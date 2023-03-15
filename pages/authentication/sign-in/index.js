@@ -1,11 +1,11 @@
 import axios from 'axios';
-import Text from 'components/shared/text';
-import Button from 'components/shared/button';
-import Authentication from 'components/Authentication';
+import Text from '../../../components/shared/text';
+import Button from '../../../components/shared/button';
+import Authentication from '../../../components/Authentication';
 import Router from 'next/router';
 import { useFormik } from 'formik';
 import { Amplify, Auth } from 'aws-amplify';
-import Dropdown from 'components/shared/dropdown';
+import Dropdown from '../../../components/shared/dropdown';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { localRedirectSignIn, productionRedirectSignIn, localRedirectSignOut, productionRedirectSignOut } from 'global/variables';
