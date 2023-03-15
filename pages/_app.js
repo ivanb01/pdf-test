@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 import store from '../store';
-import 'styles/_global.scss';
-import 'pages/contacts/details/styles.scss';
-import 'components/client-details-sidebar/styles.scss';
+// import 'styles/_global.scss';
+// import 'pages/contacts/details/styles.scss';
+// import 'components/client-details-sidebar/styles.scss';
 import 'simplebar/src/simplebar.css';
-import 'components/shared/input/styles.scss';
+// import 'components/shared/input/styles.scss';
 import { Amplify, Auth } from 'aws-amplify';
 import { useRouter } from 'next/router';
 import { Toaster } from 'react-hot-toast';
@@ -16,7 +16,7 @@ import {
   productionRedirectSignIn,
   localRedirectSignOut,
   productionRedirectSignOut,
-} from 'global/variables';
+} from '../global/variables';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
