@@ -1,8 +1,8 @@
-import Authentication from 'components/Authentication';
-import Text from 'components/shared/text';
-import Button from 'components/shared/button';
-import Input from 'components/shared/input';
-import Link from 'components/Link';
+import Authentication from '../../components/Authentication';
+import Text from '../../components/shared/text';
+import Button from '../../components/shared/button';
+import Input from '../../components/shared/input';
+import Link from '../../components/Link';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
