@@ -1,7 +1,7 @@
 {
-  "parserOptions": {
-    "ecmaVersion": 2015,
-    "sourceType": "module",
-    "allowImportExportEverywhere": true
-  }
+  // "parserOptions": {
+  //   "ecmaVersion": 2015,
+  //   "sourceType": "module",
+  //   "allowImportExportEverywhere": true
+  // }
 }
