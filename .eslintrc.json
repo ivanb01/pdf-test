@@ -3,9 +3,5 @@
     "ecmaVersion": 2015,
     "sourceType": "module",
     "allowImportExportEverywhere": true
-  },
-      "extends": [
-        "standard",
-        "standard-react"
-    ]
+  }
 }
