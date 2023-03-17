@@ -160,7 +160,7 @@ const Professionals = ({
             }}
           >
             <div className="flex flex-row bg-gray10 w-fit h-full">
-              {professionalsStatuses[openedSubtab].statuses.map(
+              {professionalsStatuses[openedSubtab]?.statuses.map(
                 (status, index) => (
                   <Column
                     status={status}

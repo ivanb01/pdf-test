@@ -14,7 +14,7 @@ const TextArea = ({
       {label && (
         <label
           htmlFor={name}
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-1"
         >
           {label}{' '}
           {optional && <span className="text-[#8F95B2] ml-1">(Optional)</span>}

@@ -1,13 +1,14 @@
 module.exports = {
   important: true,
   content: [
-    './pages/**/*.{js,ts,jsx,tsx}'
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     backgroundImage: {
       sidebar: "url('../public/images/sidebar.png')",
       'oxford-gradient':
-        'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%);',
+        'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
     },
     background: {},
 

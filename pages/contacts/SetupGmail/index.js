@@ -2,7 +2,7 @@ import GlobalAlert from 'components/shared/alert/global-alert';
 import Image from 'next/image';
 import Text from 'components/shared/text';
 import Button from 'components/shared/button';
-import Link from 'next/link';
+import Link from 'next/Link';
 import gmailToOxford from 'public/images/gmail-to-oxford.png';
 import { MailIcon, PlusIcon } from '@heroicons/react/solid';
 

@@ -1,5 +1,6 @@
 import Text from 'components/shared/text';
 import Chip from 'components/shared/chip';
+import NotificationAlert from 'components/shared/alert/notification-alert';
 
 const StatusSelect = ({
   label,
@@ -7,6 +8,8 @@ const StatusSelect = ({
   setSelectedStatus,
   className,
   statuses,
+  error,
+  errorText
 }) => {
   return (
     <div>
@@ -49,6 +52,7 @@ const StatusSelect = ({
           );
         })}
       </div>
+      {error && errorText && <NotificationAlert className='mt-2 p-2' type={'error'}>{errorText}</NotificationAlert>}
     </div>
   );
 };

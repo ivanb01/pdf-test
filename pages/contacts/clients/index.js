@@ -1,5 +1,5 @@
 import Layout from 'components/Layout';
-import Clients from './clients-content';
+import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';

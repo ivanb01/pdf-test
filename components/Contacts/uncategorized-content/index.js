@@ -151,7 +151,7 @@ const Uncategorized = ({
 
   const showCategorizedSection = () => {
     return (
-      categorizedInThisSession.length > 0 || selectedUncategorized.length > 0
+      categorizedInThisSession?.length > 0 || selectedUncategorized?.length > 0
     );
   };
   //* USE EFFECT *//
@@ -186,7 +186,7 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedContacts.length ? (
+        {uncategorizedContacts?.length ? (
           <>
             <div
               className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}
@@ -260,7 +260,7 @@ const Uncategorized = ({
             showCategorizedSection ? 'w-6/12' : 'w-9/12'
           } `}
         >
-          {selectedUncategorized.length > 0 ? (
+          {selectedUncategorized?.length > 0 ? (
             <SimpleBar
               autoHide={true}
               className="overflow-x-hidden"
@@ -313,7 +313,7 @@ const Uncategorized = ({
                   )}
               </div>
             </SimpleBar>
-          ) : uncategorizedContacts.length == 0 ? (
+          ) : uncategorizedContacts?.length == 0 ? (
             <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
               <Image src={categorizedAll}></Image>
               <Text h3 className="text-gray7 my-4 text-center">
@@ -343,7 +343,7 @@ const Uncategorized = ({
           <div
             className={`border border-gray-200 overflow-hidden relative h-full w-3/12 pb-[72px]`}
           >
-            {categorizedInThisSession.length > 0 ? (
+            {categorizedInThisSession?.length > 0 ? (
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
                 <Table
                   tableFor="categorized"
@@ -413,7 +413,7 @@ const Uncategorized = ({
                     ? 'Unkown'
                     : 'Trash'}
                 </Text>
-                {uncategorizedContacts.length > 0 && (
+                {uncategorizedContacts?.length > 0 && (
                   <div className="flex items-center justify-self-end">
                     <Search
                       placeholder="Search"

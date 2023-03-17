@@ -7,7 +7,6 @@ import {
   PencilIcon,
 } from '@heroicons/react/outline';
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export default function ClientCard({
@@ -68,10 +67,7 @@ export default function ClientCard({
         </span>
       </div>
       <div className="ml-auto mr-4">
-        <FilterDropdown
-          types={types}
-          icon={<DotsVerticalIcon height={20} />}
-        />
+        <FilterDropdown types={types} icon={<DotsVerticalIcon height={20} />} />
       </div>
     </div>
   );

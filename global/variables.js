@@ -627,3 +627,6 @@ export const importSourceOptions = [
 ];
 
 
+export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/
+
+

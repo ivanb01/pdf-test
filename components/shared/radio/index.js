@@ -1,6 +1,7 @@
 import { classNames } from 'global/functions.js';
 import Text from '../text';
 import Button from '../button';
+import NotificationAlert from '../alert/notification-alert';
 
 export default function Radio({
   label,
@@ -8,6 +9,8 @@ export default function Radio({
   changeContactType,
   selectedContactType,
   className,
+  error,
+  errorText
 }) {
   return (
     <div className={className}>
@@ -44,6 +47,8 @@ export default function Radio({
           // </div>
         ))}
       </div>
+      {error && errorText && <NotificationAlert className='mt-2 p-2' type={'error'}>{errorText}</NotificationAlert>}
+
     </div>
   );
 }

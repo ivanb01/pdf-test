@@ -11,13 +11,37 @@ import { useEffect, useState } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import { FormatLineSpacing } from '@mui/icons-material';
+import * as Yup from 'yup';
+
 
 export default function LookingFor({ contactId }) {
+
+  const LookingPropertySchema = Yup.object().shape({
+    neighborhood_id: Yup.number().required('Field is required'),
+    bedrooms_min: Yup.number().min(0, 'Minimum value is 0'),
+    bedrooms_max: Yup.number().min(0, 'Minimum value is 0').when('bedrooms_min', {
+      is: (val) => val && val >= 0,
+      then: Yup.number().min(Yup.ref('bedrooms_min'), 'Max bedrooms must be greater than min bedrooms'),
+    }),
+    bathrooms_min: Yup.number().min(0, 'Minimum value is 0'),
+    bathrooms_max: Yup.number().min(0, 'Minimum value is 0').when('bathrooms_min', {
+      is: (val) => val && val >= 0,
+      then: Yup.number().min(Yup.ref('bathrooms_min'), 'Max bathrooms must be greater than min bathrooms'),
+    }),
+    budget_min: Yup.number().min(0, 'Minimum value is 0'),
+    // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
+    budget_max: Yup.number().min(0, 'Minimum value is 0').when('budget_min', {
+      is: (val) => val && val >= 0,
+      then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
+    }),
+  });
+
+
+
   //* FORMIK *//
   const [selections, setSelections] = useState([]);
-  const [hasLookingProperty, setHasLookingProperty] = useState(false);
-  const [propertyId, setPropertyId] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       neighborhood_id: '',
@@ -29,11 +53,14 @@ export default function LookingFor({ contactId }) {
       budget_min: '',
       budget_max: '',
     },
+    validationSchema: LookingPropertySchema,
     onSubmit: (values) => {
       console.log('looking property', values);
-      hasLookingProperty ? handleUpdateSubmit(values) : handleAddSubmit(values);
+      handleAddSubmit(values);
     },
   });
+  
+  const {errors, touched, setFieldValue} = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
@@ -43,7 +70,7 @@ export default function LookingFor({ contactId }) {
         values
       );
       console.log('add', res);
-      setHasLookingProperty(true);
+      // setHasLookingProperty(true);
       setLoadingButton(false);
     } catch (error) {
       console.log(error);
@@ -51,21 +78,6 @@ export default function LookingFor({ contactId }) {
     }
   };
 
-  const handleUpdateSubmit = async (values) => {
-    setLoadingButton(true);
-    try {
-      const { data } = await contactServices.updateContactLookingProperty(
-        contactId,
-        propertyId,
-        values
-      );
-      console.log('Update', 'propertyId', propertyId, 'values', values);
-      setLoadingButton(false);
-    } catch (error) {
-      console.log(error);
-      setLoadingButton(false);
-    }
-  };
 
   const fetchLookingProperties = async () => {
     try {
@@ -73,28 +85,18 @@ export default function LookingFor({ contactId }) {
         contactId
       );
       const lookingProperties = data.data;
-      console.log(
-        'lookingProperties',
-        lookingProperties,
-        lookingProperties.length
-      );
       if (lookingProperties.length > 0) {
         formik.setValues({
           neighborhood_id: lookingProperties[0].neighborhood_id,
           looking_action: lookingProperties[0].looking_action,
-          bedrooms_min: lookingProperties[0].bedrooms_min,
-          bedrooms_max: lookingProperties[0].bedrooms_max,
-          bathrooms_min: lookingProperties[0].bathrooms_min,
-          bathrooms_max: lookingProperties[0].bathrooms_max,
-          budget_min: lookingProperties[0].budget_min,
-          budget_max: lookingProperties[0].budget_max,
+          bedrooms_min: lookingProperties[0].bedrooms_min !=0 ? lookingProperties[0].bedrooms_min : '',
+          bedrooms_max: lookingProperties[0].bedrooms_max !=0 ? lookingProperties[0].bedrooms_max : '',
+          bathrooms_min: lookingProperties[0].bathrooms_min !=0 ? lookingProperties[0].bathrooms_min : '',
+          bathrooms_max: lookingProperties[0].bathrooms_max !=0 ? lookingProperties[0].bathrooms_max : '',
+          budget_min: lookingProperties[0].budget_min !=0 ? lookingProperties[0].budget_min : '',
+          budget_max: lookingProperties[0].budget_max !=0 ? lookingProperties[0].budget_max : '',
         });
-        setPropertyId(lookingProperties[0].id);
-        setHasLookingProperty(true);
-      } else {
-        setPropertyId(null);
-        setHasLookingProperty(false);
-      }
+      } 
     } catch (error) {
       console.log(error);
     }
@@ -116,6 +118,8 @@ export default function LookingFor({ contactId }) {
             iconAfter={<SearchIcon className="text-gray3" height={20} />}
             onChange={formik.handleChange}
             value={formik.values.neighborhood_id}
+            error={errors.neighborhood_id && touched.neighborhood_id}
+            errorText={errors.neighborhood_id}
           />
         </div>
       ),
@@ -132,6 +136,8 @@ export default function LookingFor({ contactId }) {
             className="col-span-1"
             onChange={formik.handleChange}
             value={formik.values.bedrooms_min}
+            error={errors.bedrooms_min && touched.bedrooms_min}
+            errorText={errors.bedrooms_min}
           />
           <Input
             id="bedrooms_max"
@@ -141,6 +147,8 @@ export default function LookingFor({ contactId }) {
             iconAfter={<Image src={bedroom} height={20} />}
             onChange={formik.handleChange}
             value={formik.values.bedrooms_max}
+            error={errors.bedrooms_max && touched.bedrooms_max}
+            errorText={errors.bedrooms_max}
           />
           <Input
             id="bathrooms_min"
@@ -150,6 +158,8 @@ export default function LookingFor({ contactId }) {
             className="col-span-1"
             onChange={formik.handleChange}
             value={formik.values.bathrooms_min}
+            error={errors.bathrooms_min && touched.bathrooms_min}
+            errorText={errors.bathrooms_min}
           />
           <Input
             id="bathrooms_max"
@@ -159,6 +169,8 @@ export default function LookingFor({ contactId }) {
             iconAfter={<Image src={bathroom} height={20} />}
             onChange={formik.handleChange}
             value={formik.values.bathrooms_max}
+            error={errors.bathrooms_max && touched.bathrooms_max}
+            errorText={errors.bathrooms_max}
           />
         </div>
       ),
@@ -174,7 +186,9 @@ export default function LookingFor({ contactId }) {
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
             onChange={formik.handleChange}
-            value={formik.values.budget_min}
+            value={(formik.values.budget_min)}
+            error={errors.budget_min && touched.budget_min}
+            errorText={errors.budget_min}
           />
           <Input
             id="budget_max"
@@ -182,8 +196,36 @@ export default function LookingFor({ contactId }) {
             label="Budget Max"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
+            // onChange={(e)=>{
+              // formik.handleChange('budget_max');
+              // console.log(e.target.value, e.target.value.slice(0,-3), Number(e.target.value.replace(',','')))
+              // const test = (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
+              //   minimumFractionDigits: 2,
+              //   maximumFractionDigits: 2
+              // });
+              // test.slice(0,-3).replace(',',''),
+
+              // console.log(
+              //   (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(),
+              //   test,
+              //   test.slice(0,-3),
+              //   test.slice(0,-3).replace(',',''),
+
+              // )
+              // console.log('test', test, e.target.value, test.slice(0,-3).replace(',',''))
+              // formik.setFieldValue('budget_max', Number((e.target.value.replace(',',''))));
+              // formik.setFieldValue('budget_max', test.slice(0,-3).replace(',',''));
+
+            // }}
             onChange={formik.handleChange}
-            value={formik.values.budget_max}
+            value={(formik.values.budget_max)}
+            // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString()}
+            // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
+            //   minimumFractionDigits: 2,
+            //   maximumFractionDigits: 2
+            // })}
+            error={errors.budget_max && touched.budget_max}
+            errorText={errors.budget_max}
           />
         </div>
       ),
@@ -192,20 +234,18 @@ export default function LookingFor({ contactId }) {
   return (
     <div className="flex bg-gray10 flex-row details-tabs-fixed-height overflow-y-scroll">
       <div className="w-[65%] bg-gray10">
-        {/* <Accordion tabs={tabs} /> */}
         <div className="bg-white p-6 m-[24px]">
           <form onSubmit={formik.handleSubmit}>
             <Accordion
               tabs={tabs}
-              handleClick={() => console.log('test')}
+              handleClick={(a,b) => console.log('test',a,b)}
               activeSelections={selections}
               defaultOpen={true}
             />
-            <Button type="submit" primary className="" loading={loadingButton}>
+            <Button type="submit" primary className="mt-6" loading={loadingButton}>
               Save
             </Button>
           </form>
-          {/* <BasicForm customButtons={<div></div>} inputs={inputs} /> */}
         </div>
       </div>
     </div>

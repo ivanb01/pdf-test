@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
 import { types } from 'global/variables';
-import Uncategorized from './uncategorized-content';
+import Uncategorized from 'components/Contacts/uncategorized-content';
 import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';

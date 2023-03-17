@@ -37,7 +37,7 @@ const PieChart = ({ pieData, type }) => {
 
   return (
     <>
-      <div className="mx-auto w-[250px]">
+      <div className="mx-auto w-[170px]">
         <Pie data={chart} />{' '}
       </div>
       <div className="mt-6 pie-legend flex items-center justify-between">
@@ -52,12 +52,11 @@ const PieChart = ({ pieData, type }) => {
                 className={`mr-2 block h-[10px] w-[10px] rounded-full ring-2 ring-white`}
                 style={{ background: data.color }}
               />
-              {
-                type == 'number' && `${data.value} ${data.label}`
-              }
-              {
-                type == 'percentage' && `${Math.round(getPercentage(data.value, totalSum))}% ${data.label}` 
-              }
+              {type == 'number' && `${data.value} ${data.label}`}
+              {type == 'percentage' &&
+                `${Math.round(getPercentage(data.value, totalSum))}% ${
+                  data.label
+                }`}
             </div>
           );
         })}

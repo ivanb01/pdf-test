@@ -137,7 +137,7 @@ const index = () => {
   // ];
 
   const importsSummary = [];
-  
+
   const myProfileTab = () => {
     return (
       <>
@@ -302,13 +302,10 @@ const index = () => {
   ];
   return (
     <>
-      <Menu />
-      <div
-        className="w-full flex items-center justify-center"
-        style={{ height: 'calc(100vh - 70px)' }}
-      >
-        <div className="border-t border-gray2 flex h-auto min-h-full w-full">
-          <div className="w-[375px] h-auto border-r border-gray2 px-1 py-5">
+      <Menu fixed />
+      <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
+        <div className="border-t border-gray2 flex h-full min-h-full w-full">
+          <div className="w-[375px] h-full border-r border-gray2 px-1 py-5 overflow-y-scroll">
             {tabs.map((tab) => {
               return (
                 <a
@@ -327,7 +324,7 @@ const index = () => {
               );
             })}
           </div>
-          <div className="w-full relative">
+          <div className="w-full relative h-full overflow-y-scroll">
             {tabs.find((tab) => tab.id == currentTab).tabContent}
           </div>
         </div>

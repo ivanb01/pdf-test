@@ -251,11 +251,11 @@ const Campaigns = () => {
 
   return (
     <>
-      <Menu className="fixed top-0 left-0 right-0" />
+      <Menu fixed />
       <TopBar text="Campaigns" />
       <div className="bg-gray10 h-auto">
         <div className="grid grid-cols-3 gap-6 p-6">
-          <div className="col-span-2 bg-white rounded-lg border border-gray2 overflow-hidden">
+          <div className="col-span-2 bg-white rounded-lg border border-gray2 overflow-hidden relative">
             <div className="flex items-center px-6 py-4 justify-between border-b border-gray2">
               <Text h3>Upcoming Events</Text>
               <ButtonsSlider
@@ -307,12 +307,12 @@ const Campaigns = () => {
             {loadingStats ? (
               <Loader />
             ) : (
-              <div className="border border-gray2 p-6 rounded-lg bg-white">
+              <div className="border border-gray2 p-4 rounded-lg bg-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center w-1/2 border-r border-gray2 pr-6">
                     <DoughnutChart
                       data={clientsDoughnut}
-                      className="w-[75px] mr-1"
+                      className="w-[60px] mr-1"
                       color="#60A5FA"
                     />
                     <div>
@@ -327,7 +327,7 @@ const Campaigns = () => {
                   <div className="flex items-center w-1/2 pl-6">
                     <DoughnutChart
                       data={professionalsDoughnut}
-                      className="w-[75px] mr-1"
+                      className="w-[60px] mr-1"
                       color="#0369A1"
                     />
                     <div>
@@ -340,7 +340,7 @@ const Campaigns = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="-ml-6 -mr-6 my-6" />
+                <hr className="-ml-4 -mr-4 my-4" />
                 <div>
                   <div className="flex items-center justify-between mb-5">
                     <div className="text-base font-medium">

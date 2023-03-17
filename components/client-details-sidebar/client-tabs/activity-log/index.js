@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlusCircleIcon } from '@heroicons/react/outline';
+import { PlusCircleIcon } from '@heroicons/react/solid';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
@@ -10,7 +10,8 @@ import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
 import { FormatLineSpacing } from '@mui/icons-material';
-
+import noActivitLog from 'public/images/no_activitylog.svg';
+import Image from 'next/image';
 
 
 
@@ -100,9 +101,25 @@ export default function ActivityLog({contactId}) {
   }, [fetchActivitiesRequired, contactId]);
 
   return (
-    <div className="flex bg-gray10 flex-row details-tabs-fixed-height overflow-y-scroll">
-      <div className="w-[65%] bg-gray10">
-        <Feeds contactId={contactId} activities={activities} handleFetchActivitiesRequired={handleFetchActivitiesRequired}/>
+    <div className="flex bg-gray10 flex-row ">
+      <div className="w-[65%] bg-gray10 details-tabs-fixed-height p-[24px] pr-0">
+      { 
+        activities.length == 0 ? (
+          <div className="flow-root bg-white h-full overflow-y-scroll">
+            <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+              <Image src={noActivitLog}></Image>
+              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                There is no activity logged for this client
+              </Text>
+              <Text p className="text-gray4 relative text-center mb-6">
+                All activities related with this client will be shown here.
+              </Text>
+            </div>
+          </div>
+        ) : (
+          <Feeds contactId={contactId} activities={activities} handleFetchActivitiesRequired={handleFetchActivitiesRequired}/>
+        )
+      }
       </div>
       <div className="w-[35%] m-[24px]">
         <div className="bg-white flex flex-row justify-between p-6">
@@ -125,10 +142,10 @@ export default function ActivityLog({contactId}) {
                   placeHolder="Choose"
                   activeIcon={false}
                   options={activityTypes}
-                  className="mb-1 w-[100%]"
+                  className="mb-6 w-[100%]"
                   activeClasses='bg-lightBlue1'
                   handleSelect={(item)=>handleChooseActivityType(item.id)}
-              ></Dropdown>
+              />
               <TextArea
                 className="mb-6 min-h-[120px]"
                 id="description"

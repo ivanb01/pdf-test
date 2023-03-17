@@ -6,7 +6,7 @@ import Tabs from 'components/shared/tabs';
 import { tabs } from 'components/client-details-sidebar/list';
 import { menuItems } from 'global/variables';
 import Router, { useRouter } from 'next/router';
-import Link from 'next/link';
+import Link from 'next/Link';
 import backArrow from 'public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
@@ -61,7 +61,7 @@ export default function Details() {
 
   return (
     <>
-      <Menu className="fixed top-0 left-0 right-0" />
+      <Menu fixed />
       <div className="client-details-page-wrapper">
         <div className="p-6 inline-block">
           <a

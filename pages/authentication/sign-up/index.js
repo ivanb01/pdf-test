@@ -1,16 +1,15 @@
 import axios from 'axios';
-import Text from '../../../components/shared/text';
-import Link from '../../../components/Link';
+import Text from 'components/shared/text';
+import Link from 'components/Link';
 // import BasicForm from 'components/shared/form';
-import { inputs } from './list';
 import facebookIcon from 'public/images/facebook.svg';
 import gmailIcon from 'public/images/gmail.svg';
 import twitterIcon from 'public/images/twitter.svg';
-import Authentication from '../../../components/Authentication';
+import Authentication from 'components/Authentication';
 import Router from 'next/router';
-import Button from '../../../components/shared/button';
+import Button from 'components/shared/button';
 import { useFormik } from 'formik';
-import Input from '../../../components/shared/input';
+import Input from 'components/shared/input';
 import toast from 'react-hot-toast';
 
 const planValues = [

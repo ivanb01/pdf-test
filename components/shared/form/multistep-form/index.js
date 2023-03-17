@@ -13,12 +13,18 @@ const MultiStepOverlay = ({
   nextStep,
   changeStep,
   submit,
+  isSubmittingButton
 }) => {
   const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    setLoading(isSubmittingButton);
+  },[isSubmittingButton])
+
   return (
     <div className="flex items-center justify-center overflow-y-auto overflow-x-hidden fixed top-40 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full bg-overlayBackground">
-      <div className="relative p-4 w-auto min-w-[700px] h-full md:h-auto max-w-[700px]">
-        <div className="relative bg-white rounded-lg shadow mt-10">
+      <div className="relative my-10 p-4 w-auto min-w-[632px] h-full md:h-auto ">
+        <div className="relative bg-white rounded-lg shadow">
           <div className="flex justify-between items-center p-5 rounded-t">
             <Text h3 className="text-gray7">
               {title}
@@ -37,7 +43,7 @@ const MultiStepOverlay = ({
                       <li
                         key={step.name}
                         className="md:flex-1"
-                        onClick={() => changeStep(step.id)}
+                        onClick={() => changeStep && changeStep(step.id)}
                       >
                         {currentStep >= step.id ? (
                           <a

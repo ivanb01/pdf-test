@@ -1,5 +1,5 @@
 import Layout from 'components/Layout';
-import Professionals from './professionals-content';
+import Professionals from 'components/Contacts/professionals-content';
 import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,7 @@ const index = () => {
   useEffect(() => {
     getContacts('8,9,12,').then((data) => {
       dispatch(setContacts(data.data));
-      setProfessionalsCopy(data.data)
+      setProfessionalsCopy(data.data);
       setLoading(false);
     });
     dispatch(setOpenedTab(1));

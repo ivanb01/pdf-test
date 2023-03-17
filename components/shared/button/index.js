@@ -90,12 +90,20 @@ const Button = ({
           ></CircularProgress>
         )}
         {leftIcon && !loading && (
-          <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>
+          <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {leftIcon}
+          </div>
         )}
         {!centerIcon && !loading && (children ? children : label)}
-        {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
+        {centerIcon && !loading && (
+          <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>
+            {centerIcon}
+          </div>
+        )}
         {rightIcon && !loading && (
-          <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>
+          <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {rightIcon}
+          </div>
         )}
       </button>
     );
@@ -142,7 +150,7 @@ const Button = ({
       <button
         type="button"
         onClick={onClick}
-        className={`${className} flex relative items-center justify-center text-base font-medium text-white min-h-[85px] p-5 px-9 w-full text-center rounded-lg`}
+        className={`${className} flex relative items-center justify-center text-base font-medium text-white min-h-[70px] p-0 px-9 w-full text-center rounded-lg`}
       >
         {children ? children : label}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -162,12 +170,20 @@ const Button = ({
         {...props}
       >
         {leftIcon && !loading && (
-          <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>
+          <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {leftIcon}
+          </div>
         )}
         {!centerIcon && !loading && (children ? children : label)}
-        {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
+        {centerIcon && !loading && (
+          <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>
+            {centerIcon}
+          </div>
+        )}
         {rightIcon && !loading && (
-          <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>
+          <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {rightIcon}
+          </div>
         )}
       </button>
     );

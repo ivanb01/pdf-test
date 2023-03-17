@@ -46,7 +46,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
             white
             className="mr-2"
           />
-          <Button onClick={handleSubmit} label="Move to Dropped" danger />
+          <Button onClick={handleSubmit} label="Move to Trash" danger />
         </div>
       </div>
     </Overlay>

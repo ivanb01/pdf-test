@@ -155,7 +155,7 @@ export default function Feeds({
 
   return (
     <>
-      <div className="flow-root m-[24px] mr-0 bg-white p-4 h-auto">
+      <div className="flow-root bg-white p-6 h-full overflow-y-scroll ">
         <ul role="list" className="-mb-8">
           {activities
             .slice()
@@ -194,6 +194,7 @@ export default function Feeds({
                       types={types}
                       icon={<More className="w-5" />}
                       data={activityItem}
+                      positionClass="right-0"
                     />
                   </div>
                 </div>

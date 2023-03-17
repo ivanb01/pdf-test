@@ -14,8 +14,9 @@ import { setContacts } from 'store/contacts/slice';
 import { clientStatuses } from 'global/variables';
 import { formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
-import { importSourceOptions } from 'global/variables';
+import { importSourceOptions, phoneNumberRules } from 'global/variables';
 import ChipInput from 'components/shared/input/ChipInput';
+import * as Yup from 'yup';
 
 const categoryIds = {
   'Add Client': '4,5,6,7',
@@ -43,25 +44,24 @@ const AddClientManuallyOverlay = ({
     { id: 2, name: 'Type and Status', href: '#' },
   ];
 
-  const resetForm = () => {
-    handleClose();
-  };
 
   const [currentStep, setCurrentStep] = useState(1);
-
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
-  const [selectedContactType, setSelectedContactType] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState(null);
-  const [globalSubTab, setGlobalSubTab] = useState(0);
-
+  
   const dispatch = useDispatch();
+
+  const AddContactSchema = Yup.object().shape({
+    first_name: Yup.string().required('Field can not be empty'),
+    last_name: Yup.string().required('Field can not be empty'),
+    email: Yup.string().required('Field can not be empty').email('Not a proper email'),
+    phone_number: Yup.string().required('Field can not be empty')
+    .matches(phoneNumberRules, { message: "Not a proper format phone number"}),
+ 
+  });
+
+  const AddContactSchema2 = Yup.object().shape({
+    selectedContactType: Yup.string().required('Contact type is required'),
+    selectedStatus: Yup.string().required('Contact status is required'),
+  });
 
   //* FORMIK *//
   const formik = useFormik({
@@ -73,16 +73,46 @@ const AddClientManuallyOverlay = ({
       import_source: '',
       tags: [],
     },
+    validationSchema: AddContactSchema,
+    onSubmit: (values) => {
+      setCurrentStep(currentStep + 1);
+    },
   });
+  const {errors, touched, submitForm: submitForm1} = formik;
+
+   //* FORMIK-STEP-2 *//
+  const formikStep2 = useFormik({
+    initialValues: {
+      selectedContactType: '',
+      selectedStatus: '',
+
+    },
+    validationSchema: AddContactSchema2,
+    onSubmit: async (values, {setSubmitting}) => {
+      await addClient();
+      setSubmitting(false);
+    },
+  });
+  const {errors: errors2, touched: touched2, submitForm: submitForm2, setFieldValue: setFieldValue2, isSubmitting: isSubmitting2} = formikStep2;
+
+  const nextStep = () => {
+    submitForm1();
+  };
+
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
 
   const removeChip = (tagToRemove) => {
     let newArray = formik.values.tags.filter((tag) => tag !== tagToRemove);
     formik.setFieldValue('tags', newArray);
   };
+
   const addChip = (tagToAdd) => {
     console.log(tagToAdd);
     let newArray = formik.values.tags;
-    newArray.push(tagToAdd);
+    const tagAdded = newArray.includes(tagToAdd);
+    !tagAdded && newArray.push(tagToAdd);
     console.log('newTags', newArray);
     formik.setFieldValue('tags', newArray);
   };
@@ -93,16 +123,19 @@ const AddClientManuallyOverlay = ({
     try {
       const contactToAdd = {
         ...formik.values,
-        category_id: selectedContactType,
-        status_id: selectedStatus,
+        category_id: formikStep2.values.selectedContactType,
+        status_id: formikStep2.values.selectedStatus,
       };
+
+      console.log('contact to add: ', contactToAdd);
+
       const res = await contactServices.addContact(contactToAdd);
       const { data } = await contactServices.getContacts(categoryIds[title]);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
-        console.log(subtab, index, selectedStatus);
-        if (subtab.includes(selectedStatus)) {
+        console.log(subtab, index, formikStep2.values.selectedStatus);
+        if (subtab.includes(formikStep2.values.selectedStatus)) {
           subtabValue = index;
         }
       });
@@ -110,21 +143,23 @@ const AddClientManuallyOverlay = ({
       dispatch(setContacts(data));
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
+      handleClose();
     } catch (error) {
       console.log(error);
+      handleClose();
     }
-    resetForm();
   };
   return (
     <MultiStepOverlay
-      handleClose={resetForm}
+      handleClose={handleClose}
       steps={steps}
       currentStep={currentStep}
       nextStep={nextStep}
       prevStep={prevStep}
-      changeStep={(arg) => setCurrentStep(arg)}
+      // changeStep={(arg) => setCurrentStep(arg)}
       title={title}
-      submit={addClient}
+      submit={submitForm2}
+      isSubmittingButton={isSubmitting2}
     >
       <div className="step">
         {currentStep == 1 ? (
@@ -142,6 +177,8 @@ const AddClientManuallyOverlay = ({
                     id="first_name"
                     onChange={formik.handleChange}
                     value={formik.values.first_name}
+                    error={errors.first_name && touched.first_name}
+                    errorText={errors.first_name}
                   />
                   <Input
                     type="text"
@@ -149,6 +186,8 @@ const AddClientManuallyOverlay = ({
                     id="last_name"
                     onChange={formik.handleChange}
                     value={formik.values.last_name}
+                    error={errors.last_name && touched.last_name}
+                    errorText={errors.last_name}
                   />
 
                   <Input
@@ -157,6 +196,8 @@ const AddClientManuallyOverlay = ({
                     id="email"
                     onChange={formik.handleChange}
                     value={formik.values.email}
+                    error={errors.email && touched.email}
+                    errorText={errors.email}
                   />
                   <Input
                     type="text"
@@ -165,6 +206,8 @@ const AddClientManuallyOverlay = ({
                     onChange={formik.handleChange}
                     value={formatPhoneNumber(formik.values.phone_number)}
                     placeholder="ex: (555) 555-5555"
+                    error={errors.phone_number && touched.phone_number}
+                    errorText={errors.phone_number}
                   />
                   <Dropdown
                     white
@@ -186,7 +229,7 @@ const AddClientManuallyOverlay = ({
                     removeChip={removeChip}
                     addChip={addChip}
                   />
-                </div>
+                </div> 
               </form>
             </div>
           </div>
@@ -195,15 +238,19 @@ const AddClientManuallyOverlay = ({
             <Radio
               options={options}
               label="What kind of contact is this for you?"
-              selectedContactType={selectedContactType}
-              changeContactType={setSelectedContactType}
+              selectedContactType={formik.values.selectedContactType}
+              changeContactType={(e)=>setFieldValue2('selectedContactType', e)}
               className="mb-6"
+              error={errors2.selectedContactType && touched2.selectedContactType}
+              errorText={errors2.selectedContactType}
             />
             <StatusSelect
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
+              selectedStatus={formik.values.selectedStatus}
+              setSelectedStatus={(e)=>setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
               statuses={statuses}
+              error={errors2.selectedStatus && touched2.selectedStatus}
+              errorText={errors2.selectedStatus}
             />
           </div>
         )}
