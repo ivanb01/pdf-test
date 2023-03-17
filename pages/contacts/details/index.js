@@ -6,7 +6,6 @@ import Tabs from 'components/shared/tabs';
 import { tabs } from 'components/client-details-sidebar/list';
 import { menuItems } from 'global/variables';
 import Router, { useRouter } from 'next/router';
-import Link from 'next/Link';
 import backArrow from 'public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';

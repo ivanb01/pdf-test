@@ -3,8 +3,6 @@ import Text from 'components/shared/text';
 import Button from 'components/shared/button';
 import Search from 'components/shared/input/search';
 import SimpleBar from 'simplebar-react';
-import FilterList from '@mui/icons-material/FilterList';
-import Add from '@mui/icons-material/Add';
 import {
   statuses,
   clientStatuses,
@@ -225,9 +223,16 @@ const Uncategorized = ({
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
-            <Image src={categorizedAll}></Image>
+            <lottie-player
+              src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+              loop
+              autoplay
+              style={{ width: '420px', height: '300px' }}
+            ></lottie-player>
             <Text h3 className="text-gray7 my-4 text-center">
-              Yay, well done! No uncategorized contact.
+              {openedSubtab == 0
+                ? 'Yay, well done! No uncategorized new records.'
+                : 'Yay, well done! No uncategorized unknown contacts.'}
             </Text>
             <Text p className="text-gray4 relative text-center">
               You did a great job, seems you’re taking that seriously.
@@ -315,7 +320,12 @@ const Uncategorized = ({
             </SimpleBar>
           ) : uncategorizedContacts?.length == 0 ? (
             <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
-              <Image src={categorizedAll}></Image>
+              <lottie-player
+                src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+                style={{ width: '420px', height: '300px' }}
+                loop
+                autoplay
+              ></lottie-player>
               <Text h3 className="text-gray7 my-4 text-center">
                 Yay, well done! No uncategorized contact.
               </Text>
