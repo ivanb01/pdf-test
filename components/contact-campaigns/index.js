@@ -10,7 +10,7 @@ import Table from 'components/shared/table';
 import SimpleBar from 'simplebar-react';
 import Button from 'components/shared/button';
 import UnassignOverlay from 'components/overlays/unassign';
-import AssignCampaignOverlay from 'components/client-details-sidebar/overlays/assign-campaign';
+import AssignCampaignOverlay from 'components/overlays/assign-campaign';
 import {
   getCampaign,
   getCampaignsByCategory,
