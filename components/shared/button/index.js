@@ -80,7 +80,7 @@ const Button = ({
         type="button"
         className={`${disabled && 'opacity-50'} ${
           loading && 'pointer-events-none'
-        } inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${textColor} hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${textColor} hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
         {...props}
       >
         {loading && (

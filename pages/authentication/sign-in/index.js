@@ -8,20 +8,26 @@ import { Amplify, Auth } from 'aws-amplify';
 import Dropdown from 'components/shared/dropdown';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { localRedirectSignIn, productionRedirectSignIn, localRedirectSignOut, productionRedirectSignOut } from 'global/variables';
+import {
+  localRedirectSignIn,
+  productionRedirectSignIn,
+  localRedirectSignOut,
+  productionRedirectSignOut,
+} from 'global/variables';
 
-const isLocalhost = typeof window !== 'undefined' && Boolean(
-  window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === "[::1]" ||
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
-);
+const isLocalhost =
+  typeof window !== 'undefined' &&
+  Boolean(
+    window.location.hostname === 'localhost' ||
+      // [::1] is the IPv6 localhost address.
+      window.location.hostname === '[::1]' ||
+      // 127.0.0.1/8 is considered localhost for IPv4.
+      window.location.hostname.match(
+        /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+      )
+  );
 
 const SignIn = () => {
-  
   //* FORMIK *//
   const formik = useFormik({
     initialValues: { tenantName: 'Oxford Property Group' },
@@ -41,9 +47,10 @@ const SignIn = () => {
       //   `https://cjylzkf22j.execute-api.us-east-1.amazonaws.com/prod//tenant/init/${values.tenantName}`
       // );
       const data = {
-        apiGatewayUrl: 'https://ozz4sedx7k.execute-api.us-east-1.amazonaws.com/prod/',
+        apiGatewayUrl:
+          'https://ozz4sedx7k.execute-api.us-east-1.amazonaws.com/prod/',
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
-        userPoolId: 'us-east-1_ENvP5VYjb'
+        userPoolId: 'us-east-1_ENvP5VYjb',
       };
       localStorage.setItem('tenantName', values.tenantName);
       localStorage.setItem('apiGatewayUrl', data.apiGatewayUrl);
@@ -64,13 +71,18 @@ const SignIn = () => {
           userPoolId: userPoolId,
           userPoolWebClientId: appClientId,
           oauth: {
-            domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
+            domain:
+              'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost ? localRedirectSignIn : productionRedirectSignIn,
-            redirectSignOut: isLocalhost ? localRedirectSignOut : productionRedirectSignOut,
-            responseType: 'code'
-          }
+            redirectSignIn: isLocalhost
+              ? localRedirectSignIn
+              : productionRedirectSignIn,
+            redirectSignOut: isLocalhost
+              ? localRedirectSignOut
+              : productionRedirectSignOut,
+            responseType: 'code',
+          },
         },
       };
       Amplify.configure(awsmobile);
@@ -116,7 +128,7 @@ const SignIn = () => {
         {/* <Text p className="text-gray4 mb-[50px]">
           Don't have an account?{' '}
           <Link
-            href="javascript:void(0)"
+            href="#"
             className="underline"
             onClick={() => Router.push('sign-up')}
           >

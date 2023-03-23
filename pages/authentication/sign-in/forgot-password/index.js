@@ -79,7 +79,7 @@ const ForgotPassword = () => {
       </form>
       <div className="flex items-center justify-between my-6">
         <Link
-          href="javascript:void(0)"
+          href="#"
           className="font-medium text-sm"
           onClick={() => router.push('credentials')}
         >

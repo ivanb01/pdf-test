@@ -225,7 +225,7 @@ const Input = ({
         </div>
         {showForgotPassword && (
           <Link
-            href="javascript:void(0)"
+            href="#"
             className="font-medium text-sm"
             onClick={() => Router.push('sign-in/forgot-password')}
           >

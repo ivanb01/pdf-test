@@ -4,45 +4,46 @@ import { useState } from 'react';
 import StatusSelect from 'components/status-select';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
-import { contactCategoryOptions } from 'global/variables';
 
-const UpdateCategoryType = ({
+const AddProfile = ({
   handleClose,
-  contact,
+  contactId,
   categoryTypes,
   statuses,
-  handleFetchContactRequired,
+  handleFetchProfilesRequired,
 }) => {
-  const [selectedContactType, setSelectedContactType] = useState(
-    contact.category_id
-  );
-  const [selectedStatus, setSelectedStatus] = useState(contact.status_id);
+  const [selectedContactType, setSelectedContactType] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState(0);
   const [loadingButton, setLoadingButton] = useState(false);
 
-  const editContact = async () => {
+  const addProfile = async () => {
     try {
-      const contactToEdit = {
+      const newProfile = {
         category_id: selectedContactType,
         status_id: selectedStatus,
       };
-      await contactServices.updateContact(contact.id, contactToEdit);
+      const { data } = await contactServices.addContactProfile(
+        contactId,
+        newProfile
+      );
+      console.log('add profile', newProfile, data);
     } catch (error) {
       console.log(error);
     }
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await editContact();
-    handleFetchContactRequired();
+    // alert('Not implemented yet')
+    await addProfile();
+    handleFetchProfilesRequired();
     handleClose();
   };
 
   return (
     <Overlay
-      title="Edit Type"
+      title="Add Aditional Type"
       handleCloseOverlay={handleClose}
-      className="w-[50%]"
+      className="w-[40%]"
     >
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
@@ -63,21 +64,19 @@ const UpdateCategoryType = ({
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-row justify-between mt-5">
+            <div className="flex flex-row justify-end mt-5">
               <Button
-                size="small"
                 className="mr-3 "
                 white
                 label="Cancel"
                 onClick={handleClose}
               />
-              <Button 
+              <Button
                 type="submit"
-                size="small" 
-                primary 
-                label="Save Changes" 
+                primary
+                label="Save Changes"
                 loading={loadingButton}
-                onClick={()=>{
+                onClick={() => {
                   setLoadingButton(true);
                 }}
               />
@@ -89,4 +88,4 @@ const UpdateCategoryType = ({
   );
 };
 
-export default UpdateCategoryType;
+export default AddProfile;

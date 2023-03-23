@@ -22,8 +22,13 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
           engaged and connected with your clients.
         </Text>
       </div>
-      <div className="flex items-center justify-between p-6 space-x-2 rounded-b">
-        <Button white label="Cancel" onClick={handleCloseOverlay} />
+      <div className="flex items-center justify-end p-6 space-x-2 rounded-b">
+        <Button
+          className="mr-2"
+          white
+          label="Cancel"
+          onClick={handleCloseOverlay}
+        />
         <Button primary label="Assign in Campaign" onClick={onSubmit} />
       </div>
     </Overlay>

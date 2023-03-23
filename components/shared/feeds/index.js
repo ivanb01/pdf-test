@@ -158,7 +158,7 @@ export default function Feeds({
       <div className="flow-root bg-white p-6 h-full overflow-y-scroll ">
         <ul role="list" className="-mb-8">
           {activities
-            .slice()
+            ?.slice()
             .reverse()
             .map((activityItem, activityItemIdx) => (
               <li key={activityItem.id}>
@@ -180,7 +180,11 @@ export default function Feeds({
                       <div className="min-w-0 flex-1">
                         <p className="mt-0.5 text-sm text-gray-500">
                           {/* Commented 6d ago */}
-                          {formatDateAgo(activityItem.updated_at ? activityItem.updated_at : activityItem.created_at)}
+                          {formatDateAgo(
+                            activityItem.updated_at
+                              ? activityItem.updated_at
+                              : activityItem.created_at
+                          )}
                         </p>
 
                         <div className="mt-2 text-sm text-gray-700">
@@ -229,13 +233,17 @@ export default function Feeds({
               ></TextArea>
               <div className="flex flex-row justify-end">
                 <Button
-                  size="small"
                   className="mr-3"
                   white
                   label="Cancel"
                   onClick={handleCloseModal}
                 />
-                <Button type="submit" size="small" primary label="Save" loading={loadingButton} />
+                <Button
+                  type="submit"
+                  primary
+                  label="Save"
+                  loading={loadingButton}
+                />
               </div>
             </form>
           </div>

@@ -42,11 +42,7 @@ const GlobalAlert = ({
             <p className={`text-sm font-medium ${textColor}`}>{message}</p>
           </div>
         </div>
-        {onButtonClick && (
-          <Button size="small" white>
-            Set up now
-          </Button>
-        )}
+        {onButtonClick && <Button white>Set up now</Button>}
       </div>
     </div>
   );

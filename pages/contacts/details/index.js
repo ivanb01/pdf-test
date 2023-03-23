@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Breadcrumbs from 'components/shared/breadcrumbs';
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import ClientDetailsSidebar from 'components/client-details-sidebar';
 import Tabs from 'components/shared/tabs';
 import { tabs } from 'components/client-details-sidebar/list';
@@ -25,6 +25,7 @@ export default function Details() {
   const handleFetchContactRequired = () => {
     setFetchContactRequired((prev) => !prev);
   };
+  const [current, setCurrent] = useState(0);
 
   const [overlays, setOverlays] = useState({
     deleteClient: false,
@@ -55,12 +56,18 @@ export default function Details() {
   };
 
   useEffect(() => {
+    if (router.query.campaigns) {
+      setCurrent(1);
+    }
+  }, []);
+
+  useEffect(() => {
     id && fetchContact();
   }, [fetchContactRequired, id]);
 
   return (
     <>
-      <Menu fixed />
+      <MainMenu fixed />
       <div className="client-details-page-wrapper">
         <div className="p-6 inline-block">
           <a
@@ -81,7 +88,12 @@ export default function Details() {
               client={contact}
               handleFetchContactRequired={handleFetchContactRequired}
             />
-            <Tabs className="px-6 pb-6" tabs={localTabs} />
+            <Tabs
+              current={current}
+              setCurrent={setCurrent}
+              className="px-6 pb-6"
+              tabs={localTabs}
+            />
           </div>
         )}
       </div>

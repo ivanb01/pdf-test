@@ -44,18 +44,21 @@ const AddClientManuallyOverlay = ({
     { id: 2, name: 'Type and Status', href: '#' },
   ];
 
-
   const [currentStep, setCurrentStep] = useState(1);
-  
+
   const dispatch = useDispatch();
 
   const AddContactSchema = Yup.object().shape({
     first_name: Yup.string().required('Field can not be empty'),
     last_name: Yup.string().required('Field can not be empty'),
-    email: Yup.string().required('Field can not be empty').email('Not a proper email'),
-    phone_number: Yup.string().required('Field can not be empty')
-    .matches(phoneNumberRules, { message: "Not a proper format phone number"}),
- 
+    email: Yup.string()
+      .required('Field can not be empty')
+      .email('Not a proper email'),
+    phone_number: Yup.string()
+      .required('Field can not be empty')
+      .matches(phoneNumberRules, {
+        message: 'Not a proper format phone number',
+      }),
   });
 
   const AddContactSchema2 = Yup.object().shape({
@@ -78,22 +81,27 @@ const AddClientManuallyOverlay = ({
       setCurrentStep(currentStep + 1);
     },
   });
-  const {errors, touched, submitForm: submitForm1} = formik;
+  const { errors, touched, submitForm: submitForm1 } = formik;
 
-   //* FORMIK-STEP-2 *//
+  //* FORMIK-STEP-2 *//
   const formikStep2 = useFormik({
     initialValues: {
       selectedContactType: '',
       selectedStatus: '',
-
     },
     validationSchema: AddContactSchema2,
-    onSubmit: async (values, {setSubmitting}) => {
+    onSubmit: async (values, { setSubmitting }) => {
       await addClient();
       setSubmitting(false);
     },
   });
-  const {errors: errors2, touched: touched2, submitForm: submitForm2, setFieldValue: setFieldValue2, isSubmitting: isSubmitting2} = formikStep2;
+  const {
+    errors: errors2,
+    touched: touched2,
+    submitForm: submitForm2,
+    setFieldValue: setFieldValue2,
+    isSubmitting: isSubmitting2,
+  } = formikStep2;
 
   const nextStep = () => {
     submitForm1();
@@ -151,6 +159,7 @@ const AddClientManuallyOverlay = ({
   };
   return (
     <MultiStepOverlay
+      className="max-w-[635px]"
       handleClose={handleClose}
       steps={steps}
       currentStep={currentStep}
@@ -229,7 +238,7 @@ const AddClientManuallyOverlay = ({
                     removeChip={removeChip}
                     addChip={addChip}
                   />
-                </div> 
+                </div>
               </form>
             </div>
           </div>
@@ -239,14 +248,18 @@ const AddClientManuallyOverlay = ({
               options={options}
               label="What kind of contact is this for you?"
               selectedContactType={formik.values.selectedContactType}
-              changeContactType={(e)=>setFieldValue2('selectedContactType', e)}
+              changeContactType={(e) =>
+                setFieldValue2('selectedContactType', e)
+              }
               className="mb-6"
-              error={errors2.selectedContactType && touched2.selectedContactType}
+              error={
+                errors2.selectedContactType && touched2.selectedContactType
+              }
               errorText={errors2.selectedContactType}
             />
             <StatusSelect
               selectedStatus={formik.values.selectedStatus}
-              setSelectedStatus={(e)=>setFieldValue2('selectedStatus', e)}
+              setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
               statuses={statuses}
               error={errors2.selectedStatus && touched2.selectedStatus}

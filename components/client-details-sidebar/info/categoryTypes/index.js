@@ -4,8 +4,8 @@ import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import { DotsVerticalIcon } from '@heroicons/react/outline';
 import { PlusIcon, PencilIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from 'react';
-import UpdateCategoryType from './updateCategoryType';
-import AddProfile from './addProfile';
+import UpdateCategoryType from 'components/overlays/update-category-type';
+import AddProfile from 'components/overlays/add-profile';
 import {
   clientStatuses,
   professionalsStatuses,

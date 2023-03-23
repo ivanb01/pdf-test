@@ -1,5 +1,5 @@
 import TopBar from 'components/shared/top-bar';
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import Text from 'components/shared/text';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
@@ -302,10 +302,13 @@ const index = () => {
   ];
   return (
     <>
-      <Menu fixed />
-      <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
+      <MainMenu fixed />
+      <div
+        className="w-full flex items-center justify-center"
+        style={{ height: 'calc(100vh - 70px)' }}
+      >
         <div className="border-t border-gray2 flex h-full min-h-full w-full">
-          <div className="w-[375px] h-full border-r border-gray2 px-1 py-5 overflow-y-scroll">
+          <div className="w-[375px] h-full border-r border-gray2 px-1 py-5">
             {tabs.map((tab) => {
               return (
                 <a

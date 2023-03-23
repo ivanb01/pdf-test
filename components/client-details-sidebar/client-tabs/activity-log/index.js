@@ -13,8 +13,6 @@ import { FormatLineSpacing } from '@mui/icons-material';
 import noActivitLog from 'public/images/no_activitylog.svg';
 import Image from 'next/image';
 
-
-
 const activityTypes = [
   {
     id: 1,
@@ -35,10 +33,10 @@ const activityTypes = [
   {
     id: 5,
     name: 'Other',
-  }
+  },
 ];
 
-export default function ActivityLog({contactId}) {
+export default function ActivityLog({ contactId }) {
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
   const handleToggleAddActicity = () =>
@@ -46,16 +44,15 @@ export default function ActivityLog({contactId}) {
 
   const [fetchActivitiesRequired, setFetchActivitiesRequired] = useState(false);
   const handleFetchActivitiesRequired = () =>
-    setFetchActivitiesRequired((prev)=> !prev);
+    setFetchActivitiesRequired((prev) => !prev);
 
   const [activities, setActivities] = useState([]);
-
 
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
       type_of_activity_id: '',
-      description: ''
+      description: '',
     },
     onSubmit: (values) => {
       handleAddActivitySubmit(values);
@@ -65,25 +62,27 @@ export default function ActivityLog({contactId}) {
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const { data } = await contactServices.addContactActivity(contactId, values);
-      console.log('add activity', values)
-      setFetchActivitiesRequired((prev)=>!prev);
+      const { data } = await contactServices.addContactActivity(
+        contactId,
+        values
+      );
+      console.log('add activity', values);
+      setFetchActivitiesRequired((prev) => !prev);
       formik.setValues({
         type_of_activity_id: '',
         description: '',
       });
       handleToggleAddActicity();
       setLoadingButton(false);
-  } catch (error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
       setLoadingButton(false);
-  }
+    }
   };
 
   const handleChooseActivityType = (id) => {
-    formik.setFieldValue('type_of_activity_id', id)
-  }
-
+    formik.setFieldValue('type_of_activity_id', id);
+  };
 
   const fetchContactActivities = async () => {
     try {
@@ -91,11 +90,11 @@ export default function ActivityLog({contactId}) {
       console.log('all activities', contactId, data?.data);
       setActivities(data?.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log('test from activities');
     fetchContactActivities();
   }, [fetchActivitiesRequired, contactId]);
@@ -103,8 +102,7 @@ export default function ActivityLog({contactId}) {
   return (
     <div className="flex bg-gray10 flex-row ">
       <div className="w-[65%] bg-gray10 details-tabs-fixed-height p-[24px] pr-0">
-      { 
-        activities.length == 0 ? (
+        {activities?.length == 0 ? (
           <div className="flow-root bg-white h-full overflow-y-scroll">
             <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
               <Image src={noActivitLog}></Image>
@@ -117,9 +115,12 @@ export default function ActivityLog({contactId}) {
             </div>
           </div>
         ) : (
-          <Feeds contactId={contactId} activities={activities} handleFetchActivitiesRequired={handleFetchActivitiesRequired}/>
-        )
-      }
+          <Feeds
+            contactId={contactId}
+            activities={activities}
+            handleFetchActivitiesRequired={handleFetchActivitiesRequired}
+          />
+        )}
       </div>
       <div className="w-[35%] m-[24px]">
         <div className="bg-white flex flex-row justify-between p-6">
@@ -138,13 +139,13 @@ export default function ActivityLog({contactId}) {
           <div className="p-6 bg-white border-t border-gray2">
             <form onSubmit={formik.handleSubmit}>
               <Dropdown
-                  label="Type"
-                  placeHolder="Choose"
-                  activeIcon={false}
-                  options={activityTypes}
-                  className="mb-6 w-[100%]"
-                  activeClasses='bg-lightBlue1'
-                  handleSelect={(item)=>handleChooseActivityType(item.id)}
+                label="Type"
+                placeHolder="Choose"
+                activeIcon={false}
+                options={activityTypes}
+                className="mb-6 w-[100%]"
+                activeClasses="bg-lightBlue1"
+                handleSelect={(item) => handleChooseActivityType(item.id)}
               />
               <TextArea
                 className="mb-6 min-h-[120px]"
@@ -155,13 +156,17 @@ export default function ActivityLog({contactId}) {
               ></TextArea>
               <div className="flex flex-row justify-end">
                 <Button
-                  size="small"
                   className="mr-3"
                   white
                   label="Cancel"
                   onClick={() => setToggleAddActivity(false)}
                 />
-                <Button type="submit" size="small" primary label="Save" loading={loadingButton} />
+                <Button
+                  type="submit"
+                  primary
+                  label="Save"
+                  loading={loadingButton}
+                />
               </div>
             </form>
             {/* <BasicForm

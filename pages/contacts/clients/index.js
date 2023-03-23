@@ -154,6 +154,7 @@ const index = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   let subtab = globalTabsStates[0][openedSubtab];
@@ -164,6 +165,10 @@ const index = () => {
     dispatch(setContacts(filteredArray));
     console.log(filteredArray, contacts);
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, [openedTab]);
 
   useEffect(() => {
     // getContactsByCategory('4,').then((data) => {

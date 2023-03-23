@@ -8,7 +8,7 @@ import Help from '@mui/icons-material/Help';
 import Delete from '@mui/icons-material/Delete';
 import { getContacts } from 'api/contacts';
 import MainSidebar from 'components/shared/accordion/main-sidebar';
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import dynamic from 'next/dynamic';
 import { Contacts } from '@mui/icons-material';
 import SetupGmail from 'pages/contacts/SetupGmail';
@@ -136,7 +136,7 @@ const Layout = ({ children }) => {
   }, []);
   return (
     <>
-      <Menu />
+      <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
       {allContacts && !allContacts.length ? (
         <div

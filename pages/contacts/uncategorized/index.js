@@ -84,6 +84,10 @@ const index = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
+  }, [openedTab]);
+
+  useEffect(() => {
     let contacts = uncategorizedContactsOriginal?.data?.filter(
       (element) => element.category_id == openedSubtab + 1
     );

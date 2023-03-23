@@ -213,7 +213,6 @@ const Uncategorized = ({
               </Text>
               <Button
                 className="bg-purple6"
-                size="small"
                 rightIcon={<ArrowForward className=" h-[18px] w-[18px]" />}
                 onClick={() => handleStartCategorizing(true)}
               >
@@ -222,14 +221,14 @@ const Uncategorized = ({
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
+          <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
             <lottie-player
               src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
               loop
               autoplay
               style={{ width: '420px', height: '300px' }}
             ></lottie-player>
-            <Text h3 className="text-gray7 my-4 text-center">
+            <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               {openedSubtab == 0
                 ? 'Yay, well done! No uncategorized new records.'
                 : 'Yay, well done! No uncategorized unknown contacts.'}
@@ -319,14 +318,14 @@ const Uncategorized = ({
               </div>
             </SimpleBar>
           ) : uncategorizedContacts?.length == 0 ? (
-            <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
+            <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
               <lottie-player
                 src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
                 style={{ width: '420px', height: '300px' }}
                 loop
                 autoplay
               ></lottie-player>
-              <Text h3 className="text-gray7 my-4 text-center">
+              <Text h3 className="text-gray7 mt-4 mb-2 text-center">
                 Yay, well done! No uncategorized contact.
               </Text>
               <Text p className="text-gray4 relative text-center">
@@ -365,7 +364,7 @@ const Uncategorized = ({
             ) : (
               <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
                 <Image src={noCategorized}></Image>
-                <Text h3 className="text-gray7 my-4 text-center">
+                <Text h3 className="text-gray7 mt-4 mb-2 text-center">
                   You haven’t categorized any contact in this session yet
                 </Text>
                 <Text p className="text-gray4 relative text-center">

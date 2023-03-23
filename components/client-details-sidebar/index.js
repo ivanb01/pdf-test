@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import ClientCard from './card';
 import Info from './info';
-import DeleteClientOverlay from './overlays/delete-client';
-import EditClientOverlay from './overlays/edit-client';
+import DeleteClientOverlay from 'components/overlays/delete-client';
+import EditClientOverlay from 'components/overlays/edit-client';
 
 export default function ClientDetailsSidebar({
   client,
   handleFetchContactRequired,
 }) {
-
   const [editingContact, setEditingContact] = useState(false);
   const [deletingClient, setDeletingContact] = useState(false);
 

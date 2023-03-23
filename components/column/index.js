@@ -8,8 +8,11 @@ import SortByAlpha from '@mui/icons-material/SortByAlpha';
 import sortAscIcon from 'public/images/sort-asc.svg';
 import sortDescIcon from 'public/images/sort-desc.svg';
 import Image from 'next/image';
+import EditContactOverlay from 'components/overlays/edit-client';
+import { useRouter } from 'next/router';
 
 const Column = ({ status, filter, categoryType }) => {
+  const router = useRouter();
   // const [cardData, setCardData] = useState(contacts?.data || []);
   // useEffect(() => {
   //   if (filter) {
@@ -20,7 +23,7 @@ const Column = ({ status, filter, categoryType }) => {
   // }, [filter]);
   // console.log(status);
   const [dropdownOpened, setDropdownOpened] = useState(false);
-
+  const [editingContact, setEditingContact] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
   const contacts = useSelector((state) => state.contacts.data.data);
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -52,6 +55,13 @@ const Column = ({ status, filter, categoryType }) => {
   }, [openedSubtab, contacts]);
 
   // console.log(filteredContacts);
+
+  const handleCardClick = (id) => {
+    router.push({
+      pathname: '/contacts/details',
+      query: { id: id },
+    });
+  };
 
   const handleSortAsc = () => {
     setFilteredContacts(
@@ -125,6 +135,7 @@ const Column = ({ status, filter, categoryType }) => {
         <div className="p-[16px] pb-48">
           {filteredContacts.map((contact, index) => (
             <ContactCard
+              handleCardClick={handleCardClick}
               contact={contact}
               key={index}
               categoryType={categoryType}
@@ -167,6 +178,14 @@ const Column = ({ status, filter, categoryType }) => {
           </ul>
         </SimpleBar>
       </div> */}
+      {editingContact && (
+        <EditClientOverlay
+          handleClose={() => setEditingContact(false)}
+          title="Edit Contact"
+          client={contact}
+          handleFetchContactRequired={handleFetchContactRequired}
+        />
+      )}
     </div>
   );
 };

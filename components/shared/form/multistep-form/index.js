@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Button from 'components/shared/button';
 import Text from 'components/shared/text';
 import { ArrowRightIcon } from '@heroicons/react/outline';
+import { ArrowLeftIcon } from '@heroicons/react/outline';
 
 const MultiStepOverlay = ({
   title,
@@ -13,17 +14,20 @@ const MultiStepOverlay = ({
   nextStep,
   changeStep,
   submit,
-  isSubmittingButton
+  isSubmittingButton,
+  className,
 }) => {
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(isSubmittingButton);
-  },[isSubmittingButton])
+  }, [isSubmittingButton]);
 
   return (
     <div className="flex items-center justify-center overflow-y-auto overflow-x-hidden fixed top-40 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full bg-overlayBackground">
-      <div className="relative my-10 p-4 w-auto min-w-[632px] h-full md:h-auto ">
+      <div
+        className={`relative p-4 w-auto min-w-[635px] md:h-full ${className}`}
+      >
         <div className="relative bg-white rounded-lg shadow">
           <div className="flex justify-between items-center p-5 rounded-t">
             <Text h3 className="text-gray7">
@@ -78,33 +82,44 @@ const MultiStepOverlay = ({
 
             {children}
           </div>
-          <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 justify-end">
-            {currentStep != 1 && (
+          <div className="flex items-center justify-between p-6 space-x-2 border-t border-gray-200">
+            <div>
+              {currentStep != 1 && (
+                <Button
+                  label="Go Back"
+                  secondary
+                  leftIcon={<ArrowLeftIcon height={15} />}
+                  className="mr-3"
+                  onClick={prevStep}
+                ></Button>
+              )}
+            </div>
+            <div>
               <Button
-                label="Go Back"
-                white
                 className="mr-3"
-                onClick={prevStep}
+                label="Cancel"
+                white
+                onClick={handleClose}
               ></Button>
-            )}
-            {currentStep != steps.length && (
-              <Button
-                label="Next"
-                rightIcon={<ArrowRightIcon height={15} />}
-                onClick={nextStep}
-              ></Button>
-            )}
-            {currentStep == steps.length && (
-              <Button
-                label="Save"
-                loading={loading}
-                // rightIcon={<ArrowRightIcon height={15} />}
-                onClick={() => {
-                  setLoading(true);
-                  submit();
-                }}
-              ></Button>
-            )}
+              {currentStep != steps.length && (
+                <Button
+                  label="Next"
+                  rightIcon={<ArrowRightIcon height={15} />}
+                  onClick={nextStep}
+                ></Button>
+              )}
+              {currentStep == steps.length && (
+                <Button
+                  label="Save"
+                  loading={loading}
+                  // rightIcon={<ArrowRightIcon height={15} />}
+                  onClick={() => {
+                    setLoading(true);
+                    submit();
+                  }}
+                ></Button>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import Text from 'components/shared/text';
 import Router from 'next/router';
 import GlobalAlert from 'components/shared/alert/global-alert';
@@ -58,7 +58,7 @@ const ImportDetails = () => {
   ]);
   return (
     <>
-      <Menu />
+      <MainMenu />
       <div className="p-6 flex items-center justify-between border-b border-gray2">
         <div className="flex items-center justify-between w-full">
           <Text

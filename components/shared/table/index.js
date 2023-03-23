@@ -313,11 +313,7 @@ const Table = ({
               scope="col"
               className="py-3 pl-4 pr-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
             >
-              <Button
-                white
-                size="small"
-                onClick={() => undoAllCategorizations()}
-              >
+              <Button white onClick={() => undoAllCategorizations()}>
                 Undo All
               </Button>
             </th>
@@ -365,11 +361,7 @@ const Table = ({
                 )}
               </td>
               <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
-                <Button
-                  white
-                  size="small"
-                  onClick={() => undoCategorization(dataItem.id)}
-                >
+                <Button white onClick={() => undoCategorization(dataItem.id)}>
                   Undo
                 </Button>
               </td>

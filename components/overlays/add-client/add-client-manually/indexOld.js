@@ -80,7 +80,7 @@ const AddClientManuallyOverlay = ({
               className="mb-6"
               onChange={formik.handleChange}
             />
-            <Button type="submit" size="small" primary label="Save" />
+            <Button type="submit" primary label="Save" />
           </form>
           {/* <BasicForm
             inputs={inputs}

@@ -258,13 +258,12 @@ export default function Notes({ contactId }) {
               ></TextArea>
               <div className="flex flex-row justify-end">
                 <Button
-                  size="small"
                   className="mr-3"
                   white
                   label="Cancel"
                   onClick={handleCloseModal}
                 />
-                <Button type="submit" size="small" primary label="Save" />
+                <Button type="submit" primary label="Save" />
               </div>
             </form>
           </div>

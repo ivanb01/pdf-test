@@ -1,4 +1,4 @@
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import TopBar from 'components/shared/top-bar';
 import Router from 'next/router';
 import Search from 'components/shared/input/search';
@@ -113,7 +113,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   return (
     <>
-      <Menu />
+      <MainMenu />
       <TopBar
         text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
         onBackClick={() => Router.push('/campaigns')}

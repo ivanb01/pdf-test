@@ -1,4 +1,4 @@
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import ContactsSyncedOverlay from 'components/overlays/categorized-successfully/contacts-synced';
@@ -836,7 +836,7 @@ const Contacts = ({ data }) => {
 
   return (
     <>
-      <Menu />
+      <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
       <div
         className="h-full w-full flex items-center justify-center"

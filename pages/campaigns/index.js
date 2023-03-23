@@ -1,4 +1,4 @@
-import Menu from 'components/shared/menu';
+import MainMenu from 'components/shared/menu';
 import TopBar from 'components/shared/top-bar';
 import Button from 'components/shared/button';
 import Text from 'components/shared/text';
@@ -251,7 +251,7 @@ const Campaigns = () => {
 
   return (
     <>
-      <Menu fixed />
+      <MainMenu fixed />
       <TopBar text="Campaigns" />
       <div className="bg-gray10 h-auto">
         <div className="grid grid-cols-3 gap-6 p-6">

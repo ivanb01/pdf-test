@@ -18,7 +18,7 @@ const ChipInput = ({
     }
   };
   return (
-    <div className={className}>
+    <div className={`${className} cursor-text`}>
       {label && (
         <Text h4 className="text-gray6 mb-1">
           {label}{' '}
@@ -26,6 +26,7 @@ const ChipInput = ({
         </Text>
       )}
       <div
+        onClick={() => document.querySelector('.tags-input').focus()}
         className={`border border-borderColor rounded-lg bg-white px-[13px] py-2 min-h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1`}
       >
         {selections.map((selection, index) => (
@@ -38,7 +39,7 @@ const ChipInput = ({
           />
         ))}
         <input
-          className="border-none outline-none h-full focus:ring-transparent focus:border-none font-[14px] max-w-[175px] p-0"
+          className="tags-input border-none outline-none h-full focus:ring-transparent focus:border-none font-[14px] max-w-[175px] p-0"
           type="text"
           name={name ? name : id}
           id={id}

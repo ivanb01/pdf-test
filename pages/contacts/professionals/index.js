@@ -14,28 +14,17 @@ const index = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [professionalsCopy, setProfessionalsCopy] = useState();
-
-  const professionalsOptions = [
-    {
-      id: 8,
-      name: 'Vendor',
-    },
-    {
-      id: 12,
-      name: 'Agent',
-    },
-    {
-      id: 9,
-      name: 'Other',
-    },
-  ];
-
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
+  const openedTab = useSelector((state) => state.global.openedTab);
 
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
     dispatch(setContacts(filteredArray));
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, [openedTab]);
 
   useEffect(() => {
     getContacts('8,9,12,').then((data) => {
@@ -46,6 +35,7 @@ const index = () => {
     dispatch(setOpenedTab(1));
     dispatch(setOpenedSubtab(0));
   }, []);
+
   const professionalsTypeCards = [
     {
       id: 0,
@@ -111,6 +101,21 @@ const index = () => {
       name: 'Dropped',
       type: 'dropped',
       className: 'bg-indigo2',
+    },
+  ];
+
+  const professionalsOptions = [
+    {
+      id: 8,
+      name: 'Vendor',
+    },
+    {
+      id: 12,
+      name: 'Agent',
+    },
+    {
+      id: 9,
+      name: 'Other',
     },
   ];
 

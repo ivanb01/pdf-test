@@ -19,13 +19,18 @@ import Dropdown from 'components/shared/dropdown/';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactStatus } from 'store/contacts/slice';
 import { formatDateAgo } from 'global/functions';
+import toast from 'react-hot-toast';
 
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
 
-export default function ContactCard({ contact, categoryType }) {
+export default function ContactCard({
+  contact,
+  categoryType,
+  handleCardClick,
+}) {
   const router = useRouter();
   const dispatch = useDispatch();
   const status =
@@ -42,6 +47,10 @@ export default function ContactCard({ contact, categoryType }) {
       (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
     );
     const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
+    console.log(foundStatus);
+    let statusName = foundStatus.statuses.find(
+      (foundstatus) => foundstatus.id == status
+    ).name;
 
     dispatch(
       updateContactStatus({
@@ -50,6 +59,10 @@ export default function ContactCard({ contact, categoryType }) {
         status_2: statusMainTitle,
       })
     );
+    toast.success(
+      `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
+    );
+
     try {
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
@@ -114,17 +127,12 @@ export default function ContactCard({ contact, categoryType }) {
     >
       <div
         className="p-4 cursor-pointer"
-        onClick={() =>
-          router.push({
-            pathname: '/contacts/details',
-            query: { id: contact.id },
-          })
-        }
+        onClick={() => handleCardClick(contact)}
       >
         <div className="flex w-full items-center justify-between">
           <img
             className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-300"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            src={contact.image_profile_path}
           />
           <div className="flex-1 ml-2 pr-2">
             <div className="flex items-center space-x-3">
@@ -211,7 +219,15 @@ export default function ContactCard({ contact, categoryType }) {
                 .classList.add('invisible', 'opacity-0')
             }
           >
-            <Campaign className="text-gray3 w-4 h-4" />
+            <Campaign
+              className="text-gray3 w-4 h-4"
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: contact.id, campaigns: true },
+                })
+              }
+            />
             <div
               id={'tooltip-see-campaigns-' + contact.id}
               role="tooltip"

@@ -44,7 +44,7 @@ const SignIn = () => {
         <Text p className="text-gray4 mb-[50px]">
           Don't have an account?{' '}
           <Link
-            href="javascript:void(0)"
+            href="#"
             className="underline"
             onClick={() => Router.push('sign-up')}
           >
@@ -92,7 +92,7 @@ const SignIn = () => {
       <div className="flex items-center justify-between mb-6">
         <Input type="checkbox" placeholder="Remember me" value="Remember me" />
         <Link
-          href="javascript:void(0)"
+          href="#"
           className="font-medium text-sm"
           onClick={() => Router.push('sign-in/forgot-password')}
         >

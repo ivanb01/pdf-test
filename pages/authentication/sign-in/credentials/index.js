@@ -24,14 +24,13 @@ const brokerageEmails = {
 };
 
 const SignIn = () => {
-
-  const signInWithGoogle = async() => {
+  const signInWithGoogle = async () => {
     try {
-      await Auth.federatedSignIn({provider: "Google"})
+      await Auth.federatedSignIn({ provider: 'Google' });
     } catch (error) {
-      console.log('fail', error)
+      console.log('fail', error);
     }
-  }
+  };
 
   const router = useRouter();
   const [alert, setAlert] = useState({
@@ -80,7 +79,7 @@ const SignIn = () => {
     },
     validationSchema: NewPasswordRequiredSchema,
     validateOnChange: false,
-    validateOnBlur: false, 
+    validateOnBlur: false,
     onSubmit: (values) => {
       handleSubmitPass(values);
     },
@@ -297,23 +296,31 @@ const SignIn = () => {
           <div className="flex items-center justify-between my-6">
             {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
             <Link
-              href="javascript:void(0)"
+              href="#"
               className="font-medium text-sm"
               onClick={() => router.push('forgot-password')}
             >
               Forgot Password?
             </Link>
           </div>
-          
-          <Text p className="text-gray4 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2">
+
+          <Text
+            p
+            className="text-gray4 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2"
+          >
             Or continue with
-          </Text> 
+          </Text>
           <div className="flex items-center justify-between mb-6">
-            <Button social={facebookIcon} className="pointer-events-none mr-2 opacity-0"/>
-            <Button social={gmailIcon} onClick={signInWithGoogle}/>
-            <Button social={twitterIcon} className="pointer-events-none mr-2 opacity-0" />
+            <Button
+              social={facebookIcon}
+              className="pointer-events-none mr-2 opacity-0"
+            />
+            <Button social={gmailIcon} onClick={signInWithGoogle} />
+            <Button
+              social={twitterIcon}
+              className="pointer-events-none mr-2 opacity-0"
+            />
           </div>
-         
         </div>
       )}
     </Authentication>

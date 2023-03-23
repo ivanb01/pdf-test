@@ -2,8 +2,14 @@ import Image from 'next/dist/client/image';
 import { classNames } from 'global/functions';
 import { useState } from 'react';
 
-export default function Tabs({ tabs = [], className, withNumbers, ...props }) {
-  const [current, setCurrent] = useState(0);
+export default function Tabs({
+  tabs = [],
+  className,
+  withNumbers,
+  current,
+  setCurrent,
+  ...props
+}) {
   const handleSetCurrent = (id) => () => {
     setCurrent(id);
   };
