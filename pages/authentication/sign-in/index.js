@@ -123,7 +123,7 @@ const SignIn = () => {
     <Authentication>
       <div className="m-auto">
         <Text title className="text-onelineMainColor mb-[50px]">
-          Choose your br
+          Choose your brokeragee
         </Text>
         {/* <Text p className="text-gray4 mb-[50px]">
           Don't have an account?{' '}
