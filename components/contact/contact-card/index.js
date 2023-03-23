@@ -132,7 +132,7 @@ export default function ContactCard({
         <div className="flex w-full items-center justify-between">
           <img
             className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-300"
-            src={contact.image_profile_path}
+            src={contact.profile_image_path}
           />
           <div className="flex-1 ml-2 pr-2">
             <div className="flex items-center space-x-3">
