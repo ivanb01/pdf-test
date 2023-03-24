@@ -76,7 +76,10 @@ const Uncategorized = ({
       // setUncategorizedContacts(updatedContacts);
       console.log('updated contacts', updatedContacts);
       console.log('categorizedinthissession', categorizedInThisSession);
-      setCategorizedInThisSession(updatedContacts);
+      setCategorizedInThisSession((prevState) => [
+        ...prevState,
+        ...updatedContacts,
+      ]);
       afterCategorizationProcess(ids);
     });
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
