@@ -9,16 +9,15 @@ import { importSourceOptions } from 'global/variables';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import { useState } from 'react';
-import * as contactServices from 'api/contacts'
-
+import * as contactServices from 'api/contacts';
 
 const EditContactOverlay = ({
   handleClose,
   title,
   client,
-  handleFetchContactRequired
+  afterUpdate,
+  handleFetchContactRequired,
 }) => {
-
   const steps = [
     {
       id: 1,
@@ -43,7 +42,6 @@ const EditContactOverlay = ({
     setCurrentStep(currentStep - 1);
   };
 
-
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -57,16 +55,21 @@ const EditContactOverlay = ({
 
   const editClient = async () => {
     try {
-      const res = await contactServices.updateContact(client?.id, formik.values);
+      const res = await contactServices.updateContact(
+        client?.id,
+        formik.values
+      );
       console.log(formik.values, 'edit contact', client?.id);
-      handleFetchContactRequired()
+      if (handleFetchContactRequired) {
+        handleFetchContactRequired();
+      } else {
+        afterUpdate();
+      }
     } catch (error) {
-      console.log(error)
-
-    } 
+      console.log(error);
+    }
     resetForm();
-    
-  }
+  };
   return (
     <MultiStepOverlay
       handleClose={resetForm}
@@ -133,7 +136,9 @@ const EditContactOverlay = ({
                   options={importSourceOptions}
                   className="mb-6 w-52"
                   activeClasses="bg-purple1"
-                  handleSelect={(source) => formik.values.import_source = source.name}
+                  handleSelect={(source) =>
+                    (formik.values.import_source = source.name)
+                  }
                   initialSelect={formik.values.import_source}
                   selectClasses="bg-purple1 rounded-full"
                   placeHolder={formik.values.import_source ? null : 'Choose'}
@@ -141,10 +146,9 @@ const EditContactOverlay = ({
               </form>
             </div>
           </div>
-        ) }
+        )}
       </div>
     </MultiStepOverlay>
-    
   );
 };
 

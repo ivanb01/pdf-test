@@ -11,6 +11,7 @@ import { clientStatuses } from 'global/variables';
 import { getContactsSearch } from 'api/contacts';
 import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
+import EditContactOverlay from 'components/overlays/edit-client';
 
 const clientOptions = [
   {
@@ -148,6 +149,8 @@ const index = () => {
       className: 'bg-rose1',
     },
   ];
+  const [showEditContact, setShowEditContact] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
   const contacts = useSelector((state) => state.contacts.data);
@@ -170,16 +173,20 @@ const index = () => {
     setLoading(true);
   }, [openedTab]);
 
-  useEffect(() => {
-    // getContactsByCategory('4,').then((data) => {
-    // dispatch(setContacts(data.data.data));
-    // setLoading(false);
-    // });
+  const fetchClients = () => {
+    setLoading(true);
     getContacts('4,5,6,7').then((data) => {
       dispatch(setContacts(data.data));
       setContactsCopy(data.data);
       setLoading(false);
     });
+  };
+  useEffect(() => {
+    // getContactsByCategory('4,').then((data) => {
+    // dispatch(setContacts(data.data.data));
+    // setLoading(false);
+    // });
+    fetchClients();
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
   }, []);
@@ -189,6 +196,10 @@ const index = () => {
         <Loader />
       ) : (
         <Clients
+          handleCardEdit={(contact) => {
+            setShowEditContact(true);
+            setContactToEdit(contact);
+          }}
           setShowAddContactOverlay={setShowAddContactOverlay}
           onSearch={searchClients}
         />
@@ -199,6 +210,14 @@ const index = () => {
           title="Add Client"
           options={clientOptions}
           statuses={clientStatuses}
+        />
+      )}
+      {showEditContact && (
+        <EditContactOverlay
+          handleClose={() => setShowEditContact(false)}
+          title="Edit Contact"
+          client={contactToEdit}
+          afterUpdate={() => fetchClients()}
         />
       )}
     </Layout>

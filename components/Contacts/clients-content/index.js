@@ -17,7 +17,7 @@ import { clientStatuses } from 'global/variables';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
 
-const Clients = ({ setShowAddContactOverlay, onSearch }) => {
+const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState();
@@ -390,7 +390,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch }) => {
           >
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <Column key={index} status={status} categoryType="clients" />
+                <Column
+                  key={index}
+                  status={status}
+                  categoryType="clients"
+                  handleCardEdit={handleCardEdit}
+                />
               ))}
             </div>
           </SimpleBar>

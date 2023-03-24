@@ -87,6 +87,7 @@ export default function Details() {
             <ClientDetailsSidebar
               client={contact}
               handleFetchContactRequired={handleFetchContactRequired}
+              // afterUpdate={fetchContact}
             />
             <Tabs
               current={current}

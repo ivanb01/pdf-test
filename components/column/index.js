@@ -11,7 +11,7 @@ import Image from 'next/image';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
 
-const Column = ({ status, filter, categoryType }) => {
+const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const router = useRouter();
   // const [cardData, setCardData] = useState(contacts?.data || []);
   // useEffect(() => {
@@ -23,7 +23,6 @@ const Column = ({ status, filter, categoryType }) => {
   // }, [filter]);
   // console.log(status);
   const [dropdownOpened, setDropdownOpened] = useState(false);
-  const [editingContact, setEditingContact] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
   const contacts = useSelector((state) => state.contacts.data.data);
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -56,10 +55,10 @@ const Column = ({ status, filter, categoryType }) => {
 
   // console.log(filteredContacts);
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (contact) => {
     router.push({
       pathname: '/contacts/details',
-      query: { id: id },
+      query: { id: contact.id },
     });
   };
 
@@ -135,6 +134,7 @@ const Column = ({ status, filter, categoryType }) => {
         <div className="p-[16px] pb-48">
           {filteredContacts.map((contact, index) => (
             <ContactCard
+              handleCardEdit={handleCardEdit}
               handleCardClick={handleCardClick}
               contact={contact}
               key={index}
@@ -178,14 +178,6 @@ const Column = ({ status, filter, categoryType }) => {
           </ul>
         </SimpleBar>
       </div> */}
-      {editingContact && (
-        <EditClientOverlay
-          handleClose={() => setEditingContact(false)}
-          title="Edit Contact"
-          client={contact}
-          handleFetchContactRequired={handleFetchContactRequired}
-        />
-      )}
     </div>
   );
 };

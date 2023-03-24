@@ -30,6 +30,7 @@ export default function ContactCard({
   contact,
   categoryType,
   handleCardClick,
+  handleCardEdit,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -168,6 +169,7 @@ export default function ContactCard({
                 .querySelector('#tooltip-edit-contact-' + contact.id)
                 .classList.add('invisible', 'opacity-0')
             }
+            onClick={() => handleCardEdit(contact)}
           >
             <Edit className="text-gray3 w-4 h-4" />
             <div
