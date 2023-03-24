@@ -53,11 +53,12 @@ export default function Chip({
       ) : (
         <div
           onClick={onClick}
-          className={`${selectedStatus && 'bg-purple1'} ${
-            secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'
-          } border ${
-            !notClickable && 'hover:bg-purple1 transition-all cursor-pointer'
-          } border-borderColor inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
+          className={`${
+            selectedStatus && 'border-lightBlue3 text-lightBlue3'
+          } ${secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'} ${
+            !notClickable &&
+            'hover:border-lightBlue3 hover:border transition-all cursor-pointer'
+          }  border inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
         >
           {label}
           {closable && (

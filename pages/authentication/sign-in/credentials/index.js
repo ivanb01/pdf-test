@@ -142,7 +142,10 @@ const SignIn = () => {
   const handleSubmit = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
-      const user = await Auth.signIn(values.userName, values.password);
+      const user = await Auth.signIn(
+        values.userName.toLowerCase(),
+        values.password
+      );
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
         setTimeout(() => {
