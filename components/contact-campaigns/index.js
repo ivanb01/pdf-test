@@ -11,6 +11,7 @@ import SimpleBar from 'simplebar-react';
 import Button from 'components/shared/button';
 import UnassignOverlay from 'components/overlays/unassign';
 import AssignCampaignOverlay from 'components/overlays/assign-campaign';
+import noClientCampaigns from 'public/images/no-client-campaigns.svg';
 import {
   getCampaign,
   getCampaignsByCategory,
@@ -148,35 +149,48 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               </div>
               <div className="h-auto w-auto bg-gray10">
                 <div className=" border border-gray-200 overflow-hidden relative">
-                  <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
-                    <Table
-                      tableFor="contact-campaigns"
-                      handleSelectContact={handleSelectContact}
-                      handleAction={(id, action) => {
-                        if (action == 'unassign') {
-                          setContactToUnassign(id);
-                          setShowUnassignOverlay(true);
-                        } else {
-                          setContactToAssign(id);
-                          setShowAssignOverlay(true);
+                  {currentCampaign.contacts.length ? (
+                    <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
+                      <Table
+                        tableFor="contact-campaigns"
+                        handleSelectContact={handleSelectContact}
+                        handleAction={(id, action) => {
+                          if (action == 'unassign') {
+                            setContactToUnassign(id);
+                            setShowUnassignOverlay(true);
+                          } else {
+                            setContactToAssign(id);
+                            setShowAssignOverlay(true);
+                          }
+                        }}
+                        data={
+                          currentButton == 0
+                            ? currentCampaign.contacts.filter(
+                                (contact) =>
+                                  contact.contact_campaign_status == 'assigned'
+                              )
+                            : currentCampaign.contacts.filter(
+                                (contact) =>
+                                  contact.contact_campaign_status ==
+                                    'unassigned' ||
+                                  contact.contact_campaign_status ==
+                                    'never_assigned'
+                              )
                         }
-                      }}
-                      data={
-                        currentButton == 0
-                          ? currentCampaign.contacts.filter(
-                              (contact) =>
-                                contact.contact_campaign_status == 'assigned'
-                            )
-                          : currentCampaign.contacts.filter(
-                              (contact) =>
-                                contact.contact_campaign_status ==
-                                  'unassigned' ||
-                                contact.contact_campaign_status ==
-                                  'never_assigned'
-                            )
-                      }
-                    />
-                  </SimpleBar>
+                      />
+                    </SimpleBar>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+                      <Image src={noClientCampaigns}></Image>
+                      <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                        You don’t have any client assigned here
+                      </Text>
+                      <Text p className="text-gray4 relative text-center mb-6">
+                        Clients that are part of this campaign will be listed
+                        here
+                      </Text>
+                    </div>
+                  )}
                   {selectedContacts.length > 1 && (
                     <div
                       style={{ zIndex: '99999 !important' }}
