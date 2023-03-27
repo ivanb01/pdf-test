@@ -159,7 +159,6 @@ const AddClientManuallyOverlay = ({
   };
   return (
     <MultiStepOverlay
-      className="max-w-[635px]"
       handleClose={handleClose}
       steps={steps}
       currentStep={currentStep}
