@@ -16,6 +16,7 @@ import GlobalAlert from 'components/shared/alert/global-alert';
 import { clientStatuses } from 'global/variables';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
+import Chip from 'components/shared/chip';
 
 const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
@@ -286,6 +287,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
   ];
 
+  const [showFiltersBar, setShowFiltersBar] = useState(false);
+  const [filtersArray, setFiltersArray] = useState([]);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
   const [currentButton, setCurrentButton] = useState(0);
@@ -306,9 +309,10 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     // filters = category: ['today', 'yesterday'], last_comm: ['tomorrow','etc']
     // contacts = [{last_comm: today}, {last_comm: today}, {last_comm: today}]
     if (filtersCleared) {
-      console.log('filters cleared');
       dispatch(updateContacts(contactsOriginal));
       setOpen(false);
+      setFiltersCleared(false);
+      setFiltersArray([]);
       return;
     }
     let filteredContacts = [];
@@ -318,9 +322,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
       );
     });
     dispatch(updateContacts(filteredContacts));
+    setFiltersArray([].concat(...Object.values(filters)));
+    setShowFiltersBar(true);
     setOpen(false);
   };
   const handleFilterClick = (selectedFilter, category) => () => {
+    console.log(selectedFilter, category);
     let filtersCopy = { ...filters };
     if (filtersCopy[category]) {
       if (filtersCopy[category].includes(selectedFilter)) {
@@ -336,6 +343,9 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     setFilters(filtersCopy);
   };
 
+  const removeChip = (chip) => {
+    console.log(chip);
+  };
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -379,6 +389,20 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
             </div>
           </div>
         </div>
+        {/* {console.log(filtersArray)} */}
+        {showFiltersBar && filtersArray.length > 0 && (
+          <div className="w-full border-t border-gray2 px-6 py-3">
+            <div className="flex items-center">
+              <div className="mr-2">
+                {filtersArray.length}{' '}
+                {filtersArray.length == 1 ? 'result' : 'results'} for:
+              </div>
+              {filtersArray.map((filter, index) => (
+                <Chip key={index} active label={filter} className="mr-1" />
+              ))}
+            </div>
+          </div>
+        )}
         {currentButton == 0 ? (
           <SimpleBar
             autoHide={true}

@@ -12,6 +12,7 @@ export default function Chip({
   secondary,
   notClickable,
   closable,
+  active,
   removeChip,
   ...props
 }) {
@@ -58,12 +59,18 @@ export default function Chip({
           } ${secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'} ${
             !notClickable &&
             'hover:border-lightBlue3 hover:border transition-all cursor-pointer'
-          }  border inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
+          }  ${
+            active && 'border-lightBlue3 text-lightBlue3'
+          } border inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
         >
           {label}
           {closable && (
-            <span className="" onClick={() => removeChip(label)}>
-              <Close className="h-3 w-3 text-gray4" />
+            <span className="ml-1" onClick={() => removeChip(label)}>
+              <Close
+                className={`h-3 w-3 ${
+                  active ? 'text-lightBlue3' : 'text-gray4'
+                }`}
+              />
             </span>
           )}
         </div>
