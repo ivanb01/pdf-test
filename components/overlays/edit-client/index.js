@@ -10,8 +10,10 @@ import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import { useState } from 'react';
 import * as contactServices from 'api/contacts';
+import Overlay from 'components/shared/overlay';
 
 const EditContactOverlay = ({
+  className,
   handleClose,
   title,
   client,
@@ -28,18 +30,10 @@ const EditContactOverlay = ({
     // { id: 2, name: 'Type and Status', href: '#' },
   ];
 
+  const [loading, setLoading] = useState(false);
+
   const resetForm = () => {
     handleClose();
-  };
-
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
   };
 
   //* FORMIK *//
@@ -71,58 +65,61 @@ const EditContactOverlay = ({
     resetForm();
   };
   return (
-    <MultiStepOverlay
-      handleClose={resetForm}
-      steps={steps}
-      currentStep={currentStep}
-      nextStep={nextStep}
-      prevStep={prevStep}
-      changeStep={(arg) => setCurrentStep(arg)}
+    <Overlay
+      // className="w-[632px]"
+      handleCloseOverlay={resetForm}
       title={title}
-      submit={editClient}
+      className={className}
+      // className={className}
+      // handleClose={resetForm}
+      // steps={steps}
+      // currentStep={currentStep}
+      // nextStep={nextStep}
+      // prevStep={prevStep}
+      // changeStep={(arg) => setCurrentStep(arg)}
+      // title={title}
+      // submit={editClient}
     >
-      <div className="step">
-        {currentStep == 1 && (
-          <div>
-            <div className="flex items-center mb-6">
-              <Avatar size="large" className="mr-4" />
-              <Button white label="Edit" />
-            </div>
-            <div>
-              <form onSubmit={formik.handleSubmit}>
-                <Input
-                  type="text"
-                  label="First Name"
-                  id="first_name"
-                  className="mb-6 w-[50%] pr-3 float-left"
-                  onChange={formik.handleChange}
-                  value={formik.values.first_name}
-                />
-                <Input
-                  type="text"
-                  label="Last Name"
-                  id="last_name"
-                  className="mb-6 w-[50%] pl-3 float-left"
-                  onChange={formik.handleChange}
-                  value={formik.values.last_name}
-                />
-                <Input
-                  type="email"
-                  label="Email"
-                  id="email"
-                  className="mb-6 w-[50%] pr-3 float-left"
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                />
-                <Input
-                  type="text"
-                  label="Phone"
-                  id="phone_number"
-                  className="mb-6 w-[50%] pl-3 float-left"
-                  onChange={formik.handleChange}
-                  value={formik.values.phone_number}
-                />
-                {/* <Input
+      <div className="p-5">
+        <div className="flex items-center mb-6">
+          <Avatar size="large" className="mr-4" />
+          <Button white label="Edit" />
+        </div>
+        <div>
+          <form onSubmit={formik.handleSubmit}>
+            <Input
+              type="text"
+              label="First Name"
+              id="first_name"
+              className="mb-6 w-[50%] pr-3 float-left"
+              onChange={formik.handleChange}
+              value={formik.values.first_name}
+            />
+            <Input
+              type="text"
+              label="Last Name"
+              id="last_name"
+              className="mb-6 w-[50%] pl-3 float-left"
+              onChange={formik.handleChange}
+              value={formik.values.last_name}
+            />
+            <Input
+              type="email"
+              label="Email"
+              id="email"
+              className="mb-6 w-[50%] pr-3 float-left"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+            />
+            <Input
+              type="text"
+              label="Phone"
+              id="phone_number"
+              className="mb-6 w-[50%] pl-3 float-left"
+              onChange={formik.handleChange}
+              value={formik.values.phone_number}
+            />
+            {/* <Input
                   type="text"
                   label="Source"
                   id="import_source"
@@ -130,25 +127,43 @@ const EditContactOverlay = ({
                   onChange={formik.handleChange}
                   value={formik.values.import_source}
                 /> */}
-                <Dropdown
-                  label="Source"
-                  activeIcon={false}
-                  options={importSourceOptions}
-                  className="mb-6 w-52"
-                  activeClasses="bg-purple1"
-                  handleSelect={(source) =>
-                    (formik.values.import_source = source.name)
-                  }
-                  initialSelect={formik.values.import_source}
-                  selectClasses="bg-purple1 rounded-full"
-                  placeHolder={formik.values.import_source ? null : 'Choose'}
-                />
-              </form>
-            </div>
-          </div>
-        )}
+            <Dropdown
+              label="Source"
+              activeIcon={false}
+              options={importSourceOptions}
+              className="mb-6 w-52"
+              activeClasses="bg-purple1"
+              handleSelect={(source) =>
+                (formik.values.import_source = source.name)
+              }
+              initialSelect={formik.values.import_source}
+              selectClasses="bg-purple1 rounded-full"
+              placeHolder={formik.values.import_source ? null : 'Choose'}
+            />
+          </form>
+        </div>
       </div>
-    </MultiStepOverlay>
+      <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
+        <div></div>
+        <div>
+          <Button
+            className="mr-3"
+            label="Cancel"
+            white
+            onClick={handleClose}
+          ></Button>
+          <Button
+            label="Save"
+            loading={loading}
+            // rightIcon={<ArrowRightIcon height={15} />}
+            onClick={() => {
+              setLoading(true);
+              editClient();
+            }}
+          ></Button>
+        </div>
+      </div>
+    </Overlay>
   );
 };
 

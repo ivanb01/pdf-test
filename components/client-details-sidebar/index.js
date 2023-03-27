@@ -37,6 +37,7 @@ export default function ClientDetailsSidebar({
           handleClose={() => setEditingContact(false)}
           title="Edit Contact"
           client={client}
+          className="w-[635px]"
           handleFetchContactRequired={handleFetchContactRequired}
         />
       )}

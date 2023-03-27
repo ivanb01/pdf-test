@@ -217,6 +217,7 @@ const index = () => {
           handleClose={() => setShowEditContact(false)}
           title="Edit Contact"
           client={contactToEdit}
+          className="w-[635px]"
           afterUpdate={() => fetchClients()}
         />
       )}
