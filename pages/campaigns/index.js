@@ -13,6 +13,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Router from 'next/router';
 import * as campaignServices from 'api/campaign';
 import Loader from 'components/shared/loader';
+import Mail from '@mui/icons-material/Mail';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -267,7 +268,7 @@ const Campaigns = () => {
             </div>
             {loadingEvents ? (
               <Loader />
-            ) : (
+            ) : !campaignsEvents.thisWeek.length ? (
               <SimpleBar
                 autoHide={true}
                 className="overflow-x-hidden"
@@ -285,6 +286,16 @@ const Campaigns = () => {
                   handleSelectContact={handleSelectContact}
                 />
               </SimpleBar>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
+                <Mail className="w-10 h-10 text-gray3"></Mail>
+                <Text h3 className="text-gray7 mt-4 mb-2 text-center">
+                  There are no upcoming events on this week!
+                </Text>
+                <Text p className="text-gray4 relative text-center">
+                  All upcoming events for this week will be shown here.
+                </Text>
+              </div>
             )}
           </div>
           <div>
