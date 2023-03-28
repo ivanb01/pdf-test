@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Button = ({
   children,
