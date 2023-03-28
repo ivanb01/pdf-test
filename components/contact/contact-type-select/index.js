@@ -7,7 +7,7 @@ const ContactTypeSelect = ({ type, setSelectedType, selectedType }) => {
         {type.icon}
         <div className="text-lightBlue3 text-xs uppercase">{type.name}</div>
       </div>
-      <div className="font-normal text-xs text-gray4 border-b pb-2 mb-3 border-gray2">
+      <div className="min-h-[40px] font-normal text-xs text-gray4 border-b pb-2 mb-3 border-gray2">
         {type.description}
       </div>
       <div className="contact-type">

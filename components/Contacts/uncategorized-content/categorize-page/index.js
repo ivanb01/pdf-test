@@ -131,7 +131,7 @@ const CategorizePage = ({
   return (
     <>
       <div
-        className={`border border-gray-200 overflow-hidden relative h-full w-3/12 pb-[72px]`}
+        className={`border border-gray-200 overflow-hidden relative h-full w-[20%] pb-[72px]`}
       >
         <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
           <Table
@@ -145,7 +145,7 @@ const CategorizePage = ({
       </div>
       <div
         className={`bg-white pb-[72px] border-t border-gray-200 relative ${
-          showCategorizedSection ? 'w-6/12' : 'w-9/12'
+          showCategorizedSection ? 'w-[55%]' : 'w-[80%]'
         } `}
       >
         {selectedUncategorized?.length > 0 ? (
@@ -234,7 +234,7 @@ const CategorizePage = ({
 
       {showCategorizedSection && (
         <div
-          className={`border border-gray-200 overflow-hidden relative h-full w-3/12 pb-[72px]`}
+          className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}
         >
           {categorizedInThisSession?.length > 0 ? (
             <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
