@@ -824,12 +824,12 @@ const Contacts = ({ data }) => {
           icon: <Help className="h-4 w-4" />,
           count: 10,
         },
-        {
-          id: 2,
-          name: 'Trash',
-          icon: <Delete className="h-4 w-4" />,
-          count: 5,
-        },
+        // {
+        //   id: 2,
+        //   name: 'Trash',
+        //   icon: <Delete className="h-4 w-4" />,
+        //   count: 5,
+        // },
       ],
     },
   ]);

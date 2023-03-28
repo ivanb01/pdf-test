@@ -104,12 +104,12 @@ const Layout = ({ children }) => {
           icon: <Help className="h-4 w-4" />,
           count: 0,
         },
-        {
-          id: 2,
-          name: 'Trash',
-          icon: <Delete className="h-4 w-4" />,
-          count: 0,
-        },
+        // {
+        //   id: 2,
+        //   name: 'Trash',
+        //   icon: <Delete className="h-4 w-4" />,
+        //   count: 0,
+        // },
       ],
     },
   ]);

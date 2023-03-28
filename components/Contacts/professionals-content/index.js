@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
+import Chip from 'components/shared/chip';
 
 const Professionals = ({
   professionalsTypeCards,
@@ -22,6 +23,8 @@ const Professionals = ({
   onSearch,
 }) => {
   const dispatch = useDispatch();
+  const [showFiltersBar, setShowFiltersBar] = useState(false);
+  const [filtersArray, setFiltersArray] = useState([]);
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState({});
   const [hideFilter, setHideFilter] = useState(false);
@@ -85,6 +88,7 @@ const Professionals = ({
     if (filtersCleared) {
       console.log('filters cleared');
       dispatch(updateContacts(contactsOriginal));
+      setFiltersArray([]);
       setOpen(false);
       return;
     }
@@ -94,6 +98,8 @@ const Professionals = ({
         filters[key].includes(contact[key])
       );
     });
+    setShowFiltersBar(true);
+    setFiltersArray([].concat(...Object.values(filters)));
     dispatch(updateContacts(filteredContacts));
     setOpen(false);
   };
@@ -150,6 +156,19 @@ const Professionals = ({
             </div>
           </div>
         </div>
+        {showFiltersBar && filtersArray.length > 0 && (
+          <div className="w-full border-t border-gray2 px-6 py-3">
+            <div className="flex items-center">
+              <div className="mr-2">
+                {filtersArray.length}{' '}
+                {filtersArray.length == 1 ? 'result' : 'results'} for:
+              </div>
+              {filtersArray.map((filter, index) => (
+                <Chip key={index} active label={filter} className="mr-1" />
+              ))}
+            </div>
+          </div>
+        )}
         {currentButton == 0 ? (
           <SimpleBar
             autoHide={true}

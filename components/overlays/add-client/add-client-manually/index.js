@@ -246,7 +246,7 @@ const AddClientManuallyOverlay = ({
             <Radio
               options={options}
               label="What kind of contact is this for you?"
-              selectedContactType={formik.values.selectedContactType}
+              selectedContactType={formikStep2.values.selectedContactType}
               changeContactType={(e) =>
                 setFieldValue2('selectedContactType', e)
               }
@@ -257,7 +257,7 @@ const AddClientManuallyOverlay = ({
               errorText={errors2.selectedContactType}
             />
             <StatusSelect
-              selectedStatus={formik.values.selectedStatus}
+              selectedStatus={formikStep2.values.selectedStatus}
               setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
               statuses={statuses}
