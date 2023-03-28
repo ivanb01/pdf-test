@@ -178,7 +178,7 @@ const index = () => {
     getContacts('4,5,6,7').then((data) => {
       dispatch(setContacts(data.data));
       setContactsCopy(data.data);
-      setLoading(false);
+      // setLoading(false);
     });
   };
   useEffect(() => {
