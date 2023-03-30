@@ -36,12 +36,12 @@ const MainMenu = ({
     router.push('/authentication/sign-in');
   };
 
-  const contacts = useSelector((state) => state.contacts.data.data);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const showUncategorizedButton = () => {
     return (
-      contacts &&
-      contacts.filter((contact) => contact.category_1 == 'Uncategorized')
+      allContacts &&
+      allContacts.filter((contact) => contact.category_1 == 'Uncategorized')
         .length > 0
     );
   };
