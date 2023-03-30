@@ -114,7 +114,11 @@ export const searchContacts = (originalArray, term) => {
 };
 
 export const formatDateMDY = (date) => {
-  return moment(date).format("MM/DD/YYY")
+  return moment(date).format("MM/DD/YYYY")
+};
+
+export const formatDateLL = (date) => {
+  return moment(date).format("LL")
 };
 
 export const formatDateLT = (date) => {

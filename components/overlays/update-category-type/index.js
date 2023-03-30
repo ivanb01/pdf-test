@@ -14,20 +14,23 @@ const UpdateCategoryType = ({
   handleFetchContactRequired,
 }) => {
   const [selectedContactType, setSelectedContactType] = useState(
-    contact.category_id
+    contact?.category_id
   );
-  const [selectedStatus, setSelectedStatus] = useState(contact.status_id);
+  const [selectedStatus, setSelectedStatus] = useState(contact?.status_id);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const editContact = async () => {
+    setLoadingButton(true);
     try {
       const contactToEdit = {
         category_id: selectedContactType,
         status_id: selectedStatus,
       };
-      await contactServices.updateContact(contact.id, contactToEdit);
+      await contactServices.updateContact(contact?.id, contactToEdit);
+      setLoadingButton(false);
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
 
@@ -75,9 +78,9 @@ const UpdateCategoryType = ({
                 primary
                 label="Save Changes"
                 loading={loadingButton}
-                onClick={() => {
-                  setLoadingButton(true);
-                }}
+                // onClick={() => {
+                //   setLoadingButton(true);
+                // }}
               />
             </div>
           </form>

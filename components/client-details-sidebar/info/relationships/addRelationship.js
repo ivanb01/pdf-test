@@ -11,12 +11,41 @@ import Dropdown from 'components/shared/dropdown';
 import { Transition } from '@headlessui/react';
 import * as contactServices from 'api/contacts';
 import { relationshipsTypes } from 'global/variables';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import NotificationAlert from 'components/shared/alert/notification-alert';
+
 
 const AddRelationshipModal = ({
   handleClose,
   contactId,
   handleFetchRelationships,
 }) => {
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  const AddRelationshipSchema = Yup.object().shape({
+    related_to_contact_id: Yup.string().required('No selected contact'),
+    relationship_name: Yup.string().required('Choose relationship type'),
+  });
+
+  //* FORMIK *//
+  const formik = useFormik({
+    initialValues: {
+      related_to_contact_id: '',
+      relationship_name: '',
+    },
+    validationSchema: AddRelationshipSchema,
+    onSubmit: async (values, { setSubmitting }) => {      
+      await addRelationship(values);
+      handleFetchRelationships();
+      handleCloseAddModal();
+    },
+  });
+
+  const { errors, touched } = formik;
+
+
+
   // const [relationshipsToAdd, setRelationshipsToAdd] = useState([]);
   const [relationshipToAdd, setRelationshipToAdd] = useState(null);
   const [contactsSearched, setContactsSearched] = useState([]);
@@ -29,7 +58,6 @@ const AddRelationshipModal = ({
         search_term: searchKey,
         exclude_contact_id: contactId,
       });
-      console.log('contcts', data);
       const filterData = data.map((item) => ({
         id: item.id,
         name: `${item.first_name} ${item.last_name}`,
@@ -68,6 +96,8 @@ const AddRelationshipModal = ({
     });
     setSearchKey('');
     setContactsDropdown(false);
+    formik.setFieldValue('related_to_contact_id', contact.id);
+
   };
 
   const handleChooseRelationshipType = (relationshipType) => {
@@ -78,12 +108,18 @@ const AddRelationshipModal = ({
       ...relationshipToAdd,
       relationship_type: relationshipType.name,
     });
+    formik.setFieldValue('relationship_name', relationshipType.name);
+
   };
 
   const removeRelationship = () => {
     // const filteredArray = relationshipsToAdd.filter(item => item.relationship_id !== id)
     // setRelationshipsToAdd(filteredArray)
     setRelationshipToAdd(null);
+    formik.setValues({
+      relationship_id: '',
+      relationship_name: '',
+    });
   };
 
   const handleCloseAddModal = () => {
@@ -91,29 +127,36 @@ const AddRelationshipModal = ({
     setSearchKey('');
     setContactsDropdown(false);
     setRelationshipToAdd(null);
+    formik.setValues({
+      related_to_contact_id: '',
+      relationship_name: '',
+    });
   };
 
-  const addRelationship = async () => {
+  const addRelationship = async (values) => {
+    setLoadingButton(true);
     try {
-      const relationship = {
-        related_to_contact_id: relationshipToAdd.relationship_id,
-        relationship_name: relationshipToAdd.relationship_type,
-      };
-      const { data } = await contactServices.addContactRelationship(
+      // const relationship = {
+      //   related_to_contact_id: relationshipToAdd.relationship_id,
+      //   relationship_name: relationshipToAdd.relationship_type,
+      // };
+      await contactServices.addContactRelationship(
         contactId,
-        relationship
+        values
       );
+      setLoadingButton(false);
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await addRelationship();
-    handleFetchRelationships();
-    handleCloseAddModal();
-  };
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   await addRelationship();
+  //   handleFetchRelationships();
+  //   handleCloseAddModal();
+  // };
 
   return (
     <Overlay
@@ -175,6 +218,9 @@ const AddRelationshipModal = ({
             </div>
           </Transition>
         </div>
+
+        {errors.related_to_contact_id  && <NotificationAlert className='mt-2 p-2' type={'error'}>{errors.related_to_contact_id}</NotificationAlert>}
+
         <div className="my-2 min-h-[100px]">
           {relationshipToAdd && (
             <div className="flex flex-row p-3 bg-gray-50 group">
@@ -213,7 +259,10 @@ const AddRelationshipModal = ({
             </div>
           )}
         </div>
-        <form onSubmit={handleSubmit}>
+
+        {!errors.related_to_contact_id && errors.relationship_name && touched.relationship_name && <NotificationAlert className='mt-2 p-2' type={'error'}>{errors.relationship_name}</NotificationAlert>}
+
+        <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-row justify-end mt-5">
             <Button
               className="mr-3 "
@@ -221,7 +270,12 @@ const AddRelationshipModal = ({
               label="Cancel"
               onClick={handleCloseAddModal}
             />
-            <Button type="submit" primary label="Save" />
+            <Button 
+              type="submit" 
+              primary 
+              label="Save" 
+              loading={loadingButton}
+              />
           </div>
         </form>
       </div>

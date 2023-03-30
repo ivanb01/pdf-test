@@ -17,7 +17,6 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
       const res = await contactServices.updateContact(contact?.id, {
         status_id: dropped_status_id,
       });
-      console.log('delete contact', contact?.id);
       contact?.category_1 == 'Client' && router.push('/contacts/clients');
       contact?.category_1 == 'Professional' &&
         router.push('/contacts/professionals');

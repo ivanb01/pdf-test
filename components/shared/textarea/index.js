@@ -1,3 +1,5 @@
+import NotificationAlert from "../alert/notification-alert";
+
 const TextArea = ({
   rows,
   name,
@@ -7,6 +9,8 @@ const TextArea = ({
   label,
   optional,
   className,
+  error,
+  errorText,
   ...props
 }) => {
   return (
@@ -30,6 +34,11 @@ const TextArea = ({
           className={`resize-none ${className} max-h-[65px] shadow-sm focus:ring-primaryOxford focus:border-primaryOxford block w-full sm:text-sm border-gray-300 rounded-md`}
         />
       </div>
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 };

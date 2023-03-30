@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';
 import { setContacts } from 'store/contacts/slice';
-import { clientStatuses } from 'global/variables';
 import { formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';
@@ -247,7 +246,7 @@ const AddClientManuallyOverlay = ({
             <Radio
               options={options}
               label="What kind of contact is this for you?"
-              selectedContactType={formik.values.selectedContactType}
+              selectedContactType={formikStep2.values.selectedContactType}
               changeContactType={(e) =>
                 setFieldValue2('selectedContactType', e)
               }
@@ -258,7 +257,7 @@ const AddClientManuallyOverlay = ({
               errorText={errors2.selectedContactType}
             />
             <StatusSelect
-              selectedStatus={formik.values.selectedStatus}
+              selectedStatus={formikStep2.values.selectedStatus}
               setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
               statuses={statuses}

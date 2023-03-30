@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlusCircleIcon } from '@heroicons/react/outline';
-import { MinusCircleIcon } from '@heroicons/react/solid';
-import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
-// import { inputs, notes } from './list';
 import Button from 'components/shared/button';
 import Input from 'components/shared/input';
 import { useFormik } from 'formik';
@@ -18,14 +14,18 @@ import Overlay from 'components/shared/overlay';
 import * as contactServices from 'api/contacts';
 import noNotes from 'public/images/notes-empty.svg';
 import Image from 'next/image';
+import * as Yup from 'yup';
+import { formatDateLL } from 'global/functions';
+
 
 export default function Notes({ contactId }) {
   const [noteModal, setNoteModal] = useState(false);
   const [formType, setFormType] = useState('Add');
   const [noteId, setNoteId] = useState(0);
-  const [notes, setNotes] = useState({});
+  const [notes, setNotes] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [fetchRequired, setFetchRequired] = useState({});
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const openAddModal = () => {
     setFormType('Add');
@@ -36,56 +36,64 @@ export default function Notes({ contactId }) {
     setNoteModal(true);
   };
 
+  const AddNoteSchema = Yup.object().shape({
+    title: Yup.string().required('Title required'),
+    description: Yup.string().required('Description required'),
+  });
+
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
     },
+    validationSchema: AddNoteSchema,
     onSubmit: (values) => {
       formType === 'Add' ? handleAddSubmit(values) : handleUpdateSubmit(values);
     },
   });
 
+  const { errors, touched, resetForm } = formik;
+
   const handleAddSubmit = async (values) => {
+    setLoadingButton(true);
     try {
-      const res = await contactServices.addContactNote(contactId, values);
-      console.log('res', res);
-      console.log('Add', 'note_id', noteId, 'values', values);
-      handleCloseModal();
+      await contactServices.addContactNote(contactId, values);
       setFetchRequired((prev) => !prev);
+      // setNotes(prev=>[...prev, tagToAdd])
+      setLoadingButton(false);
+      handleCloseModal();
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
 
   const handleUpdateSubmit = async (values) => {
+    setLoadingButton(true);
     try {
-      const { data } = await contactServices.updateContactNote(
+      await contactServices.updateContactNote(
         contactId,
         noteId,
         values
       );
-      console.log('Update', 'note_id', noteId, 'values', values);
-      handleCloseModal();
       setFetchRequired((prev) => !prev);
+      setLoadingButton(false);
+      handleCloseModal();
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
 
   const handleCloseModal = () => {
-    setFormType('Add');
-    formik.setValues({
-      title: '',
-      description: '',
-    });
     setNoteModal(false);
     setNoteId(0);
+    setFormType('Add');
+    resetForm();
   };
 
   const handleEditNote = (note) => {
-    console.log('to edit', note);
     formik.setValues({
       title: note.title,
       description: note.description,
@@ -96,11 +104,11 @@ export default function Notes({ contactId }) {
 
   const handleDeleteNote = async (note) => {
     try {
-      const { data } = await contactServices.deleteContactNote(
+      setNotes(prev=>prev.filter((item) => item.id !== note.id))
+      await contactServices.deleteContactNote(
         contactId,
         note.id
       );
-      console.log('Delete', 'note_id', note.id);
       setFetchRequired((prev) => !prev);
     } catch (error) {
       console.log(error);
@@ -145,22 +153,21 @@ export default function Notes({ contactId }) {
   };
 
   useEffect(() => {
-    console.log('test from notes');
     fetchContactNotes();
   }, [fetchRequired, searchTerm, contactId]);
 
   return (
     <>
       <div className="details-tabs-fixed-height overflow-y-scroll">
-        {notes.length == 0 ? (
+        {notes && (notes.length == 0 && !searchTerm ? (
           <div className="h-full">
             <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
               <Image src={noNotes}></Image>
               <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-                You don’t have any notes for this client yet
+                You don’t have any notes for this contact yet
               </Text>
               <Text p className="text-gray4 relative text-center mb-6">
-                All notes about this client will be placed here.
+                All notes about this contact will be placed here.
               </Text>
               <Button
                 primary
@@ -200,13 +207,13 @@ export default function Notes({ contactId }) {
                       <div className="flex justify-between">
                         <div className="pr-12">
                           <Text p className="mb-1">
-                            {note.title}
+                            {note?.title}
                           </Text>
                           <Text p className="text-gray4">
-                            {note.description}
+                            {note?.description}
                           </Text>
-                          <Text className="text-gray4 text-xs mt-2 italic">
-                            {note.date}
+                          <Text className="text-gray4 text-xs mt-2">
+                            {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
                           </Text>
                         </div>
                         <div className="flex">
@@ -214,6 +221,7 @@ export default function Notes({ contactId }) {
                             types={types}
                             icon={<More className="w-5" />}
                             data={note}
+                            positionClass="right-0"
                           />
                           {/* <a href="" className="mr-4">
                             <Edit className="w-4" />
@@ -230,7 +238,7 @@ export default function Notes({ contactId }) {
             </div>
             {/* <hr className="my-7" /> */}
           </>
-        )}
+        ))}
       </div>
       {noteModal && (
         <Overlay
@@ -247,23 +255,32 @@ export default function Notes({ contactId }) {
                 className="mb-6"
                 onChange={formik.handleChange}
                 value={formik.values.title}
+                error={errors.title && touched.title}
+                errorText={errors.title}
               />
               <TextArea
-                className="mb-6 min-h-[120px]"
+                className="min-h-[120px]"
                 // height="min-h-[120px]"
                 id="description"
                 label="Description"
                 handleChange={formik.handleChange}
                 value={formik.values.description}
+                error={errors.description && touched.description}
+                errorText={errors.description}
               ></TextArea>
-              <div className="flex flex-row justify-end">
+              <div className="flex flex-row justify-end mt-6">
                 <Button
                   className="mr-3"
                   white
                   label="Cancel"
                   onClick={handleCloseModal}
                 />
-                <Button type="submit" primary label="Save" />
+                <Button 
+                  type="submit" 
+                  primary 
+                  label="Save" 
+                  loading={loadingButton}
+                  />
               </div>
             </form>
           </div>

@@ -1,45 +1,30 @@
-import { useState } from 'react';
+import { Calculate } from '@mui/icons-material';
 import ClientCard from './card';
 import Info from './info';
-import DeleteClientOverlay from 'components/overlays/delete-client';
-import EditClientOverlay from 'components/overlays/edit-client';
+import CategoryTypes from './info/categoryTypes';
+import Relationships from './info/relationships/relationships';
 
 export default function ClientDetailsSidebar({
   client,
   handleFetchContactRequired,
 }) {
-  const [editingContact, setEditingContact] = useState(false);
-  const [deletingClient, setDeletingContact] = useState(false);
-
   return (
-    <div className="client-details-wrapper z-10 h-auto w-[550px]">
+    <div className="client-details-wrapper z-10 w-[550px]">
       <ClientCard
-        handleDeleteClient={(value) => setDeletingContact(value)}
-        handleEditContact={(value) => {
-          setEditingContact(value);
-        }}
-        client={client}
-      />
-      <div className="border-b border-gray-2" />
-      <Info
         client={client}
         handleFetchContactRequired={handleFetchContactRequired}
       />
-
-      {deletingClient && (
-        <DeleteClientOverlay
-          handleCloseOverlay={() => setDeletingContact(false)}
-          contact={client}
-        />
-      )}
-      {editingContact && (
-        <EditClientOverlay
-          handleClose={() => setEditingContact(false)}
-          title="Edit Contact"
+      <CategoryTypes
+          client={client}
+          handleFetchContactRequired={handleFetchContactRequired}
+      />
+      <div className="overflow-y-scroll" style={{ height: 'calc(100vh - 350px)' }}>
+        <Info
           client={client}
           handleFetchContactRequired={handleFetchContactRequired}
         />
-      )}
+        <Relationships contactId={client?.id} />
+      </div>
     </div>
   );
 }
