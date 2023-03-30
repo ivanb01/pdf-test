@@ -12,14 +12,14 @@ export default function InfoCard({ label, content, iconContent }) {
           content.map((chip) => (
             <Chip notClickable secondary key={chip} label={chip} />
           ))
-        ) : (
-          iconContent ?
+        ) : iconContent ? (
           <div className="flex flex-row items-center">
             <Text className="text-gray-900 pl-3" p>
               {content}
             </Text>
             {iconContent}
-          </div> : 
+          </div>
+        ) : (
           <Text className="text-gray-900 pl-3" p>
             {content}
           </Text>

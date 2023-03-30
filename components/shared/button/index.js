@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ChevronRightIcon } from '@heroicons/react/solid';
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Button = ({
   children,
@@ -136,8 +136,10 @@ const Button = ({
       <button
         type="button"
         className={`${
-          active ? 'bg-lightBlue1 text-lightBlue5' : 'bg-gray1'
-        }  transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
+          active
+            ? 'bg-lightBlue1 text-lightBlue5 border-lightBlue3'
+            : 'bg-gray1'
+        }  border transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
         onClick={onClick}
       >
         {children ? children : label}

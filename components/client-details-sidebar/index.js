@@ -21,6 +21,7 @@ export default function ClientDetailsSidebar({
       <div className="overflow-y-scroll" style={{ height: 'calc(100vh - 350px)' }}>
         <Info
           client={client}
+          className="w-[635px]"
           handleFetchContactRequired={handleFetchContactRequired}
         />
         <Relationships contactId={client?.id} />

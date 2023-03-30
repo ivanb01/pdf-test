@@ -13,30 +13,41 @@ import * as contactServices from 'api/contacts';
 import { FormatLineSpacing } from '@mui/icons-material';
 import * as Yup from 'yup';
 
-
 export default function LookingFor({ contactId }) {
-
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_id: Yup.number().required('Field is required'),
     bedrooms_min: Yup.number().min(0, 'Minimum value is 0'),
-    bedrooms_max: Yup.number().min(0, 'Minimum value is 0').when('bedrooms_min', {
-      is: (val) => val && val >= 0,
-      then: Yup.number().min(Yup.ref('bedrooms_min'), 'Max bedrooms must be greater than min bedrooms'),
-    }),
+    bedrooms_max: Yup.number()
+      .min(0, 'Minimum value is 0')
+      .when('bedrooms_min', {
+        is: (val) => val && val >= 0,
+        then: Yup.number().min(
+          Yup.ref('bedrooms_min'),
+          'Max bedrooms must be greater than min bedrooms'
+        ),
+      }),
     bathrooms_min: Yup.number().min(0, 'Minimum value is 0'),
-    bathrooms_max: Yup.number().min(0, 'Minimum value is 0').when('bathrooms_min', {
-      is: (val) => val && val >= 0,
-      then: Yup.number().min(Yup.ref('bathrooms_min'), 'Max bathrooms must be greater than min bathrooms'),
-    }),
+    bathrooms_max: Yup.number()
+      .min(0, 'Minimum value is 0')
+      .when('bathrooms_min', {
+        is: (val) => val && val >= 0,
+        then: Yup.number().min(
+          Yup.ref('bathrooms_min'),
+          'Max bathrooms must be greater than min bathrooms'
+        ),
+      }),
     budget_min: Yup.number().min(0, 'Minimum value is 0'),
     // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
-    budget_max: Yup.number().min(0, 'Minimum value is 0').when('budget_min', {
-      is: (val) => val && val >= 0,
-      then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
-    }),
+    budget_max: Yup.number()
+      .min(0, 'Minimum value is 0')
+      .when('budget_min', {
+        is: (val) => val && val >= 0,
+        then: Yup.number().min(
+          Yup.ref('budget_min'),
+          'Max budget must be greater than min budget'
+        ),
+      }),
   });
-
-
 
   //* FORMIK *//
   const [selections, setSelections] = useState([]);
@@ -59,8 +70,8 @@ export default function LookingFor({ contactId }) {
       handleAddSubmit(values);
     },
   });
-  
-  const {errors, touched, setFieldValue} = formik;
+
+  const { errors, touched, setFieldValue } = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
@@ -78,7 +89,6 @@ export default function LookingFor({ contactId }) {
     }
   };
 
-
   const fetchLookingProperties = async () => {
     try {
       const { data } = await contactServices.getContactLookingProperties(
@@ -89,14 +99,32 @@ export default function LookingFor({ contactId }) {
         formik.setValues({
           neighborhood_id: lookingProperties[0].neighborhood_id,
           looking_action: lookingProperties[0].looking_action,
-          bedrooms_min: lookingProperties[0].bedrooms_min !=0 ? lookingProperties[0].bedrooms_min : '',
-          bedrooms_max: lookingProperties[0].bedrooms_max !=0 ? lookingProperties[0].bedrooms_max : '',
-          bathrooms_min: lookingProperties[0].bathrooms_min !=0 ? lookingProperties[0].bathrooms_min : '',
-          bathrooms_max: lookingProperties[0].bathrooms_max !=0 ? lookingProperties[0].bathrooms_max : '',
-          budget_min: lookingProperties[0].budget_min !=0 ? lookingProperties[0].budget_min : '',
-          budget_max: lookingProperties[0].budget_max !=0 ? lookingProperties[0].budget_max : '',
+          bedrooms_min:
+            lookingProperties[0].bedrooms_min != 0
+              ? lookingProperties[0].bedrooms_min
+              : '',
+          bedrooms_max:
+            lookingProperties[0].bedrooms_max != 0
+              ? lookingProperties[0].bedrooms_max
+              : '',
+          bathrooms_min:
+            lookingProperties[0].bathrooms_min != 0
+              ? lookingProperties[0].bathrooms_min
+              : '',
+          bathrooms_max:
+            lookingProperties[0].bathrooms_max != 0
+              ? lookingProperties[0].bathrooms_max
+              : '',
+          budget_min:
+            lookingProperties[0].budget_min != 0
+              ? lookingProperties[0].budget_min
+              : '',
+          budget_max:
+            lookingProperties[0].budget_max != 0
+              ? lookingProperties[0].budget_max
+              : '',
         });
-      } 
+      }
     } catch (error) {
       console.log(error);
     }
@@ -186,7 +214,7 @@ export default function LookingFor({ contactId }) {
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
             onChange={formik.handleChange}
-            value={(formik.values.budget_min)}
+            value={formik.values.budget_min}
             error={errors.budget_min && touched.budget_min}
             errorText={errors.budget_min}
           />
@@ -197,28 +225,28 @@ export default function LookingFor({ contactId }) {
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
             // onChange={(e)=>{
-              // formik.handleChange('budget_max');
-              // console.log(e.target.value, e.target.value.slice(0,-3), Number(e.target.value.replace(',','')))
-              // const test = (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
-              //   minimumFractionDigits: 2,
-              //   maximumFractionDigits: 2
-              // });
-              // test.slice(0,-3).replace(',',''),
+            // formik.handleChange('budget_max');
+            // console.log(e.target.value, e.target.value.slice(0,-3), Number(e.target.value.replace(',','')))
+            // const test = (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
+            //   minimumFractionDigits: 2,
+            //   maximumFractionDigits: 2
+            // });
+            // test.slice(0,-3).replace(',',''),
 
-              // console.log(
-              //   (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(),
-              //   test,
-              //   test.slice(0,-3),
-              //   test.slice(0,-3).replace(',',''),
+            // console.log(
+            //   (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(),
+            //   test,
+            //   test.slice(0,-3),
+            //   test.slice(0,-3).replace(',',''),
 
-              // )
-              // console.log('test', test, e.target.value, test.slice(0,-3).replace(',',''))
-              // formik.setFieldValue('budget_max', Number((e.target.value.replace(',',''))));
-              // formik.setFieldValue('budget_max', test.slice(0,-3).replace(',',''));
+            // )
+            // console.log('test', test, e.target.value, test.slice(0,-3).replace(',',''))
+            // formik.setFieldValue('budget_max', Number((e.target.value.replace(',',''))));
+            // formik.setFieldValue('budget_max', test.slice(0,-3).replace(',',''));
 
             // }}
             onChange={formik.handleChange}
-            value={(formik.values.budget_max)}
+            value={formik.values.budget_max}
             // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString()}
             // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
             //   minimumFractionDigits: 2,
@@ -238,11 +266,16 @@ export default function LookingFor({ contactId }) {
           <form onSubmit={formik.handleSubmit}>
             <Accordion
               tabs={tabs}
-              handleClick={(a,b) => console.log('test',a,b)}
+              handleClick={(a, b) => console.log('test', a, b)}
               activeSelections={selections}
               defaultOpen={true}
             />
-            <Button type="submit" primary className="mt-6" loading={loadingButton}>
+            <Button
+              type="submit"
+              primary
+              className="mt-6"
+              loading={loadingButton}
+            >
               Save
             </Button>
           </form>

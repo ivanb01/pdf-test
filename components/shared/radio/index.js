@@ -10,7 +10,7 @@ export default function Radio({
   selectedContactType,
   className,
   error,
-  errorText
+  errorText,
 }) {
   return (
     <div className={className}>
@@ -47,8 +47,11 @@ export default function Radio({
           // </div>
         ))}
       </div>
-      {error && errorText && <NotificationAlert className='mt-2 p-2' type={'error'}>{errorText}</NotificationAlert>}
-
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 }

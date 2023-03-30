@@ -14,7 +14,7 @@ import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 
 const index = () => {
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState(1);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   // const importsSummary = [
   //   {
@@ -281,24 +281,24 @@ const index = () => {
   };
 
   const tabs = [
-    {
-      id: 0,
-      name: 'My Profile',
-      icon: <UserIcon height={20} className="mr-3" />,
-      tabContent: myProfileTab(),
-    },
+    // {
+    //   id: 0,
+    //   name: 'My Profile',
+    //   icon: <UserIcon height={20} className="mr-3" />,
+    //   tabContent: myProfileTab(),
+    // },
     {
       id: 1,
       name: 'Account Management',
       icon: <ShieldCheckIcon height={20} className="mr-3" />,
       tabContent: accountManagementTab(),
     },
-    {
-      id: 2,
-      name: 'Imports Summary',
-      icon: <ShieldCheckIcon height={20} className="mr-3" />,
-      tabContent: importsSummaryTab(),
-    },
+    // {
+    //   id: 2,
+    //   name: 'Imports Summary',
+    //   icon: <ShieldCheckIcon height={20} className="mr-3" />,
+    //   tabContent: importsSummaryTab(),
+    // },
   ];
   return (
     <>

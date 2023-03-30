@@ -32,6 +32,7 @@ import SimpleBarDropdown from 'components/shared/dropdown/simpleBarDropdown';
 import Campaign from '@mui/icons-material/Campaign';
 import Chip from '../chip';
 import { formatDateAgo } from 'global/functions';
+import undoIcon from 'public/images/undo.svg';
 
 const Table = ({
   undoAllCategorizations,
@@ -227,7 +228,7 @@ const Table = ({
             )}
             {tableFor == 'in-categorization' && (
               <th className="relative px-[25px] py-[10px] flex justify-end items-center">
-                <Input type="checkbox" onChange={() => handleSelectAll}></Input>
+                <Input type="checkbox" onChange={handleSelectAll} />
               </th>
             )}
           </tr>
@@ -313,9 +314,63 @@ const Table = ({
               scope="col"
               className="py-3 pl-4 pr-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
             >
-              <Button white onClick={() => undoAllCategorizations()}>
-                Undo All
-              </Button>
+              {/* <Button white onClick={() => undoAllCategorizations()}> */}
+              {/* Undo All */}
+              {/* </Button> */}
+              <div className="relative flex justify-center">
+                <a
+                  className="cursor-pointer text-xs"
+                  onClick={() => undoAllCategorizations()}
+                  onMouseEnter={() =>
+                    document
+                      .querySelector('#tooltip-undo-all')
+                      .classList.remove('invisible', 'opacity-0')
+                  }
+                  onMouseLeave={() =>
+                    document
+                      .querySelector('#tooltip-undo-all')
+                      .classList.add('invisible', 'opacity-0')
+                  }
+                >
+                  {/* <Image src={undoIcon} className="w-5"></Image> */}
+                  <svg
+                    version="1.1"
+                    viewBox="0 0 16 20"
+                    width="15px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      fill="none"
+                      fillRule="evenodd"
+                      id="Page-1"
+                      stroke="none"
+                      strokeWidth="1"
+                    >
+                      <g
+                        fill="#6B7280"
+                        id="Core"
+                        transform="translate(-424.000000, -463.000000)"
+                      >
+                        <g
+                          id="undo"
+                          transform="translate(424.000000, 464.000000)"
+                        >
+                          <path
+                            d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
+                            id="Shape"
+                          />
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                </a>
+                <div
+                  id="tooltip-undo-all"
+                  className="inline-block capitalize -right-3 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+                >
+                  Undo All
+                </div>
+              </div>
             </th>
           </tr>
         </thead>
@@ -361,9 +416,64 @@ const Table = ({
                 )}
               </td>
               <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
-                <Button white onClick={() => undoCategorization(dataItem.id)}>
-                  Undo
-                </Button>
+                <div className="relative">
+                  <a
+                    className="cursor-pointer text-xs"
+                    onClick={() => undoCategorization(dataItem.id)}
+                    onMouseEnter={() =>
+                      document
+                        .querySelector(
+                          '#tooltip-undo-categorization-' + dataItem.id
+                        )
+                        .classList.remove('invisible', 'opacity-0')
+                    }
+                    onMouseLeave={() =>
+                      document
+                        .querySelector(
+                          '#tooltip-undo-categorization-' + dataItem.id
+                        )
+                        .classList.add('invisible', 'opacity-0')
+                    }
+                  >
+                    {/* <Image src={undoIcon} className="w-5"></Image> */}
+                    <svg
+                      version="1.1"
+                      viewBox="0 0 16 20"
+                      width="15px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g
+                        fill="none"
+                        fillRule="evenodd"
+                        id="Page-1"
+                        stroke="none"
+                        strokeWidth="1"
+                      >
+                        <g
+                          fill="#6B7280"
+                          id="Core"
+                          transform="translate(-424.000000, -463.000000)"
+                        >
+                          <g
+                            id="undo"
+                            transform="translate(424.000000, 464.000000)"
+                          >
+                            <path
+                              d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
+                              id="Shape"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </a>
+                  <div
+                    id={'tooltip-undo-categorization-' + dataItem.id}
+                    className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+                  >
+                    Undo Categorization
+                  </div>
+                </div>
               </td>
             </tr>
           ))}

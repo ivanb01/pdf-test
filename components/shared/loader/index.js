@@ -1,4 +1,4 @@
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Loader = () => {
   return (

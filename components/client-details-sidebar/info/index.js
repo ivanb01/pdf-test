@@ -27,7 +27,6 @@ export default function Info({ client, handleFetchContactRequired }) {
       } else if(data?.status === 'no_match') {
         setCampaignName('No matching campaign');
       }
-
     } catch (error) {
       console.log(error);
     }
