@@ -19,8 +19,10 @@ const EditRelationshipModal = ({
   const handleRelationshipType = (relationshipType) => {
     setRelationshipTypeToEdit(relationshipType.name);
   };
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const editRelationship = async () => {
+    setLoadingButton(true);
     try {
       const relationshipEdit = {
         relationship_name: relationshipTypeToEdit,
@@ -30,20 +32,16 @@ const EditRelationshipModal = ({
         relationship.relationship_id,
         relationshipEdit
       );
-      console.log('edit success', data);
+      setLoadingButton(false);
+
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(
-      'edit relationship',
-      contactId,
-      relationship.relationship_id,
-      relationshipTypeToEdit
-    );
     await editRelationship();
     handleFetchRelationships();
     handleClose();
@@ -96,7 +94,12 @@ const EditRelationshipModal = ({
                 label="Cancel"
                 onClick={handleClose}
               />
-              <Button type="submit" primary label="Save" />
+              <Button 
+                type="submit" 
+                primary 
+                label="Save" 
+                loading={loadingButton}
+              />
             </div>
           </form>
         </div>

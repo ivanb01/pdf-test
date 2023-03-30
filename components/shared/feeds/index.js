@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import {
   ChatAltIcon,
   TagIcon,
@@ -18,6 +18,7 @@ import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
 import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
+import * as Yup from 'yup';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -53,6 +54,7 @@ const activityTypes = [
 export default function Feeds({
   contactId,
   activities,
+  setActivities,
   handleFetchActivitiesRequired,
 }) {
   const [activityModal, setActivityModal] = useState(false);
@@ -60,18 +62,24 @@ export default function Feeds({
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
 
+  const AddActivitySchema = Yup.object().shape({
+    type_of_activity_id: Yup.string().required('No selected activity'),
+    description: Yup.string().required('Description required'),
+  });
+
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
       type_of_activity_id: '',
       description: '',
     },
+    validationSchema: AddActivitySchema,
     onSubmit: (values) => {
       handleUpdateSubmit(values);
     },
   });
 
-  const { isSubmitting } = formik;
+  const { errors, touched, resetForm } = formik;
 
   const handleUpdateSubmit = async (values) => {
     setLoadingButton(true);
@@ -81,9 +89,9 @@ export default function Feeds({
         activityId,
         values
       );
-      handleCloseModal();
       handleFetchActivitiesRequired();
       setLoadingButton(false);
+      handleCloseModal();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
@@ -91,12 +99,9 @@ export default function Feeds({
   };
 
   const handleCloseModal = () => {
-    formik.setValues({
-      type_of_activity_id: '',
-      description: '',
-    });
     setActivityModal(false);
     setActivityId(0);
+    resetForm();
   };
 
   const handleChooseActivityType = (id) => {
@@ -104,8 +109,8 @@ export default function Feeds({
   };
 
   const handleEditActivity = (activity) => {
-    console.log('to edit', activity);
     formik.setValues({
+      type_of_activity_id: activity.type_of_activity_id,
       description: activity.description,
     });
     setActivityId(activity.id);
@@ -118,7 +123,8 @@ export default function Feeds({
 
   const handleDeleteActivity = async (activity) => {
     try {
-      const { data } = await contactServices.deleteContactActivity(
+      setActivities(prev=>prev.filter((item) => item.id !== activity.id));
+      await contactServices.deleteContactActivity(
         contactId,
         activity.id
       );
@@ -220,18 +226,22 @@ export default function Feeds({
                 activeIcon={false}
                 options={activityTypes}
                 className="mb-1 w-[100%]"
-                activeClasses="bg-lightBlue1"
+                // activeClasses="bg-lightBlue1"
                 handleSelect={(item) => handleChooseActivityType(item.id)}
                 initialSelect={activityTypeToEdit}
-              ></Dropdown>
+                error={errors.type_of_activity_id && touched.type_of_activity_id}
+                errorText={errors.type_of_activity_id}
+              />
               <TextArea
-                className="mb-6 min-h-[120px]"
+                className="min-h-[120px]"
                 id="description"
                 label="Description"
                 handleChange={formik.handleChange}
                 value={formik.values.description}
+                error={errors.description && touched.description}
+                errorText={errors.description}
               ></TextArea>
-              <div className="flex flex-row justify-end">
+              <div className="flex flex-row justify-end mt-6">
                 <Button
                   className="mr-3"
                   white

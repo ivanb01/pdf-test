@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';
 import { setContacts } from 'store/contacts/slice';
-import { clientStatuses } from 'global/variables';
 import { formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';

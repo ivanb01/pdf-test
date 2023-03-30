@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/solid';
 import { ChevronDownIcon } from '@heroicons/react/solid';
+import NotificationAlert from '../alert/notification-alert';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -20,7 +21,10 @@ const Dropdown = ({
   placeHolder,
   initialSelect,
   selectClasses,
+  selectedOption,
   white,
+  error,
+  errorText,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -57,8 +61,13 @@ const Dropdown = ({
                 className={`${
                   selectClasses ? selectClasses : 'bg-white border rounded-md'
                 }  relative w-full  border-gray-300 shadow-sm pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
-              >
-                <span className="block truncate capitalize">
+              > 
+                <span className={`${selectedOption === 'statusColor' &&  `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`}`}>
+                  
+                </span>
+
+                {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
+                <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' && 'pl-4'}`}>
                   {!selected && placeHolder && placeHolder}
                   {selected && selected.name}
                 </span>
@@ -123,6 +132,12 @@ const Dropdown = ({
           </>
         )}
       </Listbox>
+
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 };

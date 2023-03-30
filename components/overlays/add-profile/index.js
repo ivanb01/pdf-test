@@ -4,6 +4,9 @@ import { useState } from 'react';
 import StatusSelect from 'components/status-select';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
 
 const AddProfile = ({
   handleClose,
@@ -12,33 +15,47 @@ const AddProfile = ({
   statuses,
   handleFetchProfilesRequired,
 }) => {
-  const [selectedContactType, setSelectedContactType] = useState(0);
-  const [selectedStatus, setSelectedStatus] = useState(0);
   const [loadingButton, setLoadingButton] = useState(false);
 
+  const AddProfileSchema = Yup.object().shape({
+    selectedContactType: Yup.string().required('Contact type is required'),
+    selectedStatus: Yup.string().required('Contact status is required'),
+  });
+
+  //* FORMIK *//
+  const formik = useFormik({
+    initialValues: {
+      selectedContactType: '',
+      selectedStatus: '',
+    },
+    validationSchema: AddProfileSchema,
+    onSubmit: async (values, { setSubmitting }) => {      
+      await addProfile();
+      handleFetchProfilesRequired();
+      handleClose();
+    },
+  });
+
+  const { errors, touched, setFieldValue } = formik;
+
   const addProfile = async () => {
+    setLoadingButton(true);
     try {
       const newProfile = {
-        category_id: selectedContactType,
-        status_id: selectedStatus,
+        category_id: formik.values.selectedContactType,
+        status_id: formik.values.selectedStatus,
       };
       const { data } = await contactServices.addContactProfile(
         contactId,
         newProfile
       );
-      console.log('add profile', newProfile, data);
+      setLoadingButton(false);
     } catch (error) {
       console.log(error);
+      setLoadingButton(false);
     }
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // alert('Not implemented yet')
-    await addProfile();
-    handleFetchProfilesRequired();
-    handleClose();
-  };
-
+  
   return (
     <Overlay
       title="Add Aditional Type"
@@ -51,19 +68,29 @@ const AddProfile = ({
             <Radio
               options={categoryTypes}
               label="What kind of contact is this for you?"
-              selectedContactType={selectedContactType}
-              changeContactType={setSelectedContactType}
+              selectedContactType={formik.values.selectedContactType}
+              changeContactType={(e) =>
+                setFieldValue('selectedContactType', e)
+              }
               className="mb-6"
+              error={
+                errors.selectedContactType && touched.selectedContactType
+              }
+              errorText={errors.selectedContactType}
             />
             <StatusSelect
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
+              selectedStatus={formik.values.selectedStatus}
+              setSelectedStatus={(e) =>
+                setFieldValue('selectedStatus', e)
+              }
               label="In what stage of communication?"
               statuses={statuses}
+              error={errors.selectedStatus && touched.selectedStatus}
+              errorText={errors.selectedStatus}
             />
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-row justify-end mt-5">
               <Button
                 className="mr-3 "
@@ -76,9 +103,6 @@ const AddProfile = ({
                 primary
                 label="Save Changes"
                 loading={loadingButton}
-                onClick={() => {
-                  setLoadingButton(true);
-                }}
               />
             </div>
           </form>

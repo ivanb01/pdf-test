@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react';
 import Alert from 'components/shared/alert';
 import Events from 'components/shared/events';
-import { alerts, steps } from './list';
 import { CalendarIcon, ClockIcon } from '@heroicons/react/outline';
 import Text from 'components/shared/text';
 import Image from 'next/image';
-import Welcome from 'public/images/welcome.svg';
 import {
   assignContactToCampaign,
   unassignContactFromCampaign,
   getContactCampaign,
   getContactCampaignEventPreview,
 } from 'api/campaign';
-import { Description } from '@mui/icons-material';
 import Button from 'components/shared/button';
 import {
   CheckCircleIcon,
@@ -22,7 +19,6 @@ import {
 } from '@heroicons/react/solid';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';
 import UnassignOverlay from 'components/overlays/unassign';
-import CannotAssignToCampaign from 'components/overlays/cannot-assign-to-campaign';
 
 export default function Campaigns({
   contactId,
@@ -32,37 +28,20 @@ export default function Campaigns({
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);
   const [showUnassignFromCampaign, setShowUnassignFromCampaign] =
     useState(false);
-  const [showCannotAssignToCampaign, setShowCannotAssignToCampaign] =
-    useState(false);
-  const [cannotAssignToCampaignMessage, setCannotAssignToCampaignMessage] =
-    useState('');
   const [fetchRequired, setFetchRequired] = useState(false);
   const [campaignId, setCampaignId] = useState();
-  const [contactCampaignLink, setContactCampaignLink] = useState('');
+  const [contactCampaignStatus, setContactCampaignStatus] = useState('');
   const [campaignEvents, setCampaignEvents] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(0);
   const [previewEvent, setPreviewEvent] = useState(null);
 
-  // let alert = alerts(
-  //   handleAssignCampaignChange,
-  //   handleUnassignCampaignChange
-  // ).filter(({ type }) => type === alertType);
 
   const handleAssignCampaignChange = async () => {
     try {
-      console.log('test assign');
       const { data } = await assignContactToCampaign(campaignId, contactId);
-      console.log('assign', data);
-      if (data.message) {
-        setAlert(alerts[2]);
-        setShowAssignToCampaign(false);
-        setShowCannotAssignToCampaign(true);
-        setCannotAssignToCampaignMessage(data.message);
-      } else {
-        setFetchRequired((prev) => !prev);
-        handleFetchContactRequired();
-        setShowAssignToCampaign(false);
-      }
+      setFetchRequired((prev) => !prev);
+      handleFetchContactRequired();
+      setShowAssignToCampaign(false);
     } catch (error) {
       console.log(error);
     }
@@ -70,13 +49,10 @@ export default function Campaigns({
 
   const handleUnassignCampaignChange = async () => {
     try {
-      console.log('test unassign');
-
       const { data } = await unassignContactFromCampaign(campaignId, contactId);
-      console.log('unassign', data);
-      setShowUnassignFromCampaign(false);
       setFetchRequired((prev) => !prev);
       handleFetchContactRequired();
+      setShowUnassignFromCampaign(false);
     } catch (error) {
       console.log(error);
     }
@@ -127,11 +103,9 @@ export default function Campaigns({
   const eventPreview = async (event) => {
     try {
       if (event.preview) {
-        console.log('fetch event', event.preview);
         setPreviewEvent(event.preview);
       } else if (event.id) {
         const { data } = await getContactCampaignEventPreview(event.id);
-        console.log('fetch event', data);
         setPreviewEvent(data);
       }
     } catch (error) {
@@ -143,24 +117,28 @@ export default function Campaigns({
     try {
       const { data } = await getContactCampaign(contactId);
       console.log('fetch contact campaign', data);
-      if (data?.id) {
+      setContactCampaignStatus(data?.status);
+      
+      if(data?.status === 'enrolled') {
         setCampaignId(data?.campaign_id);
-        setContactCampaignLink('assigned');
         setAlert(alerts[1]);
         setCampaignEvents(data?.events);
         setCurrentEvent(data?.events[0]?.id);
         await eventPreview(data?.events[0]);
-      } else if (data?.message) {
-        setContactCampaignLink('no_matching');
-      } else {
+      } else if(data?.status === 'matches_campaign') {
         setCampaignId(data?.campaign_id);
-        setContactCampaignLink('matching');
         setAlert(alerts[0]);
         const newEvents = data?.events.map((item, i) => ({ id: i, ...item }));
         setCampaignEvents(newEvents);
         setCurrentEvent(newEvents[0]?.id);
         await eventPreview(newEvents[0]);
-      }
+      } else if(data?.status === 'unenrolled') {
+        setCampaignId(data?.campaign_id);
+        setAlert(alerts[2]);
+        setCampaignEvents(data?.events);
+        setCurrentEvent(data?.events[0]?.id);
+        await eventPreview(data?.events[0]);
+      } 
     } catch (error) {
       console.log(error);
     }
@@ -171,12 +149,6 @@ export default function Campaigns({
   }, [contactId, fetchRequired]);
   return (
     <>
-      {showCannotAssignToCampaign && (
-        <CannotAssignToCampaign
-          message={cannotAssignToCampaignMessage}
-          handleCloseOverlay={() => setShowCannotAssignToCampaign(false)}
-        />
-      )}
       {showAssignToCampaign && (
         <AssignToCampaign
           // contacts={}
@@ -190,9 +162,9 @@ export default function Campaigns({
           onSubmit={handleUnassignCampaignChange}
         />
       )}
-      {contactCampaignLink == 'no_matching' && (
+      {contactCampaignStatus == 'no_match' && (
         <div className="bg-gray10 p-[24px]">
-          Contact not asssigned in campaign. Matching campaign not found.
+          No matching campaign found for the contact.
         </div>
       )}
       {campaignEvents && (

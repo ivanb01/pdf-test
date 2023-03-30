@@ -4,7 +4,7 @@ import Text from 'components/shared/text';
 export default function InfoCard({ label, content, iconContent }) {
   return (
     <div className="flex flex-col my-3">
-      <Text className="text-gray4 mb-1" h4>
+      <Text className="text-gray-700 mb-1" h4>
         {label}
       </Text>
       <div className="flex flex-row">
@@ -14,13 +14,13 @@ export default function InfoCard({ label, content, iconContent }) {
           ))
         ) : iconContent ? (
           <div className="flex flex-row items-center">
-            <Text className="text-gray7 pl-3" p>
+            <Text className="text-gray-900 pl-3" p>
               {content}
             </Text>
             {iconContent}
           </div>
         ) : (
-          <Text className="text-gray7 pl-3" p>
+          <Text className="text-gray-900 pl-3" p>
             {content}
           </Text>
         )}

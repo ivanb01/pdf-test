@@ -5,13 +5,13 @@ import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
 import { useFormik } from 'formik';
 import Button from 'components/shared/button';
-import Input from 'components/shared/input';
 import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
-import { FormatLineSpacing } from '@mui/icons-material';
 import noActivitLog from 'public/images/no_activitylog.svg';
 import Image from 'next/image';
+import * as Yup from 'yup';
+
 
 const activityTypes = [
   {
@@ -46,7 +46,12 @@ export default function ActivityLog({ contactId }) {
   const handleFetchActivitiesRequired = () =>
     setFetchActivitiesRequired((prev) => !prev);
 
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState(null);
+
+  const AddActivitySchema = Yup.object().shape({
+    type_of_activity_id: Yup.string().required('No selected activity'),
+    description: Yup.string().required('Description required'),
+  });
 
   //* FORMIK *//
   const formik = useFormik({
@@ -54,26 +59,25 @@ export default function ActivityLog({ contactId }) {
       type_of_activity_id: '',
       description: '',
     },
+    validationSchema: AddActivitySchema,
     onSubmit: (values) => {
       handleAddActivitySubmit(values);
     },
   });
 
+  const { errors, touched, resetForm } = formik;
+
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const { data } = await contactServices.addContactActivity(
+      await contactServices.addContactActivity(
         contactId,
         values
       );
-      console.log('add activity', values);
       setFetchActivitiesRequired((prev) => !prev);
-      formik.setValues({
-        type_of_activity_id: '',
-        description: '',
-      });
-      handleToggleAddActicity();
       setLoadingButton(false);
+      resetForm();
+      handleToggleAddActicity();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
@@ -95,22 +99,21 @@ export default function ActivityLog({ contactId }) {
   };
 
   useEffect(() => {
-    console.log('test from activities');
     fetchContactActivities();
   }, [fetchActivitiesRequired, contactId]);
 
   return (
     <div className="flex bg-gray10 flex-row ">
       <div className="w-[65%] bg-gray10 details-tabs-fixed-height p-[24px] pr-0">
-        {activities?.length == 0 ? (
+        {activities && (activities?.length == 0 ? (
           <div className="flow-root bg-white h-full overflow-y-scroll">
             <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
               <Image src={noActivitLog}></Image>
               <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-                There is no activity logged for this client
+                There is no activity logged for this contact
               </Text>
               <Text p className="text-gray4 relative text-center mb-6">
-                All activities related with this client will be shown here.
+                All activities related with this contact will be shown here.
               </Text>
             </div>
           </div>
@@ -118,9 +121,10 @@ export default function ActivityLog({ contactId }) {
           <Feeds
             contactId={contactId}
             activities={activities}
+            setActivities={setActivities}
             handleFetchActivitiesRequired={handleFetchActivitiesRequired}
           />
-        )}
+        ))}
       </div>
       <div className="w-[35%] m-[24px]">
         <div className="bg-white flex flex-row justify-between p-6">
@@ -144,17 +148,21 @@ export default function ActivityLog({ contactId }) {
                 activeIcon={false}
                 options={activityTypes}
                 className="mb-6 w-[100%]"
-                activeClasses="bg-lightBlue1"
+                // activeClasses="bg-lightBlue1"
                 handleSelect={(item) => handleChooseActivityType(item.id)}
+                error={errors.type_of_activity_id && touched.type_of_activity_id}
+                errorText={errors.type_of_activity_id}
               />
               <TextArea
-                className="mb-6 min-h-[120px]"
+                className="min-h-[120px]"
                 id="description"
                 label="Description"
                 handleChange={formik.handleChange}
                 value={formik.values.description}
+                error={errors.description && touched.description}
+                errorText={errors.description}
               ></TextArea>
-              <div className="flex flex-row justify-end">
+              <div className="flex flex-row justify-end mt-6">
                 <Button
                   className="mr-3"
                   white
@@ -169,11 +177,6 @@ export default function ActivityLog({ contactId }) {
                 />
               </div>
             </form>
-            {/* <BasicForm
-              customButtons={customButtons}
-              inputs={inputs}
-              handleSubmit={handleSubmit}
-            /> */}
           </div>
         )}
       </div>
