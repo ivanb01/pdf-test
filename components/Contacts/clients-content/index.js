@@ -343,8 +343,26 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     setFilters(filtersCopy);
   };
 
-  const removeChip = (chip) => {
-    console.log(chip);
+  const removeChip = (valueToRemove) => {
+    for (const prop in filters) {
+      if (filters.hasOwnProperty(prop)) {
+        const propArray = filters[prop];
+        const indexToRemove = propArray.indexOf(valueToRemove);
+
+        if (indexToRemove !== -1) {
+          // If the value is found, remove it from the array
+          propArray.splice(indexToRemove, 1);
+        }
+      }
+    }
+    setFiltersCleared(true, () => {
+      setFiltersArray(
+        filtersArray.filter((filter) => filter !== valueToRemove),
+        () => {
+          filterContacts();
+        }
+      );
+    });
   };
   return (
     <>
@@ -398,7 +416,14 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
                 {filtersArray.length == 1 ? 'result' : 'results'} for:
               </div>
               {filtersArray.map((filter, index) => (
-                <Chip key={index} active label={filter} className="mr-1" />
+                <Chip
+                  // closable
+                  removeChip={removeChip}
+                  key={index}
+                  active
+                  label={filter}
+                  className="mr-1"
+                />
               ))}
             </div>
           </div>

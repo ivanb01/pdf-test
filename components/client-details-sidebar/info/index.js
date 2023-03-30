@@ -70,7 +70,7 @@ export default function Info({ client, handleFetchContactRequired }) {
             label="Status"
             activeIcon={false}
             options={allStatusesQuickEdit[categoryType]}
-            className="mb-1 w-52"
+            className="mb-1 w-52 "
             activeClasses="bg-purple1"
             handleSelect={(status) => handleChangeStatus(status.id)}
             initialSelect={client?.status_2}

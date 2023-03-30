@@ -80,6 +80,9 @@ const Uncategorized = ({
     //   console.log(data);
     // });
   }, []);
+  const selectAll = (event) => {
+    console.log('test');
+  };
   const uncategorizedMainPage = () => {
     return (
       <>
@@ -96,6 +99,7 @@ const Uncategorized = ({
                     handleStartCategorizing(true);
                     selectToCategorize(event.closest('tr').id);
                   }}
+                  // handleSelectAll={() => selectAll()}
                 />
               </SimpleBar>
             </div>
