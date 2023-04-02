@@ -48,7 +48,7 @@ const SignIn = () => {
       // );
       const data = {
         apiGatewayUrl:
-          'https://ozz4sedx7k.execute-api.us-east-1.amazonaws.com/prod/',
+          'https://bkw8w58f8j.execute-api.us-east-1.amazonaws.com/prod/',
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
         userPoolId: 'us-east-1_ENvP5VYjb',
       };
