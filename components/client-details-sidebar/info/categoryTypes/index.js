@@ -13,6 +13,7 @@ import {
 } from 'global/variables';
 import * as contactServices from 'api/contacts';
 import { useRouter } from 'next/router';
+import Chip from 'components/shared/chip';
 
 export default function CategoryTypes({ client, handleFetchContactRequired }) {
   const router = useRouter();
@@ -83,37 +84,42 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
       <div className="pl-[24px] py-[12px] flex flex-row justify-items-center items-center border-y border-gray-2">
         <div
           className={`flex flex-row ${
-            contactProfiles.length > 1 ? 'bg-gray-50 rounded-lg px-3 py-1.5 w-[312px] overflow-scroll' : ''
+            contactProfiles.length > 1
+              ? 'bg-gray-50 rounded-lg px-3 py-1.5 w-[312px] overflow-scroll'
+              : ''
           }`}
         >
-          {
-            contactProfiles.length > 1 ?
-              contactProfiles.map((profile) => (
-                <div
-                  onClick={() =>
-                    router.push({
-                      pathname: '/contacts/details',
-                      query: { id: profile?.id },
-                    })
-                  }
-                  key={profile?.id}
-                  className={`${
-                    profile?.id === client?.id
-                      ? 'bg-white border border-borderColor text-gray-700'
-                      : 'bg-gray-50 border border-gray-50 text-gray-500'
-                  }
-                     hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}
-                >
-                  {profile?.category_2}
-                </div>
-              )) :
+          {contactProfiles.length > 1 ? (
+            contactProfiles.map((profile) => (
               <div
-                key={contactProfiles[0]?.id}
-                className={`bg-gray1 cursor-pointer py-2 px-[15px] uppercase text-[#474D66] text-center rounded text-xs font-medium`}
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: profile?.id },
+                  })
+                }
+                key={profile?.id}
+                className={`${
+                  profile?.id === client?.id
+                    ? 'bg-white border border-borderColor text-gray-700'
+                    : 'bg-gray-50 border border-gray-50 text-gray-500'
+                }
+                     hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}
               >
-                {contactProfiles[0]?.category_2}
+                {profile?.category_2}
               </div>
-          }
+            ))
+          ) : (
+            <Chip key={contactProfiles[0]?.id} typeStyle>
+              {contactProfiles[0]?.category_2}
+            </Chip>
+            // <div
+            //   key={contactProfiles[0]?.id}
+            //   className={`bg-gray1 cursor-pointer py-2 px-[15px] uppercase text-[#474D66] text-center rounded text-xs font-medium`}
+            // >
+            //   {contactProfiles[0]?.category_2}
+            // </div>
+          )}
         </div>
         <div className="ml-auto mr-4">
           <FilterDropdown

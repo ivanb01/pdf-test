@@ -47,7 +47,7 @@ export default function Chip({
   if (typeStyle) {
     return (
       <div
-        className={`${className} min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center`}
+        className={`${className} text-[#474D66] min-h-[28px] text-[11px] uppercase px-3 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center`}
       >
         {children ? children : label}
       </div>
