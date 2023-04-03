@@ -122,9 +122,9 @@ const SignIn = () => {
   return (
     <Authentication>
       <div className="m-auto">
-        <Text title className="text-onelineMainColor mb-[50px]">
+        <div className="text-onelineMainColor md:mb-[50px] mb-8 text-lg md:text-3xl font-extrabold">
           Choose your brokerage
-        </Text>
+        </div>
         {/* <Text p className="text-gray4 mb-[50px]">
           Don't have an account?{' '}
           <Link
@@ -137,7 +137,7 @@ const SignIn = () => {
         </Text> */}
         <form onSubmit={formik.handleSubmit}>
           <Dropdown
-            className="mb-6"
+            className="mb-6 w-full text-sm"
             label="Brokerage Name"
             options={brokerageNameOptions}
             initialSelect={brokerageNameOptions[0].name}
