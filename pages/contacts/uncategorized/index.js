@@ -32,6 +32,7 @@ const index = () => {
   ] = useState(null);
 
   const handleSelectUncategorized = (contact, event) => {
+    console.log(contact, event.target.checked);
     let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
     if (event.target.checked) {
       row.classList.add('bg-lightBlue1');
@@ -39,7 +40,7 @@ const index = () => {
     } else {
       row.classList.remove('bg-lightBlue1');
       let newUncategorized = selectedUncategorized.filter(
-        (element) => element.id != contact.id
+        (element) => element.id !== contact.id
       );
       setSelectedUncategorized(newUncategorized);
     }

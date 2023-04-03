@@ -99,7 +99,6 @@ const Uncategorized = ({
                     handleStartCategorizing(true);
                     selectToCategorize(event.closest('tr').id);
                   }}
-                  // handleSelectAll={() => selectAll()}
                 />
               </SimpleBar>
             </div>

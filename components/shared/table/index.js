@@ -228,7 +228,11 @@ const Table = ({
             )}
             {tableFor == 'in-categorization' && (
               <th className="relative px-[25px] py-[10px] flex justify-end items-center">
-                <Input type="checkbox" onChange={handleSelectAll} />
+                <Input
+                  id="select_all"
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                />
               </th>
             )}
           </tr>

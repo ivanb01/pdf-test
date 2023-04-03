@@ -128,6 +128,20 @@ const CategorizePage = ({
     }, 1);
   };
 
+  const toggleAllUncategorized = (event) => {
+    console.log(event.target.checked);
+    if (event.target.checked) {
+      document
+        .querySelectorAll("[id^='row_'] input:not(:checked)")
+        .forEach((el) => el.click());
+    } else {
+      document
+        .querySelectorAll("[id^='row_'] input:checked")
+        .forEach((el) => el.click());
+      setSelectedUncategorized([]);
+    }
+  };
+
   return (
     <>
       <div
@@ -140,6 +154,7 @@ const CategorizePage = ({
               (contact) => contact.category_id == openedSubtab + 1
             )}
             handleClickRow={handleSelectUncategorized}
+            handleSelectAll={toggleAllUncategorized}
           />
         </SimpleBar>
       </div>
