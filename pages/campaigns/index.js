@@ -268,7 +268,7 @@ const Campaigns = () => {
             </div>
             {loadingEvents ? (
               <Loader />
-            ) : !campaignsEvents.thisWeek.length ? (
+            ) : campaignsEvents.thisWeek.length ? (
               <SimpleBar
                 autoHide={true}
                 className="overflow-x-hidden"

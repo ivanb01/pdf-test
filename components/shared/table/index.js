@@ -79,7 +79,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center border-r border-gray-200"
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
             >
               <Input type="checkbox" onChange={() => handleSelectAll}></Input>
               Clients
@@ -98,14 +98,14 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="bg-white">
           {data.map((dataItem) => (
             <tr
               key={dataItem.event_id}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row"
+              className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
               onClick={(event) => handleClickRow(dataItem, event)}
             >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
                   handleSelect={() => console.log('test')}
                   data={{
@@ -117,7 +117,9 @@ const Table = ({
                 />
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">{dataItem.campaign_name}</div>
+                <div className="text-gray7  font-medium">
+                  {dataItem.campaign_name}
+                </div>
                 <div className="text-lightBlue3 cursor-pointer hover:underline">
                   <Image src={eyeIcon} />
                   <span className="ml-1">{dataItem.event_name}</span>
@@ -125,7 +127,7 @@ const Table = ({
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7 font-medium">Today</div>
-                <div className="text-gray-500 font-medium">
+                <div className="text-gray4">
                   {dataItem.event_scheduled_time}
                 </div>
               </td>
@@ -399,22 +401,23 @@ const Table = ({
                   <div className="flex items-center mt-3 type-and-status">
                     {console.log(dataItem)}
                     {dataItem.category_id != null && (
-                      <div className="min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center">
+                      <Chip typeStyle>
                         {getContactTypeByTypeId(dataItem.category_id)}
-                      </div>
+                      </Chip>
                     )}
                     {dataItem.status_id != null && (
-                      <div
-                        className={` min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 ${getContactStatusColorByStatusId(
+                      <Chip
+                        statusStyle
+                        className={getContactStatusColorByStatusId(
                           dataItem.category_id,
                           dataItem.status_id
-                        )} rounded-xl mr-3 flex items-center`}
+                        )}
                       >
                         {getContactStatusByStatusId(
                           dataItem.category_id,
                           dataItem.status_id
                         )}
-                      </div>
+                      </Chip>
                     )}
                   </div>
                 )}
@@ -848,7 +851,7 @@ const Table = ({
         <div className=" overflow-x-auto ">
           <div className="inline-block min-w-full align-middle ">
             <div className="overflow-hidden ring-black ring-opacity-5">
-              <table className="min-w-full divide-y divide-gray-300">
+              <table className="min-w-full divide-y divide-gray-200">
                 {tableFor == 'uncategorized' || tableFor == 'in-categorization'
                   ? uncategorizedTable()
                   : tableFor == 'contact-campaigns'

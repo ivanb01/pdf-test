@@ -54,9 +54,11 @@ const PieChart = ({ pieData, type }) => {
               />
               {type == 'number' && `${data.value} ${data.label}`}
               {type == 'percentage' &&
-                `${Math.round(getPercentage(data.value, totalSum))}% ${
-                  data.label
-                }`}
+                `${
+                  Math.round(getPercentage(data.value, totalSum))
+                    ? Math.round(getPercentage(data.value, totalSum))
+                    : 0
+                }% ${data.label}`}
             </div>
           );
         })}

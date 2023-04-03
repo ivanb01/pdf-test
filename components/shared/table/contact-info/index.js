@@ -2,6 +2,7 @@ import { MinusCircleIcon } from '@heroicons/react/solid';
 import Input from 'components/shared/input';
 import Image from 'next/image';
 import { PlusCircleIcon } from '@heroicons/react/solid';
+import Chip from 'components/shared/chip';
 
 const statusColors = {
   'New Lead': 'bg-lightBlue1',
@@ -38,23 +39,21 @@ const ContactInfo = ({ data, handleSelect, handleAction }) => {
         {data.email && (
           <div className="text-gray-500 font-medium">{data.email}</div>
         )}
-        {data.type ||
-          (data.status && (
-            <div className="flex flex-row">
-              <div
-                className={`bg-gray1 inline-flex items-center justify-center px-6 py-1.5 rounded-lg text-[#474D66] mr-2 text-xs font-medium`}
-              >
-                {data.type}
-              </div>
-              <div
+        <div className="flex flex-row">
+          {data.type && <Chip typeStyle>{data.type}</Chip>}
+          {data.status && (
+            <Chip statusStyle className={`${statusColors[data?.status]}`}>
+              {data.status}
+            </Chip>
+          )}
+          {/* <div
                 className={`${
                   statusColors[data?.status]
                 }  inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[#474D66] mr-2 text-xs font-medium`}
               >
                 {data.status}
-              </div>
-            </div>
-          ))}
+              </div> */}
+        </div>
       </div>
 
       {data.assigned ? (
