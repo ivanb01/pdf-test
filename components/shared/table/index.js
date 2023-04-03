@@ -305,6 +305,10 @@ const Table = ({
       </>
     );
   };
+  const showStatus = (dataItem) => {
+    console.log('dataitem', dataItem);
+    return dataItem.status_id != null && dataItem.status_id !== 1;
+  };
   const categorizedTable = () => {
     return (
       <>
@@ -405,7 +409,7 @@ const Table = ({
                         {getContactTypeByTypeId(dataItem.category_id)}
                       </Chip>
                     )}
-                    {dataItem.status_id != null && (
+                    {showStatus(dataItem) && (
                       <Chip
                         statusStyle
                         className={getContactStatusColorByStatusId(
