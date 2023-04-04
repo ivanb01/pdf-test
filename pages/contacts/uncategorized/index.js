@@ -61,8 +61,7 @@ const index = () => {
       uncategorizedContactsOriginal.data,
       term
     );
-    console.log(uncategorizedContactsOriginal.data, filteredArray);
-    // dispatch(setContacts(filteredArray));
+    setUncategorizedContacts(filteredArray.data);
   };
 
   const handleFetchUncategorized = () => {
