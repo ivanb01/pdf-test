@@ -103,9 +103,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               fetchedCampaign.contact_category_2 == campaign.value
           );
         });
-        if (data.length) {
-          handleOpenCategory(openCategory);
-        }
+        handleOpenCategory(openCategory);
       }
     );
   };
