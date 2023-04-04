@@ -50,6 +50,7 @@ const index = () => {
       document.querySelector('.main-menu-wrapper').style.display = 'none';
       setCategorizing(true);
     } else {
+      handleFetchUncategorized();
       document.querySelector('.main-menu-wrapper').style.display = 'block';
       setCategorizing(false);
     }
@@ -64,7 +65,8 @@ const index = () => {
     // dispatch(setContacts(filteredArray));
   };
 
-  useEffect(() => {
+  const handleFetchUncategorized = () => {
+    setLoading(true);
     getContacts('1,2,3,').then((data) => {
       setUncategorizedContactsOriginal(data.data);
       dispatch(setContacts(data.data));
@@ -77,6 +79,10 @@ const index = () => {
     });
     dispatch(setOpenedTab(2));
     dispatch(setOpenedSubtab(0));
+  };
+
+  useEffect(() => {
+    handleFetchUncategorized();
 
     if (router.query.categorize) {
       handleStartCategorizing(true);
