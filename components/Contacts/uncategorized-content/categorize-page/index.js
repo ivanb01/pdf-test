@@ -94,8 +94,8 @@ const CategorizePage = ({
       console.log('updated contacts', updatedContacts);
       console.log('categorizedinthissession', categorizedInThisSession);
       setCategorizedInThisSession((prevState) => [
-        ...prevState,
         ...updatedContacts,
+        ...prevState,
       ]);
       afterCategorizationProcess(ids);
     });
