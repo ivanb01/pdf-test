@@ -10,7 +10,7 @@ import Campaign from '@mui/icons-material/Campaign';
 import Edit from '@mui/icons-material/Edit';
 import Category from '@mui/icons-material/Category';
 import { useEffect, useState } from 'react';
-import { allStatusesQuickEdit, clientStatuses } from 'global/variables';
+import { allStatusesQuickEdit, clientStatuses, professionalsStatuses } from 'global/variables';
 import SimpleBar from 'simplebar-react';
 import { useRouter } from 'next/router';
 import * as contactServices from 'api/contacts';
@@ -44,7 +44,9 @@ export default function ContactCard({
 
   const changeStatus = async (status) => {
     const statusId = status; // example status id to search for
-    const foundStatus = clientStatuses.find(
+    const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+
+    const foundStatus = categoryStatuses.find(
       (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
     );
     const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
