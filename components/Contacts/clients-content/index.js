@@ -13,282 +13,57 @@ import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import GlobalAlert from 'components/shared/alert/global-alert';
-import { clientStatuses } from 'global/variables';
+import { clientStatuses, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
+import { TrashIcon } from '@heroicons/react/solid';
+
+const tabs = [
+  {
+    title: 'CLIENT TYPES',
+    content: ['Landlord', 'Renter', 'Buyer', 'Seller'],
+    value: 'category_2',
+  },
+  {
+    title: 'LAST COMMUNICATION',
+    content: Object.keys(filtersForLastCommunicationDate),
+    value: 'created_at',
+    // value: 'last_communication_date',
+    onlyOneValue: true, 
+  },
+  {
+    title: 'CLIENT STATUS',
+    content : allStatusesQuickEdit['clients'].map(item=>item.name),
+    value: 'status_2',
+  },
+  {
+    title: 'CAMPAIGN',
+    content: ['Assigned Clients', 'Unassigned Clients'],
+    value: 'campaign',
+  },
+  {
+    title: 'TAGS',
+    content: ['tag1', 'tag2', 'tag3'],
+    value: 'tags',
+  },
+];
+const buttons = [
+  {
+    id: 0,
+    icon: <ViewColumn className="h-5 w-5" />,
+  },
+  {
+    id: 1,
+    icon: <TableRows className="h-5 w-5" />,
+  },
+];
 
 const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
 
-  const [searchTerm, setSearchTerm] = useState();
-  const [uncategorizedContacts, setUncategorizedContacts] = useState([
-    {
-      tenant: 'Oxford',
-      email: 'blendk@outlook.com',
-      first_name: 'Blendar',
-      last_name: 'Kabashi',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'gentk@outlook.com',
-      first_name: 'Gent',
-      last_name: 'Kabashi',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk1@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk2@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk3@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk4@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk5@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk6@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk7@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk8@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk9@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk10@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk11@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-    {
-      tenant: 'Oxford',
-      email: 'blendk12@outlook.com',
-      first_name: 'Drin',
-      last_name: 'Fejzullahu',
-      phone_number: '049487720',
-      type: null,
-      status: null,
-      active: 0,
-      note: 'Test Note',
-      created_at: '2022-05-18 15:00:00',
-      modified_at: '2022-05-18 15:00:00',
-      last_communication: '2022-05-18 15:00:00',
-      next_communication: '2022-06-18 15:00:00',
-    },
-  ]);
-
   const [filters, setFilters] = useState({});
-  const [hideFilter, setHideFilter] = useState(false);
-  const tabs = [
-    {
-      title: 'CLIENT TYPES',
-      content: ['Landlord', 'Renter', 'Buyer', 'Seller'],
-      value: 'category_2',
-    },
-    {
-      title: 'LAST COMMUNICATION',
-      content: [
-        'Up to Date',
-        'Today',
-        '1 Week ago',
-        '2 Weeks ago',
-        '1 Month ago',
-      ],
-      value: 'last_communication_date',
-    },
-    {
-      title: 'CLIENT STATUS',
-      content: [
-        'New Lead',
-        'Attempted Contact',
-        'In Communication',
-        'Appointment Set',
-        'Actively Working',
-      ],
-      value: 'status_2',
-    },
-    {
-      title: 'CAMPAIGN',
-      content: ['Assigned Clients', 'Unassigned Clients'],
-      value: 'campaign',
-    },
-    {
-      title: 'TAGS',
-      content: ['Tag 1', 'Tag 2', 'Tag 3'],
-      value: 'tags',
-    },
-  ];
-  const buttons = [
-    {
-      id: 0,
-      icon: <ViewColumn className="h-5 w-5" />,
-    },
-    {
-      id: 1,
-      icon: <TableRows className="h-5 w-5" />,
-    },
-  ];
-
-  const [showFiltersBar, setShowFiltersBar] = useState(false);
-  const [filtersArray, setFiltersArray] = useState([]);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
   const [currentButton, setCurrentButton] = useState(0);
@@ -305,65 +80,82 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
 
   //   return () => clearTimeout(delayDebounceFn);
   // }, [searchTerm]);
+
   const filterContacts = () => {
-    // filters = category: ['today', 'yesterday'], last_comm: ['tomorrow','etc']
-    // contacts = [{last_comm: today}, {last_comm: today}, {last_comm: today}]
     if (filtersCleared) {
       dispatch(updateContacts(contactsOriginal));
-      setOpen(false);
       setFiltersCleared(false);
-      setFiltersArray([]);
       return;
     }
-    let filteredContacts = [];
+
+    let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      filteredContacts = contactsOriginal.filter((contact) =>
-        filters[key].includes(contact[key])
-      );
-    });
-    dispatch(updateContacts(filteredContacts));
-    setFiltersArray([].concat(...Object.values(filters)));
-    setShowFiltersBar(true);
-    setOpen(false);
-  };
-  const handleFilterClick = (selectedFilter, category) => () => {
-    console.log(selectedFilter, category);
-    let filtersCopy = { ...filters };
-    if (filtersCopy[category]) {
-      if (filtersCopy[category].includes(selectedFilter)) {
-        filtersCopy[category] = filtersCopy[category].filter(
-          (element) => element != selectedFilter
-        );
+      if(key == 'created_at') {
+        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0]));
       } else {
-        filtersCopy[category] = [...filtersCopy[category], selectedFilter];
+        contactsState = contactsState.filter((contact) => {
+          if(Array.isArray(contact[key])) {
+            return contact[key].reduce(
+                (accumulator, current) => accumulator || filters[key].includes(current),
+                false
+            )
+          } 
+          return filters[key].includes(contact[key])
+        })
+      }
+    });
+
+    dispatch(updateContacts(contactsState));
+  };
+
+  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    let filtersCopy = { ...filters };
+
+    if (filtersCopy[filterType]) {
+      if (filtersCopy[filterType].includes(selectedFilter)) {
+        filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== selectedFilter);
+        if(filtersCopy[filterType].length < 1) {
+          delete filtersCopy[filterType];
+        }
+      } else {
+        if(isOnlyOneFilter) {
+          filtersCopy[filterType] = [selectedFilter];
+        } else {
+          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+        }
       }
     } else {
-      filtersCopy[category] = [selectedFilter];
+      filtersCopy[filterType] = [selectedFilter];
     }
+
+    // console.log('filters', filtersCopy)
     setFilters(filtersCopy);
-  };
 
-  const removeChip = (valueToRemove) => {
-    for (const prop in filters) {
-      if (filters.hasOwnProperty(prop)) {
-        const propArray = filters[prop];
-        const indexToRemove = propArray.indexOf(valueToRemove);
-
-        if (indexToRemove !== -1) {
-          // If the value is found, remove it from the array
-          propArray.splice(indexToRemove, 1);
-        }
-      }
+    if(Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
     }
-    setFiltersCleared(true, () => {
-      setFiltersArray(
-        filtersArray.filter((filter) => filter !== valueToRemove),
-        () => {
-          filterContacts();
-        }
-      );
-    });
   };
+
+  const removeFilter = (filterToRemove, filterType ) => {
+    let filtersCopy = { ...filters };
+
+    filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== filterToRemove);
+    if(filtersCopy[filterType].length < 1) {
+      delete filtersCopy[filterType];
+    }
+
+    // console.log('filters', filtersCopy)
+    setFilters(filtersCopy);
+
+    if(Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
+    }
+  };
+
+  useEffect(()=>{
+    filterContacts();
+  },[filters])
+
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -407,24 +199,40 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
             </div>
           </div>
         </div>
-        {/* {console.log(filtersArray)} */}
-        {showFiltersBar && filtersArray.length > 0 && (
+        {Object.keys(filters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
-            <div className="flex items-center">
-              <div className="mr-2">
-                {filtersArray.length}{' '}
-                {filtersArray.length == 1 ? 'result' : 'results'} for:
+            <div className="flex justify-between">
+              <div className="flex flex-wrap items-center w-[100%]">
+                <div className="mr-2 text-gray5 text-sm ">
+                  {contacts.length}{' '}
+                  {contacts.length == 1 ? 'result' : 'results'} for:
+                </div>
+                {Object.keys(filters).map((key, index) => (
+                  filters[key].map((filter, i) => 
+                    <Chip
+                      closable
+                      removeChip={(filterToRemove)=>removeFilter(filterToRemove, key)}
+                      key={`${index}${i}`}
+                      active
+                      label={filter}
+                      className="mr-1"
+                    />
+                  )               
+                ))}
+                
               </div>
-              {filtersArray.map((filter, index) => (
-                <Chip
-                  // closable
-                  removeChip={removeChip}
-                  key={index}
-                  active
-                  label={filter}
-                  className="mr-1"
-                />
-              ))}
+              <div 
+                className="flex flex-row items-center cursor-pointer"
+                onClick={() => {
+                  setFiltersCleared(true);
+                  setFilters({});
+                }}
+              >
+                  <TrashIcon height={20} className="text-gray3 mr-1" />
+                  <Text p className="whitespace-nowrap">
+                    Clear Filter
+                  </Text>
+              </div>
             </div>
           </div>
         )}
@@ -470,26 +278,24 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
         className="top-[70px]"
         buttons={
           <>
-            {Object.values(filters).flat().length > 0 ? (
+            {Object.values(filters).flat().length > 0 && (
               <Button
                 white
-                label="Clear Filters"
+                label="Clear Filter"
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
                 }}
               />
-            ) : (
-              <div className="opacity-0"></div>
             )}
-            <Button
+            {/* <Button
               onClick={filterContacts}
               primary
               label="See Results"
               disabled={
                 !Object.values(filters).flat().length && !filtersCleared
               }
-            />
+            /> */}
           </>
         }
       >
