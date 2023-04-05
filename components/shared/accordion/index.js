@@ -45,7 +45,7 @@ export default function Accordion({
                   ) : typeof tab.content === 'object' ? (
                     <div className="mb-4 w-[100%] pb-4 flex flex-wrap">
                       {tab.content.map((content, index) => (
-                        <>
+                        <div key={index}>
                           <Chip
                             key={index}
                             selectedStatus={
@@ -60,7 +60,7 @@ export default function Accordion({
                             onClick={handleClick(content, tab.value)}
                           />
                           <br />
-                        </>
+                        </div>
                       ))}
                     </div>
                   ) : (

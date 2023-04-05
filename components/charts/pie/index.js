@@ -13,10 +13,11 @@ const PieChart = ({ pieData, type }) => {
     labels: pieData.map((data) => data.label),
     datasets: [
       {
-        data:
+        data: [
           type == 'number'
             ? pieData.map((data) => data.value)
             : pieData.map((data) => getPercentage(data.value, totalSum)),
+        ],
         backgroundColor: pieData.map((el) => el.color),
         borderColor: pieData.map((el) => el.color),
         borderWidth: 1,

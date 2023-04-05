@@ -21,9 +21,7 @@ const DoughnutChart = ({ data, color = '#60A5FA', className, label }) => {
   };
   return (
     <div className={`relative flex items-center justify-center ${className}`}>
-      <div
-        className="text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-medium"
-      >
+      <div className="text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-medium">
         {data[0] + '/' + data[1]}
       </div>
       <Doughnut data={doughnutData} />

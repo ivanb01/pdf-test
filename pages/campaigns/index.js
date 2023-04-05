@@ -238,7 +238,6 @@ const Campaigns = () => {
         }
         return obj;
       });
-
       setPieData(newPieData);
       setLoadingStats(false);
     } catch (error) {
@@ -254,7 +253,10 @@ const Campaigns = () => {
     <>
       <MainMenu fixed />
       <TopBar text="Campaigns" />
-      <div className="bg-gray10 h-auto">
+      <div
+        className="bg-gray10"
+        style={{ height: 'calc(100vh - 76px - 68px) !important' }}
+      >
         <div className="grid grid-cols-3 gap-6 p-6">
           <div className="col-span-2 bg-white rounded-lg border border-gray2 overflow-hidden relative">
             <div className="flex items-center px-6 py-4 justify-between border-b border-gray2">
@@ -351,26 +353,30 @@ const Campaigns = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="-ml-4 -mr-4 my-4" />
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="text-base font-medium">
-                      From in Campaign
+                {pieData[0].value != 0 && pieData[1].value != 0 && (
+                  <>
+                    <hr className="-ml-4 -mr-4 my-4" />
+                    <div>
+                      <div className="flex items-center justify-between mb-5">
+                        <div className="text-base font-medium">
+                          From in Campaign
+                        </div>
+                        <ButtonsSlider
+                          small
+                          buttons={chartTabs}
+                          currentButton={currentChartTab}
+                          onClick={setCurrentChartTab}
+                        />
+                      </div>
+                      <div className="">
+                        <PieChart
+                          pieData={pieData}
+                          type={currentChartTab == 0 ? 'percentage' : 'number'}
+                        />
+                      </div>
                     </div>
-                    <ButtonsSlider
-                      small
-                      buttons={chartTabs}
-                      currentButton={currentChartTab}
-                      onClick={setCurrentChartTab}
-                    />
-                  </div>
-                  <div className="">
-                    <PieChart
-                      pieData={pieData}
-                      type={currentChartTab == 0 ? 'percentage' : 'number'}
-                    />
-                  </div>
-                </div>
+                  </>
+                )}
               </div>
             )}
           </div>
