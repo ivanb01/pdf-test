@@ -55,9 +55,12 @@ export default function Accordion({
                                     .includes(content)
                                 : null
                             }
-                            className="my-2 text-gray5 mr-3"
+                            className={`my-2 mr-3 ${Object.values(activeSelections)
+                              .flat()
+                              .includes(content) ? '' : 'text-gray5'}`
+                            }
                             label={content}
-                            onClick={handleClick(content, tab.value)}
+                            onClick={handleClick(content, tab.value, tab.onlyOneValue)}
                           />
                           <br />
                         </>

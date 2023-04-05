@@ -4,6 +4,7 @@ import {
   clientStatuses,
   contactStatuses,
   professionalsStatuses,
+  filtersForLastCommunicationDate,
 } from './variables';
 import moment from 'moment';
 
@@ -156,4 +157,12 @@ export const formatPhoneNumber = (input) => {
     }
   );
   return output;
+};
+
+export const filterLastCommuncationDate = (date, filterDateString) => {
+  
+  let filterDate = filtersForLastCommunicationDate[filterDateString]
+  let test = moment().subtract(filterDate[0], filterDate[1]);
+  // console.log('filteringdate', date, test, moment(date).isSameOrAfter(test));
+  return moment(date).isSameOrAfter(test);
 };
