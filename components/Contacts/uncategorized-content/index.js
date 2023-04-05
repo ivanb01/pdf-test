@@ -151,14 +151,18 @@ const Uncategorized = ({
           <div className="flex items-center justify-between w-full">
             {categorizing ? (
               <>
-                <div className="flex items-center">
+                <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
                     Uncategorized Contacts
                   </Text>
                   <Search
                     placeholder="Search"
-                    className="ml-4 text-sm"
-                    onInput={(event) => onSearch(event.target.value)}
+                    className="mr-5 ml-4 text-sm"
+                    onInput={(event) => {
+                      setSelectedUncategorized([]);
+
+                      onSearch(event.target.value);
+                    }}
                   />
                 </div>
                 <div>
