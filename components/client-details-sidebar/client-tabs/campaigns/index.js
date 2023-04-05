@@ -4,7 +4,7 @@ import Events from 'components/shared/events';
 import { CalendarIcon, ClockIcon } from '@heroicons/react/outline';
 import Text from 'components/shared/text';
 import Image from 'next/image';
-import campaignsSVG from 'public/images/no-campaigns.svg';
+import campaignsSVG from 'public/images/no_campaigns.svg';
 import {
   assignContactToCampaign,
   unassignContactFromCampaign,
