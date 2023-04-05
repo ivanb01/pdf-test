@@ -48,7 +48,7 @@ export default function ContactCard({
       (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
     );
     const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-    console.log(foundStatus);
+    console.log('tesr', foundStatus);
     let statusName = foundStatus.statuses.find(
       (foundstatus) => foundstatus.id == status
     ).name;
@@ -57,7 +57,7 @@ export default function ContactCard({
       updateContactStatus({
         id: contact.id,
         status_id: status,
-        status_2: statusMainTitle,
+        status_2: statusName,
       })
     );
     toast.success(
@@ -233,9 +233,9 @@ export default function ContactCard({
             <div
               id={'tooltip-see-campaigns-' + contact.id}
               role="tooltip"
-              className="inline-block bottom-11 absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
-              See Campaigns
+              See Campaigns 
             </div>
           </div>
           <div
@@ -269,7 +269,7 @@ export default function ContactCard({
             <div
               id={'tooltip-change-status-' + contact.id}
               role="tooltip"
-              className="inline-block absolute bottom-11 invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block  absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
               Change Status
             </div>

@@ -18,9 +18,9 @@ import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
 
 const Professionals = ({
-  professionalsTypeCards,
   setShowAddContactOverlay,
   onSearch,
+  handleCardEdit
 }) => {
   const dispatch = useDispatch();
   const [showFiltersBar, setShowFiltersBar] = useState(false);
@@ -185,6 +185,7 @@ const Professionals = ({
                     status={status}
                     key={index}
                     categoryType="professionals"
+                    handleCardEdit={handleCardEdit}
                   />
                 )
               )}
@@ -199,7 +200,7 @@ const Professionals = ({
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" />
+                <Table tableFor="contactsList" categoryType="professionals" handleCardEdit={handleCardEdit} />
               </SimpleBar>
             </div>
           </div>

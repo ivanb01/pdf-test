@@ -33,6 +33,15 @@ import Campaign from '@mui/icons-material/Campaign';
 import Chip from '../chip';
 import { formatDateAgo } from 'global/functions';
 import undoIcon from 'public/images/undo.svg';
+import { useDispatch } from 'react-redux';
+import { setContacts, updateContactStatus } from 'store/contacts/slice';
+import toast from 'react-hot-toast';
+import * as contactServices from 'api/contacts';
+const categoryIds = {
+  Client: '4,5,6,7',
+  Professional: '8,9,12',
+};
+
 
 const Table = ({
   undoAllCategorizations,
@@ -44,6 +53,8 @@ const Table = ({
   handleClickRow,
   tableFor,
   handleAction,
+  categoryType,
+  handleCardEdit,
 }) => {
   const types = [
     {
@@ -577,6 +588,46 @@ const Table = ({
     const contacts = useSelector((state) => state.contacts.data.data);
     let contactsStatuses =
       openedTab == 0 ? clientStatuses : professionalsStatuses;
+
+    const dispatch = useDispatch();
+    const changeStatus = async (contact, status) => {
+      const statusId = status; // example status id to search for
+      const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+      const foundStatus = categoryStatuses.find(
+        (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
+      );
+      const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
+      console.log(foundStatus);
+      let statusName = foundStatus.statuses.find(
+        (foundstatus) => foundstatus.id == status
+      ).name;
+  
+      dispatch(
+        updateContactStatus({
+          id: contact.id,
+          status_id: status,
+          status_2: statusMainTitle,
+        })
+      );
+      toast.success(
+        `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
+      );
+  
+      try {
+        const res = await contactServices.updateContact(contact.id, {
+          status_id: status,
+        });
+        // change status locally
+        console.log('changeStatus', contact, contact.id, status, res);
+        // setDropdownOpened(false);
+        const { data } = await contactServices.getContacts(
+          categoryIds[contact?.category_1]
+        );
+        dispatch(setContacts(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
     return (
       <>
         <thead className="bg-gray-50">
@@ -678,6 +729,7 @@ const Table = ({
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
+                            
                           />
                         </div>
                         {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
@@ -685,7 +737,7 @@ const Table = ({
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div
-                            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
+                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
                             onMouseEnter={() =>
                               document
                                 .querySelector(
@@ -700,17 +752,21 @@ const Table = ({
                                 )
                                 .classList.add('invisible', 'opacity-0')
                             }
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleCardEdit(contact)
+                            }}
                           >
                             <Edit className="text-gray3 w-4 h-4" />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
-                              className="inline-block bottom-14 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
                             >
                               Edit Contact
                             </div>
                           </div>
                           <div
-                            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
+                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
                             onMouseEnter={() =>
                               document
                                 .querySelector(
@@ -725,12 +781,19 @@ const Table = ({
                                 )
                                 .classList.add('invisible', 'opacity-0')
                             }
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              router.push({
+                                pathname: '/contacts/details',
+                                query: { id: contact.id, campaigns: true },
+                              })
+                            }}
                           >
                             <Campaign className="text-gray3 w-4 h-4" />
                             <div
                               id={'tooltip-see-campaigns-' + contact.id}
                               role="tooltip"
-                              className="inline-block bottom-14 absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                             >
                               See Campaigns
                             </div>
@@ -752,29 +815,26 @@ const Table = ({
                                 .classList.add('invisible', 'opacity-0')
                             }
                             // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                            onClick={() => setDropdownOpened(!dropdownOpened)}
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <Category className="text-gray3 w-4 h-4" />
-                            {/* <SimpleBarDropdown
-                              options={allStatusesQuickEdit[0]}
-                              activeIcon={false}
-                              activeClasses="bg-lightBlue1"
-                              handleSelect={(item) => {
-                                // setDropdownVal(item)
-                                changeStatus(item.id);
-                              }}
-                              iconLabel={
-                                <Category className="text-gray3 w-4 h-4" />
-                              }
-                              dropdownValue={contact?.status_2}
-                              handleDropdownClosed={(item) =>
-                                setDropdownOpened(item)
-                              }
-                            ></SimpleBarDropdown> */}
+                            {/* <Category className="text-gray3 w-4 h-4" /> */}
+                            
+                            <SimpleBarDropdown
+                            options={allStatusesQuickEdit[categoryType]}
+                            activeIcon={false}
+                            activeClasses="bg-lightBlue1"
+                            handleSelect={(item) => {
+                              // setDropdownVal(item)
+                              changeStatus(contact, item.id);
+                            }}
+                            iconLabel={<Category className="text-gray3 w-4 h-4" />}
+                            dropdownValue={contact?.status_2}
+                            handleDropdownClosed={(item) => console.log('testing', item)}
+                          ></SimpleBarDropdown>
                             <div
                               id={'tooltip-change-status-' + contact.id}
                               role="tooltip"
-                              className="w-[109px] inline-block absolute bottom-14 invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                              className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                             >
                               Change Status
                             </div>

@@ -9,12 +9,16 @@ import Loader from 'components/shared/loader';
 import { professionalsStatuses } from 'global/variables';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { searchContacts } from 'global/functions';
+import EditContactOverlay from 'components/overlays/edit-client';
+
 
 const index = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [professionalsCopy, setProfessionalsCopy] = useState();
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
+  const [showEditContact, setShowEditContact] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState(null);
   const openedTab = useSelector((state) => state.global.openedTab);
 
   const searchProfessionals = (term) => {
@@ -125,9 +129,12 @@ const index = () => {
         <Loader />
       ) : (
         <Professionals
-          professionalsTypeCards={professionalsTypeCards}
           setShowAddContactOverlay={setShowAddContactOverlay}
           onSearch={searchProfessionals}
+          handleCardEdit={(contact) => {
+            setShowEditContact(true);
+            setContactToEdit(contact);
+          }}
         />
       )}
 
@@ -137,6 +144,16 @@ const index = () => {
           title="Add Professional"
           options={professionalsOptions}
           statuses={professionalsStatuses}
+        />
+      )}
+
+      {showEditContact && (
+        <EditContactOverlay
+          handleClose={() => setShowEditContact(false)}
+          title="Edit Professional"
+          client={contactToEdit}
+          className="w-[635px]"
+          afterUpdate={() => console.log('fetching')}
         />
       )}
     </Layout>
