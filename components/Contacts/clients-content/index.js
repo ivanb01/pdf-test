@@ -265,7 +265,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" />
+                <Table tableFor="contactsList" categoryType="clients" handleCardEdit={handleCardEdit}/>
               </SimpleBar>
             </div>
           </div>

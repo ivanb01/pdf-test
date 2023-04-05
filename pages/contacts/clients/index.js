@@ -77,7 +77,7 @@ const index = () => {
       {showEditContact && (
         <EditContactOverlay
           handleClose={() => setShowEditContact(false)}
-          title="Edit Contact"
+          title="Edit Client"
           client={contactToEdit}
           className="w-[635px]"
           afterUpdate={() => fetchClients()}

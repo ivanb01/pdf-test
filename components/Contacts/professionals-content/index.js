@@ -64,6 +64,7 @@ const buttons = [
 const Professionals = ({
   setShowAddContactOverlay,
   onSearch,
+  handleCardEdit
 }) => {
   const dispatch = useDispatch();
 
@@ -252,6 +253,7 @@ const Professionals = ({
                     status={status}
                     key={index}
                     categoryType="professionals"
+                    handleCardEdit={handleCardEdit}
                   />
                 )
               )}
@@ -266,7 +268,7 @@ const Professionals = ({
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" />
+                <Table tableFor="contactsList" categoryType="professionals" handleCardEdit={handleCardEdit} />
               </SimpleBar>
             </div>
           </div>
