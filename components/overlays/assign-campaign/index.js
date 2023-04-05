@@ -14,7 +14,7 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
           h2
           className="max-w-xs mx-auto mb-3 leading-[1.4] mt-6 justify-center"
         >
-          Assigning to a Campaign
+          Assigning to Campaign
         </Text>
         <Text p className="text-gray4 max-w-xl mx-auto">
           Contacts can easily be assigned to campaigns based on their stage in
@@ -29,7 +29,7 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
           label="Cancel"
           onClick={handleCloseOverlay}
         />
-        <Button primary label="Assign in Campaign" onClick={onSubmit} />
+        <Button primary label="Assign to Campaign" onClick={onSubmit} />
       </div>
     </Overlay>
   );
