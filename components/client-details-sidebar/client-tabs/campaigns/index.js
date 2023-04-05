@@ -4,6 +4,7 @@ import Events from 'components/shared/events';
 import { CalendarIcon, ClockIcon } from '@heroicons/react/outline';
 import Text from 'components/shared/text';
 import Image from 'next/image';
+import campaignsSVG from 'public/images/no_campaigns.svg';
 import {
   assignContactToCampaign,
   unassignContactFromCampaign,
@@ -163,8 +164,27 @@ export default function Campaigns({
         />
       )}
       {contactCampaignStatus == 'no_match' && (
-        <div className="bg-gray10 p-[24px]">
-          No matching campaign found for the contact.
+        // <div className="bg-gray10 p-[24px]">
+        //   No matching campaign found for the contact.
+        // </div>
+        <div className="bg-gray10 details-tabs-fixed-height p-[24px]">
+          <div className='bg-white h-full overflow-y-scroll'>
+            <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+              <Image src={campaignsSVG}></Image>
+              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                There is no matched campaign for this contact
+              </Text>
+              <Text p className="text-gray4 relative text-center mb-6">
+                Matched campaign will be shown here.
+              </Text>
+              <Button
+                primary
+                leftIcon={<Add className="w-4 h-4" />}
+                label={`${formType} Note`}
+                onClick={openAddModal}
+              />
+            </div>
+          </div>
         </div>
       )}
       {campaignEvents && (

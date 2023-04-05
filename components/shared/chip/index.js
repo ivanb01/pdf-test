@@ -14,6 +14,9 @@ export default function Chip({
   closable,
   active,
   removeChip,
+  statusStyle,
+  typeStyle,
+  children,
   ...props
 }) {
   // let today = new Date();
@@ -39,6 +42,26 @@ export default function Chip({
   } else {
     lastCommunicationLabel = lastCommunication;
     styling = 'text-red3 bg-red1';
+  }
+
+  if (typeStyle) {
+    return (
+      <div
+        className={`${className} text-[#474D66] min-h-[28px] text-[11px] uppercase px-3 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center`}
+      >
+        {children ? children : label}
+      </div>
+    );
+  }
+
+  if (statusStyle) {
+    return (
+      <div
+        className={`${className} min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 rounded-xl mr-3 flex items-center`}
+      >
+        {children ? children : label}
+      </div>
+    );
   }
 
   return (

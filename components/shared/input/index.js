@@ -211,7 +211,7 @@ const Input = ({
               id={id}
               placeholder={placeholder}
               onInput={onInput}
-              onChange={(event) => onChange(event)}
+              onChange={onChange}
               onKeyDown={onKeyDown}
               value={value}
               type="checkbox"

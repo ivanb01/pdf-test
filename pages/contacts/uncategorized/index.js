@@ -32,6 +32,7 @@ const index = () => {
   ] = useState(null);
 
   const handleSelectUncategorized = (contact, event) => {
+    console.log(contact, event.target.checked);
     let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
     if (event.target.checked) {
       row.classList.add('bg-lightBlue1');
@@ -39,7 +40,7 @@ const index = () => {
     } else {
       row.classList.remove('bg-lightBlue1');
       let newUncategorized = selectedUncategorized.filter(
-        (element) => element.id != contact.id
+        (element) => element.id !== contact.id
       );
       setSelectedUncategorized(newUncategorized);
     }
@@ -49,6 +50,7 @@ const index = () => {
       document.querySelector('.main-menu-wrapper').style.display = 'none';
       setCategorizing(true);
     } else {
+      handleFetchUncategorized();
       document.querySelector('.main-menu-wrapper').style.display = 'block';
       setCategorizing(false);
     }
@@ -59,11 +61,11 @@ const index = () => {
       uncategorizedContactsOriginal.data,
       term
     );
-    console.log(uncategorizedContactsOriginal.data, filteredArray);
-    // dispatch(setContacts(filteredArray));
+    setUncategorizedContacts(filteredArray.data);
   };
 
-  useEffect(() => {
+  const handleFetchUncategorized = () => {
+    setLoading(true);
     getContacts('1,2,3,').then((data) => {
       setUncategorizedContactsOriginal(data.data);
       dispatch(setContacts(data.data));
@@ -76,6 +78,10 @@ const index = () => {
     });
     dispatch(setOpenedTab(2));
     dispatch(setOpenedSubtab(0));
+  };
+
+  useEffect(() => {
+    handleFetchUncategorized();
 
     if (router.query.categorize) {
       handleStartCategorizing(true);

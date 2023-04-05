@@ -268,7 +268,7 @@ const Campaigns = () => {
             </div>
             {loadingEvents ? (
               <Loader />
-            ) : !campaignsEvents.thisWeek.length ? (
+            ) : campaignsEvents.thisWeek.length ? (
               <SimpleBar
                 autoHide={true}
                 className="overflow-x-hidden"
@@ -290,10 +290,10 @@ const Campaigns = () => {
               <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
                 <Mail className="w-10 h-10 text-gray3"></Mail>
                 <Text h3 className="text-gray7 mt-4 mb-2 text-center">
-                  There are no upcoming events on this week!
+                  {`There are no upcoming events on this ${currentButton == 0 ? 'week': 'month'}!`}
                 </Text>
                 <Text p className="text-gray4 relative text-center">
-                  All upcoming events for this week will be shown here.
+                  {`All upcoming events for this ${currentButton == 0 ? 'week': 'month'} will be shown here.`}
                 </Text>
               </div>
             )}

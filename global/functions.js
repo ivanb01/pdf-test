@@ -8,7 +8,6 @@ import {
 } from './variables';
 import moment from 'moment';
 
-
 export const getInitials = (name) => {
   let fullName = name.split(' ');
   return fullName[0][0] + fullName[1][0];
@@ -16,6 +15,10 @@ export const getInitials = (name) => {
 
 export const classNames = (...classes) => {
   return classes.filter(Boolean).join(' ');
+};
+
+export const formatNumber = (number) => {
+  return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
 };
 
 export const formatDate = (eventDate, hideTime) => {
@@ -115,15 +118,15 @@ export const searchContacts = (originalArray, term) => {
 };
 
 export const formatDateMDY = (date) => {
-  return moment(date).format("MM/DD/YYYY")
+  return moment(date).format('MM/DD/YYYY');
 };
 
 export const formatDateLL = (date) => {
-  return moment(date).format("LL")
+  return moment(date).format('LL');
 };
 
 export const formatDateLT = (date) => {
-  return moment(date).format("MM/DD/YYYY, LT")
+  return moment(date).format('MM/DD/YYYY, LT');
 };
 
 export const formatDateAgo = (date, param) => {
@@ -144,16 +147,17 @@ export const formatDateTo = (date, param) => {
 // }
 
 export const formatPhoneNumber = (input) => {
-  let output = "";
-  input.replace( /^\D*(\d{0,3})\D*(\d{0,3})\D*(\d{0,4})/, function( match, g1, g2, g3 )
-      {
-        if( g1.length ) output = "(" + g1;
-        if( g2.length ) output += ") " + g2 ;
-        if( g3.length ) output += " - " + g3 ;
-      }       
-    );        
+  let output = '';
+  input.replace(
+    /^\D*(\d{0,3})\D*(\d{0,3})\D*(\d{0,4})/,
+    function (match, g1, g2, g3) {
+      if (g1.length) output = '(' + g1;
+      if (g2.length) output += ') ' + g2;
+      if (g3.length) output += ' - ' + g3;
+    }
+  );
   return output;
-}
+};
 
 export const filterLastCommuncationDate = (date, filterDateString) => {
   
@@ -161,4 +165,4 @@ export const filterLastCommuncationDate = (date, filterDateString) => {
   let test = moment().subtract(filterDate[0], filterDate[1]);
   // console.log('filteringdate', date, test, moment(date).isSameOrAfter(test));
   return moment(date).isSameOrAfter(test);
-}
+};
