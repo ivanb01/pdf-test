@@ -160,23 +160,40 @@ export default function ContactCard({
       >
         <div className="border-t border-gray-200 px-4 py-[10px] flex items-center justify-end">
           <div
-            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
-            onMouseEnter={() =>
+            className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+            onMouseEnter={() => {
               document
                 .querySelector('#tooltip-edit-contact-' + contact.id)
                 .classList.remove('invisible', 'opacity-0')
+              document
+                .querySelector('#edit-contact-icon-' + contact.id)
+                .classList.add('text-gray4')
+              document
+                .querySelector('#edit-contact-icon-' + contact.id)
+                .classList.remove('text-gray3')
+              }
             }
-            onMouseLeave={() =>
+            onMouseLeave={() => {
               document
                 .querySelector('#tooltip-edit-contact-' + contact.id)
                 .classList.add('invisible', 'opacity-0')
+              document
+                .querySelector('#edit-contact-icon-' + contact.id)
+                .classList.add('text-gray3')
+              document
+                .querySelector('#edit-contact-icon-' + contact.id)
+                .classList.remove('text-gray4')
+              }
             }
             onClick={() => handleCardEdit(contact)}
           >
-            <Edit className="text-gray3 w-4 h-4" />
+            <Edit 
+              id={'edit-contact-icon-' + contact.id}
+              className="text-gray3 w-4 h-4" 
+            />
             <div
               id={'tooltip-edit-contact-' + contact.id}
-              className="inline-block bottom-11 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+              className="inline-block bottom-11 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
             >
               Edit Contact
             </div>
@@ -185,72 +202,101 @@ export default function ContactCard({
             // temporarily removing send email and send sms buttons
           }
           {/* <div
-            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
+            className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
             data-tooltip-target={'tooltip-send-email-' + contact.id}
           >
             <Email className="text-gray3 w-4 h-4" />
             <div
               id={'tooltip-send-email-' + contact.id}
               role="tooltip"
-              className="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
               Send Email
             </div>
           </div>
           <div
-            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
+            className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
             data-tooltip-target={'tooltip-send-sms-' + contact.id}
           >
             <Sms className="text-gray3 w-4 h-4" />
             <div
               id={'tooltip-send-sms-' + contact.id}
               role="tooltip"
-              className="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block absolute invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
               Send SMS
             </div>
           </div> */}
           <div
-            className="cursor-pointer rounded-full p-1.5 bg-gray1 mr-2 flex items-center justify-center"
-            onMouseEnter={() =>
+            className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+            onMouseEnter={() => {
               document
                 .querySelector('#tooltip-see-campaigns-' + contact.id)
                 .classList.remove('invisible', 'opacity-0')
+              document
+                .querySelector('#see-campaigns-icon-' + contact.id)
+                .classList.add('text-gray4')
+              document
+                .querySelector('#see-campaigns-icon-' + contact.id)
+                .classList.remove('text-gray3')
+              }
             }
-            onMouseLeave={() =>
+            onMouseLeave={() => {
               document
                 .querySelector('#tooltip-see-campaigns-' + contact.id)
                 .classList.add('invisible', 'opacity-0')
+              document
+                .querySelector('#see-campaigns-icon-' + contact.id)
+                .classList.add('text-gray3')
+              document
+                .querySelector('#see-campaigns-icon-' + contact.id)
+                .classList.remove('text-gray4')
+              }
             }
-          >
-            <Campaign
-              className="text-gray3 w-4 h-4"
-              onClick={() =>
+            onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
                   query: { id: contact.id, campaigns: true },
                 })
               }
+          >
+            <Campaign
+              id={'see-campaigns-icon-' + contact.id}
+              className="text-gray3 w-4 h-4"            
             />
             <div
               id={'tooltip-see-campaigns-' + contact.id}
               role="tooltip"
-              className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
               See Campaigns 
             </div>
           </div>
           <div
-            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 flex items-center justify-center group-hover"
-            onMouseEnter={() =>
+            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
+            onMouseEnter={() => {
               document
                 .querySelector('#tooltip-change-status-' + contact.id)
                 .classList.remove('invisible', 'opacity-0')
+              document
+                .querySelector('#change-status-icon-' + contact.id)
+                .classList.add('text-gray4')
+              document
+                .querySelector('#change-status-icon-' + contact.id)
+                .classList.remove('text-gray3')
+              }
             }
-            onMouseLeave={() =>
+            onMouseLeave={() => {
               document
                 .querySelector('#tooltip-change-status-' + contact.id)
                 .classList.add('invisible', 'opacity-0')
+              document
+                .querySelector('#change-status-icon-' + contact.id)
+                .classList.add('text-gray3')
+              document
+                .querySelector('#change-status-icon-' + contact.id)
+                .classList.remove('text-gray4')
+              }
             }
             // onClick={(event) => handleDropdown(event, !dropdownOpened)}
             onClick={() => setDropdownOpened(!dropdownOpened)}
@@ -264,14 +310,14 @@ export default function ContactCard({
                 // setDropdownVal(item)
                 changeStatus(item.id);
               }}
-              iconLabel={<Category className="text-gray3 w-4 h-4" />}
+              iconLabel={<Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />}
               dropdownValue={contact?.status_2}
               handleDropdownClosed={(item) => setDropdownOpened(item)}
             ></SimpleBarDropdown>
             <div
               id={'tooltip-change-status-' + contact.id}
               role="tooltip"
-              className="inline-block  absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              className="inline-block  absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
               Change Status
             </div>
