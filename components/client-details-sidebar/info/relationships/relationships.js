@@ -59,7 +59,7 @@ export default function Relationships({contactId}) {
         </Text>
         <div className="group relative cursor-pointer mr-2">
             <PlusCircleIcon className="text-gray3" height={20} onClick={() => setAddModal(true)}/>           
-            <div className="group-hover:opacity-100 opacity-0 right-0 bottom-6 whitespace-nowrap inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+            <div className="group-hover:opacity-100 opacity-0 right-0 bottom-6 whitespace-nowrap inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
             >
               Add Relationship
             </div>
@@ -116,7 +116,7 @@ export default function Relationships({contactId}) {
                           <div
                             id={`tooltip-delete-relationship-${relationship?.relationship_id}`}
                             role="tooltip"
-                            className="inline-block absolute right-0 bottom-6 whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm  dark:bg-gray-700"
+                            className="inline-block absolute right-0 bottom-6 whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700"
                             >
                             Delete Relationship
                           </div>
@@ -139,7 +139,7 @@ export default function Relationships({contactId}) {
                           <div
                             id={`tooltip-edit-relationship-${relationship?.relationship_id}`}
                             role="tooltip"
-                            className="inline-block absolute right-0 bottom-6 whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm  dark:bg-gray-700"
+                            className="inline-block absolute right-0 bottom-6 whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700"
                             >
                             Edit Relationship
                           </div>
