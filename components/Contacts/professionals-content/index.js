@@ -8,116 +8,160 @@ import TableRows from '@mui/icons-material/TableRows';
 import Add from '@mui/icons-material/Add';
 import Column from 'components/column';
 import SlideOver from 'components/shared/slideOver';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Accordion from 'components/shared/accordion';
-import { professionalsStatuses } from 'global/variables';
+import { professionalsStatuses, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
+import { TrashIcon } from '@heroicons/react/solid';
+
+
+const tabs = [
+  {
+    title: 'PROFESSIONAL TYPES',
+    content: ['Vendor', 'Agent', 'Other'],
+    value: 'category_2',
+  },
+  {
+    title: 'LAST COMMUNICATION',
+    content: Object.keys(filtersForLastCommunicationDate),
+    value: 'created_at',
+    // value: 'last_communication_date',
+    onlyOneValue: true,
+  },
+  {
+    title: 'PROFESSIONAL STATUSES',
+    content : allStatusesQuickEdit['professionals'].map(item=>item.name),
+    value: 'status_2',
+  },
+  {
+    title: 'CAMPAIGN',
+    content: ['Assigned Professionals', 'Unassigned Professionals'],
+    value: 'campaign',
+  },
+  {
+    title: 'TAGS',
+    content: ['tag1', 'tag2', 'tag3'],
+    value: 'tags',
+  },
+];
+const buttons = [
+  {
+    id: 0,
+    icon: <ViewColumn className="h-5 w-5" />,
+  },
+  {
+    id: 1,
+    icon: <TableRows className="h-5 w-5" />,
+  },
+];
+
 
 const Professionals = ({
-  professionalsTypeCards,
   setShowAddContactOverlay,
   onSearch,
+  handleCardEdit
 }) => {
   const dispatch = useDispatch();
-  const [showFiltersBar, setShowFiltersBar] = useState(false);
-  const [filtersArray, setFiltersArray] = useState([]);
-  const [open, setOpen] = useState(false);
+
   const [filters, setFilters] = useState({});
-  const [hideFilter, setHideFilter] = useState(false);
-  const [currentButton, setCurrentButton] = useState(0);
   const [filtersCleared, setFiltersCleared] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [currentButton, setCurrentButton] = useState(0);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
 
-  const buttons = [
-    {
-      id: 0,
-      icon: <ViewColumn className="h-5 w-5" />,
-    },
-    {
-      id: 1,
-      icon: <TableRows className="h-5 w-5" />,
-    },
-  ];
-  const tabs = [
-    {
-      title: 'PROFESSIONAL TYPES',
-      content: ['Vendor', 'Agent', 'Other'],
-      value: 'category_2',
-    },
-    {
-      title: 'LAST COMMUNICATION',
-      content: [
-        'Up to Date',
-        'Today',
-        '1 Week ago',
-        '2 Weeks ago',
-        '1 Month ago',
-      ],
-      value: 'last_communication_date',
-    },
-    {
-      title: 'CLIENT STATUS',
-      content: [
-        'No Relationship',
-        'Loose Relationship',
-        'Strong Relationship',
-        'Dropped',
-      ],
-      value: 'status_2',
-    },
-    {
-      title: 'CAMPAIGN',
-      content: ['Assigned Clients', 'Unassigned Clients'],
-      value: 'campaign',
-    },
-    {
-      title: 'TAGS',
-      content: ['Tag 1', 'Tag 2', 'Tag 3'],
-      value: 'tags',
-    },
-  ];
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     onSearch(searchTerm);
+  //     // Send Axios request here
+  //   }, 2000);
+
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [searchTerm]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      console.log('filters cleared');
       dispatch(updateContacts(contactsOriginal));
-      setFiltersArray([]);
-      setOpen(false);
+      setFiltersCleared(false);
       return;
     }
-    let filteredContacts = [];
+
+    let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      filteredContacts = contactsOriginal.filter((contact) =>
-        filters[key].includes(contact[key])
-      );
-    });
-    setShowFiltersBar(true);
-    setFiltersArray([].concat(...Object.values(filters)));
-    dispatch(updateContacts(filteredContacts));
-    setOpen(false);
-  };
-  const handleFilterClick = (selectedFilter, category) => () => {
-    let filtersCopy = { ...filters };
-    if (filtersCopy[category]) {
-      if (filtersCopy[category].includes(selectedFilter)) {
-        filtersCopy[category] = filtersCopy[category].filter(
-          (element) => element != selectedFilter
-        );
+      if(key == 'created_at') {
+        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0]));
       } else {
-        filtersCopy[category] = [...filtersCopy[category], selectedFilter];
+        contactsState = contactsState.filter((contact) => {
+          if(Array.isArray(contact[key])) {
+            return contact[key].reduce(
+                (accumulator, current) => accumulator || filters[key].includes(current),
+                false
+            )
+          } 
+          return filters[key].includes(contact[key])
+        })
+      }
+    });
+
+    dispatch(updateContacts(contactsState));
+  };
+
+  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    let filtersCopy = { ...filters };
+
+    if (filtersCopy[filterType]) {
+      if (filtersCopy[filterType].includes(selectedFilter)) {
+        filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== selectedFilter);
+        if(filtersCopy[filterType].length < 1) {
+          delete filtersCopy[filterType];
+        }
+      } else {
+        if(isOnlyOneFilter) {
+          filtersCopy[filterType] = [selectedFilter];
+        } else {
+          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+        }
       }
     } else {
-      filtersCopy[category] = [selectedFilter];
+      filtersCopy[filterType] = [selectedFilter];
     }
+
+    // console.log('filters', filtersCopy)
     setFilters(filtersCopy);
+
+    if(Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
+    }
   };
+
+  const removeFilter = (filterToRemove, filterType ) => {
+    let filtersCopy = { ...filters };
+
+    filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== filterToRemove);
+    if(filtersCopy[filterType].length < 1) {
+      delete filtersCopy[filterType];
+    }
+
+    // console.log('filters', filtersCopy)
+    setFilters(filtersCopy);
+
+    if(Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
+    }
+  };
+
+  useEffect(()=>{
+    filterContacts();
+  },[filters])
+
+
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -156,16 +200,40 @@ const Professionals = ({
             </div>
           </div>
         </div>
-        {showFiltersBar && filtersArray.length > 0 && (
+         {Object.keys(filters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
-            <div className="flex items-center">
-              <div className="mr-2">
-                {filtersArray.length}{' '}
-                {filtersArray.length == 1 ? 'result' : 'results'} for:
+            <div className="flex justify-between">
+              <div className="flex flex-wrap items-center w-[100%]">
+                <div className="mr-2 text-gray5 text-sm ">
+                  {contacts.length}{' '}
+                  {contacts.length == 1 ? 'result' : 'results'} for:
+                </div>
+                {Object.keys(filters).map((key, index) => (
+                  filters[key].map((filter, i) => 
+                    <Chip
+                      closable
+                      removeChip={(filterToRemove)=>removeFilter(filterToRemove, key)}
+                      key={`${index}${i}`}
+                      active
+                      label={filter}
+                      className="mr-1"
+                    />
+                  )               
+                ))}
+                
               </div>
-              {filtersArray.map((filter, index) => (
-                <Chip key={index} active label={filter} className="mr-1" />
-              ))}
+              <div 
+                className="flex flex-row items-center cursor-pointer"
+                onClick={() => {
+                  setFiltersCleared(true);
+                  setFilters({});
+                }}
+              >
+                  <TrashIcon height={20} className="text-gray3 mr-1" />
+                  <Text p className="whitespace-nowrap">
+                    Clear Filter
+                  </Text>
+              </div>
             </div>
           </div>
         )}
@@ -185,6 +253,7 @@ const Professionals = ({
                     status={status}
                     key={index}
                     categoryType="professionals"
+                    handleCardEdit={handleCardEdit}
                   />
                 )
               )}
@@ -199,7 +268,7 @@ const Professionals = ({
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" />
+                <Table tableFor="contactsList" categoryType="professionals" handleCardEdit={handleCardEdit} />
               </SimpleBar>
             </div>
           </div>
@@ -208,29 +277,31 @@ const Professionals = ({
       <SlideOver
         open={open}
         setOpen={setOpen}
-        title="Professionals Filters"
+        title="Professional Filters"
         className="top-[70px]"
         buttons={
-          <>
-            <Button
-              white
-              label="Clear Filters"
-              onClick={() => {
-                setFiltersCleared(true);
-                setFilters({});
-              }}
-            />
-            <Button
-              onClick={filterContacts}
-              primary
-              label="See Results"
-              disabled={
-                !Object.values(filters).flat().length && !filtersCleared
-              }
-            />
-          </>
-        }
-      >
+            <>
+              {Object.values(filters).flat().length > 0 && (
+                <Button
+                  white
+                  label="Clear Filter"
+                  onClick={() => {
+                    setFiltersCleared(true);
+                    setFilters({});
+                  }}
+                />
+              )}
+              {/* <Button
+                onClick={filterContacts}
+                primary
+                label="See Results"
+                disabled={
+                  !Object.values(filters).flat().length && !filtersCleared
+                }
+              /> */}
+            </>
+          }
+        >
         <Accordion
           tabs={tabs}
           handleClick={handleFilterClick}

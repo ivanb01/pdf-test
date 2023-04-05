@@ -513,6 +513,10 @@ export const contactCategoryOptions = {
         name: 'Vendor',
       },
       {
+        id: 12,
+        name: 'Agent',
+      },
+      {
         id: 9,
         name: 'Other',
       },
@@ -543,6 +547,10 @@ export const professionalsOptions = [
   {
     id: 8,
     name: 'Vendor',
+  },
+  {
+    id: 12,
+    name: 'Agent',
   },
   {
     id: 9,
@@ -628,5 +636,13 @@ export const importSourceOptions = [
 
 
 export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/
+
+export const filtersForLastCommunicationDate = {
+  // 'Up to Date',
+  'Today': [1, 'days'],
+  '1 Week ago': [7, 'days'],
+  '2 Weeks ago': [14, 'days'],
+  '1 Month ago': [1, 'months'],
+}
 
 
