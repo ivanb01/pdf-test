@@ -14,6 +14,7 @@ import Router from 'next/router';
 import * as campaignServices from 'api/campaign';
 import Loader from 'components/shared/loader';
 import Mail from '@mui/icons-material/Mail';
+import { sortDateAsc } from 'global/functions';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -201,13 +202,15 @@ const Campaigns = () => {
   const fetchCampaignsEvents = async () => {
     try {
       const { data } = await campaignServices.getCampaignsEventsUpcoming();
-      setCampaignsEvents((prev) => ({ ...prev, thisWeek: data?.data }));
+      const sortData = sortDateAsc(data?.data, 'event_scheduled_time')
+      setCampaignsEvents((prev) => ({ ...prev, thisWeek: sortData }));
+
       const { data: dataMonth } =
         await campaignServices.getCampaignsEventsUpcoming({
           period: 'this_month',
         });
-      setCampaignsEvents((prev) => ({ ...prev, thisMonth: dataMonth?.data }));
-      console.log('dataWeek', data, 'dataMonth', dataMonth);
+      const sortDataMonth = sortDateAsc(dataMonth?.data, 'event_scheduled_time')
+      setCampaignsEvents((prev) => ({ ...prev, thisMonth: sortDataMonth }));
       setLoadingEvents(false);
     } catch (error) {
       console.log(error);
