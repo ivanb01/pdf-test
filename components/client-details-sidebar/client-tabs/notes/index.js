@@ -209,7 +209,7 @@ export default function Notes({ contactId }) {
                           <Text p className="mb-1">
                             {note?.title}
                           </Text>
-                          <Text p className="text-gray4">
+                          <Text p className="text-gray4 h-[84px] align-baseline overflow-y-scroll">
                             {note?.description}
                           </Text>
                           <Text className="text-gray4 text-xs mt-2">
