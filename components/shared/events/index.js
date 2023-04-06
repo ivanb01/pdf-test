@@ -4,7 +4,7 @@ import { classNames } from 'global/functions';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import EventStatus from 'components/event-status/';
 import { eventStatuses, eventStatusesIcons } from 'global/variables';
-import { formatDateLT } from 'global/functions';
+import { formatDateLT, isValidDate } from 'global/functions';
 
 // const eventStatusesIcons = {
 //   'scheduled': <CheckIcon
@@ -68,11 +68,22 @@ export default function Events({
                   >
                     <div className="flex flex-col">
                       <span className=" text-xs font-semibold tracking-wide uppercase">
-                        {event.event_action} - {event.event_type}
+                        {event.event_type}
+                        {
+                          event.preview ? (
+                            event.preview.preview.subject ? `: ${event.preview.preview.subject}` : ''
+                          ) : (
+                            event.subject ? `: ${event.subject}` : ''
+                          )
+                        }
                       </span>
                       <div className="mt-2 flex items-center whitespace-nowrap text-center text-sm text-gray-500">
                         {event.status && <EventStatus status={event.status} /> }
-                        <div className="ml-2 text-gray4">{formatDateLT(event.execute_on)} </div>
+                        <div className="ml-2 text-gray4">
+                          {
+                            isValidDate(event.execute_on) ? formatDateLT(event.execute_on) : event.execute_on
+                          }
+                        </div>
                       </div>
                     </div>
                     <ArrowForward
