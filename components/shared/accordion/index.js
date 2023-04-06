@@ -24,8 +24,8 @@ export default function Accordion({
             {({ open }) => (
               <>
                 <div className="flex flex-row mt-[16px] border-b border-gray2 pb-[6px]">
-                  <Disclosure.Button className="text-left w-full flex justify-between items-center text-gray-400">
-                    <span className="text-xs font-semibold text-gray5">
+                  <Disclosure.Button className="text-left w-full flex justify-between items-center text-gray4">
+                    <span className="text-xs font-semibold text-gray4">
                       {tab.title}
                     </span>
                     <span className="ml-6 h-7 flex items-center">
@@ -60,7 +60,7 @@ export default function Accordion({
                               .includes(content) ? '' : 'text-gray5'}`
                             }
                             label={content}
-                            onClick={handleClick(content, tab.value, tab.onlyOneValue)}
+                            onClick={handleClick(content, tab?.value, tab?.onlyOneValue)}
                           />
                           <br />
                         </div>
