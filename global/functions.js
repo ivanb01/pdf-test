@@ -129,6 +129,16 @@ export const formatDateLT = (date) => {
   return moment(date).format('MM/DD/YYYY, LT');
 };
 
+export const formatDateLThour = (date) => {
+  return moment(date).format('LT');
+};
+
+export const formatDateCalendar = (date) => {
+  const calendarDate = moment(date).calendar();
+  const calendarDateArray = calendarDate.split(" ");
+  return calendarDateArray[0];
+};
+
 export const formatDateAgo = (date, param) => {
   return moment(date).startOf(param).fromNow();
 };
@@ -149,7 +159,7 @@ export const dateAfterDate = (date1, date2) => {
   return moment(date1).isAfter(date2);
 };
 
-export const sortFromOldestDate = (array, arrayFieldName) => {
+export const sortDateAsc = (array, arrayFieldName) => {
   const sortedArray = array.sort(function (a, b) {
       if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
         return -1;

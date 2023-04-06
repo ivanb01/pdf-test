@@ -31,7 +31,7 @@ import Category from '@mui/icons-material/Category';
 import SimpleBarDropdown from 'components/shared/dropdown/simpleBarDropdown';
 import Campaign from '@mui/icons-material/Campaign';
 import Chip from '../chip';
-import { formatDateAgo } from 'global/functions';
+import { formatDateAgo, formatDateLThour, formatDateCalendar } from 'global/functions';
 import undoIcon from 'public/images/undo.svg';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactStatus } from 'store/contacts/slice';
@@ -137,9 +137,9 @@ const Table = ({
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">Today</div>
+                <div className="text-gray7 font-medium">{formatDateCalendar(dataItem.event_scheduled_time)}</div>
                 <div className="text-gray4">
-                  {dataItem.event_scheduled_time}
+                  {formatDateLThour(dataItem.event_scheduled_time)}
                 </div>
               </td>
             </tr>
