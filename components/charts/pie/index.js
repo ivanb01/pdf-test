@@ -38,14 +38,13 @@ const PieChart = ({ pieData, type }) => {
 
   return (
     <>
-      {console.log(pieData)}
       <div className="mx-auto w-[170px]">
-        {pieData[0].value !== 0 && pieData[1].value !== 0 ? (
-          <Pie data={chart} />
-        ) : (
+        {pieData[0].value == 0 && pieData[1].value == 0 ? (
           <div className="mx-auto h-[170px] w-[170px] bg-borderColor rounded-full flex items-center justify-center text-gray5 italic text-xs">
             No contacts to show
           </div>
+        ) : (
+          <Pie data={chart} />
         )}
       </div>
       <div className="mt-6 pie-legend flex items-center justify-between">
