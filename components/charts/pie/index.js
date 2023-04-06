@@ -8,16 +8,16 @@ const PieChart = ({ pieData, type }) => {
   const getPercentage = (partialValue, totalValue) => {
     return (100 * partialValue) / totalValue;
   };
+  let pieDataNumber = pieData.map((data) => data.value);
+  let pieDataPercentage = pieData.map((data) =>
+    getPercentage(data.value, totalSum)
+  );
 
   const chart = {
     labels: pieData.map((data) => data.label),
     datasets: [
       {
-        data: [
-          type == 'number'
-            ? pieData.map((data) => data.value)
-            : pieData.map((data) => getPercentage(data.value, totalSum)),
-        ],
+        data: type == 'number' ? pieDataNumber : pieDataPercentage,
         backgroundColor: pieData.map((el) => el.color),
         borderColor: pieData.map((el) => el.color),
         borderWidth: 1,
