@@ -19,7 +19,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       if(data?.status === 'enrolled') {
         const { data: data2 } = await getCampaign(data?.campaign_id);
         setCampaignName(data2?.campaign_name);
-      } else if(data?.status === 'matching_campaign') {
+      } else if(data?.status === 'matches_campaign') {
         setCampaignName('Not in campaign');
       } else if(data?.status === 'unenrolled') {
         const { data: data2 } = await getCampaign(data?.campaign_id);
