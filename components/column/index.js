@@ -130,8 +130,14 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           )}
         </a>
       </div>
-      <SimpleBar style={{ overflowX: 'hidden', maxHeight: '100%' }}>
-        <div className="p-[16px] pb-48">
+      <SimpleBar
+        style={{
+          overflowX: 'hidden',
+          maxHeight: '100%',
+          height: 'calc(100vh - 224px) !important',
+        }}
+      >
+        <div className="p-[16px] h-full">
           {filteredContacts.map((contact, index) => (
             <ContactCard
               handleCardEdit={handleCardEdit}

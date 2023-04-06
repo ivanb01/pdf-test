@@ -54,7 +54,7 @@ const SignIn = () => {
   };
 
   const [newPasswordRequired, setNewPasswordRequired] = useState(false);
-  const [cognitoUser, setCognituUser] = useState(null);
+  const [cognitoUser, setCognitoUser] = useState(null);
   const [loadingButton, setLoadingButton] = useState(null);
   const passwordRules =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
@@ -146,13 +146,14 @@ const SignIn = () => {
         values.userName.toLowerCase(),
         values.password
       );
+      console.log('user signed in', user);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
         setTimeout(() => {
           router.push('/contacts/clients');
         }, 2000);
       } else {
-        setCognituUser(user);
+        setCognitoUser(user);
         setNewPasswordRequired(true);
         setLoadingButton(false);
       }

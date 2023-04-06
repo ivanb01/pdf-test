@@ -253,10 +253,7 @@ const Campaigns = () => {
     <>
       <MainMenu fixed />
       <TopBar text="Campaigns" />
-      <div
-        className="bg-gray10"
-        style={{ height: 'calc(100vh - 76px - 68px) !important' }}
-      >
+      <div className="bg-gray10 campaigns-custom-height">
         <div className="grid grid-cols-3 gap-6 p-6">
           <div className="col-span-2 bg-white rounded-lg border border-gray2 overflow-hidden relative">
             <div className="flex items-center px-6 py-4 justify-between border-b border-gray2">
@@ -292,10 +289,14 @@ const Campaigns = () => {
               <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
                 <Mail className="w-10 h-10 text-gray3"></Mail>
                 <Text h3 className="text-gray7 mt-4 mb-2 text-center">
-                  {`There are no upcoming events on this ${currentButton == 0 ? 'week': 'month'}!`}
+                  {`There are no upcoming events on this ${
+                    currentButton == 0 ? 'week' : 'month'
+                  }!`}
                 </Text>
                 <Text p className="text-gray4 relative text-center">
-                  {`All upcoming events for this ${currentButton == 0 ? 'week': 'month'} will be shown here.`}
+                  {`All upcoming events for this ${
+                    currentButton == 0 ? 'week' : 'month'
+                  } will be shown here.`}
                 </Text>
               </div>
             )}
@@ -353,30 +354,28 @@ const Campaigns = () => {
                     </div>
                   </div>
                 </div>
-                {pieData[0].value != 0 && pieData[1].value != 0 && (
-                  <>
-                    <hr className="-ml-4 -mr-4 my-4" />
-                    <div>
-                      <div className="flex items-center justify-between mb-5">
-                        <div className="text-base font-medium">
-                          From in Campaign
-                        </div>
-                        <ButtonsSlider
-                          small
-                          buttons={chartTabs}
-                          currentButton={currentChartTab}
-                          onClick={setCurrentChartTab}
-                        />
+                <>
+                  <hr className="-ml-4 -mr-4 my-4" />
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="text-base font-medium">
+                        From in Campaign
                       </div>
-                      <div className="">
-                        <PieChart
-                          pieData={pieData}
-                          type={currentChartTab == 0 ? 'percentage' : 'number'}
-                        />
-                      </div>
+                      <ButtonsSlider
+                        small
+                        buttons={chartTabs}
+                        currentButton={currentChartTab}
+                        onClick={setCurrentChartTab}
+                      />
                     </div>
-                  </>
-                )}
+                    <div>
+                      <PieChart
+                        pieData={pieData}
+                        type={currentChartTab == 0 ? 'percentage' : 'number'}
+                      />
+                    </div>
+                  </div>
+                </>
               </div>
             )}
           </div>
