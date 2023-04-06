@@ -137,6 +137,10 @@ export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };
 
+export const isValidDate = (date) => {
+  return moment(date).isValid();
+};
+
 // export const phoneUSAFormat = (input) => { //returns (###) ###-####
 //   input = input.replace(/\D/g,'');
 //   let size = input.length;
