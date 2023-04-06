@@ -55,7 +55,7 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+          className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
         />
@@ -79,7 +79,7 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+          className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
         />
@@ -110,8 +110,8 @@ const Input = ({
           readOnly={saved || readonly}
           className={
             saved
-              ? 'text-gray7 p-0 border-none bg-transparent outline-none'
-              : `border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+              ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'
+              : `text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
                   errorClasses ? errorClasses : 'border-borderColor'
                 }`
           }
@@ -140,7 +140,7 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+          className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
         />
@@ -179,7 +179,7 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className=" outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
+            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
           >
             <option>US</option>
             <option>CA</option>
@@ -190,7 +190,7 @@ const Input = ({
           type="text"
           name={name ? name : id}
           id={id}
-          className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full pl-16 px-[13px] py-[9px] sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
+          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full pl-16 px-[13px] py-[9px] sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -239,7 +239,7 @@ const Input = ({
   return (
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
-        <Text h4 className={saved ? 'text-gray4' : 'text-gray-700'}>
+        <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
           {label}{' '}
           {optional && <span className="text-gray3 ml-1">(Optional)</span>}
         </Text>

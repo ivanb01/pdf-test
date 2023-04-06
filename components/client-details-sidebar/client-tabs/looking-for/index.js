@@ -135,25 +135,27 @@ export default function LookingFor({ contactId }) {
   }, [contactId]);
 
   const tabs = [
-    {
-      title: 'NEIGHBORHOOD',
-      content: (
-        <div className="">
-          <Input
-            id="neighborhood_id"
-            type="number"
-            label="Neighborhood"
-            iconAfter={<SearchIcon className="text-gray3" height={20} />}
-            onChange={formik.handleChange}
-            value={formik.values.neighborhood_id}
-            error={errors.neighborhood_id && touched.neighborhood_id}
-            errorText={errors.neighborhood_id}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   title: 'NEIGHBORHOOD',
+    //   value: 'neighborhood',
+    //   content: (
+    //     <div className="">
+    //       <Input
+    //         id="neighborhood_id"
+    //         type="number"
+    //         label="Neighborhood"
+    //         iconAfter={<SearchIcon className="text-gray3" height={20} />}
+    //         onChange={formik.handleChange}
+    //         value={formik.values.neighborhood_id}
+    //         error={errors.neighborhood_id && touched.neighborhood_id}
+    //         errorText={errors.neighborhood_id}
+    //       />
+    //     </div>
+    //   ),
+    // },
     {
       title: 'AMENITIES',
+      value: 'amenities',
       content: (
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -205,6 +207,7 @@ export default function LookingFor({ contactId }) {
     },
     {
       title: 'BUDGET MIN/MAX',
+      value: 'budget',
       content: (
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -264,9 +267,20 @@ export default function LookingFor({ contactId }) {
       <div className="w-[65%] bg-gray10">
         <div className="bg-white p-6 m-[24px]">
           <form onSubmit={formik.handleSubmit}>
+            <div className="max-w-3xl mx-auto">
+              <Input
+                id="neighborhood_id"
+                type="number"
+                label="Neighborhood"
+                iconAfter={<SearchIcon className="text-gray3" height={20} />}
+                onChange={formik.handleChange}
+                value={formik.values.neighborhood_id}
+                error={errors.neighborhood_id && touched.neighborhood_id}
+                errorText={errors.neighborhood_id}
+              />
+            </div>
             <Accordion
               tabs={tabs}
-              handleClick={(a, b) => console.log('test', a, b)}
               activeSelections={selections}
               defaultOpen={true}
             />
