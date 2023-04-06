@@ -12,6 +12,7 @@ import Button from 'components/shared/button';
 import UnassignOverlay from 'components/overlays/unassign';
 import AssignCampaignOverlay from 'components/overlays/assign-campaign';
 import noClientCampaigns from 'public/images/no-client-campaigns.svg';
+import Image from 'next/image';
 import {
   getCampaign,
   getCampaignsByCategory,
@@ -21,6 +22,7 @@ import {
 import Loader from 'components/shared/loader';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
+  console.log('campaigns', campaigns);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
   const [showAssignOverlay, setShowAssignOverlay] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -64,6 +66,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
         data.data.contacts_unassigned_count +
         data.data.contacts_never_assigned_count;
       setLoading(false);
+      console.log('campaign', data.data);
     });
     // fetch data
   };
@@ -153,8 +156,14 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   ></ButtonsSlider>
                 </div>
               </div>
-              <div className="h-auto w-auto bg-gray10">
-                <div className=" border border-gray-200 overflow-hidden relative">
+              <div
+                className={`w-auto bg-gray10 ${
+                  currentCampaign.contacts.length ? 'h-auto' : 'h-full'
+                }`}
+              >
+                <div
+                  className={`border border-gray-200 overflow-hidden relative h-full`}
+                >
                   {currentCampaign.contacts.length ? (
                     <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
                       <Table
