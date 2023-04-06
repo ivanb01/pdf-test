@@ -20,6 +20,8 @@ import {
 } from '@heroicons/react/solid';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';
 import UnassignOverlay from 'components/overlays/unassign';
+import { sortFromOldestDate } from 'global/functions';
+
 
 export default function Campaigns({
   contactId,
@@ -123,7 +125,8 @@ export default function Campaigns({
       if(data?.status === 'enrolled') {
         setCampaignId(data?.campaign_id);
         setAlert(alerts[1]);
-        setCampaignEvents(data?.events);
+        // setCampaignEvents(data?.events);
+        setCampaignEvents(sortFromOldestDate(data?.events, 'execute_on'));
         setCurrentEvent(data?.events[0]?.id);
         await eventPreview(data?.events[0]);
       } else if(data?.status === 'matches_campaign') {
@@ -136,7 +139,8 @@ export default function Campaigns({
       } else if(data?.status === 'unenrolled') {
         setCampaignId(data?.campaign_id);
         setAlert(alerts[2]);
-        setCampaignEvents(data?.events);
+        // setCampaignEvents(data?.events);
+        setCampaignEvents(sortFromOldestDate(data?.events, 'execute_on'));
         setCurrentEvent(data?.events[0]?.id);
         await eventPreview(data?.events[0]);
       } 

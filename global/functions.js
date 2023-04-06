@@ -141,6 +141,28 @@ export const isValidDate = (date) => {
   return moment(date).isValid();
 };
 
+export const dateBeforeDate = (date1, date2) => {
+  return moment(date1).isBefore(date2);
+};
+
+export const dateAfterDate = (date1, date2) => {
+  return moment(date1).isAfter(date2);
+};
+
+export const sortFromOldestDate = (array, arrayFieldName) => {
+  const sortedArray = array.sort(function (a, b) {
+      if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
+        return -1;
+      }
+      if (dateAfterDate(a[arrayFieldName], b[arrayFieldName])) {
+        return 1;
+      }
+      return 0;
+    });
+
+  return sortedArray;
+};
+
 // export const phoneUSAFormat = (input) => { //returns (###) ###-####
 //   input = input.replace(/\D/g,'');
 //   let size = input.length;
