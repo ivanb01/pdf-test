@@ -27,7 +27,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [contactToUnassign, setContactToUnassign] = useState();
   const [contactToAssign, setContactToAssign] = useState();
   const [loading, setLoading] = useState(true);
-  const [currentButton, setCurrentButton] = useState(0);
+  const [currentButton, setCurrentButton] = useState(2);
   const [currentCampaign, setCurrentCampaign] = useState();
   const [openedCampaignCategory, setOpenedCampaignCategory] = useState([0]);
   const [openedCampaign, setOpenedCampaign] = useState(0);
@@ -58,8 +58,9 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     getCampaign(campaignId).then((data) => {
       console.log(data.data);
       setCurrentCampaign(data.data);
-      tabs[0].count = data.data.contacts_assigned_count;
-      tabs[1].count =
+      tabs[0].count = data.data.contacts.length;
+      tabs[1].count = data.data.contacts_assigned_count;
+      tabs[2].count =
         data.data.contacts_unassigned_count +
         data.data.contacts_never_assigned_count;
       setLoading(false);
@@ -81,6 +82,11 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   };
 
   const [tabs, setTabs] = useState([
+    {
+      id: 2,
+      name: 'All',
+      count: 0,
+    },
     {
       id: 0,
       name: 'In Campaign',
@@ -169,13 +175,15 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                                 (contact) =>
                                   contact.contact_campaign_status == 'assigned'
                               )
-                            : currentCampaign.contacts.filter(
+                            : currentButton == 1
+                            ? currentCampaign.contacts.filter(
                                 (contact) =>
                                   contact.contact_campaign_status ==
                                     'unassigned' ||
                                   contact.contact_campaign_status ==
                                     'never_assigned'
                               )
+                            : currentCampaign.contacts
                         }
                       />
                     </SimpleBar>
