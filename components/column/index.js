@@ -137,7 +137,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           height: 'calc(100vh - 224px) !important',
         }}
       >
-        <div className="p-[16px] h-full">
+        <div className="p-[16px] contact-column-custom-height">
           {filteredContacts.map((contact, index) => (
             <ContactCard
               handleCardEdit={handleCardEdit}
