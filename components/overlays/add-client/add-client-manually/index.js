@@ -14,7 +14,7 @@ import { setContacts } from 'store/contacts/slice';
 import { formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';
-import ChipInput from 'components/shared/input/ChipInput';
+import ChipInput from 'components/shared/input/chipInput';
 import * as Yup from 'yup';
 import Select from 'react-select';
 import Chip from 'components/shared/chip';

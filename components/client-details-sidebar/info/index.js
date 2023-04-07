@@ -6,7 +6,7 @@ import { allStatusesQuickEdit, importSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign } from 'api/campaign';
-import ChipInput from 'components/shared/input/ChipInput';
+import ChipInput from 'components/shared/input/chipInput';
 
 export default function Info({ client, handleFetchContactRequired }) {
   const categoryType = client?.category_1.toLowerCase() + 's';
@@ -16,15 +16,16 @@ export default function Info({ client, handleFetchContactRequired }) {
     try {
       const { data } = await getContactCampaign(client?.id);
       console.log('campaign name', data);
-      if(data?.status === 'enrolled') {
+      if (data?.status === 'enrolled') {
         const { data: data2 } = await getCampaign(data?.campaign_id);
         setCampaignName(data2?.campaign_name);
-      } else if(data?.status === 'matches_campaign') {
+      } else if (data?.status === 'matches_campaign') {
         setCampaignName('Not in campaign');
-      } else if(data?.status === 'unenrolled') {
-        const { data: data2 } = await getCampaign(data?.campaign_id);``
+      } else if (data?.status === 'unenrolled') {
+        const { data: data2 } = await getCampaign(data?.campaign_id);
+        ``;
         setCampaignName(`Unassigned from '${data2?.campaign_name}'`);
-      } else if(data?.status === 'no_match') {
+      } else if (data?.status === 'no_match') {
         setCampaignName('No matching campaign');
       }
     } catch (error) {
@@ -37,12 +38,12 @@ export default function Info({ client, handleFetchContactRequired }) {
   tagsRef.current = tags;
 
   const removeTag = (tagToRemove) => {
-    setTags(prev=>prev.filter((tag) => tag !== tagToRemove))
+    setTags((prev) => prev.filter((tag) => tag !== tagToRemove));
   };
 
   const addTag = (tagToAdd) => {
     const tagAdded = tags.includes(tagToAdd);
-    !tagAdded && setTags(prev=>[...prev, tagToAdd])
+    !tagAdded && setTags((prev) => [...prev, tagToAdd]);
   };
 
   const handleChangeTags = async () => {
@@ -55,13 +56,13 @@ export default function Info({ client, handleFetchContactRequired }) {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchContactCampaign();
     setTags(initialTags);
     return () => {
-      handleChangeTags()
-    }
-  }, [client])
+      handleChangeTags();
+    };
+  }, [client]);
 
   const handleChangeStatus = async (status) => {
     try {
@@ -87,45 +88,61 @@ export default function Info({ client, handleFetchContactRequired }) {
 
   return (
     <>
-    { client && 
-      <div className="px-6 py-3 flex flex-col">
-        <Dropdown
-          label="Status"
-          activeIcon={false}
-          options={allStatusesQuickEdit[categoryType]}
-          className="my-3"
-          handleSelect={(status) => handleChangeStatus(status.id)}
-          initialSelect={client?.status_2}
-          selectedOption="statusColor"
-        />
+      {client && (
+        <div className="px-6 py-3 flex flex-col">
+          <Dropdown
+            label="Status"
+            activeIcon={false}
+            options={allStatusesQuickEdit[categoryType]}
+            className="my-3"
+            handleSelect={(status) => handleChangeStatus(status.id)}
+            initialSelect={client?.status_2}
+            selectedOption="statusColor"
+          />
 
-        <ChipInput
+          <ChipInput
             label="Tags"
             selections={tags}
             placeholder="Write tag and hit enter"
             removeChip={removeTag}
             addChip={addTag}
-        />
+          />
 
-        <Dropdown
-          label="Source"
-          activeIcon={false}
-          options={importSourceOptions}
-          className="my-3"
-          handleSelect={(source) => handleChangeSource(source.name)}
-          initialSelect={client?.import_source}
-          placeHolder={client?.import_source ? null : 'Choose'}
-        />
+          <Dropdown
+            label="Source"
+            activeIcon={false}
+            options={importSourceOptions}
+            className="my-3"
+            handleSelect={(source) => handleChangeSource(source.name)}
+            initialSelect={client?.import_source}
+            placeHolder={client?.import_source ? null : 'Choose'}
+          />
 
-        {campaginName ? <InfoCard label= 'Campaign' content={campaginName} /> :<InfoCard label= 'Campaign' content='' /> }
-        <InfoCard 
-          label= 'Last Communication'
-          content={client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'}
-          iconContent={client?.last_communication_date ? <Chip lastCommunication={formatDateAgo(client?.last_communication_date)} className='ml-2 mt-0' /> : null}
-        />
-
-      </div>
-    }
+          {campaginName ? (
+            <InfoCard label="Campaign" content={campaginName} />
+          ) : (
+            <InfoCard label="Campaign" content="" />
+          )}
+          <InfoCard
+            label="Last Communication"
+            content={
+              client?.last_communication_date
+                ? formatDateMDY(client?.last_communication_date)
+                : 'No Communication'
+            }
+            iconContent={
+              client?.last_communication_date ? (
+                <Chip
+                  lastCommunication={formatDateAgo(
+                    client?.last_communication_date
+                  )}
+                  className="ml-2 mt-0"
+                />
+              ) : null
+            }
+          />
+        </div>
+      )}
     </>
   );
 }

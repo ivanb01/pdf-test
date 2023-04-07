@@ -60,14 +60,23 @@ const Dropdown = ({
               <Listbox.Button
                 className={`${
                   selectClasses ? selectClasses : 'bg-white border rounded-md'
-                }  relative w-full  border-gray-300 shadow-sm pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
-              > 
-                <span className={`${selectedOption === 'statusColor' &&  `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`}`}>
-                  
-                </span>
+                }  relative w-full  border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
+              >
+                <span
+                  className={`${
+                    selectedOption === 'statusColor' &&
+                    `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
+                  }`}
+                ></span>
 
                 {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
-                <span className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-gray6'} ${selected && selected.name && 'text-gray8'} ${selectedOption === 'statusColor' && 'pl-4'}`}>
+                <span
+                  className={`flex items-center truncate capitalize ${
+                    !selected && placeHolder && 'text-gray6'
+                  } ${selected && selected.name && 'text-gray8'} ${
+                    selectedOption === 'statusColor' && 'pl-4'
+                  }`}
+                >
                   {!selected && placeHolder && placeHolder}
                   {selected && selected.name}
                 </span>
