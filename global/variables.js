@@ -301,6 +301,18 @@ export const allStatusesQuickEdit = {
   ],
 };
 
+export const clientStatusMainTitlesUpdated = {
+  'In The Funnel': 'Clients in The Funnel',
+  'Closed': 'Closed Clients',
+  'On Hold': 'On Hold Clients',
+  'Dropped': 'Dropped Clients',
+}
+
+export const professioonalStatusMainTitlesUpdated = {
+  'Active': 'Active Professionals',
+  'Dropped': 'Dropped Professionals',
+}
+
 export const clientStatuses = [
   {
     id: 0,

@@ -13,7 +13,7 @@ import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import GlobalAlert from 'components/shared/alert/global-alert';
-import { clientStatuses, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import { clientStatuses, clientStatusMainTitlesUpdated, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
@@ -166,7 +166,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {clientStatuses[openedSubtab].statusMainTitle}
+              {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               {/* {openedTab} - {openedSubtab} */}
             </Text>
             <div className="flex items-center justify-self-end">
