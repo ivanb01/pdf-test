@@ -21,11 +21,6 @@ module.exports = {
         destination: '/authentication/sign-in',
         permanent: true,
       },
-      {
-        source: '/contacts',
-        destination: '/contacts/clients',
-        permanent: true,
-      },
     ];
   },
 };

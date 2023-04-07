@@ -18,27 +18,7 @@ import ChipInput from 'components/shared/input/chipInput';
 import * as Yup from 'yup';
 import Select from 'react-select';
 import Chip from 'components/shared/chip';
-
-const multiselectOptions = [
-  { value: 'super-high-priority', label: 'Super High Priority!' },
-  { value: 'high-priority', label: 'High Priority' },
-  { value: 'low-priority', label: 'Low Priority' },
-  { value: 'lawyer', label: 'Lawyer' },
-  { value: 'contractor', label: 'Contractor' },
-  { value: 'mortgage-broker', label: 'Mortagage Broker' },
-  { value: 'title-agent', label: 'Title Agent' },
-  { value: 'agent', label: 'Agent' },
-  { value: 'friend', label: 'Friend' },
-  { value: 'family', label: 'Family' },
-  { value: 'mover', label: 'Mover' },
-  { value: 'photographer', label: 'Photographer' },
-  { value: 'staging', label: 'Staging' },
-  { value: 'home-inspector', label: 'Home Inspector' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'insurance', label: 'Insurance' },
-  { value: 'appraiser', label: 'Appraiser' },
-  { value: 'handyman', label: 'Handyman' },
-];
+import { multiselectOptions } from 'global/variables';
 
 const categoryIds = {
   'Add Client': '4,5,6,7',

@@ -22,10 +22,13 @@ import { CheckIcon } from '@heroicons/react/solid';
 //   { id: 7, name: 'Submitting Offer', colorClass: '--success-v6' },
 // ];
 
-export const localRedirectSignIn = 'http://localhost:3000/contacts/clients'
-export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients'
-export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in'
-export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in'
+export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
+export const productionRedirectSignIn =
+  'https://onelinecrm.com/contacts/clients';
+export const localRedirectSignOut =
+  'http://localhost:3000/authentication/sign-in';
+export const productionRedirectSignOut =
+  'https://onelinecrm.com/authentication/sign-in';
 
 export const menuItems = [
   {
@@ -577,7 +580,6 @@ export const globalTabsStates = {
   },
 };
 
-
 export const importSourceOptions = [
   {
     id: 0,
@@ -631,18 +633,35 @@ export const importSourceOptions = [
     id: 12,
     name: 'Other',
   },
-
 ];
 
-
-export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/
+export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
 
 export const filtersForLastCommunicationDate = {
   // 'Up to Date',
-  'Today': [1, 'days'],
+  Today: [1, 'days'],
   '1 Week ago': [7, 'days'],
   '2 Weeks ago': [14, 'days'],
   '1 Month ago': [1, 'months'],
-}
+};
 
-
+export const multiselectOptions = [
+  { value: 'super-high-priority', label: 'Super High Priority!' },
+  { value: 'high-priority', label: 'High Priority' },
+  { value: 'low-priority', label: 'Low Priority' },
+  { value: 'lawyer', label: 'Lawyer' },
+  { value: 'contractor', label: 'Contractor' },
+  { value: 'mortgage-broker', label: 'Mortagage Broker' },
+  { value: 'title-agent', label: 'Title Agent' },
+  { value: 'agent', label: 'Agent' },
+  { value: 'friend', label: 'Friend' },
+  { value: 'family', label: 'Family' },
+  { value: 'mover', label: 'Mover' },
+  { value: 'photographer', label: 'Photographer' },
+  { value: 'staging', label: 'Staging' },
+  { value: 'home-inspector', label: 'Home Inspector' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'insurance', label: 'Insurance' },
+  { value: 'appraiser', label: 'Appraiser' },
+  { value: 'handyman', label: 'Handyman' },
+];

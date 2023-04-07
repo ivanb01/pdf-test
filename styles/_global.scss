@@ -260,28 +260,28 @@ html{
 }
 
 .css-13cymwt-control{
-  border-radius: 8px;
-  border-color: #D1D5DB;
+  border-radius: 8px !important;
+  border-color: #D1D5DB !important;
   &:hover{
-  border-color: #D1D5DB;
+  border-color: #D1D5DB !important;
   }
 }
 .css-1p3m7a8-multiValue{
-  border-radius: 70px;
-  background: #F3F4F6;
-  color: #474D66;
+  border-radius: 70px !important;
+  background: #F3F4F6 !important;
+  color: #474D66 !important;
   padding: 0px 4px !important;
 }
 .css-12a83d4-MultiValueRemove{
   &:hover{
-    background-color: transparent;
+    background-color: transparent !important;
   }
   svg{
-    fill: #474D66;
+    fill: #474D66 !important;
   }
 }
 #react-select-3-input{
-  border-color: transparent;
+  border-color: transparent !important;
   &:focus{
     border-color: transparent !important;
     box-shadow: 0 !important;
@@ -292,10 +292,10 @@ html{
 .css-1nmdiq5-menu{
   .css-1n6sfyn-MenuList{
     div{
-      background-color:white;
+      background-color:white !important;
       &:hover{
-        background: #3B82F6;
-        color:white;
+        background: #3B82F6 !important;
+        color:white !important;
       }
     }
   }
