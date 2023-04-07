@@ -181,12 +181,6 @@ export default function Campaigns({
               <Text p className="text-gray4 relative text-center mb-6">
                 Matched campaign will be shown here.
               </Text>
-              <Button
-                primary
-                leftIcon={<Add className="w-4 h-4" />}
-                label={`${formType} Note`}
-                onClick={openAddModal}
-              />
             </div>
           </div>
         </div>
