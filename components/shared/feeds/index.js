@@ -193,7 +193,7 @@ export default function Feeds({
                           )}
                         </p>
 
-                        <div className="mt-2 text-sm text-gray-700">
+                        <div className="mt-2 text-sm text-gray6">
                           <p>{activityItem.description}</p>
                         </div>
                       </div>

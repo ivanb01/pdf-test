@@ -66,7 +66,7 @@ const MultiStepOverlay = ({
                             href={step.href}
                             className="group pl-4 py-2 flex flex-col border-l-4 border-gray-200 hover:border-gray-300 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
                           >
-                            <span className="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray-700">
+                            <span className="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray6">
                               Step {step.id}
                             </span>
                             <span className="text-sm font-medium">
