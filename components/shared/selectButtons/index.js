@@ -8,7 +8,7 @@ const SelectButtons = ({
   return (
     <div className="text-left col-span-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray6">
           {label}
         </label>
       )}

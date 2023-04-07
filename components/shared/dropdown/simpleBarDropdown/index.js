@@ -42,7 +42,7 @@ const Dropdown = ({
         {({ open }) => (
           <>
             {label && (
-              <Listbox.Label className="block text-sm font-medium text-gray-700">
+              <Listbox.Label className="block text-sm font-medium text-gray6">
                 {label}{' '}
                 {optional && (
                   <span className="text-gray3 ml-1">(Optional)</span>

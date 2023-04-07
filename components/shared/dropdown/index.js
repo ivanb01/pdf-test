@@ -49,7 +49,7 @@ const Dropdown = ({
         {({ open }) => (
           <>
             {label && (
-              <Listbox.Label className="block text-sm font-medium text-gray4">
+              <Listbox.Label className="block text-sm font-medium text-gray6">
                 {label}{' '}
                 {optional && (
                   <span className="text-gray3 ml-1">(Optional)</span>
@@ -67,13 +67,13 @@ const Dropdown = ({
                 </span>
 
                 {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
-                <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' && 'pl-4'}`}>
+                <span className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-gray6'} ${selected && selected.name && 'text-gray8'} ${selectedOption === 'statusColor' && 'pl-4'}`}>
                   {!selected && placeHolder && placeHolder}
                   {selected && selected.name}
                 </span>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                   <ChevronDownIcon
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-gray3"
                     aria-hidden="true"
                   />
                 </span>
@@ -92,7 +92,7 @@ const Dropdown = ({
                       key={option.id}
                       className={({ active }) =>
                         classNames(
-                          active ? activeClasse : 'text-gray-900',
+                          active ? activeClasse : 'text-gray7',
                           'cursor-pointer select-none relative py-2 pl-3 pr-9'
                         )
                       }
