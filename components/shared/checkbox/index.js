@@ -14,7 +14,7 @@ export default function Checkbox({ id, name, setState, state, label }) {
         />
       </div>
       <div className="ml-3 text-sm">
-        <label htmlFor={name} className="text-gray-700">
+        <label htmlFor={name} className="text-gray6">
           {label}
         </label>
       </div>

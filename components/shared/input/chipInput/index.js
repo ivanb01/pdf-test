@@ -20,7 +20,7 @@ const ChipInput = ({
   return (
     <div className={`${className} cursor-text`}>
       {label && (
-        <Text h4 className="text-gray-700 mb-1">
+        <Text h4 className="text-gray6 mb-1">
           {label}{' '}
           {optional && <span className="text-gray3 ml-1">(Optional)</span>}
         </Text>
@@ -40,7 +40,7 @@ const ChipInput = ({
           />
         ))}
         <input
-          className="tags-input border-none outline-none h-full focus:ring-transparent focus:border-none font-[14px] max-w-[175px] p-0"
+          className="tags-input placeholder:text-gray4 placeholder:italic text-gray8 text-sm border-none outline-none h-full focus:ring-transparent focus:border-none font-[14px] max-w-[175px] p-0"
           type="text"
           name={name ? name : id}
           id={id}

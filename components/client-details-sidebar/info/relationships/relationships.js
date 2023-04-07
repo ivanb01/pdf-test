@@ -54,7 +54,7 @@ export default function Relationships({contactId}) {
     <>
     <div className="flex flex-col my-3">
       <div className="flex flex-row justify-between border-y border-gray-2 px-[24px] py-[12px]">
-        <Text className="text-gray-700 mr-1" h4>
+        <Text className="text-gray6 mr-1" h4>
           Relationship(s)
         </Text>
         <div className="group relative cursor-pointer mr-2">

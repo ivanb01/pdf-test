@@ -15,8 +15,8 @@ export default function Breadcrumbs({ className, ...props }) {
             <div className="flex items-center">
               <a
                 href="#"
-                className={`mr-4 text-sm font-medium text-gray-500 hover:text-gray-700 ${
-                  page.current && 'text-gray-700'
+                className={`mr-4 text-sm font-medium text-gray-500 hover:text-gray6 ${
+                  page.current && 'text-gray6'
                 } `}
                 aria-current={page.current ? 'page' : undefined}
                 onClick={() => Router.push('/contacts/clients')}

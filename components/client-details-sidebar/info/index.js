@@ -22,7 +22,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       } else if(data?.status === 'matches_campaign') {
         setCampaignName('Not in campaign');
       } else if(data?.status === 'unenrolled') {
-        const { data: data2 } = await getCampaign(data?.campaign_id);
+        const { data: data2 } = await getCampaign(data?.campaign_id);``
         setCampaignName(`Unassigned from '${data2?.campaign_name}'`);
       } else if(data?.status === 'no_match') {
         setCampaignName('No matching campaign');
@@ -120,7 +120,7 @@ export default function Info({ client, handleFetchContactRequired }) {
         {campaginName ? <InfoCard label= 'Campaign' content={campaginName} /> :<InfoCard label= 'Campaign' content='' /> }
         <InfoCard 
           label= 'Last Communication'
-          content={client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : '-'}
+          content={client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'}
           iconContent={client?.last_communication_date ? <Chip lastCommunication={formatDateAgo(client?.last_communication_date)} className='ml-2 mt-0' /> : null}
         />
 
