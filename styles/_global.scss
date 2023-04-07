@@ -258,3 +258,46 @@ html{
 .contact-column-custom-height{
   height: calc(100vh - 224px) !important;
 }
+
+.css-13cymwt-control{
+  border-radius: 8px;
+  border-color: #D1D5DB;
+  &:hover{
+  border-color: #D1D5DB;
+  }
+}
+.css-1p3m7a8-multiValue{
+  border-radius: 70px;
+  background: #F3F4F6;
+  color: #474D66;
+  padding: 0px 4px !important;
+}
+.css-12a83d4-MultiValueRemove{
+  &:hover{
+    background-color: transparent;
+  }
+  svg{
+    fill: #474D66;
+  }
+}
+#react-select-3-input{
+  border-color: transparent;
+  &:focus{
+    border-color: transparent !important;
+    box-shadow: 0 !important;
+    --tw-ring-color: transparent !important;
+  }
+}
+
+.css-1nmdiq5-menu{
+  .css-1n6sfyn-MenuList{
+    div{
+      background-color:white;
+      &:hover{
+        background: #3B82F6;
+        color:white;
+      }
+    }
+  }
+  font-size: 14px !important;
+}

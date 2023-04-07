@@ -29,6 +29,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [contactToUnassign, setContactToUnassign] = useState();
   const [contactToAssign, setContactToAssign] = useState();
   const [loading, setLoading] = useState(true);
+  const [loadingAssign, setLoadingAssign] = useState(false);
   const [currentButton, setCurrentButton] = useState(2);
   const [currentCampaign, setCurrentCampaign] = useState();
   const [openedCampaignCategory, setOpenedCampaignCategory] = useState([0]);
@@ -78,6 +79,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   };
 
   const handleAssignToCampaign = () => {
+    setLoadingAssign(true);
     assignContactToCampaign(openedCampaign, contactToAssign).then((data) => {
       fetchData(openedCampaignCategory);
       setShowAssignOverlay(false);
@@ -243,6 +245,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
       )}
       {showAssignOverlay && (
         <AssignCampaignOverlay
+          loading={loadingAssign}
           onSubmit={handleAssignToCampaign}
           handleCloseOverlay={() => setShowAssignOverlay(false)}
         />

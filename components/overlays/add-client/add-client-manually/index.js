@@ -16,6 +16,29 @@ import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';
 import ChipInput from 'components/shared/input/ChipInput';
 import * as Yup from 'yup';
+import Select from 'react-select';
+import Chip from 'components/shared/chip';
+
+const multiselectOptions = [
+  { value: 'super-high-priority', label: 'Super High Priority!' },
+  { value: 'high-priority', label: 'High Priority' },
+  { value: 'low-priority', label: 'Low Priority' },
+  { value: 'lawyer', label: 'Lawyer' },
+  { value: 'contractor', label: 'Contractor' },
+  { value: 'mortgage-broker', label: 'Mortagage Broker' },
+  { value: 'title-agent', label: 'Title Agent' },
+  { value: 'agent', label: 'Agent' },
+  { value: 'friend', label: 'Friend' },
+  { value: 'family', label: 'Family' },
+  { value: 'mover', label: 'Mover' },
+  { value: 'photographer', label: 'Photographer' },
+  { value: 'staging', label: 'Staging' },
+  { value: 'home-inspector', label: 'Home Inspector' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'insurance', label: 'Insurance' },
+  { value: 'appraiser', label: 'Appraiser' },
+  { value: 'handyman', label: 'Handyman' },
+];
 
 const categoryIds = {
   'Add Client': '4,5,6,7',
@@ -73,7 +96,7 @@ const AddClientManuallyOverlay = ({
       email: '',
       phone_number: '',
       import_source: '',
-      tags: [],
+      tags: ['test'],
     },
     validationSchema: AddContactSchema,
     onSubmit: (values) => {
@@ -158,6 +181,7 @@ const AddClientManuallyOverlay = ({
   };
   return (
     <MultiStepOverlay
+      className="max-w-[635px]"
       handleClose={handleClose}
       steps={steps}
       currentStep={currentStep}
@@ -227,7 +251,22 @@ const AddClientManuallyOverlay = ({
                     initialSelect={formik.values.import_source}
                     placeHolder={formik.values.import_source ? null : 'Choose'}
                   />
-                  <ChipInput
+                  <div className="w-full custom-chipinput-styles col-span-2">
+                    <div className="block text-sm font-medium text-gray6 mb-1">
+                      Tags
+                    </div>
+                    <Select
+                      isMulti
+                      options={multiselectOptions}
+                      onChange={(choice) => {
+                        formik.setFieldValue(
+                          'tags',
+                          choice.map((el) => el.label)
+                        );
+                      }}
+                    ></Select>
+                  </div>
+                  {/* <ChipInput
                     label="Tags"
                     optional
                     className="col-span-2"
@@ -235,7 +274,7 @@ const AddClientManuallyOverlay = ({
                     placeholder="Write tag and hit enter"
                     removeChip={removeChip}
                     addChip={addChip}
-                  />
+                  /> */}
                 </div>
               </form>
             </div>

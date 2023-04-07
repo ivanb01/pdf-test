@@ -5,11 +5,25 @@ import assignToCampaign from 'public/images/assign-to-campaign-2.gif';
 import Image from 'next/image';
 import Overlay from 'components/shared/overlay';
 
-const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
+const AssignCampaignOverlay = ({
+  title,
+  handleCloseOverlay,
+  onSubmit,
+  loading,
+}) => {
   return (
     <Overlay handleCloseOverlay={handleCloseOverlay} className="max-w-[512px]">
       <div className="p-[24px] text-center">
-        <Image src={assignToCampaign} />
+        <div className="h-[235px] mx-auto">
+          <lottie-player
+            src="https://assets1.lottiefiles.com/packages/lf20_kdx6cani.json"
+            background="transparent"
+            speed="1"
+            style={{ width: '100%', height: '100%' }}
+            loop
+            autoplay
+          ></lottie-player>
+        </div>
         <Text
           h2
           className="max-w-xs mx-auto mb-3 leading-[1.4] mt-6 justify-center"
@@ -29,7 +43,12 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
           label="Cancel"
           onClick={handleCloseOverlay}
         />
-        <Button primary label="Assign to Campaign" onClick={onSubmit} />
+        <Button
+          loading={loading}
+          primary
+          label="Assign to Campaign"
+          onClick={onSubmit}
+        />
       </div>
     </Overlay>
   );
