@@ -184,6 +184,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
                 iconSize="w-5 h-5"
               />
               <ButtonsSlider
+                noCount
                 buttons={buttons}
                 currentButton={currentButton}
                 onClick={setCurrentButton}
