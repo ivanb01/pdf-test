@@ -185,6 +185,7 @@ const Professionals = ({
                 onClick={() => setOpen(true)}
               />
               <ButtonsSlider
+                noCount
                 buttons={buttons}
                 currentButton={currentButton}
                 onClick={setCurrentButton}
