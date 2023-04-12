@@ -9,7 +9,7 @@ import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import Error from '@mui/icons-material/Error';
 import Help from '@mui/icons-material/Help';
 import Delete from '@mui/icons-material/Delete';
-import SetupGmail from './SetupGmail';
+import SetupGmail from 'components/SetupGmail';
 import SuccessfullyCategorized from 'components/overlays/successfully-categorized';
 import StartCategorizing from 'components/overlays/start-categorizing';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';

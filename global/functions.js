@@ -7,6 +7,7 @@ import {
   filtersForLastCommunicationDate,
 } from './variables';
 import moment from 'moment';
+import { multiselectOptions } from './variables';
 
 export const getInitials = (name) => {
   let fullName = name.split(' ');
@@ -135,7 +136,7 @@ export const formatDateLThour = (date) => {
 
 export const formatDateCalendar = (date) => {
   const calendarDate = moment(date).calendar();
-  const calendarDateArray = calendarDate.split(" ");
+  const calendarDateArray = calendarDate.split(' ');
   return calendarDateArray[0];
 };
 
@@ -161,14 +162,14 @@ export const dateAfterDate = (date1, date2) => {
 
 export const sortDateAsc = (array, arrayFieldName) => {
   const sortedArray = array.sort(function (a, b) {
-      if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
-        return -1;
-      }
-      if (dateAfterDate(a[arrayFieldName], b[arrayFieldName])) {
-        return 1;
-      }
-      return 0;
-    });
+    if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
+      return -1;
+    }
+    if (dateAfterDate(a[arrayFieldName], b[arrayFieldName])) {
+      return 1;
+    }
+    return 0;
+  });
 
   return sortedArray;
 };
@@ -196,9 +197,24 @@ export const formatPhoneNumber = (input) => {
 };
 
 export const filterLastCommuncationDate = (date, filterDateString) => {
-  
-  let filterDate = filtersForLastCommunicationDate[filterDateString]
+  let filterDate = filtersForLastCommunicationDate[filterDateString];
   let test = moment().subtract(filterDate[0], filterDate[1]);
   // console.log('filteringdate', date, test, moment(date).isSameOrAfter(test));
   return moment(date).isSameOrAfter(test);
+};
+
+export const findTagsOption = (selectedOptions) => {
+  if (!selectedOptions) {
+    return null;
+  }
+  const options = selectedOptions.map((label) => {
+    const value = label;
+    const option = multiselectOptions.find((option) => option.value === value);
+    return {
+      value: value,
+      label: option ? option.label : label,
+    };
+  });
+  return options;
+  // return multiselectOptions.find((option) => option.label === selectedOption);
 };

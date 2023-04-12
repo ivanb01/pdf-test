@@ -3,10 +3,11 @@ import Dropdown from 'components/shared/dropdown';
 import Chip from 'components/shared/chip';
 import * as contactServices from 'api/contacts';
 import { allStatusesQuickEdit, importSourceOptions } from 'global/variables';
-import { formatDateMDY, formatDateAgo } from 'global/functions';
+import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign } from 'api/campaign';
-import ChipInput from 'components/shared/input/chipInput';
+// import ChipInput from 'components/shared/input/chipInput';
+import TagsInput from 'components/tagsInput';
 
 export default function Info({ client, handleFetchContactRequired }) {
   const categoryType = client?.category_1.toLowerCase() + 's';
@@ -100,12 +101,19 @@ export default function Info({ client, handleFetchContactRequired }) {
             selectedOption="statusColor"
           />
 
-          <ChipInput
+          {/* <ChipInput
             label="Tags"
             selections={tags}
             placeholder="Write tag and hit enter"
             removeChip={removeTag}
             addChip={addTag}
+          /> */}
+          <TagsInput
+            label="Tags"
+            value={findTagsOption(tags)}
+            onChange={(choice) => {
+              setTags(choice.map((el) => el.label));
+            }}
           />
 
           <Dropdown

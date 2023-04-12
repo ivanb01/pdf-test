@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';
 import { setContacts } from 'store/contacts/slice';
-import { formatPhoneNumber } from 'global/functions';
+import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';
 import ChipInput from 'components/shared/input/chipInput';
@@ -19,6 +19,7 @@ import * as Yup from 'yup';
 import Select from 'react-select';
 import Chip from 'components/shared/chip';
 import { multiselectOptions } from 'global/variables';
+import TagsInput from 'components/tagsInput';
 
 const categoryIds = {
   'Add Client': '4,5,6,7',
@@ -200,7 +201,6 @@ const AddClientManuallyOverlay = ({
                     error={errors.last_name && touched.last_name}
                     errorText={errors.last_name}
                   />
-
                   <Input
                     type="email"
                     label="Email"
@@ -231,21 +231,15 @@ const AddClientManuallyOverlay = ({
                     initialSelect={formik.values.import_source}
                     placeHolder={formik.values.import_source ? null : 'Choose'}
                   />
-                  <div className="w-full custom-chipinput-styles col-span-2">
-                    <div className="block text-sm font-medium text-gray6 mb-1">
-                      Tags
-                    </div>
-                    <Select
-                      isMulti
-                      options={multiselectOptions}
-                      onChange={(choice) => {
-                        formik.setFieldValue(
-                          'tags',
-                          choice.map((el) => el.label)
-                        );
-                      }}
-                    ></Select>
-                  </div>
+                  <TagsInput
+                    label="Tags"
+                    onChange={(choice) => {
+                      formik.setFieldValue(
+                        'tags',
+                        choice.map((el) => el.label)
+                      );
+                    }}
+                  />
                   {/* <ChipInput
                     label="Tags"
                     optional
