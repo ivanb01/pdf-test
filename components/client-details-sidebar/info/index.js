@@ -110,7 +110,11 @@ export default function Info({ client, handleFetchContactRequired }) {
           /> */}
           <TagsInput
             label="Tags"
-            value={findTagsOption(tags)}
+            typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
+            value={findTagsOption(
+              tags,
+              client?.category_1 === 'Client' ? 0 : 1
+            )}
             onChange={(choice) => {
               setTags(choice.map((el) => el.label));
             }}

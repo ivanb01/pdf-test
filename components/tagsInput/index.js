@@ -1,7 +1,10 @@
 import Select from 'react-select';
-import { multiselectOptions } from 'global/variables';
+import {
+  multiselectOptionsClients,
+  multiselectOptionsProfessionals,
+} from 'global/variables';
 
-const TagsInput = ({ onChange, label, value }) => {
+const TagsInput = ({ onChange, label, value, typeOfContact }) => {
   return (
     <div className="w-full custom-chipinput-styles col-span-2">
       {label && (
@@ -10,7 +13,11 @@ const TagsInput = ({ onChange, label, value }) => {
       <Select
         isMulti
         value={value}
-        options={multiselectOptions}
+        options={
+          typeOfContact == 0
+            ? multiselectOptionsClients
+            : multiselectOptionsProfessionals
+        }
         onChange={onChange}
         styles={{
           input: (base) => ({

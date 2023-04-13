@@ -5,6 +5,8 @@ import {
   contactStatuses,
   professionalsStatuses,
   filtersForLastCommunicationDate,
+  multiselectOptionsClients,
+  multiselectOptionsProfessionals,
 } from './variables';
 import moment from 'moment';
 import { multiselectOptions } from './variables';
@@ -203,12 +205,16 @@ export const filterLastCommuncationDate = (date, filterDateString) => {
   return moment(date).isSameOrAfter(test);
 };
 
-export const findTagsOption = (selectedOptions) => {
+export const findTagsOption = (selectedOptions, typeOfContact) => {
   if (!selectedOptions) {
     return null;
   }
   const options = selectedOptions.map((label) => {
     const value = label;
+    let multiselectOptions =
+      typeOfContact === 0
+        ? multiselectOptionsClients
+        : multiselectOptionsProfessionals;
     const option = multiselectOptions.find((option) => option.value === value);
     return {
       value: value,

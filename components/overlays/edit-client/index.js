@@ -13,6 +13,7 @@ import * as contactServices from 'api/contacts';
 import Overlay from 'components/shared/overlay';
 import TagsInput from 'components/tagsInput';
 import { findTagsOption } from 'global/functions';
+import { useSelector } from 'react-redux';
 
 const EditContactOverlay = ({
   className,
@@ -33,6 +34,8 @@ const EditContactOverlay = ({
   ];
 
   const [loading, setLoading] = useState(false);
+
+  const openedTab = useSelector((state) => state.global.openedTab);
 
   const resetForm = () => {
     handleClose();
@@ -143,7 +146,8 @@ const EditContactOverlay = ({
             />
             <TagsInput
               label="Tags"
-              value={findTagsOption(formik.values.tags)}
+              typeOfContact={openedTab}
+              value={findTagsOption(formik.values.tags, openedTab)}
               onChange={(choice) => {
                 formik.setFieldValue(
                   'tags',

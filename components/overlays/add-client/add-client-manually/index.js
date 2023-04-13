@@ -20,6 +20,7 @@ import Select from 'react-select';
 import Chip from 'components/shared/chip';
 import { multiselectOptions } from 'global/variables';
 import TagsInput from 'components/tagsInput';
+import { useSelector } from 'react-redux';
 
 const categoryIds = {
   'Add Client': '4,5,6,7',
@@ -48,6 +49,8 @@ const AddClientManuallyOverlay = ({
   ];
 
   const [currentStep, setCurrentStep] = useState(1);
+
+  const openedTab = useSelector((state) => state.global.openedTab);
 
   const dispatch = useDispatch();
 
@@ -232,6 +235,7 @@ const AddClientManuallyOverlay = ({
                     placeHolder={formik.values.import_source ? null : 'Choose'}
                   />
                   <TagsInput
+                    typeOfContact={openedTab}
                     label="Tags"
                     onChange={(choice) => {
                       formik.setFieldValue(
