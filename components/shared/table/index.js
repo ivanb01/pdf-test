@@ -236,7 +236,7 @@ const Table = ({
             >
               {tableFor == 'in-categorization' && (
                 <Input
-                  className="mr-2"
+                  className="mr-1"
                   id="select_all"
                   type="checkbox"
                   onChange={handleSelectAll}
@@ -273,7 +273,7 @@ const Table = ({
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
                 {tableFor == 'in-categorization' && (
                   <Input
-                    className="mr-2"
+                    className="mr-1"
                     type="checkbox"
                     id={'input_' + index}
                     onChange={(event) => handleClickRow(dataItem, event)}
