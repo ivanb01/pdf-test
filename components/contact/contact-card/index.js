@@ -2,6 +2,7 @@ import Avatar from 'components/shared/avatar';
 import Text from 'components/shared/text';
 import Badge from 'components/shared/badge';
 import Chip from 'components/shared/chip';
+import DateChip from 'components/shared/chip/date-chip';
 // import { SpeakerphoneIcon } from '@heroicons/react/outline';
 import Button from 'components/shared/button';
 import Email from '@mui/icons-material/Email';
@@ -149,9 +150,8 @@ export default function ContactCard({
               Badge
             </span> */}
         </div>
-        {/* <Chip lastCommunication={new Date('11/02/2022')} /> */}
         {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
-        <Chip lastCommunication={formatDateAgo(contact.created_at)} />
+        <DateChip lastCommunication={contact.created_at} contactStatus={contact.status_2} contactCategory={categoryType} />
       </div>
       <div
         className={`${

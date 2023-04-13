@@ -91,7 +91,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
       if(key == 'created_at') {
-        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0]));
+        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2));
       } else {
         contactsState = contactsState.filter((contact) => {
           if(Array.isArray(contact[key])) {
