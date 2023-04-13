@@ -31,7 +31,11 @@ import Category from '@mui/icons-material/Category';
 import SimpleBarDropdown from 'components/shared/dropdown/simpleBarDropdown';
 import Campaign from '@mui/icons-material/Campaign';
 import Chip from '../chip';
-import { formatDateAgo, formatDateLThour, formatDateCalendar } from 'global/functions';
+import {
+  formatDateAgo,
+  formatDateLThour,
+  formatDateCalendar,
+} from 'global/functions';
 import undoIcon from 'public/images/undo.svg';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactStatus } from 'store/contacts/slice';
@@ -41,7 +45,6 @@ const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
-
 
 const Table = ({
   undoAllCategorizations,
@@ -137,7 +140,9 @@ const Table = ({
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">{formatDateCalendar(dataItem.event_scheduled_time)}</div>
+                <div className="text-gray7 font-medium">
+                  {formatDateCalendar(dataItem.event_scheduled_time)}
+                </div>
                 <div className="text-gray4">
                   {formatDateLThour(dataItem.event_scheduled_time)}
                 </div>
@@ -227,8 +232,16 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
             >
+              {tableFor == 'in-categorization' && (
+                <Input
+                  className="mr-2"
+                  id="select_all"
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                />
+              )}
               Contact
             </th>
             {tableFor != 'in-categorization' && (
@@ -237,15 +250,6 @@ const Table = ({
                 className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
               >
                 Added From
-              </th>
-            )}
-            {tableFor == 'in-categorization' && (
-              <th className="relative px-[25px] py-[10px] flex justify-end items-center">
-                <Input
-                  id="select_all"
-                  type="checkbox"
-                  onChange={handleSelectAll}
-                />
               </th>
             )}
           </tr>
@@ -266,7 +270,15 @@ const Table = ({
                 }
               }}
             >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                {tableFor == 'in-categorization' && (
+                  <Input
+                    className="mr-2"
+                    type="checkbox"
+                    id={'input_' + index}
+                    onChange={(event) => handleClickRow(dataItem, event)}
+                  ></Input>
+                )}
                 <ContactInfo
                   data={{
                     name: dataItem.first_name + ' ' + dataItem.last_name,
@@ -299,15 +311,6 @@ const Table = ({
                   <div className="text-gray-500 font-medium">
                     {dataItem.addedDate}
                   </div>
-                </td>
-              )}
-              {tableFor == 'in-categorization' && (
-                <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
-                  <Input
-                    type="checkbox"
-                    id={'input_' + index}
-                    onChange={(event) => handleClickRow(dataItem, event)}
-                  ></Input>
                 </td>
               )}
             </tr>
@@ -603,7 +606,8 @@ const Table = ({
     const dispatch = useDispatch();
     const changeStatus = async (contact, status) => {
       const statusId = status; // example status id to search for
-      const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+      const categoryStatuses =
+        categoryType === 'clients' ? clientStatuses : professionalsStatuses;
       const foundStatus = categoryStatuses.find(
         (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
       );
@@ -612,7 +616,7 @@ const Table = ({
       let statusName = foundStatus.statuses.find(
         (foundstatus) => foundstatus.id == status
       ).name;
-  
+
       dispatch(
         updateContactStatus({
           id: contact.id,
@@ -623,7 +627,7 @@ const Table = ({
       toast.success(
         `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
       );
-  
+
       try {
         const res = await contactServices.updateContact(contact.id, {
           status_id: status,
@@ -740,7 +744,6 @@ const Table = ({
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
-                            
                           />
                         </div>
                         {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
@@ -751,36 +754,46 @@ const Table = ({
                             className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
-                                .querySelector('#tooltip-edit-contact-' + contact.id)
-                                .classList.remove('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-edit-contact-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
                               document
-                                .querySelector('#edit-contact-icon-' + contact.id)
-                                .classList.add('text-gray4')
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
                               document
-                                .querySelector('#edit-contact-icon-' + contact.id)
-                                .classList.remove('text-gray3')
-                              }
-                            }
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
                             onMouseLeave={() => {
                               document
-                                .querySelector('#tooltip-edit-contact-' + contact.id)
-                                .classList.add('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-edit-contact-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
                               document
-                                .querySelector('#edit-contact-icon-' + contact.id)
-                                .classList.add('text-gray3')
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
                               document
-                                .querySelector('#edit-contact-icon-' + contact.id)
-                                .classList.remove('text-gray4')
-                              }
-                            }
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
                             onClick={(e) => {
-                              e.stopPropagation()
-                              handleCardEdit(contact)
+                              e.stopPropagation();
+                              handleCardEdit(contact);
                             }}
                           >
-                            <Edit 
+                            <Edit
                               id={'edit-contact-icon-' + contact.id}
-                              className="text-gray3 w-4 h-4" 
+                              className="text-gray3 w-4 h-4"
                             />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
@@ -793,39 +806,49 @@ const Table = ({
                             className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
-                                .querySelector('#tooltip-see-campaigns-' + contact.id)
-                                .classList.remove('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-see-campaigns-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
                               document
-                                .querySelector('#see-campaigns-icon-' + contact.id)
-                                .classList.add('text-gray4')
+                                .querySelector(
+                                  '#see-campaigns-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
                               document
-                                .querySelector('#see-campaigns-icon-' + contact.id)
-                                .classList.remove('text-gray3')
-                              }
-                            }
+                                .querySelector(
+                                  '#see-campaigns-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
                             onMouseLeave={() => {
                               document
-                                .querySelector('#tooltip-see-campaigns-' + contact.id)
-                                .classList.add('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-see-campaigns-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
                               document
-                                .querySelector('#see-campaigns-icon-' + contact.id)
-                                .classList.add('text-gray3')
+                                .querySelector(
+                                  '#see-campaigns-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
                               document
-                                .querySelector('#see-campaigns-icon-' + contact.id)
-                                .classList.remove('text-gray4')
-                              }
-                            }
+                                .querySelector(
+                                  '#see-campaigns-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
                             onClick={(e) => {
-                              e.stopPropagation()
+                              e.stopPropagation();
                               router.push({
                                 pathname: '/contacts/details',
                                 query: { id: contact.id, campaigns: true },
-                              })
+                              });
                             }}
                           >
-                            <Campaign 
+                            <Campaign
                               id={'see-campaigns-icon-' + contact.id}
-                              className="text-gray3 w-4 h-4" 
+                              className="text-gray3 w-4 h-4"
                             />
                             <div
                               id={'tooltip-see-campaigns-' + contact.id}
@@ -839,45 +862,62 @@ const Table = ({
                             className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
                             onMouseEnter={() => {
                               document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.remove('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-change-status-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
                               document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.add('text-gray4')
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
                               document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray3')
-                              }
-                            }
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
                             onMouseLeave={() => {
                               document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.add('invisible', 'opacity-0')
+                                .querySelector(
+                                  '#tooltip-change-status-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
                               document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.add('text-gray3')
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
                               document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray4')
-                              }
-                            }
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
                             // onClick={(event) => handleDropdown(event, !dropdownOpened)}
                             onClick={(e) => e.stopPropagation()}
                           >
                             {/* <Category className="text-gray3 w-4 h-4" /> */}
-                            
+
                             <SimpleBarDropdown
-                            options={allStatusesQuickEdit[categoryType]}
-                            activeIcon={false}
-                            activeClasses="bg-lightBlue1"
-                            handleSelect={(item) => {
-                              // setDropdownVal(item)
-                              changeStatus(contact, item.id);
-                            }}
-                            iconLabel={<Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />}
-                            dropdownValue={contact?.status_2}
-                            handleDropdownClosed={(item) => console.log('testing', item)}
-                          ></SimpleBarDropdown>
+                              options={allStatusesQuickEdit[categoryType]}
+                              activeIcon={false}
+                              activeClasses="bg-lightBlue1"
+                              handleSelect={(item) => {
+                                // setDropdownVal(item)
+                                changeStatus(contact, item.id);
+                              }}
+                              iconLabel={
+                                <Category
+                                  id={'change-status-icon-' + contact.id}
+                                  className="text-gray3 w-4 h-4"
+                                />
+                              }
+                              dropdownValue={contact?.status_2}
+                              handleDropdownClosed={(item) =>
+                                console.log('testing', item)
+                              }
+                            ></SimpleBarDropdown>
                             <div
                               id={'tooltip-change-status-' + contact.id}
                               role="tooltip"
