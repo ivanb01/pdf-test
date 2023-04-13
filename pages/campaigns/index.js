@@ -202,14 +202,17 @@ const Campaigns = () => {
   const fetchCampaignsEvents = async () => {
     try {
       const { data } = await campaignServices.getCampaignsEventsUpcoming();
-      const sortData = sortDateAsc(data?.data, 'event_scheduled_time')
+      const sortData = sortDateAsc(data?.data, 'event_scheduled_time');
       setCampaignsEvents((prev) => ({ ...prev, thisWeek: sortData }));
 
       const { data: dataMonth } =
         await campaignServices.getCampaignsEventsUpcoming({
           period: 'this_month',
         });
-      const sortDataMonth = sortDateAsc(dataMonth?.data, 'event_scheduled_time')
+      const sortDataMonth = sortDateAsc(
+        dataMonth?.data,
+        'event_scheduled_time'
+      );
       setCampaignsEvents((prev) => ({ ...prev, thisMonth: sortDataMonth }));
       setLoadingEvents(false);
     } catch (error) {
@@ -366,6 +369,7 @@ const Campaigns = () => {
                       </div>
                       <ButtonsSlider
                         small
+                        noCount
                         buttons={chartTabs}
                         currentButton={currentChartTab}
                         onClick={setCurrentChartTab}
