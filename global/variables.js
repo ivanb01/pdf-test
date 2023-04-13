@@ -638,7 +638,7 @@ export const importSourceOptions = [
 export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
 
 export const filtersForLastCommunicationDate = {
-  // 'Up to Date',
+  'Up to Date': 'healthy',
   Today: [1, 'days'],
   '1 Week ago': [7, 'days'],
   '2 Weeks ago': [14, 'days'],
@@ -665,3 +665,25 @@ export const multiselectOptions = [
   { value: 'appraiser', label: 'Appraiser' },
   { value: 'handyman', label: 'Handyman' },
 ];
+
+export const healthLastCommunicationDate = {
+  clients: {
+    'New Lead': 1, 
+    'Attempted Contact': 18,
+    'In Communication': 2,
+    'Appointment Set': 7,
+    'Actively Working': 4,
+    'Offer Submitted': 4,
+    'Contract Signed': 10,
+    'Closed Client': 100,
+    'On Hold': 60,
+    'Dropped': 0,
+  },
+  professionals: {
+    'Dropped': 0,
+    'No Relationship': 90,
+    'Loose Relationship': 10,
+    'Strong Relationship': 10,
+
+  }
+};
