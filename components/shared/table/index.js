@@ -31,6 +31,7 @@ import Category from '@mui/icons-material/Category';
 import SimpleBarDropdown from 'components/shared/dropdown/simpleBarDropdown';
 import Campaign from '@mui/icons-material/Campaign';
 import Chip from '../chip';
+import DateChip from '../chip/date-chip';
 import {
   formatDateAgo,
   formatDateLThour,
@@ -740,11 +741,13 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium">
-                          <Chip
+                          <DateChip lastCommunication={contact.created_at} contactStatus={contact.status_2} contactCategory={categoryType} />
+
+                          {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
-                            )}
-                          />
+                            )}                         
+                          /> */}
                         </div>
                         {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                       </td>

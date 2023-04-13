@@ -5,6 +5,7 @@ import {
   contactStatuses,
   professionalsStatuses,
   filtersForLastCommunicationDate,
+  healthLastCommunicationDate,
   multiselectOptionsClients,
   multiselectOptionsProfessionals,
 } from './variables';
@@ -198,12 +199,26 @@ export const formatPhoneNumber = (input) => {
   return output;
 };
 
-export const filterLastCommuncationDate = (date, filterDateString) => {
-  let filterDate = filtersForLastCommunicationDate[filterDateString];
-  let test = moment().subtract(filterDate[0], filterDate[1]);
-  // console.log('filteringdate', date, test, moment(date).isSameOrAfter(test));
-  return moment(date).isSameOrAfter(test);
+export const filterLastCommuncationDate = (date, filterDateString, categoryType, status) => {
+  // console.log('filteringdate', date, filterDateString, categoryType, status);
+
+  const filterForDate = filtersForLastCommunicationDate[filterDateString];
+  if(filterForDate === 'healthy') {
+    const contactType = `${categoryType.toLowerCase()}s`;
+    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
+    return isHealthyCommuncationDate(date, healthyCommunicationDays);
+  }
+
+  const filterDate = moment().subtract(filterForDate[0], filterForDate[1]);
+  return moment(date).isSameOrAfter(filterDate);
 };
+
+export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
+    const healthyCommunicationDate = moment().subtract(healthyCommunicationDays, 'days');
+    const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+
+    return isHealthyCommunication;
+}
 
 export const findTagsOption = (selectedOptions, typeOfContact) => {
   if (!selectedOptions) {
