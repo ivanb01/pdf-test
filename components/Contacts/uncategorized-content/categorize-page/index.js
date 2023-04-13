@@ -11,7 +11,7 @@ import { professionalsStatuses, clientStatuses } from 'global/variables';
 import noContactsSelected from 'public/images/categorize-no-contacts-selected.svg';
 import noContactsSelectedArrow from 'public/images/categorize-no-contacts-selected-arrow.svg';
 import noCategorized from 'public/images/no-categorized.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
 
 const CategorizePage = ({
@@ -31,6 +31,9 @@ const CategorizePage = ({
 }) => {
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
 
+  useEffect(() => {
+    bulkUpdateContacts();
+  }, []);
   const undoAllCategorizations = () => {
     bulkUpdateContacts(uncategorizedInitialState).then(() => {
       setUncategorizedContacts(uncategorizedCopy);
