@@ -175,7 +175,7 @@ const Uncategorized = ({
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'New Records' : 'Unkown'}
+                  {openedSubtab == 0 ? 'New Records' : 'Unknown'}
                 </Text>
                 {uncategorizedContacts?.length > 0 && (
                   <div className="flex items-center justify-self-end">

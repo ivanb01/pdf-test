@@ -34,8 +34,8 @@ const ContactInfo = ({ data, handleSelect, handleAction }) => {
           <Image className="h-10 w-10 rounded-full" src={src} alt="" />
         )}
       </div>
-      <div className="ml-4">
-        <div className="font-medium text-gray7 d- mb-2">{data.name}</div>
+      <div className="ml-3">
+        <div className="font-medium text-gray7">{data.name}</div>
         {data.email && (
           <div className="text-gray-500 font-medium">{data.email}</div>
         )}

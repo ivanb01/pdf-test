@@ -97,7 +97,11 @@ const ContactCampaignsSidebar = ({
                           }`}
                         >
                           {subtab.campaign_name} (
-                          {subtab.contact_assigned_count})
+                          {subtab.contact_assigned_count} /{' '}
+                          {console.log('subtab', subtab)}
+                          {subtab.contact_unassigned_count +
+                            subtab.contact_assigned_count}
+                          )
                         </Text>
                       </a>
                     );

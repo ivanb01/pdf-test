@@ -13,7 +13,7 @@ const GlobalAlert = ({
   let textColor = type == 'error' ? 'text-red-800' : 'text-green-800';
   return (
     <div
-      className={`border border-textColor ${
+      className={`border border-textColor z-50 ${
         overlay &&
         'absolute top-[90px] left-1/2 -translate-x-1/2 min-w-[400px] max-w-[800px]'
       } ${rounded && 'rounded-md'} ${bgColor} p-4 `}

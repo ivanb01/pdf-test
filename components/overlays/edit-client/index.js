@@ -11,6 +11,9 @@ import Input from 'components/shared/input';
 import { useState } from 'react';
 import * as contactServices from 'api/contacts';
 import Overlay from 'components/shared/overlay';
+import TagsInput from 'components/tagsInput';
+import { findTagsOption } from 'global/functions';
+import { useSelector } from 'react-redux';
 
 const EditContactOverlay = ({
   className,
@@ -32,6 +35,8 @@ const EditContactOverlay = ({
 
   const [loading, setLoading] = useState(false);
 
+  const openedTab = useSelector((state) => state.global.openedTab);
+
   const resetForm = () => {
     handleClose();
   };
@@ -44,6 +49,7 @@ const EditContactOverlay = ({
       email: client?.email,
       phone_number: client?.phone_number,
       import_source: client?.import_source,
+      tags: client?.tags,
     },
   });
 
@@ -85,13 +91,13 @@ const EditContactOverlay = ({
           <Avatar size="large" className="mr-4" />
           <Button white label="Edit" />
         </div>
-        <div>
-          <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
+          <div className="grid grid-cols-2 gap-4 mb-12">
             <Input
               type="text"
               label="First Name"
               id="first_name"
-              className="mb-6 w-[50%] pr-3 float-left"
+              className=""
               onChange={formik.handleChange}
               value={formik.values.first_name}
             />
@@ -99,7 +105,7 @@ const EditContactOverlay = ({
               type="text"
               label="Last Name"
               id="last_name"
-              className="mb-6 w-[50%] pl-3 float-left"
+              className=""
               onChange={formik.handleChange}
               value={formik.values.last_name}
             />
@@ -107,7 +113,7 @@ const EditContactOverlay = ({
               type="email"
               label="Email"
               id="email"
-              className="mb-6 w-[50%] pr-3 float-left"
+              className=""
               onChange={formik.handleChange}
               value={formik.values.email}
             />
@@ -115,7 +121,7 @@ const EditContactOverlay = ({
               type="text"
               label="Phone"
               id="phone_number"
-              className="mb-6 w-[50%] pl-3 float-left"
+              className=""
               onChange={formik.handleChange}
               value={formik.values.phone_number}
             />
@@ -131,17 +137,26 @@ const EditContactOverlay = ({
               label="Source"
               activeIcon={false}
               options={importSourceOptions}
-              className="mb-6 w-52"
-              activeClasses="bg-purple1"
+              className=""
               handleSelect={(source) =>
                 (formik.values.import_source = source.name)
               }
               initialSelect={formik.values.import_source}
-              selectClasses="bg-purple1 rounded-full"
               placeHolder={formik.values.import_source ? null : 'Choose'}
             />
-          </form>
-        </div>
+            <TagsInput
+              label="Tags"
+              typeOfContact={openedTab}
+              value={findTagsOption(formik.values.tags, openedTab)}
+              onChange={(choice) => {
+                formik.setFieldValue(
+                  'tags',
+                  choice.map((el) => el.label)
+                );
+              }}
+            />
+          </div>
+        </form>
       </div>
       <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
         <div></div>

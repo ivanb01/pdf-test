@@ -304,6 +304,18 @@ export const allStatusesQuickEdit = {
   ],
 };
 
+export const clientStatusMainTitlesUpdated = {
+  'In The Funnel': 'Clients in The Funnel',
+  Closed: 'Closed Clients',
+  'On Hold': 'On Hold Clients',
+  Dropped: 'Dropped Clients',
+};
+
+export const professioonalStatusMainTitlesUpdated = {
+  Active: 'Active Professionals',
+  Dropped: 'Dropped Professionals',
+};
+
 export const clientStatuses = [
   {
     id: 0,
@@ -645,10 +657,13 @@ export const filtersForLastCommunicationDate = {
   '1 Month ago': [1, 'months'],
 };
 
-export const multiselectOptions = [
+export const multiselectOptionsClients = [
   { value: 'super-high-priority', label: 'Super High Priority!' },
   { value: 'high-priority', label: 'High Priority' },
   { value: 'low-priority', label: 'Low Priority' },
+];
+
+export const multiselectOptionsProfessionals = [
   { value: 'lawyer', label: 'Lawyer' },
   { value: 'contractor', label: 'Contractor' },
   { value: 'mortgage-broker', label: 'Mortagage Broker' },

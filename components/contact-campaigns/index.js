@@ -150,7 +150,14 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <Text>{currentCampaign.campaign_name}</Text>
                 </div>
                 <div className="flex items-center">
-                  <Search placeholder="Search Seller" className="mr-3" />
+                  <Search
+                    placeholder={`Search ${
+                      campaigns.find(
+                        (campaign) => campaign.id === openedCampaignCategory
+                      ).value
+                    }`}
+                    className="mr-3"
+                  />
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}

@@ -10,7 +10,7 @@ import Column from 'components/column';
 import SlideOver from 'components/shared/slideOver';
 import { useState, useEffect } from 'react';
 import Accordion from 'components/shared/accordion';
-import { professionalsStatuses, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import { professionalsStatuses, professioonalStatusMainTitlesUpdated, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
@@ -168,7 +168,7 @@ const Professionals = ({
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {professionalsStatuses[openedSubtab].statusMainTitle}
+              {professioonalStatusMainTitlesUpdated[professionalsStatuses[openedSubtab].statusMainTitle]}
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
