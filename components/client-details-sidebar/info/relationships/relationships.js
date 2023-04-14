@@ -68,7 +68,7 @@ export default function Relationships({contactId}) {
       </div>
       <div className="flex flex-col px-[24px] py-[12px]">
         {
-          relationships.length < 1 ?  <Text className="text-gray-900 pl-3" p>No relationship</Text> :
+          relationships.length < 1 ?  <Text className="text-gray-900 pl-3 italic" p>No relationship</Text> :
         
           relationships.map((relationship) => (
             <div key={relationship?.relationship_id} className="flex flex-row p-3 hover:bg-lightBlue1 group">

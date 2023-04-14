@@ -20,7 +20,7 @@ export default function InfoCard({ label, content, iconContent }) {
             {iconContent}
           </div>
         ) : (
-          <Text className="text-gray7 pl-3" p>
+          <Text className="text-gray7 pl-3 italic" p>
             {content}
           </Text>
         )}
