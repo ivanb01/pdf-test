@@ -20,7 +20,8 @@ import {
 } from '@heroicons/react/solid';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';
 import UnassignOverlay from 'components/overlays/unassign';
-import { sortDateAsc } from 'global/functions';
+import { sortDateAsc, formatDateMDY, formatDateLThour, isValidDate } from 'global/functions';
+
 
 
 export default function Campaigns({
@@ -37,6 +38,7 @@ export default function Campaigns({
   const [campaignEvents, setCampaignEvents] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(0);
   const [previewEvent, setPreviewEvent] = useState(null);
+  const [previewEventDate, setPreviewEventDate] = useState(null);
 
 
   const handleAssignCampaignChange = async () => {
@@ -111,6 +113,7 @@ export default function Campaigns({
         const { data } = await getContactCampaignEventPreview(event.id);
         setPreviewEvent(data);
       }
+      setPreviewEventDate(event.execute_on);
     } catch (error) {
       console.log(error);
     }
@@ -221,14 +224,35 @@ export default function Campaigns({
             </div>
             <div className="w-[58%] details-campaign-fixed-height overflow-y-scroll">
               <div className="flex flex-row border-b border-gray2 p-6">
-                <CalendarIcon className="text-gray4" height={20} />
+                {
+                  isValidDate(previewEventDate) ? (
+                    <>
+                      <CalendarIcon className="text-gray4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {formatDateMDY(previewEventDate)}
+                      </Text>
+                      <ClockIcon className="text-gray4 ml-4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {formatDateLThour(previewEventDate)}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <CalendarIcon className="text-gray4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {previewEventDate}
+                      </Text>
+                    </>
+                  )
+                }
+                {/* <CalendarIcon className="text-gray4" height={20} />
                 <Text p className="text-gray4 ml-1">
                   Same day as added in the system
                 </Text>
                 <ClockIcon className="text-gray4 ml-4" height={20} />
                 <Text p className="text-gray4 ml-1">
                   10:00 AM
-                </Text>
+                </Text> */}
               </div>
               {previewEvent?.type == 'Email' && (
                 <RawHTML className="mt-6 p-6">
