@@ -80,6 +80,8 @@ const Professionals = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
+  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
+
 
   // useEffect(() => {
   //   const delayDebounceFn = setTimeout(() => {
@@ -89,6 +91,12 @@ const Professionals = ({
 
   //   return () => clearTimeout(delayDebounceFn);
   // }, [searchTerm]);
+
+  useEffect(() => {
+    if(contacts.length === contactsOriginalLength) {
+      setContactsOriginal([...contacts]);
+    }
+  },[contacts])
 
   const filterContacts = () => {
     if (filtersCleared) {
