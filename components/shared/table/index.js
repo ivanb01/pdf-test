@@ -176,7 +176,7 @@ const Table = ({
 
     if (!data.length)
       return (
-        <div className="flex flex-col items-center justify-center h-[500px] max-w-[350px] mx-auto my-0">
+        <div className="flex flex-col items-center justify-center h-[490px] max-w-[350px] mx-auto my-0">
           <Image src={noClientCampaigns}></Image>
           <Text h3 className="text-gray7 mb-2 mt-4 text-center">
             {title}

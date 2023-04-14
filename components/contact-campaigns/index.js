@@ -130,7 +130,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
         text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
         onBackClick={() => Router.push('/campaigns')}
       />
-      <div className="border-t border-gray2 flex h-auto min-h-full">
+      <div className="border-t border-gray2 flex h-auto">
         <div className="h-auto border-r border-gray2">
           <ContactCampaignsSidebar
             tabs={campaigns}
