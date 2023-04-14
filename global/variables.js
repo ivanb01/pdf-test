@@ -651,6 +651,7 @@ export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
 
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
+  'Not Up to Date': 'unhealthy',
   Today: [1, 'days'],
   '1 Week ago': [7, 'days'],
   '2 Weeks ago': [14, 'days'],
@@ -684,7 +685,7 @@ export const multiselectOptionsProfessionals = [
 export const healthLastCommunicationDate = {
   clients: {
     'New Lead': 1, 
-    'Attempted Contact': 18,
+    'Attempted Contact': 1,
     'In Communication': 2,
     'Appointment Set': 7,
     'Actively Working': 4,
@@ -697,8 +698,7 @@ export const healthLastCommunicationDate = {
   professionals: {
     'Dropped': 0,
     'No Relationship': 90,
-    'Loose Relationship': 10,
-    'Strong Relationship': 10,
-
+    'Loose Relationship': 90,
+    'Strong Relationship': 90,
   }
 };

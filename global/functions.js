@@ -208,6 +208,11 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
     const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
     return isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
+  if(filterForDate === 'unhealthy') {
+    const contactType = `${categoryType.toLowerCase()}s`;
+    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
+    return !isHealthyCommuncationDate(date, healthyCommunicationDays);
+  }
 
   const filterDate = moment().subtract(filterForDate[0], filterForDate[1]);
   return moment(date).isSameOrAfter(filterDate);
