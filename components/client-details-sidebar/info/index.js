@@ -19,7 +19,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       console.log('campaign name', data);
       if (data?.status === 'enrolled') {
         const { data: data2 } = await getCampaign(data?.campaign_id);
-        setCampaignName(data2?.campaign_name);
+        setCampaignName(`Assigned to '${data2?.campaign_name}'`);
       } else if (data?.status === 'matches_campaign') {
         setCampaignName('Not in campaign');
       } else if (data?.status === 'unenrolled') {
@@ -148,7 +148,7 @@ export default function Info({ client, handleFetchContactRequired }) {
                   lastCommunication={formatDateAgo(
                     client?.last_communication_date
                   )}
-                  className="ml-2 mt-0"
+                  className="ml-2 mt-[0px]"
                 />
               ) : null
             }
