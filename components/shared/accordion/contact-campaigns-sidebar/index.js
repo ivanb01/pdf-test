@@ -15,6 +15,7 @@ const ContactCampaignsSidebar = ({
   setOpenedTab,
   setOpenedSubtab,
   className,
+  categoryType,
   collapsable,
   importContacts,
 }) => {
@@ -24,6 +25,25 @@ const ContactCampaignsSidebar = ({
   };
   const pinned = useSelector((state) => state.global.expandedMenu);
   const [collapseMainTab, setCollapseMainTab] = useState(false);
+
+  const campaignsSubtabs = {
+    clients: {
+      'New Lead': 1,
+      'Attempted Contact': 2,
+      'In Communication': 3,
+      'Appointment Set': 4,
+      'Actively Working': 5,
+      'Offer Submitted': 6,
+      'Contract Signed': 7,
+      'Closed': 8,
+    },
+    professionals: {
+      'No Relationship': 1,
+      'Loose Relationship': 2,
+      'Strong Relationship': 3,
+    }
+  };
+  const orderCampaignsSubtabs = campaignsSubtabs[categoryType];
 
   return (
     <div
@@ -79,7 +99,18 @@ const ContactCampaignsSidebar = ({
                         : `hidden`
                     }
                   >
-                    {tab.subtab.map((subtab) => {
+                    {//tab.subtab.map((subtab) => {
+                      tab.subtab.map(subtab=>({...subtab, reOrderId: orderCampaignsSubtabs[subtab['campaign_name']]}))
+                      .sort(function (a, b) {
+                        if (a.reOrderId < b.reOrderId) {
+                          return -1;
+                        }
+                        if (a.reOrderId > b.reOrderId) {
+                          return 1;
+                        }
+                        return 0;
+                      })
+                      .map(subtab => {
                       return (
                         <a
                           key={`${subtab.campaign_id}`}
@@ -101,7 +132,7 @@ const ContactCampaignsSidebar = ({
                             }`}
                           >
                             {subtab.campaign_name} (
-                            {subtab.contact_assigned_count} /{' '}
+                            {subtab.contact_assigned_count}/
                             {console.log('subtab', subtab)}
                             {subtab.contact_unassigned_count +
                               subtab.contact_assigned_count}

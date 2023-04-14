@@ -138,6 +138,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
             openedSubtab={openedCampaign}
             setOpenedTab={handleOpenCategory}
             setOpenedSubtab={(id) => handleOpenCampaign(id)}
+            categoryType={isClient ? 'clients' : 'professionals'}
           />
         </div>
         <div className="w-full relative">
