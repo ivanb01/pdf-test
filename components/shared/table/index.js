@@ -42,6 +42,8 @@ import { useDispatch } from 'react-redux';
 import { setContacts, updateContactStatus } from 'store/contacts/slice';
 import toast from 'react-hot-toast';
 import * as contactServices from 'api/contacts';
+import noClientCampaigns from 'public/images/no-client-campaigns.svg';
+
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -59,6 +61,7 @@ const Table = ({
   handleAction,
   categoryType,
   handleCardEdit,
+  currentButton,
 }) => {
   const types = [
     {
@@ -155,6 +158,34 @@ const Table = ({
     );
   };
   const contactCampaignsTable = () => {
+    let contactStatus;
+    let title;
+    let description;
+
+    if (currentButton === 0) {
+      contactStatus = 'assigned';
+      description = `Clients that are part of this campaign will be listed here`;
+    } else if (currentButton === 1) {
+      contactStatus = 'unassigned';
+      description = `Clients that are not part of this campaign, but can be assigned will be listed here`;
+    } else {
+      contactStatus = 'canceled';
+      description = `Clients that were once part of this campaign, and cannot be reassigned will be listed here`;
+    }
+    title = `You don’t have any ${contactStatus} clients here`;
+
+    if (!data.length)
+      return (
+        <div className="flex flex-col items-center justify-center h-[500px] max-w-[350px] mx-auto my-0">
+          <Image src={noClientCampaigns}></Image>
+          <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+            {title}
+          </Text>
+          <Text p className="text-gray4 relative text-center mb-6">
+            {description}
+          </Text>
+        </div>
+      );
     return (
       <>
         <thead className="bg-gray-50">
@@ -741,7 +772,11 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium">
-                          <DateChip lastCommunication={contact.created_at} contactStatus={contact.status_2} contactCategory={categoryType} />
+                          <DateChip
+                            lastCommunication={contact.created_at}
+                            contactStatus={contact.status_2}
+                            contactCategory={categoryType}
+                          />
 
                           {/* <Chip
                             lastCommunication={formatDateAgo(

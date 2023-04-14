@@ -30,10 +30,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [contactToAssign, setContactToAssign] = useState();
   const [loading, setLoading] = useState(true);
   const [loadingAssign, setLoadingAssign] = useState(false);
-  const [currentButton, setCurrentButton] = useState(2);
+  const [currentButton, setCurrentButton] = useState(0);
   const [currentCampaign, setCurrentCampaign] = useState();
   const [openedCampaignCategory, setOpenedCampaignCategory] = useState([0]);
   const [openedCampaign, setOpenedCampaign] = useState(0);
+  const [assignedContacts, setAssignedContacts] = useState();
+  const [unassignedContacts, setUnassignedContacts] = useState();
 
   const handleSelectContact = (event, contact) => {
     if (event.target.checked) {
@@ -61,11 +63,9 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     getCampaign(campaignId).then((data) => {
       console.log(data.data);
       setCurrentCampaign(data.data);
-      tabs[0].count = data.data.contacts.length;
-      tabs[1].count = data.data.contacts_assigned_count;
-      tabs[2].count =
-        data.data.contacts_unassigned_count +
-        data.data.contacts_never_assigned_count;
+      tabs[0].count = data.data.contacts_assigned_count;
+      tabs[1].count = data.data.contacts_unassigned_count;
+      tabs[2].count = data.data.contacts_never_assigned_count;
       setLoading(false);
       console.log('campaign', data.data);
     });
@@ -88,11 +88,6 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   const [tabs, setTabs] = useState([
     {
-      id: 2,
-      name: 'All',
-      count: 0,
-    },
-    {
       id: 0,
       name: 'In Campaign',
       count: 0,
@@ -100,6 +95,11 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     {
       id: 1,
       name: 'Not in Campaign',
+      count: 0,
+    },
+    {
+      id: 2,
+      name: 'Canceled',
       count: 0,
     },
   ]);
@@ -166,7 +166,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                 </div>
               </div>
               <div
-                className={`w-auto bg-gray10 ${
+                className={`w-auto ${
                   currentCampaign.contacts.length ? 'h-auto' : 'h-full'
                 }`}
               >
@@ -187,6 +187,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                             setShowAssignOverlay(true);
                           }
                         }}
+                        currentButton={currentButton}
                         data={
                           currentButton == 0
                             ? currentCampaign.contacts.filter(
@@ -197,11 +198,13 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                             ? currentCampaign.contacts.filter(
                                 (contact) =>
                                   contact.contact_campaign_status ==
-                                    'unassigned' ||
-                                  contact.contact_campaign_status ==
-                                    'never_assigned'
+                                  'unassigned'
                               )
-                            : currentCampaign.contacts
+                            : currentCampaign.contacts.filter(
+                                (contact) =>
+                                  contact.contact_campaign_status ==
+                                  'never_assigned'
+                              )
                         }
                       />
                     </SimpleBar>
@@ -209,7 +212,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                     <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
                       <Image src={noClientCampaigns}></Image>
                       <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-                        You don’t have any client assigned here
+                        You don’t have any clients in this campaign
                       </Text>
                       <Text p className="text-gray4 relative text-center mb-6">
                         Clients that are part of this campaign will be listed
