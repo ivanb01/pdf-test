@@ -10,7 +10,12 @@ import Column from 'components/column';
 import SlideOver from 'components/shared/slideOver';
 import { useState, useEffect } from 'react';
 import Accordion from 'components/shared/accordion';
-import { professionalsStatuses, professioonalStatusMainTitlesUpdated, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import {
+  professionalsStatuses,
+  professioonalStatusMainTitlesUpdated,
+  allStatusesQuickEdit,
+  filtersForLastCommunicationDate,
+} from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
@@ -18,7 +23,7 @@ import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
-
+import { multiselectOptionsProfessionals } from 'global/variables';
 
 const tabs = [
   {
@@ -35,7 +40,7 @@ const tabs = [
   },
   {
     title: 'PROFESSIONAL STATUSES',
-    content : allStatusesQuickEdit['professionals'].map(item=>item.name),
+    content: allStatusesQuickEdit['professionals'].map((item) => item.name),
     value: 'status_2',
   },
   {
@@ -45,7 +50,7 @@ const tabs = [
   },
   {
     title: 'TAGS',
-    content: ['tag1', 'tag2', 'tag3'],
+    content: multiselectOptionsProfessionals.map((option) => option.label),
     value: 'tags',
   },
 ];
@@ -60,11 +65,10 @@ const buttons = [
   },
 ];
 
-
 const Professionals = ({
   setShowAddContactOverlay,
   onSearch,
-  handleCardEdit
+  handleCardEdit,
 }) => {
   const dispatch = useDispatch();
 
@@ -95,72 +99,87 @@ const Professionals = ({
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      if(key == 'created_at') {
-        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2));
+      if (key == 'created_at') {
+        contactsState = contactsState.filter((contact) =>
+          filterLastCommuncationDate(
+            contact[key],
+            filters[key][0],
+            contact.category_1,
+            contact.status_2
+          )
+        );
       } else {
         contactsState = contactsState.filter((contact) => {
-          if(Array.isArray(contact[key])) {
+          if (Array.isArray(contact[key])) {
             return contact[key].reduce(
-                (accumulator, current) => accumulator || filters[key].includes(current),
-                false
-            )
-          } 
-          return filters[key].includes(contact[key])
-        })
+              (accumulator, current) =>
+                accumulator || filters[key].includes(current),
+              false
+            );
+          }
+          return filters[key].includes(contact[key]);
+        });
       }
     });
 
     dispatch(updateContacts(contactsState));
   };
 
-  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
-    let filtersCopy = { ...filters };
+  const handleFilterClick =
+    (selectedFilter, filterType, isOnlyOneFilter) => () => {
+      let filtersCopy = { ...filters };
 
-    if (filtersCopy[filterType]) {
-      if (filtersCopy[filterType].includes(selectedFilter)) {
-        filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== selectedFilter);
-        if(filtersCopy[filterType].length < 1) {
-          delete filtersCopy[filterType];
+      if (filtersCopy[filterType]) {
+        if (filtersCopy[filterType].includes(selectedFilter)) {
+          filtersCopy[filterType] = filtersCopy[filterType].filter(
+            (element) => element !== selectedFilter
+          );
+          if (filtersCopy[filterType].length < 1) {
+            delete filtersCopy[filterType];
+          }
+        } else {
+          if (isOnlyOneFilter) {
+            filtersCopy[filterType] = [selectedFilter];
+          } else {
+            filtersCopy[filterType] = [
+              ...filtersCopy[filterType],
+              selectedFilter,
+            ];
+          }
         }
       } else {
-        if(isOnlyOneFilter) {
-          filtersCopy[filterType] = [selectedFilter];
-        } else {
-          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
-        }
+        filtersCopy[filterType] = [selectedFilter];
       }
-    } else {
-      filtersCopy[filterType] = [selectedFilter];
-    }
 
-    // console.log('filters', filtersCopy)
-    setFilters(filtersCopy);
+      // console.log('filters', filtersCopy)
+      setFilters(filtersCopy);
 
-    if(Object.keys(filtersCopy).length === 0) {
-      setFiltersCleared(true);
-    }
-  };
+      if (Object.keys(filtersCopy).length === 0) {
+        setFiltersCleared(true);
+      }
+    };
 
-  const removeFilter = (filterToRemove, filterType ) => {
+  const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...filters };
 
-    filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== filterToRemove);
-    if(filtersCopy[filterType].length < 1) {
+    filtersCopy[filterType] = filtersCopy[filterType].filter(
+      (element) => element !== filterToRemove
+    );
+    if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
     }
 
     // console.log('filters', filtersCopy)
     setFilters(filtersCopy);
 
-    if(Object.keys(filtersCopy).length === 0) {
+    if (Object.keys(filtersCopy).length === 0) {
       setFiltersCleared(true);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     filterContacts();
-  },[filters])
-
+  }, [filters]);
 
   return (
     <>
@@ -168,7 +187,11 @@ const Professionals = ({
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {professioonalStatusMainTitlesUpdated[professionalsStatuses[openedSubtab].statusMainTitle]}
+              {
+                professioonalStatusMainTitlesUpdated[
+                  professionalsStatuses[openedSubtab].statusMainTitle
+                ]
+              }
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
@@ -201,7 +224,7 @@ const Professionals = ({
             </div>
           </div>
         </div>
-         {Object.keys(filters).length > 0 && (
+        {Object.keys(filters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
@@ -209,31 +232,32 @@ const Professionals = ({
                   {contacts.length}{' '}
                   {contacts.length == 1 ? 'result' : 'results'} for:
                 </div>
-                {Object.keys(filters).map((key, index) => (
-                  filters[key].map((filter, i) => 
+                {Object.keys(filters).map((key, index) =>
+                  filters[key].map((filter, i) => (
                     <Chip
                       closable
-                      removeChip={(filterToRemove)=>removeFilter(filterToRemove, key)}
+                      removeChip={(filterToRemove) =>
+                        removeFilter(filterToRemove, key)
+                      }
                       key={`${index}${i}`}
                       active
                       label={filter}
                       className="mr-1"
                     />
-                  )               
-                ))}
-                
+                  ))
+                )}
               </div>
-              <div 
+              <div
                 className="flex flex-row items-center cursor-pointer"
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
                 }}
               >
-                  <TrashIcon height={20} className="text-gray3 mr-1" />
-                  <Text p className="whitespace-nowrap">
-                    Clear Filter
-                  </Text>
+                <TrashIcon height={20} className="text-gray3 mr-1" />
+                <Text p className="whitespace-nowrap">
+                  Clear Filter
+                </Text>
               </div>
             </div>
           </div>
@@ -269,7 +293,11 @@ const Professionals = ({
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" categoryType="professionals" handleCardEdit={handleCardEdit} />
+                <Table
+                  tableFor="contactsList"
+                  categoryType="professionals"
+                  handleCardEdit={handleCardEdit}
+                />
               </SimpleBar>
             </div>
           </div>
@@ -281,18 +309,18 @@ const Professionals = ({
         title="Professional Filters"
         className="top-[70px]"
         buttons={
-            <>
-              {Object.values(filters).flat().length > 0 && (
-                <Button
-                  white
-                  label="Clear Filter"
-                  onClick={() => {
-                    setFiltersCleared(true);
-                    setFilters({});
-                  }}
-                />
-              )}
-              {/* <Button
+          <>
+            {Object.values(filters).flat().length > 0 && (
+              <Button
+                white
+                label="Clear Filter"
+                onClick={() => {
+                  setFiltersCleared(true);
+                  setFilters({});
+                }}
+              />
+            )}
+            {/* <Button
                 onClick={filterContacts}
                 primary
                 label="See Results"
@@ -300,9 +328,9 @@ const Professionals = ({
                   !Object.values(filters).flat().length && !filtersCleared
                 }
               /> */}
-            </>
-          }
-        >
+          </>
+        }
+      >
         <Accordion
           tabs={tabs}
           handleClick={handleFilterClick}

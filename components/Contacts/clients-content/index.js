@@ -12,43 +12,23 @@ import TableRows from '@mui/icons-material/TableRows';
 import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
+import {
+  multiselectOptionsClients,
+  multiselectOptionsProfessionals,
+} from 'global/variables';
 import GlobalAlert from 'components/shared/alert/global-alert';
-import { clientStatuses, clientStatusMainTitlesUpdated, allStatusesQuickEdit, filtersForLastCommunicationDate } from 'global/variables';
+import {
+  clientStatuses,
+  clientStatusMainTitlesUpdated,
+  allStatusesQuickEdit,
+  filtersForLastCommunicationDate,
+} from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 
-const tabs = [
-  {
-    title: 'CLIENT TYPES',
-    content: ['Landlord', 'Renter', 'Buyer', 'Seller'],
-    value: 'category_2',
-  },
-  {
-    title: 'LAST COMMUNICATION',
-    content: Object.keys(filtersForLastCommunicationDate),
-    value: 'created_at',
-    // value: 'last_communication_date',
-    onlyOneValue: true, 
-  },
-  {
-    title: 'CLIENT STATUS',
-    content : allStatusesQuickEdit['clients'].map(item=>item.name),
-    value: 'status_2',
-  },
-  {
-    title: 'CAMPAIGN',
-    content: ['Assigned Clients', 'Unassigned Clients'],
-    value: 'campaign',
-  },
-  {
-    title: 'TAGS',
-    content: ['tag1', 'tag2', 'tag3'],
-    value: 'tags',
-  },
-];
 const buttons = [
   {
     id: 0,
@@ -72,6 +52,36 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
 
+  const tabs = [
+    {
+      title: 'CLIENT TYPES',
+      content: ['Landlord', 'Renter', 'Buyer', 'Seller'],
+      value: 'category_2',
+    },
+    {
+      title: 'LAST COMMUNICATION',
+      content: Object.keys(filtersForLastCommunicationDate),
+      value: 'created_at',
+      // value: 'last_communication_date',
+      onlyOneValue: true,
+    },
+    {
+      title: 'CLIENT STATUS',
+      content: allStatusesQuickEdit['clients'].map((item) => item.name),
+      value: 'status_2',
+    },
+    {
+      title: 'CAMPAIGN',
+      content: ['Assigned Clients', 'Unassigned Clients'],
+      value: 'campaign',
+    },
+    {
+      title: 'TAGS',
+      content: multiselectOptionsClients.map((option) => option.label),
+      value: 'tags',
+    },
+  ];
+
   // useEffect(() => {
   //   const delayDebounceFn = setTimeout(() => {
   //     onSearch(searchTerm);
@@ -90,71 +100,87 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      if(key == 'created_at') {
-        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2));
+      if (key == 'created_at') {
+        contactsState = contactsState.filter((contact) =>
+          filterLastCommuncationDate(
+            contact[key],
+            filters[key][0],
+            contact.category_1,
+            contact.status_2
+          )
+        );
       } else {
         contactsState = contactsState.filter((contact) => {
-          if(Array.isArray(contact[key])) {
+          if (Array.isArray(contact[key])) {
             return contact[key].reduce(
-                (accumulator, current) => accumulator || filters[key].includes(current),
-                false
-            )
-          } 
-          return filters[key].includes(contact[key])
-        })
+              (accumulator, current) =>
+                accumulator || filters[key].includes(current),
+              false
+            );
+          }
+          return filters[key].includes(contact[key]);
+        });
       }
     });
 
     dispatch(updateContacts(contactsState));
   };
 
-  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
-    let filtersCopy = { ...filters };
+  const handleFilterClick =
+    (selectedFilter, filterType, isOnlyOneFilter) => () => {
+      let filtersCopy = { ...filters };
 
-    if (filtersCopy[filterType]) {
-      if (filtersCopy[filterType].includes(selectedFilter)) {
-        filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== selectedFilter);
-        if(filtersCopy[filterType].length < 1) {
-          delete filtersCopy[filterType];
+      if (filtersCopy[filterType]) {
+        if (filtersCopy[filterType].includes(selectedFilter)) {
+          filtersCopy[filterType] = filtersCopy[filterType].filter(
+            (element) => element !== selectedFilter
+          );
+          if (filtersCopy[filterType].length < 1) {
+            delete filtersCopy[filterType];
+          }
+        } else {
+          if (isOnlyOneFilter) {
+            filtersCopy[filterType] = [selectedFilter];
+          } else {
+            filtersCopy[filterType] = [
+              ...filtersCopy[filterType],
+              selectedFilter,
+            ];
+          }
         }
       } else {
-        if(isOnlyOneFilter) {
-          filtersCopy[filterType] = [selectedFilter];
-        } else {
-          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
-        }
+        filtersCopy[filterType] = [selectedFilter];
       }
-    } else {
-      filtersCopy[filterType] = [selectedFilter];
-    }
 
-    // console.log('filters', filtersCopy)
-    setFilters(filtersCopy);
+      // console.log('filters', filtersCopy)
+      setFilters(filtersCopy);
 
-    if(Object.keys(filtersCopy).length === 0) {
-      setFiltersCleared(true);
-    }
-  };
+      if (Object.keys(filtersCopy).length === 0) {
+        setFiltersCleared(true);
+      }
+    };
 
-  const removeFilter = (filterToRemove, filterType ) => {
+  const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...filters };
 
-    filtersCopy[filterType] = filtersCopy[filterType].filter(element => element !== filterToRemove);
-    if(filtersCopy[filterType].length < 1) {
+    filtersCopy[filterType] = filtersCopy[filterType].filter(
+      (element) => element !== filterToRemove
+    );
+    if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
     }
 
     // console.log('filters', filtersCopy)
     setFilters(filtersCopy);
 
-    if(Object.keys(filtersCopy).length === 0) {
+    if (Object.keys(filtersCopy).length === 0) {
       setFiltersCleared(true);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     filterContacts();
-  },[filters])
+  }, [filters]);
 
   return (
     <>
@@ -166,7 +192,11 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
+              {
+                clientStatusMainTitlesUpdated[
+                  clientStatuses[openedSubtab].statusMainTitle
+                ]
+              }
               {/* {openedTab} - {openedSubtab} */}
             </Text>
             <div className="flex items-center justify-self-end">
@@ -208,31 +238,32 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
                   {contacts.length}{' '}
                   {contacts.length == 1 ? 'result' : 'results'} for:
                 </div>
-                {Object.keys(filters).map((key, index) => (
-                  filters[key].map((filter, i) => 
+                {Object.keys(filters).map((key, index) =>
+                  filters[key].map((filter, i) => (
                     <Chip
                       closable
-                      removeChip={(filterToRemove)=>removeFilter(filterToRemove, key)}
+                      removeChip={(filterToRemove) =>
+                        removeFilter(filterToRemove, key)
+                      }
                       key={`${index}${i}`}
                       active
                       label={filter}
                       className="mr-1"
                     />
-                  )               
-                ))}
-                
+                  ))
+                )}
               </div>
-              <div 
+              <div
                 className="flex flex-row items-center cursor-pointer"
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
                 }}
               >
-                  <TrashIcon height={20} className="text-gray3 mr-1" />
-                  <Text p className="whitespace-nowrap">
-                    Clear Filter
-                  </Text>
+                <TrashIcon height={20} className="text-gray3 mr-1" />
+                <Text p className="whitespace-nowrap">
+                  Clear Filter
+                </Text>
               </div>
             </div>
           </div>
@@ -266,7 +297,11 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
               <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                <Table tableFor="contactsList" categoryType="clients" handleCardEdit={handleCardEdit}/>
+                <Table
+                  tableFor="contactsList"
+                  categoryType="clients"
+                  handleCardEdit={handleCardEdit}
+                />
               </SimpleBar>
             </div>
           </div>
