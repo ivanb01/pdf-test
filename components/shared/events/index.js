@@ -40,7 +40,7 @@ export default function Events({
                 {eventIdx !== events.length - 1 ? (
                   <div
                     className={`-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full 
-                    ${event?.status ? eventStatusesBgColors[event?.status] : (eventIdx === 0 ? 'bg-green5' : 'bg-lightBlue3')}`}
+                    ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
                     aria-hidden="true"
                   />
                 ) : null}
@@ -55,10 +55,10 @@ export default function Events({
                   <div className="h-9 flex items-center">
                     <span
                       className={`relative z-0 w-8 h-8 flex items-center justify-center lightBlue3 rounded-full bg-white border-2
-                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : (eventIdx === 0 ? 'border-green5' : 'border-lightBlue3')}`}
+                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : 'border-gray-300'}`}
                     >
                       <span className={`h-[18px] w-[18px] flex items-center justify-center text-xs font-medium text-white rounded-full 
-                      ${event?.status ? eventStatusesBgColors[event?.status] : (eventIdx === 0 ? 'bg-green5' : 'bg-lightBlue3')}`}
+                      ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
                       >{eventIdx+1}</span>
                     </span>
                   </div>
