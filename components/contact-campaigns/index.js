@@ -221,7 +221,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                       </Text>
                     </div>
                   )}
-                  {selectedContacts.length > 1 && (
+                  {/* {selectedContacts.length > 1 && (
                     <div
                       style={{ zIndex: '99999 !important' }}
                       className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end"
@@ -241,7 +241,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                         // onClick={() => saveCategorization()}
                       />
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </>

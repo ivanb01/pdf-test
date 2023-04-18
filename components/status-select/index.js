@@ -9,7 +9,7 @@ const StatusSelect = ({
   className,
   statuses,
   error,
-  errorText
+  errorText,
 }) => {
   return (
     <div>
@@ -31,7 +31,7 @@ const StatusSelect = ({
               >
                 {status.statusMainTitle}
               </Text>
-              <div className="chips mt-4 flex flex-col">
+              <div className="chips mt-4 ">
                 {status.statuses.map((status) => {
                   return (
                     <Chip
@@ -52,7 +52,11 @@ const StatusSelect = ({
           );
         })}
       </div>
-      {error && errorText && <NotificationAlert className='mt-2 p-2' type={'error'}>{errorText}</NotificationAlert>}
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 };

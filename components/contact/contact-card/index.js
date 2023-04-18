@@ -11,7 +11,11 @@ import Campaign from '@mui/icons-material/Campaign';
 import Edit from '@mui/icons-material/Edit';
 import Category from '@mui/icons-material/Category';
 import { useEffect, useState } from 'react';
-import { allStatusesQuickEdit, clientStatuses, professionalsStatuses } from 'global/variables';
+import {
+  allStatusesQuickEdit,
+  clientStatuses,
+  professionalsStatuses,
+} from 'global/variables';
 import SimpleBar from 'simplebar-react';
 import { useRouter } from 'next/router';
 import * as contactServices from 'api/contacts';
@@ -19,7 +23,7 @@ import SimpleBarDropdown from 'components/shared/dropdown/simpleBarDropdown';
 import Dropdown from 'components/shared/dropdown/';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactStatus } from 'store/contacts/slice';
-import { formatDateAgo } from 'global/functions';
+import { formatDateAgo, getInitials } from 'global/functions';
 import toast from 'react-hot-toast';
 
 const categoryIds = {
@@ -45,7 +49,8 @@ export default function ContactCard({
 
   const changeStatus = async (status) => {
     const statusId = status; // example status id to search for
-    const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+    const categoryStatuses =
+      categoryType === 'clients' ? clientStatuses : professionalsStatuses;
 
     const foundStatus = categoryStatuses.find(
       (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
@@ -134,10 +139,20 @@ export default function ContactCard({
         onClick={() => handleCardClick(contact)}
       >
         <div className="flex w-full items-center justify-between">
-          <img
-            className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-300"
-            src={contact.profile_image_path}
-          />
+          {contact.profile_image_path ? (
+            <img
+              className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-400"
+              src={contact.profile_image_path}
+            />
+          ) : (
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-400">
+              <span className="text-sm font-medium leading-none text-white">
+                {getInitials(
+                  contact.first_name + ' ' + contact.last_name
+                ).toUpperCase()}
+              </span>
+            </span>
+          )}
           <div className="flex-1 ml-2 pr-2">
             <div className="flex items-center space-x-3">
               <h3 className="text-sm font-medium text-gray-900 max-w-[110px]">
@@ -151,7 +166,11 @@ export default function ContactCard({
             </span> */}
         </div>
         {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
-        <DateChip lastCommunication={contact.created_at} contactStatus={contact.status_2} contactCategory={categoryType} />
+        <DateChip
+          lastCommunication={contact.created_at}
+          contactStatus={contact.status_2}
+          contactCategory={categoryType}
+        />
       </div>
       <div
         className={`${
@@ -164,32 +183,30 @@ export default function ContactCard({
             onMouseEnter={() => {
               document
                 .querySelector('#tooltip-edit-contact-' + contact.id)
-                .classList.remove('invisible', 'opacity-0')
+                .classList.remove('invisible', 'opacity-0');
               document
                 .querySelector('#edit-contact-icon-' + contact.id)
-                .classList.add('text-gray4')
+                .classList.add('text-gray4');
               document
                 .querySelector('#edit-contact-icon-' + contact.id)
-                .classList.remove('text-gray3')
-              }
-            }
+                .classList.remove('text-gray3');
+            }}
             onMouseLeave={() => {
               document
                 .querySelector('#tooltip-edit-contact-' + contact.id)
-                .classList.add('invisible', 'opacity-0')
+                .classList.add('invisible', 'opacity-0');
               document
                 .querySelector('#edit-contact-icon-' + contact.id)
-                .classList.add('text-gray3')
+                .classList.add('text-gray3');
               document
                 .querySelector('#edit-contact-icon-' + contact.id)
-                .classList.remove('text-gray4')
-              }
-            }
+                .classList.remove('text-gray4');
+            }}
             onClick={() => handleCardEdit(contact)}
           >
-            <Edit 
+            <Edit
               id={'edit-contact-icon-' + contact.id}
-              className="text-gray3 w-4 h-4" 
+              className="text-gray3 w-4 h-4"
             />
             <div
               id={'tooltip-edit-contact-' + contact.id}
@@ -232,44 +249,42 @@ export default function ContactCard({
             onMouseEnter={() => {
               document
                 .querySelector('#tooltip-see-campaigns-' + contact.id)
-                .classList.remove('invisible', 'opacity-0')
+                .classList.remove('invisible', 'opacity-0');
               document
                 .querySelector('#see-campaigns-icon-' + contact.id)
-                .classList.add('text-gray4')
+                .classList.add('text-gray4');
               document
                 .querySelector('#see-campaigns-icon-' + contact.id)
-                .classList.remove('text-gray3')
-              }
-            }
+                .classList.remove('text-gray3');
+            }}
             onMouseLeave={() => {
               document
                 .querySelector('#tooltip-see-campaigns-' + contact.id)
-                .classList.add('invisible', 'opacity-0')
+                .classList.add('invisible', 'opacity-0');
               document
                 .querySelector('#see-campaigns-icon-' + contact.id)
-                .classList.add('text-gray3')
+                .classList.add('text-gray3');
               document
                 .querySelector('#see-campaigns-icon-' + contact.id)
-                .classList.remove('text-gray4')
-              }
-            }
+                .classList.remove('text-gray4');
+            }}
             onClick={() =>
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: contact.id, campaigns: true },
-                })
-              }
+              router.push({
+                pathname: '/contacts/details',
+                query: { id: contact.id, campaigns: true },
+              })
+            }
           >
             <Campaign
               id={'see-campaigns-icon-' + contact.id}
-              className="text-gray3 w-4 h-4"            
+              className="text-gray3 w-4 h-4"
             />
             <div
               id={'tooltip-see-campaigns-' + contact.id}
               role="tooltip"
               className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
             >
-              See Campaigns 
+              See Campaigns
             </div>
           </div>
           <div
@@ -277,27 +292,25 @@ export default function ContactCard({
             onMouseEnter={() => {
               document
                 .querySelector('#tooltip-change-status-' + contact.id)
-                .classList.remove('invisible', 'opacity-0')
+                .classList.remove('invisible', 'opacity-0');
               document
                 .querySelector('#change-status-icon-' + contact.id)
-                .classList.add('text-gray4')
+                .classList.add('text-gray4');
               document
                 .querySelector('#change-status-icon-' + contact.id)
-                .classList.remove('text-gray3')
-              }
-            }
+                .classList.remove('text-gray3');
+            }}
             onMouseLeave={() => {
               document
                 .querySelector('#tooltip-change-status-' + contact.id)
-                .classList.add('invisible', 'opacity-0')
+                .classList.add('invisible', 'opacity-0');
               document
                 .querySelector('#change-status-icon-' + contact.id)
-                .classList.add('text-gray3')
+                .classList.add('text-gray3');
               document
                 .querySelector('#change-status-icon-' + contact.id)
-                .classList.remove('text-gray4')
-              }
-            }
+                .classList.remove('text-gray4');
+            }}
             // onClick={(event) => handleDropdown(event, !dropdownOpened)}
             onClick={() => setDropdownOpened(!dropdownOpened)}
           >
@@ -310,7 +323,12 @@ export default function ContactCard({
                 // setDropdownVal(item)
                 changeStatus(item.id);
               }}
-              iconLabel={<Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />}
+              iconLabel={
+                <Category
+                  id={'change-status-icon-' + contact.id}
+                  className="text-gray3 w-4 h-4"
+                />
+              }
               dropdownValue={contact?.status_2}
               handleDropdownClosed={(item) => setDropdownOpened(item)}
             ></SimpleBarDropdown>

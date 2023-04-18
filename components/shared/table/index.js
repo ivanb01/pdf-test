@@ -194,7 +194,7 @@ const Table = ({
               scope="col"
               className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center border-r border-gray-200"
             >
-              <Input type="checkbox" onChange={() => handleSelectAll}></Input>
+              {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
               Seller
             </th>
             {data[0]?.events.map((event, index) => (
@@ -230,9 +230,9 @@ const Table = ({
                     assigned:
                       dataItem.contact_campaign_status == 'assigned' ? 1 : 0,
                   }}
-                  handleSelect={(e, dataItem) =>
-                    handleSelectContact(e, dataItem)
-                  }
+                  // handleSelect={(e, dataItem) =>
+                  //   handleSelectContact(e, dataItem)
+                  // }
                   handleAction={(id, action) => handleAction(id, action)}
                 />
               </td>
