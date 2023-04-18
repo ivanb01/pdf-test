@@ -3,7 +3,7 @@ import axiosInstance from 'api/axiosInstance';
 
 export const getContacts = (category, searchterm) => {
   return axiosInstance.get('contacts', {
-    params: { category_ids: category, search_term: searchterm, limit: 100 },
+    params: { category_ids: category, search_term: searchterm, limit: 1000 },
   });
 };
 
