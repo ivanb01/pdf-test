@@ -84,6 +84,15 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
+      <Button
+              label="Import contacts@google"
+              className="mr-4"
+              onClick={() =>
+                router.push({
+                  pathname: '/google/import/contacts'
+                })
+              }
+            />
         {showUncategorizedButton() && (
           <Button
             label="Start Categorizing Contacts"
