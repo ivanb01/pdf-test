@@ -142,7 +142,7 @@ export default function ContactCard({
           {contact.profile_image_path ? (
             <img
               className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-400"
-              src={contact.profile_image_path}
+              src={encodeURI(contact.profile_image_path)}
             />
           ) : (
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-400">
