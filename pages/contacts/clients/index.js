@@ -13,7 +13,6 @@ import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 
-
 const index = () => {
   const dispatch = useDispatch();
 
@@ -27,7 +26,6 @@ const index = () => {
 
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-
 
   const searchClients = (term) => {
     let filteredArray = searchContacts(contactsCopy.data, term);
