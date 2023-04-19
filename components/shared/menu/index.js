@@ -84,15 +84,15 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
-      <Button
-              label="Import contacts@google"
-              className="mr-4"
-              onClick={() =>
-                router.push({
-                  pathname: '/google/import/contacts'
-                })
-              }
-            />
+        <Button
+          label="Import contacts@google"
+          className="mr-4"
+          onClick={() =>
+            router.push({
+              pathname: '/google/import/contacts',
+            })
+          }
+        />
         {showUncategorizedButton() && (
           <Button
             label="Start Categorizing Contacts"
@@ -112,7 +112,7 @@ const MainMenu = ({
               <a href="#">
                 <img
                   className="inline-block h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
                   alt=""
                 />
               </a>
@@ -133,7 +133,7 @@ const MainMenu = ({
                 <div className="mr-3">
                   <img
                     className="inline-block h-10 w-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
                     alt=""
                   />
                 </div>
@@ -185,7 +185,7 @@ const MainMenu = ({
         {/* <a href="#" onClick={() => Router.push('/my-profile')}>
           <img
             className="inline-block h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             alt=""
           />
         </a>

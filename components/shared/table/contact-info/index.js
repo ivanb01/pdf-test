@@ -3,7 +3,7 @@ import Input from 'components/shared/input';
 import Image from 'next/image';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 import Chip from 'components/shared/chip';
-
+import { getInitials } from 'global/functions';
 const statusColors = {
   'New Lead': 'bg-lightBlue1',
   'Attempted Contact': 'bg-lightBlue2',
@@ -30,8 +30,18 @@ const ContactInfo = ({ data, handleSelect, handleAction }) => {
         ></Input>
       )}
       <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
-        {data.image && (
-          <Image className="h-10 w-10 rounded-full" src={src} alt="" />
+        {data.image && data.image !== null ? (
+          <img
+            className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400"
+            src={data.image}
+          />
+        ) : (
+          // <Image className="h-10 w-10 rounded-full" src={src} alt="" />
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+            <span className="text-sm font-medium leading-none text-white">
+              {getInitials(data.name).toUpperCase()}
+            </span>
+          </span>
         )}
       </div>
       <div className="ml-3">
