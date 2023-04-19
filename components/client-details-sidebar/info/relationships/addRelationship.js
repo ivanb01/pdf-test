@@ -15,7 +15,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-
 const AddRelationshipModal = ({
   handleClose,
   contactId,
@@ -35,7 +34,7 @@ const AddRelationshipModal = ({
       relationship_name: '',
     },
     validationSchema: AddRelationshipSchema,
-    onSubmit: async (values, { setSubmitting }) => {      
+    onSubmit: async (values, { setSubmitting }) => {
       await addRelationship(values);
       handleFetchRelationships();
       handleCloseAddModal();
@@ -43,8 +42,6 @@ const AddRelationshipModal = ({
   });
 
   const { errors, touched } = formik;
-
-
 
   // const [relationshipsToAdd, setRelationshipsToAdd] = useState([]);
   const [relationshipToAdd, setRelationshipToAdd] = useState(null);
@@ -97,7 +94,6 @@ const AddRelationshipModal = ({
     setSearchKey('');
     setContactsDropdown(false);
     formik.setFieldValue('related_to_contact_id', contact.id);
-
   };
 
   const handleChooseRelationshipType = (relationshipType) => {
@@ -109,7 +105,6 @@ const AddRelationshipModal = ({
       relationship_type: relationshipType.name,
     });
     formik.setFieldValue('relationship_name', relationshipType.name);
-
   };
 
   const removeRelationship = () => {
@@ -140,10 +135,7 @@ const AddRelationshipModal = ({
       //   related_to_contact_id: relationshipToAdd.relationship_id,
       //   relationship_name: relationshipToAdd.relationship_type,
       // };
-      await contactServices.addContactRelationship(
-        contactId,
-        values
-      );
+      await contactServices.addContactRelationship(contactId, values);
       setLoadingButton(false);
     } catch (error) {
       console.log(error);
@@ -202,7 +194,7 @@ const AddRelationshipModal = ({
                     <Avatar
                       size="w-8 h-8"
                       className="mr-4"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
                     />
                     <div className="flex flex-col">
                       <Text className="text-gray6" h4>
@@ -219,7 +211,11 @@ const AddRelationshipModal = ({
           </Transition>
         </div>
 
-        {errors.related_to_contact_id  && <NotificationAlert className='mt-2 p-2' type={'error'}>{errors.related_to_contact_id}</NotificationAlert>}
+        {errors.related_to_contact_id && (
+          <NotificationAlert className="mt-2 p-2" type={'error'}>
+            {errors.related_to_contact_id}
+          </NotificationAlert>
+        )}
 
         <div className="my-2 min-h-[100px]">
           {relationshipToAdd && (
@@ -227,7 +223,7 @@ const AddRelationshipModal = ({
               <Avatar
                 size="w-8 h-8"
                 className="mr-4"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
               />
               <div className="flex flex-row justify-between w-[100%]">
                 <div className="flex flex-col">
@@ -260,7 +256,13 @@ const AddRelationshipModal = ({
           )}
         </div>
 
-        {!errors.related_to_contact_id && errors.relationship_name && touched.relationship_name && <NotificationAlert className='mt-2 p-2' type={'error'}>{errors.relationship_name}</NotificationAlert>}
+        {!errors.related_to_contact_id &&
+          errors.relationship_name &&
+          touched.relationship_name && (
+            <NotificationAlert className="mt-2 p-2" type={'error'}>
+              {errors.relationship_name}
+            </NotificationAlert>
+          )}
 
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-row justify-end mt-5">
@@ -270,12 +272,12 @@ const AddRelationshipModal = ({
               label="Cancel"
               onClick={handleCloseAddModal}
             />
-            <Button 
-              type="submit" 
-              primary 
-              label="Save" 
+            <Button
+              type="submit"
+              primary
+              label="Save"
               loading={loadingButton}
-              />
+            />
           </div>
         </form>
       </div>
