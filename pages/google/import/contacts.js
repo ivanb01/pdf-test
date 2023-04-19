@@ -1,82 +1,91 @@
 import { useRouter } from 'next/router';
-import { postGoogleContacts } from 'api/google';
 import { useEffect, useState } from 'react';
 
-const GoogleImportContacs = () => {
-    const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [apiResponse, setApiResponse] = useState(null);
+import { postGoogleContacts } from 'api/google';
 
-    useEffect(() => {
-        postGoogleContacts()
-            .then((response) => {
-                const redirectUri = response.data.redirect_uri;
-                if (redirectUri) {
-                    setLoading(false);
-                    console.log(response);
-                    setApiResponse(response.data);
-                    setTimeout(() => {
-                        router.push(redirectUri);
-                    }, 2000);
-                } else {
-                    setLoading(false);
-                    console.log(response);
-                }
-            })
-            .catch((error) => {
-                setLoading(false);
-                setError(error);
-                console.error(error);
-            });
-    }, []);
+const GoogleImportContacts = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [response, setResponse] = useState(null);
+
+  useEffect(() => {
+    postGoogleContacts()
+      .then(res => {
+        setResponse(res.data);
+        if (res.data.redirect_uri) {
+          setLoading(false);
+          router.push(res.data.redirect_uri);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        setLoading(false);
+        setError(err);
+      });
+  }, []);
+
+  const renderTable = (title, data) => {
+    if (!data || data.length === 0) {
+      return <h1 className="text-2xl font-bold mb-4 mt-6">{data.length} {title}</h1>;
+    }
+
+    const columns = Object.keys(data[0]);
 
     return (
-        <div className="container">
-            {loading ? (
-                <div className="loading">Importing Google Contacts...</div>
-            ) : error ? (
-                <div className="error">Error: {error.message}</div>
-            ) : (
-                <div className="response">
-                    <p>API response: {apiResponse && JSON.stringify(apiResponse)}</p>
-                    {router.isReady && (
-                        <p className="redirecting">Redirecting in 2-3 seconds...</p>
-                    )}
-                </div>
-            )}
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold mb-4 mt-6">{data.length} {title}</h1>
+        <table className="table-auto w-full">
+          <thead>
+            <tr>
+              {columns.map(column => (
+                <th key={column} className="px-4 py-2 text-left">{column}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, index) => (
+              <tr key={index}>
+                {columns.map(column => (
+                  <td key={column} className="border px-4 py-2">{row[column]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
+  };
+
+  const importNeeded = (data) => {
+    let result = "";
+    if (data === "Not needed")
+        result = "Import is not needed. No new contacts found.";
+    else if (data == "Successfull")
+        result =  "Import was successful. Continue to categorize.";
+    else if (data == "Failed")
+        result = "Import failed. Please send an email to dev@opgny.com"
+    return <h1 className="text-2xl font-bold mb-4 mt-2">{result}</h1>
+  }
+
+  return (
+    <div className="container mx-auto p-4">
+      {loading ? (
+        <div className="text-center py-8">Importing Google Contacts...</div>
+      ) : error ? (
+        <div className="text-center text-red-600 py-8">Error: {error.message}</div>
+      ) : (
+        <div>
+          {importNeeded(response.db_insertion)}
+          {renderTable('Import', response.importable_new_contacts)}
+          {renderTable('Valid', response.importable_contacts)}
+          {renderTable('Invalid', response.invalid_contacts)}
+          {renderTable('Exist already', response.existing_contacts)}
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default GoogleImportContacs;
-
-// Styling using CSS classes
-<style jsx>{`
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .loading {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    .error {
-        font-size: 18px;
-        color: red;
-        text-align: center;
-    }
-
-    .response {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    .redirecting {
-        margin-top: 16px;
-    }
-`}</style>
+export default GoogleImportContacts;
