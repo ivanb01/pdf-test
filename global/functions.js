@@ -14,7 +14,7 @@ import { multiselectOptions } from './variables';
 
 export const getInitials = (name) => {
   let fullName = name.split(' ');
-  return fullName[0][0] + fullName[1][0];
+  return (fullName[0][0] + fullName[1][0]).toUpperCase();
 };
 
 export const classNames = (...classes) => {
@@ -199,18 +199,25 @@ export const formatPhoneNumber = (input) => {
   return output;
 };
 
-export const filterLastCommuncationDate = (date, filterDateString, categoryType, status) => {
+export const filterLastCommuncationDate = (
+  date,
+  filterDateString,
+  categoryType,
+  status
+) => {
   // console.log('filteringdate', date, filterDateString, categoryType, status);
 
   const filterForDate = filtersForLastCommunicationDate[filterDateString];
-  if(filterForDate === 'healthy') {
+  if (filterForDate === 'healthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
-    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
+    const healthyCommunicationDays =
+      healthLastCommunicationDate[contactType][status];
     return isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
-  if(filterForDate === 'unhealthy') {
+  if (filterForDate === 'unhealthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
-    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
+    const healthyCommunicationDays =
+      healthLastCommunicationDate[contactType][status];
     return !isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
 
@@ -219,11 +226,14 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
 };
 
 export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-    const healthyCommunicationDate = moment().subtract(healthyCommunicationDays, 'days');
-    const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+  const healthyCommunicationDate = moment().subtract(
+    healthyCommunicationDays,
+    'days'
+  );
+  const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
 
-    return isHealthyCommunication;
-}
+  return isHealthyCommunication;
+};
 
 export const findTagsOption = (selectedOptions, typeOfContact) => {
   if (!selectedOptions) {

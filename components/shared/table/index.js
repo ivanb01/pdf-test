@@ -226,7 +226,7 @@ const Table = ({
                     name: `${dataItem.contact_name}`,
                     id: dataItem.contact_id,
                     email: dataItem.contact_email,
-                    image: dataItem.image,
+                    image: dataItem.profile_image_path,
                     assigned:
                       dataItem.contact_campaign_status == 'assigned' ? 1 : 0,
                   }}
@@ -315,7 +315,7 @@ const Table = ({
                   data={{
                     name: dataItem.first_name + ' ' + dataItem.last_name,
                     email: dataItem.email,
-                    image: dataItem.image,
+                    image: dataItem.profile_image_path,
                   }}
                 />
                 {/* {(contact.type != null || contact.status != null) && (
@@ -438,12 +438,11 @@ const Table = ({
               className={`contact-row`}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                {console.log(dataItem)}
                 <ContactInfo
                   data={{
                     name: dataItem.first_name + ' ' + dataItem.last_name,
                     email: dataItem.email,
-                    image: dataItem.image,
+                    image: dataItem.profile_image_path,
                   }}
                 />
                 {(dataItem.category_id != null ||
@@ -756,7 +755,7 @@ const Table = ({
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
                             email: contact.email,
-                            image: contact.image,
+                            image: contact.profile_image_path,
                           }}
                         />
                       </td>
@@ -1003,7 +1002,7 @@ const Table = ({
                   data={{
                     name: dataItem.first_name + ' ' + dataItem.last_name,
                     email: dataItem.email,
-                    image: dataItem.image,
+                    image: dataItem.profile_image_path,
                   }}
                 />
               </td>

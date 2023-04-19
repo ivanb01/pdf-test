@@ -10,12 +10,9 @@ import {
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
+import { getInitials } from 'global/functions';
 
-export default function ClientCard({
-  client,
-  handleFetchContactRequired
-}) {
-
+export default function ClientCard({ client, handleFetchContactRequired }) {
   const [editingContact, setEditingContact] = useState(false);
   const [deletingClient, setDeletingContact] = useState(false);
 
@@ -48,11 +45,14 @@ export default function ClientCard({
     <>
       <div className="py-[24px] pl-[24px] flex flex-row justify-items-center items-center">
         <Avatar
-          className=""
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          initials={getInitials(client.first_name + ' ' + client.last_name)}
+          src={client.profile_image_path}
+          // src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
         />
+
+        {/* profile_image_path */}
         <div className="flex flex-col ml-[18px]">
-          <Text h1 className="" >
+          <Text h1 className="">
             {client?.first_name} {client?.last_name}
           </Text>
           <span className="flex flex-col">
@@ -73,7 +73,10 @@ export default function ClientCard({
           </span>
         </div>
         <div className="ml-auto mr-4">
-          <FilterDropdown types={types} icon={<DotsVerticalIcon height={20} />} />
+          <FilterDropdown
+            types={types}
+            icon={<DotsVerticalIcon height={20} />}
+          />
         </div>
       </div>
 
@@ -91,7 +94,6 @@ export default function ClientCard({
           handleFetchContactRequired={handleFetchContactRequired}
         />
       )}
-
     </>
   );
 }

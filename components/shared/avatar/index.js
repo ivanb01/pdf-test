@@ -1,16 +1,31 @@
-export default function Avatar({ img, size, className, src, ...props }) {
+import { getInitials } from 'global/functions';
+
+export default function Avatar({
+  initials,
+  img,
+  size,
+  className,
+  src,
+  ...props
+}) {
   let localSize = 'h-12 w-12';
   if (size === 'large') localSize = 'h-14 w-14';
   if (size) localSize = size;
-  
+
   return (
     <>
       {src ? (
         <img
-          className={`inline-block ${localSize} rounded-full ${className}`}
+          className={`h-14 w-14 inline-block ${localSize} rounded-full ${className}`}
           src={src}
           alt=""
         />
+      ) : initials ? (
+        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-400">
+          <span className="text-sm font-medium leading-none text-white">
+            {initials}
+          </span>
+        </span>
       ) : (
         <span
           className={`inline-block h-14 w-14 rounded-full overflow-hidden bg-gray-100 ${className}`}
