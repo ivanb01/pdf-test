@@ -25,7 +25,13 @@ const GoogleImportContacts = () => {
         setError(err);
       });
   }, []);
+  const handleGoToContacts = () => {
+    router.push('/contacts/clients');
+};
 
+const handleStartCategorizing = () => {
+    router.push('/contacts/uncategorized?categorize=true');
+};
   const renderTable = (title, data) => {
     if (!data || data.length === 0) {
       return <h1 className="text-2xl font-bold mb-4 mt-6">{data.length} {title}</h1>;
@@ -71,6 +77,20 @@ const GoogleImportContacts = () => {
 
   return (
     <div className="container mx-auto p-4">
+        <div className="flex justify-between items-center mb-8">
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={handleGoToContacts}
+                >
+                    Go to Contacts
+                </button>
+                <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={handleStartCategorizing}
+                >
+                    Start Categorizing
+                </button>
+            </div>
       {loading ? (
         <div className="text-center py-8">Importing Google Contacts...</div>
       ) : error ? (
