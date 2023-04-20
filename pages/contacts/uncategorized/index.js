@@ -10,6 +10,10 @@ import Loader from 'components/shared/loader';
 import { getStatuses } from 'api/categorize';
 import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
+import dynamic from 'next/dynamic';
+const Tour = dynamic(() => import('components/onboarding/tour'), {
+  ssr: false,
+});
 
 const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -104,28 +108,32 @@ const index = () => {
       {loading ? (
         <Loader />
       ) : (
-        <Uncategorized
-          handleStartCategorizing={handleStartCategorizing}
-          categorizing={categorizing}
-          setCategorizing={setCategorizing}
-          types={types}
-          uncategorizedContacts={uncategorizedContacts}
-          setUncategorizedContacts={setUncategorizedContacts}
-          selectedUncategorized={selectedUncategorized}
-          setSelectedUncategorized={setSelectedUncategorized}
-          selectedUncategorizedContactType={selectedUncategorizedContactType}
-          setSelectedUncategorizedContactType={
-            setSelectedUncategorizedContactType
-          }
-          selectedUncategorizedContactStatus={
-            selectedUncategorizedContactStatus
-          }
-          setSelectedUncategorizedContactStatus={
-            setSelectedUncategorizedContactStatus
-          }
-          handleSelectUncategorized={handleSelectUncategorized}
-          onSearch={searchUncategorized}
-        />
+        <>
+          {/* <Tour for={'uncategorized'} /> */}
+
+          <Uncategorized
+            handleStartCategorizing={handleStartCategorizing}
+            categorizing={categorizing}
+            setCategorizing={setCategorizing}
+            types={types}
+            uncategorizedContacts={uncategorizedContacts}
+            setUncategorizedContacts={setUncategorizedContacts}
+            selectedUncategorized={selectedUncategorized}
+            setSelectedUncategorized={setSelectedUncategorized}
+            selectedUncategorizedContactType={selectedUncategorizedContactType}
+            setSelectedUncategorizedContactType={
+              setSelectedUncategorizedContactType
+            }
+            selectedUncategorizedContactStatus={
+              selectedUncategorizedContactStatus
+            }
+            setSelectedUncategorizedContactStatus={
+              setSelectedUncategorizedContactStatus
+            }
+            handleSelectUncategorized={handleSelectUncategorized}
+            onSearch={searchUncategorized}
+          />
+        </>
       )}
     </Layout>
   );

@@ -9,13 +9,9 @@ import Delete from '@mui/icons-material/Delete';
 import { getContacts } from 'api/contacts';
 import MainSidebar from 'components/shared/accordion/main-sidebar';
 import MainMenu from 'components/shared/menu';
-import dynamic from 'next/dynamic';
 import { Contacts } from '@mui/icons-material';
 import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
-const Tour = dynamic(() => import('components/onboarding/tour'), {
-  ssr: false,
-});
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();

@@ -12,6 +12,10 @@ import { getContactsSearch } from 'api/contacts';
 import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
+import dynamic from 'next/dynamic';
+const Tour = dynamic(() => import('components/onboarding/tour'), {
+  ssr: false,
+});
 
 const index = () => {
   const dispatch = useDispatch();
@@ -55,14 +59,17 @@ const index = () => {
       {loading ? (
         <Loader />
       ) : (
-        <Clients
-          handleCardEdit={(contact) => {
-            setShowEditContact(true);
-            setContactToEdit(contact);
-          }}
-          setShowAddContactOverlay={setShowAddContactOverlay}
-          onSearch={searchClients}
-        />
+        <>
+          <Clients
+            handleCardEdit={(contact) => {
+              setShowEditContact(true);
+              setContactToEdit(contact);
+            }}
+            setShowAddContactOverlay={setShowAddContactOverlay}
+            onSearch={searchClients}
+          />
+          {/* <Tour for={'clients'} /> */}
+        </>
       )}
       {showAddContactOverlay && (
         <AddClientManuallyOverlay

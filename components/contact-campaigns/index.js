@@ -64,8 +64,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
       console.log(data.data);
       setCurrentCampaign(data.data);
       tabs[0].count = data.data.contacts_assigned_count;
-      tabs[1].count = data.data.contacts_unassigned_count;
-      tabs[2].count = data.data.contacts_never_assigned_count;
+      tabs[1].count = data.data.contacts_never_assigned_count;
+      tabs[2].count = data.data.contacts_unassigned_count;
       setLoading(false);
       console.log('campaign', data.data);
     });
@@ -199,12 +199,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                             ? currentCampaign.contacts.filter(
                                 (contact) =>
                                   contact.contact_campaign_status ==
-                                  'unassigned'
+                                  'never_assigned'
                               )
                             : currentCampaign.contacts.filter(
                                 (contact) =>
                                   contact.contact_campaign_status ==
-                                  'never_assigned'
+                                  'unassigned'
                               )
                         }
                       />

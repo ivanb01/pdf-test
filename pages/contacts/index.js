@@ -837,7 +837,7 @@ const Contacts = ({ data }) => {
   return (
     <>
       <MainMenu />
-      <Tour for={openedTab == 0 ? 'clients' : 'professionals'} />
+      {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
       <div
         className="h-full w-full flex items-center justify-center"
         style={{ height: 'calc(100vh - 70px)' }}

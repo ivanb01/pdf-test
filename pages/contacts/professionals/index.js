@@ -11,7 +11,6 @@ import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 
-
 const index = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -55,14 +54,16 @@ const index = () => {
       {loading ? (
         <Loader />
       ) : (
-        <Professionals
-          setShowAddContactOverlay={setShowAddContactOverlay}
-          onSearch={searchProfessionals}
-          handleCardEdit={(contact) => {
-            setShowEditContact(true);
-            setContactToEdit(contact);
-          }}
-        />
+        <>
+          <Professionals
+            setShowAddContactOverlay={setShowAddContactOverlay}
+            onSearch={searchProfessionals}
+            handleCardEdit={(contact) => {
+              setShowEditContact(true);
+              setContactToEdit(contact);
+            }}
+          />
+        </>
       )}
 
       {showAddContactOverlay && (
