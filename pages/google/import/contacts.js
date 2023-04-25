@@ -77,7 +77,13 @@ const handleStartCategorizing = () => {
 
   return (
     <div className="container mx-auto p-4">
-        <div className="flex justify-between items-center mb-8">
+      {loading ? (
+        <div className="text-center py-8">Importing Google Contacts...</div>
+      ) : error ? (
+        <div className="text-center text-red-600 py-8">Error: {error.message}</div>
+      ) : (
+        <div>
+                  <div className="flex justify-between items-center mb-8">
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={handleGoToContacts}
@@ -91,12 +97,6 @@ const handleStartCategorizing = () => {
                     Start Categorizing
                 </button>
             </div>
-      {loading ? (
-        <div className="text-center py-8">Importing Google Contacts...</div>
-      ) : error ? (
-        <div className="text-center text-red-600 py-8">Error: {error.message}</div>
-      ) : (
-        <div>
           {importNeeded(response.db_insertion)}
           {renderTable('Import', response.importable_new_contacts)}
           {renderTable('Valid', response.importable_contacts)}
