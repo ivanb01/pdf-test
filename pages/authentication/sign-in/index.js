@@ -44,11 +44,11 @@ const SignIn = () => {
     try {
       // Todo: change it later for dynamic if needed
       // const { data } = await axios.get(
-      //   `https://cjylzkf22j.execute-api.us-east-1.amazonaws.com/prod//tenant/init/${values.tenantName}`
+      //   `https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod//tenant/init/${values.tenantName}`
       // );
       const data = {
         apiGatewayUrl:
-          'https://bkw8w58f8j.execute-api.us-east-1.amazonaws.com/prod/',
+          'https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod/',
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
         userPoolId: 'us-east-1_ENvP5VYjb',
       };
