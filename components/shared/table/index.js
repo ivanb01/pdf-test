@@ -99,7 +99,7 @@ const Table = ({
               scope="col"
               className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
             >
-              <Input type="checkbox" onChange={() => handleSelectAll}></Input>
+              {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
               Clients
             </th>
             <th
@@ -125,7 +125,7 @@ const Table = ({
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
-                  handleSelect={() => console.log('test')}
+                  // handleSelect={() => console.log('test')}
                   data={{
                     name: dataItem.contact_name,
                     type: dataItem.contact_category,
