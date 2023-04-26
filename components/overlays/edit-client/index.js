@@ -87,10 +87,10 @@ const EditContactOverlay = ({
       // submit={editClient}
     >
       <div className="p-5">
-        <div className="flex items-center mb-6">
+        {/* <div className="flex items-center mb-6">
           <Avatar size="large" className="mr-4" />
           <Button white label="Edit" />
-        </div>
+        </div> */}
         <form onSubmit={formik.handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-12">
             <Input

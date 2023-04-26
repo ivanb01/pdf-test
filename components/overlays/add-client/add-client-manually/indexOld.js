@@ -46,10 +46,10 @@ const AddClientManuallyOverlay = ({
       title={title}
     >
       <div className="step">
-        <div className="flex items-center mb-6">
+        {/* <div className="flex items-center mb-6">
           <Avatar size="large" className="mr-4" />
           <Button white label="Upload Picture" />
-        </div>
+        </div> */}
         <div>
           <form onSubmit={formik.handleSubmit}>
             <Input
