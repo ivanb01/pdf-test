@@ -66,14 +66,34 @@ const handleStartCategorizing = () => {
 
   const importNeeded = (data) => {
     let result = "";
-    if (data === "Not needed")
-        result = "Import is not needed. No new contacts found.";
-    else if (data == "Successfull")
-        result =  "Import was successful. Continue to categorize.";
-    else if (data == "Failed")
-        result = "Import failed. Please send an email to dev@opgny.com"
-    return <h1 className="text-2xl font-bold mb-4 mt-2">{result}</h1>
+    let textColor = "";
+    let bgColor = "";
+    let borderColor = "";
+  
+    if (data === "Not needed") {
+      result = "Great news! You've already imported all of your contacts.";
+      textColor = "text-green-700";
+      bgColor = "bg-green-100";
+      borderColor = "border-green-500";
+    } else if (data === "Successfull") {
+      result = "Awesome! Your contacts have been imported successfully. It's time to categorize them!";
+      textColor = "text-blue-700";
+      bgColor = "bg-blue-100";
+      borderColor = "border-blue-500";
+    } else if (data === "Failed") {
+      result = "Oh no! Something went wrong with the import process. Please contact dev@opgny.com so we can help you get your contacts imported.";
+      textColor = "text-red-700";
+      bgColor = "bg-red-100";
+      borderColor = "border-red-500";
+    }
+  
+    return (
+      <div className={`border-l-4 px-4 py-2 ${borderColor} ${bgColor} ${textColor} font-bold mb-4 mt-2`}>
+        <p>{result}</p>
+      </div>
+    );
   }
+  
 
   return (
     <div className="container mx-auto p-4">
@@ -98,9 +118,9 @@ const handleStartCategorizing = () => {
                 </button>
             </div>
           {importNeeded(response.db_insertion)}
-          {renderTable('Import', response.importable_new_contacts)}
-          {renderTable('Valid', response.importable_contacts)}
-          {renderTable('Invalid', response.invalid_contacts)}
+          {renderTable('Imported', response.importable_new_contacts)}
+          {renderTable('Importable', response.importable_contacts)}
+          {renderTable('Not importable (missing information)', response.invalid_contacts)}
           {renderTable('Exist already', response.existing_contacts)}
         </div>
       )}
