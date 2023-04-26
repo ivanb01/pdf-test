@@ -6,7 +6,6 @@ import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
-// import { addContact } from 'store/contact/actions';
 import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';
@@ -14,11 +13,7 @@ import { setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { importSourceOptions, phoneNumberRules } from 'global/variables';
-import ChipInput from 'components/shared/input/chipInput';
 import * as Yup from 'yup';
-import Select from 'react-select';
-import Chip from 'components/shared/chip';
-import { multiselectOptions } from 'global/variables';
 import TagsInput from 'components/tagsInput';
 import { useSelector } from 'react-redux';
 
@@ -80,7 +75,7 @@ const AddClientManuallyOverlay = ({
       email: '',
       phone_number: '',
       import_source: '',
-      tags: ['test'],
+      tags: [],
     },
     validationSchema: AddContactSchema,
     onSubmit: (values) => {
@@ -117,19 +112,19 @@ const AddClientManuallyOverlay = ({
     setCurrentStep(currentStep - 1);
   };
 
-  const removeChip = (tagToRemove) => {
-    let newArray = formik.values.tags.filter((tag) => tag !== tagToRemove);
-    formik.setFieldValue('tags', newArray);
-  };
+  // const removeChip = (tagToRemove) => {
+  //   let newArray = formik.values.tags.filter((tag) => tag !== tagToRemove);
+  //   formik.setFieldValue('tags', newArray);
+  // };
 
-  const addChip = (tagToAdd) => {
-    console.log(tagToAdd);
-    let newArray = formik.values.tags;
-    const tagAdded = newArray.includes(tagToAdd);
-    !tagAdded && newArray.push(tagToAdd);
-    console.log('newTags', newArray);
-    formik.setFieldValue('tags', newArray);
-  };
+  // const addChip = (tagToAdd) => {
+  //   console.log(tagToAdd);
+  //   let newArray = formik.values.tags;
+  //   const tagAdded = newArray.includes(tagToAdd);
+  //   !tagAdded && newArray.push(tagToAdd);
+  //   console.log('newTags', newArray);
+  //   formik.setFieldValue('tags', newArray);
+  // };
 
   const addClient = async () => {
     let subtabs = [[2, 3, 4, 5, 7, 16], [9, 10], [8], [11]];
@@ -224,6 +219,7 @@ const AddClientManuallyOverlay = ({
                     errorText={errors.phone_number}
                   />
                   <Dropdown
+                    className="col-span-2"
                     white
                     label="Source"
                     activeIcon={false}

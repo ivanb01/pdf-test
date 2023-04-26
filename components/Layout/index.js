@@ -12,6 +12,7 @@ import MainMenu from 'components/shared/menu';
 import { Contacts } from '@mui/icons-material';
 import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
+import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -135,15 +136,25 @@ const Layout = ({ children }) => {
       <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
       {allContacts && !allContacts.length ? (
-        <div
-          className="h-full w-full flex items-center justify-center pt-[68px]"
-          style={{ height: 'calc(100vh - 70px)' }}
-        >
-          <SetupGmail
-            setShowImportingOverlay={setShowImportingOverlay}
-            setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
-          />
-        </div>
+        <>
+          <div
+            className="w-full flex items-center justify-center pt-[68px] overflow-y-scroll"
+            style={{ height: 'calc(100vh - 70px)' }}
+          >
+            <SetupGmail
+              setShowImportingOverlay={setShowImportingOverlay}
+              setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
+            />
+            
+          </div>
+          {showAddContactManuallyOverlay && (
+            <AddContactManuallyOverlay
+                handleClose={() => setShowAddContactManuallyOverlay(false)}
+                title="Add Contact"
+
+              />
+          )}
+        </>
       ) : (
         <div className=" layout-fixed-height h-full w-full flex items-center justify-center">
           <div className="border-t border-gray2 flex h-auto min-h-full w-full">
