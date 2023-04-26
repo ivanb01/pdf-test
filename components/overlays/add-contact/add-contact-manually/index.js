@@ -16,28 +16,28 @@ import * as contactServices from 'api/contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { setContacts } from 'store/contacts/slice';
-import { importSourceOptions, phoneNumberRules, clientStatuses, clientOptions, professionalsStatuses, professionalsOptions } from 'global/variables';
+import {
+  importSourceOptions,
+  phoneNumberRules,
+  clientStatuses,
+  clientOptions,
+  professionalsStatuses,
+  professionalsOptions,
+} from 'global/variables';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import * as Yup from 'yup';
-
 
 const categoryIds = {
   0: '4,5,6,7',
   1: '8,9,12',
 };
 
-const AddContactManuallyOverlay = ({
-  handleClose,
-  title,
-}) => {
-
+const AddContactManuallyOverlay = ({ handleClose, title }) => {
   // useEffect(() => {
   //   return () => {
   //     setCurrentStep(1);
   //   };
   // }, []);
-
-
 
   const steps = [
     { id: 1, name: 'Contact Group', href: '#' },
@@ -93,7 +93,6 @@ const AddContactManuallyOverlay = ({
     selectedStatus: Yup.string().required('Contact status is required'),
   });
 
-
   //* FORMIK-STEP-2 *//
   const formik = useFormik({
     initialValues: {
@@ -132,12 +131,11 @@ const AddContactManuallyOverlay = ({
   } = formik2;
 
   const nextStep = () => {
-    if(currentStep === 2) {
+    if (currentStep === 2) {
       submitForm1();
     } else {
       setCurrentStep(currentStep + 1);
     }
-    
   };
 
   const prevStep = () => {
@@ -157,7 +155,9 @@ const AddContactManuallyOverlay = ({
       console.log('contact to add: ', contactToAdd);
 
       const res = await contactServices.addContact(contactToAdd);
-      const { data } = await contactServices.getContacts(categoryIds[selectedContact]);
+      const { data } = await contactServices.getContacts(
+        categoryIds[selectedContact]
+      );
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -189,7 +189,6 @@ const AddContactManuallyOverlay = ({
       title={title}
       submit={submitForm2}
       isSubmittingButton={isSubmitting2}
-
     >
       <div className="step">
         {currentStep == 1 ? (
@@ -213,10 +212,10 @@ const AddContactManuallyOverlay = ({
           </div>
         ) : currentStep == 2 ? (
           <div>
-            <div className="flex items-center mb-6">
+            {/* <div className="flex items-center mb-6">
               <Avatar size="large" className="mr-4" />
               <Button white label="Upload Photo" />
-            </div>
+            </div> */}
             <div>
               <form onSubmit={formik.handleSubmit}>
                 <div className="grid grid-cols-2 gap-4 mb-12">
@@ -286,7 +285,9 @@ const AddContactManuallyOverlay = ({
         ) : (
           <div>
             <Radio
-              options={selectedContact === 0 ? clientOptions : professionalsOptions}
+              options={
+                selectedContact === 0 ? clientOptions : professionalsOptions
+              }
               label="What kind of contact is this for you?"
               selectedContactType={formik2.values.selectedContactType}
               changeContactType={(e) =>
@@ -302,7 +303,9 @@ const AddContactManuallyOverlay = ({
               selectedStatus={formik2.values.selectedStatus}
               setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
-              statuses={selectedContact === 0 ? clientStatuses : professionalsStatuses}
+              statuses={
+                selectedContact === 0 ? clientStatuses : professionalsStatuses
+              }
               error={errors2.selectedStatus && touched2.selectedStatus}
               errorText={errors2.selectedStatus}
             />
