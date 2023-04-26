@@ -594,55 +594,63 @@ export const globalTabsStates = {
 
 export const importSourceOptions = [
   {
-    id: 0,
-    name: 'Cold Call',
-  },
-  {
     id: 1,
-    name: 'Company Website',
+    name: 'Google Contacts',
   },
   {
     id: 2,
-    name: 'Craigslist',
+    name: 'Google Email',
   },
   {
     id: 3,
-    name: 'Facebook',
+    name: 'Cold Call',
   },
   {
     id: 4,
-    name: 'Instagram',
+    name: 'Company Website',
   },
   {
     id: 5,
-    name: 'OpCity',
+    name: 'Craigslist',
   },
   {
     id: 6,
-    name: 'Referral',
+    name: 'Facebook',
   },
   {
     id: 7,
-    name: 'Renthop',
+    name: 'Instagram',
   },
   {
     id: 8,
-    name: 'Streeteasy',
+    name: 'OpCity',
   },
   {
     id: 9,
-    name: 'Trulia',
+    name: 'Referral',
   },
   {
     id: 10,
-    name: 'Zillow',
+    name: 'Renthop',
   },
   {
     id: 11,
-    name: 'Zumper',
+    name: 'Streeteasy',
   },
   {
     id: 12,
+    name: 'Trulia',
+  },
+  {
+    id: 13,
+    name: 'Zillow',
+  },
+  {
+    id: 14,
+    name: 'Zumper',
+  },
+  {
+    id: 15,
     name: 'Other',
   },
 ];
