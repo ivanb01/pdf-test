@@ -90,6 +90,7 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
         <EditClientOverlay
           handleClose={() => setEditingContact(false)}
           title="Edit Contact"
+          className="w-[635px]"
           client={client}
           handleFetchContactRequired={handleFetchContactRequired}
         />
