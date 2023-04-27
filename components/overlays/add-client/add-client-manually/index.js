@@ -6,8 +6,6 @@ import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
-import PhoneInput from 'components/shared/input/phoneInput';
-
 import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';

@@ -15,7 +15,6 @@ import TagsInput from 'components/tagsInput';
 import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import PhoneInput from 'components/shared/input/phoneInput';
 
 const EditContactOverlay = ({
   className,
