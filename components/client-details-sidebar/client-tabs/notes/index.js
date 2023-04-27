@@ -209,9 +209,10 @@ export default function Notes({ contactId }) {
                           <Text p className="mb-1">
                             {note?.title}
                           </Text>
-                          <Text p className="text-gray4 h-[84px] align-baseline overflow-y-scroll">
+                          <div className="text-sm font-normal text-gray4 h-[84px] overflow-y-scroll relative flex items-start"
+                          >
                             {note?.description}
-                          </Text>
+                          </div>
                           <Text className="text-gray4 text-xs mt-2">
                             {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
                           </Text>

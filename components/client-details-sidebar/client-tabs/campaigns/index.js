@@ -39,6 +39,7 @@ export default function Campaigns({
   const [currentEvent, setCurrentEvent] = useState(0);
   const [previewEvent, setPreviewEvent] = useState(null);
   const [previewEventDate, setPreviewEventDate] = useState(null);
+  const [previewEventSubject, setPreviewEventSubject] = useState(null);
 
 
   const handleAssignCampaignChange = async () => {
@@ -109,11 +110,16 @@ export default function Campaigns({
     try {
       if (event.preview) {
         setPreviewEvent(event.preview);
+        event.preview.preview.subject ? setPreviewEventSubject(`${event.preview.preview.subject}`) : setPreviewEventSubject(``);
       } else if (event.id) {
         const { data } = await getContactCampaignEventPreview(event.id);
         setPreviewEvent(data);
+        console.log('eventi', data);
+        data.preview.subject ? setPreviewEventSubject(`${data.preview.subject}`) : setPreviewEventSubject(``);
+
       }
       setPreviewEventDate(event.execute_on);
+
     } catch (error) {
       console.log(error);
     }
@@ -255,19 +261,21 @@ export default function Campaigns({
                 </Text> */}
               </div>
               {previewEvent?.type == 'Email' && (
-                <RawHTML className="mt-6 p-6">
+                <RawHTML className="mt-6 p-6" title={previewEventSubject}>
                   {previewEvent?.preview?.body_html}
                 </RawHTML>
               )}
               {previewEvent?.type == 'SMS' && (
                 <PreviewEvent
-                  title={`Destination number: ${previewEvent?.preview?.destination_number}`}
+                  // title={`Destination number: ${previewEvent?.preview?.destination_number}`}
+                  title={previewEventSubject}
                   description={previewEvent?.preview?.message}
                 />
               )}
               {previewEvent?.type == 'Task' && (
                 <PreviewEvent
-                  title={previewEvent?.preview?.task_name}
+                  // title={previewEvent?.preview?.task_name}
+                  title={previewEventSubject}
                   description={previewEvent?.preview?.task_description}
                 />
               )}
@@ -279,11 +287,15 @@ export default function Campaigns({
   );
 }
 
-const RawHTML = ({ children, className = '' }) => (
-  <div
-    className={className}
-    dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />') }}
-  />
+const RawHTML = ({ title, children, className = '' }) => (
+  <div className={className}>
+    <Text h1 className="mb-3">
+      {title}
+    </Text>
+    <div
+      dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />') }}
+    />
+  </div>
 );
 
 const PreviewEvent = ({ title, description, imageSrc }) => (

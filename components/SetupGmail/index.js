@@ -5,11 +5,15 @@ import Button from 'components/shared/button';
 import Link from 'components/Link';
 import gmailToOxford from 'public/images/gmail-to-oxford.png';
 import { MailIcon, PlusIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
 
 const SetupGmail = ({
   setShowImportingOverlay,
   setshowAddContactManuallyOverlay,
 }) => {
+
+  const router = useRouter();
+
   return (
     <>
       <div className="max-w-[420px] text-center m-auto pt-14">
@@ -31,7 +35,11 @@ const SetupGmail = ({
           className="mb-10"
           leftIcon={<MailIcon />}
           label="Import from Gmail"
-          onClick={() => setShowImportingOverlay(true)}
+          onClick={() =>
+            router.push({
+              pathname: '/google/import/contacts',
+            })
+          }
         ></Button>
         <Text h4 className="text-gray8 justify-center">
           Don’t know how?{' '}
