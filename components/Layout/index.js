@@ -15,6 +15,8 @@ import { setAllContacts } from 'store/contacts/slice';
 import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
 import { useRouter } from 'next/router';
 import Loader from 'components/shared/loader';
+import ContactPage from '@mui/icons-material/ContactPage';
+import Diversity3 from '@mui/icons-material/Diversity3';
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -90,6 +92,39 @@ const Layout = ({ children }) => {
       ],
     },
     {
+      id: 3,
+      name: 'Other',
+      label: 'Other Contacts',
+      href: 'other',
+      icon: <ContactPage className="h-5 w-5" />,
+      subtab: [
+        {
+          id: 0,
+          name: 'Family & Friends',
+          icon: <Diversity3 className="h-4 w-4" />,
+          count: 0,
+        },
+        {
+          id: 1,
+          name: 'Unknown',
+          icon: <Help className="h-4 w-4" />,
+          count: 0,
+        },
+        // {
+        //   id: 1,
+        //   name: 'Unknown',
+        //   icon: <Help className="h-4 w-4" />,
+        //   count: 0,
+        // },
+        // {
+        //   id: 2,
+        //   name: 'Trash',
+        //   icon: <Delete className="h-4 w-4" />,
+        //   count: 0,
+        // },
+      ],
+    },
+    {
       id: 2,
       name: 'Uncategorized',
       label: 'Uncategorized Contacts',
@@ -102,12 +137,12 @@ const Layout = ({ children }) => {
           icon: <Group className="h-4 w-4" />,
           count: 0,
         },
-        {
-          id: 1,
-          name: 'Unknown',
-          icon: <Help className="h-4 w-4" />,
-          count: 0,
-        },
+        // {
+        //   id: 1,
+        //   name: 'Unknown',
+        //   icon: <Help className="h-4 w-4" />,
+        //   count: 0,
+        // },
         // {
         //   id: 2,
         //   name: 'Trash',
@@ -127,6 +162,7 @@ const Layout = ({ children }) => {
   const [showImportingOverlay, setShowImportingOverlay] = useState(false);
 
   const handleOpenedTab = (tab) => {
+    console.log('tab', tab);
     dispatch(setOpenedTab(tab));
     dispatch(setOpenedSubtab(0));
   };
@@ -135,7 +171,7 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    getContacts('1,2,3,4,5,6,7,8,9,12,').then((data) => {
+    getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
       dispatch(setAllContacts(data.data));
       console.log('data lenght', data?.data)
       if(data.data.count === 0 && !router.query.showContactLayout ) {
@@ -160,9 +196,10 @@ const Layout = ({ children }) => {
           >
             <SetupGmail
               setShowImportingOverlay={setShowImportingOverlay}
-              setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
+              setshowAddContactManuallyOverlay={
+                setShowAddContactManuallyOverlay
+              }
             />
-            
           </div>
           {showAddContactManuallyOverlay && (
             <AddContactManuallyOverlay
