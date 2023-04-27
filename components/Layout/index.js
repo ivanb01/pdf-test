@@ -13,9 +13,14 @@ import { Contacts } from '@mui/icons-material';
 import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
 import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
+import { useRouter } from 'next/router';
+import Loader from 'components/shared/loader';
 
 const Layout = ({ children }) => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
+
   const tourOptions = {
     defaultStepOptions: {
       cancelIcon: {
@@ -24,9 +29,11 @@ const Layout = ({ children }) => {
     },
     useModalOverlay: true,
   };
+
   const importContacts = () => {
     setShowImportFromCsvOverlay(true);
   };
+
   const [tabs] = useState([
     {
       id: 0,
@@ -110,6 +117,7 @@ const Layout = ({ children }) => {
       ],
     },
   ]);
+
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
@@ -129,15 +137,24 @@ const Layout = ({ children }) => {
   useEffect(() => {
     getContacts('1,2,3,4,5,6,7,8,9,12,').then((data) => {
       dispatch(setAllContacts(data.data));
+      console.log('data lenght', data?.data)
+      if(data.data.count === 0 && !router.query.showContactLayout ) {
+        router.push({
+          pathname: '/contacts/no-contact',
+        })
+
+      }
     });
+
   }, []);
   return (
     <>
       <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
-      {allContacts && !allContacts.length ? (
+      {allContacts && !allContacts.length && !router.query.showContactLayout  ? (
         <>
-          <div
+        <Loader />
+          {/* <div
             className="w-full flex items-center justify-center pt-[68px] overflow-y-scroll"
             style={{ height: 'calc(100vh - 70px)' }}
           >
@@ -153,7 +170,7 @@ const Layout = ({ children }) => {
                 title="Add Contact"
 
               />
-          )}
+          )} */}
         </>
       ) : (
         <div className=" layout-fixed-height h-full w-full flex items-center justify-center">
