@@ -50,7 +50,7 @@ const EditContactOverlay = ({
       .required('Field can not be empty')
       .email('Not a proper email'),
     phone_number: Yup.string()
-      .required('Field can not be empty')
+      // .required('Field can not be empty')
       .matches(phoneNumberRules, {
         message: 'Not a proper format phone number',
       }),

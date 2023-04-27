@@ -188,6 +188,7 @@ export const sortDateAsc = (array, arrayFieldName) => {
 
 
 export const phoneNumberFormat = (phoneNumber) => {
+  if(!phoneNumber) return 'N/A';
   const countryCode = phoneNumber.substring(0,2);
   if(countryCode === '+1') {
     const number = phoneNumber.substring(2);
@@ -199,6 +200,8 @@ export const phoneNumberFormat = (phoneNumber) => {
 };
 
 export const phoneNumberInputFormat = (phoneNumber) => {
+  if(!phoneNumber) return;
+
   const countryCode = phoneNumber.substring(0,2);
   let number = '';
   if(countryCode === '+1') {
@@ -216,6 +219,7 @@ export const phoneNumberInputFormat = (phoneNumber) => {
 export const revertPhoneNumberInputFormat = (phoneNumber) => {
   const number = phoneNumber.trim().replace(/[^0-9]/g, "");
   // console.log('reverting', `+1${number}`)
+  if(!number.length) return;
   return `+1${number}`;
 };
 
