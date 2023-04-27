@@ -3,6 +3,7 @@ import {
   getContactStatusByStatusId,
   getContactTypeByTypeId,
   getContactStatusColorByStatusId,
+  phoneNumberFormat,
 } from 'global/functions';
 import eyeIcon from 'public/images/eye.svg';
 import Image from 'next/image';
@@ -725,7 +726,7 @@ const Table = ({
                   key={category.id}
                   className={`${category.color} contact-row`}
                 >
-                  <td colspan="10">
+                  <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
                       <Text chipText className="text-gray4">
                         {category.name}
@@ -766,7 +767,7 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium min-w-[200px]">
-                          {contact.phone_number}
+                          {phoneNumberFormat(contact.phone_number)}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">

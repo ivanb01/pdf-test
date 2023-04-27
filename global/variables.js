@@ -655,7 +655,8 @@ export const importSourceOptions = [
   },
 ];
 
-export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
+// export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
+export const phoneNumberRules = /^[+]{1}[1]{1}(\d{10})$/;
 
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',

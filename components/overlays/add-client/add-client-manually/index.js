@@ -56,7 +56,7 @@ const AddClientManuallyOverlay = ({
       .required('Field can not be empty')
       .email('Not a proper email'),
     phone_number: Yup.string()
-      .required('Field can not be empty')
+      // .required('Field can not be empty')
       .matches(phoneNumberRules, {
         message: 'Not a proper format phone number',
       }),
@@ -208,16 +208,18 @@ const AddClientManuallyOverlay = ({
                     error={errors.email && touched.email}
                     errorText={errors.email}
                   />
+ 
                   <Input
-                    type="text"
+                    type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={formik.handleChange}
-                    value={formatPhoneNumber(formik.values.phone_number)}
+                    onChange={(val)=>formik.setFieldValue('phone_number', val)}
+                    value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
                     errorText={errors.phone_number}
                   />
+
                   <Dropdown
                     className="col-span-2"
                     white

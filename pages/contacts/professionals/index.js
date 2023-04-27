@@ -39,11 +39,6 @@ const index = () => {
   };
 
   useEffect(() => {
-    // getContacts('8,9,12,').then((data) => {
-    //   dispatch(setContacts(data.data));
-    //   setProfessionalsCopy(data.data);
-    //   setLoading(false);
-    // });
     fetchProfessionals();
     dispatch(setOpenedTab(1));
     dispatch(setOpenedSubtab(0));
@@ -81,7 +76,7 @@ const index = () => {
           title="Edit Professional"
           client={contactToEdit}
           className="w-[635px]"
-          afterUpdate={() => console.log('fetching')}
+          afterUpdate={() => fetchProfessionals()}
         />
       )}
     </Layout>

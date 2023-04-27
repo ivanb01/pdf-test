@@ -6,6 +6,7 @@ import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
+import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
 
 const Input = ({
   className,
@@ -37,8 +38,6 @@ const Input = ({
     errorClasses =
       'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500';
   }
-
-  const [showPassword, setShowPassword] = useState(false);
 
   const textInput = () => {
     return iconBefore ? (
@@ -128,6 +127,8 @@ const Input = ({
     );
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const passwordInput = () => {
     return (
       <>
@@ -164,6 +165,46 @@ const Input = ({
             <VisibilityOffIcon className="text-gray-400" />
           )}
         </div>
+      </>
+    );
+  };
+
+  const [phoneValue, setPhoneValue] = useState(phoneNumberInputFormat(value));
+  
+  const handlePhoneChange = (val) => {
+    onChange(revertPhoneNumberInputFormat(val));
+    setPhoneValue(phoneNumberInputFormat(val));
+  }
+
+  const InputPhone = () => {
+    return (
+      <>
+        <input
+          type='text'
+          name={name ? name : id}
+          id={id}
+          placeholder={placeholder}
+          onInput={onInput}
+          onChange={(e)=>handlePhoneChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          value={phoneValue}
+          readOnly={saved || readonly}
+          className={
+            saved
+              ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'
+              : `text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+                  errorClasses ? errorClasses : 'border-borderColor'
+                }`
+          }
+        />
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        )}
       </>
     );
   };
@@ -254,6 +295,8 @@ const Input = ({
       >
         {type == 'phone'
           ? phoneInput()
+          : type == 'phone_number'
+          ? InputPhone()
           : type == 'checkbox'
           ? checkboxInput()
           : type == 'password'
