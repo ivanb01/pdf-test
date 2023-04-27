@@ -1,5 +1,6 @@
-const Link = ({ label, href, onClick, className, children, underline }) => {
+const Link = ({ label, href, onClick, className, children, underline, iconAfter }) => {
   return (
+    <div>
     <a
       href={href}
       onClick={onClick}
@@ -9,6 +10,8 @@ const Link = ({ label, href, onClick, className, children, underline }) => {
     >
       {children}
     </a>
+    {iconAfter && iconAfter}
+    </div>
   );
 };
 
