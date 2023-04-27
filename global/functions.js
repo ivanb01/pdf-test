@@ -186,17 +186,37 @@ export const sortDateAsc = (array, arrayFieldName) => {
 //   return input;
 // }
 
-export const formatPhoneNumber = (input) => {
-  let output = '';
-  input.replace(
-    /^\D*(\d{0,3})\D*(\d{0,3})\D*(\d{0,4})/,
-    function (match, g1, g2, g3) {
-      if (g1.length) output = '(' + g1;
-      if (g2.length) output += ') ' + g2;
-      if (g3.length) output += ' - ' + g3;
-    }
-  );
-  return output;
+
+export const phoneNumberFormat = (phoneNumber) => {
+  const countryCode = phoneNumber.substring(0,2);
+  if(countryCode === '+1') {
+    const number = phoneNumber.substring(2);
+    return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
+  }else {
+    const number = phoneNumber.trim().replace(/[^0-9]/g, "");
+    return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
+  }
+};
+
+export const phoneNumberInputFormat = (phoneNumber) => {
+  const countryCode = phoneNumber.substring(0,2);
+  let number = '';
+  if(countryCode === '+1') {
+      number = phoneNumber.substring(2).trim().replace(/[^0-9]/g, "");
+  } else {
+      number = phoneNumber.trim().replace(/[^0-9]/g, "");
+  }
+  // console.log(phoneNumber, number,'foormating')
+  if (number.length < 4) return number;
+  if (number.length < 7) return number.replace(/(\d{3})(\d{1})/, "($1) - $2");
+  if (number.length < 11) return number.replace(/(\d{3})(\d{3})(\d{1})/, "($1) - $2 - $3");
+  return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
+};
+
+export const revertPhoneNumberInputFormat = (phoneNumber) => {
+  const number = phoneNumber.trim().replace(/[^0-9]/g, "");
+  // console.log('reverting', `+1${number}`)
+  return `+1${number}`;
 };
 
 export const filterLastCommuncationDate = (

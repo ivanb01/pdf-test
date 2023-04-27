@@ -5,15 +5,17 @@ import { inputs, steps } from './list';
 import Radio from 'components/shared/radio';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
-import { importSourceOptions } from 'global/variables';
+import { importSourceOptions, phoneNumberRules } from 'global/variables';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as contactServices from 'api/contacts';
 import Overlay from 'components/shared/overlay';
 import TagsInput from 'components/tagsInput';
-import { findTagsOption } from 'global/functions';
+import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
 import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import PhoneInput from 'components/shared/input/phoneInput';
 
 const EditContactOverlay = ({
   className,
@@ -33,13 +35,28 @@ const EditContactOverlay = ({
     // { id: 2, name: 'Type and Status', href: '#' },
   ];
 
-  const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const openedTab = useSelector((state) => state.global.openedTab);
 
-  const resetForm = () => {
-    handleClose();
-  };
+  // const resetForm = () => {
+  //   handleClose();
+  // };
+
+
+  const AddContactSchema = Yup.object().shape({
+    first_name: Yup.string().required('Field can not be empty'),
+    last_name: Yup.string().required('Field can not be empty'),
+    email: Yup.string()
+      .required('Field can not be empty')
+      .email('Not a proper email'),
+    phone_number: Yup.string()
+      .required('Field can not be empty')
+      .matches(phoneNumberRules, {
+        message: 'Not a proper format phone number',
+      }),
+  });
+
 
   //* FORMIK *//
   const formik = useFormik({
@@ -51,40 +68,44 @@ const EditContactOverlay = ({
       import_source: client?.import_source,
       tags: client?.tags,
     },
+    validationSchema: AddContactSchema,
+    onSubmit: async(values, { setSubmitting }) => {
+      await editClient();
+      setSubmitting(false);
+    },
   });
 
-  const editClient = async () => {
+  const { errors, touched, submitForm, isSubmitting} = formik;
+  
+  useEffect(() => {
+    setLoadingButton(isSubmitting);
+  }, [isSubmitting]);
+
+  const editClient = async (values) => {
     try {
       const res = await contactServices.updateContact(
         client?.id,
         formik.values
       );
-      console.log(formik.values, 'edit contact', client?.id);
+      console.log(formik.values, 'edit contact', client?.id, values);
       if (handleFetchContactRequired) {
         handleFetchContactRequired();
       } else {
         afterUpdate();
       }
+      handleClose();
     } catch (error) {
       console.log(error);
+      handleClose();
     }
-    resetForm();
   };
   return (
     <Overlay
       // className="w-[632px]"
-      handleCloseOverlay={resetForm}
+      handleCloseOverlay={handleClose}
       title={title}
       className={className}
-      // className={className}
-      // handleClose={resetForm}
-      // steps={steps}
-      // currentStep={currentStep}
-      // nextStep={nextStep}
-      // prevStep={prevStep}
-      // changeStep={(arg) => setCurrentStep(arg)}
-      // title={title}
-      // submit={editClient}
+
     >
       <div className="p-5">
         <div className="flex items-center mb-6">
@@ -100,6 +121,8 @@ const EditContactOverlay = ({
               className=""
               onChange={formik.handleChange}
               value={formik.values.first_name}
+              error={errors.first_name && touched.first_name}
+                    errorText={errors.first_name}
             />
             <Input
               type="text"
@@ -108,6 +131,8 @@ const EditContactOverlay = ({
               className=""
               onChange={formik.handleChange}
               value={formik.values.last_name}
+              error={errors.last_name && touched.last_name}
+              errorText={errors.last_name}
             />
             <Input
               type="email"
@@ -116,28 +141,23 @@ const EditContactOverlay = ({
               className=""
               onChange={formik.handleChange}
               value={formik.values.email}
+              error={errors.email && touched.email}
+              errorText={errors.email}
             />
             <Input
-              type="text"
+              type="phone_number"
               label="Phone"
               id="phone_number"
-              className=""
-              onChange={formik.handleChange}
+              onChange={(val)=>formik.setFieldValue('phone_number', val)}
               value={formik.values.phone_number}
+              error={errors.phone_number && touched.phone_number}
+              errorText={errors.phone_number}
             />
-            {/* <Input
-                  type="text"
-                  label="Source"
-                  id="import_source"
-                  className="mb-6 float-left w-[100%]"
-                  onChange={formik.handleChange}
-                  value={formik.values.import_source}
-                /> */}
             <Dropdown
               label="Source"
               activeIcon={false}
               options={importSourceOptions}
-              className=""
+              className="col-span-2"
               handleSelect={(source) =>
                 (formik.values.import_source = source.name)
               }
@@ -153,7 +173,7 @@ const EditContactOverlay = ({
                   'tags',
                   choice.map((el) => el.label)
                 );
-              }}
+              }}           
             />
           </div>
         </form>
@@ -169,14 +189,14 @@ const EditContactOverlay = ({
           ></Button>
           <Button
             label="Save"
-            loading={loading}
+            loading={loadingButton}
             // rightIcon={<ArrowRightIcon height={15} />}
             onClick={() => {
-              setLoading(true);
-              editClient();
+              setLoadingButton(true);
+              submitForm();
             }}
           ></Button>
-        </div>
+        </div> 
       </div>
     </Overlay>
   );

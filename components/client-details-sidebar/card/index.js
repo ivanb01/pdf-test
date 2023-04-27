@@ -10,7 +10,7 @@ import {
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
-import { getInitials } from 'global/functions';
+import { getInitials, phoneNumberFormat } from 'global/functions';
 
 export default function ClientCard({ client, handleFetchContactRequired }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -61,14 +61,14 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
                 className="h-4 w-4 text-[#9fa6b1] mr-1"
                 aria-hidden="true"
               />
-              <div className="text-sm">{client.email}</div>
+              <div className="text-sm">{client?.email}</div>
             </div>
             <div className="flex items-center mt-2">
               <PhoneIcon
                 className="h-4 w-4 text-[#9fa6b1] mr-1"
                 aria-hidden="true"
               />
-              <div className="text-sm">{client.phone_number}</div>
+              <div className="text-sm">{phoneNumberFormat(client?.phone_number)}</div>
             </div>
           </span>
         </div>

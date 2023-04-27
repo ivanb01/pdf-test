@@ -6,6 +6,8 @@ import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
+import PhoneInput from 'components/shared/input/phoneInput';
+
 import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import * as contactServices from 'api/contacts';
@@ -208,16 +210,18 @@ const AddClientManuallyOverlay = ({
                     error={errors.email && touched.email}
                     errorText={errors.email}
                   />
+ 
                   <Input
-                    type="text"
+                    type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={formik.handleChange}
-                    value={formatPhoneNumber(formik.values.phone_number)}
+                    onChange={(val)=>formik.setFieldValue('phone_number', val)}
+                    value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
                     errorText={errors.phone_number}
                   />
+
                   <Dropdown
                     className="col-span-2"
                     white
