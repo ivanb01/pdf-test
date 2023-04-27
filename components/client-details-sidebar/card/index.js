@@ -4,9 +4,9 @@ import Text from 'components/shared/text';
 import { PhoneIcon, MailIcon } from '@heroicons/react/solid';
 import {
   DotsVerticalIcon,
-  TrashIcon,
-  PencilIcon,
 } from '@heroicons/react/outline';
+import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
+
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
@@ -68,7 +68,7 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
                 className="h-4 w-4 text-[#9fa6b1] mr-1"
                 aria-hidden="true"
               />
-              <div className="text-sm">{phoneNumberFormat(client?.phone_number)}</div>
+              <div className={`text-sm ${phoneNumberFormat(client?.phone_number) === 'N/A' && 'italic'}`}>{phoneNumberFormat(client?.phone_number) !== 'N/A' ? phoneNumberFormat(client?.phone_number) : 'No phone number'}</div>
             </div>
           </span>
         </div>

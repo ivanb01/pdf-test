@@ -45,7 +45,7 @@ const UpdateCategoryType = ({
     <Overlay
       title="Edit Type"
       handleCloseOverlay={handleClose}
-      className="w-[50%]"
+      className="w-auto min-w-[635px] max-w-[730px]"
     >
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
