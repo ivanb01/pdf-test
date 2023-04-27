@@ -501,6 +501,7 @@ export const relationshipsTypes = [
 ];
 
 export const dropped_status_id = 11;
+export const trash_category_id = 3;
 
 export const contactCategoryOptions = {
   client: [

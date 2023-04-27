@@ -60,7 +60,7 @@ const AddProfile = ({
     <Overlay
       title="Add Aditional Type"
       handleCloseOverlay={handleClose}
-      className="w-[40%]"
+      className="w-auto min-w-[635px] max-w-[730px]"
     >
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
