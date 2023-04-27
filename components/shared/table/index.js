@@ -257,6 +257,54 @@ const Table = ({
       </>
     );
   };
+  const otherTable = () => {
+    return (
+      <>
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+            >
+              Contact
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Added From
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {data.map((dataItem, index) => (
+            <tr
+              key={dataItem.id}
+              className={`hover:bg-lightBlue1 cursor-pointer contact-row`}
+            >
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                <ContactInfo
+                  data={{
+                    name: dataItem.first_name + ' ' + dataItem.last_name,
+                    email: dataItem.email,
+                    image: dataItem.profile_image_path,
+                  }}
+                />
+              </td>
+              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 font-medium">
+                  {dataItem.addedFrom}
+                </div>
+                <div className="text-gray-500 font-medium">
+                  {dataItem.addedDate}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    );
+  };
   const uncategorizedTable = () => {
     return (
       <>
@@ -1039,6 +1087,8 @@ const Table = ({
                   ? contactsListTable()
                   : tableFor == 'categorized'
                   ? categorizedTable()
+                  : tableFor == 'other'
+                  ? otherTable()
                   : tableFor == 'import-successful' ||
                     tableFor == 'import-failed'
                   ? importDetails()

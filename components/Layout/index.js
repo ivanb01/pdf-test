@@ -13,6 +13,8 @@ import { Contacts } from '@mui/icons-material';
 import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
 import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
+import ContactPage from '@mui/icons-material/ContactPage';
+import Diversity3 from '@mui/icons-material/Diversity3';
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -83,6 +85,39 @@ const Layout = ({ children }) => {
       ],
     },
     {
+      id: 3,
+      name: 'Other',
+      label: 'Other Contacts',
+      href: 'other',
+      icon: <ContactPage className="h-5 w-5" />,
+      subtab: [
+        {
+          id: 0,
+          name: 'Family & Friends',
+          icon: <Diversity3 className="h-4 w-4" />,
+          count: 0,
+        },
+        {
+          id: 1,
+          name: 'Unknown',
+          icon: <Help className="h-4 w-4" />,
+          count: 0,
+        },
+        // {
+        //   id: 1,
+        //   name: 'Unknown',
+        //   icon: <Help className="h-4 w-4" />,
+        //   count: 0,
+        // },
+        // {
+        //   id: 2,
+        //   name: 'Trash',
+        //   icon: <Delete className="h-4 w-4" />,
+        //   count: 0,
+        // },
+      ],
+    },
+    {
       id: 2,
       name: 'Uncategorized',
       label: 'Uncategorized Contacts',
@@ -95,12 +130,12 @@ const Layout = ({ children }) => {
           icon: <Group className="h-4 w-4" />,
           count: 0,
         },
-        {
-          id: 1,
-          name: 'Unknown',
-          icon: <Help className="h-4 w-4" />,
-          count: 0,
-        },
+        // {
+        //   id: 1,
+        //   name: 'Unknown',
+        //   icon: <Help className="h-4 w-4" />,
+        //   count: 0,
+        // },
         // {
         //   id: 2,
         //   name: 'Trash',
@@ -119,6 +154,7 @@ const Layout = ({ children }) => {
   const [showImportingOverlay, setShowImportingOverlay] = useState(false);
 
   const handleOpenedTab = (tab) => {
+    console.log('tab', tab);
     dispatch(setOpenedTab(tab));
     dispatch(setOpenedSubtab(0));
   };
@@ -127,7 +163,7 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    getContacts('1,2,3,4,5,6,7,8,9,12,').then((data) => {
+    getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
       dispatch(setAllContacts(data.data));
     });
   }, []);
@@ -143,16 +179,16 @@ const Layout = ({ children }) => {
           >
             <SetupGmail
               setShowImportingOverlay={setShowImportingOverlay}
-              setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
+              setshowAddContactManuallyOverlay={
+                setShowAddContactManuallyOverlay
+              }
             />
-            
           </div>
           {showAddContactManuallyOverlay && (
             <AddContactManuallyOverlay
-                handleClose={() => setShowAddContactManuallyOverlay(false)}
-                title="Add Contact"
-
-              />
+              handleClose={() => setShowAddContactManuallyOverlay(false)}
+              title="Add Contact"
+            />
           )}
         </>
       ) : (

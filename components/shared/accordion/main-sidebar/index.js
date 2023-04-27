@@ -100,6 +100,7 @@ const MainSidebar = ({
                 }}
               >
                 <div
+                  onClick={() => !tab.subtab && setOpenedTab(tab.id)}
                   className={`flex items-center ${
                     openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                   }`}
@@ -114,44 +115,51 @@ const MainSidebar = ({
                     {tab.name}
                   </Text>
                 </div>
-                <ChevronDownIcon
-                  className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-                    !collapseMainTab && openedTab == tab.id ? 'rotate-180' : ''
-                  }`}
-                />
+
+                {tab.subtab && (
+                  <ChevronDownIcon
+                    className={`text-gray3 h-5 w-5 transition-all duration-300 ${
+                      !collapseMainTab && openedTab == tab.id
+                        ? 'rotate-180'
+                        : ''
+                    }`}
+                  />
+                )}
               </Link>
-              <div
-                className={
-                  !collapseMainTab && openedTab == tab.id ? `ml-11` : `hidden`
-                }
-              >
-                {tab.subtab.map((subtab) => {
-                  return (
-                    <a
-                      key={`${subtab.id}`}
-                      href="#"
-                      className={`transition-all duration-200 flex items-center ${
-                        isSubtabActive(`${subtab.id}`)
-                          ? 'text-lightBlue3'
-                          : 'text-gray4'
-                      }`}
-                      onClick={() => setOpenedSubtab(subtab.id)}
-                    >
-                      {subtab.icon ? subtab.icon : subtab.dot}
-                      <Text
-                        h4
-                        className={`px-[10px] py-[10px] ${
+              {tab.subtab && (
+                <div
+                  className={
+                    !collapseMainTab && openedTab == tab.id ? `ml-11` : `hidden`
+                  }
+                >
+                  {tab.subtab.map((subtab) => {
+                    return (
+                      <a
+                        key={`${subtab.id}`}
+                        href="#"
+                        className={`transition-all duration-200 flex items-center ${
                           isSubtabActive(`${subtab.id}`)
                             ? 'text-lightBlue3'
                             : 'text-gray4'
                         }`}
+                        onClick={() => setOpenedSubtab(subtab.id)}
                       >
-                        {subtab.name} ({getCount(subtab.name)})
-                      </Text>
-                    </a>
-                  );
-                })}
-              </div>
+                        {subtab.icon ? subtab.icon : subtab.dot}
+                        <Text
+                          h4
+                          className={`px-[10px] py-[10px] ${
+                            isSubtabActive(`${subtab.id}`)
+                              ? 'text-lightBlue3'
+                              : 'text-gray4'
+                          }`}
+                        >
+                          {subtab.name} ({getCount(subtab.name)})
+                        </Text>
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           );
         })}

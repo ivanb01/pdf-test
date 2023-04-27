@@ -14,7 +14,10 @@ const ContactTypeSelect = ({ type, setSelectedType, selectedType }) => {
         {type.types.map((contactType) => {
           return (
             <Button
-              className="block min-w-[100px] mb-2"
+              className={`block min-w-[100px] mb-2 ${
+                contactType.id == 3 &&
+                'bg-red1 text-red3 hover:bg-red2 hover:text-red3'
+              }`}
               ternary
               key={contactType.id}
               onClick={() => setSelectedType(contactType.id)}

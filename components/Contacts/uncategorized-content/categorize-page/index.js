@@ -60,7 +60,13 @@ const CategorizePage = ({
 
   const handleSelectUncategorizedType = (type) => {
     setSelectedUncategorizedContactType(type);
-    if (selectedUncategorizedContactStatus || type === 2 || type === 3) {
+    if (
+      selectedUncategorizedContactStatus ||
+      type === 2 ||
+      type === 3 ||
+      type === 13 ||
+      type === 14
+    ) {
       updateTypeStatus(1, type);
     }
   };
