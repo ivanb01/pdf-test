@@ -164,16 +164,16 @@ const Table = ({
     let description;
 
     if (currentButton === 0) {
-      contactStatus = 'assigned';
+      title = 'You don’t have any assigned contacts';
       description = `Clients that are part of this campaign will be listed here`;
     } else if (currentButton === 1) {
-      contactStatus = 'never assigned';
+      title =
+        'You don’t have any contacts that you can assign to this campaign';
       description = `Clients that are not part of this campaign, but can be assigned will be listed here`;
     } else {
-      contactStatus = 'unassigned';
+      title = 'You don’t have any unassigned contacts here';
       description = `Clients that were once part of this campaign, and cannot be reassigned will be listed here`;
     }
-    title = `You don’t have any ${contactStatus} contacts here`;
 
     if (!data.length)
       return (
