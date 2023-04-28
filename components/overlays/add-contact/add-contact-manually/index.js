@@ -24,8 +24,9 @@ import {
   professionalsStatuses,
   professionalsOptions,
 } from 'global/variables';
-import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import * as Yup from 'yup';
+import { useRouter } from 'next/router';
+
 
 const categoryIds = {
   0: '4,5,6,7',
@@ -33,11 +34,7 @@ const categoryIds = {
 };
 
 const AddContactManuallyOverlay = ({ handleClose, title }) => {
-  // useEffect(() => {
-  //   return () => {
-  //     setCurrentStep(1);
-  //   };
-  // }, []);
+  const router = useRouter();
 
   const steps = [
     { id: 1, name: 'Contact Group', href: '#' },
@@ -170,6 +167,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       dispatch(setContacts(data));
       dispatch(setOpenedTab(selectedContact));
       dispatch(setOpenedSubtab(subtabValue));
+      router.push({
+        pathname: `/contacts/${selectedContact === 0 ? 'clients' : 'professionals'}`,
+      })
       handleClose();
     } catch (error) {
       console.log(error);
