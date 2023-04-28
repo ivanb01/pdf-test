@@ -169,7 +169,7 @@ const Input = ({
     );
   };
 
-  const [phoneValue, setPhoneValue] = useState(phoneNumberInputFormat(value));
+  const [phoneValue, setPhoneValue] = useState(type=='phone_number' && phoneNumberInputFormat(value));
   
   const handlePhoneChange = (val) => {
     onChange(revertPhoneNumberInputFormat(val));
