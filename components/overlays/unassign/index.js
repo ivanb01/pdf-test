@@ -19,9 +19,13 @@ const UnassignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
               Unassign Client from Campaign?
             </Text>
             <Text p className="text-gray4 ">
-              Clients are not going to get events from this campaign. Are you
-              sure you want to unassign client from campaign?
+              {/* Clients are not going to get events from this campaign. Are you
+              sure you want to unassign client from campaign? */}
+              Once you unassign client from this campaign, you can’t assign back again.
+              Unassigning the client from campaign will stop immediately the events of this campaign.
+              <br/>Are you sure you want to unassign?
             </Text>
+            
             {/* <Text p className="text-gray4 mt-2">
               Are you sure you want to unassign client?
             </Text> */}
