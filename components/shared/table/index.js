@@ -167,17 +167,17 @@ const Table = ({
       contactStatus = 'assigned';
       description = `Clients that are part of this campaign will be listed here`;
     } else if (currentButton === 1) {
-      contactStatus = 'unassigned';
+      contactStatus = 'never assigned';
       description = `Clients that are not part of this campaign, but can be assigned will be listed here`;
     } else {
-      contactStatus = 'canceled';
+      contactStatus = 'unassigned';
       description = `Clients that were once part of this campaign, and cannot be reassigned will be listed here`;
     }
-    title = `You don’t have any ${contactStatus} clients here`;
+    title = `You don’t have any ${contactStatus} contacts here`;
 
     if (!data.length)
       return (
-        <div className="flex flex-col items-center justify-center h-[490px] max-w-[350px] mx-auto my-0">
+        <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
           <Image src={noClientCampaigns}></Image>
           <Text h3 className="text-gray7 mb-2 mt-4 text-center">
             {title}

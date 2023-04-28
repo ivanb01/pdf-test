@@ -15,10 +15,12 @@ const UnassignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
             <ExclamationIcon className="text-red3" height={20} width={20} />
           </div>
           <div className="flex flex-col ml-2">
-            <Text h3 className="mb-4">Remove Client from Campaign?</Text>
+            <Text h3 className="mb-4">
+              Unassign Client from Campaign?
+            </Text>
             <Text p className="text-gray4 ">
-              Clients are not going to get events from this campaign.
-              Are you sure you want to remove client from campaign?
+              Clients are not going to get events from this campaign. Are you
+              sure you want to unassign client from campaign?
             </Text>
             {/* <Text p className="text-gray4 mt-2">
               Are you sure you want to unassign client?
@@ -32,14 +34,15 @@ const UnassignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
             white
             className="mr-2"
           />
-          <Button 
-            label="Yes, remove"
+          <Button
+            label="Yes, unassign"
             danger
             loading={loadingButton}
-            onClick={()=>{
+            onClick={() => {
               setLoadingButton(true);
               onSubmit();
-            }} />
+            }}
+          />
         </div>
       </div>
     </Overlay>

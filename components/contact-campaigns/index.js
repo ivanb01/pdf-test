@@ -99,7 +99,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     },
     {
       id: 2,
-      name: 'Canceled',
+      name: 'Unassigned',
       count: 0,
     },
   ]);
