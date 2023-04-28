@@ -1,22 +1,18 @@
 // import Accordion from 'components/shared/accordion';
 import Input from 'components/shared/input';
-import Text from 'components/shared/text';
 import { useFormik } from 'formik';
 import bedroom from 'public/images/bedroom.svg';
 import bathroom from 'public/images/bathroom.svg';
 import usd from 'public/images/usd.svg';
-import { SearchIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import Accordion from 'components/shared/accordion';
 import { useEffect, useState, Fragment } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
-import { FormatLineSpacing } from '@mui/icons-material';
 import * as Yup from 'yup';
-import SimpleBar from 'simplebar-react';
-import { Transition } from '@headlessui/react';
 import { NYCneighborhoods } from 'global/variables';
 import SearchSelectInput from 'components/shared/search-select-input';
+import toast from 'react-hot-toast';
 
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
@@ -87,6 +83,7 @@ export default function LookingFor({ contactId }) {
       );
       console.log('add', res);
       setLoadingButton(false);
+      toast.success('Changes were successfully saved');
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
