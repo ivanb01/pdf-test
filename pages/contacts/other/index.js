@@ -24,11 +24,11 @@ const index = () => {
   const fetchOther = () => {
     setLoading(true);
     getContacts('13,14').then((data) => {
-      setFamilyAndFriends(data.data);
+      setFamilyAndFriends(data.data.data);
       setLoading(false);
     });
     getContacts('2,').then((data) => {
-      setUnknown(data.data);
+      setUnknown(data.data.data);
       setLoading(false);
     });
   };
