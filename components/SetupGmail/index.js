@@ -34,7 +34,7 @@ const SetupGmail = ({
         <Button
           className="mb-4"
           leftIcon={<MailIcon />}
-          label="Import from Gmail"
+          label="Import Google Contacts"
           onClick={() =>
             router.push({
               pathname: '/google/import/contacts',
