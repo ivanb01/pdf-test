@@ -135,7 +135,7 @@ const ContactCampaignsSidebar = ({
                             {subtab.contact_assigned_count}/
                             {console.log('subtab', subtab)}
                             {subtab.contact_unassigned_count +
-                              subtab.contact_assigned_count}
+                              subtab.contact_assigned_count + subtab.contact_never_assigned_count}
                             )
                           </Text>
                         </a>
