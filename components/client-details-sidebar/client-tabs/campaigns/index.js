@@ -100,7 +100,7 @@ export default function Campaigns({
     },
     {
       icon: <CheckCircleIcon className="text-red6" />,
-      text: 'This contact was once in the campaign, currently is unassigned and cannot be assigned again in same campaign.',
+      text: 'This contact was once in campaign, currently is unassigned and cannot be assigned again.',
       button: <span></span>,
       type: 'error',
     },
