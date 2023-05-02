@@ -16,6 +16,8 @@ import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import { useDispatch } from 'react-redux';
+import { setUser } from 'store/global/slice';
 
 const brokerageEmails = {
   'Oxford Property Group': '@opgny.com',
@@ -24,6 +26,7 @@ const brokerageEmails = {
 };
 
 const SignIn = () => {
+  const dispatch = useDispatch();
   const signInWithGoogle = async () => {
     try {
       await Auth.federatedSignIn({ provider: 'Google' });
@@ -146,10 +149,12 @@ const SignIn = () => {
         values.userName.toLowerCase(),
         values.password
       );
-      console.log('user signed in', user);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
+
         setTimeout(() => {
+          console.log('user', user.attributes);
+          dispatch(setUser(user.attributes));
           router.push('/contacts/clients');
         }, 2000);
       } else {

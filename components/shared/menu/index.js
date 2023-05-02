@@ -29,6 +29,7 @@ const MainMenu = ({
   fixed,
 }) => {
   const router = useRouter();
+  const user = useSelector((state) => state.global.user);
 
   const handleSignOut = async () => {
     console.log('sign out');
@@ -130,7 +131,7 @@ const MainMenu = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute right-0 z-10 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
                   <img
@@ -139,10 +140,12 @@ const MainMenu = ({
                     alt=""
                   />
                 </div>
-                <div>
-                  <p className="text-sm text-gray6 font-medium">Tim Cook</p>
+                <div className="max-w-[165px] w-full">
+                  <p className="text-sm text-gray6 font-medium">
+                    {user.name ? user.name : 'Test User'}
+                  </p>
                   <p className="truncate text-sm font-medium text-gray4">
-                    tom@example.com
+                    {user.email}
                   </p>
                 </div>
               </div>
