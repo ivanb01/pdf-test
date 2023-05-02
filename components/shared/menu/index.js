@@ -32,6 +32,8 @@ const MainMenu = ({
   const user = useSelector((state) => state.global.user);
 
   const handleSignOut = async () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('skippedEmptyState');
     console.log('sign out');
     await Auth.signOut();
     router.push('/authentication/sign-in');

@@ -6,8 +6,14 @@ const global = createSlice({
     openedTab: 0,
     openedSubtab: 0,
     expandedMenu: true,
-    user: null,
-    skippedEmptyState: false,
+    user:
+      typeof window !== 'undefined' && localStorage.getItem('user')
+        ? JSON.parse(localStorage.getItem('user'))
+        : null,
+    skippedEmptyState:
+      typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
+        ? localStorage.getItem('skippedEmptyState')
+        : false,
   },
   reducers: {
     setOpenedTab(state, action) {

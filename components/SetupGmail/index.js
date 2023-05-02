@@ -59,6 +59,7 @@ const SetupGmail = ({ setshowAddContactManuallyOverlay }) => {
         <div
           className={`text-sm font-medium' cursor-pointer text-lightBlue3 hover:text-lightBlue4 mb-6 justify-center flex items-center`}
           onClick={() => {
+            localStorage.setItem('skippedEmptyState', true);
             dispatch(setSkippedEmptyState(true));
             router.push({
               pathname: '/contacts/clients',

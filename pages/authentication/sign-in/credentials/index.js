@@ -155,6 +155,7 @@ const SignIn = () => {
         setTimeout(() => {
           console.log('user', user.attributes);
           dispatch(setUser(user.attributes));
+          localStorage.setItem('user', JSON.stringify(user.attributes));
           router.push('/contacts/clients');
         }, 2000);
       } else {
