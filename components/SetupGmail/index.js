@@ -5,14 +5,13 @@ import Button from 'components/shared/button';
 import gmailToOneline from 'public/images/gmail-to-oneline.svg';
 import { MailIcon, PlusIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
-import { ArrowRightIcon } from "@heroicons/react/outline";
+import { ArrowRightIcon } from '@heroicons/react/outline';
+import { useDispatch } from 'react-redux';
+import { setSkippedEmptyState } from 'store/global/slice';
 
-
-const SetupGmail = ({
-  setshowAddContactManuallyOverlay,
-}) => {
-
+const SetupGmail = ({ setshowAddContactManuallyOverlay }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -23,7 +22,7 @@ const SetupGmail = ({
           type="error"
           rounded
         /> */}
-        <Image src={gmailToOneline}  />
+        <Image src={gmailToOneline} />
         <Text h2 className="text-gray7 mt-9 mb-4 justify-center">
           Setup Gmail Account to import Contacts
         </Text>
@@ -57,22 +56,20 @@ const SetupGmail = ({
           onClick={() => setshowAddContactManuallyOverlay(true)}
         />
         <hr className="bg-[#E5E7EB] mt-10 mb-10" />
-        <div 
+        <div
           className={`text-sm font-medium' cursor-pointer text-lightBlue3 hover:text-lightBlue4 mb-6 justify-center flex items-center`}
-          onClick={()=>{
+          onClick={() => {
+            dispatch(setSkippedEmptyState(true));
             router.push({
               pathname: '/contacts/clients',
-              query: { showContactLayout: true },
-
-            })
+            });
           }}
         >
           <span>Skip for now, maybe later</span>
           <div className={`ml-2 -mr-0.5`}>
-          {<ArrowRightIcon className="w-4 h-4 " />}
+            {<ArrowRightIcon className="w-4 h-4 " />}
           </div>
         </div>
-
       </div>
     </>
   );

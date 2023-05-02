@@ -7,6 +7,7 @@ const global = createSlice({
     openedSubtab: 0,
     expandedMenu: true,
     user: null,
+    skippedEmptyState: false,
   },
   reducers: {
     setOpenedTab(state, action) {
@@ -21,9 +22,17 @@ const global = createSlice({
     setUser(state, action) {
       state.user = action.payload;
     },
+    setSkippedEmptyState(state, action) {
+      state.skippedEmptyState = action.payload;
+    },
   },
 });
 
-export const { setOpenedTab, setOpenedSubtab, setExpandedMenu, setUser } =
-  global.actions;
+export const {
+  setOpenedTab,
+  setOpenedSubtab,
+  setExpandedMenu,
+  setUser,
+  setSkippedEmptyState,
+} = global.actions;
 export default global.reducer;

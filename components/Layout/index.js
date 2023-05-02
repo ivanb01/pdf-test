@@ -156,6 +156,9 @@ const Layout = ({ children }) => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const skippedEmptyState = useSelector(
+    (state) => state.global.skippedEmptyState
+  );
 
   const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =
     useState(false);
@@ -173,23 +176,21 @@ const Layout = ({ children }) => {
   useEffect(() => {
     getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
       dispatch(setAllContacts(data.data));
-      console.log('data lenght', data?.data)
-      if(data.data.count === 0 && !router.query.showContactLayout ) {
+      console.log('data lenght', data?.data);
+      if (data.data.count === 0 && !skippedEmptyState) {
         router.push({
           pathname: '/contacts/no-contact',
-        })
-
+        });
       }
     });
-
   }, []);
   return (
     <>
       <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
-      {allContacts && !allContacts.length && !router.query.showContactLayout  ? (
+      {allContacts && !allContacts.length && !skippedEmptyState ? (
         <>
-        <Loader />
+          <Loader />
           {/* <div
             className="w-full flex items-center justify-center pt-[68px] overflow-y-scroll"
             style={{ height: 'calc(100vh - 70px)' }}
