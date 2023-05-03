@@ -83,6 +83,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     assignContactToCampaign(openedCampaign, contactToAssign).then((data) => {
       fetchData(openedCampaignCategory);
       setShowAssignOverlay(false);
+      setLoadingAssign(false);
     });
   };
 
