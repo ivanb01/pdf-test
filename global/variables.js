@@ -379,7 +379,7 @@ export const clientStatuses = [
       },
       {
         id: 10,
-        name: 'Closed',
+        name: 'Closed Client',
         color: 'bg-green2',
       },
     ],

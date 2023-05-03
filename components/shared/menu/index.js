@@ -143,7 +143,7 @@ const MainMenu = ({
                   />
                 </div>
                 <div className="max-w-[165px] w-full">
-                  <p className="text-sm text-gray6 font-medium">Test User</p>
+                  {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}
                   <p className="truncate text-sm font-medium text-gray4">
                     {user?.email ? user?.email : user}
                   </p>
