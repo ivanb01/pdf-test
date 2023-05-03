@@ -17,6 +17,8 @@ import { useRouter } from 'next/router';
 import Loader from 'components/shared/loader';
 import ContactPage from '@mui/icons-material/ContactPage';
 import Diversity3 from '@mui/icons-material/Diversity3';
+import { Auth } from 'aws-amplify';
+import { setUser } from 'store/global/slice';
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -183,6 +185,21 @@ const Layout = ({ children }) => {
         });
       }
     });
+  }, []);
+
+  const getCurrentUser = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      console.log(user.username);
+      dispatch(setUser(user.username));
+      localStorage.setItem('user', JSON.stringify(user.username));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
   }, []);
   return (
     <>

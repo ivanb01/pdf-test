@@ -29,7 +29,9 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const signInWithGoogle = async () => {
     try {
-      await Auth.federatedSignIn({ provider: 'Google' });
+      Auth.federatedSignIn({ provider: 'Google' });
+      user = await Auth.currentAuthenticatedUser();
+      console.log(user);
     } catch (error) {
       console.log('fail', error);
     }
@@ -153,9 +155,8 @@ const SignIn = () => {
         // displayAlert('success', 'Login successfully', 2000);
 
         setTimeout(() => {
-          console.log('user', user.attributes);
-          dispatch(setUser(user.attributes));
-          localStorage.setItem('user', JSON.stringify(user.attributes));
+          dispatch(setUser(user.attributes.email));
+          localStorage.setItem('user', JSON.stringify(user.attributes.email));
           router.push('/contacts/clients');
         }, 2000);
       } else {
