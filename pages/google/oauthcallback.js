@@ -19,3 +19,11 @@ const GoogleOauthCallbak = () => {
 };
 
 export default GoogleOauthCallbak;
+
+export async function getStaticProps(context) {
+    return {
+      props: {
+        requiresAuth: true,
+      },
+    };
+  }

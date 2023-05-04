@@ -10,7 +10,7 @@ const GoogleAuthorize = () => {
             .then((response) => {
                 const redirectUri = response.data.redirect_uri; // Assuming the response contains a property called 'redirectUri'
                 window.location.href = redirectUri; // Redirect to the URI returned from the response
-                console.log(response)
+                console.log('authorize1', response)
             })
             .catch((error) => {
                 console.error(error);
@@ -21,3 +21,11 @@ const GoogleAuthorize = () => {
 };
 
 export default GoogleAuthorize;
+
+export async function getStaticProps(context) {
+    return {
+      props: {
+        requiresAuth: true,
+      },
+    };
+  }
