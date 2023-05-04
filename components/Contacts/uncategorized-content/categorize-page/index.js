@@ -252,7 +252,7 @@ const CategorizePage = ({
               <div className="absolute -left-40 bottom-1">
                 <Image src={noContactsSelectedArrow}></Image>
               </div>
-              <strong>Select a contact</strong> to start the categorization
+              <span><strong>Select a contact</strong> to start the categorization</span>
             </Text>
           </div>
         )}

@@ -21,40 +21,24 @@ const SetupGmail = ({
   return (
     <>
       <div className="max-w-[420px] text-center m-auto pt-14">
-        {/* <GlobalAlert
-          overlay
-          message="Import process was interrupted. Please Try Again!"
-          type="error"
-          rounded
-        /> */}
         {error && 
           <NotificationAlert className="mb-8 p-4" type='error'>{error}</NotificationAlert>
         }
         <Image src={gmailToOneline} />
         <Text h2 className="text-gray7 mt-9 mb-4 justify-center">
-          Setup Gmail Account to import Contacts
+          Setup Gmail Account to Import Contacts
         </Text>
         <Text paragraph className="text-gray4 mb-6">
-          Automatically sync your gmail account. Your contacts & leads will
-          automatically be imported as they arrive in your inbox.{' '}
+          Automatically sync your google contacts.
+          Run this process once you have new contacts added to your google contacts.
+          We will automatically add them to your uncategorized contacts in the CRM.
         </Text>
         <Button
           className="mb-4"
           leftIcon={<MailIcon />}
           label="Import Google Contacts"
-          // onClick={() =>
-          //   router.push({
-          //     pathname: '/google/import/contacts',
-          //   })
-          // }
           onClick={()=>setShowImportGoogleContactsModal()}
         ></Button>
-        {/* <Text h4 className="text-gray8 justify-center">
-          Don’t know how?{' '}
-          <Link className="underline ml-2" href="#">
-            Watch the video
-          </Link>
-        </Text> */}
         <Text paragraph className="text-gray8 mb-4 justify-center">
           or
         </Text>

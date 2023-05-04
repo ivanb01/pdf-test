@@ -124,8 +124,8 @@ const NoContactPage = () => {
             <MainMenu />
             {
                 googleContactResponse?.db_insertion==='Successful' ?
-                    <div className="layout-fixed-height w-full flex items-center justify-center overflow-y-scroll">
-                        <div className="border-t border-gray2 flex min-h-full w-full">
+                    <div className="w-full flex items-center justify-center">
+                        <div className="border-t border-gray2 flex  w-full">
                             <div className="w-full relative">
                                 <GoogleContactsImportSummary data={googleContactResponse} />
                             </div>
@@ -152,7 +152,7 @@ const NoContactPage = () => {
                 showImportGoogleContactsModal && (
                     <ImportGoogleContacts
                         handleCloseOverlay={handleCloseImportGoogleContactsModal}
-                        title='Import Google Contacts'
+                        title='Importing Google Contacts'
                         list={modalList}
                         stateAfterImport={stateAfterImport}
                     />
