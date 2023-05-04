@@ -35,13 +35,13 @@ const ContactCampaignsSidebar = ({
       'Actively Working': 5,
       'Offer Submitted': 6,
       'Contract Signed': 7,
-      'Closed': 8,
+      Closed: 8,
     },
     professionals: {
       'No Relationship': 1,
       'Loose Relationship': 2,
       'Strong Relationship': 3,
-    }
+    },
   };
   const orderCampaignsSubtabs = campaignsSubtabs[categoryType];
 
@@ -99,48 +99,57 @@ const ContactCampaignsSidebar = ({
                         : `hidden`
                     }
                   >
-                    {//tab.subtab.map((subtab) => {
-                      tab.subtab.map(subtab=>({...subtab, reOrderId: orderCampaignsSubtabs[subtab['campaign_name']]}))
-                      .sort(function (a, b) {
-                        if (a.reOrderId < b.reOrderId) {
-                          return -1;
-                        }
-                        if (a.reOrderId > b.reOrderId) {
-                          return 1;
-                        }
-                        return 0;
-                      })
-                      .map(subtab => {
-                      return (
-                        <a
-                          key={`${subtab.campaign_id}`}
-                          href="#"
-                          className={`transition-all duration-200 flex items-center ${
-                            isSubtabActive(`${subtab.campaign_id}`)
-                              ? 'text-lightBlue3'
-                              : 'text-gray4'
-                          }`}
-                          onClick={() => setOpenedSubtab(subtab.campaign_id)}
-                        >
-                          {subtab.icon ? subtab.icon : subtab.dot}
-                          <Text
-                            h4
-                            className={`px-[10px] py-[10px] ${
-                              isSubtabActive(`${subtab.campaign_id}`)
-                                ? 'text-lightBlue3'
-                                : 'text-gray4'
-                            }`}
-                          >
-                            {subtab.campaign_name} (
-                            {subtab.contact_assigned_count}/
-                            {console.log('subtab', subtab)}
-                            {subtab.contact_unassigned_count +
-                              subtab.contact_assigned_count + subtab.contact_never_assigned_count}
-                            )
-                          </Text>
-                        </a>
-                      );
-                    })}
+                    {
+                      //tab.subtab.map((subtab) => {
+                      tab.subtab
+                        .map((subtab) => ({
+                          ...subtab,
+                          reOrderId:
+                            orderCampaignsSubtabs[subtab['campaign_name']],
+                        }))
+                        .sort(function (a, b) {
+                          if (a.reOrderId < b.reOrderId) {
+                            return -1;
+                          }
+                          if (a.reOrderId > b.reOrderId) {
+                            return 1;
+                          }
+                          return 0;
+                        })
+                        .map((subtab) => {
+                          return (
+                            <a
+                              key={`${subtab.campaign_id}`}
+                              href="#"
+                              className={`transition-all duration-200 flex items-center ${
+                                isSubtabActive(`${subtab.campaign_id}`)
+                                  ? 'text-lightBlue3'
+                                  : 'text-gray4'
+                              }`}
+                              onClick={() =>
+                                setOpenedSubtab(subtab.campaign_id)
+                              }
+                            >
+                              {subtab.icon ? subtab.icon : subtab.dot}
+                              <Text
+                                h4
+                                className={`px-[10px] py-[10px] ${
+                                  isSubtabActive(`${subtab.campaign_id}`)
+                                    ? 'text-lightBlue3'
+                                    : 'text-gray4'
+                                }`}
+                              >
+                                {subtab.campaign_name} (
+                                {subtab.contact_assigned_count}/
+                                {subtab.contact_unassigned_count +
+                                  subtab.contact_assigned_count +
+                                  subtab.contact_never_assigned_count}
+                                )
+                              </Text>
+                            </a>
+                          );
+                        })
+                    }
                   </div>
                 </div>
               );

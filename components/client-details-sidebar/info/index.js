@@ -16,7 +16,6 @@ export default function Info({ client, handleFetchContactRequired }) {
   const fetchContactCampaign = async () => {
     try {
       const { data } = await getContactCampaign(client?.id);
-      console.log('campaign name', data);
       if (data?.status === 'enrolled') {
         const { data: data2 } = await getCampaign(data?.campaign_id);
         setCampaignName(`Assigned to '${data2?.campaign_name}'`);

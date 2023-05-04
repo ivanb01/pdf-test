@@ -1,9 +1,10 @@
 import MainMenu from 'components/shared/menu';
 import TopBar from 'components/shared/top-bar';
-import Router from 'next/router';
+// import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Search from 'components/shared/input/search';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Text from 'components/shared/text';
 import ContactCampaignsSidebar from 'components/shared/accordion/contact-campaigns-sidebar';
 import Table from 'components/shared/table';
@@ -22,7 +23,6 @@ import {
 import Loader from 'components/shared/loader';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
-  console.log('campaigns', campaigns);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
   const [showAssignOverlay, setShowAssignOverlay] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -37,6 +37,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [assignedContacts, setAssignedContacts] = useState();
   const [unassignedContacts, setUnassignedContacts] = useState();
 
+  const router = useRouter();
   const handleSelectContact = (event, contact) => {
     if (event.target.checked) {
       // add to array
@@ -51,9 +52,19 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     }
   };
 
-  const handleOpenCategory = (tab) => {
+  const handleOpenCategory = (tab, campaignId = null) => {
+    console.log('llll', tab, campaignId);
+    console.log(campaigns);
     setOpenedCampaignCategory(tab);
-    handleOpenCampaign(campaigns[tab].subtab[0].campaign_id);
+
+    // campaigns[tab].subtab.find(campaign=> campaign.campaign_id == campaignId)
+    if (campaignId === null) {
+      handleOpenCampaign(campaigns[tab].subtab[0].campaign_id);
+    } else {
+      handleOpenCampaign(campaignId);
+    }
+
+    localStorage.setItem('openCampaignCategory', tab);
   };
 
   const handleOpenCampaign = async (campaignId) => {
@@ -61,13 +72,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     setLoading(true);
 
     getCampaign(campaignId).then((data) => {
-      console.log(data.data);
       setCurrentCampaign(data.data);
       tabs[0].count = data.data.contacts_assigned_count;
       tabs[1].count = data.data.contacts_never_assigned_count;
       tabs[2].count = data.data.contacts_unassigned_count;
       setLoading(false);
-      console.log('campaign', data.data);
+      localStorage.setItem('openCampaign', campaignId);
     });
     // fetch data
   };
@@ -115,21 +125,46 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               fetchedCampaign.contact_category_2 == campaign.value
           );
         });
-        handleOpenCategory(openCategory);
+        let campaignId = localStorage.getItem('openCampaign');
+        // console.log('ttttttttttt', openedCampaign, campaignId);
+        handleOpenCategory(openCategory, campaignId);
       }
     );
   };
 
   useEffect(() => {
-    fetchData(0);
+    let category = localStorage.getItem('openCampaignCategory')
+      ? localStorage.getItem('openCampaignCategory')
+      : 0;
+    fetchData(category);
   }, []);
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (url !== router.asPath) {
+        localStorage.removeItem('openCampaignCategory');
+        localStorage.removeItem('openCampaign');
+      }
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+  }, [router]);
+
+  // useEffect(() => {
+  //   let category = localStorage.getItem('openCampaignCategory');
+  //   let campaignId = localStorage.getItem('openCampaign');
+  //   console.log('category', category);
+  //   console.log('campaignID', campaignId);
+  //   // handleOpenCategory(category);
+  //   // handleOpenCampaign(campaignId);
+  // }, []);
 
   return (
     <>
       <MainMenu />
       <TopBar
         text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
-        onBackClick={() => Router.push('/campaigns')}
+        onBackClick={() => router.push('/campaigns')}
       />
       <div className="border-t border-gray2 flex h-auto">
         <div className="h-auto border-r border-gray2">
@@ -156,7 +191,11 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                     placeholder={`Search ${
                       campaigns.find(
                         (campaign) => campaign.id === openedCampaignCategory
-                      ).value
+                      )?.value
+                        ? campaigns.find(
+                            (campaign) => campaign.id === openedCampaignCategory
+                          )?.value
+                        : ''
                     }`}
                     className="mr-3"
                   />
@@ -167,11 +206,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   ></ButtonsSlider>
                 </div>
               </div>
-              <div
-                className={`w-auto ${
-                  currentCampaign.contacts.length ? 'h-auto' : 'h-full'
-                }`}
-              >
+              <div className={`w-auto h-auto`}>
                 <div
                   className={`border border-gray-200 overflow-hidden relative h-full`}
                 >
