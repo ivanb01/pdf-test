@@ -78,7 +78,7 @@ const ImportDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex h-full w-full">
+      {/* <div className="flex h-full w-full">
         <div className="p-6 border-r border-gray2 w-1/2">
           <GlobalAlert
             title="12 Contacts imported successfully"
@@ -89,7 +89,7 @@ const ImportDetails = () => {
           <Search placeholder="Search Contact" className="max-w-[300px] my-6" />
           <div className="border border-gray2 rounded">
             <Table
-              tableFor="import-successful"
+              tableFor="import-google-contacts-successful"
               data={imports.filter(
                 (importData) => importData.import_error == ''
               )}
@@ -106,14 +106,14 @@ const ImportDetails = () => {
           <Search placeholder="Search Contact" className="max-w-[300px] my-6" />
           <div className="border border-gray2 rounded">
             <Table
-              tableFor="import-failed"
+              tableFor="import-google-contacts-failed"
               data={imports.filter(
                 (importData) => importData.import_error != ''
               )}
             ></Table>
           </div>
-        </div>
-      </div>
+        </div> 
+      </div> */}
     </>
   );
 };
