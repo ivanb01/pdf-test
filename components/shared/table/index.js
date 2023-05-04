@@ -1025,7 +1025,7 @@ const Table = ({
       </>
     );
   };
-  const importDetails = () => {
+  const importGoogleContactsDetails = () => {
     const [hovered, setHovered] = useState(false);
     return (
       <>
@@ -1044,8 +1044,8 @@ const Table = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {data.map((dataItem) => (
-            <tr key={dataItem.email} className="">
+          {data.map((dataItem,i) => (
+            <tr key={i} className="">
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
                   data={{
@@ -1055,12 +1055,12 @@ const Table = ({
                   }}
                 />
               </td>
-              {dataItem.import_error && (
+              {dataItem.reason && (
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
                   <div className="flex items-center justify-center">
                     <Error className="h-5 w-5 text-red4 mr-2" />
                     <div className="text-gray7 font-medium">
-                      {dataItem.import_error}
+                      {dataItem.reason}
                     </div>
                   </div>
                 </td>
@@ -1090,9 +1090,9 @@ const Table = ({
                   ? categorizedTable()
                   : tableFor == 'other'
                   ? otherTable()
-                  : tableFor == 'import-successful' ||
-                    tableFor == 'import-failed'
-                  ? importDetails()
+                  : tableFor == 'import-google-contacts-successful' ||
+                    tableFor == 'import-google-contacts-failed'
+                  ? importGoogleContactsDetails()
                   : campaignsTable()}
               </table>
             </div>

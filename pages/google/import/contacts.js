@@ -129,3 +129,11 @@ const handleStartCategorizing = () => {
 };
 
 export default GoogleImportContacts;
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      requiresAuth: true,
+    },
+  };
+}
