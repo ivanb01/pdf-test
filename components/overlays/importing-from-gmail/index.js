@@ -4,25 +4,30 @@ import Overlay from 'components/shared/overlay';
 import img from 'public/images/importing.svg';
 import Image from 'next/image';
 import { CheckCircleIcon } from '@heroicons/react/solid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, progress=5}) => {
 
   const [loadingButton, setLoadingButton] = useState(false);
+  const [mainTitle, setMainTitle] = useState(title);
   const titleAfterImport = {
     'Not needed': 'No Contact!',
-    'Successful': 'Imported',
+    'Successful': 'Imported Google Contacts',
     'Failed': 'Something went wrong',
   }
   const subtitleAfterImport = {
-    'Not needed': 'There is no contact to be imported from your Google Account.',
+    'Not needed': 'There are no contacts to be imported from your Google Account.',
     'Successful': 'Your contacts have been imported successfully.',
     'Failed': 'Please contact dev@opgny.com so we can help you get your contacts imported.',
   }
 
+  useEffect(()=>{
+    stateAfterImport && setMainTitle(titleAfterImport[stateAfterImport]);
+  },[stateAfterImport])
+
   return (
     <Overlay
-      title={title}
+      title={mainTitle}
       handleCloseOverlay={handleCloseOverlay}
       className="min-w-[512px] max-w-[512px]"
     >
