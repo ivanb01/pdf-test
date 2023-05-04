@@ -272,7 +272,7 @@ const SignIn = () => {
           >
             Sign In
           </Text>
-          <form onSubmit={formik.handleSubmit}>
+          {/* <form onSubmit={formik.handleSubmit}>
             <Input
               type="text"
               label="Email"
@@ -303,9 +303,10 @@ const SignIn = () => {
               label="Sign in"
               className="bg-blue2 w-full justify-center"
             />
-          </form>
-          <div className="flex items-center justify-between my-6">
-            {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
+            </form>*/}
+            
+          {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
+          {/* <div className="flex items-center justify-between my-6">
             <Link
               href="#"
               className="font-medium text-sm"
@@ -313,13 +314,14 @@ const SignIn = () => {
             >
               Forgot Password?
             </Link>
-          </div>
+          </div>  */}
 
           <Text
             p
-            className="text-gray4 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2"
+            className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2"
           >
-            Or continue with
+            {/* Or continue with */}
+            Sign in with
           </Text>
           <div className="flex items-center justify-between mb-6">
             <Button
