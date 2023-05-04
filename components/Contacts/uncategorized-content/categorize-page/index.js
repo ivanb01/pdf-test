@@ -205,7 +205,9 @@ const CategorizePage = ({
               </div>
               {selectedUncategorizedContactType != null &&
                 selectedUncategorizedContactType != 2 &&
-                selectedUncategorizedContactType != 3 && (
+                selectedUncategorizedContactType != 3 &&
+                selectedUncategorizedContactType != 13 &&
+                selectedUncategorizedContactType != 14 && (
                   <>
                     <div className="flex items-center mb-4">
                       <CircleStepNumber number={2} className="mr-2" />
