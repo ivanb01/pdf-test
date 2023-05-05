@@ -45,6 +45,7 @@ import toast from 'react-hot-toast';
 import * as contactServices from 'api/contacts';
 import noClientCampaigns from 'public/images/no-client-campaigns.svg';
 import Link from 'components/Link';
+import { formatDateMDY } from 'global/functions';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -256,7 +257,9 @@ const Table = ({
                 event.event_id ? (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                     <EventStatus status={event.event_status} />
-                    <div className="text-gray7">{event.event_updated_at}</div>
+                    <div className="text-gray7">
+                      {formatDateMDY(event?.event_updated_at)}
+                    </div>
                   </td>
                 ) : (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
@@ -265,7 +268,9 @@ const Table = ({
                 )
               )}
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">{event.event_updated_at}</div>
+                <div className="text-gray7">
+                  {formatDateMDY(event?.event_updated_at)}
+                </div>
               </td>
             </tr>
           ))}
@@ -1129,8 +1134,10 @@ const Table = ({
 export default Table;
 
 //if any table was broken after classname 'h-full' was adden we need to set 'h-full' just for 'contactList' table
-{/* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
+{
+  /* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
 <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} flex flex-col`} >
   <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} overflow-x-auto`} >
     <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} inline-block min-w-full align-middle`}>
-      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */}
+      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */
+}
