@@ -147,3 +147,11 @@ const GoogleImportContacts = () => {
 };
 
 export default GoogleImportContacts;
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      requiresAuth: true,
+    },
+  };
+}

@@ -90,11 +90,11 @@ const MainMenu = ({
       </div>
       <div className="flex items-center">
         <Button
-          label="Import contacts@google"
+          label="Import Google Contacts"
           className="mr-4"
           onClick={() =>
             router.push({
-              pathname: '/google/import/contacts',
+              pathname: '/contacts/no-contact/',
             })
           }
         />
