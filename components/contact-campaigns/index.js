@@ -59,6 +59,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
     // campaigns[tab].subtab.find(campaign=> campaign.campaign_id == campaignId)
     if (campaignId === null) {
+      console.log('its null', campaigns[tab].subtab[0].campaign_id);
       handleOpenCampaign(campaigns[tab].subtab[0].campaign_id);
     } else {
       handleOpenCampaign(campaignId);
@@ -120,12 +121,16 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     getCampaignsByCategory(isClient ? 'Client' : 'Professional').then(
       (data) => {
         campaigns.forEach((campaign, index) => {
-          campaigns[index].subtab = data.data.campaigns.filter(
-            (fetchedCampaign) =>
-              fetchedCampaign.contact_category_2 == campaign.value
-          );
+          campaigns[index].subtab = data.data.campaigns
+            .filter(
+              (fetchedCampaign) =>
+                fetchedCampaign.contact_category_2 == campaign.value
+            )
+            .sort((a, b) => (a.campaign_id > b.campaign_id ? 1 : -1));
         });
-        let campaignId = localStorage.getItem('openCampaign');
+        let campaignId = localStorage.getItem('openCampaign')
+          ? localStorage.getItem('openCampaign')
+          : null;
         // console.log('ttttttttttt', openedCampaign, campaignId);
         handleOpenCategory(openCategory, campaignId);
       }
