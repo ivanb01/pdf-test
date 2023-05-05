@@ -1078,11 +1078,11 @@ const Table = ({
     );
   };
   return (
-    <div className="">
-      <div className="flex flex-col">
-        <div className=" overflow-x-auto ">
-          <div className="inline-block min-w-full align-middle ">
-            <div className="overflow-hidden ring-black ring-opacity-5">
+    <div className="h-full ">
+      <div className="h-full flex flex-col">
+        <div className="h-full  overflow-x-auto ">
+          <div className="h-full inline-block min-w-full align-middle ">
+            <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
                 {tableFor == 'uncategorized' || tableFor == 'in-categorization'
                   ? uncategorizedTable()
@@ -1110,3 +1110,10 @@ const Table = ({
 };
 
 export default Table;
+
+//if any table was broken after classname 'h-full' was adden we need to set 'h-full' just for 'contactList' table
+{/* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
+<div className={`${tableFor == 'contactsList' ? 'h-full' : ''} flex flex-col`} >
+  <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} overflow-x-auto`} >
+    <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} inline-block min-w-full align-middle`}>
+      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */}
