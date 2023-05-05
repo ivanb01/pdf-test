@@ -34,8 +34,8 @@ const tabs = [
   {
     title: 'LAST COMMUNICATION',
     content: Object.keys(filtersForLastCommunicationDate),
-    value: 'created_at',
-    // value: 'last_communication_date',
+    // value: 'created_at',
+    value: 'last_communication_date',
     onlyOneValue: true,
   },
   {
