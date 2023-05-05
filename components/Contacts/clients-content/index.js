@@ -62,8 +62,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     {
       title: 'LAST COMMUNICATION',
       content: Object.keys(filtersForLastCommunicationDate),
-      value: 'created_at',
-      // value: 'last_communication_date',
+      // value: 'created_at',
+      value: 'last_communication_date',
       onlyOneValue: true,
     },
     {
@@ -298,12 +298,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
         ) : (
           <div
             className="w-auto relative flex"
-            style={{ height: 'calc(100vh - 160px)' }}
+            style={{ height: 'calc(100vh - 170px)' }}
           >
             <div
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
-              <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+              <SimpleBar autoHide={true} style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
                   tableFor="contactsList"
                   categoryType="clients"

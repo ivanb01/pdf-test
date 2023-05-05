@@ -256,7 +256,7 @@ const Table = ({
                 event.event_id ? (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                     <EventStatus status={event.event_status} />
-                    <div className="text-gray7">22/02/2022</div>
+                    <div className="text-gray7">{event.event_updated_at}</div>
                   </td>
                 ) : (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
@@ -265,7 +265,7 @@ const Table = ({
                 )
               )}
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">22/02/2022</div>
+                <div className="text-gray7">{event.event_updated_at}</div>
               </td>
             </tr>
           ))}
@@ -1095,11 +1095,11 @@ const Table = ({
     );
   };
   return (
-    <div className="">
-      <div className="flex flex-col">
-        <div className=" overflow-x-auto ">
-          <div className="inline-block min-w-full align-middle ">
-            <div className="overflow-hidden ring-black ring-opacity-5">
+    <div className="h-full ">
+      <div className="h-full flex flex-col">
+        <div className="h-full  overflow-x-auto ">
+          <div className="h-full inline-block min-w-full align-middle ">
+            <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
                 {tableFor == 'uncategorized' || tableFor == 'in-categorization'
                   ? uncategorizedTable()
@@ -1127,3 +1127,10 @@ const Table = ({
 };
 
 export default Table;
+
+//if any table was broken after classname 'h-full' was adden we need to set 'h-full' just for 'contactList' table
+{/* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
+<div className={`${tableFor == 'contactsList' ? 'h-full' : ''} flex flex-col`} >
+  <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} overflow-x-auto`} >
+    <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} inline-block min-w-full align-middle`}>
+      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */}
