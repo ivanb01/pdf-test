@@ -42,7 +42,7 @@ const EventPreview = ({
                               <div>
                                 <div>{eventInfo?.event_name}</div>
                                 <div className="flex flex-row mt-5">
-                                  {isValidDate(eventInfo?.eventPreviewDate) ? (
+                                  {isValidDate(eventInfo?.event_updated_at) ? (
                                     <>
                                       <CalendarIcon
                                         className="text-gray4"
@@ -50,7 +50,7 @@ const EventPreview = ({
                                       />
                                       <Text p className="text-gray4 ml-1">
                                         {formatDateMDY(
-                                          eventInfo?.eventPreviewDate
+                                          eventInfo?.event_updated_at
                                         )}
                                       </Text>
                                       <ClockIcon
@@ -59,7 +59,7 @@ const EventPreview = ({
                                       />
                                       <Text p className="text-gray4 ml-1">
                                         {formatDateLThour(
-                                          eventInfo?.eventPreviewDate
+                                          eventInfo?.event_updated_at
                                         )}
                                       </Text>
                                     </>
@@ -70,7 +70,7 @@ const EventPreview = ({
                                         height={20}
                                       />
                                       <Text p className="text-gray4 ml-1">
-                                        {eventInfo?.eventPreviewDate}
+                                        {eventInfo?.event_updated_at}
                                       </Text>
                                     </>
                                   )}
