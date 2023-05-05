@@ -21,8 +21,14 @@ import {
   assignContactToCampaign,
 } from 'api/campaign';
 import Loader from 'components/shared/loader';
+import EventPreview from 'components/overlays/event-preview';
+import { getContactCampaignEventPreview } from 'api/campaign';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
+  const [eventInfo, setEventInfo] = useState(null);
+  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
+  const [eventToPreview, setEventToPreview] = useState(null);
+  const [showEventPreview, setShowEventPreview] = useState(false);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
   const [showAssignOverlay, setShowAssignOverlay] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -155,6 +161,19 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     router.events.on('routeChangeStart', handleRouteChange);
   }, [router]);
 
+  const handleEventPreview = async (event, event_name) => {
+    setLoadingEventPreview(true);
+    setShowEventPreview(true);
+    setEventInfo({
+      event_updated_at: event.event_updated_at,
+      event_name: event_name,
+    });
+    console.log('event preview for', event);
+    getContactCampaignEventPreview(event.event_id).then((data) => {
+      setEventToPreview(data.data);
+      setLoadingEventPreview(false);
+    });
+  };
   // useEffect(() => {
   //   let category = localStorage.getItem('openCampaignCategory');
   //   let campaignId = localStorage.getItem('openCampaign');
@@ -229,6 +248,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                         }
                       }}
                       currentButton={currentButton}
+                      handleEventPreview={handleEventPreview}
                       data={
                         currentButton == 0
                           ? currentCampaign.contacts.filter(
@@ -248,7 +268,13 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                       }
                     />
                   </SimpleBar>
-
+                  <EventPreview
+                    eventInfo={eventInfo}
+                    loading={loadingEventPreview}
+                    event={eventToPreview}
+                    showEventPreview={showEventPreview}
+                    setShowEventPreview={setShowEventPreview}
+                  />
                   {/* {selectedContacts.length > 1 && (
                     <div
                       style={{ zIndex: '99999 !important' }}

@@ -44,6 +44,7 @@ import { setContacts, updateContactStatus } from 'store/contacts/slice';
 import toast from 'react-hot-toast';
 import * as contactServices from 'api/contacts';
 import noClientCampaigns from 'public/images/no-client-campaigns.svg';
+import Link from 'components/Link';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -63,6 +64,7 @@ const Table = ({
   categoryType,
   handleCardEdit,
   currentButton,
+  handleEventPreview,
 }) => {
   const types = [
     {
@@ -193,7 +195,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center border-r border-gray-200"
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center border-r border-gray-200"
             >
               {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
               Seller
@@ -201,9 +203,22 @@ const Table = ({
             {data[0]?.events.map((event, index) => (
               <th
                 scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+                className="px-3 py-3 text-center text-xs font-medium tracking-wide"
               >
-                Event Name {index + 1}
+                <div className="">
+                  <div className="uppercase text-gray-500">
+                    Event {index + 1}
+                  </div>
+                  <div
+                    className="text-lightBlue3 cursor-pointer"
+                    onClick={() =>
+                      handleEventPreview(event, `Event ${index + 1}`)
+                    }
+                  >
+                    <Image src={eyeIcon} />
+                    <span className="ml-1">Preview</span>
+                  </div>
+                </div>
               </th>
             ))}
             <th
@@ -1044,14 +1059,16 @@ const Table = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
-          {data.map((dataItem,i) => (
+          {data.map((dataItem, i) => (
             <tr key={i} className="">
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                {
-                  dataItem.details ?
+                {dataItem.details ? (
                   <div className="flex items-center relative">
-                    <div className="font-medium text-gray7">{dataItem.details}</div>
-                  </div> :
+                    <div className="font-medium text-gray7">
+                      {dataItem.details}
+                    </div>
+                  </div>
+                ) : (
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
@@ -1059,7 +1076,7 @@ const Table = ({
                       image: dataItem.profile_image_path,
                     }}
                   />
-                }
+                )}
               </td>
               {dataItem.reason && (
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
