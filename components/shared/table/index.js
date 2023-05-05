@@ -241,7 +241,7 @@ const Table = ({
                 event.event_id ? (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                     <EventStatus status={event.event_status} />
-                    <div className="text-gray7">22/02/2022</div>
+                    <div className="text-gray7">{event.event_updated_at}</div>
                   </td>
                 ) : (
                   <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
@@ -250,7 +250,7 @@ const Table = ({
                 )
               )}
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">22/02/2022</div>
+                <div className="text-gray7">{event.event_updated_at}</div>
               </td>
             </tr>
           ))}
