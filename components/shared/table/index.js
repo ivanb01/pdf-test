@@ -230,11 +230,11 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className=" bg-white">
           {data.map((dataItem) => (
             <tr
               key={dataItem.contact_id}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group"
+              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200 w-96">
@@ -297,11 +297,11 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
               key={dataItem.id}
-              className={`hover:bg-lightBlue1 cursor-pointer contact-row`}
+              className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
                 <ContactInfo
@@ -355,12 +355,12 @@ const Table = ({
             )}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
               key={dataItem.id}
               id={'row_' + index}
-              className={`hover:bg-lightBlue1 cursor-pointer contact-row`}
+              className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
               onClick={(event) => {
                 if (tableFor == 'in-categorization') {
                   if (event.target.id != 'input_' + index) {
@@ -499,12 +499,12 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
               key={dataItem.email}
               id={'row_' + index}
-              className={`contact-row`}
+              className={`contact-row border-b border-gray-200`}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
@@ -656,11 +656,11 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="bg-white">
           {data.map((data) => (
             <tr
               key={data.id}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row"
+              className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
               onClick={(event) => handleClickRow(data, event)}
             >
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 pl-6">
@@ -783,7 +783,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="bg-white">
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
             contacts.filter(
               (contact) =>
@@ -792,7 +792,7 @@ const Table = ({
               <>
                 <tr
                   key={category.id}
-                  className={`${category.color} contact-row`}
+                  className={`${category.color} contact-row border-b border-gray-200`}
                 >
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
@@ -811,7 +811,7 @@ const Table = ({
                   .map((contact) => (
                     <tr
                       key={contact.id}
-                      className="hover:bg-lightBlue1 cursor-pointer contact-row"
+                      className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
                       onClick={() =>
                         router.push({
                           pathname: '/contacts/details',
@@ -1063,9 +1063,9 @@ const Table = ({
             ></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className=" bg-white">
           {data.map((dataItem, i) => (
-            <tr key={i} className="">
+            <tr key={i} className="border-b border-gray-200">
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 {dataItem.details ? (
                   <div className="flex items-center relative">
@@ -1103,7 +1103,7 @@ const Table = ({
     <div className="h-full ">
       <div className="h-full flex flex-col">
         <div className="h-full  overflow-x-auto ">
-          <div className="h-full inline-block min-w-full align-middle ">
+          <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
                 {tableFor == 'uncategorized' || tableFor == 'in-categorization'

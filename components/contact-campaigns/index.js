@@ -190,7 +190,10 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
         text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
         onBackClick={() => router.push('/campaigns')}
       />
-      <div className="border-t border-gray2 flex h-auto">
+      <div
+        className="border-t border-gray2 flex"
+        style={{ height: 'calc(100vh - 146px) !important;' }}
+      >
         <div className="h-auto border-r border-gray2">
           <ContactCampaignsSidebar
             tabs={campaigns}
@@ -232,7 +235,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               </div>
               <div className={`w-auto h-auto`}>
                 <div
-                  className={`border border-gray-200 overflow-hidden relative h-full`}
+                  className={`border border-gray-200 overflow-hidden relative h-full border-l-0 border-b-0`}
                 >
                   <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
                     <Table
