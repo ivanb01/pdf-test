@@ -1,6 +1,6 @@
 import Mail from '@mui/icons-material/Mail';
 import {healthLastCommunicationDate} from 'global/variables';
-import { isHealthyCommuncationDate, formatDateAgo, formatDateMDY, dateAfterDate } from 'global/functions';
+import { isHealthyCommuncationDate, formatDateAgo, isValidDate } from 'global/functions';
 import moment from 'moment';
 
 
@@ -19,7 +19,8 @@ export default function DateChip({
     let isHealthyCommunication = isHealthyCommuncationDate(lastCommunication, healthyCommunicationDays);
 
     styling = isHealthyCommunication ? 'text-green4 bg-green1': 'text-red3 bg-red1';
-    lastCommunicationLabel = formatDateAgo(lastCommunication).includes('hour') ? 'Today' : formatDateAgo(lastCommunication);
+    
+    lastCommunicationLabel = isValidDate(lastCommunication) ? (formatDateAgo(lastCommunication).includes('hour') ? 'Today' : formatDateAgo(lastCommunication)) : 'No communication';
     
 return (
     
