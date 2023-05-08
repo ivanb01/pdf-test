@@ -167,7 +167,7 @@ export default function ContactCard({
         </div>
         {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
         <DateChip
-          lastCommunication={contact.created_at}
+          lastCommunication={contact.last_communication_date}
           contactStatus={contact.status_2}
           contactCategory={categoryType}
         />

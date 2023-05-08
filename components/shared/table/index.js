@@ -841,7 +841,7 @@ const Table = ({
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium">
                           <DateChip
-                            lastCommunication={contact.created_at}
+                            lastCommunication={contact.last_communication_date}
                             contactStatus={contact.status_2}
                             contactCategory={categoryType}
                           />

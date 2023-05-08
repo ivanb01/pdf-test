@@ -1052,3 +1052,33 @@ export const NYCneighborhoods = [
   { value: 328, label: 'Woodhaven' },
   { value: 329, label: 'Woodside' },
 ];
+
+export const activityTypes = [
+  {
+    id: 1,
+    name: 'Email',
+  },
+  {
+    id: 2,
+    name: 'SMS',
+  },
+  {
+    id: 3,
+    name: 'Phone Call',
+  },
+  {
+    id: 4,
+    name: 'Social Media',
+  },
+  {
+    id: 5,
+    name: 'In Person',
+  },
+  {
+    id: 6,
+    name: 'Other',
+  },
+];
+
+
+

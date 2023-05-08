@@ -11,30 +11,8 @@ import Dropdown from 'components/shared/dropdown';
 import noActivitLog from 'public/images/no_activitylog.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
+import { activityTypes } from 'global/variables';
 
-
-const activityTypes = [
-  {
-    id: 1,
-    name: 'Email',
-  },
-  {
-    id: 2,
-    name: 'Phone',
-  },
-  {
-    id: 3,
-    name: 'Social Media',
-  },
-  {
-    id: 4,
-    name: 'In Person',
-  },
-  {
-    id: 5,
-    name: 'Other',
-  },
-];
 
 export default function ActivityLog({ contactId }) {
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
