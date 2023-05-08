@@ -18,27 +18,34 @@ const NoContactPage = () => {
     const [modalList, setModalList] = useState([]);
     const [googleContactResponse, setGoogleContactResponse] = useState(null);
     const [stateAfterImport, setStateAfterImport] = useState(null);
+    const [motionImage, setMotionImage] = useState(false);
     const [errorImporting, setErorrImporting] = useState('');
 
     const handleCloseImportGoogleContactsModal = () => {
         setShowImportGoogleContactsModal(false);
         setModalList([]);
         setStateAfterImport(null);
+        setMotionImage(false);
     }
 
-    const handleImportGoogleContact = async () => {
+    const handleImportGoogleContact = async (modalChangeImmediately=true) => {
         try {
-            setShowImportGoogleContactsModal(true);
+            if(modalChangeImmediately) {
+                setShowImportGoogleContactsModal(true);
+                setModalList(list2);
+                setMotionImage(true);
+            }
             const { data } = await postGoogleContacts();
             console.log('post google contacts', data);
             
             if(data.redirect_uri) {
                 setModalList(list1);
+                setMotionImage(false);
             } else {
                 setGoogleContactResponse(data);
                 setModalList([]);
                 setStateAfterImport(data.db_insertion);
-
+                setMotionImage(false);
             }
         } catch (error) {
             setShowImportGoogleContactsModal(false);
@@ -61,13 +68,12 @@ const NoContactPage = () => {
         try {
             const { data } = await getGoogleAuthCallback(queryParams);
             console.log('google auth callback', data);
-            if(data.error){
-                setShowImportGoogleContactsModal(true);
-                setModalList(list2);
-            } else {
+            if(!data.error) {
                 setShowImportGoogleContactsModal(true);
                 setModalList(list3);
-                handleImportGoogleContact();
+                setMotionImage(true);
+                setTimeout(()=>handleImportGoogleContact(false), 4000);
+                // handleImportGoogleContact();
             }
         } catch (error) {
             setShowImportGoogleContactsModal(false);
@@ -81,7 +87,11 @@ const NoContactPage = () => {
             queryParams[key] = value
         }
         if (Object.keys(queryParams).length > 0) {
-            handleGoogleAuthCallback(queryParams);
+            if(queryParams?.start_importing){
+                handleImportGoogleContact();
+            } else {
+                handleGoogleAuthCallback(queryParams);
+            }
         }
     }, [router.query]);
 
@@ -98,7 +108,7 @@ const NoContactPage = () => {
     ];
     const list2=[
         {
-            text: 'Failed to get credentials from Google.',
+            text: 'Please wait ...',
             state: 'not_finished',
         },
     ];
@@ -155,6 +165,7 @@ const NoContactPage = () => {
                         title='Importing Google Contacts'
                         list={modalList}
                         stateAfterImport={stateAfterImport}
+                        motionImage={motionImage}
                     />
                 )}
             

@@ -95,6 +95,7 @@ const MainMenu = ({
           onClick={() =>
             router.push({
               pathname: '/contacts/no-contact/',
+              query: { start_importing: true },
             })
           }
         />
