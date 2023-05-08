@@ -1,3 +1,23 @@
+const iconStyle = {
+  width: '48px',
+  height: '48px',
+  textAlign: 'center',
+  verticalAlign: 'center',
+  display: 'block',
+  marginTop: '1px',
+  marginLeft: '1px',
+  float: 'left',
+  backgroundColor: '#fff',
+  borderRadius: '1px',
+  whiteSpace: 'nowrap'
+}
+
+const svgStyle = {
+  width: '48px',
+  height: '48px',
+  display: 'block'
+}
+
 const googleIconSvg = (
   <svg
     version="1.1"
@@ -114,23 +134,5 @@ export const GoogleIcon = () => (
   </div>
 )
 
-const iconStyle = {
-    width: '48px',
-    height: '48px',
-    textAlign: 'center',
-    verticalAlign: 'center',
-    display: 'block',
-    marginTop: '1px',
-    marginLeft: '1px',
-    float: 'left',
-    backgroundColor: '#fff',
-    borderRadius: '1px',
-    whiteSpace: 'nowrap'
-  }
-  
-const svgStyle = {
-    width: '48px',
-    height: '48px',
-    display: 'block'
-  }
+
 
