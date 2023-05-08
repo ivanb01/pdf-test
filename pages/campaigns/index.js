@@ -260,7 +260,7 @@ const Campaigns = () => {
       <MainMenu fixed />
       <TopBar text="Campaigns" />
       <div className="bg-gray10 campaigns-custom-height">
-        <div className="grid grid-cols-3 gap-6 p-6">
+        <div className="grid grid-cols-3 gap-6 p-6 h-full">
           <div className="col-span-2 bg-white rounded-lg border border-gray2 overflow-hidden relative">
             <div className="flex items-center px-6 py-4 justify-between border-b border-gray2">
               <Text h3>Upcoming Events</Text>
@@ -324,67 +324,69 @@ const Campaigns = () => {
                 onClick={() => Router.push('/campaigns/client-campaigns')}
               />
             </div>
-            {loadingStats ? (
-              <Loader />
-            ) : (
-              <div className="border border-gray2 p-4 rounded-lg bg-white">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center w-1/2 border-r border-gray2 pr-6">
-                    <DoughnutChart
-                      data={clientsDoughnut}
-                      className="w-[60px] mr-1"
-                      color="#60A5FA"
-                    />
-                    <div>
-                      <div className="text-base font-semibold text-gray8">
-                        Clients
-                      </div>
-                      <div className=" text-sm font-normal text-gray4">
-                        In Campaign
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center w-1/2 pl-6">
-                    <DoughnutChart
-                      data={professionalsDoughnut}
-                      className="w-[60px] mr-1"
-                      color="#0369A1"
-                    />
-                    <div>
-                      <div className="text-base font-semibold text-gray8">
-                        Professionals
-                      </div>
-                      <div className=" text-sm font-normal text-gray4">
-                        In Campaign
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div className="relative border border-gray2 p-4 rounded-lg bg-white min-h-[200px]">
+              {loadingStats ? (
+                <Loader />
+              ) : (
                 <>
-                  <hr className="-ml-4 -mr-4 my-4" />
-                  <div>
-                    <div className="flex items-center justify-between mb-5">
-                      <div className="text-base font-medium">
-                        From in Campaign
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center w-1/2 border-r border-gray2 pr-6">
+                      <DoughnutChart
+                        data={clientsDoughnut}
+                        className="w-[60px] mr-1"
+                        color="#60A5FA"
+                      />
+                      <div>
+                        <div className="text-base font-semibold text-gray8">
+                          Clients
+                        </div>
+                        <div className=" text-sm font-normal text-gray4">
+                          In Campaign
+                        </div>
                       </div>
-                      <ButtonsSlider
-                        small
-                        noCount
-                        buttons={chartTabs}
-                        currentButton={currentChartTab}
-                        onClick={setCurrentChartTab}
-                      />
                     </div>
-                    <div>
-                      <PieChart
-                        pieData={pieData}
-                        type={currentChartTab == 0 ? 'percentage' : 'number'}
+                    <div className="flex items-center w-1/2 pl-6">
+                      <DoughnutChart
+                        data={professionalsDoughnut}
+                        className="w-[60px] mr-1"
+                        color="#0369A1"
                       />
+                      <div>
+                        <div className="text-base font-semibold text-gray8">
+                          Professionals
+                        </div>
+                        <div className=" text-sm font-normal text-gray4">
+                          In Campaign
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <hr className="-ml-4 -mr-4 my-4" />
+                    <div>
+                      <div className="flex items-center justify-between mb-5">
+                        <div className="text-base font-medium">
+                          From in Campaign
+                        </div>
+                        <ButtonsSlider
+                          small
+                          noCount
+                          buttons={chartTabs}
+                          currentButton={currentChartTab}
+                          onClick={setCurrentChartTab}
+                        />
+                      </div>
+                      <div>
+                        <PieChart
+                          pieData={pieData}
+                          type={currentChartTab == 0 ? 'percentage' : 'number'}
+                        />
+                      </div>
                     </div>
                   </div>
                 </>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
