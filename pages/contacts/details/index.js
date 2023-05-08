@@ -55,11 +55,11 @@ export default function Details() {
     }
   };
 
-  useEffect(() => {
-    if (router.query.campaigns) {
-      setCurrent(1);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (router.query.campaigns) {
+  //     setCurrent(1);
+  //   }
+  // }, []);
 
   useEffect(() => {
     id && fetchContact();
