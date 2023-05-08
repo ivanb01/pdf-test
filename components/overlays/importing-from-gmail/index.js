@@ -6,14 +6,14 @@ import Image from 'next/image';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from 'react';
 
-const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, progress=5}) => {
+const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, motionImage, progress=5}) => {
 
   const [loadingButton, setLoadingButton] = useState(false);
   const [mainTitle, setMainTitle] = useState(title);
   const titleAfterImport = {
     'Not needed': 'No Contact!',
     'Successful': 'Imported Google Contacts',
-    'Failed': 'Something went wrong',
+    'Failed': 'Something went wrong!',
   }
   const subtitleAfterImport = {
     'Not needed': 'There are no contacts to be imported from your Google Account.',
@@ -34,8 +34,20 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
       <div className="p-[24px]">
         <div className="">
           <div className="">
-            <div className="mb-10 text-center">
-              <Image src={img} alt="header-img" />
+            <div className="mb-10 flex justify-center">
+              {/* <Image src={img} alt="header-img" /> */}
+              {
+                motionImage ? 
+                  <lottie-player
+                    src="https://assets8.lottiefiles.com/packages/lf20_o9df1rnx.json"
+                    background="transparent"
+                    speed="1"
+                    style={{ width: '160px', height: '128px' }}
+                    loop
+                    autoplay
+                  ></lottie-player>
+                  : <Image src={img} alt="header-img" />
+              }
             </div>
             
             {
@@ -44,7 +56,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
                 <Text h2 className="text-gray7 justify-center mb-2">
                   {titleAfterImport[stateAfterImport]}
                 </Text>
-                <Text p className="text-gray4 text-center ">
+                <Text p className="text-gray4 justify-center ">
                   {subtitleAfterImport[stateAfterImport]}
                 </Text>
                 <div className='flex justify-center'>
@@ -83,7 +95,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
                   </>
                 }
                 
-              </div>) : <div className='flex justify-center'>Please wait...</div>
+              </div>) : null
             }
             
 
