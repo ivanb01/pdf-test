@@ -14,13 +14,6 @@ export const tabs = (
 ) => [
   {
     id: 0,
-    name: 'Activity Log',
-    href: '#',
-    icon: <List />,
-    content: <ActivityLogContent contactId={contactId}/>,
-  },
-  {
-    id: 1,
     name: 'Campaigns',
     href: '#',
     icon: <Campaigns />,
@@ -32,6 +25,13 @@ export const tabs = (
     ),
   },
   {
+    id: 1,
+    name: 'Looking for',
+    href: '#',
+    icon: <Home />,
+    content: <LookingForContent contactId={contactId}/>,
+  },
+  {
     id: 2,
     name: 'Notes',
     href: '#',
@@ -40,10 +40,10 @@ export const tabs = (
   },
   {
     id: 3,
-    name: 'Looking for',
+    name: 'Activity Log',
     href: '#',
-    icon: <Home />,
-    content: <LookingForContent contactId={contactId}/>,
+    icon: <List />,
+    content: <ActivityLogContent contactId={contactId}/>,
   },
 ];
 
