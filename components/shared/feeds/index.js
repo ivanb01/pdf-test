@@ -5,6 +5,7 @@ import {
   UserCircleIcon,
   PhoneIcon,
   MailIcon,
+  ChatAlt2Icon,
 } from '@heroicons/react/solid';
 import { formatDateAgo } from 'global/functions';
 import Text from 'components/shared/text';
@@ -19,37 +20,17 @@ import Dropdown from 'components/shared/dropdown';
 import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
+import { activityTypes } from 'global/variables';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  2: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  3: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  4: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  5: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 
-const activityTypes = [
-  {
-    id: 1,
-    name: 'Email',
-  },
-  {
-    id: 2,
-    name: 'Phone',
-  },
-  {
-    id: 3,
-    name: 'Social Media',
-  },
-  {
-    id: 4,
-    name: 'In Person',
-  },
-  {
-    id: 5,
-    name: 'Other',
-  },
-];
 
 export default function Feeds({
   contactId,

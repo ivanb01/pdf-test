@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
 import TagsInput from 'components/tagsInput';
+import DateChip from 'components/shared/chip/date-chip';
 
 export default function Info({ client, handleFetchContactRequired }) {
   const categoryType = client?.category_1.toLowerCase() + 's';
@@ -143,12 +144,12 @@ export default function Info({ client, handleFetchContactRequired }) {
             }
             iconContent={
               client?.last_communication_date ? (
-                <Chip
-                  lastCommunication={formatDateAgo(
-                    client?.last_communication_date
-                  )}
+                <DateChip
+                  lastCommunication={client.last_communication_date}
+                  contactStatus={client.status_2}
+                  contactCategory={categoryType}
                   className="ml-2 mt-[0px]"
-                />
+              />
               ) : null
             }
           />
