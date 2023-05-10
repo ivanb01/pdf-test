@@ -42,6 +42,11 @@ const index = () => {
   useEffect(() => {
     setLoading(true);
   }, [openedTab]);
+
+  const onSearch = (term) => {//to implement
+    console.log(term);
+  }
+
   return (
     <Layout>
       {loading ? (
@@ -56,8 +61,11 @@ const index = () => {
                   {openedSubtab == 0 ? 'Family & Friends' : 'Unknown'}
                 </Text>
                 <div className="flex items-center justify-self-end">
-                  <Search placeholder="Search" className="mr-4 text-sm" />
-                  <Button primary iconSize="w-5 h-5" label="Add Professional" />
+                  <Search
+                    placeholder="Search"
+                    className="mr-4 text-sm"
+                    onInput={(event) => onSearch(event.target.value)}
+                  />
                 </div>
               </div>
             </div>

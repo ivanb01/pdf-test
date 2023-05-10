@@ -17,8 +17,9 @@ import toast from 'react-hot-toast';
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms_min: Yup.number().min(0, 'Minimum value is 0'),
+    bedrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     bedrooms_max: Yup.number()
+      .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('bedrooms_min', {
         is: (val) => val && val >= 0,
@@ -27,8 +28,9 @@ export default function LookingFor({ contactId }) {
           'Max bedrooms must be greater than min bedrooms'
         ),
       }),
-    bathrooms_min: Yup.number().min(0, 'Minimum value is 0'),
+    bathrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     bathrooms_max: Yup.number()
+      .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('bathrooms_min', {
         is: (val) => val && val >= 0,
@@ -37,9 +39,10 @@ export default function LookingFor({ contactId }) {
           'Max bathrooms must be greater than min bathrooms'
         ),
       }),
-    budget_min: Yup.number().min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
     budget_max: Yup.number()
+      .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('budget_min', {
         is: (val) => val && val >= 0,
