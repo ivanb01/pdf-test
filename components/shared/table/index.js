@@ -961,7 +961,7 @@ const Table = ({
                               role="tooltip"
                               className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                             >
-                              See Campaigns
+                              See Campaign
                             </div>
                           </div>
                           <div

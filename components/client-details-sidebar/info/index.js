@@ -14,6 +14,9 @@ export default function Info({ client, handleFetchContactRequired }) {
   const categoryType = client?.category_1.toLowerCase() + 's';
   const [campaginName, setCampaignName] = useState('');
 
+  const initialTags = client.tags ? client.tags : [];
+  const [tags, setTags] = useState(initialTags);
+
   const fetchContactCampaign = async () => {
     try {
       const { data } = await getContactCampaign(client?.id);
@@ -33,25 +36,15 @@ export default function Info({ client, handleFetchContactRequired }) {
       console.log(error);
     }
   };
-  const initialTags = client.tags ? client.tags : [];
-  const [tags, setTags] = useState(initialTags);
-  const tagsRef = useRef();
-  tagsRef.current = tags;
 
-  const removeTag = (tagToRemove) => {
-    setTags((prev) => prev.filter((tag) => tag !== tagToRemove));
-  };
 
-  const addTag = (tagToAdd) => {
-    const tagAdded = tags.includes(tagToAdd);
-    !tagAdded && setTags((prev) => [...prev, tagToAdd]);
-  };
-
-  const handleChangeTags = async () => {
+  const handleChangeTags = async (currentTags) => {
     try {
+      setTags(currentTags);
       await contactServices.updateContact(client.id, {
-        tags: tagsRef.current,
+        tags: currentTags,
       });
+      handleFetchContactRequired();
     } catch (error) {
       console.log(error);
     }
@@ -60,9 +53,6 @@ export default function Info({ client, handleFetchContactRequired }) {
   useEffect(() => {
     fetchContactCampaign();
     setTags(initialTags);
-    return () => {
-      handleChangeTags();
-    };
   }, [client]);
 
   const handleChangeStatus = async (status) => {
@@ -116,7 +106,7 @@ export default function Info({ client, handleFetchContactRequired }) {
               client?.category_1 === 'Client' ? 0 : 1
             )}
             onChange={(choice) => {
-              setTags(choice.map((el) => el.label));
+              handleChangeTags(choice.map((el) => el.label));
             }}
           />
 
