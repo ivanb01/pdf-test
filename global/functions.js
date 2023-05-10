@@ -155,6 +155,10 @@ export const isValidDate = (date) => {
   return moment(date).isValid();
 };
 
+export const isToday= (date) => {
+  return moment(date).isSameOrAfter(moment().startOf('date'))
+};
+
 export const dateBeforeDate = (date1, date2) => {
   return moment(date1).isBefore(date2);
 };
@@ -244,13 +248,16 @@ export const filterLastCommuncationDate = (
       healthLastCommunicationDate[contactType][status];
     return !isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
+  if (filterForDate === 'today') {
+    return isToday(date)
+  }
 
-  const filterDate = moment().subtract(filterForDate[0], filterForDate[1]);
-  return moment(date).isSameOrAfter(filterDate);
+  const filterDate = moment().startOf('date').subtract(filterForDate[0], filterForDate[1]);
+  return moment(date).isSameOrBefore(filterDate);
 };
 
 export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-  const healthyCommunicationDate = moment().subtract(
+  const healthyCommunicationDate = moment().startOf('date').subtract(
     healthyCommunicationDays,
     'days'
   );

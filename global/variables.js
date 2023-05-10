@@ -670,9 +670,9 @@ export const phoneNumberRules = /^[+]{1}[1]{1}(\d{10})$/;
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
   'Not Up to Date': 'unhealthy',
-  Today: [1, 'days'],
-  '1 Week ago': [7, 'days'],
-  '2 Weeks ago': [14, 'days'],
+  Today: 'today',
+  '1 Week ago': [1, 'weeks'],
+  '2 Weeks ago': [2, 'weeks'],
   '1 Month ago': [1, 'months'],
 };
 
