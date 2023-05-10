@@ -677,27 +677,27 @@ export const filtersForLastCommunicationDate = {
 };
 
 export const multiselectOptionsClients = [
-  { value: 'super-high-priority', label: 'Super High Priority!' },
-  { value: 'high-priority', label: 'High Priority' },
-  { value: 'low-priority', label: 'Low Priority' },
+  { value: 'Super High Priority!', label: 'Super High Priority!' },
+  { value: 'High Priority', label: 'High Priority' },
+  { value: 'Low Priority', label: 'Low Priority' },
 ];
 
 export const multiselectOptionsProfessionals = [
-  { value: 'lawyer', label: 'Lawyer' },
-  { value: 'contractor', label: 'Contractor' },
-  { value: 'mortgage-broker', label: 'Mortagage Broker' },
-  { value: 'title-agent', label: 'Title Agent' },
-  { value: 'agent', label: 'Agent' },
-  { value: 'friend', label: 'Friend' },
-  { value: 'family', label: 'Family' },
-  { value: 'mover', label: 'Mover' },
-  { value: 'photographer', label: 'Photographer' },
-  { value: 'staging', label: 'Staging' },
-  { value: 'home-inspector', label: 'Home Inspector' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'insurance', label: 'Insurance' },
+  { value: 'Lawyer', label: 'Lawyer' },
+  { value: 'Contractor', label: 'Contractor' },
+  { value: 'Mortagage Broker', label: 'Mortagage Broker' },
+  { value: 'Title Agent', label: 'Title Agent' },
+  { value: 'Agent', label: 'Agent' },
+  { value: 'Friend', label: 'Friend' },
+  { value: 'Family', label: 'Family' },
+  { value: 'Mover', label: 'Mover' },
+  { value: 'Photographer', label: 'Photographer' },
+  { value: 'Staging', label: 'Staging' },
+  { value: 'Home Inspector', label: 'Home Inspector' },
+  { value: 'Finance', label: 'Finance' },
+  { value: 'Insurance', label: 'Insurance' },
   { value: 'appraiser', label: 'Appraiser' },
-  { value: 'handyman', label: 'Handyman' },
+  { value: 'Handyman', label: 'Handyman' },
 ];
 
 export const healthLastCommunicationDate = {

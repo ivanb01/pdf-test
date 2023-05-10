@@ -11,7 +11,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
   const [loadingButton, setLoadingButton] = useState(false);
   const [mainTitle, setMainTitle] = useState(title);
   const titleAfterImport = {
-    'Not needed': 'No Contact!',
+    'Not needed': 'No Contacts!',
     'Successful': 'Imported Google Contacts',
     'Failed': 'Something went wrong!',
   }
