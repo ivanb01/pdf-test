@@ -34,7 +34,6 @@ const tabs = [
   {
     title: 'LAST COMMUNICATION',
     content: Object.keys(filtersForLastCommunicationDate),
-    // value: 'created_at',
     value: 'last_communication_date',
     onlyOneValue: true,
   },
@@ -46,7 +45,7 @@ const tabs = [
   {
     title: 'CAMPAIGN',
     content: ['Assigned Professionals', 'Unassigned Professionals'],
-    value: 'campaign',
+    value: 'is_in_campaign',
   },
   {
     title: 'TAGS',
@@ -54,6 +53,12 @@ const tabs = [
     value: 'tags',
   },
 ];
+
+const campaignFilterMeaning = {
+  'Assigned Professionals': true,
+  'Unassigned Professionals': false,
+};
+
 const buttons = [
   {
     id: 0,
@@ -107,7 +112,7 @@ const Professionals = ({
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      if (key == 'created_at') {
+      if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(
             contact[key],
@@ -116,6 +121,9 @@ const Professionals = ({
             contact.status_2
           )
         );
+      } else if (key == 'is_in_campaign') {
+        let booleanFilter = filters[key].map(filter=>campaignFilterMeaning[filter])
+        contactsState = contactsState.filter(contact => booleanFilter.includes(contact[key]))
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {

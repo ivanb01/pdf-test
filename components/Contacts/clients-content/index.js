@@ -62,7 +62,6 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     {
       title: 'LAST COMMUNICATION',
       content: Object.keys(filtersForLastCommunicationDate),
-      // value: 'created_at',
       value: 'last_communication_date',
       onlyOneValue: true,
     },
@@ -74,7 +73,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     {
       title: 'CAMPAIGN',
       content: ['Assigned Clients', 'Unassigned Clients'],
-      value: 'campaign',
+      value: 'is_in_campaign',
     },
     {
       title: 'TAGS',
@@ -82,6 +81,10 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
       value: 'tags',
     },
   ];
+  const campaignFilterMeaning = {
+    'Assigned Clients': true,
+    'Unassigned Clients': false,
+  };
 
   // useEffect(() => {
   //   const delayDebounceFn = setTimeout(() => {
@@ -107,7 +110,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      if (key == 'created_at') {
+      if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(
             contact[key],
@@ -116,6 +119,9 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
             contact.status_2
           )
         );
+      } else if (key == 'is_in_campaign') {
+        let booleanFilter = filters[key].map(filter=>campaignFilterMeaning[filter])
+        contactsState = contactsState.filter(contact => booleanFilter.includes(contact[key]))
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
@@ -136,7 +142,6 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const handleFilterClick =
     (selectedFilter, filterType, isOnlyOneFilter) => () => {
       let filtersCopy = { ...filters };
-
       if (filtersCopy[filterType]) {
         if (filtersCopy[filterType].includes(selectedFilter)) {
           filtersCopy[filterType] = filtersCopy[filterType].filter(
