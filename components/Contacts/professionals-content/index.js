@@ -245,8 +245,12 @@ const Professionals = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {contacts.length}{' '}
-                  {contacts.length == 1 ? 'result' : 'results'} for:
+                  {
+                  contacts.filter(contact => 
+                    contact?.status_1.toLowerCase() === professionalsStatuses[openedSubtab].statusMainTitle.toLowerCase()).length
+
+                  }
+                  {contacts.length == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
