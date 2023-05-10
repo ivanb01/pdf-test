@@ -172,8 +172,13 @@ const Input = ({
   const [phoneValue, setPhoneValue] = useState(type=='phone_number' && phoneNumberInputFormat(value));
   
   const handlePhoneChange = (val) => {
-    onChange(revertPhoneNumberInputFormat(val));
     setPhoneValue(phoneNumberInputFormat(val));
+
+    if(val) {
+      onChange(revertPhoneNumberInputFormat(val));
+    } else {
+      onChange('');
+    }
   }
 
   const InputPhone = () => {

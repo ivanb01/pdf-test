@@ -63,13 +63,13 @@ const EditContactOverlay = ({
       first_name: client?.first_name,
       last_name: client?.last_name,
       email: client?.email,
-      phone_number: client?.phone_number,
+      phone_number: client?.phone_number ? client?.phone_number : '',
       import_source: client?.import_source,
       tags: client?.tags,
     },
     validationSchema: AddContactSchema,
     onSubmit: async(values, { setSubmitting }) => {
-      await editClient();
+      await editClient(values);
       setSubmitting(false);
     },
   });
@@ -82,11 +82,11 @@ const EditContactOverlay = ({
 
   const editClient = async (values) => {
     try {
-      const res = await contactServices.updateContact(
+      await contactServices.updateContact(
         client?.id,
-        formik.values
+        values
       );
-      console.log(formik.values, 'edit contact', client?.id, values);
+      console.log(values, 'edit contact', client?.id);
       if (handleFetchContactRequired) {
         handleFetchContactRequired();
       } else {
