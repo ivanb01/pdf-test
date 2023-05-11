@@ -281,142 +281,160 @@ const Table = ({
   const otherTable = () => {
     return (
       <>
-        <thead className="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
-            >
-              Contact
-            </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-            >
-              Added From
-            </th>
-          </tr>
-        </thead>
-        <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
-            <tr
-              key={dataItem.id}
-              className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
-            >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
-                <ContactInfo
-                  data={{
-                    name: dataItem.first_name + ' ' + dataItem.last_name,
-                    email: dataItem.email,
-                    image: dataItem.profile_image_path,
-                  }}
-                />
-              </td>
-              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">
-                  {dataItem.addedFrom}
-                </div>
-                <div className="text-gray-500 font-medium">
-                  {dataItem.addedDate}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </>
-    );
-  };
-  const uncategorizedTable = () => {
-    return (
-      <>
-        <thead className="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
-            >
-              {tableFor == 'in-categorization' && (
-                <Input
-                  className="mr-1"
-                  id="select_all"
-                  type="checkbox"
-                  onChange={handleSelectAll}
-                />
-              )}
-              Contact
-            </th>
-            {tableFor != 'in-categorization' && (
+        {data?.length ? (
+          <>
+          <thead className="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+              >
+                Contact
+              </th>
               <th
                 scope="col"
                 className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
               >
                 Added From
               </th>
-            )}
-          </tr>
-        </thead>
-        <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
-            <tr
-              key={dataItem.id}
-              id={'row_' + index}
-              className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
-              onClick={(event) => {
-                if (tableFor == 'in-categorization') {
-                  if (event.target.id != 'input_' + index) {
-                    document.querySelector('#input_' + index).click();
-                  }
-                } else if (tableFor == 'uncategorized') {
-                  handleClickRow(event.target);
-                }
-              }}
-            >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+            </tr>
+          </thead>
+          <tbody className=" bg-white">
+            {data.map((dataItem, index) => (
+              <tr
+                key={dataItem.id}
+                className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+              >
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                  <ContactInfo
+                    data={{
+                      name: dataItem?.first_name + ' ' + dataItem?.last_name,
+                      email: dataItem?.email,
+                      image: dataItem?.profile_image_path,
+                    }}
+                  />
+                </td>
+                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <div className="text-gray7 font-medium">
+                    {dataItem?.import_source}
+                  </div>
+                  <div className="text-gray-500 font-medium">
+                    {formatDateMDY(dataItem?.created_at)}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          </>) : 
+          <div className="bg-white flex justify-center items-center">
+            <div className="text-gray7 my-4 text-base font-normal">
+              No result has been found!
+            </div>
+          </div>
+        }
+      </>
+    );
+  };
+  const uncategorizedTable = () => {
+    return (
+      <>
+        {data?.length ? (
+        <>
+          <thead className="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+              >
                 {tableFor == 'in-categorization' && (
                   <Input
                     className="mr-1"
+                    id="select_all"
                     type="checkbox"
-                    id={'input_' + index}
-                    onChange={(event) => handleClickRow(dataItem, event)}
-                  ></Input>
+                    onChange={handleSelectAll}
+                  />
                 )}
-                <ContactInfo
-                  data={{
-                    name: dataItem.first_name + ' ' + dataItem.last_name,
-                    email: dataItem.email,
-                    image: dataItem.profile_image_path,
-                  }}
-                />
-                {/* {(contact.type != null || contact.status != null) && (
-                  <div className="flex items-center mt-3 type-and-status">
-                    {contact.type != null && (
-                      <div className="min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center border border-gray3">
-                        {getContactTypeByTypeId(contact.type)}
-                      </div>
-                    )}
-                    {contact.status != null && (
-                      <div
-                        className={` min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 bg-purple1 rounded-xl mr-3 flex items-center border border-purple3`}
-                      >
-                        {getContactStatusByStatusId(contact.status)}
-                      </div>
-                    )}
-                  </div>
-                )} */}
-              </td>
+                Contact
+              </th>
               {tableFor != 'in-categorization' && (
-                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <div className="text-gray7 font-medium">
-                    {dataItem.addedFrom}
-                  </div>
-                  <div className="text-gray-500 font-medium">
-                    {dataItem.addedDate}
-                  </div>
-                </td>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Added From
+                </th>
               )}
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody className=" bg-white">
+            {data.map((dataItem, index) => (
+              <tr
+                key={dataItem.id}
+                id={'row_' + index}
+                className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                onClick={(event) => {
+                  if (tableFor == 'in-categorization') {
+                    if (event.target.id != 'input_' + index) {
+                      document.querySelector('#input_' + index).click();
+                    }
+                  } else if (tableFor == 'uncategorized') {
+                    handleClickRow(event.target);
+                  }
+                }}
+              >
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                  {tableFor == 'in-categorization' && (
+                    <Input
+                      className="mr-1"
+                      type="checkbox"
+                      id={'input_' + index}
+                      onChange={(event) => handleClickRow(dataItem, event)}
+                    ></Input>
+                  )}
+                  <ContactInfo
+                    data={{
+                      name: dataItem.first_name + ' ' + dataItem.last_name,
+                      email: dataItem.email,
+                      image: dataItem.profile_image_path,
+                    }}
+                  />
+                  {/* {(contact.type != null || contact.status != null) && (
+                    <div className="flex items-center mt-3 type-and-status">
+                      {contact.type != null && (
+                        <div className="min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center border border-gray3">
+                          {getContactTypeByTypeId(contact.type)}
+                        </div>
+                      )}
+                      {contact.status != null && (
+                        <div
+                          className={` min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 bg-purple1 rounded-xl mr-3 flex items-center border border-purple3`}
+                        >
+                          {getContactStatusByStatusId(contact.status)}
+                        </div>
+                      )}
+                    </div>
+                  )} */}
+                </td>
+                {tableFor != 'in-categorization' && (
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <div className="text-gray7 font-medium">
+                      {dataItem?.import_source}
+                    </div>
+                    <div className="text-gray-500 font-medium">
+                      {formatDateMDY(dataItem?.created_at)}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+          </>) : 
+          <div className="flex justify-center items-center">
+            <div className="text-gray7 my-4 text-base font-normal">
+              No result has been found!
+            </div>
+          </div>
+        }
       </>
     );
   };
@@ -961,7 +979,7 @@ const Table = ({
                               role="tooltip"
                               className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                             >
-                              See Campaigns
+                              See Campaign
                             </div>
                           </div>
                           <div

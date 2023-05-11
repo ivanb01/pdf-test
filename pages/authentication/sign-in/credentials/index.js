@@ -3,6 +3,7 @@ import Text from 'components/shared/text';
 import Input from 'components/shared/input';
 import Link from 'components/Link';
 import Button from 'components/shared/button';
+import GoogleButton from 'components/shared/button/google-button';
 import Authentication from 'components/Authentication';
 import { useRouter } from 'next/router';
 import facebookIcon from 'public/images/facebook.svg';
@@ -316,12 +317,11 @@ const SignIn = () => {
             </Link>
           </div>  */}
 
-          <Text
+          {/* <Text
             p
             className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2"
           >
-            {/* Or continue with */}
-            Sign in with
+            Or continue with
           </Text>
           <div className="flex items-center justify-between mb-6">
             <Button
@@ -333,7 +333,12 @@ const SignIn = () => {
               social={twitterIcon}
               className="pointer-events-none mr-2 opacity-0"
             />
-          </div>
+          </div> */}
+          <GoogleButton
+            onClick={signInWithGoogle}
+            label='Sign in with Google'
+          />
+
         </div>
       )}
     </Authentication>

@@ -23,7 +23,8 @@ export default function Notes({ contactId }) {
   const [formType, setFormType] = useState('Add');
   const [noteId, setNoteId] = useState(0);
   const [notes, setNotes] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [notesOriginal, setNotesOriginal] = useState(null);
+  // const [searchTerm, setSearchTerm] = useState('');
   const [fetchRequired, setFetchRequired] = useState({});
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -142,11 +143,13 @@ export default function Notes({ contactId }) {
 
   const fetchContactNotes = async () => {
     try {
-      const { data } = await contactServices.getContactNotes(contactId, {
-        search_term: searchTerm,
-      });
+      // const { data } = await contactServices.getContactNotes(contactId, {
+      //   search_term: searchTerm,
+      // });
+      const { data } = await contactServices.getContactNotes(contactId);
       console.log('all notes', contactId, data?.data);
       setNotes(data?.data);
+      setNotesOriginal(data?.data);
     } catch (error) {
       console.log(error);
     }
@@ -154,12 +157,25 @@ export default function Notes({ contactId }) {
 
   useEffect(() => {
     fetchContactNotes();
-  }, [fetchRequired, searchTerm, contactId]);
+  }, [fetchRequired, contactId]);
+
+  const onSearch = (term) => {
+    const trimmedTerm = term.replace(/\s+/g, '').toLowerCase();
+    const filteredArray = notesOriginal.filter((note) => {
+      const title = note?.title.toLowerCase();
+      const description = note?.description.toLowerCase();
+      return (
+        title.includes(trimmedTerm) ||
+        description.includes(trimmedTerm)
+      )
+    })
+    setNotes(filteredArray);
+  }
 
   return (
     <>
       <div className="details-tabs-fixed-height overflow-y-scroll">
-        {notes && (notes.length == 0 && !searchTerm ? (
+        {notesOriginal && (notesOriginal.length == 0 ? (
           <div className="h-full">
             <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
               <Image src={noNotes}></Image>
@@ -185,8 +201,9 @@ export default function Notes({ contactId }) {
                 <Search
                   placeholder="Search"
                   className="w-[100%] mr-6"
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  value={searchTerm}
+                  // onChange={(event) => setSearchTerm(event.target.value)}
+                  onInput={(event) => onSearch(event.target.value)}
+                  // value={searchTerm}
                 />
               </div>
               <Button

@@ -58,10 +58,13 @@ const GoogleContactsImportSummary = ({data}) => {
                     <div className={`p-6 border-r border-gray2 ${ data?.invalid_contacts &&  data?.invalid_contacts_count > 1 ? 'w-1/2': 'w-full'}`}>
                         <GlobalAlert
                             title={`${data?.importable_new_contacts_count} Contact${data?.importable_new_contacts_count > 1 ? 's' : ''} imported successfully`}
-                            message="These contacts were able to be imported succesfully in the CRM."
+                            message={`${data?.importable_new_contacts_count > 1 ? 
+                                'These contacts were successfully imported.' 
+                                : 'This contact was successfully imported.'} Your next step is to sort them in the uncategorized contacts section.`}
                             type="success"
                             rounded
                         />
+                        
                         <Search
                             placeholder="Search Contact"
                             className="max-w-[300px] py-6"
@@ -83,7 +86,9 @@ const GoogleContactsImportSummary = ({data}) => {
                     <div className="p-6 w-1/2">
                         <GlobalAlert
                             title={`${data?.invalid_contacts_count} Contact${data?.invalid_contacts_count > 1 ? 's were' : ' was'} unable to be imported`}
-                            message={`${data?.invalid_contacts_count > 1 ? 'These contacts were' : 'This contact was'} not able to be imported due to the reason written in ${data?.invalid_contacts_count > 1 ? 'each of them.' : 'it.'}`}
+                            message={`${data?.invalid_contacts_count > 1 ? 
+                                'These contacts were unable to be imported.'
+                                : 'This contact was unable to be imported.'} Fix the error message below then try importing again.`}
                             type="error"
                             rounded
                         />
@@ -93,7 +98,7 @@ const GoogleContactsImportSummary = ({data}) => {
                             onInput={(event) => handleSearch2(event.target.value)}
                             value={searchTermNotImported}
                         />
-                        <div className="border border-gray2 rounded " >
+                        <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
                             <SimpleBar autoHide={true} style={{ maxHeight: '100%' }} >
                                 <Table
                                 tableFor="import-google-contacts-failed"

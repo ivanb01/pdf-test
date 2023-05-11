@@ -34,7 +34,6 @@ const tabs = [
   {
     title: 'LAST COMMUNICATION',
     content: Object.keys(filtersForLastCommunicationDate),
-    // value: 'created_at',
     value: 'last_communication_date',
     onlyOneValue: true,
   },
@@ -45,8 +44,8 @@ const tabs = [
   },
   {
     title: 'CAMPAIGN',
-    content: ['Assigned Professionals', 'Unassigned Professionals'],
-    value: 'campaign',
+    content: ['In Campaign', 'Not In Campaign'],
+    value: 'is_in_campaign',
   },
   {
     title: 'TAGS',
@@ -54,6 +53,12 @@ const tabs = [
     value: 'tags',
   },
 ];
+
+const campaignFilterMeaning = {
+  'In Campaign': true,
+  'Not In Campaign': false,
+};
+
 const buttons = [
   {
     id: 0,
@@ -107,7 +112,7 @@ const Professionals = ({
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      if (key == 'created_at') {
+      if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(
             contact[key],
@@ -116,6 +121,9 @@ const Professionals = ({
             contact.status_2
           )
         );
+      } else if (key == 'is_in_campaign') {
+        let booleanFilter = filters[key].map(filter=>campaignFilterMeaning[filter])
+        contactsState = contactsState.filter(contact => booleanFilter.includes(contact[key]))
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
@@ -237,8 +245,12 @@ const Professionals = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {contacts.length}{' '}
-                  {contacts.length == 1 ? 'result' : 'results'} for:
+                  {
+                  contacts.filter(contact => 
+                    contact?.status_1.toLowerCase() === professionalsStatuses[openedSubtab].statusMainTitle.toLowerCase()).length
+
+                  }
+                  {contacts.length == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
