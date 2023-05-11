@@ -46,10 +46,10 @@ const CategorizePage = ({
     let contact = uncategorizedInitialState.contacts.find(
       (element) => element.id === contactToUndo
     );
+    setCategorizedInThisSession(
+      categorizedInThisSession.filter((el) => el.id != contactToUndo)
+    );
     bulkUpdateContacts({ contacts: [contact] }).then(() => {
-      setCategorizedInThisSession(
-        categorizedInThisSession.filter((el) => el.id != contactToUndo)
-      );
       let contactInitial = uncategorizedCopy.find(
         (element) => element.id === contactToUndo
       );
@@ -252,7 +252,9 @@ const CategorizePage = ({
               <div className="absolute -left-40 bottom-1">
                 <Image src={noContactsSelectedArrow}></Image>
               </div>
-              <span><strong>Select a contact</strong> to start the categorization</span>
+              <span>
+                <strong>Select a contact</strong> to start the categorization
+              </span>
             </Text>
           </div>
         )}
