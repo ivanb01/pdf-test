@@ -72,7 +72,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
     {
       title: 'CAMPAIGN',
-      content: ['Assigned Clients', 'Unassigned Clients'],
+      content: ['In Campain', 'Not In Campaign'],
       value: 'is_in_campaign',
     },
     {
@@ -82,8 +82,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
   ];
   const campaignFilterMeaning = {
-    'Assigned Clients': true,
-    'Unassigned Clients': false,
+    'In Campain': true,
+    'Not In Campaign': false,
   };
 
   // useEffect(() => {
