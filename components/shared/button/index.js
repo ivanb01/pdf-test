@@ -154,12 +154,15 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
         className={`${className} ${
-          disabled && 'opacity-50'
+          disabled && 'bg-[#ebebeb] text-[#a3a3a3]'
         } flex relative items-center justify-center text-base font-medium text-white min-h-[70px] p-0 px-9 w-full text-center rounded-lg`}
       >
         {children ? children : label}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <ChevronRightIcon className="text-white" height={20} />
+          <ChevronRightIcon
+            className={disabled ? 'text-[#a3a3a3]' : 'text-white'}
+            height={20}
+          />
         </div>
       </button>
     );
