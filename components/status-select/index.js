@@ -18,12 +18,22 @@ const StatusSelect = ({
           {label}
         </Text>
       )}
-      <div className={`grid grid-cols-4 gap-4 sm:grid-cols-4 ${className}`}>
+      <div className={`flex ${className}`}>
         {statuses.map((status, index) => {
           const color = status.color;
           let mainStatusId = status.id;
+          let width = 0;
+          if (
+            status.statusMainTitle == 'In The Funnel' ||
+            status.statusMainTitle == 'Closed'
+          ) {
+            width = 40;
+          } else {
+            width = 20;
+          }
+
           return (
-            <div key={status.id}>
+            <div key={status.id} style={{ width: `${width}%` }}>
               <Text
                 className={`text-gray3 pb-2 ${color} border-b-4`}
                 chipText
@@ -34,17 +44,19 @@ const StatusSelect = ({
               <div className="chips mt-4 ">
                 {status.statuses.map((status) => {
                   return (
-                    <Chip
-                      label={status.name}
-                      key={status.id}
-                      className="mb-4"
-                      selectedStatus={
-                        selectedStatus == status.id ? true : false
-                      }
-                      onClick={() => {
-                        setSelectedStatus(status.id);
-                      }}
-                    />
+                    <div className=" block">
+                      <Chip
+                        label={status.name}
+                        key={status.id}
+                        className="mb-4"
+                        selectedStatus={
+                          selectedStatus == status.id ? true : false
+                        }
+                        onClick={() => {
+                          setSelectedStatus(status.id);
+                        }}
+                      />
+                    </div>
                   );
                 })}
               </div>
