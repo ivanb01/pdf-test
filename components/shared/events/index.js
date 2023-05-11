@@ -82,7 +82,9 @@ export default function Events({
                         {event.status && <EventStatus status={event.status} /> }
                         <div className="ml-2 text-gray4">
                           {
-                            isValidDate(event.execute_on) ? formatDateLT(event.execute_on) : event.execute_on
+                            isValidDate(event.execute_on) ? formatDateLT(event.execute_on) : (
+                              event.execute_on.includes('After') ? `${parseInt(event.execute_on.replace(/[^0-9\.]/g, ''))} days after added in Campaign` : event.execute_on
+                            )
                           }
                         </div>
                       </div>
