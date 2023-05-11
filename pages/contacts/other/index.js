@@ -30,6 +30,7 @@ const index = () => {
       const contactsFamilyFriends = contacts.filter((contact) => contact.category_id === 13 || contact.category_id === 14)
       const contactsUnknown = contacts.filter((contact) => contact.category_id === 2)
       
+      dispatch(setContacts(data.data));
       setFamilyAndFriends(contactsFamilyFriends);
       setUnknown(contactsUnknown);
       setActualContact(contactsFamilyFriends);
