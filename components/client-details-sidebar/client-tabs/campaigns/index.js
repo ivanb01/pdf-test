@@ -247,7 +247,7 @@ export default function Campaigns({
                       <CalendarIcon className="text-gray4" height={20} />
                       <Text p className="text-gray4 ml-1">
                         {
-                          previewEventDate.includes('After') ? `${parseInt(previewEventDate.replace(/[^0-9\.]/g, ''))} days after added in Campaign` : previewEventDate
+                          previewEventDate?.includes('After') ? `${parseInt(previewEventDate.replace(/[^0-9\.]/g, ''))} days after added in Campaign` : previewEventDate
                         }
                       </Text>
                     </>
