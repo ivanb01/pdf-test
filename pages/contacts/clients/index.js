@@ -33,13 +33,19 @@ const index = () => {
 
   const searchClients = (term) => {
     let filteredArray = searchContacts(contactsCopy.data, term);
+    console.log('filteredarray', filteredArray);
     dispatch(setContacts(filteredArray));
-    console.log(filteredArray, contacts);
   };
 
   useEffect(() => {
     setLoading(true);
   }, [openedTab]);
+
+  useEffect(() => {
+    getContacts('4,5,6,7').then((data) => {
+      setContactsCopy(data.data);
+    });
+  }, [contacts]);
 
   const fetchClients = () => {
     setLoading(true);
