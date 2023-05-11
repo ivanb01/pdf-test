@@ -324,7 +324,7 @@ const Campaigns = () => {
                 onClick={() => Router.push('/campaigns/client-campaigns')}
               />
             </div>
-            <div className="relative border border-gray2 p-4 rounded-lg bg-white min-h-[200px]">
+            <div className="relative border border-gray2 p-4 rounded-lg bg-white min-h-[425px]">
               {loadingStats ? (
                 <Loader />
               ) : (

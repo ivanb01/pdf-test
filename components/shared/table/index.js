@@ -222,12 +222,12 @@ const Table = ({
                 </div>
               </th>
             ))}
-            <th
+            {/* <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
             >
               Assigned On
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -267,11 +267,11 @@ const Table = ({
                   </td>
                 )
               )}
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7">
                   {formatDateMDY(event?.event_updated_at)}
                 </div>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
