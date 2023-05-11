@@ -44,7 +44,7 @@ const tabs = [
   },
   {
     title: 'CAMPAIGN',
-    content: ['Assigned Professionals', 'Unassigned Professionals'],
+    content: ['In Campaign', 'Not In Campaign'],
     value: 'is_in_campaign',
   },
   {
@@ -55,8 +55,8 @@ const tabs = [
 ];
 
 const campaignFilterMeaning = {
-  'Assigned Professionals': true,
-  'Unassigned Professionals': false,
+  'In Campaign': true,
+  'Not In Campaign': false,
 };
 
 const buttons = [
