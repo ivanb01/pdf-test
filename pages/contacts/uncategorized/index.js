@@ -70,7 +70,7 @@ const index = () => {
 
   const handleFetchUncategorized = () => {
     setLoading(true);
-    getContacts('1,2,3,').then((data) => {
+    getContacts('1,2,').then((data) => {
       setUncategorizedContactsOriginal(data.data);
       dispatch(setContacts(data.data));
       setLoading(false);
