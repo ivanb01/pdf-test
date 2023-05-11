@@ -101,7 +101,7 @@ const MainMenu = ({
         />
         {showUncategorizedButton() && (
           <Button
-            label="Start Categorizing Contacts"
+            label="Categorize Contacts"
             secondary
             className="mr-4"
             onClick={() =>
