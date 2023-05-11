@@ -33,8 +33,7 @@ const index = () => {
 
   const searchClients = (term) => {
     let filteredArray = searchContacts(contactsCopy.data, term);
-    console.log('filteredarray', filteredArray);
-    dispatch(setContacts(filteredArray));
+    dispatch(updateContacts(filteredArray.data));
   };
 
   useEffect(() => {
