@@ -86,7 +86,7 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedContacts?.length ? (
+        {uncategorizedCopy?.length ? (
           <>
             <div
               className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}
@@ -177,7 +177,7 @@ const Uncategorized = ({
                 <Text h3 className="text-gray7 text-xl">
                   {openedSubtab == 0 ? 'New Records' : 'Unknown'}
                 </Text>
-                {uncategorizedContacts?.length > 0 && (
+                {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">
                     <Search
                       placeholder="Search"

@@ -12,23 +12,27 @@ import Button from 'components/shared/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { searchContacts } from 'global/functions';
 
 const index = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [familyAndFriends, setFamilyAndFriends] = useState(null);
   const [unknown, setUnknown] = useState(null);
+  const [actualContact, setActualContact] = useState(null);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   const fetchOther = () => {
     setLoading(true);
-    getContacts('13,14').then((data) => {
-      setFamilyAndFriends(data.data.data);
-      setLoading(false);
-    });
-    getContacts('2,').then((data) => {
-      setUnknown(data.data.data);
+    getContacts('2,13,14').then((data) => {
+      const contacts = data?.data?.data;
+      const contactsFamilyFriends = contacts.filter((contact) => contact.category_id === 13 || contact.category_id === 14)
+      const contactsUnknown = contacts.filter((contact) => contact.category_id === 2)
+      
+      setFamilyAndFriends(contactsFamilyFriends);
+      setUnknown(contactsUnknown);
+      setActualContact(contactsFamilyFriends);
       setLoading(false);
     });
   };
@@ -43,8 +47,14 @@ const index = () => {
     setLoading(true);
   }, [openedTab]);
 
-  const onSearch = (term) => {//to implement
-    console.log(term);
+  useEffect(() => {
+    openedSubtab === 0 ? setActualContact(familyAndFriends) : setActualContact(unknown)
+  }, [openedSubtab]);
+
+  const onSearch = (term) => {
+    const contactsCopy = openedSubtab === 0 ? familyAndFriends : unknown;
+    const filteredArray = searchContacts(contactsCopy, term);
+    setActualContact(filteredArray?.data);
   }
 
   return (
@@ -80,7 +90,7 @@ const index = () => {
                 <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
                   <Table
                     tableFor="other"
-                    data={openedSubtab == 0 ? familyAndFriends : unknown}
+                    data={actualContact}
                   />
                 </SimpleBar>
               </div>
@@ -101,7 +111,6 @@ const index = () => {
               : 'You have no contacts categorized as unknown.'}
           </Text>
         </div>
-        // <div>Empty</div>
       )}
     </Layout>
   );
