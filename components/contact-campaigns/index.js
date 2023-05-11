@@ -190,10 +190,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
         text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
         onBackClick={() => router.push('/campaigns')}
       />
-      <div
-        className="border-t border-gray2 flex"
-        style={{ height: 'calc(100vh - 146px) !important;' }}
-      >
+      <div className="border-t border-gray2 flex contact-campaigns-fixed-height">
         <div className="h-auto border-r border-gray2">
           <ContactCampaignsSidebar
             tabs={campaigns}
