@@ -139,7 +139,7 @@ const Button = ({
           active
             ? 'bg-lightBlue1 text-lightBlue5 border-lightBlue3'
             : 'bg-gray1'
-        }  border transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
+        } border transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
         onClick={onClick}
       >
         {children ? children : label}
@@ -151,8 +151,11 @@ const Button = ({
     return (
       <button
         type="button"
+        disabled={disabled}
         onClick={onClick}
-        className={`${className} flex relative items-center justify-center text-base font-medium text-white min-h-[70px] p-0 px-9 w-full text-center rounded-lg`}
+        className={`${className} ${
+          disabled && 'opacity-50'
+        } flex relative items-center justify-center text-base font-medium text-white min-h-[70px] p-0 px-9 w-full text-center rounded-lg`}
       >
         {children ? children : label}
         <div className="absolute right-2 top-1/2 -translate-y-1/2">

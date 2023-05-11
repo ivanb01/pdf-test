@@ -311,17 +311,18 @@ const Campaigns = () => {
             <div className="flex mb-6">
               <Button
                 bigButton
-                label="Professional Campaigns"
+                label="Client Campaigns"
+                className="bg-blue1 mr-6"
+                onClick={() => Router.push('/campaigns/client-campaigns')}
+              />
+              <Button
+                bigButton
+                label="Professional Campaigns (coming soon)"
+                disabled
                 className="bg-lightBlue4"
                 onClick={() =>
                   Router.push('/campaigns/professionals-campaigns')
                 }
-              />
-              <Button
-                bigButton
-                label="Client Campaigns"
-                className="bg-blue1 ml-6"
-                onClick={() => Router.push('/campaigns/client-campaigns')}
               />
             </div>
             <div className="relative border border-gray2 p-4 rounded-lg bg-white min-h-[425px]">
