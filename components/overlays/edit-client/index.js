@@ -53,7 +53,8 @@ const EditContactOverlay = ({
       // .required('Field can not be empty')
       .matches(phoneNumberRules, {
         message: 'Not a proper format phone number',
-      }),
+      })
+      .nullable(),
   });
 
 
@@ -63,7 +64,7 @@ const EditContactOverlay = ({
       first_name: client?.first_name,
       last_name: client?.last_name,
       email: client?.email,
-      phone_number: client?.phone_number ? client?.phone_number : '',
+      phone_number: client?.phone_number ? client?.phone_number : null,
       import_source: client?.import_source,
       tags: client?.tags,
     },

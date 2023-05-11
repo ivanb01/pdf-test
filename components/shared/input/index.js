@@ -177,7 +177,7 @@ const Input = ({
     if(val) {
       onChange(revertPhoneNumberInputFormat(val));
     } else {
-      onChange('');
+      onChange(null);
     }
   }
 
