@@ -22,6 +22,7 @@ const Dropdown = ({
   dropdownValue,
   handleChange,
   handleDropdownClosed,
+  hideInput,
   ...props
 }) => {
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
@@ -50,26 +51,7 @@ const Dropdown = ({
               </Listbox.Label>
             )}
             <div className="relative">
-              {iconLabel ? (
-                <Listbox.Button className={`flex`}>{iconLabel}</Listbox.Button>
-              ) : (
-                <Listbox.Button
-                  className={`${
-                    selectClasses ? selectClasses : 'bg-white border rounded-md'
-                  }  relative w-full  border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
-                >
-                  <span className="block truncate capitalize">
-                    {!dropdownValue && placeHolder && placeHolder}
-                    {dropdownValue && dropdownValue.name}
-                  </span>
-                  <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <ChevronDownIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </Listbox.Button>
-              )}
+
 
               <Transition
                 show={open}

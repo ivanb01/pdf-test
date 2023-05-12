@@ -27,7 +27,7 @@ import { formatDateAgo, getInitials } from 'global/functions';
 import toast from 'react-hot-toast';
 import AddActivity from 'components/overlays/add-activity';
 import List from '@mui/icons-material/List';
-
+import DropdownNoInput from 'components/shared/dropdown/dropdownNoInput';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -133,6 +133,21 @@ export default function ContactCard({
   //   };
   // }, []);
 
+  // useEffect(() => {
+  //   const dropdownMenu = document.querySelector('.custom-dropdown-menu');
+
+  //   document.addEventListener('click', function (event) {
+  //     if (dropdownMenu) {
+  //       const isClickInsideDropdown = dropdownMenu.contains(event.target);
+  //       console.log('isClickInsideDropdown', isClickInsideDropdown);
+  //       if (!isClickInsideDropdown) {
+  //         console.log('click outside dropdown');
+  //         setDropdownOpened(false);
+  //       }
+  //     }
+  //   });
+  // }, []);
+
   return (
     <>
       <div
@@ -141,6 +156,17 @@ export default function ContactCard({
           dropdownOpened && 'border-t-4'
         } relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}
       >
+        {dropdownOpened && (
+          <DropdownNoInput
+            selectedOption={contact?.status_2}
+            options={allStatusesQuickEdit[categoryType]}
+            handleSelect={(item) => {
+              // console.log(item);
+              changeStatus(item.id);
+              setDropdownOpened(false);
+            }}
+          />
+        )}
         <div
           className="p-4 cursor-pointer"
           onClick={() => handleCardClick(contact)}
@@ -317,7 +343,8 @@ export default function ContactCard({
               onClick={() => setDropdownOpened(!dropdownOpened)}
             >
               {/* <Category className="text-gray3 w-4 h-4" /> */}
-              <SimpleBarDropdown
+              {/* <SimpleBarDropdown
+              hideInput
                 options={allStatusesQuickEdit[categoryType]}
                 activeIcon={false}
                 activeClasses="bg-lightBlue1"
@@ -333,7 +360,11 @@ export default function ContactCard({
                 }
                 dropdownValue={contact?.status_2}
                 handleDropdownClosed={(item) => setDropdownOpened(item)}
-              ></SimpleBarDropdown>
+              ></SimpleBarDropdown> */}
+              <Category
+                id={'change-status-icon-' + contact.id}
+                className="text-gray3 w-4 h-4"
+              />
               <div
                 id={'tooltip-change-status-' + contact.id}
                 role="tooltip"
