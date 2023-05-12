@@ -328,7 +328,7 @@ const Table = ({
           </>) : 
           <div className="bg-white flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
-              No result has been found!
+              No results have been found!
             </div>
           </div>
         }
@@ -431,7 +431,7 @@ const Table = ({
           </>) : 
           <div className="flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
-              No result has been found!
+              No results have been found!
             </div>
           </div>
         }

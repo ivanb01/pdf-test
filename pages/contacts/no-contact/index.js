@@ -19,6 +19,7 @@ const NoContactPage = () => {
     const [googleContactResponse, setGoogleContactResponse] = useState(null);
     const [stateAfterImport, setStateAfterImport] = useState(null);
     const [motionImage, setMotionImage] = useState(false);
+    const [emptyModal, setEmptyModal] = useState(false);
     const [errorImporting, setErorrImporting] = useState('');
 
     const handleCloseImportGoogleContactsModal = () => {
@@ -69,11 +70,15 @@ const NoContactPage = () => {
             const { data } = await getGoogleAuthCallback(queryParams);
             console.log('google auth callback', data);
             if(!data.error) {
+                setEmptyModal(false);
                 setShowImportGoogleContactsModal(true);
                 setModalList(list3);
                 setMotionImage(true);
                 setTimeout(()=>handleImportGoogleContact(false), 4000);
                 // handleImportGoogleContact();
+            } else {
+                setShowImportGoogleContactsModal(false);
+                setEmptyModal(false);
             }
         } catch (error) {
             setShowImportGoogleContactsModal(false);
@@ -82,6 +87,7 @@ const NoContactPage = () => {
     }
 
     useEffect(() => {
+
         const queryParams = {}
         for (const [key, value] of Object.entries(router.query)) {
             queryParams[key] = value
@@ -89,7 +95,10 @@ const NoContactPage = () => {
         if (Object.keys(queryParams).length > 0) {
             if(queryParams?.start_importing){
                 handleImportGoogleContact();
-            } else {
+            // } else {
+            } else if(queryParams?.code){
+                setShowImportGoogleContactsModal(true);
+                setEmptyModal(true);
                 handleGoogleAuthCallback(queryParams);
             }
         }
@@ -133,7 +142,7 @@ const NoContactPage = () => {
         <>
             <MainMenu />
             {
-                googleContactResponse?.db_insertion==='Successful' ?
+                googleContactResponse?.db_insertion === 'Successful' || googleContactResponse?.db_insertion === 'Not needed' ?
                     <div className="w-full flex items-center justify-center">
                         <div className="border-t border-gray2 flex  w-full">
                             <div className="w-full relative">
@@ -166,6 +175,7 @@ const NoContactPage = () => {
                         list={modalList}
                         stateAfterImport={stateAfterImport}
                         motionImage={motionImage}
+                        emptyModal={emptyModal}
                     />
                 )}
             
