@@ -6,6 +6,7 @@ const global = createSlice({
     openedTab: 0,
     openedSubtab: 0,
     expandedMenu: true,
+    refetchContacts: false,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user')
         ? JSON.parse(localStorage.getItem('user'))
@@ -16,6 +17,9 @@ const global = createSlice({
         : false,
   },
   reducers: {
+    setRefetchContacts(state, action) {
+      state.refetchContacts = action.payload;
+    },
     setOpenedTab(state, action) {
       state.openedTab = action.payload;
     },
@@ -35,6 +39,7 @@ const global = createSlice({
 });
 
 export const {
+  setRefetchContacts,
   setOpenedTab,
   setOpenedSubtab,
   setExpandedMenu,
