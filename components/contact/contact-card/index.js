@@ -26,6 +26,8 @@ import { setContacts, updateContactStatus } from 'store/contacts/slice';
 import { formatDateAgo, getInitials } from 'global/functions';
 import toast from 'react-hot-toast';
 import AddActivity from 'components/overlays/add-activity';
+import List from '@mui/icons-material/List';
+
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -275,7 +277,7 @@ export default function ContactCard({
               }}
               onClick={() => handleAddActivity(contact)}
             >
-              <Campaign
+              <List
                 id={'see-campaigns-icon-' + contact.id}
                 className="text-gray3 w-4 h-4"
               />
