@@ -3,7 +3,7 @@ import GlobalAlert from 'components/shared/alert/global-alert';
 import Search from 'components/shared/input/search';
 import Table from 'components/shared/table';
 import Text from 'components/shared/text';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from 'components/shared/button';
 
@@ -11,15 +11,16 @@ import Button from 'components/shared/button';
 const GoogleContactsImportSummary = ({data}) => {
     const router = useRouter();
 
+    const [allContacts, setAllContacts] = useState([]);
     const [searchTermImported, setSearchTermImported] = useState('');
     const [searchTermNotImported, setSearchTermNotImported] = useState('');
-    const [importedContacts, setImportedContacts] = useState(data?.importable_new_contacts);
-    const [notImportedContacts, setNotImportedContacts] = useState(data?.invalid_contacts);
+    const [importedContacts, setImportedContacts] = useState([]);
+    const [notImportedContacts, setNotImportedContacts] = useState([]);
 
     const handleSearch1 = (term) => {
         setSearchTermImported(term);
         const trimmedSearchValue = term.replace(/\s+/g, '').toLowerCase();
-        let filteredArray = data?.importable_new_contacts.filter((item) => {
+        let filteredArray = allContacts?.importable_new_contacts.filter((item) => {
             const fullName = `${item.first_name}${item.last_name}`.toLowerCase();
             const fullEmail = `${item.email}`.toLowerCase();
             return (
@@ -33,15 +34,25 @@ const GoogleContactsImportSummary = ({data}) => {
     const handleSearch2 = (term) => {
         setSearchTermNotImported(term);
         const trimmedSearchValue = term.replace(/\s+/g, '').toLowerCase();
-        let filteredArray = data?.invalid_contacts.filter((item) => {
+        let filteredArray = [...allContacts?.invalid_contacts, ...allContacts?.existing_contacts].filter((item) => {
             const invalidContactDetails = `${item.details}`.toLowerCase();
+            const fullName = `${item.first_name}${item.last_name}`.toLowerCase();
+            const fullEmail = `${item.email}`.toLowerCase();
             return (
-                invalidContactDetails.includes(trimmedSearchValue)
+                invalidContactDetails.includes(trimmedSearchValue) ||
+                fullName.includes(trimmedSearchValue) ||
+                fullEmail.includes(trimmedSearchValue) 
             )
         });
         setNotImportedContacts(filteredArray);
         
     }
+
+    useEffect(()=>{
+        setAllContacts(data);
+        setImportedContacts(data?.importable_new_contacts);
+        setNotImportedContacts([...data?.invalid_contacts, ...data?.existing_contacts]);
+    },[data])
 
     return (
         <>
@@ -55,12 +66,18 @@ const GoogleContactsImportSummary = ({data}) => {
 
                 {/* <div className="flex w-full border-y border-gray2" style={{ height: 'calc(100vh - 146px)' }}> */}
                 <div className="flex w-full border-y border-gray2 relative pb-[72px]">
-                    <div className={`p-6 border-r border-gray2 ${ data?.invalid_contacts &&  data?.invalid_contacts_count > 1 ? 'w-1/2': 'w-full'}`}>
+                    <div className={`p-6 border-r border-gray2 ${( allContacts?.invalid_contacts &&  allContacts?.invalid_contacts_count >=1 )
+                        || ( allContacts?.existing_contacts &&  allContacts?.existing_contacts.length >= 1 ) ? 'w-1/2': 'w-full'}`}>
                         <GlobalAlert
-                            title={`${data?.importable_new_contacts_count} Contact${data?.importable_new_contacts_count > 1 ? 's' : ''} imported successfully`}
-                            message={`${data?.importable_new_contacts_count > 1 ? 
-                                'These contacts were successfully imported.' 
-                                : 'This contact was successfully imported.'} Your next step is to sort them in the uncategorized contacts section.`}
+                            title={`
+                                ${allContacts?.importable_new_contacts_count === 0 ? 'There are no contacts to be imported' : ''} 
+                                ${allContacts?.importable_new_contacts_count === 1 ? '1 Contact imported successfully' : ''} 
+                                ${allContacts?.importable_new_contacts_count > 1 ? `${allContacts?.importable_new_contacts_count} Contacts imported successfully` : ''} 
+                            `}
+                            message={`
+                                ${allContacts?.importable_new_contacts_count === 1 ? 'This contact was successfully imported. Your next step is to sort in the uncategorized contacts section.' : ''}
+                                ${allContacts?.importable_new_contacts_count > 1 ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.' : ''}
+                            `}
                             type="success"
                             rounded
                         />
@@ -76,19 +93,24 @@ const GoogleContactsImportSummary = ({data}) => {
                                 <Table
                                 tableFor="import-google-contacts-successful"
                                 data={importedContacts}
-                                // data={imports1}
+                                // allContacts={imports1}
                                 ></Table>
                             </SimpleBar>
                         </div>
                     </div>
                     {
-                    data?.invalid_contacts &&  data?.invalid_contacts_count > 1 &&
+                    (( allContacts?.invalid_contacts &&  allContacts?.invalid_contacts_count >= 1 ) ||
+                    ( allContacts?.existing_contacts &&  allContacts?.existing_contacts.length >= 1 )) &&
                     <div className="p-6 w-1/2">
                         <GlobalAlert
-                            title={`${data?.invalid_contacts_count} Contact${data?.invalid_contacts_count > 1 ? 's were' : ' was'} unable to be imported`}
-                            message={`${data?.invalid_contacts_count > 1 ? 
-                                'These contacts were unable to be imported.'
-                                : 'This contact was unable to be imported.'} Fix the error message below then try importing again.`}
+                            title={`
+                                ${allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length === 1 ? '1 Contact was unable to be imported' : ''} 
+                                ${allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length > 1 ? `${allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length} Contacts were unable to be imported` : ''} 
+                            `}
+                            message={`
+                                ${allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length === 1 ? 'This contact was unable to be imported. See the error message below.' : ''}
+                                ${allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length > 1 ? 'These contacts were unable to be imported. See the error message below.' : ''}
+                            `}
                             type="error"
                             rounded
                         />

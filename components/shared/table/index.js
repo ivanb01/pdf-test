@@ -328,7 +328,7 @@ const Table = ({
           </>) : 
           <div className="bg-white flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
-              No result has been found!
+              No results have been found!
             </div>
           </div>
         }
@@ -431,7 +431,7 @@ const Table = ({
           </>) : 
           <div className="flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
-              No result has been found!
+              No results have been found!
             </div>
           </div>
         }
@@ -1101,16 +1101,17 @@ const Table = ({
                   />
                 )}
               </td>
-              {dataItem.reason && (
+              {tableFor == 'import-google-contacts-failed' && (
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
                   <div className="flex items-center justify-center">
                     <Error className="h-5 w-5 text-red4 mr-2" />
                     <div className="text-gray7 font-medium">
-                      {dataItem.reason}
+                      {dataItem.reason || 'Contact exists in the system'}
                     </div>
                   </div>
                 </td>
               )}
+
             </tr>
           ))}
         </tbody>
