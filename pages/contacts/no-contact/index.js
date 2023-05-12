@@ -143,7 +143,8 @@ const NoContactPage = () => {
             <MainMenu />
             {
                 ( googleContactResponse?.db_insertion === 'Successful' ) ||
-                    ( googleContactResponse?.db_insertion === 'Not needed' && ( googleContactResponse?.importable_new_contacts_count > 0 || googleContactResponse?.invalid_contacts_count > 0 ) ) ?
+                    ( googleContactResponse?.db_insertion === 'Not needed' && 
+                        ( googleContactResponse?.importable_new_contacts_count > 0 || googleContactResponse?.invalid_contacts_count > 0 || googleContactResponse?.existing_contacts.length > 0 ) ) ?
                     <div className="w-full flex items-center justify-center">
                         <div className="border-t border-gray2 flex  w-full">
                             <div className="w-full relative">

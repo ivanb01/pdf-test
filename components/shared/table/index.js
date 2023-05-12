@@ -1101,16 +1101,17 @@ const Table = ({
                   />
                 )}
               </td>
-              {dataItem.reason && (
+              {tableFor == 'import-google-contacts-failed' && (
                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
                   <div className="flex items-center justify-center">
                     <Error className="h-5 w-5 text-red4 mr-2" />
                     <div className="text-gray7 font-medium">
-                      {dataItem.reason}
+                      {dataItem.reason || 'Contact exists in the system'}
                     </div>
                   </div>
                 </td>
               )}
+
             </tr>
           ))}
         </tbody>
