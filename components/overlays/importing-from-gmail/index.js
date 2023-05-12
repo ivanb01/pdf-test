@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from 'react';
 
-const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, motionImage, progress=5}) => {
+const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, motionImage, emptyModal}) => {
 
   const [loadingButton, setLoadingButton] = useState(false);
   const [mainTitle, setMainTitle] = useState(title);
@@ -37,6 +37,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
             <div className="mb-10 flex justify-center">
               {/* <Image src={img} alt="header-img" /> */}
               {
+                !emptyModal ?(
                 motionImage ? 
                   <lottie-player
                     src="https://assets8.lottiefiles.com/packages/lf20_o9df1rnx.json"
@@ -47,6 +48,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
                     autoplay
                   ></lottie-player>
                   : <Image src={img} alt="header-img" />
+                ) : <div className='h-[228px]'></div>
               }
             </div>
             
