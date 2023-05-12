@@ -26,6 +26,7 @@ import { sortDateAsc, formatDateMDY, formatDateLThour, isValidDate } from 'globa
 
 export default function Campaigns({
   contactId,
+  contact,
   handleFetchContactRequired
 }) {
   const [alert, setAlert] = useState(null);
@@ -160,7 +161,7 @@ export default function Campaigns({
 
   useEffect(() => {
     fetchContactCampaign();
-  }, [contactId, fetchRequired]);
+  }, [contactId, contact, fetchRequired]);
   return (
     <>
       {showAssignToCampaign && (
