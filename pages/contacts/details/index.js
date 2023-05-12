@@ -42,7 +42,7 @@ export default function Details() {
   const handleUnassignCampaignChange = (state) => () =>
     setOverlays({ unassignCampaign: state });
 
-  const localTabs = tabs(id, handleFetchContactRequired);
+  const localTabs = tabs(id, contact, handleFetchContactRequired);
 
   const fetchContact = async () => {
     try {

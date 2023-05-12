@@ -10,6 +10,7 @@ import NotesContent from './client-tabs/notes';
 
 export const tabs = (
   contactId,
+  contact,
   handleFetchContactRequired
 ) => [
   {
@@ -20,6 +21,7 @@ export const tabs = (
     content: (
       <CampaignsContent
         contactId={contactId}
+        contact={contact}
         handleFetchContactRequired={handleFetchContactRequired}
       />
     ),
