@@ -5,6 +5,8 @@ import StatusSelect from 'components/status-select';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import { contactCategoryOptions } from 'global/variables';
+import ChangeStatus from 'components/overlays/change-contact-status';
+import { unassignContactFromCampaign } from 'api/campaign';
 
 const UpdateCategoryType = ({
   handleClose,
@@ -18,6 +20,8 @@ const UpdateCategoryType = ({
   );
   const [selectedStatus, setSelectedStatus] = useState(contact?.status_id);
   const [loadingButton, setLoadingButton] = useState(false);
+
+  const [changeStatusModal, setChangeStatusModal] = useState(false);
 
   const editContact = async () => {
     setLoadingButton(true);
@@ -36,12 +40,34 @@ const UpdateCategoryType = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await editContact();
-    handleFetchContactRequired();
-    handleClose();
+    try {
+      if(contact?.is_in_campaign === 'assigned' && (contact?.status_id !== selectedStatus || contact?.category_id !== selectedContactType)) {
+        setChangeStatusModal(true);
+      } else {
+        await editContact();
+        handleFetchContactRequired();
+        handleClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const handleChangeStatusAndCampaign = async () => {
+    try {
+      await unassignContactFromCampaign(contact.campaign_id, contact.id);
+      await editContact();
+      handleFetchContactRequired();
+      handleClose();
+      setChangeStatusModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return (
+    <>
     <Overlay
       title="Edit Type"
       handleCloseOverlay={handleClose}
@@ -87,6 +113,14 @@ const UpdateCategoryType = ({
         </div>
       </div>
     </Overlay>
+
+    {changeStatusModal && (
+        <ChangeStatus
+          handleCloseOverlay={() => setChangeStatusModal(false)}
+          onSubmit={handleChangeStatusAndCampaign}
+        />
+    )}
+    </>
   );
 };
 

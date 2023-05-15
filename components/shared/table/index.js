@@ -46,6 +46,10 @@ import * as contactServices from 'api/contacts';
 import noClientCampaigns from 'public/images/no-client-campaigns.svg';
 import Link from 'components/Link';
 import { formatDateMDY } from 'global/functions';
+import List from '@mui/icons-material/List';
+import AddActivity from 'components/overlays/add-activity';
+import ChangeStatus from 'components/overlays/change-contact-status';
+import { unassignContactFromCampaign } from 'api/campaign';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -722,31 +726,75 @@ const Table = ({
       openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
-    const changeStatus = async (contact, status) => {
-      const statusId = status; // example status id to search for
-      const categoryStatuses =
-        categoryType === 'clients' ? clientStatuses : professionalsStatuses;
-      const foundStatus = categoryStatuses.find(
-        (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
-      );
-      const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-      console.log(foundStatus);
-      let statusName = foundStatus.statuses.find(
-        (foundstatus) => foundstatus.id == status
-      ).name;
 
-      dispatch(
-        updateContactStatus({
-          id: contact.id,
-          status_id: status,
-          status_2: statusMainTitle,
-        })
-      );
-      toast.success(
-        `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
-      );
+    const [addActivityPopup, setAddActivityPopup] = useState(false);
+    const handleAddActivity = (client) => {
+      setContactToModify(client);
+      setAddActivityPopup(true);
+    };
+
+    const [changeStatusModal, setChangeStatusModal] = useState(false);
+    const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
+    const [contactToModify, setContactToModify] = useState(null);
+
+    const handleChangeStatus = async (status, contact) => {
+      try {
+        if(contact?.is_in_campaign==="assigned" && contact?.status_id !== status) {
+          setStatusIdToUpdate(status);
+          setChangeStatusModal(true);
+          setContactToModify(contact);
+
+        } else {
+          await changeStatus(status, contact);
+          console.log('change status')
+
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleChangeStatusAndCampaign = async () => {
+      try {
+        await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
+        await changeStatus(statusIdToUpdate, contactToModify);
+        console.log('unassin then change status')
+
+        setChangeStatusModal(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const changeStatus = async (status, contact) => {
+
 
       try {
+        const statusId = status; // example status id to search for
+        const categoryStatuses =
+          categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+    
+        const foundStatus = categoryStatuses.find(
+          (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
+        );
+        const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
+        console.log('tesr', foundStatus);
+        let statusName = foundStatus.statuses.find(
+          (foundstatus) => foundstatus.id == status
+        ).name;
+    
+        dispatch(
+          updateContactStatus({
+            id: contact.id,
+            status_id: status,
+            status_2: statusName,
+          })
+        );
+        toast.success(
+          `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
+        );
+
+
         const res = await contactServices.updateContact(contact.id, {
           status_id: status,
         });
@@ -761,6 +809,10 @@ const Table = ({
         console.log(error);
       }
     };
+
+
+
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -931,55 +983,59 @@ const Table = ({
                             onMouseEnter={() => {
                               document
                                 .querySelector(
-                                  '#tooltip-see-campaigns-' + contact.id
+                                  '#tooltip-add-activity-' + contact.id
                                 )
                                 .classList.remove('invisible', 'opacity-0');
                               document
                                 .querySelector(
-                                  '#see-campaigns-icon-' + contact.id
+                                  '#add-activity-icon-' + contact.id
                                 )
                                 .classList.add('text-gray4');
                               document
                                 .querySelector(
-                                  '#see-campaigns-icon-' + contact.id
+                                  '#add-activity-icon-' + contact.id
                                 )
                                 .classList.remove('text-gray3');
                             }}
                             onMouseLeave={() => {
                               document
                                 .querySelector(
-                                  '#tooltip-see-campaigns-' + contact.id
+                                  '#tooltip-add-activity-' + contact.id
                                 )
                                 .classList.add('invisible', 'opacity-0');
                               document
                                 .querySelector(
-                                  '#see-campaigns-icon-' + contact.id
+                                  '#add-activity-icon-' + contact.id
                                 )
                                 .classList.add('text-gray3');
                               document
                                 .querySelector(
-                                  '#see-campaigns-icon-' + contact.id
+                                  '#add-activity-icon-' + contact.id
                                 )
                                 .classList.remove('text-gray4');
                             }}
+                            // onClick={(e) => {
+                            //   e.stopPropagation();
+                            //   router.push({
+                            //     pathname: '/contacts/details',
+                            //     query: { id: contact.id, campaigns: true },
+                            //   });
+                            // }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              router.push({
-                                pathname: '/contacts/details',
-                                query: { id: contact.id, campaigns: true },
-                              });
+                              handleAddActivity(contact)
                             }}
                           >
-                            <Campaign
-                              id={'see-campaigns-icon-' + contact.id}
+                            <List
+                              id={'add-activity-icon-' + contact.id}
                               className="text-gray3 w-4 h-4"
                             />
                             <div
-                              id={'tooltip-see-campaigns-' + contact.id}
+                              id={'tooltip-add-activity-' + contact.id}
                               role="tooltip"
                               className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                             >
-                              See Campaign
+                              Add Activity
                             </div>
                           </div>
                           <div
@@ -1029,7 +1085,7 @@ const Table = ({
                               activeClasses="bg-lightBlue1"
                               handleSelect={(item) => {
                                 // setDropdownVal(item)
-                                changeStatus(contact, item.id);
+                                handleChangeStatus(item.id, contact);
                               }}
                               iconLabel={
                                 <Category
@@ -1038,9 +1094,7 @@ const Table = ({
                                 />
                               }
                               dropdownValue={contact?.status_2}
-                              handleDropdownClosed={(item) =>
-                                console.log('testing', item)
-                              }
+                              handleDropdownClosed={(item) => console.log(item)}
                             ></SimpleBarDropdown>
                             <div
                               id={'tooltip-change-status-' + contact.id}
@@ -1060,6 +1114,21 @@ const Table = ({
             )
           )}
         </tbody>
+        {addActivityPopup && (
+          <AddActivity
+            client={contactToModify}
+            className="min-w-[550px]"
+            title={`Add Activity`}
+            setAddActivityPopup={setAddActivityPopup}
+            handleClose={() => setAddActivityPopup(false)}
+          />
+        )}
+        {changeStatusModal && (
+          <ChangeStatus
+            handleCloseOverlay={() => setChangeStatusModal(false)}
+            onSubmit={handleChangeStatusAndCampaign}
+          />
+        )}
       </>
     );
   };
