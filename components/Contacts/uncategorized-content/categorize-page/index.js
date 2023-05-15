@@ -291,8 +291,8 @@ const CategorizePage = ({
         className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end"
       >
         <Button
-          white
-          label="Exit from categorization view"
+          primary
+          label="Save & Exit"
           className="mr-4"
           onClick={() => handleStartCategorizing(false)}
         />

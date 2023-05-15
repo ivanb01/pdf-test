@@ -249,7 +249,11 @@ const Table = ({
                     email: dataItem.contact_email,
                     image: dataItem.profile_image_path,
                     assigned:
-                      dataItem.contact_campaign_status == 'assigned' ? 1 : 0,
+                      dataItem.contact_campaign_status == 'unassigned'
+                        ? 2
+                        : dataItem.contact_campaign_status == 'assigned'
+                        ? 1
+                        : 0,
                   }}
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
@@ -287,55 +291,56 @@ const Table = ({
       <>
         {data?.length ? (
           <>
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
-              >
-                Contact
-              </th>
-              <th
-                scope="col"
-                className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-              >
-                Added From
-              </th>
-            </tr>
-          </thead>
-          <tbody className=" bg-white">
-            {data.map((dataItem, index) => (
-              <tr
-                key={dataItem.id}
-                className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
-              >
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
-                  <ContactInfo
-                    data={{
-                      name: dataItem?.first_name + ' ' + dataItem?.last_name,
-                      email: dataItem?.email,
-                      image: dataItem?.profile_image_path,
-                    }}
-                  />
-                </td>
-                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                  <div className="text-gray7 font-medium">
-                    {dataItem?.import_source}
-                  </div>
-                  <div className="text-gray-500 font-medium">
-                    {formatDateMDY(dataItem?.created_at)}
-                  </div>
-                </td>
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+                >
+                  Contact
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                >
+                  Added From
+                </th>
               </tr>
-            ))}
-          </tbody>
-          </>) : 
+            </thead>
+            <tbody className=" bg-white">
+              {data.map((dataItem, index) => (
+                <tr
+                  key={dataItem.id}
+                  className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                >
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                    <ContactInfo
+                      data={{
+                        name: dataItem?.first_name + ' ' + dataItem?.last_name,
+                        email: dataItem?.email,
+                        image: dataItem?.profile_image_path,
+                      }}
+                    />
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <div className="text-gray7 font-medium">
+                      {dataItem?.import_source}
+                    </div>
+                    <div className="text-gray-500 font-medium">
+                      {formatDateMDY(dataItem?.created_at)}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </>
+        ) : (
           <div className="bg-white flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
               No results have been found!
             </div>
           </div>
-        }
+        )}
       </>
     );
   };
@@ -343,66 +348,66 @@ const Table = ({
     return (
       <>
         {data?.length ? (
-        <>
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
-              >
-                {tableFor == 'in-categorization' && (
-                  <Input
-                    className="mr-1"
-                    id="select_all"
-                    type="checkbox"
-                    onChange={handleSelectAll}
-                  />
-                )}
-                Contact
-              </th>
-              {tableFor != 'in-categorization' && (
+          <>
+            <thead className="bg-gray-50">
+              <tr>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
                 >
-                  Added From
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody className=" bg-white">
-            {data.map((dataItem, index) => (
-              <tr
-                key={dataItem.id}
-                id={'row_' + index}
-                className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
-                onClick={(event) => {
-                  if (tableFor == 'in-categorization') {
-                    if (event.target.id != 'input_' + index) {
-                      document.querySelector('#input_' + index).click();
-                    }
-                  } else if (tableFor == 'uncategorized') {
-                    handleClickRow(event.target);
-                  }
-                }}
-              >
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
                   {tableFor == 'in-categorization' && (
                     <Input
                       className="mr-1"
+                      id="select_all"
                       type="checkbox"
-                      id={'input_' + index}
-                      onChange={(event) => handleClickRow(dataItem, event)}
-                    ></Input>
+                      onChange={handleSelectAll}
+                    />
                   )}
-                  <ContactInfo
-                    data={{
-                      name: dataItem.first_name + ' ' + dataItem.last_name,
-                      email: dataItem.email,
-                      image: dataItem.profile_image_path,
-                    }}
-                  />
-                  {/* {(contact.type != null || contact.status != null) && (
+                  Contact
+                </th>
+                {tableFor != 'in-categorization' && (
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
+                    Added From
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody className=" bg-white">
+              {data.map((dataItem, index) => (
+                <tr
+                  key={dataItem.id}
+                  id={'row_' + index}
+                  className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                  onClick={(event) => {
+                    if (tableFor == 'in-categorization') {
+                      if (event.target.id != 'input_' + index) {
+                        document.querySelector('#input_' + index).click();
+                      }
+                    } else if (tableFor == 'uncategorized') {
+                      handleClickRow(event.target);
+                    }
+                  }}
+                >
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                    {tableFor == 'in-categorization' && (
+                      <Input
+                        className="mr-1"
+                        type="checkbox"
+                        id={'input_' + index}
+                        onChange={(event) => handleClickRow(dataItem, event)}
+                      ></Input>
+                    )}
+                    <ContactInfo
+                      data={{
+                        name: dataItem.first_name + ' ' + dataItem.last_name,
+                        email: dataItem.email,
+                        image: dataItem.profile_image_path,
+                      }}
+                    />
+                    {/* {(contact.type != null || contact.status != null) && (
                     <div className="flex items-center mt-3 type-and-status">
                       {contact.type != null && (
                         <div className="min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center border border-gray3">
@@ -418,27 +423,28 @@ const Table = ({
                       )}
                     </div>
                   )} */}
-                </td>
-                {tableFor != 'in-categorization' && (
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <div className="text-gray7 font-medium">
-                      {dataItem?.import_source}
-                    </div>
-                    <div className="text-gray-500 font-medium">
-                      {formatDateMDY(dataItem?.created_at)}
-                    </div>
                   </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-          </>) : 
+                  {tableFor != 'in-categorization' && (
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <div className="text-gray7 font-medium">
+                        {dataItem?.import_source}
+                      </div>
+                      <div className="text-gray-500 font-medium">
+                        {formatDateMDY(dataItem?.created_at)}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </>
+        ) : (
           <div className="flex justify-center items-center">
             <div className="text-gray7 my-4 text-base font-normal">
               No results have been found!
             </div>
           </div>
-        }
+        )}
       </>
     );
   };
@@ -739,15 +745,16 @@ const Table = ({
 
     const handleChangeStatus = async (status, contact) => {
       try {
-        if(contact?.is_in_campaign==="assigned" && contact?.status_id !== status) {
+        if (
+          contact?.is_in_campaign === 'assigned' &&
+          contact?.status_id !== status
+        ) {
           setStatusIdToUpdate(status);
           setChangeStatusModal(true);
           setContactToModify(contact);
-
         } else {
           await changeStatus(status, contact);
-          console.log('change status')
-
+          console.log('change status');
         }
       } catch (error) {
         console.log(error);
@@ -756,9 +763,12 @@ const Table = ({
 
     const handleChangeStatusAndCampaign = async () => {
       try {
-        await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
+        await unassignContactFromCampaign(
+          contactToModify.campaign_id,
+          contactToModify.id
+        );
         await changeStatus(statusIdToUpdate, contactToModify);
-        console.log('unassin then change status')
+        console.log('unassin then change status');
 
         setChangeStatusModal(false);
       } catch (error) {
@@ -767,22 +777,22 @@ const Table = ({
     };
 
     const changeStatus = async (status, contact) => {
-
-
       try {
         const statusId = status; // example status id to search for
         const categoryStatuses =
           categoryType === 'clients' ? clientStatuses : professionalsStatuses;
-    
+
         const foundStatus = categoryStatuses.find(
           (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
         );
-        const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
+        const statusMainTitle = foundStatus
+          ? foundStatus.statusMainTitle
+          : null;
         console.log('tesr', foundStatus);
         let statusName = foundStatus.statuses.find(
           (foundstatus) => foundstatus.id == status
         ).name;
-    
+
         dispatch(
           updateContactStatus({
             id: contact.id,
@@ -791,9 +801,10 @@ const Table = ({
           })
         );
         toast.success(
-          `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
+          `${
+            contact.first_name + ' ' + contact.last_name
+          } moved to ${statusName}`
         );
-
 
         const res = await contactServices.updateContact(contact.id, {
           status_id: status,
@@ -809,9 +820,6 @@ const Table = ({
         console.log(error);
       }
     };
-
-
-
 
     return (
       <>
@@ -1023,7 +1031,7 @@ const Table = ({
                             // }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleAddActivity(contact)
+                              handleAddActivity(contact);
                             }}
                           >
                             <List
@@ -1180,7 +1188,6 @@ const Table = ({
                   </div>
                 </td>
               )}
-
             </tr>
           ))}
         </tbody>
