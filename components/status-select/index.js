@@ -24,8 +24,8 @@ const StatusSelect = ({
           let mainStatusId = status.id;
           let width = 0;
           if (
-            status.statusMainTitle == 'In The Funnel' ||
-            status.statusMainTitle == 'Closed'
+            status.statusMainTitle.toLowerCase() == 'in the funnel' ||
+            status.statusMainTitle.toLowerCase() == 'closed' || status.statusMainTitle.toLowerCase() == 'active'
           ) {
             width = 40;
           } else {

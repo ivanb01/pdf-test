@@ -25,7 +25,7 @@ const Overlay = ({
                 </Text>
               )}
               {handleCloseOverlay && (
-                <Button closeButton onClick={handleCloseOverlay}></Button>
+                <Button closeButton onClick={handleCloseOverlay} />
               )}
             </div>
           ) : null}

@@ -33,6 +33,7 @@ const MainSidebar = ({
     if (!contacts.metadata) {
       return 0;
     }
+
     if (subtab == 'Family & Friends') {
       return contacts.metadata.category['Family'] + contacts.metadata.category['Friend'] || 0
     }

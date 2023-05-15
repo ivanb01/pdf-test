@@ -1,7 +1,7 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchContacts } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { setContacts, updateContacts } from 'store/contacts/slice';
@@ -28,6 +28,7 @@ const index = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const refetchContacts = useSelector((state) => state.global.refetchContacts);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
@@ -59,6 +60,12 @@ const index = () => {
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
   }, []);
+  useEffect(() => {
+    fetchClients();
+    dispatch(setOpenedTab(0));
+    dispatch(setOpenedSubtab(0));
+    dispatch(setRefetchContacts(false))
+  }, [refetchContacts]);
   return (
     <Layout>
       {loading ? (

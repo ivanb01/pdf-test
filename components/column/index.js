@@ -10,6 +10,7 @@ import sortDescIcon from 'public/images/sort-desc.svg';
 import Image from 'next/image';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
+import AddActivity from 'components/overlays/add-activity';
 
 const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const router = useRouter();
@@ -22,6 +23,8 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   //   } else setCardData(contacts?.data || []);
   // }, [filter]);
   // console.log(status);
+  const [clientToModify, setClientToModify] = useState(null);
+  const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
   const contacts = useSelector((state) => state.contacts.data.data);
@@ -92,8 +95,22 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
     setSortAsc(!sortAsc);
   };
 
+  const handleAddActivity = (client) => {
+    setClientToModify(client);
+    setAddActivityPopup(true);
+  };
+
   return (
     <div className="flex flex-col border-r border-gray2">
+      {addActivityPopup && (
+        <AddActivity
+          client={clientToModify}
+          className="min-w-[550px]"
+          title={`Add Activity`}
+          setAddActivityPopup={setAddActivityPopup}
+          handleClose={() => setAddActivityPopup(false)}
+        />
+      )}
       <div
         className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}
       >
@@ -145,6 +162,9 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               contact={contact}
               key={index}
               categoryType={categoryType}
+              addActivityPopup={addActivityPopup}
+              setAddActivityPopup={setAddActivityPopup}
+              handleAddActivity={handleAddActivity}
             />
           ))}
         </div>
