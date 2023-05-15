@@ -153,23 +153,25 @@ const CategorizePage = ({
 
   return (
     <>
-      <div
-        className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}
-      >
-        <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-          <Table
-            tableFor="in-categorization"
-            data={uncategorizedContacts.filter(
-              (contact) => contact.category_id == openedSubtab + 1
-            )}
-            handleClickRow={handleSelectUncategorized}
-            handleSelectAll={toggleAllUncategorized}
-          />
-        </SimpleBar>
-      </div>
+      {uncategorizedContacts.length > 0 && (
+        <div
+          className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}
+        >
+          <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+            <Table
+              tableFor="in-categorization"
+              data={uncategorizedContacts.filter(
+                (contact) => contact.category_id == openedSubtab + 1
+              )}
+              handleClickRow={handleSelectUncategorized}
+              handleSelectAll={toggleAllUncategorized}
+            />
+          </SimpleBar>
+        </div>
+      )}
       <div
         className={`bg-white pb-[72px] border-t border-gray-200 relative ${
-          showCategorizedSection ? 'w-[50%]' : 'w-[80%]'
+          uncategorizedContacts.length ? 'w-[50%]' : 'w-[75%]'
         } `}
       >
         {selectedUncategorized?.length > 0 ? (
