@@ -33,7 +33,7 @@ const StatusSelect = ({
           }
 
           return (
-            <div key={status.id} style={{ width: `${width}%` }}>
+            <div key={status.statusMainTitle} style={{ width: `${width}%` }}>
               <Text
                 className={`text-gray3 pb-2 ${color} border-b-4`}
                 chipText

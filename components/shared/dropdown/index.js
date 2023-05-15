@@ -42,7 +42,7 @@ const Dropdown = ({
       <Listbox
         value={selected}
         onChange={(val) => {
-          setSelected(val);
+          props?.noOptionChange ? null : setSelected(val);
           handleSelect(val);
         }}
       >

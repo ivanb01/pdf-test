@@ -1,14 +1,14 @@
 import InfoCard from './card';
 import Dropdown from 'components/shared/dropdown';
-import Chip from 'components/shared/chip';
 import * as contactServices from 'api/contacts';
 import { allStatusesQuickEdit, importSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
-import { getContactCampaign, getCampaign } from 'api/campaign';
+import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
 import TagsInput from 'components/tagsInput';
 import DateChip from 'components/shared/chip/date-chip';
+import ChangeStatus from 'components/overlays/change-contact-status';
 
 export default function Info({ client, handleFetchContactRequired }) {
   const categoryType = client?.category_1.toLowerCase() + 's';
@@ -17,20 +17,42 @@ export default function Info({ client, handleFetchContactRequired }) {
   const initialTags = client.tags ? client.tags : [];
   const [tags, setTags] = useState(initialTags);
 
+  const [changeStatusModal, setChangeStatusModal] = useState(false);
+  const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
+  const [isContactInCampaign, setIsContactInCampaign] = useState(false);
+
+  // const fetchContactCampaign = async () => {
+  //   try {
+  //     const { data } = await getContactCampaign(client?.id);
+  //     if (data?.status === 'enrolled') {
+  //       const { data: data2 } = await getCampaign(data?.campaign_id);
+  //       setIsContactInCampaign(true);
+  //       setCampaignName(`Assigned to '${data2?.campaign_name}'`);
+  //     } else if (data?.status === 'matches_campaign') {
+  //       setCampaignName('Not in campaign');
+  //       setIsContactInCampaign(false);
+  //     } else if (data?.status === 'unenrolled') {
+  //       const { data: data2 } = await getCampaign(data?.campaign_id);
+  //       ``;
+  //       setCampaignName(`Unassigned from '${data2?.campaign_name}'`);
+  //       setIsContactInCampaign(false);
+  //     } else if (data?.status === 'no_match') {
+  //       setCampaignName('No matching campaign');
+  //       setIsContactInCampaign(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const fetchContactCampaign = async () => {
     try {
-      const { data } = await getContactCampaign(client?.id);
-      if (data?.status === 'enrolled') {
-        const { data: data2 } = await getCampaign(data?.campaign_id);
-        setCampaignName(`Assigned to '${data2?.campaign_name}'`);
-      } else if (data?.status === 'matches_campaign') {
+      if (client?.is_in_campaign === 'assigned') {
+        setIsContactInCampaign(true);
+        setCampaignName(`Assigned to '${client?.campaign_name}'`);
+      } else {
         setCampaignName('Not in campaign');
-      } else if (data?.status === 'unenrolled') {
-        const { data: data2 } = await getCampaign(data?.campaign_id);
-        ``;
-        setCampaignName(`Unassigned from '${data2?.campaign_name}'`);
-      } else if (data?.status === 'no_match') {
-        setCampaignName('No matching campaign');
+        setIsContactInCampaign(false);
       }
     } catch (error) {
       console.log(error);
@@ -55,16 +77,7 @@ export default function Info({ client, handleFetchContactRequired }) {
     setTags(initialTags);
   }, [client]);
 
-  const handleChangeStatus = async (status) => {
-    try {
-      await contactServices.updateContact(client.id, {
-        status_id: status,
-      });
-      handleFetchContactRequired();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
 
   const handleChangeSource = async (source) => {
     try {
@@ -72,6 +85,35 @@ export default function Info({ client, handleFetchContactRequired }) {
         import_source: source,
       });
       handleFetchContactRequired();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeStatus = async (status) => {
+    try {
+      if(isContactInCampaign && client?.status_id !== status) {
+        setStatusIdToUpdate(status);
+        setChangeStatusModal(true);
+      } else {
+        await contactServices.updateContact(client.id, {
+          status_id: status,
+        });
+        handleFetchContactRequired();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeStatusAndCampaign = async () => {
+    try {
+      await unassignContactFromCampaign(client.campaign_id, client.id);
+      await contactServices.updateContact(client.id, {
+        status_id: statusIdToUpdate,
+      });
+      handleFetchContactRequired();
+      setChangeStatusModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -89,6 +131,7 @@ export default function Info({ client, handleFetchContactRequired }) {
             handleSelect={(status) => handleChangeStatus(status.id)}
             initialSelect={client?.status_2}
             selectedOption="statusColor"
+            noOptionChange={isContactInCampaign}
           />
 
           {/* <ChipInput
@@ -145,6 +188,13 @@ export default function Info({ client, handleFetchContactRequired }) {
           />
         </div>
       )}
+      {changeStatusModal && (
+        <ChangeStatus
+          handleCloseOverlay={() => setChangeStatusModal(false)}
+          onSubmit={handleChangeStatusAndCampaign}
+        />
+      )}
+
     </>
   );
 }
