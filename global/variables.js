@@ -1079,6 +1079,3 @@ export const activityTypes = [
     name: 'Other',
   },
 ];
-
-
-

@@ -4,7 +4,11 @@ import * as contactServices from 'api/contacts';
 import { allStatusesQuickEdit, importSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
-import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
+import {
+  getContactCampaign,
+  getCampaign,
+  unassignContactFromCampaign,
+} from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
 import TagsInput from 'components/tagsInput';
 import DateChip from 'components/shared/chip/date-chip';
@@ -59,7 +63,6 @@ export default function Info({ client, handleFetchContactRequired }) {
     }
   };
 
-
   const handleChangeTags = async (currentTags) => {
     try {
       setTags(currentTags);
@@ -77,8 +80,6 @@ export default function Info({ client, handleFetchContactRequired }) {
     setTags(initialTags);
   }, [client]);
 
-
-
   const handleChangeSource = async (source) => {
     try {
       await contactServices.updateContact(client.id, {
@@ -92,7 +93,7 @@ export default function Info({ client, handleFetchContactRequired }) {
 
   const handleChangeStatus = async (status) => {
     try {
-      if(isContactInCampaign && client?.status_id !== status) {
+      if (isContactInCampaign && client?.status_id !== status) {
         setStatusIdToUpdate(status);
         setChangeStatusModal(true);
       } else {
@@ -164,9 +165,17 @@ export default function Info({ client, handleFetchContactRequired }) {
           />
 
           {campaginName ? (
-            <InfoCard label="Campaign" content={campaginName} />
+            <InfoCard
+              label="Campaign"
+              showDot={client?.campaign_id ? client?.campaign_id : 0}
+              content={campaginName}
+            />
           ) : (
-            <InfoCard label="Campaign" content="" />
+            <InfoCard
+              label="Campaign"
+              showDot={client?.campaign_id ? client?.campaign_id : 0}
+              content=""
+            />
           )}
           <InfoCard
             label="Last Communication"
@@ -181,8 +190,8 @@ export default function Info({ client, handleFetchContactRequired }) {
                   lastCommunication={client.last_communication_date}
                   contactStatus={client.status_2}
                   contactCategory={categoryType}
-                  className="ml-2 mt-[0px]"
-              />
+                  className="ml-2 !mt-0  pt-0"
+                />
               ) : null
             }
           />
@@ -194,7 +203,6 @@ export default function Info({ client, handleFetchContactRequired }) {
           onSubmit={handleChangeStatusAndCampaign}
         />
       )}
-
     </>
   );
 }

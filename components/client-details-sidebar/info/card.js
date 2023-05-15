@@ -1,7 +1,7 @@
 import Chip from 'components/shared/chip';
 import Text from 'components/shared/text';
 
-export default function InfoCard({ label, content, iconContent }) {
+export default function InfoCard({ label, showDot, content, iconContent }) {
   return (
     <div className="flex flex-col my-3">
       <Text className="text-gray6 mb-1" h4>
@@ -20,9 +20,18 @@ export default function InfoCard({ label, content, iconContent }) {
             {iconContent}
           </div>
         ) : (
-          <Text className="text-gray7 pl-3 italic" p>
-            {content}
-          </Text>
+          <div className="flex items-center pl-3">
+            {showDot >= 0 && (
+              <span
+                className={`block h-2 w-2 mr-1 rounded-full ${
+                  showDot ? 'bg-green5' : 'bg-red3'
+                }`}
+              />
+            )}
+            <Text className="text-gray7 italic" p>
+              {content}
+            </Text>
+          </div>
         )}
       </div>
     </div>
