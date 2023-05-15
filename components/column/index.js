@@ -11,9 +11,26 @@ import Image from 'next/image';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
 import AddActivity from 'components/overlays/add-activity';
+import toast from 'react-hot-toast';
+import {
+  clientStatuses,
+  professionalsStatuses,
+} from 'global/variables';
+import ChangeStatus from 'components/overlays/change-contact-status';
+import { unassignContactFromCampaign } from 'api/campaign';
+import { useDispatch } from 'react-redux';
+import { setContacts, updateContactStatus } from 'store/contacts/slice';
+import * as contactServices from 'api/contacts';
+
+const categoryIds = {
+  Client: '4,5,6,7',
+  Professional: '8,9,12',
+};
+
 
 const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   // const [cardData, setCardData] = useState(contacts?.data || []);
   // useEffect(() => {
   //   if (filter) {
@@ -100,6 +117,85 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
     setAddActivityPopup(true);
   };
 
+  const [changeStatusModal, setChangeStatusModal] = useState(false);
+  const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
+  const [contactToModify, setContactToModify] = useState(null);
+
+  const handleChangeStatus = async (status, contact) => {
+    try {
+      if(contact?.is_in_campaign==="assigned" && contact?.status_id !== status) {
+        setStatusIdToUpdate(status);
+        setChangeStatusModal(true);
+        setContactToModify(contact);
+
+      } else {
+        await changeStatus(status, contact);
+        console.log('change status')
+
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeStatusAndCampaign = async () => {
+    try {
+      await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
+      await changeStatus(statusIdToUpdate, contactToModify);
+      console.log('unassin then change status')
+
+      setChangeStatusModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const changeStatus = async (status, contact) => {
+
+
+    try {
+      const statusId = status; // example status id to search for
+      const categoryStatuses =
+        categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+  
+      const foundStatus = categoryStatuses.find(
+        (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
+      );
+      const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
+      console.log('tesr', foundStatus);
+      let statusName = foundStatus.statuses.find(
+        (foundstatus) => foundstatus.id == status
+      ).name;
+  
+      dispatch(
+        updateContactStatus({
+          id: contact.id,
+          status_id: status,
+          status_2: statusName,
+        })
+      );
+      toast.success(
+        `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
+      );
+
+
+      const res = await contactServices.updateContact(contact.id, {
+        status_id: status,
+      });
+      // change status locally
+      console.log('changeStatus', contact, contact.id, status, res);
+      // setDropdownOpened(false);
+      const { data } = await contactServices.getContacts(
+        categoryIds[contact?.category_1]
+      );
+      dispatch(setContacts(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
   return (
     <div className="flex flex-col border-r border-gray2">
       {addActivityPopup && (
@@ -109,6 +205,12 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           title={`Add Activity`}
           setAddActivityPopup={setAddActivityPopup}
           handleClose={() => setAddActivityPopup(false)}
+        />
+      )}
+      {changeStatusModal && (
+        <ChangeStatus
+          handleCloseOverlay={() => setChangeStatusModal(false)}
+          onSubmit={handleChangeStatusAndCampaign}
         />
       )}
       <div
@@ -165,6 +267,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               addActivityPopup={addActivityPopup}
               setAddActivityPopup={setAddActivityPopup}
               handleAddActivity={handleAddActivity}
+              handleChangeStatus={handleChangeStatus}
             />
           ))}
         </div>

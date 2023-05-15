@@ -35,13 +35,12 @@ const categoryIds = {
 };
 
 export default function ContactCard({
-  handleAddActivity,
   contact,
   categoryType,
   handleCardClick,
   handleCardEdit,
-  addActivityPopup,
-  setAddActivityPopup,
+  handleAddActivity,
+  handleChangeStatus,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -49,104 +48,9 @@ export default function ContactCard({
     contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState(
-    allStatusesQuickEdit[categoryType][0]
-  );
-
-  const changeStatus = async (status) => {
-    const statusId = status; // example status id to search for
-    const categoryStatuses =
-      categoryType === 'clients' ? clientStatuses : professionalsStatuses;
-
-    const foundStatus = categoryStatuses.find(
-      (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
-    );
-    const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-    console.log('tesr', foundStatus);
-    let statusName = foundStatus.statuses.find(
-      (foundstatus) => foundstatus.id == status
-    ).name;
-
-    dispatch(
-      updateContactStatus({
-        id: contact.id,
-        status_id: status,
-        status_2: statusName,
-      })
-    );
-    toast.success(
-      `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
-    );
-
-    try {
-      const res = await contactServices.updateContact(contact.id, {
-        status_id: status,
-      });
-      // change status locally
-      console.log('changeStatus', contact, contact.id, status, res);
-      // setDropdownOpened(false);
-      const { data } = await contactServices.getContacts(
-        categoryIds[contact?.category_1]
-      );
-      dispatch(setContacts(data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // const handleDropdown = (event, value) => {
-  //   let values = event.target.closest('.change-status').getBoundingClientRect();
-  //   let dropdownElement = document.querySelector('#dropdown');
-  //   // console.log('test', event, value, dropdownElement)
-  //   if (value) {
-  //     // console.log(event.pageX, window.innerWidth);
-  //     // console.log(event.pageY, window.innerHeight);
-  //     // dropdownElement.style.top = event.pageY + 15 + 'px';
-  //     // dropdownElement.style.left = event.pageX + 'px';
-  //     console.log('remove hidden');
-  //     dropdownElement.classList.remove('hidden');
-  //   } else {
-  //     dropdownElement.classList.add('hidden');
-  //     console.log('add hidden');
-  //   }
-  //   setDropdownOpened(value);
-  // };
-
-  // useEffect(() => {
-  //   function handleClick(event) {
-  //     let dropdownElement = document.getElementById('dropdown')
-
-  //     if (!dropdownElement.contains(event.target)){
-  //       console.log("Clicked outside Box");
-
-  //     }
-  //   }
-
-  //   // 👇️ optionally set body height to full screen
-  //   // document.body.style.minHeight = '100vh';
-
-  //   document.addEventListener('click', handleClick);
-
-  //   return () => {
-  //     // 👇️ remove event listener when the component unmounts
-  //     document.removeEventListener('click', handleClick);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const dropdownMenu = document.querySelector('.custom-dropdown-menu');
-
-  //   document.addEventListener('click', function (event) {
-  //     if (dropdownMenu) {
-  //       const isClickInsideDropdown = dropdownMenu.contains(event.target);
-  //       console.log('isClickInsideDropdown', isClickInsideDropdown);
-  //       if (!isClickInsideDropdown) {
-  //         console.log('click outside dropdown');
-  //         setDropdownOpened(false);
-  //       }
-  //     }
-  //   });
-  // }, []);
+  // const [dropdownVal, setDropdownVal] = useState(
+  //   allStatusesQuickEdit[categoryType][0]
+  // );
 
   return (
     <>
@@ -162,7 +66,7 @@ export default function ContactCard({
             options={allStatusesQuickEdit[categoryType]}
             handleSelect={(item) => {
               // console.log(item);
-              changeStatus(item.id);
+              handleChangeStatus(item.id, contact);
               setDropdownOpened(false);
             }}
           />
@@ -281,34 +185,34 @@ export default function ContactCard({
               className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
               onMouseEnter={() => {
                 document
-                  .querySelector('#tooltip-see-campaigns-' + contact.id)
+                  .querySelector('#tooltip-add-activity-' + contact.id)
                   .classList.remove('invisible', 'opacity-0');
                 document
-                  .querySelector('#see-campaigns-icon-' + contact.id)
+                  .querySelector('#add-activity-icon-' + contact.id)
                   .classList.add('text-gray4');
                 document
-                  .querySelector('#see-campaigns-icon-' + contact.id)
+                  .querySelector('#add-activity-icon-' + contact.id)
                   .classList.remove('text-gray3');
               }}
               onMouseLeave={() => {
                 document
-                  .querySelector('#tooltip-see-campaigns-' + contact.id)
+                  .querySelector('#tooltip-add-activity-' + contact.id)
                   .classList.add('invisible', 'opacity-0');
                 document
-                  .querySelector('#see-campaigns-icon-' + contact.id)
+                  .querySelector('#add-activity-icon-' + contact.id)
                   .classList.add('text-gray3');
                 document
-                  .querySelector('#see-campaigns-icon-' + contact.id)
+                  .querySelector('#add-activity-icon-' + contact.id)
                   .classList.remove('text-gray4');
               }}
               onClick={() => handleAddActivity(contact)}
             >
               <List
-                id={'see-campaigns-icon-' + contact.id}
+                id={'add-activity-icon-' + contact.id}
                 className="text-gray3 w-4 h-4"
               />
               <div
-                id={'tooltip-see-campaigns-' + contact.id}
+                id={'tooltip-add-activity-' + contact.id}
                 role="tooltip"
                 className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
               >
@@ -342,15 +246,13 @@ export default function ContactCard({
               // onClick={(event) => handleDropdown(event, !dropdownOpened)}
               onClick={() => setDropdownOpened(!dropdownOpened)}
             >
-              {/* <Category className="text-gray3 w-4 h-4" /> */}
               {/* <SimpleBarDropdown
-              hideInput
                 options={allStatusesQuickEdit[categoryType]}
                 activeIcon={false}
                 activeClasses="bg-lightBlue1"
                 handleSelect={(item) => {
                   // setDropdownVal(item)
-                  changeStatus(item.id);
+                  handleChangeStatus(item.id, contact);
                 }}
                 iconLabel={
                   <Category
@@ -360,6 +262,7 @@ export default function ContactCard({
                 }
                 dropdownValue={contact?.status_2}
                 handleDropdownClosed={(item) => setDropdownOpened(item)}
+                noOptionChange={contact?.is_in_campaign==="assigned"}
               ></SimpleBarDropdown> */}
               <Category
                 id={'change-status-icon-' + contact.id}
@@ -376,6 +279,7 @@ export default function ContactCard({
           </div>
         </div>
       </div>
+
     </>
   );
 }
