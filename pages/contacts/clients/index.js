@@ -1,9 +1,13 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab, setRefetchContacts } from 'store/global/slice';
+import {
+  setOpenedTab,
+  setOpenedSubtab,
+  setRefetchContacts,
+} from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'api/contacts';
+import { bulkUpdateContacts, getContacts } from 'api/contacts';
 import { setContacts, updateContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
@@ -56,6 +60,7 @@ const index = () => {
     });
   };
   useEffect(() => {
+    bulkUpdateContacts();
     fetchClients();
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
@@ -64,7 +69,7 @@ const index = () => {
     fetchClients();
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
-    dispatch(setRefetchContacts(false))
+    dispatch(setRefetchContacts(false));
   }, [refetchContacts]);
   return (
     <Layout>
