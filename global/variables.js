@@ -602,14 +602,14 @@ export const globalTabsStates = {
 };
 
 export const importSourceOptions = [
-  {
-    id: 1,
-    name: 'Google Contacts',
-  },
-  {
-    id: 2,
-    name: 'Google Email',
-  },
+  // {
+  //   id: 1,
+  //   name: 'Google Contacts',
+  // },
+  // {
+  //   id: 2,
+  //   name: 'Google Email',
+  // },
   {
     id: 3,
     name: 'Cold Call',
