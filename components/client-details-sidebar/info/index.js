@@ -161,7 +161,9 @@ export default function Info({ client, handleFetchContactRequired }) {
             className="my-3"
             handleSelect={(source) => handleChangeSource(source.name)}
             initialSelect={client?.import_source}
-            placeHolder={client?.import_source ? null : 'Choose'}
+            placeHolder={
+              client?.import_source ? client?.import_source : 'Choose'
+            }
           />
 
           {campaginName ? (

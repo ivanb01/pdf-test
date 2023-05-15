@@ -208,12 +208,14 @@ const AddClientManuallyOverlay = ({
                     error={errors.email && touched.email}
                     errorText={errors.email}
                   />
- 
+
                   <Input
                     type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={(val)=>formik.setFieldValue('phone_number', val)}
+                    onChange={(val) =>
+                      formik.setFieldValue('phone_number', val)
+                    }
                     value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
@@ -230,7 +232,11 @@ const AddClientManuallyOverlay = ({
                       (formik.values.import_source = source.name)
                     }
                     initialSelect={formik.values.import_source}
-                    placeHolder={formik.values.import_source ? null : 'Choose'}
+                    placeHolder={
+                      formik.values.import_source
+                        ? formik.values.import_source
+                        : 'Choose'
+                    }
                   />
                   <TagsInput
                     typeOfContact={openedTab}

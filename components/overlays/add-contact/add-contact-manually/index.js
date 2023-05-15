@@ -27,7 +27,6 @@ import {
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 
-
 const categoryIds = {
   0: '4,5,6,7',
   1: '8,9,12',
@@ -168,8 +167,10 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       dispatch(setOpenedTab(selectedContact));
       dispatch(setOpenedSubtab(subtabValue));
       router.push({
-        pathname: `/contacts/${selectedContact === 0 ? 'clients' : 'professionals'}`,
-      })
+        pathname: `/contacts/${
+          selectedContact === 0 ? 'clients' : 'professionals'
+        }`,
+      });
       handleClose();
     } catch (error) {
       console.log(error);
@@ -250,7 +251,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={(val)=>formik.setFieldValue('phone_number', val)}
+                    onChange={(val) =>
+                      formik.setFieldValue('phone_number', val)
+                    }
                     value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
@@ -266,7 +269,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                       (formik.values.import_source = source.name)
                     }
                     initialSelect={formik.values.import_source}
-                    placeHolder={formik.values.import_source ? null : 'Choose'}
+                    placeHolder={'Choose'}
                   />
                   <TagsInput
                     typeOfContact={selectedContact}

@@ -60,7 +60,7 @@ const Dropdown = ({
               <Listbox.Button
                 className={`${
                   selectClasses ? selectClasses : 'bg-white border rounded-md'
-                }  relative w-full min-h-[38px] border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
+                }  relative w-full border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
               >
                 <span
                   className={`${

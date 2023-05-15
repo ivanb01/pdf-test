@@ -42,7 +42,6 @@ const EditContactOverlay = ({
   //   handleClose();
   // };
 
-
   const AddContactSchema = Yup.object().shape({
     first_name: Yup.string().required('Field can not be empty'),
     last_name: Yup.string().required('Field can not be empty'),
@@ -57,7 +56,6 @@ const EditContactOverlay = ({
       .nullable(),
   });
 
-
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -69,24 +67,21 @@ const EditContactOverlay = ({
       tags: client?.tags,
     },
     validationSchema: AddContactSchema,
-    onSubmit: async(values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       await editClient(values);
       setSubmitting(false);
     },
   });
 
-  const { errors, touched, submitForm, isSubmitting} = formik;
-  
+  const { errors, touched, submitForm, isSubmitting } = formik;
+
   useEffect(() => {
     setLoadingButton(isSubmitting);
   }, [isSubmitting]);
 
   const editClient = async (values) => {
     try {
-      await contactServices.updateContact(
-        client?.id,
-        values
-      );
+      await contactServices.updateContact(client?.id, values);
       console.log(values, 'edit contact', client?.id);
       if (handleFetchContactRequired) {
         handleFetchContactRequired();
@@ -105,7 +100,6 @@ const EditContactOverlay = ({
       handleCloseOverlay={handleClose}
       title={title}
       className={className}
-
     >
       <div className="p-5">
         {/* <div className="flex items-center mb-6">
@@ -122,7 +116,7 @@ const EditContactOverlay = ({
               onChange={formik.handleChange}
               value={formik.values.first_name}
               error={errors.first_name && touched.first_name}
-                    errorText={errors.first_name}
+              errorText={errors.first_name}
             />
             <Input
               type="text"
@@ -148,7 +142,7 @@ const EditContactOverlay = ({
               type="phone_number"
               label="Phone"
               id="phone_number"
-              onChange={(val)=>formik.setFieldValue('phone_number', val)}
+              onChange={(val) => formik.setFieldValue('phone_number', val)}
               value={formik.values.phone_number}
               error={errors.phone_number && touched.phone_number}
               errorText={errors.phone_number}
@@ -162,7 +156,11 @@ const EditContactOverlay = ({
                 (formik.values.import_source = source.name)
               }
               initialSelect={formik.values.import_source}
-              placeHolder={formik.values.import_source ? null : 'Choose'}
+              placeHolder={
+                formik.values.import_source
+                  ? formik.values.import_source
+                  : 'Choose'
+              }
             />
             <TagsInput
               label="Tags"
@@ -173,7 +171,7 @@ const EditContactOverlay = ({
                   'tags',
                   choice.map((el) => el.label)
                 );
-              }}           
+              }}
             />
           </div>
         </form>
@@ -196,7 +194,7 @@ const EditContactOverlay = ({
               submitForm();
             }}
           ></Button>
-        </div> 
+        </div>
       </div>
     </Overlay>
   );
