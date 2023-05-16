@@ -16,6 +16,7 @@ import noNotes from 'public/images/notes-empty.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
 import { formatDateLL } from 'global/functions';
+import SimpleBar from 'simplebar-react';
 
 
 export default function Notes({ contactId }) {
@@ -222,13 +223,20 @@ export default function Notes({ contactId }) {
                   <div key={note.id} className="w-[50%] bg-gray10">
                     <div className="bg-white m-[12px] p-6 rounded-lg shadow">
                       <div className="flex justify-between">
-                        <div className="pr-12">
+                        <div className="pr-12 w-full">
                           <Text p className="mb-1">
                             {note?.title}
                           </Text>
-                          <div className="text-sm font-normal text-gray4 h-[84px] overflow-y-scroll relative flex items-start"
+                          
+                          <div
+                            className={`w-full h-[84px] relative `}
                           >
-                            {note?.description}
+                            <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+                              <div className="text-sm font-normal text-gray4 flex items-start"
+                            >
+                              {note?.description}
+                            </div>
+                            </SimpleBar>
                           </div>
                           <Text className="text-gray4 text-xs mt-2">
                             {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
