@@ -2,11 +2,12 @@ import Text from 'components/shared/text';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import Link from 'components/Link';
 import Router from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
-import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
+import { phoneNumberInputFormat, revertPhoneNumberInputFormat
+, moneyNumberInputFormat, revertMoneyNumberInputFormat} from 'global/functions';
 
 const Input = ({
   className,
@@ -214,6 +215,121 @@ const Input = ({
     );
   };
 
+  const moneyNumberInputFormat = (number) => {
+    if(!number) return null;
+    return number.toString().replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const revertMoneyNumberInputFormat = (value) => {
+    return value.replace(/,/g, '');
+  };
+
+  const [moneyValue, setMoneyValue] = useState(null);
+  
+  const handleMoneyInputChange = (val) => {
+    // setMoneyValue(moneyNumberInputFormat(val));
+    if(val) {
+      onChange(revertMoneyNumberInputFormat(val));
+    } else {
+      onChange(0);
+      setMoneyValue(null)
+    }
+  }
+
+  useEffect(()=>{
+    if( type == 'money' ) {
+      setMoneyValue(moneyNumberInputFormat(value))
+    }
+  },[value])
+
+  const moneyInput = () => {
+    return iconBefore ? (
+      <>
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          {iconBefore}
+        </div>
+        <input
+          type='text'
+          name={name ? name : id}
+          id={id}
+          placeholder={placeholder}
+          onInput={onInput}
+          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          value={moneyValue}
+          className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+            errorClasses ? errorClasses : 'border-borderColor'
+          }`}
+        />
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        )}
+      </>
+    ) : iconAfter ? (
+      <>
+        <input
+          type='text'
+          name={name ? name : id}
+          id={id}
+          placeholder={placeholder}
+          onInput={onInput}
+          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          value={moneyValue}
+          className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+            errorClasses ? errorClasses : ' border-borderColor'
+          }`}
+        />
+        {error ? (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        ) : (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            {iconAfter}
+          </div>
+        )}
+      </>
+    ) : (
+      <>
+        <input
+          type='text'
+          name={name ? name : id}
+          id={id}
+          placeholder={placeholder}
+          onInput={onInput}
+          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          value={moneyValue}
+          readOnly={saved || readonly}
+          className={
+            saved
+              ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'
+              : `text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+                  errorClasses ? errorClasses : 'border-borderColor'
+                }`
+          }
+        />
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        )}
+      </>
+    );
+  };
+
   const phoneInput = () => {
     return (
       <>
@@ -306,6 +422,8 @@ const Input = ({
           ? checkboxInput()
           : type == 'password'
           ? passwordInput()
+          : type == 'money'
+          ? moneyInput()
           : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
