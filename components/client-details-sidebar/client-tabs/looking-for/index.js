@@ -210,49 +210,27 @@ export default function LookingFor({ contactId }) {
         <div className="grid grid-cols-2 gap-4">
           <Input
             id="budget_min"
-            type="number"
+            type="money"
             label="Budget Min"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            onChange={formik.handleChange}
+            onChange={(val) =>
+              formik.setFieldValue('budget_min', val)
+            }
             value={formik.values.budget_min}
             error={errors.budget_min && touched.budget_min}
             errorText={errors.budget_min}
           />
           <Input
             id="budget_max"
-            type="number"
+            type="money"
             label="Budget Max"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            // onChange={(e)=>{
-            // formik.handleChange('budget_max');
-            // console.log(e.target.value, e.target.value.slice(0,-3), Number(e.target.value.replace(',','')))
-            // const test = (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
-            //   minimumFractionDigits: 2,
-            //   maximumFractionDigits: 2
-            // });
-            // test.slice(0,-3).replace(',',''),
-
-            // console.log(
-            //   (Number((e.target.value).toString().replace(/\D/g, '')) || '').toLocaleString(),
-            //   test,
-            //   test.slice(0,-3),
-            //   test.slice(0,-3).replace(',',''),
-
-            // )
-            // console.log('test', test, e.target.value, test.slice(0,-3).replace(',',''))
-            // formik.setFieldValue('budget_max', Number((e.target.value.replace(',',''))));
-            // formik.setFieldValue('budget_max', test.slice(0,-3).replace(',',''));
-
-            // }}
-            onChange={formik.handleChange}
+            onChange={(val) =>
+              formik.setFieldValue('budget_max', val)
+            }
             value={formik.values.budget_max}
-            // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString()}
-            // value={(Number((formik.values.budget_max).toString().replace(/\D/g, '')) || '').toLocaleString(undefined, {
-            //   minimumFractionDigits: 2,
-            //   maximumFractionDigits: 2
-            // })}
             error={errors.budget_max && touched.budget_max}
             errorText={errors.budget_max}
           />
