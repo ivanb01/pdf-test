@@ -70,6 +70,7 @@ const Table = ({
   handleCardEdit,
   currentButton,
   handleEventPreview,
+  searchTerm,
 }) => {
   const types = [
     {
@@ -182,7 +183,15 @@ const Table = ({
       description = `Clients that were once part of this campaign, and cannot be reassigned will be listed here`;
     }
 
-    if (!data.length)
+    if (!data?.length && searchTerm)
+      return (
+        <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
+          <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+            No results have been found!
+          </Text>
+        </div>
+    );
+    if (!data?.length && !searchTerm)
       return (
         <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
           <Image src={noClientCampaigns}></Image>
@@ -207,6 +216,7 @@ const Table = ({
             </th>
             {data[0]?.events.map((event, index) => (
               <th
+                key={index}
                 scope="col"
                 className="px-3 py-3 text-center text-xs font-medium tracking-wide"
               >
@@ -263,7 +273,7 @@ const Table = ({
               </td>
               {dataItem.events.map((event, index) =>
                 event.event_id ? (
-                  <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                  <td key={`event-${index}`} className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                     <EventStatus status={event.event_status} />
                     <div className="text-gray7">
                       {formatDateMDY(event?.event_updated_at)}
@@ -335,10 +345,10 @@ const Table = ({
             </tbody>
           </>
         ) : (
-          <div className="bg-white flex justify-center items-center">
-            <div className="text-gray7 my-4 text-base font-normal">
+          <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
+            <Text h3 className="text-gray7 mb-2 mt-4 text-center">
               No results have been found!
-            </div>
+            </Text>
           </div>
         )}
       </>
@@ -439,10 +449,10 @@ const Table = ({
             </tbody>
           </>
         ) : (
-          <div className="flex justify-center items-center">
-            <div className="text-gray7 my-4 text-base font-normal">
+          <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
+            <Text h3 className="text-gray7 mb-2 mt-4 text-center">
               No results have been found!
-            </div>
+            </Text>
           </div>
         )}
       </>
