@@ -9,11 +9,13 @@ import Button from 'components/shared/button';
 import SimpleBar from 'simplebar-react';
 import Dropdown from 'components/shared/dropdown';
 import { Transition } from '@headlessui/react';
-import * as contactServices from 'api/contacts';
+// import * as contactServices from 'api/contacts';
+import { getContactsSearch, addContactRelationship } from 'api/contacts';
 import { relationshipsTypes } from 'global/variables';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import NotificationAlert from 'components/shared/alert/notification-alert';
+import ContactInfo from 'components/shared/table/contact-info';
 
 const AddRelationshipModal = ({
   handleClose,
@@ -51,7 +53,7 @@ const AddRelationshipModal = ({
 
   const fetchContacts = async () => {
     try {
-      const { data } = await contactServices.getContactsSearch({
+      const { data } = await getContactsSearch({
         search_term: searchKey,
         exclude_contact_id: contactId,
       });
@@ -59,6 +61,7 @@ const AddRelationshipModal = ({
         id: item.id,
         name: `${item.first_name} ${item.last_name}`,
         email: item.email,
+        image: item.profile_image_path,
       }));
       setContactsSearched(filterData);
       filterData.length > 0
@@ -87,6 +90,7 @@ const AddRelationshipModal = ({
     //     },
     //     ...relationshipsToAdd]);
     setRelationshipToAdd({
+      relationship_image: contact.image,
       relationship_person: contact.name,
       relationship_email: contact.email,
       relationship_id: contact.id,
@@ -135,7 +139,7 @@ const AddRelationshipModal = ({
       //   related_to_contact_id: relationshipToAdd.relationship_id,
       //   relationship_name: relationshipToAdd.relationship_type,
       // };
-      await contactServices.addContactRelationship(contactId, values);
+      await addContactRelationship(contactId, values);
       setLoadingButton(false);
     } catch (error) {
       console.log(error);
@@ -189,21 +193,15 @@ const AddRelationshipModal = ({
                   <div
                     onClick={() => handleChooseContact(contact)}
                     key={contact.id}
-                    className="flex flex-row p-3 hover:bg-lightBlue1 cursor-pointer group"
+                    className="flex flex-row p-3 hover:bg-lightBlue1 cursor-pointer text-sm"
                   >
-                    <Avatar
-                      size="w-8 h-8"
-                      className="mr-4"
-                      src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                    <ContactInfo
+                      data={{
+                        name: contact.name,
+                        email: contact.email,
+                        image: contact.image,
+                      }}
                     />
-                    <div className="flex flex-col">
-                      <Text className="text-gray6" h4>
-                        {contact.name}
-                      </Text>
-                      <Text className="text-gray4" p>
-                        {contact.email}
-                      </Text>
-                    </div>
                   </div>
                 ))}
               </SimpleBar>
@@ -219,21 +217,15 @@ const AddRelationshipModal = ({
 
         <div className="my-2 min-h-[100px]">
           {relationshipToAdd && (
-            <div className="flex flex-row p-3 bg-gray-50 group">
-              <Avatar
-                size="w-8 h-8"
-                className="mr-4"
-                src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-              />
-              <div className="flex flex-row justify-between w-[100%]">
-                <div className="flex flex-col">
-                  <Text className="text-gray6" h4>
-                    {relationshipToAdd.relationship_person}
-                  </Text>
-                  <Text className="text-gray4" p>
-                    {relationshipToAdd.relationship_email}
-                  </Text>
-                </div>
+            <div className="flex flex-row p-3 bg-gray-50">
+              <div className="flex flex-row justify-between w-[100%] text-sm">
+                <ContactInfo
+                    data={{
+                      name: relationshipToAdd.relationship_person,
+                      email: relationshipToAdd.relationship_email,
+                      image: relationshipToAdd.relationship_image,
+                    }}
+                />
                 <div className="flex flex-row items-center">
                   <Dropdown
                     placeHolder="Choose Type*"

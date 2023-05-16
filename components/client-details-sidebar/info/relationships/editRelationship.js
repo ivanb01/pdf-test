@@ -4,8 +4,10 @@ import Avatar from 'components/shared/avatar';
 import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import Dropdown from 'components/shared/dropdown';
-import * as contactServices from 'api/contacts';
+// import * as contactServices from 'api/contacts';
+import { updateContactRelationship } from 'api/contacts';
 import { relationshipsTypes } from 'global/variables';
+import ContactInfo from 'components/shared/table/contact-info';
 
 const EditRelationshipModal = ({
   handleClose,
@@ -27,7 +29,7 @@ const EditRelationshipModal = ({
       const relationshipEdit = {
         relationship_name: relationshipTypeToEdit,
       };
-      const { data } = await contactServices.updateContactRelationship(
+      const { data } = await updateContactRelationship(
         contactId,
         relationship.relationship_id,
         relationshipEdit
@@ -55,20 +57,14 @@ const EditRelationshipModal = ({
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
           <div className="flex flex-row p-3 bg-gray-50 group">
-            <Avatar
-              size="w-8 h-8"
-              className="mr-4"
-              src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-            />
-            <div className="flex flex-row justify-between w-[100%]">
-              <div className="flex flex-col">
-                <Text className="text-gray6" h4>
-                  {`${relationship.first_name} ${relationship.last_name}`}
-                </Text>
-                <Text className="text-gray4" p>
-                  {relationship.email}
-                </Text>
-              </div>
+            <div className="flex flex-row justify-between w-[100%] text-sm">
+              <ContactInfo
+                data={{
+                  name: `${relationship.first_name} ${relationship.last_name}`,
+                  email: relationship.email,
+                  image: relationship.profile_image_path,
+                }}
+              />
               <div className="flex flex-row items-center">
                 <Dropdown
                   placeHolder="Choose Type*"
