@@ -124,16 +124,18 @@ export default function Info({ client, handleFetchContactRequired }) {
     <>
       {client && (
         <div className="px-6 py-3 flex flex-col">
-          <Dropdown
-            label="Status"
-            activeIcon={false}
-            options={allStatusesQuickEdit[categoryType]}
-            className="my-3"
-            handleSelect={(status) => handleChangeStatus(status.id)}
-            initialSelect={client?.status_2}
-            selectedOption="statusColor"
-            noOptionChange={isContactInCampaign}
-          />
+          {![2, 3, 13, 14].includes(client?.category_id) && (
+            <Dropdown
+              label="Status"
+              activeIcon={false}
+              options={allStatusesQuickEdit[categoryType]}
+              className="my-3"
+              handleSelect={(status) => handleChangeStatus(status.id)}
+              initialSelect={client?.status_2}
+              selectedOption="statusColor"
+              noOptionChange={isContactInCampaign}
+            />
+          )}
 
           {/* <ChipInput
             label="Tags"

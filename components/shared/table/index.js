@@ -190,7 +190,7 @@ const Table = ({
             No results have been found!
           </Text>
         </div>
-    );
+      );
     if (!data?.length && !searchTerm)
       return (
         <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
@@ -273,7 +273,10 @@ const Table = ({
               </td>
               {dataItem.events.map((event, index) =>
                 event.event_id ? (
-                  <td key={`event-${index}`} className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                  <td
+                    key={`event-${index}`}
+                    className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500"
+                  >
                     <EventStatus status={event.event_status} />
                     <div className="text-gray7">
                       {formatDateMDY(event?.event_updated_at)}
@@ -322,6 +325,12 @@ const Table = ({
                 <tr
                   key={dataItem.id}
                   className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                  onClick={() =>
+                    router.push({
+                      pathname: '/contacts/details',
+                      query: { id: dataItem?.id },
+                    })
+                  }
                 >
                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
                     <ContactInfo

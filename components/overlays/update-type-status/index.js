@@ -38,9 +38,6 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
       setIsSubmitting(false);
       handleClose();
       dispatch(setRefetchData(true));
-      if ([2, 3, 13, 14].includes(selectedType)) {
-        router.push('/contacts/other');
-      }
     });
   };
 
