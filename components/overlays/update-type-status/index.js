@@ -1,5 +1,5 @@
 import MultiStepOverlay from 'components/shared/form/multistep-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Text from 'components/shared/text';
 import CircleStepNumber from 'components/shared/circle-step-number';
 import ContactTypeSelect from 'components/contact/contact-type-select';
@@ -9,16 +9,10 @@ import { professionalsStatuses, clientStatuses } from 'global/variables';
 import { updateContact } from 'api/contacts';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
+import { useRouter } from 'next/router';
 const UpdateTypeStatus = ({ client, handleClose }) => {
   const dispatch = useDispatch();
-  const steps = [
-    { id: 1, name: 'Select Category', href: '#' },
-    {
-      id: 2,
-      name: 'Select Type',
-      href: '#',
-    },
-  ];
+  const router = useRouter();
 
   const nextStep = () => {
     if (currentStep === 2) {
@@ -34,6 +28,9 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
 
   const changeTypeAndStatus = () => {
     setIsSubmitting(true);
+    if ([2, 3, 13, 14].includes(selectedType)) {
+      setSelectedStatus(1);
+    }
     updateContact(client.id, {
       category_id: selectedType,
       status_id: selectedStatus,
@@ -41,6 +38,9 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
       setIsSubmitting(false);
       handleClose();
       dispatch(setRefetchData(true));
+      if ([2, 3, 13, 14].includes(selectedType)) {
+        router.push('/contacts/other');
+      }
     });
   };
 
@@ -48,6 +48,22 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedType, setSelectedType] = useState(client.category_id);
   const [selectedStatus, setSelectedStatus] = useState(client.status_id);
+  const [steps, setSteps] = useState([]);
+
+  useEffect(() => {
+    if ([2, 3, 13, 14].includes(selectedType)) {
+      setSteps([{ id: 1, name: 'Select Category', href: '#' }]);
+    } else {
+      setSteps([
+        { id: 1, name: 'Select Category', href: '#' },
+        {
+          id: 2,
+          name: 'Select Type',
+          href: '#',
+        },
+      ]);
+    }
+  }, [selectedType]);
 
   return (
     <MultiStepOverlay
@@ -88,88 +104,20 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
           </div>
         ) : (
           <div>
-            <>
-              <div className="flex items-center mb-6">
-                <CircleStepNumber number={2} className="mr-2" />
-                <Text h3>In what stage of communication?</Text>
-              </div>
-              <StatusSelect
-                className="px-9"
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                statuses={
-                  [8, 9, 12].includes(selectedType)
-                    ? professionalsStatuses
-                    : clientStatuses
-                }
-              />
-            </>
-            {/* <div className="p-6">
-              <div className="flex items-center mb-4">
-                <CircleStepNumber number={1} className="mr-2" />
-                <Text h3>What type of contact is this for you?</Text>
-              </div>
-              <div className="grid grid-cols-3 gap-4 pl-9 mb-6">
-                {types.map((type, index) => {
-                  return (
-                    <div key={index}>
-                      <ContactTypeSelect
-                        type={type}
-                        setSelectedType={handleSelectUncategorizedType}
-                        selectedType={selectedUncategorizedContactType}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              {selectedUncategorizedContactType != null &&
-                selectedUncategorizedContactType != 2 &&
-                selectedUncategorizedContactType != 3 &&
-                selectedUncategorizedContactType != 13 &&
-                selectedUncategorizedContactType != 14 && (
-                  <>
-                    <div className="flex items-center mb-4">
-                      <CircleStepNumber number={2} className="mr-2" />
-                      <Text h3>In what stage of communication?</Text>
-                    </div>
-                    <StatusSelect
-                      className="pl-9"
-                      selectedStatus={selectedUncategorizedContactStatus}
-                      setSelectedStatus={handleSelectUncategorizedStatus}
-                      statuses={
-                        [8, 9, 12].includes(selectedUncategorizedContactType)
-                          ? professionalsStatuses
-                          : clientStatuses
-                      }
-                    />
-                  </>
-                )}
-            </div> */}
-            {/* <Radio
-              options={
-                selectedContact === 0 ? clientOptions : professionalsOptions
-              }
-              label="What kind of contact is this for you?"
-              selectedContactType={formik2.values.selectedContactType}
-              changeContactType={(e) =>
-                setFieldValue2('selectedContactType', e)
-              }
-              className="mb-6"
-              error={
-                errors2.selectedContactType && touched2.selectedContactType
-              }
-              errorText={errors2.selectedContactType}
-            />
+            <div className="flex items-center mb-6">
+              <CircleStepNumber number={2} className="mr-2" />
+              <Text h3>In what stage of communication?</Text>
+            </div>
             <StatusSelect
-              selectedStatus={formik2.values.selectedStatus}
-              setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-              label="In what stage of communication?"
+              className="px-9"
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
               statuses={
-                selectedContact === 0 ? clientStatuses : professionalsStatuses
+                [8, 9, 12].includes(selectedType)
+                  ? professionalsStatuses
+                  : clientStatuses
               }
-              error={errors2.selectedStatus && touched2.selectedStatus}
-              errorText={errors2.selectedStatus}
-            /> */}
+            />
           </div>
         )}
       </div>

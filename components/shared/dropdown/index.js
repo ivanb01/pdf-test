@@ -28,7 +28,7 @@ const Dropdown = ({
   ...props
 }) => {
   const firstSelect = initialSelect
-    ? options.find((item) => item.name === initialSelect)
+    ? options?.find((item) => item.name === initialSelect)
     : null;
   const [selected, setSelected] = useState(firstSelect);
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
@@ -96,7 +96,7 @@ const Dropdown = ({
                 leaveTo="opacity-0"
               >
                 <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                  {options.map((option) => (
+                  {options?.map((option) => (
                     <Listbox.Option
                       key={option.id}
                       className={({ active }) =>

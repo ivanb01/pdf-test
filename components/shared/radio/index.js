@@ -20,7 +20,7 @@ export default function Radio({
         </Text>
       )}
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
-        {options.map((option) => (
+        {options?.map((option) => (
           <Button
             ternary
             active={selectedContactType == option.id}

@@ -50,7 +50,6 @@ const Dropdown = ({
               </Listbox.Label>
             )}
             <div className="relative">
-
               {iconLabel ? (
                 <Listbox.Button className={`flex`}>{iconLabel}</Listbox.Button>
               ) : (
@@ -72,7 +71,6 @@ const Dropdown = ({
                 </Listbox.Button>
               )}
 
-
               <Transition
                 show={open}
                 as={Fragment}
@@ -82,7 +80,7 @@ const Dropdown = ({
                 afterLeave={() => handleDropdownClosed(open)}
               >
                 <Listbox.Options className=" z-50 absolute mt-1 top-[20px] right-[50%] w-auto bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                  {options.map((option) => (
+                  {options?.map((option) => (
                     <Listbox.Option
                       key={option.id}
                       className={({ selected, active }) =>
