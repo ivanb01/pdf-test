@@ -1,10 +1,14 @@
 import Layout from 'components/Layout';
 import Professionals from 'components/Contacts/professionals-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab, setRefetchContacts } from 'store/global/slice';
+import {
+  setOpenedTab,
+  setOpenedSubtab,
+  setRefetchContacts,
+} from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
-import { setContacts } from 'store/contacts/slice';
+import { setContacts, updateContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import { professionalsStatuses, professionalsOptions } from 'global/variables';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
@@ -23,7 +27,7 @@ const index = () => {
 
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
-    dispatch(setContacts(filteredArray));
+    dispatch(updateContacts(filteredArray.data));
   };
 
   useEffect(() => {
@@ -46,8 +50,8 @@ const index = () => {
   }, []);
 
   useEffect(() => {
-    fetchProfessionals()
-    dispatch(setRefetchContacts(false))
+    fetchProfessionals();
+    dispatch(setRefetchContacts(false));
   }, [refetchContacts]);
 
   return (
