@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import {
   setOpenedTab,
   setOpenedSubtab,
-  setRefetchContacts,
+  setRefetchData,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
@@ -23,7 +23,7 @@ const index = () => {
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
   const openedTab = useSelector((state) => state.global.openedTab);
-  const refetchContacts = useSelector((state) => state.global.refetchContacts);
+  const refetchData = useSelector((state) => state.global.refetchData);
 
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
@@ -51,8 +51,8 @@ const index = () => {
 
   useEffect(() => {
     fetchProfessionals();
-    dispatch(setRefetchContacts(false));
-  }, [refetchContacts]);
+    dispatch(setRefetchData(false));
+  }, [refetchData]);
 
   return (
     <Layout>

@@ -8,15 +8,17 @@ import { menuItems } from 'global/variables';
 import Router, { useRouter } from 'next/router';
 import backArrow from 'public/images/back-arrow.svg';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import * as contactServices from 'api/contacts';
 import Loader from 'components/shared/loader';
-
+import { setRefetchData } from 'store/global/slice';
 export default function Details() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { id } = router.query;
 
+  const refetchData = useSelector((state) => state.global.refetchData);
   const contacts = useSelector((state) => state.contacts.data.data);
   // const contact = contacts.find((contact) => contact.id == id);
   const [contact, setContact] = useState(null);
@@ -45,6 +47,7 @@ export default function Details() {
   const localTabs = tabs(id, contact, handleFetchContactRequired);
 
   const fetchContact = async () => {
+    setLoading(true);
     try {
       const { data } = await contactServices.getContact(id);
       setContact(data);
@@ -60,6 +63,12 @@ export default function Details() {
   //     setCurrent(1);
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (refetchData) {
+      fetchContact().then(() => dispatch(setRefetchData(false)));
+    }
+  }, [refetchData]);
 
   useEffect(() => {
     id && fetchContact();

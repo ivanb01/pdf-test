@@ -4,6 +4,7 @@ import { DotsVerticalIcon } from '@heroicons/react/outline';
 import { PlusIcon, PencilIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from 'react';
 import UpdateCategoryType from 'components/overlays/update-category-type';
+import UpdateTypeStatus from 'components/overlays/update-type-status';
 import AddProfile from 'components/overlays/add-profile';
 import {
   clientStatuses,
@@ -128,14 +129,19 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
           />
         </div>
       </div>
+      {console.log('client', client)}
       {editModal && (
-        <UpdateCategoryType
-          handleClose={handleCloseEditModal}
-          contact={client}
-          categoryTypes={categoryTypes}
-          statuses={contactStatuses}
-          handleFetchContactRequired={handleFetchContactRequired}
+        <UpdateTypeStatus
+          client={client}
+          handleClose={() => setEditModal(false)}
         />
+        // <UpdateCategoryType
+        //   handleClose={handleCloseEditModal}
+        //   contact={client}
+        //   categoryTypes={categoryTypes}
+        //   statuses={contactStatuses}
+        //   handleFetchContactRequired={handleFetchContactRequired}
+        // />
       )}
       {addModal && (
         <AddProfile

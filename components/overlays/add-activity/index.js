@@ -17,7 +17,7 @@ import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
 import TextArea from 'components/shared/textarea';
 import { useDispatch } from 'react-redux';
-import { setRefetchContacts } from 'store/global/slice';
+import { setRefetchData } from 'store/global/slice';
 const AddActivity = ({
   className,
   handleClose,
@@ -25,7 +25,7 @@ const AddActivity = ({
   client,
   afterUpdate,
   setAddActivityPopup,
-  refetchContacts
+  refetchData,
 }) => {
   const dispatch = useDispatch();
   const steps = [
@@ -76,8 +76,8 @@ const AddActivity = ({
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
-      handleClose()
-      dispatch(setRefetchContacts(true))
+      handleClose();
+      dispatch(setRefetchData(true));
     }
   };
 
@@ -118,18 +118,23 @@ const AddActivity = ({
             error={errors.description && touched.description}
             errorText={errors.description}
           ></TextArea>
-      <div className="flex items-center justify-between pt-6 ">
-        <div></div>
-        <div>
-          <Button
-            className="mr-3"
-            white
-            label="Cancel"
-            onClick={() => setAddActivityPopup(false)}
-          />
-          <Button type="submit" primary label="Save" loading={loadingButton} />
-        </div>
-      </div>
+          <div className="flex items-center justify-between pt-6 ">
+            <div></div>
+            <div>
+              <Button
+                className="mr-3"
+                white
+                label="Cancel"
+                onClick={() => setAddActivityPopup(false)}
+              />
+              <Button
+                type="submit"
+                primary
+                label="Save"
+                loading={loadingButton}
+              />
+            </div>
+          </div>
         </form>
       </div>
     </Overlay>

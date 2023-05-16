@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import {
   setOpenedTab,
   setOpenedSubtab,
-  setRefetchContacts,
+  setRefetchData,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { bulkUpdateContacts, getContacts } from 'api/contacts';
@@ -32,7 +32,7 @@ const index = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const refetchContacts = useSelector((state) => state.global.refetchContacts);
+  const refetchData = useSelector((state) => state.global.refetchData);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
@@ -69,8 +69,8 @@ const index = () => {
     fetchClients();
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
-    dispatch(setRefetchContacts(false));
-  }, [refetchContacts]);
+    dispatch(setRefetchData(false));
+  }, [refetchData]);
   return (
     <Layout>
       {loading ? (
