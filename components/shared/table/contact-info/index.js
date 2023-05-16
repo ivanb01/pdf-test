@@ -66,22 +66,24 @@ const ContactInfo = ({ data, handleSelect, handleAction }) => {
         </div>
       </div>
 
-      {data.assigned == 2 ? (
-        <></>
-      ) : data.assigned == 1 ? (
-        <div className="group-hover:block hidden absolute right-2 top-1/2 -translate-y-1/2">
-          <MinusCircleIcon
-            className="h-5 w-5 text-gray3 group-hover:text-red4"
-            onClick={() => handleAction(data.id, 'unassign')}
-          />
-        </div>
-      ) : (
-        <div className="group-hover:block hidden absolute right-2 top-1/2 -translate-y-1/2">
-          <PlusCircleIcon
-            className="h-5 w-5 text-gray3 group-hover:text-lightBlue3"
-            onClick={() => handleAction(data.id, 'assign')}
-          />
-        </div>
+      { data.assigned && (
+        data.assigned == 2 ? (
+          <></>
+        ) : data.assigned == 1 ? (
+          <div className="group-hover:block hidden absolute right-2 top-1/2 -translate-y-1/2">
+            <MinusCircleIcon
+              className="h-5 w-5 text-gray3 group-hover:text-red4"
+              onClick={() => handleAction(data.id, 'unassign')}
+            />
+          </div>
+        ) : (
+          <div className="group-hover:block hidden absolute right-2 top-1/2 -translate-y-1/2">
+            <PlusCircleIcon
+              className="h-5 w-5 text-gray3 group-hover:text-lightBlue3"
+              onClick={() => handleAction(data.id, 'assign')}
+            />
+          </div>
+        )
       )}
     </div>
   );

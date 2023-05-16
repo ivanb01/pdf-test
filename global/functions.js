@@ -13,7 +13,9 @@ import moment from 'moment';
 import { multiselectOptions } from './variables';
 
 export const getInitials = (name) => {
-  let fullName = name.split(' ');
+  // let fullName = name.split(' ');
+  let fullName = name.split(/\s+/);
+  console.log('testing', fullName)
   return (fullName[0][0] + fullName[1][0]).toUpperCase();
 };
 

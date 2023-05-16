@@ -8,7 +8,10 @@ import Text from 'components/shared/text';
 import Avatar from 'components/shared/avatar';
 import AddRelationshipModal from './addRelationship';
 import EditRelationshipModal from './editRelationship';
-import * as contactServices from 'api/contacts';
+// import * as contactServices from 'api/contacts';
+import { getContactRelationships, deleteContactRelationship } from 'api/contacts';
+import ContactInfo from 'components/shared/table/contact-info';
+import toast from 'react-hot-toast';
 
 export default function Relationships({ contactId }) {
   const [relationships, setRelationships] = useState([]);
@@ -31,7 +34,7 @@ export default function Relationships({ contactId }) {
 
   const fetchContactRelationships = async () => {
     try {
-      const { data } = await contactServices.getContactRelationships(contactId);
+      const { data } = await getContactRelationships(contactId);
       console.log('relationships', data?.data);
       setRelationships(data?.data);
     } catch (error) {
@@ -48,7 +51,8 @@ export default function Relationships({ contactId }) {
       setRelationships((prev) =>
         prev.filter((relationship) => relationship?.relationship_id !== id)
       );
-      await contactServices.deleteContactRelationship(contactId, id);
+      toast.success('Relationship was deleted successfully');
+      await deleteContactRelationship(contactId, id);
       // handleFetchRelationshipsRequired();
     } catch (error) {
       console.log(error);
@@ -84,30 +88,15 @@ export default function Relationships({ contactId }) {
                 key={relationship?.relationship_id}
                 className="flex flex-row p-3 hover:bg-lightBlue1 group"
               >
-                <Avatar
-                  size="w-8 h-8"
-                  className="mr-4"
-                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                />
-                <div className="flex flex-row justify-between w-[100%]">
-                  <div className="flex flex-col">
-                    <Text className="text-gray6" h4>
-                      {`${relationship?.first_name} ${relationship?.last_name}`}
-                    </Text>
-                    <Text className="text-gray4" p>
-                      {relationship?.relationship_name}
-                    </Text>
-                  </div>
+                <div className="flex flex-row justify-between w-[100%] text-sm">
+                  <ContactInfo
+                      data={{
+                        name: `${relationship?.first_name} ${relationship?.last_name}`,
+                        email: relationship?.relationship_name,
+                        image: relationship?.profile_image_path,
+                      }}
+                  />
                   <div className="flex flex-row items-center">
-                    {/* <MinusCircleIcon onClick={() => handleDeleteRelationship(relationship?.relationship_id)} className="cursor-pointer text-gray3 hover:text-red4 m-2 opacity-0 group-hover:opacity-100" height={20} /> */}
-                    {/* <div className="grupet relative cursor-pointer opacity-0 group-hover:opacity-100">
-
-                            <PencilIcon onClick={() => {setEditModal(true); setRelationshipToEdit(relationship);}} className="text-gray3 hover:text-gray5" height={20} />
-                            <div className="grupet-hover:opacity-100 opacity-0 whitespace-nowrap inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
-                            >
-                                Edit Relationship
-                            </div>
-                        </div> */}
                     <div
                       className="cursor-pointer relative"
                       onMouseEnter={() =>
