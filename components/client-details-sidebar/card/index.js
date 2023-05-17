@@ -14,7 +14,7 @@ import { getInitials, phoneNumberFormat } from 'global/functions';
 
 export default function ClientCard({ client, handleFetchContactRequired }) {
   const [editingContact, setEditingContact] = useState(false);
-  const [deletingClient, setDeletingContact] = useState(false);
+  const [deletingContact, setDeletingContact] = useState(false);
 
   const types = [
     {
@@ -94,7 +94,7 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
         </div>
       </div>
 
-      {deletingClient && (
+      {deletingContact && (
         <DeleteClientOverlay
           handleCloseOverlay={() => setDeletingContact(false)}
           contact={client}

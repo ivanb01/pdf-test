@@ -24,7 +24,7 @@ export default function ClientDetailsSidebar({
           className="w-[635px]"
           handleFetchContactRequired={handleFetchContactRequired}
         />
-        <Relationships contactId={client?.id} />
+        {/* <Relationships contactId={client?.id} /> */}
       </div>
     </div>
   );
