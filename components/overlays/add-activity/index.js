@@ -1,17 +1,9 @@
 import Dropdown from 'components/shared/dropdown';
 import Button from 'components/shared/button';
-import Avatar from 'components/shared/avatar';
-import Radio from 'components/shared/radio';
-import StatusSelect from 'components/status-select';
-import MultiStepOverlay from 'components/shared/form/multistep-form';
-import { importSourceOptions, phoneNumberRules } from 'global/variables';
 import { useFormik } from 'formik';
-import Input from 'components/shared/input';
 import { useState, useEffect } from 'react';
 import * as contactServices from 'api/contacts';
 import Overlay from 'components/shared/overlay';
-import TagsInput from 'components/tagsInput';
-import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';

@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { setContacts } from 'store/contacts/slice';
 import {
-  importSourceOptions,
+  leadSourceOptions,
   phoneNumberRules,
   clientStatuses,
   clientOptions,
@@ -262,9 +262,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                   <Dropdown
                     className="col-span-2"
                     white
-                    label="Source"
+                    label="Lead Source"
                     activeIcon={false}
-                    options={importSourceOptions}
+                    options={leadSourceOptions}
                     handleSelect={(source) =>
                       (formik.values.lead_source = source.name)
                     }
