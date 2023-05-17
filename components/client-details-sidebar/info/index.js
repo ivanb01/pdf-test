@@ -83,7 +83,7 @@ export default function Info({ client, handleFetchContactRequired }) {
   const handleChangeSource = async (source) => {
     try {
       await contactServices.updateContact(client.id, {
-        import_source: source,
+        lead_source: source,
       });
       handleFetchContactRequired();
     } catch (error) {
@@ -162,9 +162,9 @@ export default function Info({ client, handleFetchContactRequired }) {
             options={importSourceOptions}
             className="my-3"
             handleSelect={(source) => handleChangeSource(source.name)}
-            initialSelect={client?.import_source}
+            initialSelect={client?.lead_source}
             placeHolder={
-              client?.import_source ? client?.import_source : 'Choose'
+              client?.lead_source ? client?.lead_source : 'Choose'
             }
           />
 

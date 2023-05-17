@@ -96,7 +96,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       last_name: '',
       email: '',
       phone_number: '',
-      import_source: '',
+      lead_source: '',
       tags: [],
     },
     validationSchema: AddContactSchema,
@@ -266,9 +266,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     activeIcon={false}
                     options={importSourceOptions}
                     handleSelect={(source) =>
-                      (formik.values.import_source = source.name)
+                      (formik.values.lead_source = source.name)
                     }
-                    initialSelect={formik.values.import_source}
+                    initialSelect={formik.values.lead_source}
                     placeHolder={'Choose'}
                   />
                   <TagsInput
