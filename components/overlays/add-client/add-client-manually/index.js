@@ -74,7 +74,7 @@ const AddClientManuallyOverlay = ({
       last_name: '',
       email: '',
       phone_number: '',
-      import_source: '',
+      lead_source: '',
       tags: [],
     },
     validationSchema: AddContactSchema,
@@ -229,12 +229,12 @@ const AddClientManuallyOverlay = ({
                     activeIcon={false}
                     options={importSourceOptions}
                     handleSelect={(source) =>
-                      (formik.values.import_source = source.name)
+                      (formik.values.lead_source = source.name)
                     }
-                    initialSelect={formik.values.import_source}
+                    initialSelect={formik.values.lead_source}
                     placeHolder={
-                      formik.values.import_source
-                        ? formik.values.import_source
+                      formik.values.lead_source
+                        ? formik.values.lead_source
                         : 'Choose'
                     }
                   />

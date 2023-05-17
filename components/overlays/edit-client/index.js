@@ -63,7 +63,7 @@ const EditContactOverlay = ({
       last_name: client?.last_name,
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
-      import_source: client?.import_source,
+      lead_source: client?.lead_source,
       tags: client?.tags,
     },
     validationSchema: AddContactSchema,
@@ -153,12 +153,12 @@ const EditContactOverlay = ({
               options={importSourceOptions}
               className="col-span-2"
               handleSelect={(source) =>
-                (formik.values.import_source = source.name)
+                (formik.values.lead_source = source.name)
               }
-              initialSelect={formik.values.import_source}
+              initialSelect={formik.values.lead_source}
               placeHolder={
-                formik.values.import_source
-                  ? formik.values.import_source
+                formik.values.lead_source
+                  ? formik.values.lead_source
                   : 'Choose'
               }
             />
