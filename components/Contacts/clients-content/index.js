@@ -72,7 +72,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
     {
       title: 'CAMPAIGN',
-      content: ['In Campain', 'Not In Campaign'],
+      content: ['In Campaign', 'Not In Campaign'],
       value: 'is_in_campaign',
     },
     {
@@ -82,7 +82,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
   ];
   const campaignFilterMeaning = {
-    'In Campain': 'assigned',
+    'In Campaign': 'assigned',
     'Not In Campaign': null,
   };
 
