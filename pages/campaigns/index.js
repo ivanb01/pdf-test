@@ -15,6 +15,8 @@ import * as campaignServices from 'api/campaign';
 import Loader from 'components/shared/loader';
 import Mail from '@mui/icons-material/Mail';
 import { sortDateAsc } from 'global/functions';
+import EventPreview from 'components/overlays/event-preview';
+import { getContactCampaignEventPreview } from 'api/campaign';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -55,6 +57,11 @@ const Campaigns = () => {
     thisMonth: [],
   });
   const [currentCampaignsEvents, setCurrentCampaignsEvents] = useState([]);
+  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
+  const [eventToPreview, setEventToPreview] = useState(null);
+  const [showEventPreview, setShowEventPreview] = useState(false);
+  const [eventInfo, setEventInfo] = useState(null);
+
 
   const [pieData, setPieData] = useState([
     {
@@ -93,6 +100,20 @@ const Campaigns = () => {
       );
       setSelectedContacts(selectedContactsCopy);
     }
+  };
+
+  const handleEventPreview = async (event) => {
+    setLoadingEventPreview(true);
+    setShowEventPreview(true);
+    setEventInfo({
+      event_updated_at: event?.event_scheduled_time,
+      event_name: event?.event_name,
+    });
+    console.log('event preview for', event);
+    getContactCampaignEventPreview(event?.event_id).then((data) => {
+      setEventToPreview(data.data);
+      setLoadingEventPreview(false);
+    });
   };
 
   const fetchCampaignsEvents = async () => {
@@ -152,7 +173,6 @@ const Campaigns = () => {
   }, []);
 
   useEffect(() => {
-    console.log('brrradadlawdlawldawldlawda')
     currentButton == 0 ? setCurrentCampaignsEvents(campaignsEvents.thisWeek) :
     setCurrentCampaignsEvents(campaignsEvents.thisMonth)
   }, [currentButton]);
@@ -176,24 +196,42 @@ const Campaigns = () => {
             {loadingEvents ? (
               <Loader />
             ) : currentCampaignsEvents.length ? (
-              <SimpleBar
-                autoHide={true}
-                className="overflow-x-hidden"
-                style={{ maxHeight: '590px' }}
-              >
-                <Table
-                  tableFor="campaigns"
-                  // data={
-                  //   currentButton == 0
-                  //     ? campaignsEvents.thisWeek
-                  //     : campaignsEvents.thisMonth
-                  // }
-                  data={currentCampaignsEvents}
-                  handleSelectAll={handleSelectAll}
-                  handleClickRow={handleClickContact}
-                  handleSelectContact={handleSelectContact}
-                />
-              </SimpleBar>
+              <div className='relative h-full'>
+                <SimpleBar
+                  autoHide={true}
+                  className="overflow-x-hidden"
+                  style={{ maxHeight: '590px' }}
+                >
+                  <Table
+                    tableFor="campaigns"
+                    // data={
+                    //   currentButton == 0
+                    //     ? campaignsEvents.thisWeek
+                    //     : campaignsEvents.thisMonth
+                    // }
+                    data={currentCampaignsEvents}
+                    handleSelectAll={handleSelectAll}
+                    handleClickRow={handleClickContact}
+                    handleSelectContact={handleSelectContact}
+                    handleEventPreview={handleEventPreview}
+                  />
+                </SimpleBar>
+                {
+                  showEventPreview && 
+                  <div>
+                    <EventPreview
+                      topClass={'top-[250px]'}
+                      eventInfo={eventInfo}
+                      loading={loadingEventPreview}
+                      event={eventToPreview}
+                      showEventPreview={showEventPreview}
+                      setShowEventPreview={setShowEventPreview}
+                    />
+                  </div>
+                }
+                
+              
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
                 <Mail className="w-10 h-10 text-gray3"></Mail>
