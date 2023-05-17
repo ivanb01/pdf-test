@@ -41,17 +41,17 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
       ),
       handleClick: () => setEditModal(true),
     },
-    {
-      name: (
-        <span className="flex flex-row">
-          <PlusIcon height={20} className="text-gray6 mr-3" />
-          <Text p className="text-gray6">
-            Add Additional Type
-          </Text>
-        </span>
-      ),
-      handleClick: () => setAddModal(true),
-    },
+    // {
+    //   name: (
+    //     <span className="flex flex-row">
+    //       <PlusIcon height={20} className="text-gray6 mr-3" />
+    //       <Text p className="text-gray6">
+    //         Add Additional Type
+    //       </Text>
+    //     </span>
+    //   ),
+    //   handleClick: () => setAddModal(true),
+    // },
   ];
 
   const categoryTypes =

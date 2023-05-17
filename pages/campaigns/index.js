@@ -15,6 +15,8 @@ import * as campaignServices from 'api/campaign';
 import Loader from 'components/shared/loader';
 import Mail from '@mui/icons-material/Mail';
 import { sortDateAsc } from 'global/functions';
+import EventPreview from 'components/overlays/event-preview';
+import { getContactCampaignEventPreview } from 'api/campaign';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -54,6 +56,13 @@ const Campaigns = () => {
     thisWeek: [],
     thisMonth: [],
   });
+  const [currentCampaignsEvents, setCurrentCampaignsEvents] = useState([]);
+  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
+  const [eventToPreview, setEventToPreview] = useState(null);
+  const [showEventPreview, setShowEventPreview] = useState(false);
+  const [eventInfo, setEventInfo] = useState(null);
+
+
   const [pieData, setPieData] = useState([
     {
       id: 0,
@@ -68,112 +77,6 @@ const Campaigns = () => {
       color: '#0369A1',
     },
   ]);
-
-  // const [contacts, setContacts] = useState({
-  //   thisWeek: [
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'In Communication',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltonn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltons@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoen@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'Contract Signed',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltofn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'Contract Signed',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walhton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoqn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltzon@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.wallton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoln@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //   ],
-  //   thisMonth: [
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walto1n@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'New Lead',
-  //     },
-  //   ],
-  // });
 
   const handleClickContact = (item, e) => {
     if (e.target.type == 'checkbox') {
@@ -199,11 +102,26 @@ const Campaigns = () => {
     }
   };
 
+  const handleEventPreview = async (event) => {
+    setLoadingEventPreview(true);
+    setShowEventPreview(true);
+    setEventInfo({
+      event_updated_at: event?.event_scheduled_time,
+      event_name: event?.event_name,
+    });
+    console.log('event preview for', event);
+    getContactCampaignEventPreview(event?.event_id).then((data) => {
+      setEventToPreview(data.data);
+      setLoadingEventPreview(false);
+    });
+  };
+
   const fetchCampaignsEvents = async () => {
     try {
       const { data } = await campaignServices.getCampaignsEventsUpcoming();
       const sortData = sortDateAsc(data?.data, 'event_scheduled_time');
       setCampaignsEvents((prev) => ({ ...prev, thisWeek: sortData }));
+      setCurrentCampaignsEvents(sortData);
 
       const { data: dataMonth } =
         await campaignServices.getCampaignsEventsUpcoming({
@@ -255,6 +173,11 @@ const Campaigns = () => {
     fetchCampaignsEnrollSummary();
   }, []);
 
+  useEffect(() => {
+    currentButton == 0 ? setCurrentCampaignsEvents(campaignsEvents.thisWeek) :
+    setCurrentCampaignsEvents(campaignsEvents.thisMonth)
+  }, [currentButton]);
+
   return (
     <>
       <MainMenu fixed />
@@ -273,24 +196,43 @@ const Campaigns = () => {
             </div>
             {loadingEvents ? (
               <Loader />
-            ) : campaignsEvents.thisWeek.length ? (
-              <SimpleBar
-                autoHide={true}
-                className="overflow-x-hidden"
-                style={{ maxHeight: '590px' }}
-              >
-                <Table
-                  tableFor="campaigns"
-                  data={
-                    currentButton == 0
-                      ? campaignsEvents.thisWeek
-                      : campaignsEvents.thisMonth
-                  }
-                  handleSelectAll={handleSelectAll}
-                  handleClickRow={handleClickContact}
-                  handleSelectContact={handleSelectContact}
-                />
-              </SimpleBar>
+            ) : currentCampaignsEvents.length ? (
+              <div className='relative h-full'>
+                <SimpleBar
+                  autoHide={true}
+                  className="overflow-x-hidden"
+                  style={{ maxHeight: '590px' }}
+                >
+                  <Table
+                    tableFor="campaigns"
+                    // data={
+                    //   currentButton == 0
+                    //     ? campaignsEvents.thisWeek
+                    //     : campaignsEvents.thisMonth
+                    // }
+                    data={currentCampaignsEvents}
+                    handleSelectAll={handleSelectAll}
+                    handleClickRow={handleClickContact}
+                    handleSelectContact={handleSelectContact}
+                    handleEventPreview={handleEventPreview}
+                  />
+                </SimpleBar>
+                {
+                  showEventPreview && 
+                  <div>
+                    <EventPreview
+                      topClass={'top-[250px]'}
+                      eventInfo={eventInfo}
+                      loading={loadingEventPreview}
+                      event={eventToPreview}
+                      showEventPreview={showEventPreview}
+                      setShowEventPreview={setShowEventPreview}
+                    />
+                  </div>
+                }
+                
+              
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
                 <Mail className="w-10 h-10 text-gray3"></Mail>

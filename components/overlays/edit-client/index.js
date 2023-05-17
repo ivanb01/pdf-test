@@ -5,7 +5,7 @@ import { inputs, steps } from './list';
 import Radio from 'components/shared/radio';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
-import { importSourceOptions, phoneNumberRules } from 'global/variables';
+import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import { useState, useEffect } from 'react';
@@ -63,7 +63,7 @@ const EditContactOverlay = ({
       last_name: client?.last_name,
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
-      import_source: client?.import_source,
+      lead_source: client?.lead_source,
       tags: client?.tags,
     },
     validationSchema: AddContactSchema,
@@ -148,17 +148,17 @@ const EditContactOverlay = ({
               errorText={errors.phone_number}
             />
             <Dropdown
-              label="Source"
+              label="Lead Source"
               activeIcon={false}
-              options={importSourceOptions}
+              options={leadSourceOptions}
               className="col-span-2"
               handleSelect={(source) =>
-                (formik.values.import_source = source.name)
+                (formik.values.lead_source = source.name)
               }
-              initialSelect={formik.values.import_source}
+              initialSelect={formik.values.lead_source}
               placeHolder={
-                formik.values.import_source
-                  ? formik.values.import_source
+                formik.values.lead_source
+                  ? formik.values.lead_source
                   : 'Choose'
               }
             />

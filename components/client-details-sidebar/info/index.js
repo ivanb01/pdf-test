@@ -1,7 +1,7 @@
 import InfoCard from './card';
 import Dropdown from 'components/shared/dropdown';
 import * as contactServices from 'api/contacts';
-import { allStatusesQuickEdit, importSourceOptions } from 'global/variables';
+import { allStatusesQuickEdit, leadSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -83,7 +83,7 @@ export default function Info({ client, handleFetchContactRequired }) {
   const handleChangeSource = async (source) => {
     try {
       await contactServices.updateContact(client.id, {
-        import_source: source,
+        lead_source: source,
       });
       handleFetchContactRequired();
     } catch (error) {
@@ -157,14 +157,14 @@ export default function Info({ client, handleFetchContactRequired }) {
           />
 
           <Dropdown
-            label="Source"
+            label="Lead Source"
             activeIcon={false}
-            options={importSourceOptions}
+            options={leadSourceOptions}
             className="my-3"
             handleSelect={(source) => handleChangeSource(source.name)}
-            initialSelect={client?.import_source}
+            initialSelect={client?.lead_source}
             placeHolder={
-              client?.import_source ? client?.import_source : 'Choose'
+              client?.lead_source ? client?.lead_source : 'Choose'
             }
           />
 

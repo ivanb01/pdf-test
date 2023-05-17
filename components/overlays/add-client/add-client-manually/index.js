@@ -12,7 +12,7 @@ import * as contactServices from 'api/contacts';
 import { setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
-import { importSourceOptions, phoneNumberRules } from 'global/variables';
+import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
 import TagsInput from 'components/tagsInput';
 import { useSelector } from 'react-redux';
@@ -74,7 +74,7 @@ const AddClientManuallyOverlay = ({
       last_name: '',
       email: '',
       phone_number: '',
-      import_source: '',
+      lead_source: '',
       tags: [],
     },
     validationSchema: AddContactSchema,
@@ -225,16 +225,16 @@ const AddClientManuallyOverlay = ({
                   <Dropdown
                     className="col-span-2"
                     white
-                    label="Source"
+                    label="Lead Source"
                     activeIcon={false}
-                    options={importSourceOptions}
+                    options={leadSourceOptions}
                     handleSelect={(source) =>
-                      (formik.values.import_source = source.name)
+                      (formik.values.lead_source = source.name)
                     }
-                    initialSelect={formik.values.import_source}
+                    initialSelect={formik.values.lead_source}
                     placeHolder={
-                      formik.values.import_source
-                        ? formik.values.import_source
+                      formik.values.lead_source
+                        ? formik.values.lead_source
                         : 'Choose'
                     }
                   />

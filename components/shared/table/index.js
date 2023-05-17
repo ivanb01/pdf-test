@@ -130,7 +130,7 @@ const Table = ({
             <tr
               key={dataItem.event_id}
               className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
-              onClick={(event) => handleClickRow(dataItem, event)}
+              // onClick={(event) => handleClickRow(dataItem, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
@@ -147,7 +147,10 @@ const Table = ({
                 <div className="text-gray7  font-medium">
                   {dataItem.campaign_name}
                 </div>
-                <div className="text-lightBlue3 cursor-pointer hover:underline">
+                <div 
+                  className="text-lightBlue3 cursor-pointer hover:underline"
+                  onClick={() => handleEventPreview(dataItem)}
+                >
                   <Image src={eyeIcon} />
                   <span className="ml-1">{dataItem.event_name}</span>
                 </div>

@@ -601,7 +601,7 @@ export const globalTabsStates = {
   },
 };
 
-export const importSourceOptions = [
+export const leadSourceOptions = [
   // {
   //   id: 1,
   //   name: 'Google Contacts',

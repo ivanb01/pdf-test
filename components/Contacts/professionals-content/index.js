@@ -55,8 +55,8 @@ const tabs = [
 ];
 
 const campaignFilterMeaning = {
-  'In Campaign': true,
-  'Not In Campaign': false,
+  'In Campaign': 'assigned',
+  'Not In Campaign': null,
 };
 
 const buttons = [

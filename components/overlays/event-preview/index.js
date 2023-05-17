@@ -15,6 +15,7 @@ const EventPreview = ({
   event,
   loading,
   handleEventPreview,
+  topClass,
 }) => {
   const [campaignEvents, setCampaignEvents] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(0);
@@ -32,7 +33,11 @@ const EventPreview = ({
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed top-[222px] inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+            <div
+              className={`pointer-events-none fixed ${
+                topClass ? topClass : 'top-[222px]'
+              } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16`}
+            >
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
