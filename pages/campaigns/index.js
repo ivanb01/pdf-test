@@ -54,6 +54,8 @@ const Campaigns = () => {
     thisWeek: [],
     thisMonth: [],
   });
+  const [currentCampaignsEvents, setCurrentCampaignsEvents] = useState([]);
+
   const [pieData, setPieData] = useState([
     {
       id: 0,
@@ -68,112 +70,6 @@ const Campaigns = () => {
       color: '#0369A1',
     },
   ]);
-
-  // const [contacts, setContacts] = useState({
-  //   thisWeek: [
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'In Communication',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltonn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltons@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoen@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'Contract Signed',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltofn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'Contract Signed',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walhton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoqn@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltzon@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.wallton@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Landloard',
-  //       status: 'Attempted Contact',
-  //     },
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.waltoln@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Buyer',
-  //       status: 'New Lead',
-  //     },
-  //   ],
-  //   thisMonth: [
-  //     {
-  //       first_name: 'Lindsay',
-  //       last_name: 'Walton',
-  //       email: 'lindsay.walto1n@example.com',
-  //       addedFrom: 'CSV',
-  //       addedDate: '01/01/2022',
-  //       type: 'Renter',
-  //       status: 'New Lead',
-  //     },
-  //   ],
-  // });
 
   const handleClickContact = (item, e) => {
     if (e.target.type == 'checkbox') {
@@ -255,6 +151,12 @@ const Campaigns = () => {
     fetchCampaignsEnrollSummary();
   }, []);
 
+  useEffect(() => {
+    console.log('brrradadlawdlawldawldlawda')
+    currentButton == 0 ? setCurrentCampaignsEvents(campaignsEvents.thisWeek) :
+    setCurrentCampaignsEvents(campaignsEvents.thisMonth)
+  }, [currentButton]);
+
   return (
     <>
       <MainMenu fixed />
@@ -273,7 +175,7 @@ const Campaigns = () => {
             </div>
             {loadingEvents ? (
               <Loader />
-            ) : campaignsEvents.thisWeek.length ? (
+            ) : currentCampaignsEvents.length ? (
               <SimpleBar
                 autoHide={true}
                 className="overflow-x-hidden"
@@ -281,11 +183,12 @@ const Campaigns = () => {
               >
                 <Table
                   tableFor="campaigns"
-                  data={
-                    currentButton == 0
-                      ? campaignsEvents.thisWeek
-                      : campaignsEvents.thisMonth
-                  }
+                  // data={
+                  //   currentButton == 0
+                  //     ? campaignsEvents.thisWeek
+                  //     : campaignsEvents.thisMonth
+                  // }
+                  data={currentCampaignsEvents}
                   handleSelectAll={handleSelectAll}
                   handleClickRow={handleClickContact}
                   handleSelectContact={handleSelectContact}
