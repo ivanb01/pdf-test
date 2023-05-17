@@ -121,6 +121,7 @@ const Campaigns = () => {
       const { data } = await campaignServices.getCampaignsEventsUpcoming();
       const sortData = sortDateAsc(data?.data, 'event_scheduled_time');
       setCampaignsEvents((prev) => ({ ...prev, thisWeek: sortData }));
+      setCurrentCampaignsEvents(sortData);
 
       const { data: dataMonth } =
         await campaignServices.getCampaignsEventsUpcoming({
