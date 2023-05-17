@@ -11,7 +11,7 @@ const eventStatusesBgColors = {
   scheduled: 'bg-lightBlue3',
   canceled: 'bg-red3',
 };
-const eventStatusesCirclesBorders= {
+const eventStatusesCirclesBorders = {
   Sent: 'border-green5',
   sent: 'border-green5',
   scheduled: 'border-lightBlue3',
@@ -40,7 +40,11 @@ export default function Events({
                 {eventIdx !== events.length - 1 ? (
                   <div
                     className={`-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full 
-                    ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
+                    ${
+                      event?.status
+                        ? eventStatusesBgColors[event?.status]
+                        : 'bg-gray-300'
+                    }`}
                     aria-hidden="true"
                   />
                 ) : null}
@@ -48,18 +52,29 @@ export default function Events({
                   href={event.href}
                   onClick={() => {
                     setCurrentEvent(event.id);
-                    eventPreview(event);
+                    // eventPreview(event);
                   }}
                   className="relative flex items-center group"
                 >
                   <div className="h-9 flex items-center">
                     <span
                       className={`relative z-0 w-8 h-8 flex items-center justify-center lightBlue3 rounded-full bg-white border-2
-                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : 'border-gray-300'}`}
+                      ${
+                        event?.status
+                          ? eventStatusesCirclesBorders[event?.status]
+                          : 'border-gray-300'
+                      }`}
                     >
-                      <span className={`h-[18px] w-[18px] flex items-center justify-center text-xs font-medium text-white rounded-full 
-                      ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
-                      >{eventIdx+1}</span>
+                      <span
+                        className={`h-[18px] w-[18px] flex items-center justify-center text-xs font-medium text-white rounded-full 
+                      ${
+                        event?.status
+                          ? eventStatusesBgColors[event?.status]
+                          : 'bg-gray-300'
+                      }`}
+                      >
+                        {eventIdx + 1}
+                      </span>
                     </span>
                   </div>
                   <div
@@ -70,22 +85,24 @@ export default function Events({
                     <div className="flex flex-col">
                       <span className=" text-xs font-semibold tracking-wide uppercase">
                         {event.event_type}
-                        {
-                          event.preview ? (
-                            event.preview.preview.subject ? `: ${event.preview.preview.subject}` : ''
-                          ) : (
-                            event.subject ? `: ${event.subject}` : ''
-                          )
-                        }
+                        {event.preview
+                          ? event.preview.preview.subject
+                            ? `: ${event.preview.preview.subject}`
+                            : ''
+                          : event.subject
+                          ? `: ${event.subject}`
+                          : ''}
                       </span>
                       <div className="mt-2 flex items-center whitespace-nowrap text-center text-sm text-gray-500">
-                        {event.status && <EventStatus status={event.status} /> }
+                        {event.status && <EventStatus status={event.status} />}
                         <div className="ml-2 text-gray4">
-                          {
-                            isValidDate(event.execute_on) ? formatDateLT(event.execute_on) : (
-                              event.execute_on?.includes('After') ? `${parseInt(event.execute_on.replace(/[^0-9\.]/g, ''))} days after added in Campaign` : event.execute_on
-                            )
-                          }
+                          {isValidDate(event.execute_on)
+                            ? formatDateLT(event.execute_on)
+                            : event.execute_on?.includes('After')
+                            ? `${parseInt(
+                                event.execute_on.replace(/[^0-9\.]/g, '')
+                              )} days after added in Campaign`
+                            : event.execute_on}
                         </div>
                       </div>
                     </div>

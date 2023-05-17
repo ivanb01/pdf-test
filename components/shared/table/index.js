@@ -227,7 +227,11 @@ const Table = ({
                   <div
                     className="text-lightBlue3 cursor-pointer"
                     onClick={() =>
-                      handleEventPreview(event, `Event ${index + 1}`)
+                      handleEventPreview(
+                        data[0]?.events,
+                        event,
+                        `Event ${index + 1}`
+                      )
                     }
                   >
                     <Image src={eyeIcon} />

@@ -26,6 +26,7 @@ import { getContactCampaignEventPreview } from 'api/campaign';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
   const [eventInfo, setEventInfo] = useState(null);
+  const [events, setEvents] = useState(null);
   const [loadingEventPreview, setLoadingEventPreview] = useState(false);
   const [eventToPreview, setEventToPreview] = useState(null);
   const [showEventPreview, setShowEventPreview] = useState(false);
@@ -163,7 +164,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     router.events.on('routeChangeStart', handleRouteChange);
   }, [router]);
 
-  const handleEventPreview = async (event, event_name) => {
+  const handleEventPreview = async (events, event, event_name) => {
+    setEvents(events);
     setLoadingEventPreview(true);
     setShowEventPreview(true);
     setEventInfo({
@@ -188,40 +190,36 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const handleSearch = (term, contacts) => {
     const trimmedSearchValue = term.replace(/\s+/g, '').toLowerCase();
     let filteredArray = contacts?.filter((item) => {
-        const fullName = `${item.contact_name}`.toLowerCase();
-        const fullEmail = `${item.contact_email}`.toLowerCase();
-        return (
-            fullName.includes(trimmedSearchValue) ||
-            fullEmail.includes(trimmedSearchValue) 
-        )
+      const fullName = `${item.contact_name}`.toLowerCase();
+      const fullEmail = `${item.contact_email}`.toLowerCase();
+      return (
+        fullName.includes(trimmedSearchValue) ||
+        fullEmail.includes(trimmedSearchValue)
+      );
     });
     // setCampaignViewContacts(filteredArray);
     return filteredArray;
-  }
+  };
 
   useEffect(() => {
     console.log('testing');
-    const contactsInCurrentCampaign = currentButton == 0
+    const contactsInCurrentCampaign =
+      currentButton == 0
         ? currentCampaign?.contacts?.filter(
-            (contact) =>
-              contact.contact_campaign_status == 'assigned'
+            (contact) => contact.contact_campaign_status == 'assigned'
           )
         : currentButton == 1
         ? currentCampaign?.contacts?.filter(
-            (contact) =>
-              contact.contact_campaign_status ==
-              'never_assigned'
+            (contact) => contact.contact_campaign_status == 'never_assigned'
           )
         : currentCampaign?.contacts?.filter(
-            (contact) =>
-              contact.contact_campaign_status == 'unassigned'
-          )
-    
+            (contact) => contact.contact_campaign_status == 'unassigned'
+          );
+
     const filteredArr = handleSearch(searchTerm, contactsInCurrentCampaign);
 
     setCampaignViewContacts(filteredArr);
   }, [currentCampaign, currentButton, searchTerm]);
-
 
   return (
     <>
@@ -264,7 +262,6 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                     className="mr-3"
                     onInput={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
-
                   />
                   <ButtonsSlider
                     buttons={tabs}
@@ -297,11 +294,13 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                     />
                   </SimpleBar>
                   <EventPreview
+                    events={events}
                     eventInfo={eventInfo}
                     loading={loadingEventPreview}
                     event={eventToPreview}
                     showEventPreview={showEventPreview}
                     setShowEventPreview={setShowEventPreview}
+                    handleEventPreview={handleEventPreview}
                   />
                   {/* {selectedContacts.length > 1 && (
                     <div
