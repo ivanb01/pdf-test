@@ -82,8 +82,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
     },
   ];
   const campaignFilterMeaning = {
-    'In Campain': true,
-    'Not In Campaign': false,
+    'In Campain': 'assigned',
+    'Not In Campaign': null,
   };
 
   // useEffect(() => {
