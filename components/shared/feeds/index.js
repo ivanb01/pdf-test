@@ -30,7 +30,6 @@ const activitiesTypes = {
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
-
 export default function Feeds({
   contactId,
   activities,
@@ -101,6 +100,23 @@ export default function Feeds({
     setActivityTypeToEdit(found.name);
   };
 
+  const placeholderDescription = (activity_type) => {
+    if (activity_type == 1) {
+      return 'Email Sent to contact';
+    }
+    if (activity_type == 2) {
+      return 'SMS sent to contact';
+    }
+    if (activity_type == 3) {
+      return 'Phone Call with contact';
+    }
+    if (activity_type == 4) {
+      return 'Contacted on Social Media';
+    }
+    if (activity_type == 5) {
+      return 'Contacted in person';
+    }
+  };
   const handleDeleteActivity = async (activity) => {
     try {
       setActivities((prev) => prev.filter((item) => item.id !== activity.id));
@@ -171,7 +187,13 @@ export default function Feeds({
                         </p>
 
                         <div className="mt-2 text-sm text-gray6">
-                          <p>{activityItem.description}</p>
+                          <p>
+                            {activityItem.description
+                              ? activityItem.description
+                              : placeholderDescription(
+                                  activityItem.type_of_activity_id
+                                )}
+                          </p>
                         </div>
                       </div>
                     </>
