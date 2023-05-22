@@ -6,25 +6,39 @@ import Text from 'components/shared/text';
 import { isValidDate, formatDateMDY, formatDateLThour } from 'global/functions';
 import Loader from 'components/shared/loader';
 import Events from 'components/shared/events';
+import { useEffect } from 'react';
+import { getContactCampaignEventPreview } from 'api/campaign';
 
-const EventPreview = ({
-  events,
-  showEventPreview,
-  setShowEventPreview,
-  eventInfo,
-  event,
-  loading,
-  handleEventPreview,
-  topClass,
-}) => {
+const EventPreview = ({ topClass, currentEvent }) => {
   const [campaignEvents, setCampaignEvents] = useState(null);
-  const [currentEvent, setCurrentEvent] = useState(0);
-
+  const [eventInfo, setEventInfo] = useState(null);
+  const [events, setEvents] = useState(null);
+  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
+  const [eventToPreview, setEventToPreview] = useState(null);
+  const [showEventPreview, setShowEventPreview] = useState(false);
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
 
-  console.log(events);
+  const handleEventPreview = async (events, event, eventIndex) => {
+    setEvents(events);
+    setLoadingEventPreview(true);
+    setShowEventPreview(true);
+    setEventInfo({
+      event_updated_at: event?.event_updated_at,
+      event_name: `Event ${eventIndex}`,
+    });
+    getContactCampaignEventPreview(event.event_id).then((data) => {
+      setEventToPreview(data.data);
+      setLoadingEventPreview(false);
+    });
+  };
+
+  useEffect(() => {
+    if (currentEvent[0] && currentEvent[1] && currentEvent[2]) {
+      handleEventPreview(currentEvent[0], currentEvent[1], currentEvent[2]);
+    }
+  }, [currentEvent]);
 
   return (
     <Transition.Root show={showEventPreview} as={Fragment}>
@@ -96,7 +110,7 @@ const EventPreview = ({
                                         handleEventPreview(
                                           events,
                                           event,
-                                          `Event ${eventIdx + 1}`
+                                          eventIdx + 1
                                         )
                                       }
                                       className={`${
@@ -123,7 +137,7 @@ const EventPreview = ({
                           </ol>
                         </nav>
                       </div>
-                      {loading ? (
+                      {loadingEventPreview ? (
                         <div className="relative w-full">
                           <Loader />
                         </div>
@@ -189,14 +203,14 @@ const EventPreview = ({
                           </div>
                           <div className="relative flex-1 p-6">
                             <div className="text-2xl text-gray8 mb-7 font-medium">
-                              {event?.preview?.subject}
+                              {eventToPreview?.preview?.subject}
                             </div>
                             <div
                               className="text-sm text-gray5"
                               dangerouslySetInnerHTML={{
-                                __html: event?.preview?.body_html
-                                  ? event?.preview.body_html
-                                  : event?.preview.message,
+                                __html: eventToPreview?.preview?.body_html
+                                  ? eventToPreview?.preview.body_html
+                                  : eventToPreview?.preview.message,
                               }}
                             ></div>
                           </div>

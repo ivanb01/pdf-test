@@ -69,7 +69,7 @@ const Table = ({
   categoryType,
   handleCardEdit,
   currentButton,
-  handleEventPreview,
+  setCurrentEvent,
   searchTerm,
 }) => {
   const types = [
@@ -147,9 +147,9 @@ const Table = ({
                 <div className="text-gray7  font-medium">
                   {dataItem.campaign_name}
                 </div>
-                <div 
+                <div
                   className="text-lightBlue3 cursor-pointer hover:underline"
-                  onClick={() => handleEventPreview(dataItem)}
+                  onClick={() => console.log(dataItem, data)}
                 >
                   <Image src={eyeIcon} />
                   <span className="ml-1">{dataItem.event_name}</span>
@@ -230,11 +230,7 @@ const Table = ({
                   <div
                     className="text-lightBlue3 cursor-pointer"
                     onClick={() =>
-                      handleEventPreview(
-                        data[0]?.events,
-                        event,
-                        `Event ${index + 1}`
-                      )
+                      setCurrentEvent([data[0]?.events, event, index + 1])
                     }
                   >
                     <Image src={eyeIcon} />

@@ -45,6 +45,7 @@ const chartTabs = [
 ];
 
 const Campaigns = () => {
+  const [currentEvent, setCurrentEvent] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingStats, setLoadingStats] = useState(true);
   const [clientsDoughnut, setClientsDoughnut] = useState([0, 0]);
@@ -57,11 +58,7 @@ const Campaigns = () => {
     thisMonth: [],
   });
   const [currentCampaignsEvents, setCurrentCampaignsEvents] = useState([]);
-  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
-  const [eventToPreview, setEventToPreview] = useState(null);
   const [showEventPreview, setShowEventPreview] = useState(false);
-  const [eventInfo, setEventInfo] = useState(null);
-
 
   const [pieData, setPieData] = useState([
     {
@@ -174,8 +171,9 @@ const Campaigns = () => {
   }, []);
 
   useEffect(() => {
-    currentButton == 0 ? setCurrentCampaignsEvents(campaignsEvents.thisWeek) :
-    setCurrentCampaignsEvents(campaignsEvents.thisMonth)
+    currentButton == 0
+      ? setCurrentCampaignsEvents(campaignsEvents.thisWeek)
+      : setCurrentCampaignsEvents(campaignsEvents.thisMonth);
   }, [currentButton]);
 
   return (
@@ -197,7 +195,7 @@ const Campaigns = () => {
             {loadingEvents ? (
               <Loader />
             ) : currentCampaignsEvents.length ? (
-              <div className='relative h-full'>
+              <div className="relative h-full">
                 <SimpleBar
                   autoHide={true}
                   className="overflow-x-hidden"
@@ -214,24 +212,15 @@ const Campaigns = () => {
                     handleSelectAll={handleSelectAll}
                     handleClickRow={handleClickContact}
                     handleSelectContact={handleSelectContact}
-                    handleEventPreview={handleEventPreview}
+                    setCurrentEvent={setCurrentEvent}
                   />
                 </SimpleBar>
-                {
-                  showEventPreview && 
-                  <div>
-                    <EventPreview
-                      topClass={'top-[250px]'}
-                      eventInfo={eventInfo}
-                      loading={loadingEventPreview}
-                      event={eventToPreview}
-                      showEventPreview={showEventPreview}
-                      setShowEventPreview={setShowEventPreview}
-                    />
-                  </div>
-                }
-                
-              
+                <div>
+                  <EventPreview
+                    topClass={'top-[250px]'}
+                    currentEvent={currentEvent}
+                  />
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full mx-auto my-0">

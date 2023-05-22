@@ -40,7 +40,7 @@ const AddActivity = ({
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
-    description: Yup.string().required('Description required'),
+    // description: Yup.string().required('Description required'),
   });
 
   const formik = useFormik({

@@ -13,7 +13,6 @@ import Image from 'next/image';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
 
-
 export default function ActivityLog({ contactId }) {
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
@@ -28,7 +27,7 @@ export default function ActivityLog({ contactId }) {
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
-    description: Yup.string().required('Description required'),
+    // description: Yup.string().required('Description required'),
   });
 
   //* FORMIK *//
@@ -48,10 +47,7 @@ export default function ActivityLog({ contactId }) {
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
-      await contactServices.addContactActivity(
-        contactId,
-        values
-      );
+      await contactServices.addContactActivity(contactId, values);
       setFetchActivitiesRequired((prev) => !prev);
       setLoadingButton(false);
       resetForm();
@@ -83,26 +79,27 @@ export default function ActivityLog({ contactId }) {
   return (
     <div className="flex bg-gray10 flex-row ">
       <div className="w-[65%] bg-gray10 details-tabs-fixed-height p-[24px] pr-0">
-        {activities && (activities?.length == 0 ? (
-          <div className="flow-root bg-white h-full overflow-y-scroll">
-            <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
-              <Image src={noActivitLog}></Image>
-              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-                There is no activity logged for this contact
-              </Text>
-              <Text p className="text-gray4 relative text-center mb-6">
-                All activities related with this contact will be shown here.
-              </Text>
+        {activities &&
+          (activities?.length == 0 ? (
+            <div className="flow-root bg-white h-full overflow-y-scroll">
+              <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+                <Image src={noActivitLog}></Image>
+                <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                  There is no activity logged for this contact
+                </Text>
+                <Text p className="text-gray4 relative text-center mb-6">
+                  All activities related with this contact will be shown here.
+                </Text>
+              </div>
             </div>
-          </div>
-        ) : (
-          <Feeds
-            contactId={contactId}
-            activities={activities}
-            setActivities={setActivities}
-            handleFetchActivitiesRequired={handleFetchActivitiesRequired}
-          />
-        ))}
+          ) : (
+            <Feeds
+              contactId={contactId}
+              activities={activities}
+              setActivities={setActivities}
+              handleFetchActivitiesRequired={handleFetchActivitiesRequired}
+            />
+          ))}
       </div>
       <div className="w-[35%] m-[24px]">
         <div className="bg-white flex flex-row justify-between p-6">
@@ -128,7 +125,9 @@ export default function ActivityLog({ contactId }) {
                 className="mb-6 w-[100%]"
                 // activeClasses="bg-lightBlue1"
                 handleSelect={(item) => handleChooseActivityType(item.id)}
-                error={errors.type_of_activity_id && touched.type_of_activity_id}
+                error={
+                  errors.type_of_activity_id && touched.type_of_activity_id
+                }
                 errorText={errors.type_of_activity_id}
               />
               <TextArea

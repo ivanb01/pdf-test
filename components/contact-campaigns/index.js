@@ -25,11 +25,7 @@ import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
-  const [eventInfo, setEventInfo] = useState(null);
-  const [events, setEvents] = useState(null);
-  const [loadingEventPreview, setLoadingEventPreview] = useState(false);
-  const [eventToPreview, setEventToPreview] = useState(null);
-  const [showEventPreview, setShowEventPreview] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState([]);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
   const [showAssignOverlay, setShowAssignOverlay] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -163,21 +159,6 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
     router.events.on('routeChangeStart', handleRouteChange);
   }, [router]);
-
-  const handleEventPreview = async (events, event, event_name) => {
-    setEvents(events);
-    setLoadingEventPreview(true);
-    setShowEventPreview(true);
-    setEventInfo({
-      event_updated_at: event.event_updated_at,
-      event_name: event_name,
-    });
-    console.log('event preview for', event);
-    getContactCampaignEventPreview(event.event_id).then((data) => {
-      setEventToPreview(data.data);
-      setLoadingEventPreview(false);
-    });
-  };
   // useEffect(() => {
   //   let category = localStorage.getItem('openCampaignCategory');
   //   let campaignId = localStorage.getItem('openCampaign');
@@ -288,20 +269,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                         }
                       }}
                       currentButton={currentButton}
-                      handleEventPreview={handleEventPreview}
+                      setCurrentEvent={setCurrentEvent}
                       data={campaignViewContacts}
                       searchTerm={searchTerm}
                     />
                   </SimpleBar>
-                  <EventPreview
-                    events={events}
-                    eventInfo={eventInfo}
-                    loading={loadingEventPreview}
-                    event={eventToPreview}
-                    showEventPreview={showEventPreview}
-                    setShowEventPreview={setShowEventPreview}
-                    handleEventPreview={handleEventPreview}
-                  />
+                  <EventPreview currentEvent={currentEvent} />
                   {/* {selectedContacts.length > 1 && (
                     <div
                       style={{ zIndex: '99999 !important' }}

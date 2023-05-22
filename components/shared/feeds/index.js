@@ -31,7 +31,6 @@ const activitiesTypes = {
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 
-
 export default function Feeds({
   contactId,
   activities,
@@ -45,7 +44,7 @@ export default function Feeds({
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
-    description: Yup.string().required('Description required'),
+    // description: Yup.string().required('Description required'),
   });
 
   //* FORMIK *//
@@ -104,11 +103,8 @@ export default function Feeds({
 
   const handleDeleteActivity = async (activity) => {
     try {
-      setActivities(prev=>prev.filter((item) => item.id !== activity.id));
-      await contactServices.deleteContactActivity(
-        contactId,
-        activity.id
-      );
+      setActivities((prev) => prev.filter((item) => item.id !== activity.id));
+      await contactServices.deleteContactActivity(contactId, activity.id);
       handleFetchActivitiesRequired();
     } catch (error) {
       console.log(error);
@@ -210,7 +206,9 @@ export default function Feeds({
                 // activeClasses="bg-lightBlue1"
                 handleSelect={(item) => handleChooseActivityType(item.id)}
                 initialSelect={activityTypeToEdit}
-                error={errors.type_of_activity_id && touched.type_of_activity_id}
+                error={
+                  errors.type_of_activity_id && touched.type_of_activity_id
+                }
                 errorText={errors.type_of_activity_id}
               />
               <TextArea
