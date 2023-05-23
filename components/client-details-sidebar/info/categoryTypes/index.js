@@ -19,6 +19,7 @@ import Chip from 'components/shared/chip';
 export default function CategoryTypes({ client, handleFetchContactRequired }) {
   const router = useRouter();
 
+  const [loadingProfiles, setLoadingProfiles] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const handleCloseEditModal = () => {
     setEditModal(false);
@@ -72,11 +73,14 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
       allProfiles.unshift(client);
       console.log('allprofiles', allProfiles);
       setContactProfiles(allProfiles);
+      setLoadingProfiles(false);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
+    setLoadingProfiles(true);
+
     fetchProfiles();
   }, [client, fetchProfilesRequired]);
 
@@ -105,15 +109,21 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
                     ? 'bg-white border border-borderColor text-gray-700'
                     : 'bg-gray-50 border border-gray-50 text-gray-500'
                 }
-                     hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}
+                    hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}
               >
                 {profile?.category_2}
               </div>
             ))
           ) : (
-            <Chip key={contactProfiles[0]?.id} typeStyle>
-              {contactProfiles[0]?.category_2}
-            </Chip>
+            <>
+              {loadingProfiles ? (
+                <div className="flex w-[60px] h-7 animate-pulse rounded-md bg-gray2"></div>
+              ) : (
+                <Chip key={contactProfiles[0]?.id} typeStyle>
+                  {contactProfiles[0]?.category_2}
+                </Chip>
+              )}
+            </>
             // <div
             //   key={contactProfiles[0]?.id}
             //   className={`bg-gray1 cursor-pointer py-2 px-[15px] uppercase text-[#474D66] text-center rounded text-xs font-medium`}
