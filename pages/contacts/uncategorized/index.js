@@ -70,7 +70,7 @@ const index = () => {
 
   const handleFetchUncategorized = () => {
     setLoading(true);
-    getContacts('1,2,').then((data) => {
+    getContacts('1,').then((data) => {
       setUncategorizedContactsOriginal(data.data);
       dispatch(setContacts(data.data));
       setLoading(false);
@@ -101,6 +101,7 @@ const index = () => {
     let contacts = uncategorizedContactsOriginal?.data?.filter(
       (element) => element.category_id == openedSubtab + 1
     );
+    console.log('uncategorized cont', contacts);
     setUncategorizedContacts(contacts);
   }, [openedSubtab]);
   return (
