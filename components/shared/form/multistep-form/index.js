@@ -18,10 +18,10 @@ const MultiStepOverlay = ({
   className,
   hideHeader,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
 
   useEffect(() => {
-    setLoading(isSubmittingButton);
+    setLoadingButton(isSubmittingButton);
   }, [isSubmittingButton]);
 
   return (
@@ -112,10 +112,10 @@ const MultiStepOverlay = ({
               {currentStep == steps.length && (
                 <Button
                   label="Save"
-                  loading={loading}
+                  loading={loadingButton}
                   // rightIcon={<ArrowRightIcon height={15} />}
                   onClick={() => {
-                    setLoading(true);
+                    // setLoadingButton(true);
                     submit();
                   }}
                 ></Button>

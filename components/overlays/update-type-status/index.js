@@ -7,45 +7,66 @@ import StatusSelect from 'components/status-select';
 import { types } from 'global/variables';
 import { professionalsStatuses, clientStatuses } from 'global/variables';
 import { updateContact } from 'api/contacts';
-import { useDispatch } from 'react-redux';
-import { setRefetchData } from 'store/global/slice';
-import { useRouter } from 'next/router';
-const UpdateTypeStatus = ({ client, handleClose }) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
+import ChangeStatus from 'components/overlays/change-contact-status';
+import { unassignContactFromCampaign } from 'api/campaign';
 
+
+const UpdateTypeStatus = ({ contact, handleClose, handleFetchContactRequired }) => {
   const nextStep = () => {
-    if (currentStep === 2) {
-      submitForm1();
-    } else {
       setCurrentStep(currentStep + 1);
-    }
   };
 
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
 
-  const changeTypeAndStatus = () => {
-    setIsSubmitting(true);
-    if ([2, 3, 13, 14].includes(selectedType)) {
-      setSelectedStatus(1);
-    }
-    updateContact(client.id, {
-      category_id: selectedType,
-      status_id: selectedStatus,
-    }).then(() => {
-      setIsSubmitting(false);
-      handleClose();
-      dispatch(setRefetchData(true));
-    });
-  };
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedType, setSelectedType] = useState(client.category_id);
-  const [selectedStatus, setSelectedStatus] = useState(client.status_id);
+  const [selectedType, setSelectedType] = useState(contact.category_id);
+  const [selectedStatus, setSelectedStatus] = useState(contact.status_id);
   const [steps, setSteps] = useState([]);
+  const [changeStatusModal, setChangeStatusModal] = useState(false);
+
+  const editContact = async () => {
+    setIsSubmitting(true);
+    try {
+      const contactToEdit = {
+        category_id: selectedType,
+        status_id: selectedStatus,
+      };
+      await updateContact(contact?.id, contactToEdit);
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if(contact?.is_in_campaign === 'assigned' && (contact?.status_id !== selectedStatus || contact?.category_id !== selectedType)) {
+        setChangeStatusModal(true);
+      } else {
+        await editContact();
+        handleFetchContactRequired();
+        handleClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeStatusAndCampaign = async () => {
+    try {
+      await unassignContactFromCampaign(contact.campaign_id, contact.id);
+      await editContact();
+      handleFetchContactRequired();
+      handleClose();
+      setChangeStatusModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if ([2, 3, 13, 14].includes(selectedType)) {
@@ -63,62 +84,71 @@ const UpdateTypeStatus = ({ client, handleClose }) => {
   }, [selectedType]);
 
   return (
-    <MultiStepOverlay
-      handleClose={handleClose}
-      hideHeader
-      className="max-w-[850px] min-w-[850px]"
-      steps={steps}
-      currentStep={currentStep}
-      nextStep={nextStep}
-      prevStep={prevStep}
-      title={'Edit Type & Status'}
-      submit={changeTypeAndStatus}
-      isSubmittingButton={isSubmitting}
-      changeStep={(arg) => setCurrentStep(arg)}
-      // submit={submitForm2}
-      // isSubmittingButton={isSubmitting2}
-    >
-      <div className="step">
-        {currentStep == 1 ? (
-          <div>
-            <div className="flex items-center mb-6">
-              <CircleStepNumber number={1} className="mr-2" />
-              <Text h3>What type of contact is this?</Text>
+    <>
+      <MultiStepOverlay
+        handleClose={handleClose}
+        hideHeader
+        className="max-w-[850px] min-w-[850px]"
+        steps={steps}
+        currentStep={currentStep}
+        nextStep={nextStep}
+        prevStep={prevStep}
+        title={'Edit Type & Status'}
+        submit={handleSubmit}
+        isSubmittingButton={isSubmitting}
+        changeStep={(arg) => setCurrentStep(arg)}
+        // submit={submitForm2}
+        // isSubmittingButton={isSubmitting2}
+      >
+        <div className="step">
+          {currentStep == 1 ? (
+            <div>
+              <div className="flex items-center mb-6">
+                <CircleStepNumber number={1} className="mr-2" />
+                <Text h3>What type of contact is this?</Text>
+              </div>
+              <div className="grid grid-cols-3 gap-4 px-9 mb-6">
+                {types.map((type, index) => {
+                  return (
+                    <div key={index}>
+                      <ContactTypeSelect
+                        type={type}
+                        setSelectedType={setSelectedType}
+                        selectedType={selectedType}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="grid grid-cols-3 gap-4 px-9 mb-6">
-              {types.map((type, index) => {
-                return (
-                  <div key={index}>
-                    <ContactTypeSelect
-                      type={type}
-                      setSelectedType={setSelectedType}
-                      selectedType={selectedType}
-                    />
-                  </div>
-                );
-              })}
+          ) : (
+            <div>
+              <div className="flex items-center mb-6">
+                <CircleStepNumber number={2} className="mr-2" />
+                <Text h3>In what stage of communication?</Text>
+              </div>
+              <StatusSelect
+                className="px-9"
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+                statuses={
+                  [8, 9, 12].includes(selectedType)
+                    ? professionalsStatuses
+                    : clientStatuses
+                }
+              />
             </div>
-          </div>
-        ) : (
-          <div>
-            <div className="flex items-center mb-6">
-              <CircleStepNumber number={2} className="mr-2" />
-              <Text h3>In what stage of communication?</Text>
-            </div>
-            <StatusSelect
-              className="px-9"
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
-              statuses={
-                [8, 9, 12].includes(selectedType)
-                  ? professionalsStatuses
-                  : clientStatuses
-              }
-            />
-          </div>
-        )}
-      </div>
-    </MultiStepOverlay>
+          )}
+        </div>
+      </MultiStepOverlay>
+
+      {changeStatusModal && (
+        <ChangeStatus
+          handleCloseOverlay={() => setChangeStatusModal(false)}
+          onSubmit={handleChangeStatusAndCampaign}
+        />
+      )}
+    </>
   );
 };
 
