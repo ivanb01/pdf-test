@@ -139,11 +139,11 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
           />
         </div>
       </div>
-      {console.log('client', client)}
       {editModal && (
         <UpdateTypeStatus
-          client={client}
+          contact={client}
           handleClose={() => setEditModal(false)}
+          handleFetchContactRequired={handleFetchContactRequired}
         />
         // <UpdateCategoryType
         //   handleClose={handleCloseEditModal}
