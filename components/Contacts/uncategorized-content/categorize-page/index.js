@@ -30,6 +30,7 @@ const CategorizePage = ({
   handleStartCategorizing,
 }) => {
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
+  const [categorizationInProcess, setCategorizationInProcess] = useState(false);
 
   useEffect(() => {
     bulkUpdateContacts();
@@ -76,6 +77,7 @@ const CategorizePage = ({
   };
 
   const updateTypeStatus = async (status, type) => {
+    setCategorizationInProcess(true);
     let ids = selectedUncategorized.map((contact) => contact.id);
     let contacts = { contacts: [] };
     let contactsArray = [];
@@ -120,6 +122,9 @@ const CategorizePage = ({
       (contact) => !ids.includes(contact.id)
     );
     setUncategorizedContacts(uncategorized);
+    setTimeout(() => {
+      setCategorizationInProcess(false);
+    }, 1000);
   };
 
   const showCategorizedSection = () => {
@@ -134,7 +139,7 @@ const CategorizePage = ({
         document.querySelector('.contact-row input:checked').click();
       if (document.querySelector('.contact-row input'))
         document.querySelector('.contact-row input').click();
-    }, 1);
+    }, 700);
   };
 
   const toggleAllUncategorized = (event) => {
@@ -174,7 +179,7 @@ const CategorizePage = ({
           uncategorizedContacts.length ? 'w-[50%]' : 'w-[75%]'
         } `}
       >
-        {selectedUncategorized?.length > 0 ? (
+        {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
             autoHide={true}
             className="overflow-x-hidden"

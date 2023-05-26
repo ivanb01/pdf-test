@@ -61,7 +61,7 @@ const EventPreview = ({ topClass, currentEvent }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-4xl">
                   <div className="relative flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex h-full">
                       <div className="bg-white border-gray2 border-r p-6 min-w-fit">
@@ -94,7 +94,14 @@ const EventPreview = ({ topClass, currentEvent }) => {
                                       className="flex h-9 items-center"
                                       aria-hidden="true"
                                     >
-                                      <span className="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-gray3 bg-white">
+                                      <span
+                                        className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 ${
+                                          `Event ${eventIdx + 1}` ==
+                                          eventInfo?.event_name
+                                            ? 'border-lightBlue3'
+                                            : 'border-gray3'
+                                        } bg-white`}
+                                      >
                                         <span
                                           className={`h-3 w-3 rounded-full ${
                                             `Event ${eventIdx + 1}` ==

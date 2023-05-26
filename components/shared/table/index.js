@@ -50,7 +50,11 @@ import List from '@mui/icons-material/List';
 import AddActivity from 'components/overlays/add-activity';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
-
+import { getContact } from 'api/contacts';
+import { useEffect } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Fragment } from 'react';
+import React from 'react';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -97,6 +101,16 @@ const Table = ({
     },
   ];
   const router = useRouter();
+
+  const getContactInfo = async () => {
+    try {
+      const { data } = await getContact(3729);
+      console.log('get contact', data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const campaignsTable = () => {
     const [hovered, setHovered] = useState(false);
 
@@ -149,7 +163,10 @@ const Table = ({
                 </div>
                 <div
                   className="text-lightBlue3 cursor-pointer hover:underline"
-                  onClick={() => console.log(dataItem, data)}
+                  onClick={() => {
+                    console.log(dataItem, data);
+                    getContactInfo();
+                  }}
                 >
                   <Image src={eyeIcon} />
                   <span className="ml-1">{dataItem.event_name}</span>
@@ -397,39 +414,44 @@ const Table = ({
                 )}
               </tr>
             </thead>
-            <tbody className=" bg-white">
+            <TransitionGroup component="tbody" className=" bg-white">
               {data.map((dataItem, index) => (
-                <tr
+                <CSSTransition
                   key={dataItem.id}
-                  id={'row_' + index}
-                  className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
-                  onClick={(event) => {
-                    if (tableFor == 'in-categorization') {
-                      if (event.target.id != 'input_' + index) {
-                        document.querySelector('#input_' + index).click();
-                      }
-                    } else if (tableFor == 'uncategorized') {
-                      handleClickRow(event.target);
-                    }
-                  }}
+                  timeout={500}
+                  classNames="item"
                 >
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
-                    {tableFor == 'in-categorization' && (
-                      <Input
-                        className="mr-1"
-                        type="checkbox"
-                        id={'input_' + index}
-                        onChange={(event) => handleClickRow(dataItem, event)}
-                      ></Input>
-                    )}
-                    <ContactInfo
-                      data={{
-                        name: dataItem.first_name + ' ' + dataItem.last_name,
-                        email: dataItem.email,
-                        image: dataItem.profile_image_path,
-                      }}
-                    />
-                    {/* {(contact.type != null || contact.status != null) && (
+                  <tr
+                    key={dataItem.id}
+                    id={'row_' + index}
+                    className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                    onClick={(event) => {
+                      if (tableFor == 'in-categorization') {
+                        if (event.target.id != 'input_' + index) {
+                          document.querySelector('#input_' + index).click();
+                        }
+                      } else if (tableFor == 'uncategorized') {
+                        handleClickRow(event.target);
+                      }
+                    }}
+                  >
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                      {tableFor == 'in-categorization' && (
+                        <Input
+                          className="mr-1"
+                          type="checkbox"
+                          id={'input_' + index}
+                          onChange={(event) => handleClickRow(dataItem, event)}
+                        ></Input>
+                      )}
+                      <ContactInfo
+                        data={{
+                          name: dataItem.first_name + ' ' + dataItem.last_name,
+                          email: dataItem.email,
+                          image: dataItem.profile_image_path,
+                        }}
+                      />
+                      {/* {(contact.type != null || contact.status != null) && (
                     <div className="flex items-center mt-3 type-and-status">
                       {contact.type != null && (
                         <div className="min-h-[28px] text-[10px] uppercase px-2 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center border border-gray3">
@@ -445,20 +467,21 @@ const Table = ({
                       )}
                     </div>
                   )} */}
-                  </td>
-                  {tableFor != 'in-categorization' && (
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <div className="text-gray7 font-medium">
-                        {dataItem?.import_source}
-                      </div>
-                      <div className="text-gray-500 font-medium">
-                        {formatDateMDY(dataItem?.created_at)}
-                      </div>
                     </td>
-                  )}
-                </tr>
+                    {tableFor != 'in-categorization' && (
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <div className="text-gray7 font-medium">
+                          {dataItem?.import_source}
+                        </div>
+                        <div className="text-gray-500 font-medium">
+                          {formatDateMDY(dataItem?.created_at)}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                </CSSTransition>
               ))}
-            </tbody>
+            </TransitionGroup>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
@@ -549,110 +572,107 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
-            <tr
-              key={dataItem.email}
-              id={'row_' + index}
-              className={`contact-row border-b border-gray-200`}
-            >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                <ContactInfo
-                  data={{
-                    name: dataItem.first_name + ' ' + dataItem.last_name,
-                    email: dataItem.email,
-                    image: dataItem.profile_image_path,
-                  }}
-                />
-                {(dataItem.category_id != null ||
-                  dataItem.status_id != null) && (
-                  <div className="flex items-center mt-3 type-and-status">
-                    {console.log(dataItem)}
-                    {dataItem.category_id != null && (
-                      <Chip typeStyle>
-                        {getContactTypeByTypeId(dataItem.category_id)}
-                      </Chip>
-                    )}
-                    {showStatus(dataItem) && (
-                      <Chip
-                        statusStyle
-                        className={getContactStatusColorByStatusId(
-                          dataItem.category_id,
-                          dataItem.status_id
-                        )}
-                      >
-                        {getContactStatusByStatusId(
-                          dataItem.category_id,
-                          dataItem.status_id
-                        )}
-                      </Chip>
-                    )}
-                  </div>
-                )}
-              </td>
-              <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
-                <div className="relative">
-                  <a
-                    className="cursor-pointer text-xs"
-                    onClick={() => undoCategorization(dataItem.id)}
-                    onMouseEnter={() =>
-                      document
-                        .querySelector(
-                          '#tooltip-undo-categorization-' + dataItem.id
-                        )
-                        .classList.remove('invisible', 'opacity-0')
-                    }
-                    onMouseLeave={() =>
-                      document
-                        .querySelector(
-                          '#tooltip-undo-categorization-' + dataItem.id
-                        )
-                        .classList.add('invisible', 'opacity-0')
-                    }
+        {data.map((dataItem, index) => (
+          <tr
+            key={dataItem.email}
+            id={'row_' + index}
+            className={`contact-row border-b border-gray-200`}
+          >
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+              <ContactInfo
+                data={{
+                  name: dataItem.first_name + ' ' + dataItem.last_name,
+                  email: dataItem.email,
+                  image: dataItem.profile_image_path,
+                }}
+              />
+              {(dataItem.category_id != null || dataItem.status_id != null) && (
+                <div className="flex items-center mt-3 type-and-status">
+                  {console.log(dataItem)}
+                  {dataItem.category_id != null && (
+                    <Chip typeStyle>
+                      {getContactTypeByTypeId(dataItem.category_id)}
+                    </Chip>
+                  )}
+                  {showStatus(dataItem) && (
+                    <Chip
+                      statusStyle
+                      className={getContactStatusColorByStatusId(
+                        dataItem.category_id,
+                        dataItem.status_id
+                      )}
+                    >
+                      {getContactStatusByStatusId(
+                        dataItem.category_id,
+                        dataItem.status_id
+                      )}
+                    </Chip>
+                  )}
+                </div>
+              )}
+            </td>
+            <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
+              <div className="relative">
+                <a
+                  className="cursor-pointer text-xs"
+                  onClick={() => undoCategorization(dataItem.id)}
+                  onMouseEnter={() =>
+                    document
+                      .querySelector(
+                        '#tooltip-undo-categorization-' + dataItem.id
+                      )
+                      .classList.remove('invisible', 'opacity-0')
+                  }
+                  onMouseLeave={() =>
+                    document
+                      .querySelector(
+                        '#tooltip-undo-categorization-' + dataItem.id
+                      )
+                      .classList.add('invisible', 'opacity-0')
+                  }
+                >
+                  {/* <Image src={undoIcon} className="w-5"></Image> */}
+                  <svg
+                    version="1.1"
+                    viewBox="0 0 16 20"
+                    width="15px"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    {/* <Image src={undoIcon} className="w-5"></Image> */}
-                    <svg
-                      version="1.1"
-                      viewBox="0 0 16 20"
-                      width="15px"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <g
+                      fill="none"
+                      fillRule="evenodd"
+                      id="Page-1"
+                      stroke="none"
+                      strokeWidth="1"
                     >
                       <g
-                        fill="none"
-                        fillRule="evenodd"
-                        id="Page-1"
-                        stroke="none"
-                        strokeWidth="1"
+                        fill="#6B7280"
+                        id="Core"
+                        transform="translate(-424.000000, -463.000000)"
                       >
                         <g
-                          fill="#6B7280"
-                          id="Core"
-                          transform="translate(-424.000000, -463.000000)"
+                          id="undo"
+                          transform="translate(424.000000, 464.000000)"
                         >
-                          <g
-                            id="undo"
-                            transform="translate(424.000000, 464.000000)"
-                          >
-                            <path
-                              d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
-                              id="Shape"
-                            />
-                          </g>
+                          <path
+                            d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
+                            id="Shape"
+                          />
                         </g>
                       </g>
-                    </svg>
-                  </a>
-                  <div
-                    id={'tooltip-undo-categorization-' + dataItem.id}
-                    className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
-                  >
-                    Undo Categorization
-                  </div>
+                    </g>
+                  </svg>
+                </a>
+                <div
+                  id={'tooltip-undo-categorization-' + dataItem.id}
+                  className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
+                >
+                  Undo Categorization
                 </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+              </div>
+            </td>
+          </tr>
+        ))}
       </>
     );
   };

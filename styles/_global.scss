@@ -268,3 +268,24 @@ html {
 .contact-campaigns-fixed-height {
   height: calc(100vh - 146px) !important;
 }
+.item-enter {
+  opacity: 0;
+}
+
+.item-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.item-exit {
+  opacity: 1;
+}
+
+.item-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+tbody > div {
+  display: contents !important;
+}
