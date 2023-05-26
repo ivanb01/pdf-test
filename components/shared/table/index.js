@@ -574,7 +574,11 @@ const Table = ({
         </thead>
         <TransitionGroup component="tbody" className=" bg-white">
           {data.map((dataItem, index) => (
-            <CSSTransition key={dataItem.id} timeout={500} classNames="item">
+            <CSSTransition
+              key={dataItem.id}
+              timeout={500}
+              classNames="item-reverse"
+            >
               <tr
                 key={dataItem.email}
                 id={'row_' + index}

@@ -139,7 +139,7 @@ const CategorizePage = ({
         document.querySelector('.contact-row input:checked').click();
       if (document.querySelector('.contact-row input'))
         document.querySelector('.contact-row input').click();
-    }, 700);
+    }, 650);
   };
 
   const toggleAllUncategorized = (event) => {

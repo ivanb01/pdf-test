@@ -270,7 +270,7 @@ html {
 }
 .item-enter {
   opacity: 0;
-  transform: translateX(-400px);
+  transform: translateX(100%);
 }
 
 .item-enter-active {
@@ -293,4 +293,27 @@ html {
 
 tbody > div {
   display: contents !important;
+}
+
+.item-reverse-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.item-reverse-enter-active {
+  opacity: 1;
+  transform: translateX(0px);
+  transition: all 500ms ease-in;
+}
+
+.item-reverse-exit {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 500ms ease;
+}
+
+.item-reverse-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 500ms ease-in;
 }
