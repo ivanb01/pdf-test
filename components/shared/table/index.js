@@ -572,107 +572,112 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        {data.map((dataItem, index) => (
-          <tr
-            key={dataItem.email}
-            id={'row_' + index}
-            className={`contact-row border-b border-gray-200`}
-          >
-            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-              <ContactInfo
-                data={{
-                  name: dataItem.first_name + ' ' + dataItem.last_name,
-                  email: dataItem.email,
-                  image: dataItem.profile_image_path,
-                }}
-              />
-              {(dataItem.category_id != null || dataItem.status_id != null) && (
-                <div className="flex items-center mt-3 type-and-status">
-                  {console.log(dataItem)}
-                  {dataItem.category_id != null && (
-                    <Chip typeStyle>
-                      {getContactTypeByTypeId(dataItem.category_id)}
-                    </Chip>
-                  )}
-                  {showStatus(dataItem) && (
-                    <Chip
-                      statusStyle
-                      className={getContactStatusColorByStatusId(
-                        dataItem.category_id,
-                        dataItem.status_id
+        <TransitionGroup component="tbody" className=" bg-white">
+          {data.map((dataItem, index) => (
+            <CSSTransition key={dataItem.id} timeout={500} classNames="item">
+              <tr
+                key={dataItem.email}
+                id={'row_' + index}
+                className={`contact-row border-b border-gray-200`}
+              >
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                  <ContactInfo
+                    data={{
+                      name: dataItem.first_name + ' ' + dataItem.last_name,
+                      email: dataItem.email,
+                      image: dataItem.profile_image_path,
+                    }}
+                  />
+                  {(dataItem.category_id != null ||
+                    dataItem.status_id != null) && (
+                    <div className="flex items-center mt-3 type-and-status">
+                      {console.log(dataItem)}
+                      {dataItem.category_id != null && (
+                        <Chip typeStyle>
+                          {getContactTypeByTypeId(dataItem.category_id)}
+                        </Chip>
                       )}
-                    >
-                      {getContactStatusByStatusId(
-                        dataItem.category_id,
-                        dataItem.status_id
+                      {showStatus(dataItem) && (
+                        <Chip
+                          statusStyle
+                          className={getContactStatusColorByStatusId(
+                            dataItem.category_id,
+                            dataItem.status_id
+                          )}
+                        >
+                          {getContactStatusByStatusId(
+                            dataItem.category_id,
+                            dataItem.status_id
+                          )}
+                        </Chip>
                       )}
-                    </Chip>
+                    </div>
                   )}
-                </div>
-              )}
-            </td>
-            <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
-              <div className="relative">
-                <a
-                  className="cursor-pointer text-xs"
-                  onClick={() => undoCategorization(dataItem.id)}
-                  onMouseEnter={() =>
-                    document
-                      .querySelector(
-                        '#tooltip-undo-categorization-' + dataItem.id
-                      )
-                      .classList.remove('invisible', 'opacity-0')
-                  }
-                  onMouseLeave={() =>
-                    document
-                      .querySelector(
-                        '#tooltip-undo-categorization-' + dataItem.id
-                      )
-                      .classList.add('invisible', 'opacity-0')
-                  }
-                >
-                  {/* <Image src={undoIcon} className="w-5"></Image> */}
-                  <svg
-                    version="1.1"
-                    viewBox="0 0 16 20"
-                    width="15px"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g
-                      fill="none"
-                      fillRule="evenodd"
-                      id="Page-1"
-                      stroke="none"
-                      strokeWidth="1"
+                </td>
+                <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
+                  <div className="relative">
+                    <a
+                      className="cursor-pointer text-xs"
+                      onClick={() => undoCategorization(dataItem.id)}
+                      onMouseEnter={() =>
+                        document
+                          .querySelector(
+                            '#tooltip-undo-categorization-' + dataItem.id
+                          )
+                          .classList.remove('invisible', 'opacity-0')
+                      }
+                      onMouseLeave={() =>
+                        document
+                          .querySelector(
+                            '#tooltip-undo-categorization-' + dataItem.id
+                          )
+                          .classList.add('invisible', 'opacity-0')
+                      }
                     >
-                      <g
-                        fill="#6B7280"
-                        id="Core"
-                        transform="translate(-424.000000, -463.000000)"
+                      {/* <Image src={undoIcon} className="w-5"></Image> */}
+                      <svg
+                        version="1.1"
+                        viewBox="0 0 16 20"
+                        width="15px"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
                         <g
-                          id="undo"
-                          transform="translate(424.000000, 464.000000)"
+                          fill="none"
+                          fillRule="evenodd"
+                          id="Page-1"
+                          stroke="none"
+                          strokeWidth="1"
                         >
-                          <path
-                            d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
-                            id="Shape"
-                          />
+                          <g
+                            fill="#6B7280"
+                            id="Core"
+                            transform="translate(-424.000000, -463.000000)"
+                          >
+                            <g
+                              id="undo"
+                              transform="translate(424.000000, 464.000000)"
+                            >
+                              <path
+                                d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
+                                id="Shape"
+                              />
+                            </g>
+                          </g>
                         </g>
-                      </g>
-                    </g>
-                  </svg>
-                </a>
-                <div
-                  id={'tooltip-undo-categorization-' + dataItem.id}
-                  className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
-                >
-                  Undo Categorization
-                </div>
-              </div>
-            </td>
-          </tr>
-        ))}
+                      </svg>
+                    </a>
+                    <div
+                      id={'tooltip-undo-categorization-' + dataItem.id}
+                      className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
+                    >
+                      Undo Categorization
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
       </>
     );
   };
