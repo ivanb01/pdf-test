@@ -56,7 +56,9 @@ import { getContact } from 'api/contacts';
 import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Fragment } from 'react';
+import ClientHealth from 'components/clientHealth';
 import React from 'react';
+import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -1647,6 +1649,119 @@ const Table = ({
       </>
     );
   };
+
+  const reportsTable = () => {
+    let healthyCount = 118;
+    let unhealthyCount = 20;
+    let closedClients = 10;
+    return (
+      <>
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center "
+            >
+              Agent
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              # of clients
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              In the funnel
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Client health
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              closed clients
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Time spent in the crm
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              last interaction
+            </th>
+          </tr>
+        </thead>
+        <tbody className=" bg-white">
+          {data.map((dataItem) => (
+            <tr
+              key={dataItem.contact_id}
+              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+              // onClick={(event) => handleClickRow(contact, event)}
+            >
+              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
+                <ContactInfo
+                  data={{
+                    name: `${dataItem.contact_name}`,
+                    id: dataItem.contact_id,
+                    email: dataItem.contact_email,
+                    image: dataItem.profile_image_path,
+                  }}
+                  // handleSelect={(e, dataItem) =>
+                  //   handleSelectContact(e, dataItem)
+                  // }
+                  // handleAction={(id, action) => handleAction(id, action)}
+                />
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 font-medium">120</div>
+                <div className="text-gray4 italic">80 in the funnel</div>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 font-medium">80</div>
+                <div className="text-gray4 italic">17 new leads</div>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <ClientHealth
+                  healthyCount={healthyCount}
+                  unhealthyCount={unhealthyCount}
+                />
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 flex items-center justify-center">
+                  {closedClients}{' '}
+                  <CheckCircleIcon
+                    className={`h-4 ml-1 ${
+                      closedClients == 0 ? 'text-gray3' : 'text-green5'
+                    }`}
+                  />
+                </div>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 font-medium">
+                  1080 <span className="text-gray4">hrs</span>
+                </div>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7">March 16 2023</div>
+                <div className="text-gray4">11:00 AM</div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -1660,6 +1775,8 @@ const Table = ({
                   ? contactCampaignsTable()
                   : tableFor == 'professionals'
                   ? professionalsTable()
+                  : tableFor == 'reports'
+                  ? reportsTable()
                   : tableFor == 'imports-summary'
                   ? importsSummaryTable()
                   : tableFor == 'contactsList'
