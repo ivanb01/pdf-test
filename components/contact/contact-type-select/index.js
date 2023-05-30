@@ -13,17 +13,19 @@ const ContactTypeSelect = ({ type, setSelectedType, selectedType }) => {
       <div className="contact-type">
         {type.types.map((contactType) => {
           return (
-            <Button
-              className={`block min-w-[100px] mb-2 ${
-                contactType.id == 3 &&
-                'bg-red1 text-red3 hover:bg-red2 hover:text-red3'
-              }`}
-              ternary
-              key={contactType.id}
-              onClick={() => setSelectedType(contactType.id)}
-              label={contactType.name}
-              active={selectedType == contactType.id}
-            />
+            !contactType.hidden && (
+              <Button
+                className={`block min-w-[100px] mb-2 ${
+                  contactType.id == 3 &&
+                  'bg-red1 text-red3 hover:bg-red2 hover:text-red3'
+                }`}
+                ternary
+                key={contactType.id}
+                onClick={() => setSelectedType(contactType.id)}
+                label={contactType.name}
+                active={selectedType == contactType.id}
+              />
+            )
           );
         })}
       </div>

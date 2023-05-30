@@ -28,7 +28,7 @@ import { multiselectOptionsProfessionals } from 'global/variables';
 const tabs = [
   {
     title: 'PROFESSIONAL TYPES',
-    content: ['Vendor', 'Agent', 'Other'],
+    content: ['Vendor', 'Agent'],
     value: 'category_2',
   },
   {
@@ -85,8 +85,9 @@ const Professionals = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
-
+  const [contactsOriginalLength, setContactsOriginalLength] = useState(
+    contacts.length
+  );
 
   // useEffect(() => {
   //   const delayDebounceFn = setTimeout(() => {
@@ -98,10 +99,10 @@ const Professionals = ({
   // }, [searchTerm]);
 
   useEffect(() => {
-    if(contacts.length === contactsOriginalLength) {
+    if (contacts.length === contactsOriginalLength) {
       setContactsOriginal([...contacts]);
     }
-  },[contacts])
+  }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
@@ -122,8 +123,12 @@ const Professionals = ({
           )
         );
       } else if (key == 'is_in_campaign') {
-        let booleanFilter = filters[key].map(filter=>campaignFilterMeaning[filter])
-        contactsState = contactsState.filter(contact => booleanFilter.includes(contact[key]))
+        let booleanFilter = filters[key].map(
+          (filter) => campaignFilterMeaning[filter]
+        );
+        contactsState = contactsState.filter((contact) =>
+          booleanFilter.includes(contact[key])
+        );
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
@@ -223,13 +228,13 @@ const Professionals = ({
                 className="mr-4"
                 onClick={() => setOpen(true)}
               />
-              <ButtonsSlider
+              {/* <ButtonsSlider
                 noCount
                 buttons={buttons}
                 currentButton={currentButton}
                 onClick={setCurrentButton}
                 className="mr-4"
-              />
+              /> */}
               <Button
                 primary
                 leftIcon={<Add className="w-5 h-5" />}
@@ -246,9 +251,13 @@ const Professionals = ({
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {
-                  contacts.filter(contact => 
-                    contact?.status_1.toLowerCase() === professionalsStatuses[openedSubtab].statusMainTitle.toLowerCase()).length
-
+                    contacts.filter(
+                      (contact) =>
+                        contact?.status_1.toLowerCase() ===
+                        professionalsStatuses[
+                          openedSubtab
+                        ].statusMainTitle.toLowerCase()
+                    ).length
                   }
                   {contacts.length == 1 ? ' result' : ' results'} for:
                 </div>
@@ -282,46 +291,46 @@ const Professionals = ({
             </div>
           </div>
         )}
-        {currentButton == 0 ? (
-          <SimpleBar
-            autoHide={true}
-            style={{
-              maxWidth: '100%',
-              height: '100%',
-              background: '#f9fafb',
-            }}
-          >
-            <div className="flex flex-row bg-gray10 w-fit h-full">
-              {professionalsStatuses[openedSubtab]?.statuses.map(
-                (status, index) => (
-                  <Column
-                    status={status}
-                    key={index}
-                    categoryType="professionals"
-                    handleCardEdit={handleCardEdit}
-                  />
-                )
-              )}
-            </div>
-          </SimpleBar>
-        ) : (
+        {/* // <SimpleBar
+          //   autoHide={true}
+          //   style={{
+          //     maxWidth: '100%',
+          //     height: '100%',
+          //     background: '#f9fafb',
+          //   }}
+          // >
+          //   <div className="flex flex-row bg-gray10 w-fit h-full">
+          //     {professionalsStatuses[openedSubtab]?.statuses.map(
+          //       (status, index) => (
+          //         <Column
+          //           status={status}
+          //           key={index}
+          //           categoryType="professionals"
+          //           handleCardEdit={handleCardEdit}
+          //         />
+          //       )
+          //     )}
+          //   </div>
+          // </SimpleBar> */}
+        <div
+          className="w-auto relative flex"
+          style={{ height: 'calc(100vh - 170px)' }}
+        >
           <div
-            className="w-auto relative flex"
-            style={{ height: 'calc(100vh - 170px)' }}
+            className={`border border-gray-200 overflow-hidden relative h-full w-full`}
           >
-            <div
-              className={`border border-gray-200 overflow-hidden relative h-full w-full`}
+            <SimpleBar
+              autoHide={true}
+              style={{ height: '100%', maxHeight: '100%' }}
             >
-              <SimpleBar autoHide={true} style={{height: '100%', maxHeight: '100%' }}>
-                <Table
-                  tableFor="contactsList"
-                  categoryType="professionals"
-                  handleCardEdit={handleCardEdit}
-                />
-              </SimpleBar>
-            </div>
+              <Table
+                tableFor="professionals"
+                categoryType="professionals"
+                handleCardEdit={handleCardEdit}
+              />
+            </SimpleBar>
           </div>
-        )}
+        </div>
       </div>
       <SlideOver
         open={open}

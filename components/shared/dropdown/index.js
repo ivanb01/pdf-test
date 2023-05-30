@@ -74,7 +74,7 @@ const Dropdown = ({
                   className={`flex items-center truncate capitalize ${
                     !selected && placeHolder && 'text-gray6'
                   } ${selected && selected.name && 'text-gray8'} ${
-                    selectedOption === 'statusColor' && 'pl-4'
+                    selectedOption === 'statusColor' && selected && 'pl-4'
                   }`}
                 >
                   {!selected && placeHolder && placeHolder}

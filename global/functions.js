@@ -156,8 +156,8 @@ export const isValidDate = (date) => {
   return moment(date).isValid();
 };
 
-export const isToday= (date) => {
-  return moment(date).isSameOrAfter(moment().startOf('date'))
+export const isToday = (date) => {
+  return moment(date).isSameOrAfter(moment().startOf('date'));
 };
 
 export const dateBeforeDate = (date1, date2) => {
@@ -191,40 +191,43 @@ export const sortDateAsc = (array, arrayFieldName) => {
 //   return input;
 // }
 
-
 export const phoneNumberFormat = (phoneNumber) => {
-  if(!phoneNumber) return 'N/A';
-  const countryCode = phoneNumber.substring(0,2);
-  if(countryCode === '+1') {
+  if (!phoneNumber) return 'N/A';
+  const countryCode = phoneNumber.substring(0, 2);
+  if (countryCode === '+1') {
     const number = phoneNumber.substring(2);
-    return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
-  }else {
-    const number = phoneNumber.trim().replace(/[^0-9]/g, "");
-    return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
+    return number.replace(/(\d{3})(\d{3})(\d{4})/, '($1) - $2 - $3');
+  } else {
+    const number = phoneNumber.trim().replace(/[^0-9]/g, '');
+    return number.replace(/(\d{3})(\d{3})(\d{4})/, '($1) - $2 - $3');
   }
 };
 
 export const phoneNumberInputFormat = (phoneNumber) => {
-  if(!phoneNumber) return;
+  if (!phoneNumber) return;
 
-  const countryCode = phoneNumber.substring(0,2);
+  const countryCode = phoneNumber.substring(0, 2);
   let number = '';
-  if(countryCode === '+1') {
-      number = phoneNumber.substring(2).trim().replace(/[^0-9]/g, "");
+  if (countryCode === '+1') {
+    number = phoneNumber
+      .substring(2)
+      .trim()
+      .replace(/[^0-9]/g, '');
   } else {
-      number = phoneNumber.trim().replace(/[^0-9]/g, "");
+    number = phoneNumber.trim().replace(/[^0-9]/g, '');
   }
   // console.log(phoneNumber, number,'foormating')
   if (number.length < 4) return number;
-  if (number.length < 7) return number.replace(/(\d{3})(\d{1})/, "($1) - $2");
-  if (number.length < 11) return number.replace(/(\d{3})(\d{3})(\d{1})/, "($1) - $2 - $3");
-  return number.replace(/(\d{3})(\d{3})(\d{4})/, "($1) - $2 - $3");
+  if (number.length < 7) return number.replace(/(\d{3})(\d{1})/, '($1) - $2');
+  if (number.length < 11)
+    return number.replace(/(\d{3})(\d{3})(\d{1})/, '($1) - $2 - $3');
+  return number.replace(/(\d{3})(\d{3})(\d{4})/, '($1) - $2 - $3');
 };
 
 export const revertPhoneNumberInputFormat = (phoneNumber) => {
-  const number = phoneNumber.trim().replace(/[^0-9]/g, "");
+  const number = phoneNumber.trim().replace(/[^0-9]/g, '');
   // console.log('reverting', `+1${number}`)
-  if(!number.length) return;
+  if (!number.length) return;
   return `+1${number}`;
 };
 
@@ -250,18 +253,19 @@ export const filterLastCommuncationDate = (
     return !isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
   if (filterForDate === 'today') {
-    return isToday(date)
+    return isToday(date);
   }
 
-  const filterDate = moment().startOf('date').subtract(filterForDate[0], filterForDate[1]);
+  const filterDate = moment()
+    .startOf('date')
+    .subtract(filterForDate[0], filterForDate[1]);
   return moment(date).isSameOrBefore(filterDate);
 };
 
 export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-  const healthyCommunicationDate = moment().startOf('date').subtract(
-    healthyCommunicationDays,
-    'days'
-  );
+  const healthyCommunicationDate = moment()
+    .startOf('date')
+    .subtract(healthyCommunicationDays, 'days');
   const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
 
   return isHealthyCommunication;

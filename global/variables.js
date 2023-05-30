@@ -113,18 +113,23 @@ export const types = [
     icon: <UsersIcon className="text-lightBlue3 mr-1 w-6" />,
     description: 'Contacts who assist you in closing clients.',
     types: [
-      {
-        id: 8,
-        name: 'vendor',
-      },
+      { id: 8, hidden: false, name: 'vendor' },
       {
         id: 12,
+        hidden: false,
         name: 'agent',
       },
-      {
-        id: 9,
-        name: 'other',
-      },
+      { id: 15, hidden: true, name: 'lawyer' },
+      { id: 16, hidden: true, name: 'contractor' },
+      { id: 17, hidden: true, name: 'mortgage broker' },
+      { id: 18, hidden: true, name: 'mover' },
+      { id: 19, hidden: true, name: 'photographer' },
+      { id: 20, hidden: true, name: 'staging' },
+      { id: 21, hidden: true, name: 'home inspector' },
+      { id: 22, hidden: true, name: 'finance' },
+      { id: 23, hidden: true, name: 'insurance' },
+      { id: 24, hidden: true, name: 'appraiser' },
+      { id: 25, hidden: true, name: 'handyman' },
     ],
   },
   {
@@ -410,26 +415,79 @@ export const clientStatuses = [
   },
 ];
 
+export const vendorTypes = [
+  { id: 15, name: 'Lawyer' },
+  { id: 16, name: 'Contractor' },
+  { id: 17, name: 'Mortgage Broker' },
+  { id: 18, name: 'Mover' },
+  { id: 19, name: 'Photographer' },
+  { id: 20, name: 'Staging' },
+  { id: 21, name: 'Home Inspector' },
+  { id: 22, name: 'Finance' },
+  { id: 23, name: 'Insurance' },
+  { id: 24, name: 'Appraiser' },
+  { id: 25, name: 'Handyman' },
+];
+
+export const agentTypes = [{ id: 12, name: 'Agent' }];
+
 export const professionalsStatuses = [
   {
     id: 0,
-    statusMainTitle: 'Active',
+    statusMainTitle: 'Vendor',
     color: 'border-lightBlue3',
     statuses: [
       {
         id: 13,
         name: 'No Relationship',
-        color: 'bg-lightBlue1',
       },
       {
         id: 14,
         name: 'Loose Relationship',
-        color: 'bg-lightBlue2',
       },
       {
         id: 15,
-        name: 'Strong Relationship',
-        color: 'bg-purple1',
+        name: 'Lawyer',
+      },
+      {
+        id: 16,
+        name: 'Contractor',
+      },
+      {
+        id: 17,
+        name: 'Mortgage Broker',
+      },
+      {
+        id: 18,
+        name: 'Mover',
+      },
+      {
+        id: 19,
+        name: 'Photographer',
+      },
+      {
+        id: 20,
+        name: 'Staging',
+      },
+      {
+        id: 21,
+        name: 'Home Inspector',
+      },
+      {
+        id: 22,
+        name: 'Finance',
+      },
+      {
+        id: 23,
+        name: 'Insurance',
+      },
+      {
+        id: 24,
+        name: 'Appraiser',
+      },
+      {
+        id: 25,
+        name: 'Handyman',
       },
     ],
   },
@@ -459,7 +517,7 @@ export const professionalsStatuses = [
   // },
   {
     id: 1,
-    statusMainTitle: 'Dropped',
+    statusMainTitle: 'Agent',
     color: 'border-red4',
     statuses: [
       {
@@ -540,10 +598,6 @@ export const contactCategoryOptions = {
         id: 12,
         name: 'Agent',
       },
-      {
-        id: 9,
-        name: 'Other',
-      },
     ],
   ],
 };
@@ -575,10 +629,6 @@ export const professionalsOptions = [
   {
     id: 12,
     name: 'Agent',
-  },
-  {
-    id: 9,
-    name: 'Other',
   },
 ];
 

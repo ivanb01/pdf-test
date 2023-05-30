@@ -279,7 +279,6 @@ export default function ContactCard({
           </div>
         </div>
       </div>
-
     </>
   );
 }

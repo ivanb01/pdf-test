@@ -36,10 +36,21 @@ const MainSidebar = ({
     if (subtab == 'Family & Friends') {
       const familyCount = contacts.metadata.category['Family'] || 0;
       const friendsCount = contacts.metadata.category['Friend'] || 0;
-      return familyCount + friendsCount
+      return familyCount + friendsCount;
     }
     if (subtab == 'Unknown') {
-      return contacts.metadata.category['Unknown'] || 0
+      return contacts.metadata.category['Unknown'] || 0;
+    }
+    if (subtab == 'Agent') {
+      return contacts.metadata.category['Agent'] || 0;
+    }
+    if (subtab == 'Vendor') {
+      let category = contacts.metadata.category;
+      const agentCount = category['Agent'] || 0;
+      const othersCount =
+        Object.values(category).reduce((total, count) => total + count, 0) -
+        agentCount;
+      return othersCount;
     }
     return openedTab === 2
       ? contacts.metadata.category[subtab] || 0

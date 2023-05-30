@@ -12,10 +12,7 @@ import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
 import AddActivity from 'components/overlays/add-activity';
 import toast from 'react-hot-toast';
-import {
-  clientStatuses,
-  professionalsStatuses,
-} from 'global/variables';
+import { clientStatuses, professionalsStatuses } from 'global/variables';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
@@ -26,7 +23,6 @@ const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
-
 
 const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const router = useRouter();
@@ -123,15 +119,16 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatus = async (status, contact) => {
     try {
-      if(contact?.is_in_campaign==="assigned" && contact?.status_id !== status) {
+      if (
+        contact?.is_in_campaign === 'assigned' &&
+        contact?.status_id !== status
+      ) {
         setStatusIdToUpdate(status);
         setChangeStatusModal(true);
         setContactToModify(contact);
-
       } else {
         await changeStatus(status, contact);
-        console.log('change status')
-
+        console.log('change status');
       }
     } catch (error) {
       console.log(error);
@@ -140,9 +137,12 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatusAndCampaign = async () => {
     try {
-      await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
+      await unassignContactFromCampaign(
+        contactToModify.campaign_id,
+        contactToModify.id
+      );
       await changeStatus(statusIdToUpdate, contactToModify);
-      console.log('unassin then change status')
+      console.log('unassin then change status');
 
       setChangeStatusModal(false);
     } catch (error) {
@@ -151,13 +151,11 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   };
 
   const changeStatus = async (status, contact) => {
-
-
     try {
       const statusId = status; // example status id to search for
       const categoryStatuses =
         categoryType === 'clients' ? clientStatuses : professionalsStatuses;
-  
+
       const foundStatus = categoryStatuses.find(
         (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
       );
@@ -166,7 +164,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       let statusName = foundStatus.statuses.find(
         (foundstatus) => foundstatus.id == status
       ).name;
-  
+
       dispatch(
         updateContactStatus({
           id: contact.id,
@@ -177,7 +175,6 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       toast.success(
         `${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`
       );
-
 
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
@@ -193,8 +190,6 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       console.log(error);
     }
   };
-
-
 
   return (
     <div className="flex flex-col border-r border-gray2">

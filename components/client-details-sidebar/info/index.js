@@ -127,6 +127,7 @@ export default function Info({ client, handleFetchContactRequired }) {
           {![2, 3, 13, 14].includes(client?.category_id) && (
             <Dropdown
               label="Status"
+              placeHolder="Choose"
               activeIcon={false}
               options={allStatusesQuickEdit[categoryType]}
               className="my-3"
@@ -163,9 +164,7 @@ export default function Info({ client, handleFetchContactRequired }) {
             className="my-3"
             handleSelect={(source) => handleChangeSource(source.name)}
             initialSelect={client?.lead_source}
-            placeHolder={
-              client?.lead_source ? client?.lead_source : 'Choose'
-            }
+            placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
           />
 
           {campaginName ? (

@@ -81,13 +81,13 @@ const Layout = ({ children }) => {
       subtab: [
         {
           id: 0,
-          name: 'Active',
+          name: 'Vendor',
           dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
         },
         {
           id: 1,
-          name: 'Dropped',
+          name: 'Agent',
           dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
         },

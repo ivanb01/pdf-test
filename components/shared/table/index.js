@@ -19,6 +19,8 @@ import {
   clientStatuses,
   allStatusesQuickEdit,
   professionalsStatuses,
+  vendorTypes,
+  agentTypes,
 } from 'global/variables';
 import { useRouter } from 'next/router';
 import {
@@ -1191,6 +1193,406 @@ const Table = ({
       </>
     );
   };
+
+  const professionalsTable = () => {
+    const openedTab = useSelector((state) => state.global.openedTab);
+    const openedSubtab = useSelector((state) => state.global.openedSubtab);
+    const contactsOriginal = useSelector((state) => state.contacts.data.data);
+    const [contacts, setContacts] = useState([]);
+
+    useEffect(() => {
+      if (openedSubtab === 0) {
+        setContacts(
+          contactsOriginal.filter((contact) => contact.category_id !== 12)
+        );
+      } else if (openedSubtab === 1) {
+        setContacts(
+          contactsOriginal.filter((contact) => contact.category_id === 12)
+        );
+      }
+      console.log('filtered', contacts, contacts);
+    }, [openedSubtab]);
+
+    const dispatch = useDispatch();
+
+    const [addActivityPopup, setAddActivityPopup] = useState(false);
+    const handleAddActivity = (client) => {
+      setContactToModify(client);
+      setAddActivityPopup(true);
+    };
+
+    const [changeStatusModal, setChangeStatusModal] = useState(false);
+    const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
+    const [contactToModify, setContactToModify] = useState(null);
+
+    let professionalTypes = openedSubtab == 0 ? vendorTypes : agentTypes;
+
+    // const handleChangeStatus = async (status, contact) => {
+    //   try {
+    //     if (
+    //       contact?.is_in_campaign === 'assigned' &&
+    //       contact?.status_id !== status
+    //     ) {
+    //       setStatusIdToUpdate(status);
+    //       setChangeStatusModal(true);
+    //       setContactToModify(contact);
+    //     } else {
+    //       await changeStatus(status, contact);
+    //       console.log('change status');
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
+    // const handleChangeStatusAndCampaign = async () => {
+    //   try {
+    //     await unassignContactFromCampaign(
+    //       contactToModify.campaign_id,
+    //       contactToModify.id
+    //     );
+    //     await changeStatus(statusIdToUpdate, contactToModify);
+    //     console.log('unassin then change status');
+
+    //     setChangeStatusModal(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
+    // const changeStatus = async (status, contact) => {
+    //   try {
+    //     const statusId = status; // example status id to search for
+    //     const categoryStatuses =
+    //       categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+
+    //     const foundStatus = categoryStatuses.find(
+    //       (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1
+    //     );
+    //     const statusMainTitle = foundStatus
+    //       ? foundStatus.statusMainTitle
+    //       : null;
+    //     console.log('tesr', foundStatus);
+    //     let statusName = foundStatus.statuses.find(
+    //       (foundstatus) => foundstatus.id == status
+    //     ).name;
+
+    //     dispatch(
+    //       updateContactStatus({
+    //         id: contact.id,
+    //         status_id: status,
+    //         status_2: statusName,
+    //       })
+    //     );
+    //     toast.success(
+    //       `${
+    //         contact.first_name + ' ' + contact.last_name
+    //       } moved to ${statusName}`
+    //     );
+
+    //     const res = await contactServices.updateContact(contact.id, {
+    //       status_id: status,
+    //     });
+    //     // change status locally
+    //     console.log('changeStatus', contact, contact.id, status, res);
+    //     // setDropdownOpened(false);
+    //     const { data } = await contactServices.getContacts(
+    //       categoryIds[contact?.category_1]
+    //     );
+    //     dispatch(setContacts(data));
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
+    return (
+      <>
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+            >
+              {/* <Input
+                type="checkbox"
+                onChange={(event) => handleSelectContact(event, contact)}
+              ></Input> */}
+              Professional
+            </th>
+            {/* <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Type
+            </th> */}
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              PHONE
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              LAST COMMUNICATION
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              ACTIONS
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white">
+          {professionalTypes.map((type, index) =>
+            contacts.filter((contact) => contact.category_id == type.id)
+              .length ? (
+              <>
+                <tr
+                  key={type.id}
+                  className={`contact-row border-b border-gray-200`}
+                >
+                  <td colSpan="10">
+                    <div className="flex items-center px-6 py-2">
+                      <Text chipText className="text-gray4">
+                        {type.name}
+                      </Text>
+                    </div>
+                  </td>
+                </tr>
+                {contacts
+                  .filter((contact) => contact.category_id == type.id)
+                  .map((contact) => (
+                    <tr
+                      key={contact.id}
+                      className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                      onClick={() =>
+                        router.push({
+                          pathname: '/contacts/details',
+                          query: { id: contact.id },
+                        })
+                      }
+                    >
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                        <ContactInfo
+                          data={{
+                            name: contact.first_name + ' ' + contact.last_name,
+                            email: contact.email,
+                            image: contact.profile_image_path,
+                          }}
+                        />
+                      </td>
+                      {/* <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
+                          {contact.category_2}
+                        </div>
+                      </td> */}
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium min-w-[200px]">
+                          {phoneNumberFormat(contact.phone_number)}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium">
+                          <DateChip
+                            lastCommunication={contact.last_communication_date}
+                            contactStatus={contact.status_2}
+                            contactCategory={categoryType}
+                          />
+
+                          {/* <Chip
+                            lastCommunication={formatDateAgo(
+                              contact?.last_communication_date
+                            )}                         
+                          /> */}
+                        </div>
+                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                      </td>
+                      <td>
+                        <div className="px-4 py-[10px] flex items-center justify-center">
+                          <div
+                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                            onMouseEnter={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-edit-contact-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
+                              document
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
+                            onMouseLeave={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-edit-contact-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
+                              document
+                                .querySelector(
+                                  '#edit-contact-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardEdit(contact);
+                            }}
+                          >
+                            <Edit
+                              id={'edit-contact-icon-' + contact.id}
+                              className="text-gray3 w-4 h-4"
+                            />
+                            <div
+                              id={'tooltip-edit-contact-' + contact.id}
+                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
+                            >
+                              Edit Contact
+                            </div>
+                          </div>
+                          <div
+                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                            onMouseEnter={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-add-activity-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#add-activity-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
+                              document
+                                .querySelector(
+                                  '#add-activity-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
+                            onMouseLeave={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-add-activity-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#add-activity-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
+                              document
+                                .querySelector(
+                                  '#add-activity-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
+                            // onClick={(e) => {
+                            //   e.stopPropagation();
+                            //   router.push({
+                            //     pathname: '/contacts/details',
+                            //     query: { id: contact.id, campaigns: true },
+                            //   });
+                            // }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddActivity(contact);
+                            }}
+                          >
+                            <List
+                              id={'add-activity-icon-' + contact.id}
+                              className="text-gray3 w-4 h-4"
+                            />
+                            <div
+                              id={'tooltip-add-activity-' + contact.id}
+                              role="tooltip"
+                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                            >
+                              Add Activity
+                            </div>
+                          </div>
+                          {/* <div
+                            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
+                            onMouseEnter={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-change-status-' + contact.id
+                                )
+                                .classList.remove('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.add('text-gray4');
+                              document
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray3');
+                            }}
+                            onMouseLeave={() => {
+                              document
+                                .querySelector(
+                                  '#tooltip-change-status-' + contact.id
+                                )
+                                .classList.add('invisible', 'opacity-0');
+                              document
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.add('text-gray3');
+                              document
+                                .querySelector(
+                                  '#change-status-icon-' + contact.id
+                                )
+                                .classList.remove('text-gray4');
+                            }}
+                            // onClick={(event) => handleDropdown(event, !dropdownOpened)}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div
+                              id={'tooltip-change-status-' + contact.id}
+                              role="tooltip"
+                              className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+                            >
+                              Change Status
+                            </div>
+                          </div> */}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </>
+            ) : (
+              <></>
+            )
+          )}
+        </tbody>
+        {addActivityPopup && (
+          <AddActivity
+            client={contactToModify}
+            className="min-w-[550px]"
+            title={`Add Activity`}
+            setAddActivityPopup={setAddActivityPopup}
+            handleClose={() => setAddActivityPopup(false)}
+          />
+        )}
+      </>
+    );
+  };
   const importGoogleContactsDetails = () => {
     const [hovered, setHovered] = useState(false);
     return (
@@ -1256,6 +1658,8 @@ const Table = ({
                   ? uncategorizedTable()
                   : tableFor == 'contact-campaigns'
                   ? contactCampaignsTable()
+                  : tableFor == 'professionals'
+                  ? professionalsTable()
                   : tableFor == 'imports-summary'
                   ? importsSummaryTable()
                   : tableFor == 'contactsList'

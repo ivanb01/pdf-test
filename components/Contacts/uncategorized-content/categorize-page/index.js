@@ -6,13 +6,14 @@ import Image from 'next/image';
 import Button from 'components/shared/button';
 import CircleStepNumber from 'components/shared/circle-step-number';
 import Text from 'components/shared/text';
-import { types } from 'global/variables';
+import { types, vendorTypes } from 'global/variables';
 import { professionalsStatuses, clientStatuses } from 'global/variables';
 import noContactsSelected from 'public/images/categorize-no-contacts-selected.svg';
 import noContactsSelectedArrow from 'public/images/categorize-no-contacts-selected-arrow.svg';
 import noCategorized from 'public/images/no-categorized.svg';
 import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
+import Chip from 'components/shared/chip';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -60,13 +61,13 @@ const CategorizePage = ({
   };
 
   const handleSelectUncategorizedType = (type) => {
+    console.log('type', type);
     setSelectedUncategorizedContactType(type);
     if (
       selectedUncategorizedContactStatus ||
-      type === 2 ||
-      type === 3 ||
-      type === 13 ||
-      type === 14
+      [2, 3, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].includes(
+        type
+      )
     ) {
       updateTypeStatus(1, type);
     }
@@ -210,26 +211,48 @@ const CategorizePage = ({
                   );
                 })}
               </div>
-              {selectedUncategorizedContactType != null &&
-                selectedUncategorizedContactType != 2 &&
-                selectedUncategorizedContactType != 3 &&
-                selectedUncategorizedContactType != 13 &&
-                selectedUncategorizedContactType != 14 && (
+              {!categorizationInProcess &&
+                selectedUncategorizedContactType != null &&
+                ![2, 3, 12, 13, 14].includes(
+                  selectedUncategorizedContactType
+                ) && (
                   <>
                     <div className="flex items-center mb-4">
                       <CircleStepNumber number={2} className="mr-2" />
-                      <Text h3>In what stage of communication?</Text>
+                      <Text h3>
+                        {selectedUncategorizedContactType == 8
+                          ? 'What type of vendor is this?'
+                          : 'In what stage of communication?'}
+                      </Text>
                     </div>
-                    <StatusSelect
-                      className="pl-9"
-                      selectedStatus={selectedUncategorizedContactStatus}
-                      setSelectedStatus={handleSelectUncategorizedStatus}
-                      statuses={
-                        [8, 9, 12].includes(selectedUncategorizedContactType)
-                          ? professionalsStatuses
-                          : clientStatuses
-                      }
-                    />
+                    {selectedUncategorizedContactType != 8 ? (
+                      <StatusSelect
+                        className="pl-9"
+                        selectedStatus={selectedUncategorizedContactStatus}
+                        setSelectedStatus={handleSelectUncategorizedStatus}
+                        statuses={
+                          [9, 12].includes(selectedUncategorizedContactType)
+                            ? professionalsStatuses
+                            : clientStatuses
+                        }
+                      />
+                    ) : (
+                      <div className="flex flex-wrap">
+                        {vendorTypes.map((type) => (
+                          <Chip
+                            selectedStatus={
+                              type.id == selectedUncategorizedContactType
+                            }
+                            key={type.id}
+                            label={type.name}
+                            className="mr-3 mb-3"
+                            onClick={() =>
+                              handleSelectUncategorizedType(type.id)
+                            }
+                          />
+                        ))}
+                      </div>
+                    )}
                   </>
                 )}
             </div>

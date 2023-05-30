@@ -36,7 +36,7 @@ const index = () => {
 
   const fetchProfessionals = () => {
     setLoading(true);
-    getContacts('8,9,12,').then((data) => {
+    getContacts('12,15,16,17,18,19,20,21,22,23,24,25,').then((data) => {
       dispatch(setContacts(data.data));
       setProfessionalsCopy(data.data);
       setLoading(false);

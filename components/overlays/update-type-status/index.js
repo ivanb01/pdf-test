@@ -10,10 +10,13 @@ import { updateContact } from 'api/contacts';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 
-
-const UpdateTypeStatus = ({ contact, handleClose, handleFetchContactRequired }) => {
+const UpdateTypeStatus = ({
+  contact,
+  handleClose,
+  handleFetchContactRequired,
+}) => {
   const nextStep = () => {
-      setCurrentStep(currentStep + 1);
+    setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
@@ -44,7 +47,11 @@ const UpdateTypeStatus = ({ contact, handleClose, handleFetchContactRequired }) 
 
   const handleSubmit = async () => {
     try {
-      if(contact?.is_in_campaign === 'assigned' && (contact?.status_id !== selectedStatus || contact?.category_id !== selectedType)) {
+      if (
+        contact?.is_in_campaign === 'assigned' &&
+        (contact?.status_id !== selectedStatus ||
+          contact?.category_id !== selectedType)
+      ) {
         setChangeStatusModal(true);
       } else {
         await editContact();
