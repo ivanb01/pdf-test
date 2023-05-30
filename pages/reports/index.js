@@ -81,6 +81,7 @@ const index = () => {
             handleSelect={(item) => setSortColumn(item.id)}
           />
           <ButtonsSlider
+            noCount
             buttons={tabs}
             currentButton={currentButton}
             onClick={setCurrentButton}

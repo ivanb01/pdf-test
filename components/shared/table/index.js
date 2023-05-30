@@ -1212,8 +1212,7 @@ const Table = ({
           contactsOriginal.filter((contact) => contact.category_id === 12)
         );
       }
-      console.log('filtered', contacts, contacts);
-    }, [openedSubtab]);
+    }, [openedSubtab, contactsOriginal]);
 
     const dispatch = useDispatch();
 

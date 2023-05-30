@@ -735,7 +735,7 @@ export const multiselectOptionsClients = [
 export const multiselectOptionsProfessionals = [
   { value: 'Lawyer', label: 'Lawyer' },
   { value: 'Contractor', label: 'Contractor' },
-  { value: 'Mortagage Broker', label: 'Mortagage Broker' },
+  { value: 'Mortgage Broker', label: 'Mortgage Broker' },
   { value: 'Title Agent', label: 'Title Agent' },
   { value: 'Agent', label: 'Agent' },
   { value: 'Friend', label: 'Friend' },

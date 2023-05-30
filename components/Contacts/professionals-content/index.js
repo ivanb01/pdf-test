@@ -28,7 +28,7 @@ import { multiselectOptionsProfessionals } from 'global/variables';
 const tabs = [
   {
     title: 'PROFESSIONAL TYPES',
-    content: ['Vendor', 'Agent'],
+    content: multiselectOptionsProfessionals.map((option) => option.label),
     value: 'category_2',
   },
   {
@@ -47,11 +47,11 @@ const tabs = [
     content: ['In Campaign', 'Not In Campaign'],
     value: 'is_in_campaign',
   },
-  {
-    title: 'TAGS',
-    content: multiselectOptionsProfessionals.map((option) => option.label),
-    value: 'tags',
-  },
+  // {
+  //   title: 'TAGS',
+  //   content: multiselectOptionsProfessionals.map((option) => option.label),
+  //   value: 'tags',
+  // },
 ];
 
 const campaignFilterMeaning = {
@@ -250,15 +250,7 @@ const Professionals = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {
-                    contacts.filter(
-                      (contact) =>
-                        contact?.status_1.toLowerCase() ===
-                        professionalsStatuses[
-                          openedSubtab
-                        ].statusMainTitle.toLowerCase()
-                    ).length
-                  }
+                  {contacts.length}
                   {contacts.length == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
