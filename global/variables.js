@@ -763,6 +763,10 @@ export const tagsForProfessionals = [
     value: 'Strong Relationship',
     label: 'Strong Relationship',
   },
+  {
+    value: 'Dropped',
+    label: 'Dropped',
+  },
 ];
 
 export const healthLastCommunicationDate = {
