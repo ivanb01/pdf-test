@@ -2,6 +2,7 @@ import Select from 'react-select';
 import {
   multiselectOptionsClients,
   multiselectOptionsProfessionals,
+  tagsForProfessionals,
 } from 'global/variables';
 
 const TagsInput = ({ onChange, label, value, typeOfContact }) => {
@@ -14,9 +15,7 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
         isMulti
         value={value}
         options={
-          typeOfContact == 0
-            ? multiselectOptionsClients
-            : multiselectOptionsProfessionals
+          typeOfContact == 0 ? multiselectOptionsClients : tagsForProfessionals
         }
         onChange={onChange}
         styles={{

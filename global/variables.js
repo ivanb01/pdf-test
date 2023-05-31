@@ -750,6 +750,21 @@ export const multiselectOptionsProfessionals = [
   { value: 'Handyman', label: 'Handyman' },
 ];
 
+export const tagsForProfessionals = [
+  {
+    value: 'No Relationship',
+    label: 'No Relationship',
+  },
+  {
+    value: 'Loose Relationship',
+    label: 'Loose Relationship',
+  },
+  {
+    value: 'Strong Relationship',
+    label: 'Strong Relationship',
+  },
+];
+
 export const healthLastCommunicationDate = {
   clients: {
     'New Lead': 1,
