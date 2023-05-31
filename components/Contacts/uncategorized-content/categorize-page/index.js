@@ -310,7 +310,8 @@ const CategorizePage = ({
                 You haven’t categorized any contact in this session yet
               </Text>
               <Text p className="text-gray4 relative text-center">
-                To categorize please specify type and status.
+                To categorize please specify type and{' '}
+                {selectedUncategorizedContactType == 8 ? 'subtype' : 'status'}.
               </Text>
             </div>
           )}
