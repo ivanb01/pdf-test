@@ -14,6 +14,7 @@ const MultiStepOverlay = ({
   nextStep,
   changeStep,
   submit,
+  isSubmittingNextButton,
   isSubmittingButton,
   className,
   hideHeader,
@@ -106,6 +107,7 @@ const MultiStepOverlay = ({
                 <Button
                   label="Next"
                   rightIcon={<ArrowRightIcon height={15} />}
+                  loading={isSubmittingNextButton}
                   onClick={nextStep}
                 ></Button>
               )}

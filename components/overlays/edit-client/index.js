@@ -9,7 +9,8 @@ import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import { useState, useEffect } from 'react';
-import * as contactServices from 'api/contacts';
+// import * as contactServices from 'api/contacts';
+import { updateContact, findContactByEmail } from 'api/contacts';
 import Overlay from 'components/shared/overlay';
 import TagsInput from 'components/tagsInput';
 import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
@@ -33,6 +34,9 @@ const EditContactOverlay = ({
     },
     // { id: 2, name: 'Type and Status', href: '#' },
   ];
+
+  const [existingContactEmailError, setExistingContactEmailError] = useState('');
+  const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -68,7 +72,26 @@ const EditContactOverlay = ({
     },
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await editClient(values);
+      // await editClient(values);
+      // setSubmitting(false);
+      try {
+        if(client?.email === values.email) {
+          await editClient(values);
+        } else {
+          const { data } = await findContactByEmail({email: values.email});
+          if(data) {
+            setExistingContactEmailError('This email already exists!');
+            setExistingContactEmail(values.email)
+          }  
+        }
+      } catch (error) {
+        console.log(error);
+        if(error.response.status === 404) {
+          setExistingContactEmailError('');
+          setExistingContactEmail('');
+          await editClient(values);
+        }
+      }
       setSubmitting(false);
     },
   });
@@ -81,7 +104,7 @@ const EditContactOverlay = ({
 
   const editClient = async (values) => {
     try {
-      await contactServices.updateContact(client?.id, values);
+      await updateContact(client?.id, values);
       console.log(values, 'edit contact', client?.id);
       if (handleFetchContactRequired) {
         handleFetchContactRequired();
@@ -133,10 +156,16 @@ const EditContactOverlay = ({
               label="Email"
               id="email"
               className=""
-              onChange={formik.handleChange}
+              // onChange={formik.handleChange}
+              onChange={(e) => {
+                  if(existingContactEmail !== e.target.value) {
+                    setExistingContactEmailError('');
+                  }
+                  formik.setFieldValue('email', e.target.value);                
+              }}
               value={formik.values.email}
-              error={errors.email && touched.email}
-              errorText={errors.email}
+              error={(errors.email && touched.email) || (existingContactEmailError)}
+              errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
             />
             <Input
               type="phone_number"
