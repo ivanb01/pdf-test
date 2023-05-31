@@ -68,7 +68,7 @@ const AddClientManuallyOverlay = ({
   const AddContactSchema2 = Yup.object().shape({
     selectedContactType: Yup.string().required('Contact type is required'),
     selectedContactSubtype: Yup.string().when('selectedContactType', {
-      is: (val) => val != 12,
+      is: (val) => val == 8,
       then: Yup.string().required('Contact subtype is required'),
       otherwise: Yup.string().notRequired(),
     }),
@@ -140,13 +140,17 @@ const AddClientManuallyOverlay = ({
 
     try {
       let type =
-        formikStep2.values.selectedContactType == 12
-          ? 12
-          : formikStep2.values.selectedContactSubtype;
+        formikStep2.values.selectedContactType == 8
+          ? formikStep2.values.selectedContactSubtype
+          : formikStep2.values.selectedContactType;
+      let status = formikStep2.values.selectedStatus
+        ? formikStep2.values.selectedStatus
+        : 1;
+
       const contactToAdd = {
         ...formik.values,
         category_id: type,
-        status_id: 1,
+        status_id: status,
       };
 
       console.log('contact to add: ', contactToAdd);
@@ -318,14 +322,17 @@ const AddClientManuallyOverlay = ({
                   )}
               </>
             ) : (
-              <StatusSelect
-                selectedStatus={formikStep2.values.selectedStatus}
-                setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-                label="In what stage of communication?"
-                statuses={statuses}
-                error={errors2.selectedStatus && touched2.selectedStatus}
-                errorText={errors2.selectedStatus}
-              />
+              ![8, 12, 15].includes(formikStep2.values.selectedContactType) &&
+              formikStep2.values.selectedContactType && (
+                <StatusSelect
+                  selectedStatus={formikStep2.values.selectedStatus}
+                  setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+                  label="In what stage of communication?"
+                  statuses={statuses}
+                  error={errors2.selectedStatus && touched2.selectedStatus}
+                  errorText={errors2.selectedStatus}
+                />
+              )
             )}
           </div>
         )}
