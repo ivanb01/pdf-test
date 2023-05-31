@@ -9,6 +9,8 @@ import { professionalsStatuses, clientStatuses } from 'global/variables';
 import { updateContact } from 'api/contacts';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
+import { vendorTypes } from 'global/variables';
+import Chip from 'components/shared/chip';
 
 const UpdateTypeStatus = ({
   contact,
@@ -76,7 +78,7 @@ const UpdateTypeStatus = ({
   };
 
   useEffect(() => {
-    if ([2, 3, 13, 14].includes(selectedType)) {
+    if ([2, 3, 12, 13, 14].includes(selectedType)) {
       setSteps([{ id: 1, name: 'Select Category', href: '#' }]);
     } else {
       setSteps([
@@ -132,18 +134,38 @@ const UpdateTypeStatus = ({
             <div>
               <div className="flex items-center mb-6">
                 <CircleStepNumber number={2} className="mr-2" />
-                <Text h3>In what stage of communication?</Text>
+                <Text h3>
+                  {selectedType == 8
+                    ? 'What kind of vendor?'
+                    : 'In what stage of communication?'}
+                </Text>
               </div>
-              <StatusSelect
-                className="px-9"
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                statuses={
-                  [8, 9, 12].includes(selectedType)
-                    ? professionalsStatuses
-                    : clientStatuses
-                }
-              />
+              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].includes(
+                selectedType
+              ) ? (
+                <div className="flex flex-wrap">
+                  {vendorTypes.map((type) => (
+                    <Chip
+                      selectedStatus={type.id == selectedType}
+                      key={type.id}
+                      label={type.name}
+                      className="mr-3 mb-3"
+                      onClick={() => setSelectedType(type.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <StatusSelect
+                  className="px-9"
+                  selectedStatus={selectedStatus}
+                  setSelectedStatus={setSelectedStatus}
+                  statuses={
+                    [8, 9, 12].includes(selectedType)
+                      ? professionalsStatuses
+                      : clientStatuses
+                  }
+                />
+              )}
             </div>
           )}
         </div>

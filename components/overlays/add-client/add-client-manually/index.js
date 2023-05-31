@@ -289,7 +289,7 @@ const AddClientManuallyOverlay = ({
               }
               errorText={errors2.selectedContactType}
             />
-            {formikStep2.values.selectedContactType == 8 && (
+            {formikStep2.values.selectedContactType == 8 ? (
               <>
                 <div className="text-gray7 mb-3 text-sm font-medium">
                   What kind of vendor?
@@ -317,14 +317,15 @@ const AddClientManuallyOverlay = ({
                     </NotificationAlert>
                   )}
               </>
-              // <StatusSelect
-              //   selectedStatus={formikStep2.values.selectedStatus}
-              //   setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-              //   label="In what stage of communication?"
-              //   statuses={statuses}
-              //   error={errors2.selectedStatus && touched2.selectedStatus}
-              //   errorText={errors2.selectedStatus}
-              // />
+            ) : (
+              <StatusSelect
+                selectedStatus={formikStep2.values.selectedStatus}
+                setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+                label="In what stage of communication?"
+                statuses={statuses}
+                error={errors2.selectedStatus && touched2.selectedStatus}
+                errorText={errors2.selectedStatus}
+              />
             )}
           </div>
         )}

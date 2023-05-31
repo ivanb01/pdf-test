@@ -14,9 +14,7 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
       <Select
         isMulti
         value={value}
-        options={
-          typeOfContact == 0 ? multiselectOptionsClients : tagsForProfessionals
-        }
+        options={multiselectOptionsClients}
         onChange={onChange}
         styles={{
           input: (base) => ({
