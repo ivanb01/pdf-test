@@ -12,7 +12,8 @@ import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import Dropdown from 'components/shared/dropdown';
 import TagsInput from 'components/tagsInput';
-import * as contactServices from 'api/contacts';
+// import * as contactServices from 'api/contacts';
+import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { setContacts } from 'store/contacts/slice';
@@ -63,6 +64,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
     },
   ]);
 
+  const [existingContactEmailError, setExistingContactEmailError] = useState('');
+  const [existingContactEmail, setExistingContactEmail] = useState('');
+
   const [selectedContact, setSelectedContact] = useState(0);
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -81,7 +85,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       // .required('Field can not be empty')
       .matches(phoneNumberRules, {
         message: 'Not a proper format phone number',
-      }),
+      })
+      .nullable(),
   });
 
   const AddContactSchema2 = Yup.object().shape({
@@ -100,11 +105,25 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       tags: [],
     },
     validationSchema: AddContactSchema,
-    onSubmit: (values) => {
-      setCurrentStep(currentStep + 1);
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const { data } = await findContactByEmail({email: values.email});
+        if(data) {
+          setExistingContactEmailError('This email already exists!');
+          setExistingContactEmail(values.email);
+        }    
+      } catch (error) {
+        console.log(error);
+        if(error.response.status === 404) {
+          setExistingContactEmailError('');
+          setExistingContactEmail('');
+          setCurrentStep(currentStep + 1);
+        }
+      }
+      setSubmitting(false);
     },
   });
-  const { errors, touched, submitForm: submitForm1 } = formik;
+  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1, } = formik;
 
   //* FORMIK-STEP-3 *//
   const formik2 = useFormik({
@@ -150,8 +169,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
 
       console.log('contact to add: ', contactToAdd);
 
-      const res = await contactServices.addContact(contactToAdd);
-      const { data } = await contactServices.getContacts(
+      const res = await addContact(contactToAdd);
+      const { data } = await getContacts(
         categoryIds[selectedContact]
       );
 
@@ -189,6 +208,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       // changeStep={(arg) => setCurrentStep(arg)}
       title={title}
       submit={submitForm2}
+      isSubmittingNextButton={isSubmitting1}
       isSubmittingButton={isSubmitting2}
     >
       <div className="step">
@@ -242,10 +262,16 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     type="email"
                     label="Email"
                     id="email"
-                    onChange={formik.handleChange}
+                    // onChange={formik.handleChange}
+                    onChange={(e) => {
+                      if(existingContactEmail !== e.target.value) {
+                        setExistingContactEmailError('');
+                      }
+                      formik.setFieldValue('email', e.target.value);                
+                    }}
                     value={formik.values.email}
-                    error={errors.email && touched.email}
-                    errorText={errors.email}
+                    error={(errors.email && touched.email) || (existingContactEmailError)}
+                    errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
                   />
                   <Input
                     type="phone_number"

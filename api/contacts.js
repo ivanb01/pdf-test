@@ -33,6 +33,13 @@ export const bulkUpdateContacts = (contacts) => {
   return axiosInstance.put(`contact/bulk`, contacts);
 };
 
+export const findContactByEmail = (queryParams) => {
+  return axiosInstance.get(`contact/find_by`, {
+    params: queryParams,
+  });
+};
+
+
 export const getContactProfiles = (id) => {
   return axiosInstance.get(`contact/${id}/profiles`);
 };
