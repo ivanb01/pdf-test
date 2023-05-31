@@ -17,6 +17,8 @@ export default function Chip({
   statusStyle,
   typeStyle,
   children,
+  error,
+  errorText,
   ...props
 }) {
   // let today = new Date();

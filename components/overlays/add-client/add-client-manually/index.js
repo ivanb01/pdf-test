@@ -16,10 +16,13 @@ import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
 import TagsInput from 'components/tagsInput';
 import { useSelector } from 'react-redux';
+import { vendorTypes } from 'global/variables';
+import Chip from 'components/shared/chip';
+import NotificationAlert from 'components/shared/alert/notification-alert';
 
 const categoryIds = {
   'Add Client': '4,5,6,7',
-  'Add Professional': '8,9,12',
+  'Add Professional': '8,9,12,15,16,17,18,19,20,21,22,23,24,25,',
 };
 
 const globalTabs = {
@@ -64,7 +67,11 @@ const AddClientManuallyOverlay = ({
 
   const AddContactSchema2 = Yup.object().shape({
     selectedContactType: Yup.string().required('Contact type is required'),
-    selectedStatus: Yup.string().required('Contact status is required'),
+    selectedContactSubtype: Yup.string().when('selectedContactType', {
+      is: (val) => val != 12,
+      then: Yup.string().required('Contact subtype is required'),
+      otherwise: Yup.string().notRequired(),
+    }),
   });
 
   //* FORMIK *//
@@ -79,6 +86,7 @@ const AddClientManuallyOverlay = ({
     },
     validationSchema: AddContactSchema,
     onSubmit: (values) => {
+      console.log(values);
       setCurrentStep(currentStep + 1);
     },
   });
@@ -88,6 +96,7 @@ const AddClientManuallyOverlay = ({
   const formikStep2 = useFormik({
     initialValues: {
       selectedContactType: '',
+      selectedContactSubtype: '',
       selectedStatus: '',
     },
     validationSchema: AddContactSchema2,
@@ -130,10 +139,14 @@ const AddClientManuallyOverlay = ({
     let subtabs = [[2, 3, 4, 5, 7, 16], [9, 10], [8], [11]];
 
     try {
+      let type =
+        formikStep2.values.selectedContactType == 12
+          ? 12
+          : formikStep2.values.selectedContactSubtype;
       const contactToAdd = {
         ...formik.values,
-        category_id: formikStep2.values.selectedContactType,
-        status_id: formikStep2.values.selectedStatus,
+        category_id: type,
+        status_id: 1,
       };
 
       console.log('contact to add: ', contactToAdd);
@@ -276,14 +289,43 @@ const AddClientManuallyOverlay = ({
               }
               errorText={errors2.selectedContactType}
             />
-            <StatusSelect
-              selectedStatus={formikStep2.values.selectedStatus}
-              setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-              label="In what stage of communication?"
-              statuses={statuses}
-              error={errors2.selectedStatus && touched2.selectedStatus}
-              errorText={errors2.selectedStatus}
-            />
+            {formikStep2.values.selectedContactType == 8 && (
+              <>
+                <div className="text-gray7 mb-3 text-sm font-medium">
+                  What kind of vendor?
+                </div>
+                <div className="flex flex-wrap">
+                  {vendorTypes.map((type) => (
+                    <Chip
+                      selectedStatus={
+                        type.id == formikStep2.values.selectedContactSubtype
+                      }
+                      key={type.id}
+                      label={type.name}
+                      className="mr-3 mb-3"
+                      onClick={() =>
+                        setFieldValue2('selectedContactSubtype', type.id)
+                      }
+                    />
+                  ))}
+                </div>
+                {errors2.selectedContactSubtype &&
+                  touched2.selectedContactSubtype &&
+                  errors2.selectedContactSubtype && (
+                    <NotificationAlert className="mt-2 p-2" type={'error'}>
+                      {errors2.selectedContactSubtype}
+                    </NotificationAlert>
+                  )}
+              </>
+              // <StatusSelect
+              //   selectedStatus={formikStep2.values.selectedStatus}
+              //   setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+              //   label="In what stage of communication?"
+              //   statuses={statuses}
+              //   error={errors2.selectedStatus && touched2.selectedStatus}
+              //   errorText={errors2.selectedStatus}
+              // />
+            )}
           </div>
         )}
       </div>
