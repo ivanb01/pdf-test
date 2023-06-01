@@ -43,16 +43,26 @@ const buttons = [
 const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
 
+  let currentView = localStorage.getItem('currentView')
+    ? localStorage.getItem('currentView')
+    : 0;
+
   const [filters, setFilters] = useState({});
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(0);
+  const [currentButton, setCurrentButton] = useState(currentView);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
+  const [contactsOriginalLength, setContactsOriginalLength] = useState(
+    contacts.length
+  );
 
+  const handleViewChange = (viewId) => {
+    setCurrentButton(viewId);
+    localStorage.setItem('currentView', viewId);
+  };
   const tabs = [
     {
       title: 'CLIENT TYPES',
@@ -96,10 +106,10 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   // }, [searchTerm]);
 
   useEffect(() => {
-    if(contacts.length === contactsOriginalLength) {
+    if (contacts.length === contactsOriginalLength) {
       setContactsOriginal([...contacts]);
     }
-  },[contacts])
+  }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
@@ -120,8 +130,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
           )
         );
       } else if (key == 'is_in_campaign') {
-        let booleanFilter = filters[key].map(filter=>campaignFilterMeaning[filter])
-        contactsState = contactsState.filter(contact => booleanFilter.includes(contact[key]))
+        let booleanFilter = filters[key].map(
+          (filter) => campaignFilterMeaning[filter]
+        );
+        contactsState = contactsState.filter((contact) =>
+          booleanFilter.includes(contact[key])
+        );
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
@@ -229,7 +243,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
                 noCount
                 buttons={buttons}
                 currentButton={currentButton}
-                onClick={setCurrentButton}
+                onClick={handleViewChange}
                 className="mr-4"
               />
               <Button
@@ -248,9 +262,13 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {
-                  contacts.filter(contact => 
-                    contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase()).length
-
+                    contacts.filter(
+                      (contact) =>
+                        contact?.status_1.toLowerCase() ===
+                        clientStatuses[
+                          openedSubtab
+                        ].statusMainTitle.toLowerCase()
+                    ).length
                   }
                   {contacts.length == 1 ? ' result' : ' results'} for:
                 </div>
@@ -312,7 +330,10 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
             <div
               className={`border border-gray-200 overflow-hidden relative h-full w-full`}
             >
-              <SimpleBar autoHide={true} style={{ height: '100%', maxHeight: '100%' }}>
+              <SimpleBar
+                autoHide={true}
+                style={{ height: '100%', maxHeight: '100%' }}
+              >
                 <Table
                   tableFor="contactsList"
                   categoryType="clients"

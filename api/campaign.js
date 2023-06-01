@@ -19,6 +19,10 @@ export const getContactCampaignEventPreview = (id) => {
   return axiosInstance.get(`/campaign/event/${id}/preview`);
 };
 
+export const getAllEvents = (id) => {
+  return axiosInstance.get(`/campaign/${id}/preview`);
+};
+
 export const getCampaigns = (searchterm) => {
   return axiosInstance.get('campaigns', {
     params: { search_term: searchterm },

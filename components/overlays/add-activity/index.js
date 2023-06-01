@@ -10,6 +10,8 @@ import { activityTypes } from 'global/variables';
 import TextArea from 'components/shared/textarea';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
+import toast from 'react-hot-toast';
+
 const AddActivity = ({
   className,
   handleClose,
@@ -61,6 +63,7 @@ const AddActivity = ({
     setLoadingButton(true);
     try {
       await contactServices.addContactActivity(client.id, values);
+      toast.success(`Activity added successfully for ${client.first_name}`);
       setFetchActivitiesRequired((prev) => !prev);
       setLoadingButton(false);
       resetForm();
