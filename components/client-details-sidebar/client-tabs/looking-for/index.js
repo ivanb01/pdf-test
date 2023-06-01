@@ -69,9 +69,17 @@ export default function LookingFor({ contactId }) {
       budget_max: '',
     },
     validationSchema: LookingPropertySchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { setFieldValue }) => {
       console.log('looking property', values);
-      handleAddSubmit(values);
+      setFieldValue('budget_min', parseFloat(values.budget_min))
+      setFieldValue('budget_max', parseFloat(values.budget_max))
+
+      if (formik.isValid) {
+        handleAddSubmit({...values, 
+          budget_min: parseFloat(values.budget_min), 
+          budget_max: parseFloat(values.budget_max)
+        });
+      }
     },
   });
 
