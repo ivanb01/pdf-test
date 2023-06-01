@@ -231,7 +231,7 @@ const Input = ({
     if(val) {
       onChange(revertMoneyNumberInputFormat(val));
     } else {
-      onChange(0);
+      onChange('');
       setMoneyValue(null)
     }
   }
