@@ -45,7 +45,8 @@ const chartTabs = [
 ];
 
 const Campaigns = () => {
-  const [currentEvent, setCurrentEvent] = useState([]);
+  const [campaignId, setCampaignId] = useState();
+  const [currentEvent, setCurrentEvent] = useState(1);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingStats, setLoadingStats] = useState(true);
   const [clientsDoughnut, setClientsDoughnut] = useState([0, 0]);
@@ -99,19 +100,19 @@ const Campaigns = () => {
     }
   };
 
-  const handleEventPreview = async (event) => {
-    setLoadingEventPreview(true);
-    setShowEventPreview(true);
-    setEventInfo({
-      event_updated_at: event?.event_scheduled_time,
-      event_name: event?.event_name,
-    });
-    console.log('event preview for', event);
-    getContactCampaignEventPreview(event?.event_id).then((data) => {
-      setEventToPreview(data.data);
-      setLoadingEventPreview(false);
-    });
-  };
+  // const handleEventPreview = async (event) => {
+  //   setLoadingEventPreview(true);
+  //   setShowEventPreview(true);
+  //   setEventInfo({
+  //     event_updated_at: event?.event_scheduled_time,
+  //     event_name: event?.event_name,
+  //   });
+  //   console.log('event preview for', event);
+  //   getContactCampaignEventPreview(event?.event_id).then((data) => {
+  //     setEventToPreview(data.data);
+  //     setLoadingEventPreview(false);
+  //   });
+  // };
 
   const fetchCampaignsEvents = async () => {
     try {
@@ -213,13 +214,24 @@ const Campaigns = () => {
                     handleClickRow={handleClickContact}
                     handleSelectContact={handleSelectContact}
                     setCurrentEvent={setCurrentEvent}
+                    setCampaignId={(campaignId) => {
+                      setCampaignId(campaignId);
+                      setShowEventPreview(true);
+                    }}
                   />
                 </SimpleBar>
                 <div>
-                  <EventPreview
-                    topClass={'top-[250px]'}
-                    currentEvent={currentEvent}
-                  />
+                  {campaignId && (
+                    <EventPreview
+                      overlay
+                      topClass={'top-[250px]'}
+                      showEventPreview={showEventPreview}
+                      setShowEventPreview={setShowEventPreview}
+                      currentEvent={currentEvent}
+                      setCurrentEvent={setCurrentEvent}
+                      campaignId={campaignId}
+                    />
+                  )}
                 </div>
               </div>
             ) : (

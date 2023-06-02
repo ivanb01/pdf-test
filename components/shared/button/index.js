@@ -154,7 +154,7 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
         className={`${className} ${
-          disabled && 'bg-[#ebebeb] text-[#a3a3a3]'
+          disabled && 'bg-[#ebebeb] !text-[#a3a3a3]'
         } flex relative items-center justify-center text-base font-medium text-white min-h-[70px] p-0 px-9 w-full text-center rounded-lg`}
       >
         {children ? children : label}

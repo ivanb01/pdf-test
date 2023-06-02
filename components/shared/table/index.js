@@ -51,7 +51,7 @@ import { formatDateMDY } from 'global/functions';
 import List from '@mui/icons-material/List';
 import AddActivity from 'components/overlays/add-activity';
 import ChangeStatus from 'components/overlays/change-contact-status';
-import { unassignContactFromCampaign } from 'api/campaign';
+import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
 import { getContact } from 'api/contacts';
 import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -79,6 +79,8 @@ const Table = ({
   currentButton,
   setCurrentEvent,
   searchTerm,
+  campaignId,
+  setCampaignId,
 }) => {
   const types = [
     {
@@ -169,7 +171,7 @@ const Table = ({
                   className="text-lightBlue3 cursor-pointer hover:underline"
                   onClick={() => {
                     console.log(dataItem, data);
-                    getContactInfo();
+                    setCampaignId(dataItem.campaign_id);
                   }}
                 >
                   <Image src={eyeIcon} />
@@ -207,59 +209,104 @@ const Table = ({
       description = `Clients that were once part of this campaign, and cannot be reassigned will be listed here`;
     }
 
-    if (!data?.length && searchTerm)
+    const [campaignEvents, setCampaignEvents] = useState();
+
+    useEffect(() => {
+      getAllEvents(campaignId).then((res) => setCampaignEvents(res.data));
+    }, [campaignId]);
+
+    const noResults = () => {
       return (
-        <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
-          <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-            No results have been found!
-          </Text>
-        </div>
+        <tr>
+          <td colSpan={10}>
+            <div className="flex flex-col items-center justify-center h-[433px] max-w-[390px] mx-auto my-0">
+              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                No results have been found!
+              </Text>
+            </div>
+          </td>
+        </tr>
       );
-    if (!data?.length && !searchTerm)
+    };
+
+    // if (!data?.length && !searchTerm)
+    const noData = () => {
       return (
-        <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">
-          <Image src={noClientCampaigns}></Image>
-          <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-            {title}
-          </Text>
-          <Text p className="text-gray4 relative text-center mb-6">
-            {description}
-          </Text>
-        </div>
+        <tr>
+          <td colSpan={10}>
+            <div className="flex flex-col items-center justify-center h-[433px] max-w-[390px] mx-auto my-0">
+              <Image src={noClientCampaigns}></Image>
+              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                {title}
+              </Text>
+              <Text p className="text-gray4 relative text-center mb-6">
+                {description}
+              </Text>
+            </div>
+          </td>
+        </tr>
       );
+    };
+
+    const skeletonData = [
+      { id: 0 },
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+    ];
+
     return (
       <>
         <thead className="bg-gray-50">
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center border-r border-gray-200"
+              className="h-[56px] min-w-96 w-96 py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6  items-center border-r border-gray-200"
             >
               {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
-              Seller
+              <div className="flex items-center justify-between">
+                <span>Seller</span>
+                {/* <Button white >See Campaign Preview</Button> */}
+              </div>
             </th>
-            {data[0]?.events.map((event, index) => (
-              <th
-                key={index}
-                scope="col"
-                className="px-3 py-3 text-center text-xs font-medium tracking-wide"
-              >
-                <div className="">
-                  <div className="uppercase text-gray-500">
-                    Event {index + 1}
-                  </div>
-                  <div
-                    className="text-lightBlue3 cursor-pointer"
-                    onClick={() =>
-                      setCurrentEvent([data[0]?.events, event, index + 1])
-                    }
+            {!campaignEvents ? (
+              <>
+                {skeletonData.map((data) => (
+                  <th
+                    key={data.id}
+                    scope="col"
+                    className="px-3 py-3 text-center text-xs font-medium tracking-wide animate-pulse"
                   >
-                    <Image src={eyeIcon} />
-                    <span className="ml-1">Preview</span>
+                    <div className="">
+                      <div className="uppercase bg-gray-300 h-3.5 mb-1"></div>
+                      <div className="bg-gray-300 h-3.5"></div>
+                    </div>
+                  </th>
+                ))}
+              </>
+            ) : (
+              campaignEvents?.events.map((event, index) => (
+                <th
+                  key={index}
+                  scope="col"
+                  className="px-3 py-3 text-center text-xs font-medium tracking-wide"
+                >
+                  <div className="">
+                    <div className="uppercase text-gray-500">
+                      Event {index + 1}
+                    </div>
+                    <div
+                      className="text-lightBlue3 cursor-pointer"
+                      onClick={() => setCurrentEvent(index + 1)}
+                    >
+                      <Image src={eyeIcon} />
+                      <span className="ml-1">Preview</span>
+                    </div>
                   </div>
-                </div>
-              </th>
-            ))}
+                </th>
+              ))
+            )}
             {/* <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
@@ -269,56 +316,60 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem) => (
-            <tr
-              key={dataItem.contact_id}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
-              // onClick={(event) => handleClickRow(contact, event)}
-            >
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200 w-96">
-                <ContactInfo
-                  data={{
-                    name: `${dataItem.contact_name}`,
-                    id: dataItem.contact_id,
-                    email: dataItem.contact_email,
-                    image: dataItem.profile_image_path,
-                    assigned:
-                      dataItem.contact_campaign_status == 'unassigned'
-                        ? 2
-                        : dataItem.contact_campaign_status == 'assigned'
-                        ? 1
-                        : 0,
-                  }}
-                  // handleSelect={(e, dataItem) =>
-                  //   handleSelectContact(e, dataItem)
-                  // }
-                  handleAction={(id, action) => handleAction(id, action)}
-                />
-              </td>
-              {dataItem.events.map((event, index) =>
-                event.event_id ? (
-                  <td
-                    key={`event-${index}`}
-                    className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500"
-                  >
-                    <EventStatus status={event.event_status} />
-                    <div className="text-gray7">
-                      {formatDateMDY(event?.event_updated_at)}
-                    </div>
+          {!data?.length && searchTerm
+            ? noResults()
+            : !data?.length && !searchTerm
+            ? noData()
+            : data.map((dataItem) => (
+                <tr
+                  key={dataItem.contact_id}
+                  className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+                  // onClick={(event) => handleClickRow(contact, event)}
+                >
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
+                    <ContactInfo
+                      data={{
+                        name: `${dataItem.contact_name}`,
+                        id: dataItem.contact_id,
+                        email: dataItem.contact_email,
+                        image: dataItem.profile_image_path,
+                        assigned:
+                          dataItem.contact_campaign_status == 'unassigned'
+                            ? 2
+                            : dataItem.contact_campaign_status == 'assigned'
+                            ? 1
+                            : 0,
+                      }}
+                      // handleSelect={(e, dataItem) =>
+                      //   handleSelectContact(e, dataItem)
+                      // }
+                      handleAction={(id, action) => handleAction(id, action)}
+                    />
                   </td>
-                ) : (
-                  <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                    <div className="text-gray7">-</div>
-                  </td>
-                )
-              )}
-              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                  {dataItem?.events.map((event, index) =>
+                    event.event_id ? (
+                      <td
+                        key={`event-${index}`}
+                        className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500"
+                      >
+                        <EventStatus status={event.event_status} />
+                        <div className="text-gray7">
+                          {formatDateMDY(event?.event_updated_at)}
+                        </div>
+                      </td>
+                    ) : (
+                      <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                        <div className="text-gray7">-</div>
+                      </td>
+                    )
+                  )}
+                  {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7">
                   {formatDateMDY(event?.event_updated_at)}
                 </div>
               </td> */}
-            </tr>
-          ))}
+                </tr>
+              ))}
         </tbody>
       </>
     );

@@ -25,7 +25,8 @@ import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
-  const [currentEvent, setCurrentEvent] = useState([]);
+  const [showEventPreview, setShowEventPreview] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState(1);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
   const [showAssignOverlay, setShowAssignOverlay] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -257,6 +258,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                 >
                   <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
                     <Table
+                      campaignId={currentCampaign.campaign_id}
                       tableFor="contact-campaigns"
                       handleSelectContact={handleSelectContact}
                       handleAction={(id, action) => {
@@ -269,12 +271,22 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                         }
                       }}
                       currentButton={currentButton}
-                      setCurrentEvent={setCurrentEvent}
+                      setCurrentEvent={(event) => {
+                        setCurrentEvent(event);
+                        setShowEventPreview(true);
+                      }}
                       data={campaignViewContacts}
                       searchTerm={searchTerm}
                     />
                   </SimpleBar>
-                  <EventPreview currentEvent={currentEvent} />
+                  {console.log('current campaign', currentCampaign.campaign_id)}
+                  <EventPreview
+                    showEventPreview={showEventPreview}
+                    setShowEventPreview={setShowEventPreview}
+                    currentEvent={currentEvent}
+                    setCurrentEvent={setCurrentEvent}
+                    campaignId={currentCampaign.campaign_id}
+                  />
                   {/* {selectedContacts.length > 1 && (
                     <div
                       style={{ zIndex: '99999 !important' }}
