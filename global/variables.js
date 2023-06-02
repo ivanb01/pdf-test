@@ -130,6 +130,7 @@ export const types = [
       { id: 23, hidden: true, name: 'insurance' },
       { id: 24, hidden: true, name: 'appraiser' },
       { id: 25, hidden: true, name: 'handyman' },
+      { id: 26, hidden: true, name: 'architect' },
     ],
   },
   {
@@ -427,6 +428,7 @@ export const vendorTypes = [
   { id: 23, name: 'Insurance' },
   { id: 24, name: 'Appraiser' },
   { id: 25, name: 'Handyman' },
+  { id: 26, name: 'Architect' },
 ];
 
 export const agentTypes = [{ id: 12, name: 'Agent' }];
@@ -488,6 +490,10 @@ export const professionalsStatuses = [
       {
         id: 25,
         name: 'Handyman',
+      },
+      {
+        id: 26,
+        name: 'Architect',
       },
     ],
   },
@@ -748,6 +754,7 @@ export const multiselectOptionsProfessionals = [
   { value: 'Insurance', label: 'Insurance' },
   { value: 'appraiser', label: 'Appraiser' },
   { value: 'Handyman', label: 'Handyman' },
+  { value: 'Architect', label: 'Architect' },
 ];
 
 export const tagsForProfessionals = [
