@@ -195,7 +195,7 @@ const EventPreview = ({
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-4xl">
                   <div
-                    className={`relative flex h-full flex-col overflow-y-scroll bg-white shadow-xl border border-gray-300`}
+                    className={`relative flex h-full flex-col overflow-y-auto bg-white shadow-xl border border-gray-300`}
                   >
                     {loadingEventPreview ? (
                       <div className="relative w-full h-full">
