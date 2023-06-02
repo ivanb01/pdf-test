@@ -47,9 +47,11 @@ const MainSidebar = ({
     if (subtab == 'Vendor') {
       let category = contacts.metadata.category;
       const agentCount = category['Agent'] || 0;
+      const vendorCount = category['Vendor'] || 0;
       const othersCount =
         Object.values(category).reduce((total, count) => total + count, 0) -
-        agentCount;
+        agentCount -
+        vendorCount;
       return othersCount;
     }
     return openedTab === 2

@@ -20,10 +20,11 @@ import { useSelector } from 'react-redux';
 import { vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
+import { types } from 'global/variables';
 
 const categoryIds = {
-  'Add Client': '4,5,6,7',
-  'Add Professional': '8,9,12,15,16,17,18,19,20,21,22,23,24,25,',
+  'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
+  'Add Professional': JSON.stringify(types[1].types.map((type) => type.id)),
 };
 
 const globalTabs = {
@@ -47,7 +48,8 @@ const AddClientManuallyOverlay = ({
     { id: 2, name: 'Type and Status', href: '#' },
   ];
 
-  const [existingContactEmailError, setExistingContactEmailError] = useState('');
+  const [existingContactEmailError, setExistingContactEmailError] =
+    useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -92,14 +94,14 @@ const AddClientManuallyOverlay = ({
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const { data } = await findContactByEmail({email: values.email});
-        if(data) {
+        const { data } = await findContactByEmail({ email: values.email });
+        if (data) {
           setExistingContactEmailError('This email already exists!');
           setExistingContactEmail(values.email);
-        }    
+        }
       } catch (error) {
         console.log(error);
-        if(error.response.status === 404) {
+        if (error.response.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
           setCurrentStep(currentStep + 1);
@@ -108,7 +110,12 @@ const AddClientManuallyOverlay = ({
       setSubmitting(false);
     },
   });
-  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1 } = formik;
+  const {
+    errors,
+    touched,
+    submitForm: submitForm1,
+    isSubmitting: isSubmitting1,
+  } = formik;
 
   //* FORMIK-STEP-2 *//
   const formikStep2 = useFormik({
@@ -241,14 +248,23 @@ const AddClientManuallyOverlay = ({
                     id="email"
                     // onChange={formik.handleChange}
                     onChange={(e) => {
-                      if(existingContactEmail !== e.target.value) {
+                      if (existingContactEmail !== e.target.value) {
                         setExistingContactEmailError('');
                       }
-                      formik.setFieldValue('email', e.target.value);                
+                      formik.setFieldValue('email', e.target.value);
                     }}
                     value={formik.values.email}
-                    error={(errors.email && touched.email) || (existingContactEmailError)}
-                    errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
+                    error={
+                      (errors.email && touched.email) ||
+                      existingContactEmailError
+                    }
+                    errorText={
+                      errors.email
+                        ? errors.email
+                        : existingContactEmailError
+                        ? existingContactEmailError
+                        : null
+                    }
                   />
 
                   <Input

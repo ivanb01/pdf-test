@@ -140,7 +140,7 @@ const UpdateTypeStatus = ({
                     : 'In what stage of communication?'}
                 </Text>
               </div>
-              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].includes(
+              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
                 selectedType
               ) ? (
                 <div className="flex flex-wrap">

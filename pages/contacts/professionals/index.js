@@ -14,6 +14,7 @@ import { professionalsStatuses, professionalsOptions } from 'global/variables';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
+import { types } from 'global/variables';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -35,8 +36,11 @@ const index = () => {
   }, [openedTab]);
 
   const fetchProfessionals = () => {
+    let professionalsTypes = JSON.stringify(
+      types[1].types.map((type) => type.id)
+    );
     setLoading(true);
-    getContacts('12,15,16,17,18,19,20,21,22,23,24,25,').then((data) => {
+    getContacts(professionalsTypes).then((data) => {
       dispatch(setContacts(data.data));
       setProfessionalsCopy(data.data);
       setLoading(false);
