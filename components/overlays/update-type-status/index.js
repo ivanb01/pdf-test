@@ -135,7 +135,9 @@ const UpdateTypeStatus = ({
               <div className="flex items-center mb-6">
                 <CircleStepNumber number={2} className="mr-2" />
                 <Text h3>
-                  {selectedType == 8
+                  {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+                    selectedType
+                  )
                     ? 'What kind of vendor?'
                     : 'In what stage of communication?'}
                 </Text>
