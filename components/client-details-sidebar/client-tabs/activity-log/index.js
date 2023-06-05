@@ -12,18 +12,23 @@ import noActivitLog from 'public/images/no_activitylog.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setRefetchData } from 'store/global/slice';
 
 export default function ActivityLog({ contactId }) {
+  const dispatch = useDispatch();
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
   const handleToggleAddActicity = () =>
     setToggleAddActivity(!toggleAddActivity);
 
-  const [fetchActivitiesRequired, setFetchActivitiesRequired] = useState(false);
-  const handleFetchActivitiesRequired = () =>
-    setFetchActivitiesRequired((prev) => !prev);
+  const refetchData = useSelector((state) => state.global.refetchData);
 
   const [activities, setActivities] = useState(null);
+  const activityLogData = useSelector(
+    (state) => state.clientDetails.activityLogData
+  );
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
@@ -48,7 +53,7 @@ export default function ActivityLog({ contactId }) {
     setLoadingButton(true);
     try {
       await contactServices.addContactActivity(contactId, values);
-      setFetchActivitiesRequired((prev) => !prev);
+      dispatch(setRefetchData(true));
       setLoadingButton(false);
       resetForm();
       handleToggleAddActicity();
@@ -63,18 +68,12 @@ export default function ActivityLog({ contactId }) {
   };
 
   const fetchContactActivities = async () => {
-    try {
-      const { data } = await contactServices.getContactActivities(contactId);
-      console.log('all activities', contactId, data?.data);
-      setActivities(data?.data);
-    } catch (error) {
-      console.log(error);
-    }
+    setActivities(activityLogData);
   };
 
   useEffect(() => {
     fetchContactActivities();
-  }, [fetchActivitiesRequired, contactId]);
+  }, [refetchData, contactId]);
 
   return (
     <div className="flex bg-gray10 flex-row ">
@@ -97,7 +96,6 @@ export default function ActivityLog({ contactId }) {
               contactId={contactId}
               activities={activities}
               setActivities={setActivities}
-              handleFetchActivitiesRequired={handleFetchActivitiesRequired}
             />
           ))}
       </div>

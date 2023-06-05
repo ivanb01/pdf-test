@@ -17,17 +17,21 @@ import Image from 'next/image';
 import * as Yup from 'yup';
 import { formatDateLL } from 'global/functions';
 import SimpleBar from 'simplebar-react';
-
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setRefetchData } from 'store/global/slice';
 
 export default function Notes({ contactId }) {
+  const dispatch = useDispatch();
   const [noteModal, setNoteModal] = useState(false);
   const [formType, setFormType] = useState('Add');
   const [noteId, setNoteId] = useState(0);
   const [notes, setNotes] = useState(null);
   const [notesOriginal, setNotesOriginal] = useState(null);
   // const [searchTerm, setSearchTerm] = useState('');
-  const [fetchRequired, setFetchRequired] = useState({});
+  const refetchData = useSelector((state) => state.global.refetchData);
   const [loadingButton, setLoadingButton] = useState(false);
+  const notesData = useSelector((state) => state.clientDetails.notesData);
 
   const openAddModal = () => {
     setFormType('Add');
@@ -61,7 +65,8 @@ export default function Notes({ contactId }) {
     setLoadingButton(true);
     try {
       await contactServices.addContactNote(contactId, values);
-      setFetchRequired((prev) => !prev);
+      dispatch(setRefetchData(true));
+      // setFetchRequired((prev) => !prev);
       // setNotes(prev=>[...prev, tagToAdd])
       setLoadingButton(false);
       handleCloseModal();
@@ -74,12 +79,8 @@ export default function Notes({ contactId }) {
   const handleUpdateSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      await contactServices.updateContactNote(
-        contactId,
-        noteId,
-        values
-      );
-      setFetchRequired((prev) => !prev);
+      await contactServices.updateContactNote(contactId, noteId, values);
+      dispatch(setRefetchData(true));
       setLoadingButton(false);
       handleCloseModal();
     } catch (error) {
@@ -106,12 +107,9 @@ export default function Notes({ contactId }) {
 
   const handleDeleteNote = async (note) => {
     try {
-      setNotes(prev=>prev.filter((item) => item.id !== note.id))
-      await contactServices.deleteContactNote(
-        contactId,
-        note.id
-      );
-      setFetchRequired((prev) => !prev);
+      setNotes((prev) => prev.filter((item) => item.id !== note.id));
+      await contactServices.deleteContactNote(contactId, note.id);
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -143,128 +141,130 @@ export default function Notes({ contactId }) {
   ];
 
   const fetchContactNotes = async () => {
-    try {
-      // const { data } = await contactServices.getContactNotes(contactId, {
-      //   search_term: searchTerm,
-      // });
-      const { data } = await contactServices.getContactNotes(contactId);
-      console.log('all notes', contactId, data?.data);
-      setNotes(data?.data);
-      setNotesOriginal(data?.data);
-    } catch (error) {
-      console.log(error);
-    }
+    // const { data } = await contactServices.getContactNotes(contactId, {
+    //   search_term: searchTerm,
+    // });
+    // const { data } = await contactServices.getContactNotes(contactId);
+
+    // console.log('all notes', activityLogData);
+    setNotes(notesData);
+    setNotesOriginal(notesData);
   };
 
   useEffect(() => {
     fetchContactNotes();
-  }, [fetchRequired, contactId]);
+  }, [refetchData, contactId]);
 
   const onSearch = (term) => {
     const trimmedTerm = term.replace(/\s+/g, '').toLowerCase();
     const filteredArray = notesOriginal.filter((note) => {
       const title = note?.title.toLowerCase();
       const description = note?.description.toLowerCase();
-      return (
-        title.includes(trimmedTerm) ||
-        description.includes(trimmedTerm)
-      )
-    })
+      return title.includes(trimmedTerm) || description.includes(trimmedTerm);
+    });
     setNotes(filteredArray);
-  }
+  };
 
   return (
     <>
       <div className="details-tabs-fixed-height overflow-y-scroll">
-        {notesOriginal && (notesOriginal.length == 0 ? (
-          <div className="h-full">
-            <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
-              <Image src={noNotes}></Image>
-              <Text h3 className="text-gray7 mb-2 mt-4 text-center">
-                You don’t have any notes for this contact yet
-              </Text>
-              <Text p className="text-gray4 relative text-center mb-6">
-                All notes about this contact will be placed here.
-              </Text>
-              <Button
-                primary
-                leftIcon={<Add className="w-4 h-4" />}
-                label={`${formType} Note`}
-                onClick={openAddModal}
-              />
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="p-6 pb-0 flex items-center justify-between">
-              {/* <div className="flex items-center justify-between w-full"> */}
-              <div className="w-[50%] flex items-center">
-                <Search
-                  placeholder="Search"
-                  className="w-[100%] mr-6"
-                  // onChange={(event) => setSearchTerm(event.target.value)}
-                  onInput={(event) => onSearch(event.target.value)}
-                  // value={searchTerm}
+        {notesOriginal &&
+          (notesOriginal.length == 0 ? (
+            <div className="h-full">
+              <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+                <Image src={noNotes}></Image>
+                <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                  You don’t have any notes for this contact yet
+                </Text>
+                <Text p className="text-gray4 relative text-center mb-6">
+                  All notes about this contact will be placed here.
+                </Text>
+                <Button
+                  primary
+                  leftIcon={<Add className="w-4 h-4" />}
+                  label={`${formType} Note`}
+                  onClick={openAddModal}
                 />
               </div>
-              <Button
-                primary
-                leftIcon={<Add className="w-4 h-4" />}
-                label={`${formType} Note`}
-                onClick={openAddModal}
-              />
-              {/* </div> */}
-              {/* </div> */}
             </div>
-            <div className="flex bg-gray10 flex-wrap p-[12px]">
-              {Array.isArray(notes) &&
-                notes.length > 0 &&
-                notes.map((note) => (
-                  <div key={note.id} className="w-[50%] bg-gray10">
-                    <div className="bg-white m-[12px] p-6 rounded-lg shadow">
-                      <div className="flex justify-between">
-                        <div className="pr-12 w-full">
-                          <Text p className="mb-1">
-                            {note?.title}
-                          </Text>
-                          
-                          <div
-                            className={`w-full h-[84px] relative `}
-                          >
-                            <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                              <div className="text-sm font-normal text-gray4 flex items-start"
-                            >
-                              {note?.description}
+          ) : (
+            <>
+              <div className="p-6 pb-0 flex items-center justify-between">
+                {/* <div className="flex items-center justify-between w-full"> */}
+                <div className="w-[50%] flex items-center">
+                  <Search
+                    placeholder="Search"
+                    className="w-[100%] mr-6"
+                    // onChange={(event) => setSearchTerm(event.target.value)}
+                    onInput={(event) => onSearch(event.target.value)}
+                    // value={searchTerm}
+                  />
+                </div>
+                <Button
+                  primary
+                  leftIcon={<Add className="w-4 h-4" />}
+                  label={`${formType} Note`}
+                  onClick={openAddModal}
+                />
+                {/* </div> */}
+                {/* </div> */}
+              </div>
+              <div className="flex bg-gray10 flex-wrap p-[12px]">
+                {Array.isArray(notes) &&
+                  notes.length > 0 &&
+                  notes
+                    .slice()
+                    .sort((a, b) => b.id - a.id)
+                    .map((note) => (
+                      <div key={note.id} className="w-[50%] bg-gray10">
+                        <div className="bg-white m-[12px] p-6 rounded-lg shadow">
+                          <div className="flex justify-between">
+                            <div className="pr-12 w-full">
+                              <Text p className="mb-1">
+                                {note?.title}
+                              </Text>
+
+                              <div className={`w-full h-[84px] relative `}>
+                                <SimpleBar
+                                  autoHide={true}
+                                  style={{ maxHeight: '100%' }}
+                                >
+                                  <div className="text-sm font-normal text-gray4 flex items-start">
+                                    {note?.description}
+                                  </div>
+                                </SimpleBar>
+                              </div>
+                              <Text className="text-gray4 text-xs mt-2">
+                                {formatDateLL(
+                                  note.updated_at
+                                    ? note.updated_at
+                                    : note.created_at
+                                )}
+                              </Text>
                             </div>
-                            </SimpleBar>
-                          </div>
-                          <Text className="text-gray4 text-xs mt-2">
-                            {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
-                          </Text>
-                        </div>
-                        <div className="flex">
-                          <FilterDropdown
-                            types={types}
-                            icon={<More className="w-5" />}
-                            data={note}
-                            positionClass="right-0"
-                          />
-                          {/* <a href="" className="mr-4">
+                            <div className="flex">
+                              <FilterDropdown
+                                types={types}
+                                icon={<More className="w-5" />}
+                                data={note}
+                                positionClass="right-0"
+                              />
+                              {/* <a href="" className="mr-4">
                             <Edit className="w-4" />
                           </a>
                           <a href="">
                             <Delete className="w-4" />
                           </a> 
                       */}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-            {/* <hr className="my-7" /> */}
-          </>
-        ))}
+                    ))}
+              </div>
+              {/* <hr className="my-7" /> */}
+            </>
+          ))}
       </div>
       {noteModal && (
         <Overlay
@@ -301,12 +301,12 @@ export default function Notes({ contactId }) {
                   label="Cancel"
                   onClick={handleCloseModal}
                 />
-                <Button 
-                  type="submit" 
-                  primary 
-                  label="Save" 
+                <Button
+                  type="submit"
+                  primary
+                  label="Save"
                   loading={loadingButton}
-                  />
+                />
               </div>
             </form>
           </div>

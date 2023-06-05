@@ -13,6 +13,18 @@ import { useEffect } from 'react';
 import * as contactServices from 'api/contacts';
 import Loader from 'components/shared/loader';
 import { setRefetchData } from 'store/global/slice';
+import {
+  getContactNotes,
+  getContact,
+  getContactActivities,
+} from 'api/contacts';
+import { getContactCampaign } from 'api/campaign';
+import {
+  setActivityLogData,
+  setNotesData,
+  setCampaignsData,
+} from 'store/clientDetails/slice';
+
 export default function Details() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -47,12 +59,19 @@ export default function Details() {
   const localTabs = tabs(id, contact, handleFetchContactRequired);
 
   const fetchContact = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
-      const { data } = await contactServices.getContact(id);
+      const { data } = await getContact(id);
       setContact(data);
-      console.log('get contact', id, data);
+      const campaignsData = await getContactCampaign(id);
+      dispatch(setCampaignsData(campaignsData.data));
       setLoading(false);
+      const notesData = await getContactNotes(id);
+      const activityLogData = await getContactActivities(id);
+      dispatch(setNotesData(notesData.data.data));
+      dispatch(setActivityLogData(activityLogData.data.data));
+
+      console.log('get contact', id, data);
     } catch (error) {
       console.log(error);
     }

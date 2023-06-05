@@ -21,6 +21,8 @@ import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
+import { useDispatch } from 'react-redux';
+import { setRefetchData } from 'store/global/slice';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -30,12 +32,8 @@ const activitiesTypes = {
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
-export default function Feeds({
-  contactId,
-  activities,
-  setActivities,
-  handleFetchActivitiesRequired,
-}) {
+export default function Feeds({ contactId, activities, setActivities }) {
+  const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
@@ -68,7 +66,7 @@ export default function Feeds({
         activityId,
         values
       );
-      handleFetchActivitiesRequired();
+      dispatch(setRefetchData(true));
       setLoadingButton(false);
       handleCloseModal();
     } catch (error) {
@@ -121,7 +119,7 @@ export default function Feeds({
     try {
       setActivities((prev) => prev.filter((item) => item.id !== activity.id));
       await contactServices.deleteContactActivity(contactId, activity.id);
-      handleFetchActivitiesRequired();
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -158,7 +156,7 @@ export default function Feeds({
         <ul role="list" className="-mb-8">
           {activities
             ?.slice()
-            .reverse()
+            .sort((a, b) => b.id - a.id)
             .map((activityItem, activityItemIdx) => (
               <li key={activityItem.id}>
                 <div className="relative pb-8 flex justify-between">

@@ -20,14 +20,18 @@ import {
 } from '@heroicons/react/solid';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';
 import UnassignOverlay from 'components/overlays/unassign';
-import { sortDateAsc, formatDateMDY, formatDateLThour, isValidDate } from 'global/functions';
-
-
+import {
+  sortDateAsc,
+  formatDateMDY,
+  formatDateLThour,
+  isValidDate,
+} from 'global/functions';
+import { useSelector } from 'react-redux';
 
 export default function Campaigns({
   contactId,
   contact,
-  handleFetchContactRequired
+  handleFetchContactRequired,
 }) {
   const [alert, setAlert] = useState(null);
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);
@@ -41,7 +45,10 @@ export default function Campaigns({
   const [previewEvent, setPreviewEvent] = useState(null);
   const [previewEventDate, setPreviewEventDate] = useState(null);
   const [previewEventSubject, setPreviewEventSubject] = useState(null);
-
+  const campaignsData = useSelector(
+    (state) => state.clientDetails.campaignsData
+  );
+  const refetchData = useSelector((state) => state.global.refetchData);
 
   const handleAssignCampaignChange = async () => {
     try {
@@ -111,16 +118,18 @@ export default function Campaigns({
     try {
       if (event.preview) {
         setPreviewEvent(event.preview);
-        event.preview.preview.subject ? setPreviewEventSubject(`${event.preview.preview.subject}`) : setPreviewEventSubject(``);
+        event.preview.preview.subject
+          ? setPreviewEventSubject(`${event.preview.preview.subject}`)
+          : setPreviewEventSubject(``);
       } else if (event.id) {
         const { data } = await getContactCampaignEventPreview(event.id);
         setPreviewEvent(data);
         console.log('eventi', data);
-        data.preview.subject ? setPreviewEventSubject(`${data.preview.subject}`) : setPreviewEventSubject(``);
-
+        data.preview.subject
+          ? setPreviewEventSubject(`${data.preview.subject}`)
+          : setPreviewEventSubject(``);
       }
       setPreviewEventDate(event.execute_on);
-
     } catch (error) {
       console.log(error);
     }
@@ -128,32 +137,33 @@ export default function Campaigns({
 
   const fetchContactCampaign = async () => {
     try {
-      const { data } = await getContactCampaign(contactId);
+      // const { data } = await getContactCampaign(contactId);
+      const data = campaignsData;
       console.log('fetch contact campaign', data);
       setContactCampaignStatus(data?.status);
-      
-      if(data?.status === 'enrolled') {
+
+      if (data?.status === 'enrolled') {
         setCampaignId(data?.campaign_id);
         setAlert(alerts[1]);
         // setCampaignEvents(data?.events);
         setCampaignEvents(sortDateAsc(data?.events, 'execute_on'));
         setCurrentEvent(data?.events[0]?.id);
         await eventPreview(data?.events[0]);
-      } else if(data?.status === 'matches_campaign') {
+      } else if (data?.status === 'matches_campaign') {
         setCampaignId(data?.campaign_id);
         setAlert(alerts[0]);
         const newEvents = data?.events.map((item, i) => ({ id: i, ...item }));
         setCampaignEvents(newEvents);
         setCurrentEvent(newEvents[0]?.id);
         await eventPreview(newEvents[0]);
-      } else if(data?.status === 'unenrolled') {
+      } else if (data?.status === 'unenrolled') {
         setCampaignId(data?.campaign_id);
         setAlert(alerts[2]);
         // setCampaignEvents(data?.events);
         setCampaignEvents(sortDateAsc(data?.events, 'execute_on'));
         setCurrentEvent(data?.events[0]?.id);
         await eventPreview(data?.events[0]);
-      } 
+      }
     } catch (error) {
       console.log(error);
     }
@@ -161,7 +171,7 @@ export default function Campaigns({
 
   useEffect(() => {
     fetchContactCampaign();
-  }, [contactId, contact, fetchRequired]);
+  }, [contactId, contact, refetchData]);
   return (
     <>
       {showAssignToCampaign && (
@@ -182,7 +192,7 @@ export default function Campaigns({
         //   No matching campaign found for the contact.
         // </div>
         <div className="bg-gray10 details-tabs-fixed-height p-[24px]">
-          <div className='bg-white h-full overflow-y-scroll'>
+          <div className="bg-white h-full overflow-y-scroll">
             <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
               <Image src={campaignsSVG}></Image>
               <Text h3 className="text-gray7 mb-2 mt-4 text-center">
@@ -231,29 +241,29 @@ export default function Campaigns({
             </div>
             <div className="w-[58%] details-campaign-fixed-height overflow-y-scroll">
               <div className="flex flex-row border-b border-gray2 p-6">
-                {
-                  isValidDate(previewEventDate) ? (
-                    <>
-                      <CalendarIcon className="text-gray4" height={20} />
-                      <Text p className="text-gray4 ml-1">
-                        {formatDateMDY(previewEventDate)}
-                      </Text>
-                      <ClockIcon className="text-gray4 ml-4" height={20} />
-                      <Text p className="text-gray4 ml-1">
-                        {formatDateLThour(previewEventDate)}
-                      </Text>
-                    </>
-                  ) : (
-                    <>
-                      <CalendarIcon className="text-gray4" height={20} />
-                      <Text p className="text-gray4 ml-1">
-                        {
-                          previewEventDate?.includes('After') ? `${parseInt(previewEventDate.replace(/[^0-9\.]/g, ''))} days after added in Campaign` : previewEventDate
-                        }
-                      </Text>
-                    </>
-                  )
-                }
+                {isValidDate(previewEventDate) ? (
+                  <>
+                    <CalendarIcon className="text-gray4" height={20} />
+                    <Text p className="text-gray4 ml-1">
+                      {formatDateMDY(previewEventDate)}
+                    </Text>
+                    <ClockIcon className="text-gray4 ml-4" height={20} />
+                    <Text p className="text-gray4 ml-1">
+                      {formatDateLThour(previewEventDate)}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <CalendarIcon className="text-gray4" height={20} />
+                    <Text p className="text-gray4 ml-1">
+                      {previewEventDate?.includes('After')
+                        ? `${parseInt(
+                            previewEventDate.replace(/[^0-9\.]/g, '')
+                          )} days after added in Campaign`
+                        : previewEventDate}
+                    </Text>
+                  </>
+                )}
                 {/* <CalendarIcon className="text-gray4" height={20} />
                 <Text p className="text-gray4 ml-1">
                   Same day as added in the system
