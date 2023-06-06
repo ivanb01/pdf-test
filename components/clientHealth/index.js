@@ -15,7 +15,7 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
       <div className="mb-2">
         <div
           className={
-            'bg-green-100 mr-2 text-green-800 inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0'
+            'bg-green-100 mr-2 text-green-800 inline-flex items-baseline rounded-full px-2.5 py-0.5 text-xs font-medium md:mt-2 lg:mt-0'
           }
         >
           <ArrowNarrowUpIcon
@@ -30,7 +30,7 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
         </div>
         <div
           className={
-            'bg-red-100 text-red-800 inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0'
+            'bg-red-100 text-red-800 inline-flex items-baseline rounded-full px-2.5 py-0.5 text-xs font-medium md:mt-2 lg:mt-0'
           }
         >
           <ArrowNarrowDownIcon
@@ -40,7 +40,9 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
           {unhealthyCount}
         </div>
       </div>
-      <span className="text-[#059669] italic">{getPercentage()}% healthy</span>
+      <span className="text-[#059669] italic text-xs">
+        {getPercentage()}% healthy
+      </span>
     </div>
   );
 };

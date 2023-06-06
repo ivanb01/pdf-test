@@ -91,7 +91,7 @@ const index = () => {
       handleStartCategorizing(true);
       setCategorizing(true);
     }
-  }, []);
+  }, [router.query.categorize]);
 
   useEffect(() => {
     setLoading(true);

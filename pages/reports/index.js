@@ -69,7 +69,7 @@ const index = () => {
     <>
       <MainMenu />
       <div className="mx-6 my-4 flex items-center justify-between">
-        <div>Agent Reports</div>
+        <div className="text-lg text-gray4 font-medium">Agent Reports</div>
         <div className="flex items-center">
           <Dropdown
             horizontal
