@@ -92,7 +92,7 @@ const MainMenu = ({
         <div className="">
           <button
             label="Need Help?"
-            className="flex items-center justify-center py-[6.5px] px-3 rounded-full min-w-[130px] mr-4 h-full bg-transparent border border-white text-white italic"
+            className="flex items-center justify-center h-[38px] px-3 rounded-full min-w-[130px] mr-4 bg-transparent border border-white text-white italic"
             onClick={() => {
               FreshworksWidget('open');
             }}
