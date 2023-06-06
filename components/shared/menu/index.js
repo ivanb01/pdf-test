@@ -8,9 +8,9 @@ import Button from '../button';
 import { useSelector } from 'react-redux';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { Settings } from '@mui/icons-material';
-import { Logout } from '@mui/icons-material';
-import { ArrowDownward } from '@mui/icons-material';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
+import ContactSupport from '@mui/icons-material/ContactSupport';
 
 const MainMenu = ({
   menuItems = [
@@ -89,9 +89,21 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
+        <div className="">
+          <button
+            label="Need Help?"
+            className="flex items-center justify-center py-[6.5px] px-3 rounded-full min-w-[130px] mr-4 h-full bg-transparent border border-white text-white italic"
+            onClick={() => {
+              FreshworksWidget('open');
+            }}
+          >
+            <ContactSupport className="mr-1 h-[20px]" />
+            Need help?
+          </button>
+        </div>
         <Button
           label="Import Google Contacts"
-          className="mr-4"
+          className="mr-4 "
           onClick={() =>
             router.push({
               pathname: '/contacts/no-contact/',
