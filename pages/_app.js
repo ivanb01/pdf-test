@@ -189,7 +189,14 @@ const MyApp = ({ Component, pageProps }) => {
         >
           <Provider store={store}>
             <Component {...pageProps} />
-            {domLoaded && <Toaster position="bottom-left" />}
+            {domLoaded && (
+              <Toaster
+                toastOptions={{
+                  className: 'bg-gray6 text-white text-sm',
+                }}
+                position="bottom-left"
+              />
+            )}
           </Provider>
         </div>
       </div>
