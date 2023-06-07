@@ -169,7 +169,7 @@ export const dateAfterDate = (date1, date2) => {
 };
 
 export const sortDateAsc = (array, arrayFieldName) => {
-  const sortedArray = array.sort(function (a, b) {
+  const sortedArray = array.slice().sort(function (a, b) {
     if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
       return -1;
     }
