@@ -167,7 +167,7 @@ export default function Notes({ contactId }) {
 
   return (
     <>
-      <div className="details-tabs-fixed-height overflow-y-scroll">
+      <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
         {notesOriginal &&
           (notesOriginal.length == 0 ? (
             <div className="h-full">
@@ -265,7 +265,8 @@ export default function Notes({ contactId }) {
               {/* <hr className="my-7" /> */}
             </>
           ))}
-      </div>
+      </SimpleBar>
+
       {noteModal && (
         <Overlay
           className="w-[632px]"

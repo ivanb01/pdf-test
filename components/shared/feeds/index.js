@@ -152,7 +152,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <div className="flow-root bg-white p-6 h-full overflow-y-scroll ">
+      <div className="flow-root bg-white p-6 h-full ">
         <ul role="list" className="-mb-8">
           {activities
             ?.slice()

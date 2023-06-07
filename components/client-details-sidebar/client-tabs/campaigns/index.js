@@ -27,6 +27,7 @@ import {
   isValidDate,
 } from 'global/functions';
 import { useSelector } from 'react-redux';
+import SimpleBar from 'simplebar-react';
 
 export default function Campaigns({
   contactId,
@@ -230,41 +231,50 @@ export default function Campaigns({
             </Alert>
           )}
           <div className="flex flex-row">
-            <div className="w-[42%] details-campaign-fixed-height overflow-y-scroll">
-              <Events
-                events={campaignEvents}
-                currentEvent={currentEvent}
-                setCurrentEvent={setCurrentEvent}
-                eventPreview={eventPreview}
-                className="p-4 bg-white border-r border-gray2 h-[100%]"
-              />
+            <div className="w-[42%]">
+              <SimpleBar
+                autoHide={true}
+                style={{ maxHeight: 'calc(100vh - 295px)' }}
+              >
+                <Events
+                  events={campaignEvents}
+                  currentEvent={currentEvent}
+                  setCurrentEvent={setCurrentEvent}
+                  eventPreview={eventPreview}
+                  className="p-4 bg-white border-r border-gray2 h-[100%]"
+                />
+              </SimpleBar>
             </div>
-            <div className="w-[58%] details-campaign-fixed-height overflow-y-scroll">
-              <div className="flex flex-row border-b border-gray2 p-6">
-                {isValidDate(previewEventDate) ? (
-                  <>
-                    <CalendarIcon className="text-gray4" height={20} />
-                    <Text p className="text-gray4 ml-1">
-                      {formatDateMDY(previewEventDate)}
-                    </Text>
-                    <ClockIcon className="text-gray4 ml-4" height={20} />
-                    <Text p className="text-gray4 ml-1">
-                      {formatDateLThour(previewEventDate)}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <CalendarIcon className="text-gray4" height={20} />
-                    <Text p className="text-gray4 ml-1">
-                      {previewEventDate?.includes('After')
-                        ? `${parseInt(
-                            previewEventDate.replace(/[^0-9\.]/g, '')
-                          )} days after added in Campaign`
-                        : previewEventDate}
-                    </Text>
-                  </>
-                )}
-                {/* <CalendarIcon className="text-gray4" height={20} />
+            <div className="w-[58%]">
+              <SimpleBar
+                autoHide={true}
+                style={{ maxHeight: 'calc(100vh - 295px)' }}
+              >
+                <div className="flex flex-row border-b border-gray2 p-6">
+                  {isValidDate(previewEventDate) ? (
+                    <>
+                      <CalendarIcon className="text-gray4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {formatDateMDY(previewEventDate)}
+                      </Text>
+                      <ClockIcon className="text-gray4 ml-4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {formatDateLThour(previewEventDate)}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <CalendarIcon className="text-gray4" height={20} />
+                      <Text p className="text-gray4 ml-1">
+                        {previewEventDate?.includes('After')
+                          ? `${parseInt(
+                              previewEventDate.replace(/[^0-9\.]/g, '')
+                            )} days after added in Campaign`
+                          : previewEventDate}
+                      </Text>
+                    </>
+                  )}
+                  {/* <CalendarIcon className="text-gray4" height={20} />
                 <Text p className="text-gray4 ml-1">
                   Same day as added in the system
                 </Text>
@@ -272,26 +282,27 @@ export default function Campaigns({
                 <Text p className="text-gray4 ml-1">
                   10:00 AM
                 </Text> */}
-              </div>
-              {previewEvent?.type == 'Email' && (
-                <RawHTML className="mt-6 p-6" title={previewEventSubject}>
-                  {previewEvent?.preview?.body_html}
-                </RawHTML>
-              )}
-              {previewEvent?.type == 'SMS' && (
-                <PreviewEvent
-                  // title={`Destination number: ${previewEvent?.preview?.destination_number}`}
-                  title={previewEventSubject}
-                  description={previewEvent?.preview?.message}
-                />
-              )}
-              {previewEvent?.type == 'Task' && (
-                <PreviewEvent
-                  // title={previewEvent?.preview?.task_name}
-                  title={previewEventSubject}
-                  description={previewEvent?.preview?.task_description}
-                />
-              )}
+                </div>
+                {previewEvent?.type == 'Email' && (
+                  <RawHTML className="mt-6 p-6" title={previewEventSubject}>
+                    {previewEvent?.preview?.body_html}
+                  </RawHTML>
+                )}
+                {previewEvent?.type == 'SMS' && (
+                  <PreviewEvent
+                    // title={`Destination number: ${previewEvent?.preview?.destination_number}`}
+                    title={previewEventSubject}
+                    description={previewEvent?.preview?.message}
+                  />
+                )}
+                {previewEvent?.type == 'Task' && (
+                  <PreviewEvent
+                    // title={previewEvent?.preview?.task_name}
+                    title={previewEventSubject}
+                    description={previewEvent?.preview?.task_description}
+                  />
+                )}
+              </SimpleBar>
             </div>
           </div>
         </div>

@@ -13,11 +13,14 @@ import * as Yup from 'yup';
 import { NYCneighborhoods } from 'global/variables';
 import SearchSelectInput from 'components/shared/search-select-input';
 import toast from 'react-hot-toast';
+import SimpleBar from 'simplebar-react';
 
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    bedrooms_min: Yup.number()
+      .integer('Must be integer')
+      .min(0, 'Minimum value is 0'),
     bedrooms_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
@@ -28,7 +31,9 @@ export default function LookingFor({ contactId }) {
           'Max bedrooms must be greater than min bedrooms'
         ),
       }),
-    bathrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    bathrooms_min: Yup.number()
+      .integer('Must be integer')
+      .min(0, 'Minimum value is 0'),
     bathrooms_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
@@ -39,7 +44,9 @@ export default function LookingFor({ contactId }) {
           'Max bathrooms must be greater than min bathrooms'
         ),
       }),
-    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    budget_min: Yup.number()
+      .integer('Must be integer')
+      .min(0, 'Minimum value is 0'),
     // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
     budget_max: Yup.number()
       .integer('Must be integer')
@@ -71,13 +78,14 @@ export default function LookingFor({ contactId }) {
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
       console.log('looking property', values);
-      setFieldValue('budget_min', parseFloat(values.budget_min))
-      setFieldValue('budget_max', parseFloat(values.budget_max))
+      setFieldValue('budget_min', parseFloat(values.budget_min));
+      setFieldValue('budget_max', parseFloat(values.budget_max));
 
       if (formik.isValid) {
-        handleAddSubmit({...values, 
-          budget_min: parseFloat(values.budget_min), 
-          budget_max: parseFloat(values.budget_max)
+        handleAddSubmit({
+          ...values,
+          budget_min: parseFloat(values.budget_min),
+          budget_max: parseFloat(values.budget_max),
         });
       }
     },
@@ -144,19 +152,17 @@ export default function LookingFor({ contactId }) {
 
   useEffect(() => {
     fetchLookingProperties();
-
   }, [contactId]);
 
   const valueOptions = (selectedOptions, multiselectOptions) => {
     if (!selectedOptions) {
       return null;
     }
-    const options = selectedOptions.map((el) => {      
+    const options = selectedOptions.map((el) => {
       return multiselectOptions.find((option) => option.value === el);
     });
     return options;
   };
-
 
   const tabs = [
     {
@@ -222,9 +228,7 @@ export default function LookingFor({ contactId }) {
             label="Budget Min"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            onChange={(val) =>
-              formik.setFieldValue('budget_min', val)
-            }
+            onChange={(val) => formik.setFieldValue('budget_min', val)}
             value={formik.values.budget_min}
             error={errors.budget_min && touched.budget_min}
             errorText={errors.budget_min}
@@ -235,9 +239,7 @@ export default function LookingFor({ contactId }) {
             label="Budget Max"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            onChange={(val) =>
-              formik.setFieldValue('budget_max', val)
-            }
+            onChange={(val) => formik.setFieldValue('budget_max', val)}
             value={formik.values.budget_max}
             error={errors.budget_max && touched.budget_max}
             errorText={errors.budget_max}
@@ -247,26 +249,27 @@ export default function LookingFor({ contactId }) {
     },
   ];
   return (
-    <div className="flex bg-gray10 flex-row details-tabs-fixed-height overflow-y-scroll">
-      <div className="w-[65%] bg-gray10">
-        <div className="bg-white p-6 m-[24px]">
-          <form onSubmit={formik.handleSubmit}>
-            <div className="max-w-3xl mx-auto relative">
-              <SearchSelectInput
-                label="Neighborhood"
-                options={NYCneighborhoods}
-                value={valueOptions(
-                  formik.values.neighborhood_ids,
-                  NYCneighborhoods
-                )}
-                onChange={(choice) => {
-                  let choices = choice.map((el) => el.value);
-                  formik.setFieldValue('neighborhood_ids', choices);
-                }}
-                error={errors.neighborhood_ids && touched.neighborhood_ids}
-                errorText={errors.neighborhood_ids}
-              />
-              {/* <Input
+    <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
+      <div className="flex bg-gray10 flex-row">
+        <div className="w-[65%] bg-gray10">
+          <div className="bg-white p-6 m-[24px]">
+            <form onSubmit={formik.handleSubmit}>
+              <div className="max-w-3xl mx-auto relative">
+                <SearchSelectInput
+                  label="Neighborhood"
+                  options={NYCneighborhoods}
+                  value={valueOptions(
+                    formik.values.neighborhood_ids,
+                    NYCneighborhoods
+                  )}
+                  onChange={(choice) => {
+                    let choices = choice.map((el) => el.value);
+                    formik.setFieldValue('neighborhood_ids', choices);
+                  }}
+                  error={errors.neighborhood_ids && touched.neighborhood_ids}
+                  errorText={errors.neighborhood_ids}
+                />
+                {/* <Input
                 id="neighborhood_ids"
                 type="number"
                 label="Neighborhood"
@@ -276,23 +279,24 @@ export default function LookingFor({ contactId }) {
                 error={errors.neighborhood_ids && touched.neighborhood_ids}
                 errorText={errors.neighborhood_ids}
               /> */}
-            </div>
-            <Accordion
-              tabs={tabs}
-              activeSelections={selections}
-              defaultOpen={true}
-            />
-            <Button
-              type="submit"
-              primary
-              className="mt-6"
-              loading={loadingButton}
-            >
-              Save
-            </Button>
-          </form>
+              </div>
+              <Accordion
+                tabs={tabs}
+                activeSelections={selections}
+                defaultOpen={true}
+              />
+              <Button
+                type="submit"
+                primary
+                className="mt-6"
+                loading={loadingButton}
+              >
+                Save
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </SimpleBar>
   );
 }
