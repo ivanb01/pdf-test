@@ -212,8 +212,27 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       <div
         className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}
       >
-        <p className="text-sm">{status.name}</p>
-        <div  className='flex justify-end'>
+        <div  className='flex justify-start'>
+          <p className="text-sm mr-1">{status.name}</p>
+          {
+          healthLastCommunicationDate[categoryType][status?.name] > 0 && 
+            <div className="group relative cursor-pointer">
+              <InformationCircleIcon
+                className="h-5 w-5 text-gray3 hover:text-gray4"
+                aria-hidden="true"
+              />
+              <div className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${status?.name === 'New Lead' ? 'left-0' : 'right-0'} top-6 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                <p className="mb-2">{`You must interact with these clients every ${healthLastCommunicationDate[categoryType][status?.name] === 1 ? 'day' : `${healthLastCommunicationDate[categoryType][status?.name]} days`} in order to maintain healthy communication.`}</p>
+                <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center mr-2'><span className='h-[13px] w-[13px] rounded bg-green5 mr-1' /><span>Healthy Communication</span></div>
+                  <div className='flex items-center'><span className='h-[13px] w-[13px] rounded bg-red5 mr-1' /><span>Unhealthy Communication</span></div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        
         {/* <Checkbox label={status.name} /> */}
         <a
           href="#"
@@ -245,25 +264,6 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
             </svg>
           )}
         </a>
-        {
-          healthLastCommunicationDate[categoryType][status?.name] > 0 && 
-            <div className="group relative cursor-pointer">
-              <InformationCircleIcon
-                className="h-5 w-5 text-gray3 hover:text-gray4"
-                aria-hidden="true"
-              />
-              <div className="group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none left-0 top-5 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
-                <p className="mb-2">{`You must interact with these clients every ${healthLastCommunicationDate[categoryType][status?.name] === 1 ? 'day' : `${healthLastCommunicationDate[categoryType][status?.name]} days`} in order to maintain healthy communication.`}</p>
-                <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center mr-2'><span className='h-[13px] w-[13px] rounded bg-green5 mr-1' /><span>Healthy Communication</span></div>
-                  <div className='flex items-center'><span className='h-[13px] w-[13px] rounded bg-red5 mr-1' /><span>Unhealthy Communication</span></div>
-                </div>
-              </div>
-            </div>
-        }
-        
-      </div>
       </div>
       <SimpleBar
         style={{
