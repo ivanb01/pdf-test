@@ -81,6 +81,7 @@ const Table = ({
   searchTerm,
   campaignId,
   setCampaignId,
+  titleLabel,
 }) => {
   const types = [
     {
@@ -266,7 +267,7 @@ const Table = ({
             >
               {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
               <div className="flex items-center justify-between">
-                <span>Seller</span>
+                <span>{titleLabel}</span>
                 {/* <Button white >See Campaign Preview</Button> */}
               </div>
             </th>

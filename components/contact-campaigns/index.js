@@ -233,12 +233,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                 <div className="flex items-center">
                   <Search
                     placeholder={`Search ${
-                      campaigns.find(
-                        (campaign) => campaign.id === openedCampaignCategory
-                      )?.value
-                        ? campaigns.find(
-                            (campaign) => campaign.id === openedCampaignCategory
-                          )?.value
+                      campaigns[openedCampaignCategory].value
+                        ? campaigns[openedCampaignCategory].value
                         : ''
                     }`}
                     className="mr-3"
@@ -260,6 +256,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                     <Table
                       campaignId={currentCampaign.campaign_id}
                       tableFor="contact-campaigns"
+                      titleLabel={campaigns[openedCampaignCategory].value}
                       handleSelectContact={handleSelectContact}
                       handleAction={(id, action) => {
                         if (action == 'unassign') {
