@@ -52,7 +52,7 @@ export default function Events({
                   href={event.href}
                   onClick={() => {
                     setCurrentEvent(event.id);
-                    // eventPreview(event);
+                    eventPreview(event);
                   }}
                   className="relative flex items-center group"
                 >
