@@ -8,6 +8,10 @@ import UploadFile from '@mui/icons-material/UploadFile';
 import Router from 'next/router';
 import { setExpandedMenu } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from 'components/shared/button';
+import GoogleContactsIcon from 'public/images/google-contacts.png';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { useRouter } from 'next/router';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -18,6 +22,7 @@ const MainSidebar = ({
   collapsable,
   importContacts,
 }) => {
+  const router = useRouter();
   const contacts = useSelector((state) => state.contacts.data);
   const dispatch = useDispatch();
   const isSubtabActive = (currentSubtab) => {
@@ -72,7 +77,7 @@ const MainSidebar = ({
                 }`}
                 onClick={() => {
                   setOpenedTab(tab.id);
-                  Router.push(tab.href);
+                  router.push(tab.href);
                 }}
               >
                 <div
@@ -117,7 +122,7 @@ const MainSidebar = ({
                     setCollapseMainTab(!collapseMainTab);
                   }
                   setOpenedTab(tab.id);
-                  Router.push(tab.href);
+                  router.push(tab.href);
                 }}
               >
                 <div
@@ -208,7 +213,45 @@ const MainSidebar = ({
         pinned ? 'w-[290px]' : 'w-[62px]'
       }`}
     >
-      <div>{pinned ? expandedMenu() : narrowMenu()}</div>
+      <div>
+        {pinned ? expandedMenu() : narrowMenu()}
+
+        {pinned && (
+          <div className=" w-auto bg-[#EFF6FF] p-3 text-sm m-3">
+            <span className="font-bold">Keep in mind:</span> Your contacts need
+            to be logged in on "Google Contacts" in order to be imported here.
+            Don't know how?
+            <Button
+              white
+              iconSize="w-5"
+              leftIcon={<AccountCircle />}
+              className="w-full mt-4"
+              color="text-blue2"
+              label="Import Google Contacts"
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/no-contact/',
+                  query: { start_importing: true },
+                })
+              }
+            />
+          </div>
+        )}
+      </div>
+      {!pinned && (
+        <a
+          onClick={() =>
+            router.push({
+              pathname: '/contacts/no-contact/',
+              query: { start_importing: true },
+            })
+          }
+          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md"
+        >
+          <AccountCircle className="h-5" />
+        </a>
+      )}
+
       {collapsable && (
         <a
           href="#"

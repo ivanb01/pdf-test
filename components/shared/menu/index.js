@@ -92,16 +92,16 @@ const MainMenu = ({
         <div className="">
           <button
             label="Need Help?"
-            className=" text-sm flex items-center justify-center h-[38px] px-3 rounded-full min-w-[130px] mr-4 bg-transparent border border-white text-white"
+            className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
               FreshworksWidget('open');
             }}
           >
-            <ContactSupport className="mr-1 h-[20px]" />
-            Need help?
+            <ContactSupport className="h-[20px]" />
+            {/* Need help? */}
           </button>
         </div>
-        <Button
+        {/* <Button
           label="Import Google Contacts"
           className="mr-4 "
           onClick={() =>
@@ -110,11 +110,11 @@ const MainMenu = ({
               query: { start_importing: true },
             })
           }
-        />
+        /> */}
         {showUncategorizedButton() && (
           <Button
             label="Categorize Contacts"
-            secondary
+            narrow
             className="mr-4"
             onClick={() =>
               router.push({

@@ -21,8 +21,10 @@ export default function ActivityLog({ contactId }) {
   const dispatch = useDispatch();
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
-  const handleToggleAddActicity = () =>
+  const handleToggleAddActicity = () => {
+    formik.resetForm();
     setToggleAddActivity(!toggleAddActivity);
+  };
 
   const refetchData = useSelector((state) => state.global.refetchData);
 

@@ -143,7 +143,6 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
         <UpdateTypeStatus
           contact={client}
           handleClose={() => setEditModal(false)}
-          handleFetchContactRequired={handleFetchContactRequired}
         />
         // <UpdateCategoryType
         //   handleClose={handleCloseEditModal}

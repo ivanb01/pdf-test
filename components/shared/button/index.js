@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ChevronRightIcon } from '@heroicons/react/solid';
 import CircularProgress from '@mui/material/CircularProgress';
+import ArrowForward from '@mui/icons-material/ArrowForward';
 
 const Button = ({
   children,
@@ -27,6 +28,8 @@ const Button = ({
   special,
   loading,
   iconSize,
+  narrow,
+  color,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
@@ -62,6 +65,18 @@ const Button = ({
   if (special) {
     bgColor = 'bg-gradient-to-r from-green-400 to-blue-500';
   }
+  const narrowButton = () => {
+    return (
+      <button
+        onClick={onClick}
+        type="button"
+        className={`${className} flex group items-center justify-between cursor-pointer rouded-xl bg-white text-lightBlue3 rounded-full text-sm px-3 py-1`}
+      >
+        {children ? children : label}
+        <ArrowForward className=" h-4 group-hover:translate-x-1 transition-all" />
+      </button>
+    );
+  };
   const socialButton = () => {
     return (
       <div
@@ -80,7 +95,9 @@ const Button = ({
         type="button"
         className={`${disabled && 'opacity-50'} ${
           loading && 'pointer-events-none'
-        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${textColor} hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+          color ? color : textColor
+        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
         {...props}
       >
         {loading && (
@@ -198,6 +215,7 @@ const Button = ({
   };
 
   if (social) return socialButton();
+  else if (narrow) return narrowButton();
   else if (closeButton) return closeBtn();
   else if (ternary) return ternaryBtn();
   else if (bigButton) return bigBtn();

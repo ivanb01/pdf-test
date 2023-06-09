@@ -11,12 +11,14 @@ import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 import { vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
+import { setRefetchData } from 'store/global/slice';
+import { useDispatch, useSelector } from 'react-redux';
 
-const UpdateTypeStatus = ({
-  contact,
-  handleClose,
-  handleFetchContactRequired,
-}) => {
+const UpdateTypeStatus = ({ contact, handleClose }) => {
+  const dispatch = useDispatch();
+
+  const refetchData = useSelector((state) => state.global.refetchData);
+
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -57,7 +59,8 @@ const UpdateTypeStatus = ({
         setChangeStatusModal(true);
       } else {
         await editContact();
-        handleFetchContactRequired();
+        dispatch(setRefetchData(true));
+
         handleClose();
       }
     } catch (error) {
@@ -69,7 +72,7 @@ const UpdateTypeStatus = ({
     try {
       await unassignContactFromCampaign(contact.campaign_id, contact.id);
       await editContact();
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
       handleClose();
       setChangeStatusModal(false);
     } catch (error) {
