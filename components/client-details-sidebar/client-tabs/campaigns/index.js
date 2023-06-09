@@ -59,8 +59,6 @@ export default function Campaigns({
       const { data } = await assignContactToCampaign(campaignId, contactId);
       dispatch(setRefetchData(true));
 
-      // setFetchRequired((prev) => !prev);
-      // handleFetchContactRequired();
       setShowAssignToCampaign(false);
     } catch (error) {
       console.log(error);
@@ -71,9 +69,6 @@ export default function Campaigns({
     try {
       const { data } = await unassignContactFromCampaign(campaignId, contactId);
       dispatch(setRefetchData(true));
-
-      // setFetchRequired((prev) => !prev);
-      // handleFetchContactRequired();
       setShowUnassignFromCampaign(false);
     } catch (error) {
       console.log(error);

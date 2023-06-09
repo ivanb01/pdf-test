@@ -13,8 +13,11 @@ import {
 import TagsInput from 'components/tagsInput';
 import DateChip from 'components/shared/chip/date-chip';
 import ChangeStatus from 'components/overlays/change-contact-status';
+import { useDispatch } from 'react-redux';
+import { setRefetchData } from 'store/global/slice';
 
 export default function Info({ client, handleFetchContactRequired }) {
+  const dispatch = useDispatch();
   const categoryType = client?.category_1.toLowerCase() + 's';
   const [campaginName, setCampaignName] = useState('');
 
@@ -69,7 +72,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       await contactServices.updateContact(client.id, {
         tags: currentTags,
       });
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +88,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       await contactServices.updateContact(client.id, {
         lead_source: source,
       });
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -100,7 +103,7 @@ export default function Info({ client, handleFetchContactRequired }) {
         await contactServices.updateContact(client.id, {
           status_id: status,
         });
-        handleFetchContactRequired();
+        dispatch(setRefetchData(true));
       }
     } catch (error) {
       console.log(error);
@@ -113,7 +116,7 @@ export default function Info({ client, handleFetchContactRequired }) {
       await contactServices.updateContact(client.id, {
         status_id: statusIdToUpdate,
       });
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
       setChangeStatusModal(false);
     } catch (error) {
       console.log(error);
