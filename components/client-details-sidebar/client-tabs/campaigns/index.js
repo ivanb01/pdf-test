@@ -28,12 +28,15 @@ import {
 } from 'global/functions';
 import { useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
+import { setRefetchData } from 'store/global/slice';
+import { useDispatch } from 'react-redux';
 
 export default function Campaigns({
   contactId,
   contact,
   handleFetchContactRequired,
 }) {
+  const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);
   const [showUnassignFromCampaign, setShowUnassignFromCampaign] =
@@ -54,8 +57,10 @@ export default function Campaigns({
   const handleAssignCampaignChange = async () => {
     try {
       const { data } = await assignContactToCampaign(campaignId, contactId);
-      setFetchRequired((prev) => !prev);
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
+
+      // setFetchRequired((prev) => !prev);
+      // handleFetchContactRequired();
       setShowAssignToCampaign(false);
     } catch (error) {
       console.log(error);
@@ -65,8 +70,10 @@ export default function Campaigns({
   const handleUnassignCampaignChange = async () => {
     try {
       const { data } = await unassignContactFromCampaign(campaignId, contactId);
-      setFetchRequired((prev) => !prev);
-      handleFetchContactRequired();
+      dispatch(setRefetchData(true));
+
+      // setFetchRequired((prev) => !prev);
+      // handleFetchContactRequired();
       setShowUnassignFromCampaign(false);
     } catch (error) {
       console.log(error);
