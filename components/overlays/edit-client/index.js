@@ -19,14 +19,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 
-const EditContactOverlay = ({
-  className,
-  handleClose,
-  title,
-  client,
-  afterUpdate,
-  handleFetchContactRequired,
-}) => {
+const EditContactOverlay = ({ className, handleClose, title, client }) => {
   const steps = [
     {
       id: 1,
@@ -111,11 +104,7 @@ const EditContactOverlay = ({
     try {
       await updateContact(client?.id, values);
       console.log(values, 'edit contact', client?.id);
-      if (handleFetchContactRequired) {
-        dispatch(setRefetchData(true));
-      } else {
-        afterUpdate();
-      }
+      dispatch(setRefetchData(true));
       handleClose();
     } catch (error) {
       console.log(error);

@@ -70,7 +70,7 @@ export default function Details() {
       const activityLogData = await getContactActivities(id);
       dispatch(setNotesData(notesData.data.data));
       dispatch(setActivityLogData(activityLogData.data.data));
-
+      // setLoading(false);
       console.log('get contact', id, data);
     } catch (error) {
       console.log(error);

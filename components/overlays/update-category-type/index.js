@@ -15,7 +15,6 @@ const UpdateCategoryType = ({
   contact,
   categoryTypes,
   statuses,
-  handleFetchContactRequired,
 }) => {
   const dispatch = useDispatch();
   const [selectedContactType, setSelectedContactType] = useState(

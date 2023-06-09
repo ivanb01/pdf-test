@@ -31,11 +31,7 @@ import SimpleBar from 'simplebar-react';
 import { setRefetchData } from 'store/global/slice';
 import { useDispatch } from 'react-redux';
 
-export default function Campaigns({
-  contactId,
-  contact,
-  handleFetchContactRequired,
-}) {
+export default function Campaigns({ contactId, contact }) {
   const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);

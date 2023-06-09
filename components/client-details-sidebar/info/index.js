@@ -16,7 +16,7 @@ import ChangeStatus from 'components/overlays/change-contact-status';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 
-export default function Info({ client, handleFetchContactRequired }) {
+export default function Info({ client }) {
   const dispatch = useDispatch();
   const categoryType = client?.category_1.toLowerCase() + 's';
   const [campaginName, setCampaignName] = useState('');

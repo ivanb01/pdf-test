@@ -16,7 +16,7 @@ import * as contactServices from 'api/contacts';
 import { useRouter } from 'next/router';
 import Chip from 'components/shared/chip';
 
-export default function CategoryTypes({ client, handleFetchContactRequired }) {
+export default function CategoryTypes({ client }) {
   const router = useRouter();
 
   const [loadingProfiles, setLoadingProfiles] = useState(false);
@@ -149,7 +149,6 @@ export default function CategoryTypes({ client, handleFetchContactRequired }) {
         //   contact={client}
         //   categoryTypes={categoryTypes}
         //   statuses={contactStatuses}
-        //   handleFetchContactRequired={handleFetchContactRequired}
         // />
       )}
       {addModal && (

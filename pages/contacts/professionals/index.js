@@ -90,7 +90,6 @@ const index = () => {
           title="Edit Professional"
           client={contactToEdit}
           className="w-[635px]"
-          afterUpdate={() => fetchProfessionals()}
         />
       )}
     </Layout>
