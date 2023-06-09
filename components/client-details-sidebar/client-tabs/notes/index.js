@@ -167,7 +167,14 @@ export default function Notes({ contactId }) {
 
   return (
     <>
-      <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
+      <SimpleBar
+        autoHide={true}
+        style={{
+          maxHeight: 'calc(100vh - 222px)',
+          height:
+            notesOriginal && !notesOriginal.length && 'calc(100vh - 222px)',
+        }}
+      >
         {notesOriginal &&
           (notesOriginal.length == 0 ? (
             <div className="h-full">
