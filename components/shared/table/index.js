@@ -4,6 +4,7 @@ import {
   getContactTypeByTypeId,
   getContactStatusColorByStatusId,
   phoneNumberFormat,
+  formatDateLL,
 } from 'global/functions';
 import eyeIcon from 'public/images/eye.svg';
 import Image from 'next/image';
@@ -176,7 +177,7 @@ const Table = ({
                   }}
                 >
                   <Image src={eyeIcon} />
-                  <span className="ml-1">{dataItem.event_name}</span>
+                  <span className="ml-1">Preview Campaign</span>
                 </div>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -1702,9 +1703,6 @@ const Table = ({
   };
 
   const reportsTable = () => {
-    let healthyCount = 118;
-    let unhealthyCount = 20;
-    let closedClients = 10;
     return (
       <>
         <thead className="bg-gray-50">
@@ -1739,12 +1737,12 @@ const Table = ({
             >
               closed clients
             </th>
-            <th
+            {/* <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
             >
               Time spent in the crm
-            </th>
+            </th> */}
             <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
@@ -1756,17 +1754,17 @@ const Table = ({
         <tbody className=" bg-white">
           {data.map((dataItem) => (
             <tr
-              key={dataItem.contact_id}
+              key={dataItem.id}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
                 <ContactInfo
                   data={{
-                    name: `${dataItem.contact_name}`,
-                    id: dataItem.contact_id,
-                    email: dataItem.contact_email,
-                    image: dataItem.profile_image_path,
+                    name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                    id: dataItem.id,
+                    email: dataItem.email,
+                    // image: dataItem.profile_image_path,
                   }}
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
@@ -1775,37 +1773,51 @@ const Table = ({
                 />
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">120</div>
-                <div className="text-gray4 italic">80 in the funnel</div>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">80</div>
-                <div className="text-gray4 italic">17 new leads</div>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <ClientHealth
-                  healthyCount={healthyCount}
-                  unhealthyCount={unhealthyCount}
-                />
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 flex items-center justify-center">
-                  {closedClients}{' '}
-                  <CheckCircleIcon
-                    className={`h-4 ml-1 ${
-                      closedClients == 0 ? 'text-gray3' : 'text-green5'
-                    }`}
-                  />
+                <div className="text-gray7 font-medium">
+                  {dataItem.number_of_clients}
+                </div>
+                <div className="text-gray4 italic">
+                  {dataItem.number_of_contacts_in_the_funnel} in the funnel
                 </div>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7 font-medium">
-                  1080 <span className="text-gray4">hrs</span>
+                  {dataItem.number_of_contacts_in_the_funnel}
+                </div>
+                <div className="text-gray4 italic">
+                  {dataItem.number_of_new_leads} new leads
                 </div>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">March 16 2023</div>
-                <div className="text-gray4">11:00 AM</div>
+                <ClientHealth
+                  healthyCount={dataItem.number_of_healthy_clients}
+                  unhealthyCount={dataItem.number_of_unhealthy_clients}
+                />
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 flex items-center justify-center">
+                  {dataItem.number_of_closed_contacts}{' '}
+                  <CheckCircleIcon
+                    className={`h-4 ml-1 ${
+                      dataItem.number_of_closed_contacts == 0
+                        ? 'text-gray3'
+                        : 'text-green5'
+                    }`}
+                  />
+                </div>
+              </td>
+              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7 font-medium">
+                  1080 <span className="text-gray4">hrs</span>
+                </div>
+              </td> */}
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="text-gray7">
+                  {formatDateLL(dataItem.last_interaction)}
+                </div>{' '}
+                <div className="text-gray4">
+                  {formatDateLThour(dataItem.last_interaction)}
+                </div>
               </td>
             </tr>
           ))}

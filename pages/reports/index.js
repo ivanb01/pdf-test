@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Dropdown from 'components/shared/dropdown';
 import SimpleBar from 'simplebar-react';
 import Table from 'components/shared/table';
+import { getReports } from 'api/team';
+import { useEffect } from 'react';
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -55,14 +57,11 @@ const index = () => {
     },
   ]);
 
-  const [data, setData] = useState([
-    {
-      contact_id: 1,
-      contact_name: 'Blendar Kabashi',
-      contact_email: 'blendk@outlook.com',
-      profile_image_path: null,
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getReports().then((data) => setData(data.data));
+  }, []);
   const [sortColumn, setSortColumn] = useState(0);
   const [currentButton, setCurrentButton] = useState(0);
   return (
@@ -88,7 +87,7 @@ const index = () => {
           />
         </div>
       </div>
-      <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
+      <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 150px)' }}>
         <Table tableFor="reports" data={data} />
       </SimpleBar>
     </>

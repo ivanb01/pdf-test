@@ -17,6 +17,7 @@ import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import dynamic from 'next/dynamic';
+import GlobalAlert from 'components/shared/alert/global-alert';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });

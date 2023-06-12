@@ -82,38 +82,22 @@ const GoogleContactsImportSummary = ({ data }) => {
             }`}
           >
             <GlobalAlert
-              title={`
-                                ${
-                                  allContacts?.importable_new_contacts_count ===
-                                  0
-                                    ? 'There are no contacts to be imported'
-                                    : ''
-                                } 
-                                ${
-                                  allContacts?.importable_new_contacts_count ===
-                                  1
-                                    ? '1 Contact imported successfully'
-                                    : ''
-                                } 
-                                ${
-                                  allContacts?.importable_new_contacts_count > 1
-                                    ? `${allContacts?.importable_new_contacts_count} Contacts imported successfully`
-                                    : ''
-                                } 
-                            `}
-              message={`
-                                ${
-                                  allContacts?.importable_new_contacts_count ===
-                                  1
-                                    ? 'This contact was successfully imported. Your next step is to sort in the uncategorized contacts section.'
-                                    : ''
-                                }
-                                ${
-                                  allContacts?.importable_new_contacts_count > 1
-                                    ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.'
-                                    : ''
-                                }
-                            `}
+              title={
+                allContacts?.importable_new_contacts_count === 0
+                  ? 'There are no contacts to be imported'
+                  : allContacts?.importable_new_contacts_count === 1
+                  ? '1 contact imported successfully'
+                  : allContacts?.importable_new_contacts_count > 1
+                  ? `${allContacts?.importable_new_contacts_count} contacts imported successfully`
+                  : ''
+              }
+              message={
+                allContacts?.importable_new_contacts_count === 1
+                  ? 'This contact was successfully imported. Your next step is to sort it in the uncategorized contacts section.'
+                  : allContacts?.importable_new_contacts_count > 1
+                  ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.'
+                  : ''
+              }
               type="success"
               rounded
             />
@@ -203,8 +187,18 @@ const GoogleContactsImportSummary = ({ data }) => {
           {importedContacts.length && (
             <div className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
               <Button
-                label="Start categorization"
+                label="Close"
+                white
                 className="mr-4"
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts',
+                  })
+                }
+              />
+              <Button
+                label="Start categorization"
+                className=""
                 onClick={() =>
                   router.push({
                     pathname: '/contacts/uncategorized',
