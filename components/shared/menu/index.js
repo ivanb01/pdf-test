@@ -89,6 +89,19 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
+        {showUncategorizedButton() && (
+          <Button
+            label="Categorize Contacts"
+            narrow
+            className="mr-4"
+            onClick={() =>
+              router.push({
+                pathname: '/contacts/uncategorized',
+                query: { categorize: true },
+              })
+            }
+          />
+        )}
         <div className="">
           <button
             label="Need Help?"
@@ -111,19 +124,6 @@ const MainMenu = ({
             })
           }
         /> */}
-        {showUncategorizedButton() && (
-          <Button
-            label="Categorize Contacts"
-            narrow
-            className="mr-4"
-            onClick={() =>
-              router.push({
-                pathname: '/contacts/uncategorized',
-                query: { categorize: true },
-              })
-            }
-          />
-        )}
         <Menu as="div" className="relative inline-block text-left">
           <div>
             <Menu.Button className="">
