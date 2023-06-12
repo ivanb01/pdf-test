@@ -24,6 +24,11 @@ const MainMenu = ({
       name: 'Campaigns',
       url: '/campaigns',
     },
+    {
+      id: 2,
+      name: 'Reports',
+      url: '/reports',
+    },
   ],
   className,
   fixed,
