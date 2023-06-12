@@ -87,9 +87,18 @@ const index = () => {
           />
         </div>
       </div>
-      <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 150px)' }}>
-        <Table tableFor="reports" data={data} />
-      </SimpleBar>
+      {data.length ? (
+        <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 150px)' }}>
+          <Table tableFor="reports" data={data} />
+        </SimpleBar>
+      ) : (
+        <div
+          className="w-full flex items-center justify-center"
+          style={{ height: 'calc(100vh - 150px)' }}
+        >
+          No Agents in this table
+        </div>
+      )}
     </>
   );
 };
