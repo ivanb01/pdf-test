@@ -320,3 +320,16 @@ tbody > div {
   transform: translateX(-100%);
   transition: all 500ms ease-in;
 }
+
+.properties-container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.left-image span {
+  height: 100% !important;
+}
+
+.clip-path {
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+}
