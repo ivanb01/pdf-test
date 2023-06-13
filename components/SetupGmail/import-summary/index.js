@@ -84,7 +84,7 @@ const GoogleContactsImportSummary = ({ data }) => {
             <GlobalAlert
               title={
                 allContacts?.importable_new_contacts_count === 0
-                  ? 'There are no contacts to be imported'
+                  ? '0 contacts to be imported'
                   : allContacts?.importable_new_contacts_count === 1
                   ? '1 contact imported successfully'
                   : allContacts?.importable_new_contacts_count > 1
@@ -92,7 +92,9 @@ const GoogleContactsImportSummary = ({ data }) => {
                   : ''
               }
               message={
-                allContacts?.importable_new_contacts_count === 1
+                allContacts?.importable_new_contacts_count === 0
+                  ? 'There are no contacts to be imported in the CRM.'
+                  : allContacts?.importable_new_contacts_count === 1
                   ? 'This contact was successfully imported. Your next step is to sort it in the uncategorized contacts section.'
                   : allContacts?.importable_new_contacts_count > 1
                   ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.'
@@ -175,7 +177,10 @@ const GoogleContactsImportSummary = ({ data }) => {
                 className="border border-gray2 rounded overflow-hidden"
                 style={{ height: 'calc(100vh - 438px)' }}
               >
-                <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+                <SimpleBar
+                  autoHide={true}
+                  style={{ maxHeight: '100%', height: '100%' }}
+                >
                   <Table
                     tableFor="import-google-contacts-failed"
                     data={notImportedContacts}
@@ -184,18 +189,18 @@ const GoogleContactsImportSummary = ({ data }) => {
               </div>
             </div>
           )}
-          {importedContacts.length && (
-            <div className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
-              <Button
-                label="Close"
-                white
-                className="mr-4"
-                onClick={() =>
-                  router.push({
-                    pathname: '/contacts',
-                  })
-                }
-              />
+          <div className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
+            <Button
+              label="Close"
+              white
+              className="mr-4"
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts',
+                })
+              }
+            />
+            {importedContacts.length > 0 && (
               <Button
                 label="Start categorization"
                 className=""
@@ -206,8 +211,8 @@ const GoogleContactsImportSummary = ({ data }) => {
                   })
                 }
               />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>

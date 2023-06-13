@@ -1659,44 +1659,48 @@ const Table = ({
             >
               Contact
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-            ></th>
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem, i) => (
-            <tr key={i} className="border-b border-gray-200">
-              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                {dataItem.details ? (
-                  <div className="flex items-center relative">
-                    <div className="font-medium text-gray7">
-                      {dataItem.details}
-                    </div>
-                  </div>
-                ) : (
-                  <ContactInfo
-                    data={{
-                      name: dataItem.first_name + ' ' + dataItem.last_name,
-                      email: dataItem.email,
-                      image: dataItem.profile_image_path,
-                    }}
-                  />
-                )}
+          {!data.length ? (
+            <tr className="h-[233px] text-center align-middle">
+              <td className="text-center align-middle text-gray-400 italic">
+                <div className="">No Contacts imported</div>
               </td>
-              {tableFor == 'import-google-contacts-failed' && (
-                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
-                  <div className="flex items-center justify-center">
-                    <Error className="h-5 w-5 text-red4 mr-2" />
-                    <div className="text-gray7 font-medium">
-                      {dataItem.reason || 'Contact exists in the system'}
-                    </div>
-                  </div>
-                </td>
-              )}
             </tr>
-          ))}
+          ) : (
+            data.map((dataItem, i) => (
+              <tr key={i} className="border-b border-gray-200">
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                  {dataItem.details ? (
+                    <div className="flex items-center relative">
+                      <div className="font-medium text-gray7">
+                        {dataItem.details}
+                      </div>
+                    </div>
+                  ) : (
+                    <ContactInfo
+                      data={{
+                        name: dataItem.first_name + ' ' + dataItem.last_name,
+                        email: dataItem.email,
+                        image: dataItem.profile_image_path,
+                      }}
+                    />
+                  )}
+                </td>
+                {tableFor == 'import-google-contacts-failed' && (
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
+                    <div className="flex items-center justify-center">
+                      <Error className="h-5 w-5 text-red4 mr-2" />
+                      <div className="text-gray7 font-medium">
+                        {dataItem.reason || 'Contact exists in the system'}
+                      </div>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))
+          )}
         </tbody>
       </>
     );
