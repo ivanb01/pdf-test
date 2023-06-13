@@ -6,6 +6,7 @@ import SimpleBar from 'simplebar-react';
 import Table from 'components/shared/table';
 import { getReports } from 'api/team';
 import { useEffect } from 'react';
+import Loader from 'components/shared/loader';
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -60,8 +61,13 @@ const index = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getReports().then((data) => setData(data.data));
+    setLoading(true);
+    getReports().then((data) => {
+      setData(data.data);
+      setLoading(false);
+    });
   }, []);
+  const [loading, setLoading] = useState(false);
   const [sortColumn, setSortColumn] = useState(0);
   const [currentButton, setCurrentButton] = useState(0);
   return (
@@ -87,9 +93,13 @@ const index = () => {
           />
         </div>
       </div>
-      {data.length ? (
+      {loading ? (
+        <div className="w-full h-full relative">
+          <Loader />
+        </div>
+      ) : data?.count ? (
         <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 150px)' }}>
-          <Table tableFor="reports" data={data} />
+          <Table tableFor="reports" data={data.data} />
         </SimpleBar>
       ) : (
         <div
