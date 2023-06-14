@@ -18,8 +18,9 @@ import smoke from 'public/images/property/smoke.svg';
 import pets from 'public/images/property/pets.svg';
 import fridge from 'public/images/property/fridge.svg';
 import propertyLocation from 'public/images/property/location.png';
+import SimpleBar from 'simplebar-react';
 const index = () => {
-  const pictures = [one, two, three, four, five];
+  const pictures = [one, one, one, one, one, one, one, one, one, one];
 
   const [data, setData] = useState({
     ismls: 0,
@@ -204,7 +205,49 @@ const index = () => {
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
       <div className="flex h-[500px]">
-        <div className="w-1/2 h-full pr-3 left-image">
+        {pictures.length == 1 ? (
+          <div className="w-full h-full pr-3">
+            <img
+              src={pictures[0].src}
+              // style={{ backgroundImage: `url("${pictures[0]}")` }}
+              className="object-cover w-full h-full object-center"
+            />
+          </div>
+        ) : pictures.length == 2 ? (
+          <>
+            <div className="w-1/2 h-full pr-3">
+              <img
+                src={pictures[0].src}
+                // style={{ backgroundImage: `url("${pictures[0]}")` }}
+                className="object-cover w-full h-full object-center"
+              />
+            </div>
+            <div className="w-1/2 h-full">
+              <img
+                src={pictures[1].src}
+                // style={{ backgroundImage: `url("${pictures[0]}")` }}
+                className="object-cover w-full h-full object-center"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <SimpleBar className="w-screen d-webkit">
+              <div className="w-screen d-webkit h-full">
+                {pictures.map((picture, index) => (
+                  <div key={index} className="mr-3 last:mr-0 w-2/5">
+                    <img
+                      src={picture.src}
+                      alt={`Image ${index + 1}`}
+                      className="object-cover w-full h-full object-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </SimpleBar>
+          </>
+        )}
+        {/* <div className="w-1/2 h-full pr-3 left-image">
           <Image
             src={pictures[0]}
             // style={{ backgroundImage: `url("${pictures[0]}")` }}
@@ -220,7 +263,7 @@ const index = () => {
               className="h-full bg-cover bg-no-repeat"
             />
           ))}
-        </div>
+        </div> */}
       </div>
       <div className="properties-container">
         <div className="flex justify-between border-gray2 border-b">
@@ -243,7 +286,7 @@ const index = () => {
           </div>
           <div>
             <div className="clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 flex items-center justify-end text-gray7 font-semibold text-xl">
-              $1200
+              $1,250 <span className="font-normal">&nbsp;month</span>
             </div>
           </div>
         </div>
