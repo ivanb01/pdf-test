@@ -232,8 +232,8 @@ const index = () => {
           </>
         ) : (
           <>
-            <SimpleBar className="w-screen d-webkit">
-              <div className="w-screen d-webkit h-full">
+            <SimpleBar className="w-full d-webkit overflow-y-hidden">
+              <div className="w-full d-webkit h-full">
                 {pictures.map((picture, index) => (
                   <div key={index} className="mr-3 last:mr-0 w-2/5">
                     <img
