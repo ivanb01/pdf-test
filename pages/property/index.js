@@ -204,7 +204,7 @@ const index = () => {
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
-      <div className="flex h-[500px]">
+      <div className="flex md:h-[500px] h-[300px]">
         {pictures.length == 1 ? (
           <div className="w-full h-full pr-3">
             <img
@@ -215,14 +215,14 @@ const index = () => {
           </div>
         ) : pictures.length == 2 ? (
           <>
-            <div className="w-1/2 h-full pr-3">
+            <div className="md:w-1/2 w-full h-full pr-3">
               <img
                 src={pictures[0].src}
                 // style={{ backgroundImage: `url("${pictures[0]}")` }}
                 className="object-cover w-full h-full object-center"
               />
             </div>
-            <div className="w-1/2 h-full">
+            <div className="md:w-1/2 w-full h-full">
               <img
                 src={pictures[1].src}
                 // style={{ backgroundImage: `url("${pictures[0]}")` }}
@@ -235,7 +235,7 @@ const index = () => {
             <SimpleBar className="w-full d-webkit overflow-y-hidden">
               <div className="w-full d-webkit h-full">
                 {pictures.map((picture, index) => (
-                  <div key={index} className="mr-3 last:mr-0 w-2/5">
+                  <div key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
                     <img
                       src={picture.src}
                       alt={`Image ${index + 1}`}
@@ -266,32 +266,35 @@ const index = () => {
         </div> */}
       </div>
       <div className="properties-container">
-        <div className="flex justify-between border-gray2 border-b">
-          <div className="py-5">
-            <div className="flex items-center">
-              <div className="text-[#111827] font-semibold mr-2 text-2xl">
+        <div className="flex md:flex-row flex-col justify-between border-gray2 border-b md:pb-0 pb-[20px]">
+          <div className="md:py-5 pt-5">
+            <div className="flex md:flex-row flex-col md:items-center items-start">
+              <div className="order-2 md:order-1 text-[#111827] font-semibold md:mr-2 text-xl md:text-2xl">
                 {data.essentials_type} {data.main_status} in{' '}
                 {data.main_neighborhood}
               </div>
-              <div className="flex items-center justify-center border border-[#0891B2] bg-[#ECFEFF] rounded-full text-[#155E75] h-fit px-2 py-1 text-xs font-medium">
+              <div className="order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border border-[#0891B2] bg-[#ECFEFF] rounded-full text-[#155E75] h-fit px-2 py-1 text-xs font-medium">
                 {data.main_status}
               </div>
             </div>
             <div className="flex items-center mt-3">
               <Image src={location} alt="" />
-              <div className="ml-3 text-[#1F2937] text-base">
+              <div className="ml-3 text-[#1F2937] md:text-base text-sm">
                 {data.main_address}
               </div>
             </div>
           </div>
           <div>
-            <div className="clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 flex items-center justify-end text-gray7 font-semibold text-xl">
+            <div className="md:flex hidden mt-0 clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+              $1,250 <span className="font-normal">&nbsp;month</span>
+            </div>
+            <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
               $1,250 <span className="font-normal">&nbsp;month</span>
             </div>
           </div>
         </div>
-        <div className="max-w-[700px]">
-          <div className="mt-10 property-details">
+        <div className="max-w-[700px] md:mt-10 mt-5 pb-10">
+          <div className="property-details">
             <div className="text-gray7 text-xl mb-6 font-medium">
               Property Details
             </div>
@@ -300,8 +303,10 @@ const index = () => {
                 (propertyDetail) =>
                   propertyDetail.value != 0 && (
                     <div className="flex mr-6 items-center">
-                      <Image src={propertyDetail.icon} />
-                      <span className="mx-2 font-semibold">
+                      <div className="md:block hidden">
+                        <Image src={propertyDetail.icon} />
+                      </div>
+                      <span className="md:mx-2 mr-2 font-semibold">
                         {propertyDetail.value}
                       </span>
                       {propertyDetail.name}
@@ -319,7 +324,7 @@ const index = () => {
               {propertyAmenities.map(
                 (amenity) =>
                   amenity.value && (
-                    <div className="flex w-1/3 mb-4">
+                    <div className="flex w-1/2 md:w-1/3 mb-4 px-2">
                       <Image src={amenity.icon} />
                       <span className="ml-2">{amenity.name}</span>
                     </div>
@@ -335,7 +340,7 @@ const index = () => {
               {otherDetails.map(
                 (detail) =>
                   detail.value && (
-                    <div className="w-1/4 mb-4">
+                    <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4">
                       <div className="text-gray4 text-sm">{detail.name}</div>
                       <div className="text-sm text-gray7 mt-1">
                         {detail.value}
