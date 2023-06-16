@@ -20,7 +20,9 @@ import fridge from 'public/images/property/fridge.svg';
 import propertyLocation from 'public/images/property/location.png';
 import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+
 const index = () => {
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
@@ -149,15 +151,6 @@ const index = () => {
       icon: smoke,
     },
   ]);
-
-  const scrollRight = () => {
-    if (window.innerWidth < 767) {
-      document.querySelector('.simplebar-content-wrapper').scrollLeft += 438;
-    } else {
-      document.querySelector('.simplebar-content-wrapper').scrollLeft += 500;
-    }
-  };
-
   const [otherDetails, setOtherDetails] = useState([
     {
       id: 0,
@@ -210,6 +203,23 @@ const index = () => {
       value: '1920',
     },
   ]);
+
+  const scrollRight = () => {
+    if (window.innerWidth < 767) {
+      document.querySelector('.simplebar-content-wrapper').scrollLeft += 438;
+    } else {
+      document.querySelector('.simplebar-content-wrapper').scrollLeft += 500;
+    }
+  };
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg',
+  });
+  const center = useMemo(
+    () => ({ lat: data.extras_latitude, lng: data.extras_longitude }),
+    []
+  );
+
   return (
     <>
       <div className="bg-white p-6 flex items-center properties-container">
@@ -373,7 +383,13 @@ const index = () => {
             </div>
             <div className="text-gray5 my-2">{data.main_address}</div>
             <div className="">
-              <Image src={propertyLocation}></Image>
+              {isLoaded && (
+                <GoogleMap
+                  mapContainerClassName="map-container"
+                  center={center}
+                  zoom={10}
+                />
+              )}
             </div>
           </div>
         </div>
