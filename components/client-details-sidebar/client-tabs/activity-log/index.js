@@ -80,7 +80,10 @@ export default function ActivityLog({ contactId }) {
 
   return (
     <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      <div className="flex bg-gray10 flex-row ">
+      <div
+        className="flex bg-gray10 flex-row"
+        style={{ minHeight: 'calc(100vh - 222px)' }}
+      >
         <div className="w-[65%] bg-gray10 p-[24px] pr-0">
           {activities &&
             (activities?.length == 0 ? (
