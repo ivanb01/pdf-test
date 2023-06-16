@@ -19,8 +19,11 @@ import pets from 'public/images/property/pets.svg';
 import fridge from 'public/images/property/fridge.svg';
 import propertyLocation from 'public/images/property/location.png';
 import SimpleBar from 'simplebar-react';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import { useRef } from 'react';
 const index = () => {
-  const pictures = [one, one, one, one, one, one, one, one, one, one];
+  const scrollElement = useRef(null);
+  const pictures = [one, one, one, one, one, one, one, one];
 
   const [data, setData] = useState({
     ismls: 0,
@@ -147,6 +150,14 @@ const index = () => {
     },
   ]);
 
+  const scrollRight = () => {
+    if (window.innerWidth < 767) {
+      document.querySelector('.simplebar-content-wrapper').scrollLeft += 438;
+    } else {
+      document.querySelector('.simplebar-content-wrapper').scrollLeft += 500;
+    }
+  };
+
   const [otherDetails, setOtherDetails] = useState([
     {
       id: 0,
@@ -204,7 +215,13 @@ const index = () => {
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
-      <div className="flex md:h-[500px] h-[300px]">
+      <div className="flex md:h-[500px] h-[300px] relative">
+        <div
+          onClick={scrollRight}
+          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
+        >
+          <ArrowForward className="text-white md:text-2xl text-sm" />
+        </div>
         {pictures.length == 1 ? (
           <div className="w-full h-full pr-3">
             <img
@@ -350,7 +367,7 @@ const index = () => {
               )}
             </div>
           </div>
-          <div className="mt-10">
+          <div className="mt-10 mb-[100px]">
             <div className="text-gray7 text-xl font-medium">
               Property Location
             </div>
