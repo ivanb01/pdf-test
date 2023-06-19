@@ -239,7 +239,7 @@ export default function Campaigns({ contactId, contact }) {
                     currentEvent={currentEvent}
                     setCurrentEvent={setCurrentEvent}
                     eventPreview={eventPreview}
-                    className="p-4 bg-white border-r border-gray2 h-[100%]"
+                    className="p-4 bg-white border-r border-gray2 min-h-custom"
                   />
                 </SimpleBar>
               </div>
