@@ -36,10 +36,18 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
 
   const editContact = async () => {
     setIsSubmitting(true);
+    let status = selectedStatus;
+    if (
+      [8, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+        selectedType
+      )
+    ) {
+      status = 1;
+    }
     try {
       const contactToEdit = {
         category_id: selectedType,
-        status_id: selectedStatus,
+        status_id: status,
       };
       await updateContact(contact?.id, contactToEdit);
       setIsSubmitting(false);
