@@ -30,63 +30,226 @@ const index = () => {
   const pictures = [one, one, one, one, one, one, one, one];
 
   const [data, setData] = useState({
-    ismls: 0,
-    iscompany: 1,
-    financials_freemonth: 0,
-    main_zipcode: '10023',
-    agents_coagent_phone: '',
-    essentials_rooms: 10,
-    extras_latitude: 40.772495,
-    families: 0,
-    built: 2002,
-    agents_agent_name: 'Listing Manager',
-    essentials_beds: 4.5,
-    agents_coagent_name: '',
-    idx: 0,
-    agents_coagent_image: '',
-    agents_coagent_id: '',
-    essentials_video: '',
-    lease_term_min: 12,
-    essentials_size: 0,
-    extras_openhouse: 0,
-    agents_coagent_email: '',
-    main_image:
-      'https://images.realty.mx/618441d41cce47dbcfd9bed6e5ff64e6/images/assets/245748_56272005.jpg',
-    main_street: 'Broadway',
-    main_id: 245748,
-    lease_term_max: 12,
-    essentials_bath: 4.5,
-    vow: 0,
-    main_apt: '28G/28H',
-    extras_nofee: 0,
-    available_date: 'Immediately',
-    extras_featured: 0,
-    financials_monthsfreereqminlease: 0,
-    financials_concession: '',
-    main_cross: 'W 64TH & W 65TH ST.',
-    essentials_units: 0,
-    extras_webtitle: '',
-    agents_agent_email: 'applymedia@gmail.com',
-    main_hide_address: 1,
-    agents_agent_id: 1,
-    access_note: '212-769-1930',
-    main_status: 'For Rent',
-    essentials_type: 'Apartment',
-    main_category: 0,
-    agents_agent_phone: '646.723.2345',
-    main_neighborhood: 'Upper West Side',
-    main_address: 'W 64TH & W 65TH ST. Upper West Side',
-    main_house: '1930',
-    essentials_pets: 'Pets OK',
-    city: 'New York',
-    financials_price: 36900,
-    extras_longitude: -73.98187,
-    financials_taxes: 0,
-    date_update: 'June, 12 2023 14:12:00',
-    mls_no: '',
-    agents_agent_image: '',
-    description:
-      'This is a unique opportunity to own two adjacent buildings in the heart of NYC. 662 9th Avenue is an eight family with a commercial downstairs and two cell towers on top while 373 46th Street is a four floor fully commercial building. There is significant upside for the right developer to build up an additional 5000sqFt over 662 9th Avenue & potentially more when you combine 373 46th street which is next door to 662 9th avenue. Property has new boiler, gas lines, new intercom systems in all units, new roof & electric stoves in all residential units. Both properties can be delivered fully vacant or left as is. A Time Square area expansion is also being considered and this building would fall under the re-zone. Pro Forma / current RR available on request.',
+    MONTHSFREEREQMINLEASE: '',
+    CLOSING_DATE: '',
+    OPEN_HOUSE_REMARK: '',
+    HEATING_SYSTEM: '',
+    ID: 1204120,
+    PHOTOS: [
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/561/original/PI-5895t4e6ej.jpg?1685033538',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729036.jpg',
+        SORT_ORDER: 1,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/559/original/PI-5895t49jjv.jpg?1685033538',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729037.jpg',
+        SORT_ORDER: 2,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/560/original/PI-5895t4c3sj.jpg?1685033538',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729038.jpg',
+        SORT_ORDER: 3,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/556/original/PI-5895t3pc4e.jpg?1685033537',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729039.jpg',
+        SORT_ORDER: 4,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/553/original/PI-5895t30j32.jpg?1685033537',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729040.jpg',
+        SORT_ORDER: 5,
+        LISTING_ID: 1204120,
+        WIDTH: 512,
+        HEIGHT: 768,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/555/original/PI-5895t3j3fk.jpg?1685033537',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729041.jpg',
+        SORT_ORDER: 6,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/557/original/PI-5895t3qdvj.jpg?1685033538',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729042.jpg',
+        SORT_ORDER: 7,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/554/original/PI-5895t3i1e8.jpg?1685033537',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729043.jpg',
+        SORT_ORDER: 8,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/558/original/PI-5895t3t2ml.jpg?1685033537',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729044.jpg',
+        SORT_ORDER: 9,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/552/original/PI-5895t2esmu.jpg?1685033536',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729045.jpg',
+        SORT_ORDER: 10,
+        LISTING_ID: 1204120,
+        WIDTH: 512,
+        HEIGHT: 768,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/551/original/PI-5895t1o9qg.jpg?1685033536',
+        PHOTO_TITLE: 'Floor Plan',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729046.jpg',
+        SORT_ORDER: 12,
+        LISTING_ID: 1204120,
+        WIDTH: 1001,
+        HEIGHT: 768,
+      },
+      {
+        ORIGINAL_URL:
+          'https://media.perchwell.com/property_images/pictures/038/645/562/original/PI-5895t535th.jpg?1685033539',
+        PHOTO_TITLE: ' ',
+        PHOTO_URL: 'https://rls.realty.mx/images/assets/1204120_130729047.jpg',
+        SORT_ORDER: 12,
+        LISTING_ID: 1204120,
+        WIDTH: 1024,
+        HEIGHT: 683,
+      },
+    ],
+    NEIGHBORHOOD_ID: 52,
+    REBNY_AGENT_ID: 'RBNY-35674',
+    BATHROOMS: 1,
+    UTILITIESINCLUDED: '',
+    AGENT_IMAGE: '',
+    EXPOSURE_REMARK: '',
+    COMPANY_NAME: 'Level Group Inc',
+    MAX_LEASE_TERM: 0,
+    LISTING_TITLE: 'Bennett Avenue',
+    CONDITION: 'Excellent',
+    OPEN_HOUSE_END_4: '',
+    MIN_LEASE_TERM: 0,
+    OPEN_HOUSE_END_2: '',
+    OPEN_HOUSE_END_3: '',
+    OPEN_HOUSE_END_1: '',
+    FLOOR_NUMBER: '3',
+    DOWN_PAYMENT: '10%',
+    NUM_IMAGES: 12,
+    STORIES: 8,
+    VTOUR: '',
+    URL: 'http://www.levelgroup.com',
+    COMMON_CHARGES: 0,
+    DESCRIPTION:
+      "Pristine, fully renovated one bedroom home with park and garden views!  \n\nEnjoy the solid new French Oak wide-plank floors throughout the efficient layout.  Create memorable meals in the open-concept kitchen with quartz countertops, white cabinetry, subway tile backsplash, high-end Haier fridge, stainless steel Whirlpool dishwasher, and GE stove and micro.  New bath with marble floors. Walk-in closet.\n\nFort Tryon Gardens is a well-managed and financially sound 7-building, 350-unit co-op perfectly situated next to the beautiful Fort Tryon Park, one of New York City's most dramatic, with breathtaking Hudson River views, the exquisite Heather Garden and the world-famous Cloisters Museum. Being next to the park is like having a billionaire's backyard.  Ample nearby commerce, including supermarkets and a diverse selection of restaurants, characterize the area. The co-op has made significant infrastructure improvements in recent years, including a brand-new roof, video intercom system, and various plumbing upgrades. The complex has a friendly and diligent staff, with resident Superintendent. Pets are welcome, including your canine friends. The building is situated near the 1-train and, best of all, the A-train express line is right across the street.\n\nAll viewings are by appointment only. The co-op allows co-purchasing and pied a terre. The Special Capital Assessment ending June 30, 024 allocates $124.05 per month to this unit.  Some photos are virtually staged.",
+    BUILDING_ID: 5641,
+    DATE_CREATE: '2023-05-25 12:53:00',
+    AGENT_MOBILE: '',
+    SOURCEDB: 'ROLEX',
+    OPEN_HOUSE_REMARK_2: '',
+    OPEN_HOUSE_REMARK_4: '',
+    OPEN_HOUSE_REMARK_3: '',
+    STREET: 'Bennett Avenue',
+    CUSTOMFIELDS: '',
+    OFF_MARKET_STATUS: '',
+    CONCESSION: '',
+    CROSS_STREET: '190/191 sts',
+    FREEMONTH: '',
+    CITY: 'NEW YORK',
+    BROKER_NOTE: 'Original Price: 399000\rEmail agent. Register client name.',
+    STREETEASY_LINK:
+      'http://streeteasy.com/building/259-bennett-avenue-new_york',
+    UNIT_NUMBER: '3D',
+    OFFICE_ID: 848,
+    VENDOR_AGENT_ID: '',
+    STREET_NUMBER: '259',
+    AGENT_NAME: 'Stephen Love',
+    TOTAL_ROOMS: 3,
+    STATUS: 'For Sale',
+    AMENITIES:
+      'Elevator,Garage,Laundry,Bicycle Room,Storage,Park View,Courtyard,Pied a Terre,',
+    KEYCODE: '',
+    IDX: 1,
+    NETRENT: '',
+    OFFICE_PHONE: '(212) 994-9965',
+    COBROKE_FEE: '2.5%',
+    PRICE: 399000,
+    NEWDEVELOPMENT: 0,
+    SECURITYDEPOSIT: '',
+    NAME: '',
+    MAINTENANCE: 766,
+    OPEN_HOUSE_START_3: '',
+    PETS_POLICY: 'Pets OK',
+    OPEN_HOUSE_START_4: '',
+    OPEN_HOUSE_START_1: '',
+    ADDRESS: '259 Bennett Avenue, Unit 3D',
+    AGENT_EMAIL: 'love@levelgroup.com',
+    OPEN_HOUSE_START_2: '',
+    DATE_LISTED: '2023-05-25',
+    SQUARE_FOOTAGE: 0,
+    LATITUDE: 40.8585107,
+    BOROUGH: 'Manhattan',
+    VOW: 1,
+    NEIGHBORHOODS: 'Washington Heights',
+    VTOUR2: '',
+    ZIP_CODE: '10040',
+    LONGITUDE: -73.9327812,
+    TAXES: 0,
+    STATE: 'NY',
+    NO_SHARES: 309,
+    REBNY_LISTING_ID: 'PRCH-7581570',
+    CYOF: 0,
+    HIDEADDRESS: 0,
+    DEDUCTIBLE: '0%',
+    BEDROOMS: 1,
+    AGENT_PHONE: '(646) 221-6576',
+    COOLING_SYSTEM: '',
+    PROPERTY_TYPE: 'Condop',
+    OP: '',
+    BUILDING_ACCESS_NOTE: '',
+    DATE_AVAILABLE: '',
+    LISTING_CATEGORY: 'Exclusive',
+    CLOSING_PRICE: '',
+    DATE_UPDATE: '2023-06-20 08:44:00',
   });
 
   const [position, setPosition] = useState({
@@ -100,19 +263,19 @@ const index = () => {
     {
       id: 0,
       name: 'Rooms',
-      value: data.essentials_rooms,
+      value: data.TOTAL_ROOMS,
       icon: rooms,
     },
     {
       id: 1,
-      name: 'Beds',
-      value: data.essentials_beds,
+      name: 'Bedrooms',
+      value: data.BEDROOMS,
       icon: beds,
     },
     {
       id: 2,
       name: 'Bathrooms',
-      value: data.essentials_bath,
+      value: data.BATHROOMS,
       icon: bathrooms,
     },
     // {
@@ -226,10 +389,16 @@ const index = () => {
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
   const center = useMemo(
-    () => ({ lat: data.extras_latitude, lng: data.extras_longitude }),
+    () => ({ lat: data.LATITUDE, lng: data.LONGITUDE }),
     []
   );
 
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+  };
   return (
     <>
       <div className="bg-white p-6 flex items-center properties-container">
@@ -250,26 +419,26 @@ const index = () => {
             <ArrowBack className="text-white md:text-2xl text-sm" />
           </div>
         )}
-        {pictures.length == 1 ? (
+        {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full pr-3">
             <img
-              src={pictures[0].src}
+              src={data.PHOTOS[0].PHOTO_URL}
               // style={{ backgroundImage: `url("${pictures[0]}")` }}
               className="object-cover w-full h-full object-center"
             />
           </div>
-        ) : pictures.length == 2 ? (
+        ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
               <img
-                src={pictures[0].src}
+                src={data.PHOTOS[0].PHOTO_URL}
                 // style={{ backgroundImage: `url("${pictures[0]}")` }}
                 className="object-cover w-full h-full object-center"
               />
             </div>
             <div className="md:w-1/2 w-full h-full">
               <img
-                src={pictures[1].src}
+                src={data.PHOTOS[1].PHOTO_URL}
                 // style={{ backgroundImage: `url("${pictures[0]}")` }}
                 className="object-cover w-full h-full object-center"
               />
@@ -279,10 +448,10 @@ const index = () => {
           <>
             <SimpleBar className="w-full d-webkit overflow-y-hidden">
               <div className="w-full d-webkit h-full">
-                {pictures.map((picture, index) => (
+                {data.PHOTOS.map((picture, index) => (
                   <div key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
                     <img
-                      src={picture.src}
+                      src={picture.PHOTO_URL}
                       alt={`Image ${index + 1}`}
                       className="object-cover w-full h-full object-center"
                     />
@@ -315,26 +484,31 @@ const index = () => {
           <div className="md:py-5 pt-5">
             <div className="flex md:flex-row flex-col md:items-center items-start">
               <div className="order-2 md:order-1 text-[#111827] font-semibold md:mr-2 text-xl md:text-2xl">
-                {data.essentials_type} {data.main_status} in{' '}
-                {data.main_neighborhood}
+                {data.PROPERTY_TYPE} in {data.ADDRESS}
               </div>
               <div className="order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border border-[#0891B2] bg-[#ECFEFF] rounded-full text-[#155E75] h-fit px-2 py-1 text-xs font-medium">
-                {data.main_status}
+                {data.STATUS}
               </div>
             </div>
             <div className="flex items-center mt-3">
               <Image src={location} alt="" />
               <div className="ml-3 text-[#1F2937] md:text-base text-sm">
-                {data.main_address}
+                {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
               </div>
             </div>
           </div>
           <div>
             <div className="md:flex hidden mt-0 clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
-              $1,250 <span className="font-normal">&nbsp;month</span>
+              {formatPrice(data.PRICE)}
+              {data.STATUS.toLowerCase() == 'for rent' && (
+                <span className="font-normal">&nbsp;month</span>
+              )}
             </div>
             <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
-              $1,250 <span className="font-normal">&nbsp;month</span>
+              {formatPrice(data.PRICE)}
+              {data.STATUS.toLowerCase() == 'for rent' && (
+                <span className="font-normal">&nbsp;month</span>
+              )}
             </div>
           </div>
         </div>
@@ -359,7 +533,7 @@ const index = () => {
                   )
               )}
             </div>
-            <div className="mt-6">{data.description}</div>
+            <div className="mt-6">{data.DESCRIPTION}</div>
           </div>
           <div className="mt-10">
             <div className="text-gray7 text-xl mb-6 font-medium">
@@ -399,7 +573,7 @@ const index = () => {
             <div className="text-gray7 text-xl font-medium">
               Property Location
             </div>
-            <div className="text-gray5 my-2">{data.main_address}</div>
+            <div className="text-gray5 my-2">{data.ADDRESS}</div>
             <div className="">
               {isLoaded && (
                 <GoogleMap
@@ -410,8 +584,8 @@ const index = () => {
                   <MarkerF
                     key="marker_1"
                     position={{
-                      lat: data.extras_latitude,
-                      lng: data.extras_longitude,
+                      lat: data.LATITUDE,
+                      lng: data.LONGITUDE,
                     }}
                   />
                 </GoogleMap>
