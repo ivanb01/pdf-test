@@ -220,7 +220,6 @@ const MainSidebar = ({
           <div className=" w-auto bg-[#EFF6FF] p-3 text-sm m-3">
             <span className="font-bold">Keep in mind:</span> Your contacts need
             to be logged in on "Google Contacts" in order to be imported here.
-            Don't know how?
             <Button
               white
               iconSize="w-5"
