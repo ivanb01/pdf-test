@@ -21,7 +21,7 @@ import propertyLocation from 'public/images/property/location.png';
 import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useRef, useMemo } from 'react';
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
 
@@ -87,6 +87,11 @@ const index = () => {
     agents_agent_image: '',
     description:
       'This is a unique opportunity to own two adjacent buildings in the heart of NYC. 662 9th Avenue is an eight family with a commercial downstairs and two cell towers on top while 373 46th Street is a four floor fully commercial building. There is significant upside for the right developer to build up an additional 5000sqFt over 662 9th Avenue & potentially more when you combine 373 46th street which is next door to 662 9th avenue. Property has new boiler, gas lines, new intercom systems in all units, new roof & electric stoves in all residential units. Both properties can be delivered fully vacant or left as is. A Time Square area expansion is also being considered and this building would fall under the re-zone. Pro Forma / current RR available on request.',
+  });
+
+  const [position, setPosition] = useState({
+    lat: data.extras_latitude,
+    lng: data.extras_longitude,
   });
 
   const [hideLeftArrow, setHideLeftArrow] = useState(false);
@@ -340,9 +345,9 @@ const index = () => {
             </div>
             <div className="flex">
               {propertyDetails.map(
-                (propertyDetail) =>
+                (propertyDetail, index) =>
                   propertyDetail.value != 0 && (
-                    <div className="flex mr-6 items-center">
+                    <div className="flex mr-6 items-center" key={index}>
                       <div className="md:block hidden">
                         <Image src={propertyDetail.icon} />
                       </div>
@@ -362,9 +367,9 @@ const index = () => {
             </div>
             <div className="flex flex-wrap">
               {propertyAmenities.map(
-                (amenity) =>
+                (amenity, index) =>
                   amenity.value && (
-                    <div className="flex w-1/2 md:w-1/3 mb-4 px-2">
+                    <div className="flex w-1/2 md:w-1/3 mb-4 px-2" key={index}>
                       <Image src={amenity.icon} />
                       <span className="ml-2">{amenity.name}</span>
                     </div>
@@ -378,9 +383,9 @@ const index = () => {
             </div>
             <div className="flex flex-wrap">
               {otherDetails.map(
-                (detail) =>
+                (detail, index) =>
                   detail.value && (
-                    <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4">
+                    <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
                       <div className="text-gray4 text-sm">{detail.name}</div>
                       <div className="text-sm text-gray7 mt-1">
                         {detail.value}
@@ -400,8 +405,16 @@ const index = () => {
                 <GoogleMap
                   mapContainerClassName="map-container"
                   center={center}
-                  zoom={10}
-                />
+                  zoom={15}
+                >
+                  <MarkerF
+                    key="marker_1"
+                    position={{
+                      lat: data.extras_latitude,
+                      lng: data.extras_longitude,
+                    }}
+                  />
+                </GoogleMap>
               )}
             </div>
           </div>
