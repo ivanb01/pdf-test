@@ -22,6 +22,8 @@ import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useRef, useMemo } from 'react';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import { useEffect } from 'react';
 
 const index = () => {
   const scrollElement = useRef(null);
@@ -86,6 +88,8 @@ const index = () => {
     description:
       'This is a unique opportunity to own two adjacent buildings in the heart of NYC. 662 9th Avenue is an eight family with a commercial downstairs and two cell towers on top while 373 46th Street is a four floor fully commercial building. There is significant upside for the right developer to build up an additional 5000sqFt over 662 9th Avenue & potentially more when you combine 373 46th street which is next door to 662 9th avenue. Property has new boiler, gas lines, new intercom systems in all units, new roof & electric stoves in all residential units. Both properties can be delivered fully vacant or left as is. A Time Square area expansion is also being considered and this building would fall under the re-zone. Pro Forma / current RR available on request.',
   });
+
+  const [hideLeftArrow, setHideLeftArrow] = useState(false);
 
   const [propertyDetails, setPropertyDetails] = useState([
     {
@@ -205,15 +209,16 @@ const index = () => {
   ]);
 
   const scrollRight = () => {
-    if (window.innerWidth < 767) {
-      document.querySelector('.simplebar-content-wrapper').scrollLeft += 438;
-    } else {
-      document.querySelector('.simplebar-content-wrapper').scrollLeft += 500;
-    }
+    document.querySelector('.simplebar-content-wrapper').scrollLeft +=
+      document.querySelector('.object-cover').width + 12;
+  };
+  const scrollLeft = () => {
+    document.querySelector('.simplebar-content-wrapper').scrollLeft -=
+      document.querySelector('.object-cover').width + 12;
   };
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg',
+    googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
   const center = useMemo(
     () => ({ lat: data.extras_latitude, lng: data.extras_longitude }),
@@ -232,6 +237,14 @@ const index = () => {
         >
           <ArrowForward className="text-white md:text-2xl text-sm" />
         </div>
+        {!hideLeftArrow && (
+          <div
+            onClick={scrollLeft}
+            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
+          >
+            <ArrowBack className="text-white md:text-2xl text-sm" />
+          </div>
+        )}
         {pictures.length == 1 ? (
           <div className="w-full h-full pr-3">
             <img
