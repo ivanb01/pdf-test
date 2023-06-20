@@ -28,6 +28,7 @@ import toast from 'react-hot-toast';
 import AddActivity from 'components/overlays/add-activity';
 import List from '@mui/icons-material/List';
 import DropdownNoInput from 'components/shared/dropdown/dropdownNoInput';
+import Workspaces from '@mui/icons-material/Workspaces';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -264,7 +265,7 @@ export default function ContactCard({
                 handleDropdownClosed={(item) => setDropdownOpened(item)}
                 noOptionChange={contact?.is_in_campaign==="assigned"}
               ></SimpleBarDropdown> */}
-              <Category
+              <Workspaces
                 id={'change-status-icon-' + contact.id}
                 className="text-gray3 w-4 h-4"
               />
