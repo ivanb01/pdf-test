@@ -114,7 +114,10 @@ const GoogleContactsImportSummary = ({ data }) => {
               className="border border-gray2 rounded overflow-hidden"
               style={{ height: 'calc(100vh - 438px)' }}
             >
-              <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+              <SimpleBar
+                autoHide={true}
+                style={{ maxHeight: 'calc(100vh - 438px)' }}
+              >
                 <Table
                   tableFor="import-google-contacts-successful"
                   data={importedContacts}
@@ -179,7 +182,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               >
                 <SimpleBar
                   autoHide={true}
-                  style={{ maxHeight: '100%', height: '100%' }}
+                  style={{ maxHeight: 'calc(100vh - 438px)' }}
                 >
                   <Table
                     tableFor="import-google-contacts-failed"

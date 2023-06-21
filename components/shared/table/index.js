@@ -1654,7 +1654,7 @@ const Table = ({
         <thead className="bg-gray-50 overflow-x-hidden">
           <tr>
             <th
-              scope="col"
+              // scope="col"
               className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
             >
               Contact
@@ -1664,7 +1664,7 @@ const Table = ({
         <tbody className=" bg-white">
           {!data.length ? (
             <tr className="h-[233px] text-center align-middle">
-              <td className="text-center align-middle text-gray-400 italic">
+              <td className="text-center align-middle text-gray-400 text-sm italic">
                 <div className="">No Contacts imported</div>
               </td>
             </tr>
@@ -1672,32 +1672,32 @@ const Table = ({
             data.map((dataItem, i) => (
               <tr key={i} className="border-b border-gray-200">
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                  {dataItem.details ? (
-                    <div className="flex items-center relative">
-                      <div className="font-medium text-gray7">
-                        {dataItem.details}
+                  <div className="flex items-center justify-between">
+                    {dataItem.details ? (
+                      <div className="flex items-center relative">
+                        <div className="font-medium text-gray7">
+                          {dataItem.details}
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <ContactInfo
-                      data={{
-                        name: dataItem.first_name + ' ' + dataItem.last_name,
-                        email: dataItem.email,
-                        image: dataItem.profile_image_path,
-                      }}
-                    />
-                  )}
+                    ) : (
+                      <ContactInfo
+                        data={{
+                          name: dataItem.first_name + ' ' + dataItem.last_name,
+                          email: dataItem.email,
+                          image: dataItem.profile_image_path,
+                        }}
+                      />
+                    )}
+                    {tableFor == 'import-google-contacts-failed' && (
+                      <div className="flex items-center justify-center">
+                        <Error className="h-5 w-5 text-red4 mr-2" />
+                        <div className="text-gray7 font-medium">
+                          {dataItem.reason || 'Contact exists in the system'}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </td>
-                {tableFor == 'import-google-contacts-failed' && (
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 ">
-                    <div className="flex items-center justify-center">
-                      <Error className="h-5 w-5 text-red4 mr-2" />
-                      <div className="text-gray7 font-medium">
-                        {dataItem.reason || 'Contact exists in the system'}
-                      </div>
-                    </div>
-                  </td>
-                )}
               </tr>
             ))
           )}
