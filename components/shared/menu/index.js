@@ -6,11 +6,14 @@ import Router, { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
 import Button from '../button';
 import { useSelector } from 'react-redux';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import ContactSupport from '@mui/icons-material/ContactSupport';
+import { setAllContacts } from 'store/contacts/slice';
+import { useDispatch } from 'react-redux';
+import { getContacts } from 'api/contacts';
 
 const MainMenu = ({
   menuItems = [
@@ -35,6 +38,7 @@ const MainMenu = ({
 }) => {
   const router = useRouter();
   const user = useSelector((state) => state.global.user);
+  const dispatch = useDispatch()
 
   const handleSignOut = async () => {
     localStorage.removeItem('user');
@@ -43,6 +47,17 @@ const MainMenu = ({
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
+
+  useEffect(() => {
+    getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
+      dispatch(setAllContacts(data.data));
+      if (data.data.count === 0 && !skippedEmptyState) {
+        router.push({
+          pathname: '/contacts/no-contact',
+        });
+      }
+    });
+  }, []);
 
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 

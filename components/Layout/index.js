@@ -175,18 +175,6 @@ const Layout = ({ children }) => {
     dispatch(setOpenedSubtab(subtab));
   };
 
-  useEffect(() => {
-    getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
-      dispatch(setAllContacts(data.data));
-      console.log('data lenght', data?.data);
-      if (data.data.count === 0 && !skippedEmptyState) {
-        router.push({
-          pathname: '/contacts/no-contact',
-        });
-      }
-    });
-  }, []);
-
   const getCurrentUser = async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();

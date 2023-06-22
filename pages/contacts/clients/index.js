@@ -46,12 +46,6 @@ const index = () => {
     setLoading(true);
   }, [openedTab]);
 
-  useEffect(() => {
-    getContacts('4,5,6,7').then((data) => {
-      setContactsCopy(data.data);
-    });
-  }, [contacts]);
-
   const fetchClients = () => {
     setLoading(true);
     getContacts('4,5,6,7').then((data) => {
@@ -67,10 +61,12 @@ const index = () => {
     dispatch(setOpenedSubtab(0));
   }, []);
   useEffect(() => {
-    fetchClients();
-    dispatch(setOpenedTab(0));
-    dispatch(setOpenedSubtab(0));
-    dispatch(setRefetchData(false));
+    if(refetchData){
+      fetchClients();
+      dispatch(setOpenedTab(0));
+      dispatch(setOpenedSubtab(0));
+      dispatch(setRefetchData(false));
+    }
   }, [refetchData]);
   return (
     <Layout>
