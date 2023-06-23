@@ -48,21 +48,23 @@ const index = () => {
 
   const fetchClients = () => {
     setLoading(true);
+    console.log('clients fetch started');
+
     getContacts('4,5,6,7').then((data) => {
+      console.log('clients fetched');
       dispatch(setContacts(data.data));
       setContactsCopy(data.data);
       setLoading(false);
     });
   };
   useEffect(() => {
-    console.log('clients initialized')
     bulkUpdateContacts();
     fetchClients();
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
   }, []);
   useEffect(() => {
-    if(refetchData){
+    if (refetchData) {
       fetchClients();
       dispatch(setOpenedTab(0));
       dispatch(setOpenedSubtab(0));
