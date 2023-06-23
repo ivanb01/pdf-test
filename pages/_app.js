@@ -57,6 +57,7 @@ const MyApp = ({ Component, pageProps }) => {
 
     Auth.currentSession()
       .then((item) => {
+        console.log('auth currentsession done');
         setIsUserAuthenticated(true);
         setHelpEffect(true);
       })

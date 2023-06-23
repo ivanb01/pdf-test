@@ -55,6 +55,7 @@ const index = () => {
     });
   };
   useEffect(() => {
+    console.log('clients initialized')
     bulkUpdateContacts();
     fetchClients();
     dispatch(setOpenedTab(0));

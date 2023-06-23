@@ -187,6 +187,7 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log('layout initalized')
     getCurrentUser();
   }, []);
   return (
