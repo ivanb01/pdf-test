@@ -38,11 +38,12 @@ const MainMenu = ({
 }) => {
   const router = useRouter();
   const user = useSelector((state) => state.global.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleSignOut = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
+    localStorage.removeItem('currentSession');
     console.log('sign out');
     await Auth.signOut();
     router.push('/authentication/sign-in');

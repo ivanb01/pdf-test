@@ -6,10 +6,18 @@ const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   async (config) => {
     const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
-    const currentSession = localStorage.getItem('currentSession')
-      ? JSON.parse(localStorage.getItem('currentSession'))
-      : await Auth.currentSession();
-    const token = currentSession.idToken.jwtToken;
+
+    const appClientId = localStorage.getItem('appClientId');
+    const email = localStorage.getItem(
+      'CognitoIdentityServiceProvider.' + appClientId + '.LastAuthUser'
+    );
+    let token = localStorage.getItem(
+      'CognitoIdentityServiceProvider.' + appClientId + '.' + email + '.idToken'
+    );
+    if (!token) {
+      const currentSession = await Auth.currentSession();
+      token = currentSession.idToken.jwtToken;
+    }
 
     config.baseURL = apiGatewayUrl;
     config.headers.common['Accept'] = 'application/json';
