@@ -6,7 +6,9 @@ const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use(
   async (config) => {
     const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
-    const currentSession = await Auth.currentSession();
+    const currentSession = localStorage.getItem('currentSession')
+      ? JSON.parse(localStorage.getItem('currentSession'))
+      : await Auth.currentSession();
     const token = currentSession.idToken.jwtToken;
 
     config.baseURL = apiGatewayUrl;

@@ -58,6 +58,7 @@ const MyApp = ({ Component, pageProps }) => {
     Auth.currentSession()
       .then((item) => {
         console.log('auth currentsession done');
+        localStorage.setItem('currentSession', JSON.stringify(item));
         setIsUserAuthenticated(true);
         setHelpEffect(true);
       })
