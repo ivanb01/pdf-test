@@ -393,6 +393,11 @@ const index = () => {
     []
   );
 
+  const scrollToMap = () => {
+    var element = document.querySelector("#map-section");
+    element.scrollIntoView({ behavior: "smooth"});
+  }
+
   const formatPrice = (price) => {
     return price.toLocaleString('en-US', {
       style: 'currency',
@@ -492,7 +497,7 @@ const index = () => {
             </div>
             <div className="flex items-center mt-3">
               <Image src={location} alt="" />
-              <div className="ml-3 text-[#1F2937] md:text-base text-sm">
+              <div className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer" onClick={() => scrollToMap()}>
                 {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
               </div>
             </div>
@@ -574,7 +579,7 @@ const index = () => {
               Property Location
             </div>
             <div className="text-gray5 my-2">{data.ADDRESS}</div>
-            <div className="">
+            <div className="" id="map-section">
               {isLoaded && (
                 <GoogleMap
                   mapContainerClassName="map-container"
