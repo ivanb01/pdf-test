@@ -14,6 +14,7 @@ axiosInstance.interceptors.request.use(
     let token = localStorage.getItem(
       'CognitoIdentityServiceProvider.' + appClientId + '.' + email + '.idToken'
     );
+    console.log(appClientId, email, token);
     if (!token) {
       const currentSession = await Auth.currentSession();
       token = currentSession.idToken.jwtToken;
