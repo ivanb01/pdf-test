@@ -8,9 +8,12 @@ axiosInstance.interceptors.request.use(
     const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
 
     const appClientId = localStorage.getItem('appClientId');
-    const email = localStorage.getItem(
-      'CognitoIdentityServiceProvider.' + appClientId + '.LastAuthUser'
-    );
+    // const email = localStorage.getItem(
+    //   'CognitoIdentityServiceProvider.' + appClientId + '.LastAuthUser'
+    // );
+    const user = await Auth.currentAuthenticatedUser();
+    const email = user.username;
+    console.log(user);
     let token = localStorage.getItem(
       'CognitoIdentityServiceProvider.' + appClientId + '.' + email + '.idToken'
     );
