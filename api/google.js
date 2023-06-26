@@ -15,7 +15,9 @@ export const getGoogleAuthorize = () => {
   });
 };
 
-
+export const getGmailAILogs = () => {
+  return axiosInstance.get('gmail/ai/logs');
+};
 
 export const postGoogleContacts = () => {
   return axiosInstance.post('google/import/contacts'); 
