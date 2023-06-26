@@ -3,26 +3,35 @@ import { Auth } from 'aws-amplify';
 
 const axiosInstance = axios.create();
 
-const getLocalStorageValue = (string) => {
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.includes('idToken')) {
-      return localStorage.getItem(key);
-    }
-  }
-  return null; // Value not found
+const getLocalStorageValue = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.includes('idToken')) {
+          resolve(localStorage.getItem(key));
+          return;
+        }
+      }
+      resolve(null);
+    }, 1000);
+  });
 };
 
 axiosInstance.interceptors.request.use(
   async (config) => {
     const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
-
-    let token = getLocalStorageValue();
+    let token = null;
+    const localStorageValue = await getLocalStorageValue();
+    if (localStorageValue) {
+      token = localStorageValue;
+      console.log('local');
+    } else {
+      let tokenSession = await Auth.currentSession();
+      token = tokenSession.idToken.jwtToken;
+      console.log('api');
+    }
     console.log('token', token);
-    // let currentSession = localStorage.getItem('currentSession')
-    //   ? JSON.parse(localStorage.getItem('currentSession'))
-    //   : await Auth.currentSession();
-    // let token = currentSession.idToken.jwtToken;
 
     if (token) {
       console.log('done auth currentsession');
