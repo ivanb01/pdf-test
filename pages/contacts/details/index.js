@@ -65,11 +65,11 @@ export default function Details() {
       setContact(data);
       const campaignsData = await getContactCampaign(id);
       dispatch(setCampaignsData(campaignsData.data));
+      setLoading(false);
       const notesData = await getContactNotes(id);
       const activityLogData = await getContactActivities(id);
       dispatch(setNotesData(notesData.data.data));
       dispatch(setActivityLogData(activityLogData.data.data));
-      setLoading(false);
       // setLoading(false);
       console.log('get contact', id, data);
     } catch (error) {
