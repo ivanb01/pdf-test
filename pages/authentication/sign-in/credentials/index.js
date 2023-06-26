@@ -30,9 +30,9 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const signInWithGoogle = async () => {
     try {
-      Auth.federatedSignIn({ provider: 'Google' });
+      await Auth.federatedSignIn({ provider: 'Google' });
       user = await Auth.currentAuthenticatedUser();
-      console.log(user);
+      console.log('the user is here: ', user);
     } catch (error) {
       console.log('fail', error);
     }
@@ -305,7 +305,7 @@ const SignIn = () => {
               className="bg-blue2 w-full justify-center"
             />
             </form>*/}
-            
+
           {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
           {/* <div className="flex items-center justify-between my-6">
             <Link
@@ -336,9 +336,8 @@ const SignIn = () => {
           </div> */}
           <GoogleButton
             onClick={signInWithGoogle}
-            label='Sign in with Google'
+            label="Sign in with Google"
           />
-
         </div>
       )}
     </Authentication>
