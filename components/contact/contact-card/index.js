@@ -104,11 +104,26 @@ export default function ContactCard({
             </span> */}
           </div>
           {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
-          <DateChip
-            lastCommunication={contact.last_communication_date}
-            contactStatus={contact.status_2}
-            contactCategory={categoryType}
-          />
+          
+          <div className="flex w-full items-center justify-between">
+            <DateChip
+              lastCommunication={contact.last_communication_date}
+              contactStatus={contact.status_2}
+              contactCategory={categoryType}
+            />
+
+          { 
+            (contact.import_source === 'GmailAI' || contact.import_source === 'Gmail') &&
+            <div className={`text-white ${contact.import_source === 'Gmail' ? 'bg-gray2' : 'bg-blue2'} inline-block px-2 mt-4 rounded-full text-xs font-medium items-center`}>
+              {contact.import_source === 'GmailAI' ? 'AI' : contact.import_source}
+            </div>
+          }
+
+
+          </div>
+          
+
+
         </div>
         <div
           className={`${
