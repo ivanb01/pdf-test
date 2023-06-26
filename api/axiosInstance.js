@@ -3,38 +3,35 @@ import { Auth } from 'aws-amplify';
 
 const axiosInstance = axios.create();
 
+const getLocalStorageValue = (string) => {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.includes('idToken')) {
+      return localStorage.getItem(key);
+    }
+  }
+  return null; // Value not found
+};
+
 axiosInstance.interceptors.request.use(
   async (config) => {
-    setTimeout(() => {
-      const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
+    const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
 
-      const appClientId = localStorage.getItem('appClientId');
-      const email = localStorage.getItem(
-        'CognitoIdentityServiceProvider.' + appClientId + '.LastAuthUser'
-      );
-      let token = localStorage.getItem(
-        'CognitoIdentityServiceProvider.' +
-          appClientId +
-          '.' +
-          email +
-          '.idToken'
-      );
-      console.log('data:', appClientId, email);
-      console.log('token', token);
-      // let currentSession = localStorage.getItem('currentSession')
-      //   ? JSON.parse(localStorage.getItem('currentSession'))
-      //   : await Auth.currentSession();
-      // let token = currentSession.idToken.jwtToken;
+    let token = getLocalStorageValue();
+    console.log('token', token);
+    // let currentSession = localStorage.getItem('currentSession')
+    //   ? JSON.parse(localStorage.getItem('currentSession'))
+    //   : await Auth.currentSession();
+    // let token = currentSession.idToken.jwtToken;
 
-      if (token) {
-        console.log('done auth currentsession');
-      }
+    if (token) {
+      console.log('done auth currentsession');
+    }
 
-      config.baseURL = apiGatewayUrl;
-      config.headers.common['Accept'] = 'application/json';
-      config.headers.common['Authorization'] = `Bearer ${token}`;
-      return config;
-    }, 500);
+    config.baseURL = apiGatewayUrl;
+    config.headers.common['Accept'] = 'application/json';
+    config.headers.common['Authorization'] = `Bearer ${token}`;
+    return config;
   },
   (error) => {
     return Promise.reject(error);
