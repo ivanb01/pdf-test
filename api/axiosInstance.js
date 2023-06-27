@@ -31,8 +31,6 @@ axiosInstance.interceptors.request.use(
       token = tokenSession.idToken.jwtToken;
       console.log('api');
     }
-    console.log('token', token);
-
     if (token) {
       console.log('done auth currentsession');
     }
