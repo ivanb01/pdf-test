@@ -87,6 +87,7 @@ export default function Details() {
     if (refetchData) {
       fetchContact().then(() => dispatch(setRefetchData(false)));
     }
+    console.log('refetched');
   }, [refetchData]);
 
   useEffect(() => {
