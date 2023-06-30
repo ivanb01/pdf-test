@@ -1848,13 +1848,15 @@ const Table = ({
                 </div>
               </td> */}
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">
-                  {formatDateLL(dataItem.last_interaction)}
-                </div>{' '}
-                <div className="text-gray4">
-                  {formatDateLThour(dataItem.last_interaction)}
-                </div>
-              </td>
+              {dataItem.last_interaction ? (
+                <>
+                  <div className="text-gray7">{formatDateLL(dataItem.last_interaction)}</div>
+                  <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
+                </>
+              ) : (
+                <div className="text-red-500">No communication</div>
+              )}
+            </td>
             </tr>
           ))}
         </tbody>
