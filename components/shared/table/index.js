@@ -65,6 +65,37 @@ const categoryIds = {
   Professional: '8,9,12',
 };
 
+function getEmailParts(email) {
+  const atIndex = email.indexOf('@');
+  const dotIndex = email.indexOf('.');
+  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or other domain extensions
+
+  let firstName = email.slice(0, atIndex);
+  let lastName = email.slice(atIndex + 1, dotIndex);
+
+  // Map specific domains to corresponding names
+  switch (domain) {
+    case 'opgny':
+      lastName = 'Oxford';
+      break;
+    case 'levelgroup':
+      lastName = 'Level';
+      break;
+    case 'spiregroupny':
+      lastName = 'Spire';
+      break;
+    default:
+      // Capitalize the first letter of the last name
+      lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
+      break;
+  }
+
+  // Capitalize the first letter of the first name
+  firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+
+  return { firstName, lastName };
+}
+
 const Table = ({
   undoAllCategorizations,
   undoCategorization,
@@ -1747,12 +1778,12 @@ const Table = ({
             >
               Time spent in the crm
             </th> */}
-            <th
+            {/* <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
             >
               last interaction
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1765,9 +1796,10 @@ const Table = ({
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
                 <ContactInfo
                   data={{
-                    name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                    // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                    name: `${getEmailParts(dataItem.agent_id).firstName} ${getEmailParts(dataItem.agent_id).lastName}`,
                     id: dataItem.id,
-                    email: dataItem.email,
+                    email: dataItem.agent_id,
                     // image: dataItem.profile_image_path,
                   }}
                   // handleSelect={(e, dataItem) =>
@@ -1778,32 +1810,32 @@ const Table = ({
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7 font-medium">
-                  {dataItem.number_of_clients}
+                  {dataItem.total_clients}
                 </div>
                 <div className="text-gray4 italic">
-                  {dataItem.number_of_contacts_in_the_funnel} in the funnel
+                  {dataItem.clients_in_funnel} in the funnel
                 </div>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7 font-medium">
-                  {dataItem.number_of_contacts_in_the_funnel}
+                  {dataItem.clients_in_funnel}
                 </div>
                 <div className="text-gray4 italic">
-                  {dataItem.number_of_new_leads} new leads
+                  {dataItem.clients_in_funnel_new_lead} new leads
                 </div>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <ClientHealth
-                  healthyCount={dataItem.number_of_healthy_clients}
-                  unhealthyCount={dataItem.number_of_unhealthy_clients}
+                  healthyCount={dataItem.healthy_communication}
+                  unhealthyCount={dataItem.unhealthy_communication}
                 />
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7 flex items-center justify-center">
-                  {dataItem.number_of_closed_contacts}{' '}
+                  {dataItem.clients_closed}{' '}
                   <CheckCircleIcon
                     className={`h-4 ml-1 ${
-                      dataItem.number_of_closed_contacts == 0
+                      dataItem.clients_closed == 0
                         ? 'text-gray3'
                         : 'text-green5'
                     }`}
@@ -1815,14 +1847,14 @@ const Table = ({
                   1080 <span className="text-gray4">hrs</span>
                 </div>
               </td> */}
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7">
                   {formatDateLL(dataItem.last_interaction)}
                 </div>{' '}
                 <div className="text-gray4">
                   {formatDateLThour(dataItem.last_interaction)}
                 </div>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
