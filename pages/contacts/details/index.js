@@ -5,7 +5,7 @@ import ClientDetailsSidebar from 'components/client-details-sidebar';
 import Tabs from 'components/shared/tabs';
 import { tabs } from 'components/client-details-sidebar/list';
 import { menuItems } from 'global/variables';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import backArrow from 'public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
@@ -100,7 +100,7 @@ export default function Details() {
         <div className="p-6 inline-block">
           <a
             href="#"
-            onClick={() => Router.push('/contacts/clients')}
+            onClick={() => router.back()}
             className="items-center flex"
           >
             <Image className="cursor-pointer" src={backArrow} />
