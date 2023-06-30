@@ -74,7 +74,7 @@ function getEmailParts(email) {
   let lastName = email.slice(atIndex + 1, dotIndex);
 
   // Map specific domains to corresponding names
-  switch (domain) {
+  switch (lastName) {
     case 'opgny':
       lastName = 'Oxford';
       break;
@@ -1778,12 +1778,12 @@ const Table = ({
             >
               Time spent in the crm
             </th> */}
-            {/* <th
+            <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
             >
               last interaction
-            </th> */}
+            </th>
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1847,14 +1847,14 @@ const Table = ({
                   1080 <span className="text-gray4">hrs</span>
                 </div>
               </td> */}
-              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="text-gray7">
                   {formatDateLL(dataItem.last_interaction)}
                 </div>{' '}
                 <div className="text-gray4">
                   {formatDateLThour(dataItem.last_interaction)}
                 </div>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>
