@@ -39,7 +39,9 @@ const MainMenu = ({
   const router = useRouter();
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
-
+  const skippedEmptyState = useSelector(
+    (state) => state.global.skippedEmptyState
+  );
   const handleSignOut = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
