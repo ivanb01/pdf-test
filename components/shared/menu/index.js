@@ -39,6 +39,7 @@ const MainMenu = ({
   const router = useRouter();
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const handleSignOut = async () => {
     localStorage.removeItem('user');
@@ -50,17 +51,19 @@ const MainMenu = ({
   };
 
   useEffect(() => {
-    getContacts('1,2,3,4,5,6,7,8,9,12,13,14,').then((data) => {
-      dispatch(setAllContacts(data.data));
-      if (data.data.count === 0 && !skippedEmptyState) {
-        router.push({
-          pathname: '/contacts/no-contact',
-        });
-      }
-    });
+    if (!allContacts) {
+      getContacts(
+        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26'
+      ).then((data) => {
+        dispatch(setAllContacts(data.data));
+        if (data.data.count === 0 && !skippedEmptyState) {
+          router.push({
+            pathname: '/contacts/no-contact',
+          });
+        }
+      });
+    }
   }, []);
-
-  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const showUncategorizedButton = () => {
     return (

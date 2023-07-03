@@ -18,6 +18,7 @@ const Tour = dynamic(() => import('components/onboarding/tour'), {
 const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -69,29 +70,37 @@ const index = () => {
   };
 
   const handleFetchUncategorized = () => {
-    setLoading(true);
-    getContacts('1,').then((data) => {
-      setUncategorizedContactsOriginal(data.data);
-      dispatch(setContacts(data.data));
-      setLoading(false);
+    let uncategorized = {
+      ...allContacts,
+      data: allContacts.data.filter((contact) => contact.category_id == 1),
+    };
+    setUncategorizedContactsOriginal(uncategorized);
+    dispatch(setContacts(uncategorized));
+    setLoading(false);
+    // getContacts('1,').then((data) => {
+    //   console.log(data.data, uncategorized);
+    // });
 
-      let contacts = data.data.data.filter(
-        (element) => element.category_id == openedSubtab + 1
-      );
-      setUncategorizedContacts(contacts);
-    });
+    let contacts = uncategorized.data.filter(
+      (element) => element.category_id == openedSubtab + 1
+    );
+    setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));
     dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
-    handleFetchUncategorized();
+    setLoading(true);
+    console.log('ran');
+    if (allContacts.data) {
+      handleFetchUncategorized();
+    }
 
     if (router.query.categorize) {
       handleStartCategorizing(true);
       setCategorizing(true);
     }
-  }, [router.query.categorize]);
+  }, [router.query.categorize, allContacts]);
 
   useEffect(() => {
     setLoading(true);

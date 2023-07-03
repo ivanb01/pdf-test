@@ -57,7 +57,6 @@ const MyApp = ({ Component, pageProps }) => {
 
     Auth.currentSession()
       .then((item) => {
-        console.log('auth currentsession done');
         localStorage.setItem('currentSession', JSON.stringify(item));
         setIsUserAuthenticated(true);
         setHelpEffect(true);
@@ -116,7 +115,6 @@ const MyApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(awsmobile);
-      console.log('true from config AmplifyAuth');
 
       return true;
     } catch (err) {

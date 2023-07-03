@@ -11,7 +11,6 @@ const contactsSlice = createSlice({
   },
   reducers: {
     setContacts(state, action) {
-      console.log(action.payload);
       state.data = action.payload;
     },
     setAllContacts(state, action) {
