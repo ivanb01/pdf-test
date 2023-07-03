@@ -60,41 +60,11 @@ import { Fragment } from 'react';
 import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
+import { getEmailParts } from 'global/functions';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
-
-function getEmailParts(email) {
-  const atIndex = email.indexOf('@');
-  const dotIndex = email.indexOf('.');
-  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or other domain extensions
-
-  let firstName = email.slice(0, atIndex);
-  let lastName = email.slice(atIndex + 1, dotIndex);
-
-  // Map specific domains to corresponding names
-  switch (lastName) {
-    case 'opgny':
-      lastName = 'Oxford';
-      break;
-    case 'levelgroup':
-      lastName = 'Level';
-      break;
-    case 'spiregroupny':
-      lastName = 'Spire';
-      break;
-    default:
-      // Capitalize the first letter of the last name
-      lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
-      break;
-  }
-
-  // Capitalize the first letter of the first name
-  firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-
-  return { firstName, lastName };
-}
 
 const Table = ({
   undoAllCategorizations,
@@ -1803,7 +1773,7 @@ const Table = ({
         <tbody className=" bg-white">
           {data.map((dataItem) => (
             <tr
-              key={dataItem.id}
+              key={dataItem.agent_id}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >

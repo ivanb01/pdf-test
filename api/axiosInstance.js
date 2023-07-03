@@ -25,14 +25,9 @@ axiosInstance.interceptors.request.use(
     const localStorageValue = await getLocalStorageValue();
     if (localStorageValue) {
       token = localStorageValue;
-      console.log('local');
     } else {
       let tokenSession = await Auth.currentSession();
       token = tokenSession.idToken.jwtToken;
-      console.log('api');
-    }
-    if (token) {
-      console.log('done auth currentsession');
     }
 
     config.baseURL = apiGatewayUrl;

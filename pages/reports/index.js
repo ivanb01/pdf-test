@@ -7,6 +7,7 @@ import Table from 'components/shared/table';
 import { getReports } from 'api/team';
 import { useEffect } from 'react';
 import Loader from 'components/shared/loader';
+import { getEmailParts } from 'global/functions';
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -26,35 +27,112 @@ const index = () => {
   const [sortColumns, setSortColumns] = useState([
     {
       id: 1,
+      key: 'full_name',
+      type: 'asc',
       name: 'Name A-Z',
     },
     {
       id: 2,
+      key: 'full_name',
+      type: 'desc',
       name: 'Name Z-A',
     },
     {
       id: 3,
+      key: 'total_clients',
+      type: 'desc',
       name: '# of Clients',
     },
     {
       id: 4,
+      key: 'clients_in_funnel',
+      type: 'desc',
       name: 'Clients in the funnel',
     },
     {
       id: 5,
+      key: 'percentage_healthy_clients',
+      type: 'desc',
       name: 'Highest Client Health',
     },
     {
       id: 6,
+      key: 'percentage_healthy_clients',
+      type: 'asc',
       name: 'Lowest Client Health',
     },
     {
       id: 7,
+      key: 'clients_closed',
+      type: 'desc',
       name: 'Closed Clients',
+    },
+    {
+      id: 8,
+      key: 'percentage_closed_clients',
+      type: 'desc',
+      name: 'Conversion',
     },
   ]);
 
+  const calculateClosedClients = (closedClients, totalClients) => {
+    if (totalClients === 0) {
+      return 0;
+    }
+
+    let percentage = (closedClients / totalClients) * 100;
+    return Math.round(percentage);
+  };
+
+  const calculateHealthyCommunication = (healthyCount, unhealthyCount) => {
+    let totalValue = healthyCount + unhealthyCount;
+    if (!Math.round((100 * healthyCount) / totalValue)) {
+      return 0;
+    }
+    return Math.round((100 * healthyCount) / totalValue);
+  };
+
+  const sortData = () => {
+    let sortedData = [...data.data].sort((a, b) => {
+      if (typeof a[sortColumn.key] === 'number') {
+        return sortColumn.type === 'asc'
+          ? a[sortColumn.key] - b[sortColumn.key]
+          : b[sortColumn.key] - a[sortColumn.key];
+      } else if (typeof a[sortColumn.key] === 'string') {
+        return sortColumn.type === 'asc'
+          ? a[sortColumn.key].localeCompare(b[sortColumn.key])
+          : b[sortColumn.key].localeCompare(a[sortColumn.key]);
+      } else {
+        throw new Error(
+          'Invalid sort key. Key should be a string or a number.'
+        );
+      }
+    });
+    setData((prevState) => {
+      return { ...prevState, data: sortedData };
+    });
+  };
+
+  const initializeData = () => {
+    data.data.map((agent) => {
+      agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${
+        getEmailParts(agent.agent_id).lastName
+      }`;
+      agent.percentage_healthy_clients = calculateHealthyCommunication(
+        agent.healthy_communication,
+        agent.unhealthy_communication
+      );
+      agent.percentage_closed_clients = calculateClosedClients(
+        agent.clients_closed,
+        agent.total_clients
+      );
+      return agent;
+    });
+  };
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [sortColumn, setSortColumn] = useState(0);
+  const [currentButton, setCurrentButton] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -63,9 +141,15 @@ const index = () => {
       setLoading(false);
     });
   }, []);
-  const [loading, setLoading] = useState(false);
-  const [sortColumn, setSortColumn] = useState(0);
-  const [currentButton, setCurrentButton] = useState(0);
+
+  useEffect(() => {
+    data.data && initializeData();
+  }, [data]);
+
+  useEffect(() => {
+    sortColumn && sortData(sortColumn);
+  }, [sortColumn]);
+
   return (
     <>
       <MainMenu />
@@ -79,7 +163,7 @@ const index = () => {
             inputWidth="w-[220px]"
             placeHolder="Choose"
             options={sortColumns}
-            handleSelect={(item) => setSortColumn(item.id)}
+            handleSelect={(item) => setSortColumn(item)}
           />
           <ButtonsSlider
             noCount
