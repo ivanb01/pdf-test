@@ -165,12 +165,12 @@ const index = () => {
             options={sortColumns}
             handleSelect={(item) => setSortColumn(item)}
           />
-          <ButtonsSlider
+          {/* <ButtonsSlider
             noCount
             buttons={tabs}
             currentButton={currentButton}
             onClick={setCurrentButton}
-          />
+          /> */}
         </div>
       </div>
       {loading ? (

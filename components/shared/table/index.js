@@ -1710,11 +1710,11 @@ const Table = ({
   const reportsTable = () => {
     function calculateClosedClients(closedClients, totalClients) {
       if (totalClients === 0) {
-        return 0;
+        return (0).toFixed(2);
       }
 
       let percentage = (closedClients / totalClients) * 100;
-      return Math.round(percentage);
+      return percentage.toFixed(2);
     }
     return (
       <>
