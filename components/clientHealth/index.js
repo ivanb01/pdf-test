@@ -7,6 +7,9 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
 
   const getPercentage = () => {
     let totalValue = healthyCount + unhealthyCount;
+    if (!Math.round((100 * healthyCount) / totalValue)) {
+      return 0;
+    }
     return Math.round((100 * healthyCount) / totalValue);
   };
   // bg-red-100 text-red-800
@@ -40,7 +43,11 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
           {unhealthyCount}
         </div>
       </div>
-      <span className="text-[#059669] italic text-xs">
+      <span
+        className={`italic text-xs ${
+          getPercentage() > 80 ? 'text-[#059669]' : 'text-red-500'
+        }`}
+      >
         {getPercentage()}% healthy
       </span>
     </div>

@@ -1738,6 +1738,14 @@ const Table = ({
   };
 
   const reportsTable = () => {
+    function calculateClosedClients(closedClients, totalClients) {
+      if (totalClients === 0) {
+        return 0;
+      }
+
+      let percentage = (closedClients / totalClients) * 100;
+      return Math.round(percentage);
+    }
     return (
       <>
         <thead className="bg-gray-50">
@@ -1772,6 +1780,12 @@ const Table = ({
             >
               closed clients
             </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              conversion
+            </th>
             {/* <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
@@ -1797,7 +1811,9 @@ const Table = ({
                 <ContactInfo
                   data={{
                     // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
-                    name: `${getEmailParts(dataItem.agent_id).firstName} ${getEmailParts(dataItem.agent_id).lastName}`,
+                    name: `${getEmailParts(dataItem.agent_id).firstName} ${
+                      getEmailParts(dataItem.agent_id).lastName
+                    }`,
                     id: dataItem.id,
                     email: dataItem.agent_id,
                     // image: dataItem.profile_image_path,
@@ -1842,21 +1858,29 @@ const Table = ({
                   />
                 </div>
               </td>
-              {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7 font-medium">
-                  1080 <span className="text-gray4">hrs</span>
-                </div>
-              </td> */}
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-              {dataItem.last_interaction ? (
-                <>
-                  <div className="text-gray7">{formatDateLL(dataItem.last_interaction)}</div>
-                  <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
-                </>
-              ) : (
-                <div className="text-red-500">No communication</div>
-              )}
-            </td>
+                <div className="text-gray7 font-medium">
+                  {calculateClosedClients(
+                    dataItem.clients_closed,
+                    dataItem.total_clients
+                  )}
+                  %
+                </div>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                {dataItem.last_interaction ? (
+                  <>
+                    <div className="text-gray7">
+                      {formatDateLL(dataItem.last_interaction)}
+                    </div>
+                    <div className="text-gray4">
+                      {formatDateLThour(dataItem.last_interaction)}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-red-500">No communication</div>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

@@ -52,10 +52,6 @@ const index = () => {
       id: 7,
       name: 'Closed Clients',
     },
-    {
-      id: 8,
-      name: 'Time Spent in the CRM',
-    },
   ]);
 
   const [data, setData] = useState([]);
@@ -80,7 +76,7 @@ const index = () => {
             horizontal
             label="Sort by"
             className="mr-6"
-            inputWidth="w-[200px]"
+            inputWidth="w-[220px]"
             placeHolder="Choose"
             options={sortColumns}
             handleSelect={(item) => setSortColumn(item.id)}
