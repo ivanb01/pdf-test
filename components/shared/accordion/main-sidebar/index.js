@@ -12,6 +12,9 @@ import Button from 'components/shared/button';
 import GoogleContactsIcon from 'public/images/google-contacts.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
+import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -114,7 +117,7 @@ const MainSidebar = ({
             <div className="accordion w-inherit" key={tab.id}>
               <Link
                 href="#"
-                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md ${
+                className={`flex items-center h-10 justify-between px-2 py-4 mx-3  mr-8 rounded-md ${
                   openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                 }`}
                 onClick={() => {
@@ -209,32 +212,69 @@ const MainSidebar = ({
 
   return (
     <div
-      className={`accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
-        pinned ? 'w-[290px]' : 'w-[62px]'
+      className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
+        pinned ? 'w-[315px]' : 'w-[62px]'
       }`}
     >
       <div>
         {pinned ? expandedMenu() : narrowMenu()}
-
         {pinned && (
-          <div className=" w-auto bg-[#EFF6FF] p-3 text-sm m-3">
-            <span className="font-bold">Keep in mind:</span> Your contacts need
-            to be logged in on "Google Contacts" in order to be imported here.
-            <Button
-              white
-              iconSize="w-5"
-              leftIcon={<AccountCircle />}
-              className="w-full mt-4"
-              color="text-blue2"
-              label="Import Google Contacts"
-              onClick={() =>
-                router.push({
-                  pathname: '/contacts/no-contact/',
-                  query: { start_importing: true },
-                })
-              }
-            />
-          </div>
+          <>
+            <div className=" w-auto bg-[#EFF6FF] p-3 pb-0 text-sm m-3">
+              Import all your contacts from “Google Contacts” in the CRM.
+              <a
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/no-contact/',
+                    query: { start_importing: true },
+                  })
+                }
+                className=" cursor-pointer text-[#2563EB] py-3 pt-6 font-bold flex items-center justify-end"
+              >
+                Import Google Contacts <ArrowForward className="ml-2 h-5" />
+              </a>
+              {/* <Button
+                white
+                iconSize="w-5"
+                leftIcon={<AccountCircle />}
+                className="w-full mt-4"
+                color="text-blue2"
+                label="Import Google Contacts"
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/no-contact/',
+                    query: { start_importing: true },
+                  })
+                }
+              /> */}
+            </div>
+            <div className="w-auto bg-purple1 p-3 pb-0 text-sm m-3">
+              <span className="font-bold">AI algorithms </span>
+              intelligently analyze each contact's information from Gmail,
+              swiftly identifying their type and status.
+              <a
+                href=""
+                className="py-3 pt-6 flex items-center justify-end font-bold text-purple6"
+              >
+                Setup Smart Sync
+                <ArrowForward className="ml-2 h-5" />
+              </a>
+              {/* <Button
+                white
+                iconSize="w-5"
+                leftIcon={<AccountCircle />}
+                className="w-full mt-4"
+                color="text-blue2"
+                label="Import Google Contacts"
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/no-contact/',
+                    query: { start_importing: true },
+                  })
+                }
+              /> */}
+            </div>
+          </>
         )}
       </div>
       {!pinned && (
@@ -252,24 +292,21 @@ const MainSidebar = ({
       )}
 
       {collapsable && (
-        <a
-          href="#"
+        <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
-          className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md text-lightBlue3'`}
+          className="absolute bg-white text-gray-400 cursor-pointer z-20"
+          style={{ right: '-15px', top: '29px' }}
         >
-          <div className={`flex items-center text-gray5 `}>
-            {pinned ? (
-              <MenuOpen className="h-5 w-5 text-gray5 cursor-pointer" />
-            ) : (
-              <Menu className="h-5 w-5 text-gray5 cursor-pointer" />
-            )}
-            {pinned && (
-              <Text h4 className={`ml-3 text-gray5`}>
-                Collapse Menu
-              </Text>
-            )}
-          </div>
-        </a>
+          {pinned ? (
+            <div className="">
+              <ArrowCircleLeftOutlined className=" text-3xl" />
+            </div>
+          ) : (
+            <div className="">
+              <ArrowCircleRightOutlined className=" text-3xl" />
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

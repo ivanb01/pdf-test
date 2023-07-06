@@ -84,6 +84,11 @@ const Table = ({
   campaignId,
   setCampaignId,
   titleLabel,
+  checkbox,
+  checked,
+  toggleAll,
+  selectedPeople,
+  setSelectedPeople,
 }) => {
   const types = [
     {
@@ -1857,6 +1862,119 @@ const Table = ({
       </>
     );
   };
+
+  const aiSummaryTable = () => {
+    return (
+      <>
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center "
+            >
+              <input
+                type="checkbox"
+                className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                ref={checkbox}
+                checked={checked}
+                onChange={toggleAll}
+              />
+              Contact
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Type
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Status
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Source
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+            >
+              Delete/correct
+            </th>
+          </tr>
+        </thead>
+        <tbody className=" bg-white">
+          {data.map((dataItem) => (
+            <tr
+              key={dataItem.agent_id}
+              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+              // onClick={(event) => handleClickRow(contact, event)}
+            >
+              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                  value={dataItem.email}
+                  checked={selectedPeople.includes(dataItem)}
+                  onChange={(e) =>
+                    setSelectedPeople(
+                      e.target.checked
+                        ? [...selectedPeople, dataItem]
+                        : selectedPeople.filter((p) => p !== dataItem)
+                    )
+                  }
+                />
+                <ContactInfo
+                  data={{
+                    // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                    name: `${getEmailParts(dataItem.agent_id).firstName} ${
+                      getEmailParts(dataItem.agent_id).lastName
+                    }`,
+                    id: dataItem.id,
+                    email: dataItem.agent_id,
+                    // image: dataItem.profile_image_path,
+                  }}
+                  // handleSelect={(e, dataItem) =>
+                  //   handleSelectContact(e, dataItem)
+                  // }
+                  // handleAction={(id, action) => handleAction(id, action)}
+                />
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip typeStyle>
+                  {getContactTypeByTypeId(dataItem.category_id)}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <Chip
+                  statusStyle
+                  className={getContactStatusColorByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id
+                  )}
+                >
+                  {getContactStatusByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id
+                  )}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                {dataItem.import_source}
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                actions
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -1880,6 +1998,8 @@ const Table = ({
                   ? categorizedTable()
                   : tableFor == 'other'
                   ? otherTable()
+                  : tableFor == 'ai-summary'
+                  ? aiSummaryTable()
                   : tableFor == 'import-google-contacts-successful' ||
                     tableFor == 'import-google-contacts-failed'
                   ? importGoogleContactsDetails()

@@ -38,7 +38,7 @@ export default function DateChip({
 
   return (
     <div
-      className={`${className} mt-4 inline-block rounded-full px-2 text-xs font-medium items-center ${styling}`}
+      className={`${className} inline-flex rounded-full px-2 text-xs font-medium items-center ${styling}`}
     >
       {/*the icon below depends from lastcommuncation category type */}
       <Mail className="w-4 mr-1" />
