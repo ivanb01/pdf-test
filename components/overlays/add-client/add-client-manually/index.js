@@ -21,6 +21,7 @@ import { vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { types } from 'global/variables';
+import { setRefetchData } from 'store/global/slice';
 
 const categoryIds = {
   'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
@@ -99,6 +100,7 @@ const AddClientManuallyOverlay = ({
           setExistingContactEmailError('This email already exists!');
           setExistingContactEmail(values.email);
         }
+        dispatch(setRefetchData(true));
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
