@@ -104,7 +104,9 @@ export default function Details() {
             className="items-center flex"
           >
             <Image className="cursor-pointer" src={backArrow} />
-            <div className="ml-2 font-medium">Back to Clients</div>
+            <div className="ml-2 font-medium">
+              Back to {contact?.category_1}s
+            </div>
           </a>
         </div>
         {/* <Breadcrumbs className="bg-white pl-6 py-6 border-b border-gray-2" /> */}
