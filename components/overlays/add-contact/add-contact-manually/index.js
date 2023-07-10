@@ -64,7 +64,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
     },
   ]);
 
-  const [existingContactEmailError, setExistingContactEmailError] = useState('');
+  const [existingContactEmailError, setExistingContactEmailError] =
+    useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const [selectedContact, setSelectedContact] = useState(0);
@@ -107,14 +108,14 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const { data } = await findContactByEmail({email: values.email});
-        if(data) {
+        const { data } = await findContactByEmail({ email: values.email });
+        if (data) {
           setExistingContactEmailError('This email already exists!');
           setExistingContactEmail(values.email);
-        }    
+        }
       } catch (error) {
         console.log(error);
-        if(error.response.status === 404) {
+        if (error.response.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
           setCurrentStep(currentStep + 1);
@@ -123,7 +124,12 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       setSubmitting(false);
     },
   });
-  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1, } = formik;
+  const {
+    errors,
+    touched,
+    submitForm: submitForm1,
+    isSubmitting: isSubmitting1,
+  } = formik;
 
   //* FORMIK-STEP-3 *//
   const formik2 = useFormik({
@@ -170,9 +176,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       console.log('contact to add: ', contactToAdd);
 
       const res = await addContact(contactToAdd);
-      const { data } = await getContacts(
-        categoryIds[selectedContact]
-      );
+      const { data } = await getContacts(categoryIds[selectedContact]);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -264,14 +268,23 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     id="email"
                     // onChange={formik.handleChange}
                     onChange={(e) => {
-                      if(existingContactEmail !== e.target.value) {
+                      if (existingContactEmail !== e.target.value) {
                         setExistingContactEmailError('');
                       }
-                      formik.setFieldValue('email', e.target.value);                
+                      formik.setFieldValue('email', e.target.value);
                     }}
                     value={formik.values.email}
-                    error={(errors.email && touched.email) || (existingContactEmailError)}
-                    errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
+                    error={
+                      (errors.email && touched.email) ||
+                      existingContactEmailError
+                    }
+                    errorText={
+                      errors.email
+                        ? errors.email
+                        : existingContactEmailError
+                        ? existingContactEmailError
+                        : null
+                    }
                   />
                   <Input
                     type="phone_number"
@@ -318,8 +331,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                 selectedContact === 0 ? clientOptions : professionalsOptions
               }
               label="What kind of contact is this for you?"
-              selectedContactType={formik2.values.selectedContactType}
-              changeContactType={(e) =>
+              selectedOption={formik2.values.selectedContactType}
+              setSelectedOption={(e) =>
                 setFieldValue2('selectedContactType', e)
               }
               className="mb-6"
