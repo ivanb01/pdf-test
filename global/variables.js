@@ -119,6 +119,11 @@ export const types = [
         hidden: false,
         name: 'agent',
       },
+      {
+        id: 9,
+        hidden: false,
+        name: 'unspecified',
+      },
       { id: 15, hidden: true, name: 'lawyer' },
       { id: 16, hidden: true, name: 'contractor' },
       { id: 17, hidden: true, name: 'mortgage broker' },

@@ -15,7 +15,7 @@ const ContactTypeSelect = ({ type, setSelectedType, selectedType }) => {
           return (
             !contactType.hidden && (
               <Button
-                className={`block min-w-[100px] mb-2 ${
+                className={`block min-w-[115px] mb-2 ${
                   contactType.id == 3 &&
                   'bg-red1 text-red3 hover:bg-red2 hover:text-red3'
                 }`}
