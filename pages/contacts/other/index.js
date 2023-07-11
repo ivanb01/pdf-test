@@ -38,19 +38,22 @@ const index = () => {
     const contactsFamilyFriends = contacts.filter(
       (contact) => contact.category_id === 13 || contact.category_id === 14
     );
+    console.log('family&friends', contactsFamilyFriends);
     const contactsUnknown = contacts.filter(
       (contact) => contact.category_id === 2
     );
-
+    console.log(contactsFamilyFriends);
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
-    setActualContact(contactsFamilyFriends);
+    openedSubtab === 0
+      ? setActualContact(contactsFamilyFriends)
+      : setActualContact(contactsUnknown);
     setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     if (allContacts.data) {
       fetchOther();
     }
@@ -59,13 +62,9 @@ const index = () => {
   }, [allContacts]);
 
   useEffect(() => {
-    setLoading(true);
-  }, [openedTab]);
-
-  useEffect(() => {
-    openedSubtab === 0
-      ? setActualContact(familyAndFriends)
-      : setActualContact(unknown);
+    if (allContacts.data) {
+      fetchOther();
+    }
   }, [openedSubtab]);
 
   const onSearch = (term) => {

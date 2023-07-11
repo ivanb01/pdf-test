@@ -33,10 +33,11 @@ const index = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
   }, [openedTab]);
 
   const fetchProfessionals = () => {
+    console.log('rannnnnn');
     let professionalsTypes = types[1].types.map((type) => type.id);
 
     let professionals = {
@@ -52,15 +53,15 @@ const index = () => {
     dispatch(setContacts(professionals));
     setProfessionalsCopy(professionals);
     setLoading(false);
+    dispatch(setOpenedTab(1));
+    dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     if (allContacts.data) {
       fetchProfessionals();
     }
-    dispatch(setOpenedTab(1));
-    dispatch(setOpenedSubtab(0));
   }, [allContacts]);
 
   useEffect(() => {

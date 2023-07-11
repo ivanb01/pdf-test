@@ -57,6 +57,8 @@ const index = () => {
     dispatch(setContacts(clients));
     setContactsCopy(clients);
     setLoading(false);
+    dispatch(setOpenedTab(0));
+    dispatch(setOpenedSubtab(0));
   };
   useEffect(() => {
     setLoading(true);
@@ -64,8 +66,6 @@ const index = () => {
       fetchClients();
     }
     bulkUpdateContacts();
-    dispatch(setOpenedTab(0));
-    dispatch(setOpenedSubtab(0));
   }, [allContacts]);
   useEffect(() => {
     if (refetchData) {
