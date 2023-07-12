@@ -59,6 +59,11 @@ const MainSidebar = ({
         vendorCount;
       return othersCount;
     }
+    if (subtab == 'Unspecified') {
+      let category = contacts.metadata.category;
+      return category['Unspecified'];
+    }
+
     return openedTab === 2
       ? contacts.metadata.category[subtab] || 0
       : contacts.metadata.status[subtab] || 0;

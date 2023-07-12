@@ -91,6 +91,12 @@ const Layout = ({ children }) => {
           dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
         },
+        {
+          id: 2,
+          name: 'Unspecified',
+          dot: <span className="h-2 w-2 rounded-full bg-gray3" />,
+          count: 0,
+        },
       ],
     },
     {
@@ -187,7 +193,7 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('layout initalized')
+    console.log('layout initalized');
     getCurrentUser();
   }, []);
   return (

@@ -208,11 +208,7 @@ const Professionals = ({
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {
-                professioonalStatusMainTitlesUpdated[
-                  professionalsStatuses[openedSubtab].statusMainTitle
-                ]
-              }
+              {professionalsStatuses[openedSubtab].statusMainTitle}
             </Text>
             <div className="flex items-center justify-self-end">
               <Search

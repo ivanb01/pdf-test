@@ -22,6 +22,7 @@ import {
   professionalsStatuses,
   vendorTypes,
   agentTypes,
+  unspecifiedTypes,
 } from 'global/variables';
 import { useRouter } from 'next/router';
 import {
@@ -1257,6 +1258,10 @@ const Table = ({
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
+      console.log(
+        openedSubtab,
+        contactsOriginal.filter((contact) => contact.category_id === 9)
+      );
       if (openedSubtab === 0) {
         setContacts(
           contactsOriginal.filter((contact) => contact.category_id !== 12)
@@ -1264,6 +1269,10 @@ const Table = ({
       } else if (openedSubtab === 1) {
         setContacts(
           contactsOriginal.filter((contact) => contact.category_id === 12)
+        );
+      } else if (openedSubtab === 2) {
+        setContacts(
+          contactsOriginal.filter((contact) => contact.category_id === 9)
         );
       }
     }, [openedSubtab, contactsOriginal]);
@@ -1280,7 +1289,12 @@ const Table = ({
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
 
-    let professionalTypes = openedSubtab == 0 ? vendorTypes : agentTypes;
+    let professionalTypes =
+      openedSubtab == 0
+        ? vendorTypes
+        : openedSubtab == 1
+        ? agentTypes
+        : unspecifiedTypes;
 
     // const handleChangeStatus = async (status, contact) => {
     //   try {
