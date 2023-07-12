@@ -8,7 +8,7 @@ const index = () => {
       </div>
       <div className="max-w-[800px] mx-auto">
         <div className="mb-[70px]">
-          <div className="font-bold text-3xl text-black mb-3">
+          <div className="font-bold text-3xl text-gray-900 mb-3">
             Privacy Policy
           </div>
           <div className="text-sm text-gray-700">
@@ -29,7 +29,7 @@ const index = () => {
             collection, use and disclosure of Personal Information when you use.
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Our Services</div>
+            <div className=" text-lg font-bold text-gray-900">Our Services</div>
             <div className="mt-2">
               We will not use or share your information with anyone except as
               described in this Privacy Policy.We use your Personal Information
@@ -48,7 +48,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               Information Collection And Use
             </div>
             <div className="mt-2">
@@ -63,7 +63,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Log Data</div>
+            <div className=" text-lg font-bold text-gray-900">Log Data</div>
             <div className="mt-2">
               We may also collect information that your browser sends whenever
               you visit our Service ("Log Data"). This Log Data may include
@@ -79,7 +79,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Cookies</div>
+            <div className=" text-lg font-bold text-gray-900">Cookies</div>
             <div className="mt-2 mb-5">
               Cookies are files with a small amount of data, which may include
               an anonymous unique identifier. Cookies are sent to your browser
@@ -94,7 +94,7 @@ const index = () => {
             </div>
             <div className=" ml-6">
               <div className="mb-5">
-                <div className=" text-lg font-bold text-black">Google</div>
+                <div className="font-bold text-gray-900 text-base">Google</div>
                 <div className="mt-2">
                   Google AdWords remarketing service is provided by Google Inc.
                   You can opt-out of Google Analytics for Display Advertising
@@ -130,7 +130,7 @@ const index = () => {
                 </div>
               </div>
               <div>
-                <div className=" text-lg font-bold text-black">AdRoll</div>
+                <div className="font-bold text-gray-900 text-base">AdRoll</div>
                 <div className="mt-2">
                   AdRoll remarketing service is provided by Semantic Sugar, Inc.
                   You can opt-out of AdRoll remarketing by visiting this{' '}
@@ -160,7 +160,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               Security Providers
             </div>
             <div className="mt-2">
@@ -174,7 +174,9 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Communications</div>
+            <div className=" text-lg font-bold text-gray-900">
+              Communications
+            </div>
             <div className="mt-2">
               We may use your Personal Information to contact you with
               newsletters, marketing or promotional materials and other
@@ -185,7 +187,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               Compliance With Laws
             </div>
             <div className="mt-2">
@@ -197,7 +199,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Security</div>
+            <div className=" text-lg font-bold text-gray-900">Security</div>
             <div className="mt-2">
               The security of your Personal Information is important to us, and
               we strive to implement and maintain reasonable, commercially
@@ -211,7 +213,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               International Transfer
             </div>
             <div className="mt-2">
@@ -228,7 +230,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               Links To Other Sites
             </div>
             <div className="mt-2">
@@ -241,7 +243,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">
+            <div className=" text-lg font-bold text-gray-900">
               Changes To This Privacy Policy
             </div>
             <div className="mt-2">
@@ -260,7 +262,7 @@ const index = () => {
             </div>
           </div>
           <div className="mb-10">
-            <div className=" text-lg font-bold text-black">Contact Us</div>
+            <div className=" text-lg font-bold text-gray-900">Contact Us</div>
             <div className="mt-2">
               If you have any questions about this Privacy Policy, please
               contact us.
