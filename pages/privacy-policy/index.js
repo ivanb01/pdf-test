@@ -16,7 +16,7 @@ const index = () => {
           </div>
         </div>
         <div className="text-gray-900">
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700 text-gray-700">
             <strong>OnelineCRM</strong> operates the website{' '}
             <a
               href="https:www.onelinecrm.com"
@@ -28,7 +28,7 @@ const index = () => {
             website. This page informs you of our policies regarding the
             collection, use and disclosure of Personal Information when you use.
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">Our Services</div>
             <div className="mt-2">
               We will not use or share your information with anyone except as
@@ -47,7 +47,7 @@ const index = () => {
               </a>{' '}
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Information Collection And Use
             </div>
@@ -62,7 +62,7 @@ const index = () => {
               servicing your purchase orders, and improving our services.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">Log Data</div>
             <div className="mt-2">
               We may also collect information that your browser sends whenever
@@ -78,7 +78,7 @@ const index = () => {
               information.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">Cookies</div>
             <div className="mt-2 mb-5">
               Cookies are files with a small amount of data, which may include
@@ -159,7 +159,7 @@ const index = () => {
               </div>
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Security Providers
             </div>
@@ -173,7 +173,7 @@ const index = () => {
               purpose.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Communications
             </div>
@@ -186,7 +186,7 @@ const index = () => {
               email we send.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Compliance With Laws
             </div>
@@ -198,7 +198,7 @@ const index = () => {
               Service.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">Security</div>
             <div className="mt-2">
               The security of your Personal Information is important to us, and
@@ -212,7 +212,7 @@ const index = () => {
               Personal Information we have collected from you.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               International Transfer
             </div>
@@ -229,7 +229,7 @@ const index = () => {
               that transfer.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Links To Other Sites
             </div>
@@ -242,7 +242,7 @@ const index = () => {
               practices of any third party sites or services.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">
               Changes To This Privacy Policy
             </div>
@@ -261,7 +261,7 @@ const index = () => {
               or by placing a prominent notice on our website.
             </div>
           </div>
-          <div className="mb-10">
+          <div className="mb-10 text-gray-700">
             <div className=" text-lg font-bold text-gray-900">Contact Us</div>
             <div className="mt-2">
               If you have any questions about this Privacy Policy, please
