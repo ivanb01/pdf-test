@@ -8,7 +8,12 @@ import { Amplify, Auth } from 'aws-amplify';
 import Dropdown from 'components/shared/dropdown';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { redirectSignIn, redirectSignOut } from 'global/variables';
+import {
+  localRedirectSignIn,
+  productionRedirectSignIn,
+  localRedirectSignOut,
+  productionRedirectSignOut,
+} from 'global/variables';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -70,8 +75,12 @@ const SignIn = () => {
               'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: redirectSignIn,
-            redirectSignOut: redirectSignOut,
+            redirectSignIn: isLocalhost
+              ? localRedirectSignIn
+              : productionRedirectSignIn,
+            redirectSignOut: isLocalhost
+              ? localRedirectSignOut
+              : productionRedirectSignOut,
             responseType: 'code',
           },
         },
