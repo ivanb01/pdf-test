@@ -27,6 +27,11 @@ if (typeof window === 'object') {
   host = window.location.host;
 }
 export const redirectSignIn = `http://${host}/contacts/clients`;
+<<<<<<< HEAD
+=======
+// export const productionRedirectSignIn =
+//   'https://onelinecrm.com/contacts/clients';
+>>>>>>> parent of 1ae975a (Revert "fix redirect issue")
 export const redirectSignOut = `http://${host}/authentication/sign-in`;
 
 export const menuItems = [
