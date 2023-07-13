@@ -22,6 +22,10 @@ import { CheckIcon } from '@heroicons/react/solid';
 //   { id: 7, name: 'Submitting Offer', colorClass: '--success-v6' },
 // ];
 
+if (typeof window === 'object') {
+  //This code is executed in the browser
+  console.log(window.location);
+}
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
 export const productionRedirectSignIn =
   'https://onelinecrm.com/contacts/clients';
