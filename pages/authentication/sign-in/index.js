@@ -9,8 +9,6 @@ import Dropdown from 'components/shared/dropdown';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { redirectSignIn, redirectSignOut } from 'global/variables';
-<<<<<<< HEAD
-=======
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -23,7 +21,6 @@ const isLocalhost =
         /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
       )
   );
->>>>>>> parent of 1ae975a (Revert "fix redirect issue")
 
 const SignIn = () => {
   //* FORMIK *//
