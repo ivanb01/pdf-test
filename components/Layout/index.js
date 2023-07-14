@@ -128,7 +128,7 @@ const Layout = ({ children }) => {
           name: 'Unknown',
           icon: <Help className="h-4 w-4" />,
           count: 0,
-          count_key: 'other_unknown',
+          count_key: 'uncategorized_unknown',
         },
         // {
         //   id: 1,

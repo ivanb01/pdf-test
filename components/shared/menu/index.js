@@ -44,6 +44,7 @@ const MainMenu = ({
     (state) => state.global.skippedEmptyState
   );
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const count = useSelector((state) => state.global.count);
 
   const handleSignOut = async () => {
     localStorage.removeItem('user');
@@ -67,7 +68,7 @@ const MainMenu = ({
         }
       });
     }
-  }, []);
+  }, [count, allContacts]);
 
   const showUncategorizedButton = () => {
     return (
