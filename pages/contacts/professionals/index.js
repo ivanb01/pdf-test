@@ -25,6 +25,7 @@ const index = () => {
   const [contactToEdit, setContactToEdit] = useState(null);
   const openedTab = useSelector((state) => state.global.openedTab);
   const refetchData = useSelector((state) => state.global.refetchData);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
 
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
@@ -32,30 +33,42 @@ const index = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
   }, [openedTab]);
 
   const fetchProfessionals = () => {
-    let professionalsTypes = JSON.stringify(
-      types[1].types.map((type) => type.id)
-    );
-    setLoading(true);
-    getContacts(professionalsTypes).then((data) => {
-      dispatch(setContacts(data.data));
-      setProfessionalsCopy(data.data);
-      setLoading(false);
-    });
+    console.log('rannnnnn');
+    let professionalsTypes = types[1].types.map((type) => type.id);
+
+    let professionals = {
+      ...allContacts,
+      data: allContacts.data.filter((contact) =>
+        professionalsTypes.includes(contact.category_id)
+      ),
+    };
+    // getContacts(professionalsTypes).then((data) => {
+    //   console.log(data.data, professionals);
+    // });
+    // console.log(professionals, professionalsTypes);
+    dispatch(setContacts(professionals));
+    setProfessionalsCopy(professionals);
+    setLoading(false);
+    dispatch(setOpenedTab(1));
+    dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
-    fetchProfessionals();
-    dispatch(setOpenedTab(1));
-    dispatch(setOpenedSubtab(0));
-  }, []);
+    // setLoading(true);
+    if (allContacts.data) {
+      fetchProfessionals();
+    }
+  }, [allContacts]);
 
   useEffect(() => {
-    fetchProfessionals();
-    dispatch(setRefetchData(false));
+    if (refetchData) {
+      fetchProfessionals();
+      dispatch(setRefetchData(false));
+    }
   }, [refetchData]);
 
   return (

@@ -18,6 +18,7 @@ const Tour = dynamic(() => import('components/onboarding/tour'), {
 const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -69,41 +70,46 @@ const index = () => {
   };
 
   const handleFetchUncategorized = () => {
-    setLoading(true);
-    getContacts('1,').then((data) => {
-      setUncategorizedContactsOriginal(data.data);
-      dispatch(setContacts(data.data));
-      setLoading(false);
+    console.log(allContacts);
+    let uncategorized = {
+      ...allContacts,
+      data: allContacts?.data?.filter((contact) => contact.category_id == 1),
+    };
+    setUncategorizedContactsOriginal(uncategorized);
+    dispatch(setContacts(uncategorized));
+    setLoading(false);
+    // getContacts('1,').then((data) => {
+    //   console.log(data.data, uncategorized);
+    // });
 
-      let contacts = data.data.data.filter(
-        (element) => element.category_id == openedSubtab + 1
-      );
-      setUncategorizedContacts(contacts);
-    });
+    let contacts = uncategorized.data.filter(
+      (element) => element.category_id == openedSubtab + 1
+    );
+    setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));
     dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
-    handleFetchUncategorized();
-
+    // setLoading(true);
     if (router.query.categorize) {
       handleStartCategorizing(true);
       setCategorizing(true);
     }
   }, [router.query.categorize]);
-
   useEffect(() => {
-    setLoading(true);
-  }, [openedTab]);
+    if (allContacts.data) {
+      handleFetchUncategorized();
+    }
+  }, [allContacts]);
+  // useEffect(() => {
+  //   let contacts = uncategorizedContactsOriginal.data.filter(
+  //     (element) => element.category_id == openedSubtab + 1
+  //   );
 
-  useEffect(() => {
-    let contacts = uncategorizedContactsOriginal?.data?.filter(
-      (element) => element.category_id == openedSubtab + 1
-    );
-    console.log('uncategorized cont', contacts);
-    setUncategorizedContacts(contacts);
-  }, [openedSubtab]);
+  //   console.log('uncategorized cont', uncategorizedContactsOriginal);
+  //   setUncategorizedContacts(contacts);
+  // }, [openedSubtab]);
   return (
     <Layout>
       {loading ? (
@@ -111,7 +117,6 @@ const index = () => {
       ) : (
         <>
           {/* <Tour for={'uncategorized'} /> */}
-
           <Uncategorized
             handleStartCategorizing={handleStartCategorizing}
             categorizing={categorizing}

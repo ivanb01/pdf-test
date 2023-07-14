@@ -184,7 +184,8 @@ const MainSidebar = ({
                               : 'text-gray4'
                           }`}
                         >
-                          {subtab.name} ({getCount(subtab.name)})
+                          {subtab.name}
+                          {/* ({getCount(subtab.name)}) */}
                         </Text>
                       </a>
                     );

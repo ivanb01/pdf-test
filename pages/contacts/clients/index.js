@@ -30,6 +30,7 @@ const index = () => {
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
   const contacts = useSelector((state) => state.contacts.data);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
 
   const [loading, setLoading] = useState(true);
 
@@ -47,22 +48,25 @@ const index = () => {
   }, [openedTab]);
 
   const fetchClients = () => {
-    setLoading(true);
-    console.log('clients fetch started');
-
-    getContacts('4,5,6,7').then((data) => {
-      console.log('clients fetched');
-      dispatch(setContacts(data.data));
-      setContactsCopy(data.data);
-      setLoading(false);
-    });
-  };
-  useEffect(() => {
-    bulkUpdateContacts();
-    fetchClients();
+    let clients = {
+      ...allContacts,
+      data: allContacts.data.filter((contact) =>
+        [4, 5, 6, 7].includes(contact.category_id)
+      ),
+    };
+    dispatch(setContacts(clients));
+    setContactsCopy(clients);
+    setLoading(false);
     dispatch(setOpenedTab(0));
     dispatch(setOpenedSubtab(0));
-  }, []);
+  };
+  useEffect(() => {
+    setLoading(true);
+    if (allContacts.data) {
+      fetchClients();
+    }
+    bulkUpdateContacts();
+  }, [allContacts]);
   useEffect(() => {
     if (refetchData) {
       fetchClients();

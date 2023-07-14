@@ -22,41 +22,56 @@ const index = () => {
   const [actualContact, setActualContact] = useState(null);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
 
   const fetchOther = () => {
-    setLoading(true);
-    getContacts('2,13,14').then((data) => {
-      const contacts = data?.data?.data;
-      const contactsFamilyFriends = contacts.filter((contact) => contact.category_id === 13 || contact.category_id === 14)
-      const contactsUnknown = contacts.filter((contact) => contact.category_id === 2)
-      
-      dispatch(setContacts(data.data));
-      setFamilyAndFriends(contactsFamilyFriends);
-      setUnknown(contactsUnknown);
-      setActualContact(contactsFamilyFriends);
-      setLoading(false);
-    });
+    let other = {
+      ...allContacts,
+      data: allContacts.data.filter(
+        (contact) =>
+          contact.category_id === 13 ||
+          contact.category_id === 14 ||
+          contact.category_id === 2
+      ),
+    };
+    const contacts = other.data;
+    const contactsFamilyFriends = contacts.filter(
+      (contact) => contact.category_id === 13 || contact.category_id === 14
+    );
+    console.log('family&friends', contactsFamilyFriends);
+    const contactsUnknown = contacts.filter(
+      (contact) => contact.category_id === 2
+    );
+    console.log(contactsFamilyFriends);
+    dispatch(setContacts(other));
+    setFamilyAndFriends(contactsFamilyFriends);
+    setUnknown(contactsUnknown);
+    openedSubtab === 0
+      ? setActualContact(contactsFamilyFriends)
+      : setActualContact(contactsUnknown);
+    setLoading(false);
   };
 
   useEffect(() => {
-    fetchOther();
+    // setLoading(true);
+    if (allContacts.data) {
+      fetchOther();
+    }
     dispatch(setOpenedTab(3));
     dispatch(setOpenedSubtab(0));
-  }, []);
+  }, [allContacts]);
 
   useEffect(() => {
-    setLoading(true);
-  }, [openedTab]);
-
-  useEffect(() => {
-    openedSubtab === 0 ? setActualContact(familyAndFriends) : setActualContact(unknown)
+    if (allContacts.data) {
+      fetchOther();
+    }
   }, [openedSubtab]);
 
   const onSearch = (term) => {
     const contactsCopy = openedSubtab === 0 ? familyAndFriends : unknown;
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
-  }
+  };
 
   return (
     <Layout>
@@ -89,10 +104,7 @@ const index = () => {
                 className={`border border-gray-200 overflow-hidden relative h-full w-full`}
               >
                 <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
-                  <Table
-                    tableFor="other"
-                    data={actualContact}
-                  />
+                  <Table tableFor="other" data={actualContact} />
                 </SimpleBar>
               </div>
             </div>
