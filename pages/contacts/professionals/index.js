@@ -37,7 +37,6 @@ const index = () => {
   }, [openedTab]);
 
   const fetchProfessionals = () => {
-    console.log('rannnnnn');
     let professionalsTypes = types[1].types.map((type) => type.id);
 
     let professionals = {

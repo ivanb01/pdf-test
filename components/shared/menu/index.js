@@ -14,6 +14,7 @@ import ContactSupport from '@mui/icons-material/ContactSupport';
 import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
+import { getCount } from 'api/contacts';
 
 const MainMenu = ({
   menuItems = [

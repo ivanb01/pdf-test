@@ -1258,10 +1258,6 @@ const Table = ({
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
-      console.log(
-        openedSubtab,
-        contactsOriginal.filter((contact) => contact.category_id === 9)
-      );
       if (openedSubtab === 0) {
         setContacts(
           contactsOriginal.filter((contact) => contact.category_id !== 12)

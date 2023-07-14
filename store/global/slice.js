@@ -6,6 +6,7 @@ const global = createSlice({
     openedTab: 0,
     openedSubtab: 0,
     expandedMenu: true,
+    count: null,
     refetchData: false,
     refetchPart: null,
     user:
@@ -18,6 +19,9 @@ const global = createSlice({
         : false,
   },
   reducers: {
+    setCount(state, action) {
+      state.count = action.payload;
+    },
     setRefetchData(state, action) {
       state.refetchData = action.payload;
     },
@@ -43,6 +47,7 @@ const global = createSlice({
 });
 
 export const {
+  setCount,
   setRefetchData,
   setRefetchPart,
   setOpenedTab,

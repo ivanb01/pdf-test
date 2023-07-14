@@ -18,12 +18,15 @@ import Loader from 'components/shared/loader';
 import ContactPage from '@mui/icons-material/ContactPage';
 import Diversity3 from '@mui/icons-material/Diversity3';
 import { Auth } from 'aws-amplify';
-import { setUser } from 'store/global/slice';
+import { getCount } from 'api/contacts';
+import { setCount, setRefetchData } from 'store/global/slice';
 
 const Layout = ({ children }) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
+  const refetchData = useSelector((state) => state.global.refetchData);
+  const count = useSelector((state) => state.global.count);
 
   const tourOptions = {
     defaultStepOptions: {
@@ -51,24 +54,28 @@ const Layout = ({ children }) => {
           name: 'In the Funnel',
           dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
+          count_key: 'clients_in_funnel',
         },
         {
           id: 1,
           name: 'Closed',
           dot: <span className="h-2 w-2 rounded-full bg-green6" />,
           count: 0,
+          count_key: 'clients_closed',
         },
         {
           id: 2,
           name: 'On Hold',
           dot: <span className="h-2 w-2 rounded-full bg-orange1" />,
           count: 0,
+          count_key: 'clients_on_hold',
         },
         {
           id: 3,
           name: 'Dropped',
           dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
+          count_key: 'clients_dropped',
         },
       ],
     },
@@ -84,18 +91,21 @@ const Layout = ({ children }) => {
           name: 'Vendor',
           dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
+          count_key: 'professionals_vendor',
         },
         {
           id: 1,
           name: 'Agent',
           dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
+          count_key: 'professional_agent',
         },
         {
           id: 2,
           name: 'Unspecified',
           dot: <span className="h-2 w-2 rounded-full bg-gray3" />,
           count: 0,
+          count_key: 'professional_unspecified',
         },
       ],
     },
@@ -111,12 +121,14 @@ const Layout = ({ children }) => {
           name: 'Family & Friends',
           icon: <Diversity3 className="h-4 w-4" />,
           count: 0,
+          count_key: 'other_family_friends',
         },
         {
           id: 1,
           name: 'Unknown',
           icon: <Help className="h-4 w-4" />,
           count: 0,
+          count_key: 'other_unknown',
         },
         // {
         //   id: 1,
@@ -144,6 +156,7 @@ const Layout = ({ children }) => {
           name: 'New Records',
           icon: <Group className="h-4 w-4" />,
           count: 0,
+          count_key: 'uncategorized_new_records',
         },
         // {
         //   id: 1,
@@ -173,7 +186,6 @@ const Layout = ({ children }) => {
   const [showImportingOverlay, setShowImportingOverlay] = useState(false);
 
   const handleOpenedTab = (tab) => {
-    console.log('tab', tab);
     dispatch(setOpenedTab(tab));
     dispatch(setOpenedSubtab(0));
   };
@@ -184,7 +196,6 @@ const Layout = ({ children }) => {
   const getCurrentUser = async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
-      console.log(user.username);
       dispatch(setUser(user.username));
       localStorage.setItem('user', JSON.stringify(user.username));
     } catch (error) {
@@ -195,6 +206,13 @@ const Layout = ({ children }) => {
   useEffect(() => {
     getCurrentUser();
   }, []);
+
+  useEffect(() => {
+    getCount().then((data) => {
+      dispatch(setCount(data.data));
+    });
+  }, [count, allContacts]);
+
   return (
     <>
       <MainMenu />

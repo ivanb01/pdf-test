@@ -38,11 +38,9 @@ const index = () => {
     const contactsFamilyFriends = contacts.filter(
       (contact) => contact.category_id === 13 || contact.category_id === 14
     );
-    console.log('family&friends', contactsFamilyFriends);
     const contactsUnknown = contacts.filter(
       (contact) => contact.category_id === 2
     );
-    console.log(contactsFamilyFriends);
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
