@@ -25,7 +25,8 @@ const StatusSelect = ({
           let width = 0;
           if (
             status.statusMainTitle.toLowerCase() == 'in the funnel' ||
-            status.statusMainTitle.toLowerCase() == 'closed' || status.statusMainTitle.toLowerCase() == 'active'
+            status.statusMainTitle.toLowerCase() == 'closed' ||
+            status.statusMainTitle.toLowerCase() == 'active'
           ) {
             width = 40;
           } else {
@@ -44,7 +45,7 @@ const StatusSelect = ({
               <div className="chips mt-4 ">
                 {status.statuses.map((status) => {
                   return (
-                    <div className=" block">
+                    <div className=" block" key={status.id}>
                       <Chip
                         label={status.name}
                         key={status.id}

@@ -11,7 +11,7 @@ const IntroductionOverlay = ({
   children,
 }) => {
   return (
-    <Overlay handleCloseOverlay={}={console.log('test')} open={visible}>
+    <Overlay handleCloseOverlay={() => console.log('test')} open={visible}>
       {visible && (
         <>
           <div>
@@ -21,8 +21,7 @@ const IntroductionOverlay = ({
             <div className="text-center sm:mt-0">
               <Dialog.Title
                 as="h3"
-                className="text-lg leading-6 font-medium text-gray-900"
-              >
+                className="text-lg leading-6 font-medium text-gray-900">
                 {dialogTitle}
               </Dialog.Title>
               <div className="mt-2 px-5">
