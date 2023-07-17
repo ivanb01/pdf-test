@@ -208,9 +208,9 @@ const Layout = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    getCount().then((data) => {
-      dispatch(setCount(data.data));
-    });
+    // getCount().then((data) => {
+    //   dispatch(setCount(data.data));
+    // });
   }, [count, allContacts]);
 
   return (
