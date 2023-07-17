@@ -21,6 +21,7 @@ const index = () => {
             <a
               href="https:www.onelinecrm.com"
               target="_blank"
+              rel="noreferrer"
               className="font-bold underline">
               https:www.onelinecrm.com
             </a>{' '}
@@ -40,6 +41,7 @@ const index = () => {
               <a
                 href="https:www.onelinecrm.com"
                 target="_blank"
+                rel="noreferrer"
                 className="font-bold underline">
                 https:www.onelinecrm.com
               </a>{' '}
@@ -54,8 +56,8 @@ const index = () => {
               personally identifiable information that can be used to contact or
               identify you. Personally identifiable information may include, but
               is not limited to, your email address, name, phone number, postal
-              address ("Personal Information"). We collect this information for
-              the purpose of providing the Service, identifying and
+              address {`("Personal Information")`}. We collect this information
+              for the purpose of providing the Service, identifying and
               communicating with you, responding to your requests/inquiries,
               servicing your purchase orders, and improving our services.
             </div>
@@ -64,15 +66,16 @@ const index = () => {
             <div className=" text-lg font-bold text-gray-900">Log Data</div>
             <div className="mt-2">
               We may also collect information that your browser sends whenever
-              you visit our Service ("Log Data"). This Log Data may include
-              information such as your computer's Internet Protocol ("IP")
+              you visit our Service {`("Log Data")`}. This Log Data may include
+              information such as your {`computer's`} Internet Protocol{' '}
+              {`("IP") `}
               address, browser type, browser version, the pages of our Service
               that you visit, the time and date of your visit, the time spent on
               those pages and other statistics. In addition, we may use third
               party services such as Google Analytics that collect, monitor and
               analyze this type of information in order to increase our
-              Service's functionality. These third party service providers have
-              their own privacy policies addressing how they use such
+              {` Service's`} functionality. These third party service providers
+              have their own privacy policies addressing how they use such
               information.
             </div>
           </div>
@@ -100,6 +103,7 @@ const index = () => {
                   <a
                     href="https://myadcenter.google.com/home?sasb=true&ref=ad-settings"
                     target="_blank"
+                    rel="noreferrer"
                     className="underline">
                     Google Ads Settings
                   </a>{' '}
@@ -107,6 +111,7 @@ const index = () => {
                   <a
                     href="https://tools.google.com/dlpage/gaoptout"
                     target="_blank"
+                    rel="noreferrer"
                     className="underline">
                     Google Analytics Opt-out Browser Add-on
                   </a>{' '}
@@ -118,6 +123,7 @@ const index = () => {
                   <a
                     href="https://policies.google.com/privacy?hl=en"
                     target="_blank"
+                    rel="noreferrer"
                     className="underline">
                     Google Privacy & Terms
                   </a>{' '}
@@ -132,6 +138,7 @@ const index = () => {
                   <a
                     href="https://l3.evidon.com/pub_info/573?v=1&nt=1&nw=false"
                     target="_blank"
+                    rel="noreferrer"
                     className="underline">
                     AdRoll Advertising Preferences
                   </a>{' '}
@@ -140,13 +147,14 @@ const index = () => {
                   <a
                     href="https://www.adroll.com/about"
                     target="_blank"
+                    rel="noreferrer"
                     className="underline">
                     AdRoll Advertising Preferences
                   </a>{' '}
                   web page. Do Not Track Disclosure We do not support Do Not
-                  Track ("DNT").Do Not Track is a preference you can set in your
-                  web browser to inform websites that you do not want to be
-                  tracked. You can enable or disable Do Not Track by visiting
+                  Track {`("DNT") `}. Do Not Track is a preference you can set
+                  in your web browser to inform websites that you do not want to
+                  be tracked. You can enable or disable Do Not Track by visiting
                   the Preferences or Settings page of your web browser
                 </div>
               </div>
@@ -229,10 +237,10 @@ const index = () => {
             <div className="mt-2">
               Our Service may contain links to other sites that are not operated
               by us. If you click on a third party link, you will be directed to
-              that third party's site. We strongly advise you to review the
-              Privacy Policy of every site you visit.We have no control over,
-              and assume no responsibility for the content, privacy policies or
-              practices of any third party sites or services.
+              that third {` party's `} site. We strongly advise you to review
+              the Privacy Policy of every site you visit.We have no control
+              over, and assume no responsibility for the content, privacy
+              policies or practices of any third party sites or services.
             </div>
           </div>
           <div className="mb-10">
