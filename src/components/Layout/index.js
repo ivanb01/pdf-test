@@ -20,6 +20,7 @@ import Diversity3 from '@mui/icons-material/Diversity3';
 import { Auth } from 'aws-amplify';
 import { getCount } from 'api/contacts';
 import { setCount, setRefetchData } from 'store/global/slice';
+import { setUser } from 'store/global/slice';
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -205,13 +206,17 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     getCurrentUser();
+    getCount().then((data) => {
+      dispatch(setCount(data.data));
+    });
   }, []);
 
   useEffect(() => {
+    console.log('test');
     // getCount().then((data) => {
     //   dispatch(setCount(data.data));
     // });
-  }, [count, allContacts]);
+  }, [allContacts]);
 
   return (
     <>
