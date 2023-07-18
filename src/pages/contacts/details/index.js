@@ -6,7 +6,7 @@ import Tabs from 'components/shared/tabs';
 import { tabs } from 'components/client-details-sidebar/list';
 import { menuItems } from 'global/variables';
 import { useRouter } from 'next/router';
-import backArrow from 'public/images/back-arrow.svg';
+import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -102,8 +102,7 @@ export default function Details() {
           <a
             href="#"
             onClick={() => router.back()}
-            className="items-center flex"
-          >
+            className="items-center flex">
             <Image className="cursor-pointer" src={backArrow} />
             <div className="ml-2 font-medium">
               Back to {contact?.category_1}s
