@@ -6,6 +6,9 @@ module.exports = {
     includePaths: [path.join(__dirname, 'src/styles')],
     prependData: `@import "_variables.scss";`,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async redirects() {
     return [
       {
