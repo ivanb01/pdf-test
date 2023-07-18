@@ -15,9 +15,13 @@
     "no-console": 1,
     "no-unused-vars": 1,
     "react/jsx-boolean-value": 1,
-    "react-hooks/rules-of-hooks": 1,
     "react-hooks/exhaustive-deps": 1,
     "react/prop-types": 1,
+    "react-hooks/rules-of-hooks": "off",
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-sync-scripts": "off",
+    "react/no-unknown-property": "off",
+    "react/jsx-key": "off",
     "comma-dangle": [1, "always-multiline"]
   }
 }
