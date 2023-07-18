@@ -1,6 +1,9 @@
 import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
+export const getCount = () => {
+  return axiosInstance.get('contact/count/by_category');
+};
 export const getContacts = (category, searchterm) => {
   return axiosInstance.get('contacts', {
     params: { category_ids: category, search_term: searchterm },
@@ -38,7 +41,6 @@ export const findContactByEmail = (queryParams) => {
     params: queryParams,
   });
 };
-
 
 export const getContactProfiles = (id) => {
   return axiosInstance.get(`contact/${id}/profiles`);

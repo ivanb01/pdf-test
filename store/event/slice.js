@@ -25,9 +25,7 @@ const eventsSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
-    builder.addCase(getEvents.fulfilled, (_, action) => {
-      console.log(action.payload);
-    });
+    builder.addCase(getEvents.fulfilled, (_, action) => {});
     builder.addCase(getClientCampaignsAndEvents.fulfilled, (state, action) => {
       return {
         ...state,

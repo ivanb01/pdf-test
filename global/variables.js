@@ -117,6 +117,11 @@ export const types = [
         hidden: false,
         name: 'agent',
       },
+      {
+        id: 9,
+        hidden: false,
+        name: 'unspecified',
+      },
       { id: 15, hidden: true, name: 'lawyer' },
       { id: 16, hidden: true, name: 'contractor' },
       { id: 17, hidden: true, name: 'mortgage broker' },
@@ -430,6 +435,7 @@ export const vendorTypes = [
 ];
 
 export const agentTypes = [{ id: 12, name: 'Agent' }];
+export const unspecifiedTypes = [{ id: 9, name: 'Unspecified' }];
 
 export const professionalsStatuses = [
   {
@@ -523,6 +529,18 @@ export const professionalsStatuses = [
     id: 1,
     statusMainTitle: 'Agent',
     color: 'border-red4',
+    statuses: [
+      {
+        id: 11,
+        name: 'Dropped',
+        color: 'bg-red2',
+      },
+    ],
+  },
+  {
+    id: 2,
+    statusMainTitle: 'Unspecified',
+    color: 'border-gray4',
     statuses: [
       {
         id: 11,

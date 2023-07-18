@@ -89,7 +89,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
   };
 
   useEffect(() => {
-    if ([2, 3, 12, 13, 14].includes(selectedType)) {
+    if ([2, 3, 9, 12, 13, 14].includes(selectedType)) {
       setSteps([{ id: 1, name: 'Select Category', href: '#' }]);
     } else {
       setSteps([

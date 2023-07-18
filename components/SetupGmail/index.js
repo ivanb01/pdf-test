@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setSkippedEmptyState } from 'store/global/slice';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-const SetupGmail = ({ 
+const SetupGmail = ({
   error,
   setshowAddContactManuallyOverlay,
   setShowImportGoogleContactsModal,
@@ -21,23 +21,30 @@ const SetupGmail = ({
   return (
     <>
       <div className="max-w-[420px] text-center m-auto pt-14">
-        {error && 
-          <NotificationAlert className="mb-8 p-4" type='error'>{error}</NotificationAlert>
-        }
+        {error && (
+          <NotificationAlert className="mb-8 p-4" type="error">
+            {error}
+          </NotificationAlert>
+        )}
         <Image src={gmailToOneline} />
         <Text h2 className="text-gray7 mt-9 mb-4 justify-center">
           Setup Gmail Account to Import Contacts
         </Text>
         <Text paragraph className="text-gray4 mb-6">
-          Automatically sync your google contacts.
-          Run this process once you have new contacts added to your google contacts.
-          We will automatically add them to your uncategorized contacts in the CRM.
+          Automatically sync your google contacts. Run this process once you
+          have new contacts added to your google contacts. We will automatically
+          add them to your uncategorized contacts in the CRM.
         </Text>
         <Button
           className="mb-4"
           leftIcon={<MailIcon />}
           label="Import Google Contacts"
-          onClick={()=>setShowImportGoogleContactsModal()}
+          onClick={() =>
+            router.push({
+              pathname: '/contacts/no-contact/',
+              query: { start_importing: true },
+            })
+          }
         ></Button>
         <Text paragraph className="text-gray8 mb-4 justify-center">
           or
