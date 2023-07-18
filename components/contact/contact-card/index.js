@@ -112,7 +112,9 @@ export default function ContactCard({
               contactStatus={contact.status_2}
               contactCategory={categoryType}
             />
-            {contact.import_source === 'GmailAI' && <AIChip reviewed={true} />}
+            {contact.import_source === 'GmailAI' && (
+              <AIChip reviewed={contact.approved_ai} />
+            )}
           </div>
         </div>
         <div
