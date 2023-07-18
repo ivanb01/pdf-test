@@ -1,7 +1,13 @@
 {
-    "compilerOptions": {
-      "baseUrl": "."
-     },
-  
-     "include":["."]
- }
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@components/*": ["components/*"],
+      "@global/*": ["global/*"],
+      "@styles/*": ["styles/*"],
+      "@store/*": ["store/*"],
+      "@helpers/*": ["helpers/*"]
+    }
+  }
+}
