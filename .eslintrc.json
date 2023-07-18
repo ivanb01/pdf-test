@@ -10,19 +10,14 @@
     }
   },
 
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:react/jsx-runtime",
-    "next/core-web-vitals"
-  ],
+  "extends": ["next/core-web-vitals"],
   "rules": {
-    // "no-console": 1,
-    // "no-unused-vars": 1,
-    // "react/jsx-boolean-value": 1,
-    // "react-hooks/rules-of-hooks": 1,
-    // "react-hooks/exhaustive-deps": 1,
-    // "react/prop-types": 1,
-    // "comma-dangle": [1, "always-multiline"]
+    "no-console": 1,
+    "no-unused-vars": 1,
+    "react/jsx-boolean-value": 1,
+    "react-hooks/rules-of-hooks": 1,
+    "react-hooks/exhaustive-deps": 1,
+    "react/prop-types": 1,
+    "comma-dangle": [1, "always-multiline"]
   }
 }
