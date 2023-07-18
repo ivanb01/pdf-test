@@ -86,7 +86,7 @@ export default function ContactCard({
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-400">
                 <span className="text-sm font-medium leading-none text-white">
                   {getInitials(
-                    contact.first_name + ' ' + contact.last_name
+                    contact.first_name + ' ' + contact.last_name,
                   ).toUpperCase()}
                 </span>
               </span>

@@ -42,7 +42,7 @@ const index = () => {
     let professionals = {
       ...allContacts,
       data: allContacts.data.filter((contact) =>
-        professionalsTypes.includes(contact.category_id)
+        professionalsTypes.includes(contact.category_id),
       ),
     };
     // getContacts(professionalsTypes).then((data) => {

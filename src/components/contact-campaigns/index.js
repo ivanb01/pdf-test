@@ -250,7 +250,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               <div className={`w-auto h-auto`}>
                 <div
                   className={`border border-gray-200 overflow-hidden relative h-full border-l-0 border-b-0`}>
-                  <SimpleBar autoHide={true} style={{ maxHeight: '520px' }}>
+                  <SimpleBar autoHide style={{ maxHeight: '520px' }}>
                     <Table
                       campaignId={currentCampaign.campaign_id}
                       tableFor="contact-campaigns"

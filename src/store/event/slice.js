@@ -17,9 +17,9 @@ const eventsSlice = createSlice({
     removeCampaignFromClient(state, action) {
       state.client?.campaigns.splice(
         state.client?.campaigns?.findIndex(
-          (campaign) => campaign.id === action.payload
+          (campaign) => campaign.id === action.payload,
         ),
-        1
+        1,
       );
     },
   },

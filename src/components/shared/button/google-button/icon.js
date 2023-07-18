@@ -9,13 +9,13 @@ const iconStyle = {
   float: 'left',
   backgroundColor: '#fff',
   borderRadius: '1px',
-  whiteSpace: 'nowrap'
+  whiteSpace: 'nowrap',
 }
 
 const svgStyle = {
   width: '48px',
   height: '48px',
-  display: 'block'
+  display: 'block',
 }
 
 const googleIconSvg = (

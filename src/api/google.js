@@ -11,7 +11,7 @@ export const getGoogleAuthCallback = (queryParams) => {
 
 export const getGoogleAuthorize = () => {
   return axiosInstance.get('google/authorize', {
-    params: {test_callback: '/contacts/no-contact', scope:'contacts,gmail'}
+    params: {test_callback: '/contacts/no-contact', scope:'contacts,gmail'},
   });
 };
 
@@ -26,13 +26,13 @@ export const postGoogleContacts = () => {
 
 export const getGoogleAuthorizeEmail = () => {
   return axiosInstance.get('google/authorize', {
-    params: { scope: 'email'}
+    params: { scope: 'email'},
   });
 };
 
 export const getGmailLeadsAI = (gmail_labels="INBOX,UNREAD", gmail_limit=3, temperature=0, ai_enabled=true) => {
   return axiosInstance.get('gmail/ai/leads', {
-    params: {gmail_labels: gmail_labels, gmail_limit:gmail_limit,temperature:temperature, ai_mode:ai_enabled}
+    params: {gmail_labels: gmail_labels, gmail_limit:gmail_limit,temperature:temperature, ai_mode:ai_enabled},
   });
 };
 
@@ -44,18 +44,18 @@ export const getGmailLeadsAIDefault = () => {
 // TODO: testing purposes remove
 export const getUserConsentForGoogleContacts = () => {
   return axiosInstance.get('google/authorize', {
-    params: {test_callback: '/contacts/no-contact', scope: 'contacts'}
+    params: {test_callback: '/contacts/no-contact', scope: 'contacts'},
   });
 };
 
 export const getUserConsentForGoogleEmail = () => {
   return axiosInstance.get('google/authorize', {
-    params: {test_callback: '/contacts/no-contact', scope:'gmail'}
+    params: {test_callback: '/contacts/no-contact', scope:'gmail'},
   });
 };
 
 export const getUserConsentForGoogleContactsAndEmail = () => {
   return axiosInstance.get('google/authorize', {
-    params: {test_callback: '/contacts/no-contact', scope:'contacts,gmail'}
+    params: {test_callback: '/contacts/no-contact', scope:'contacts,gmail'},
   });
 };

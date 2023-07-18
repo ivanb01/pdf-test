@@ -45,7 +45,7 @@ const index = () => {
     } else {
       row.classList.remove('bg-lightBlue1');
       let newUncategorized = selectedUncategorized.filter(
-        (element) => element.id !== contact.id
+        (element) => element.id !== contact.id,
       );
       setSelectedUncategorized(newUncategorized);
     }
@@ -64,7 +64,7 @@ const index = () => {
   const searchUncategorized = (term) => {
     let filteredArray = searchContacts(
       uncategorizedContactsOriginal.data,
-      term
+      term,
     );
     setUncategorizedContacts(filteredArray.data);
   };
@@ -83,7 +83,7 @@ const index = () => {
     // });
 
     let contacts = uncategorized.data.filter(
-      (element) => element.category_id == openedSubtab + 1
+      (element) => element.category_id == openedSubtab + 1,
     );
     setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));

@@ -19,7 +19,7 @@ export default function ClientDetailsSidebar({
         client={client}
         handleFetchContactRequired={handleFetchContactRequired}
       />
-      <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 340px)' }}>
+      <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 340px)' }}>
         <Info
           client={client}
           className="w-[635px]"

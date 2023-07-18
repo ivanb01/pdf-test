@@ -123,7 +123,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       setSubmitting(false);
     },
   });
-  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1, } = formik;
+  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1 } = formik;
 
   //* FORMIK-STEP-3 *//
   const formik2 = useFormik({
@@ -171,7 +171,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
 
       const res = await addContact(contactToAdd);
       const { data } = await getContacts(
-        categoryIds[selectedContact]
+        categoryIds[selectedContact],
       );
 
       let subtabValue = 0;
@@ -303,7 +303,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     onChange={(choice) => {
                       formik.setFieldValue(
                         'tags',
-                        choice.map((el) => el.label)
+                        choice.map((el) => el.label),
                       );
                     }}
                   />

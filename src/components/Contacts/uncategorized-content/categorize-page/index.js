@@ -162,7 +162,7 @@ const CategorizePage = ({
       {uncategorizedContacts.length > 0 && (
         <div
           className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}>
-          <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
             <Table
               tableFor="in-categorization"
               data={uncategorizedContacts.filter(
@@ -180,7 +180,7 @@ const CategorizePage = ({
         } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
-            autoHide={true}
+            autoHide
             className="overflow-x-hidden"
             style={{
               position: 'absolute',
@@ -290,7 +290,7 @@ const CategorizePage = ({
         <div
           className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}>
           {categorizedInThisSession?.length > 0 ? (
-            <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+            <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               <Table
                 tableFor="categorized"
                 data={categorizedInThisSession}

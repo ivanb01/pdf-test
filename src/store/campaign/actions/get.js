@@ -6,7 +6,7 @@ export const getCampaigns = createAsyncThunk(
   async (thunkAPI) => {
     const { data = {} } = await campaignServices.getCampaigns();
     return data;
-  }
+  },
 );
 
 export const getCampaign = createAsyncThunk(
@@ -14,5 +14,5 @@ export const getCampaign = createAsyncThunk(
   async (id, thunkAPI) => {
     const { data = {} } = await campaignServices.getCampaign(id);
     return data;
-  }
+  },
 );

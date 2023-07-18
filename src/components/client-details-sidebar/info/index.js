@@ -153,7 +153,7 @@ export default function Info({ client }) {
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
             value={findTagsOption(
               tags,
-              client?.category_1 === 'Client' ? 0 : 1
+              client?.category_1 === 'Client' ? 0 : 1,
             )}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));

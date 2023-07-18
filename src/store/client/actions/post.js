@@ -7,7 +7,7 @@ export const addClient = createAsyncThunk(
   async (client, thunkAPI) => {
     const { data = {} } = await clientServices.addClient(client);
     return data;
-  }
+  },
 );
 
 export const bulkAddClients = createAsyncThunk(
@@ -18,5 +18,5 @@ export const bulkAddClients = createAsyncThunk(
     if (response) {
       setTimeout(() => dispatch(getClients({ active: 'active' })), 500);
     }
-  }
+  },
 );

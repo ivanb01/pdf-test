@@ -33,7 +33,7 @@ export default function Events({
               key={event.name}
               className={classNames(
                 eventIdx !== events.length - 1 ? 'pb-10' : '',
-                'relative'
+                'relative',
               )}
             >
               <>
@@ -100,7 +100,7 @@ export default function Events({
                             ? formatDateLT(event.execute_on)
                             : event.execute_on?.includes('After')
                             ? `${parseInt(
-                                event.execute_on.replace(/[^0-9\.]/g, '')
+                                event.execute_on.replace(/[^0-9\.]/g, ''),
                               )} days after added in Campaign`
                             : event.execute_on}
                         </div>

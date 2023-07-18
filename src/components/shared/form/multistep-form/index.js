@@ -76,7 +76,7 @@ const MultiStepOverlay = ({
                             </a>
                           )}
                         </li>
-                      )
+                      ),
                   )}
                 </ol>
               </nav>

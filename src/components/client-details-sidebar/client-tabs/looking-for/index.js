@@ -249,7 +249,7 @@ export default function LookingFor({ contactId }) {
     },
   ];
   return (
-    <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
+    <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
       <div className="flex bg-gray10 flex-row">
         <div className="w-[65%] bg-gray10">
           <div className="bg-white p-6 m-[24px]">
@@ -283,7 +283,7 @@ export default function LookingFor({ contactId }) {
               <Accordion
                 tabs={tabs}
                 activeSelections={selections}
-                defaultOpen={true}
+                defaultOpen
               />
               <Button
                 type="submit"

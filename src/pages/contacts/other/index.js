@@ -31,15 +31,15 @@ const index = () => {
         (contact) =>
           contact.category_id === 13 ||
           contact.category_id === 14 ||
-          contact.category_id === 2
+          contact.category_id === 2,
       ),
     };
     const contacts = other.data;
     const contactsFamilyFriends = contacts.filter(
-      (contact) => contact.category_id === 13 || contact.category_id === 14
+      (contact) => contact.category_id === 13 || contact.category_id === 14,
     );
     const contactsUnknown = contacts.filter(
-      (contact) => contact.category_id === 2
+      (contact) => contact.category_id === 2,
     );
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
@@ -101,7 +101,7 @@ const index = () => {
               <div
                 className={`border border-gray-200 overflow-hidden relative h-full w-full`}
               >
-                <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+                <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                   <Table tableFor="other" data={actualContact} />
                 </SimpleBar>
               </div>

@@ -64,7 +64,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
       await contactServices.updateContactActivity(
         contactId,
         activityId,
-        values
+        values,
       );
       dispatch(setRefetchData(true));
       setLoadingButton(false);
@@ -93,7 +93,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
     setActivityId(activity.id);
     setActivityModal(true);
     const found = activityTypes.find(
-      (element) => element.id == activity.type_of_activity_id
+      (element) => element.id == activity.type_of_activity_id,
     );
     setActivityTypeToEdit(found.name);
   };
@@ -180,7 +180,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                           {formatDateAgo(
                             activityItem.updated_at
                               ? activityItem.updated_at
-                              : activityItem.created_at
+                              : activityItem.created_at,
                           )}
                         </p>
 
@@ -189,7 +189,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                             {activityItem.description
                               ? activityItem.description
                               : placeholderDescription(
-                                  activityItem.type_of_activity_id
+                                  activityItem.type_of_activity_id,
                                 )}
                           </p>
                         </div>

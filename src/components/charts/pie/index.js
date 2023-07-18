@@ -10,7 +10,7 @@ const PieChart = ({ pieData, type }) => {
   };
   let pieDataNumber = pieData.map((data) => data.value);
   let pieDataPercentage = pieData.map((data) =>
-    getPercentage(data.value, totalSum)
+    getPercentage(data.value, totalSum),
   );
 
   const chart = {

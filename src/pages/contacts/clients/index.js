@@ -51,7 +51,7 @@ const index = () => {
     let clients = {
       ...allContacts,
       data: allContacts.data.filter((contact) =>
-        [4, 5, 6, 7].includes(contact.category_id)
+        [4, 5, 6, 7].includes(contact.category_id),
       ),
     };
     dispatch(setContacts(clients));

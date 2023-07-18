@@ -178,7 +178,7 @@ const Layout = ({ children }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const skippedEmptyState = useSelector(
-    (state) => state.global.skippedEmptyState
+    (state) => state.global.skippedEmptyState,
   );
 
   const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =

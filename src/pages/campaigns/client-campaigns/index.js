@@ -29,7 +29,7 @@ const ClientCampaigns = () => {
     },
   ]);
 
-  return <ContactCampaigns isClient={true} campaigns={campaigns} />;
+  return <ContactCampaigns isClient campaigns={campaigns} />;
 };
 
 export default ClientCampaigns;

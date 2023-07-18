@@ -90,7 +90,7 @@ const Uncategorized = ({
           <>
             <div
               className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
-              <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+              <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                 <Table
                   tableFor="uncategorized"
                   data={uncategorizedContacts}

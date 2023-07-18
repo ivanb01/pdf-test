@@ -49,7 +49,7 @@ export default function Relationships({ contactId }) {
   const handleDeleteRelationship = async (id) => {
     try {
       setRelationships((prev) =>
-        prev.filter((relationship) => relationship?.relationship_id !== id)
+        prev.filter((relationship) => relationship?.relationship_id !== id),
       );
       toast.success('Relationship was deleted successfully');
       await deleteContactRelationship(contactId, id);
@@ -102,14 +102,14 @@ export default function Relationships({ contactId }) {
                       onMouseEnter={() =>
                         document
                           .querySelector(
-                            `#tooltip-delete-relationship-${relationship?.relationship_id}`
+                            `#tooltip-delete-relationship-${relationship?.relationship_id}`,
                           )
                           .classList.remove('invisible', 'opacity-0')
                       }
                       onMouseLeave={() =>
                         document
                           .querySelector(
-                            `#tooltip-delete-relationship-${relationship?.relationship_id}`
+                            `#tooltip-delete-relationship-${relationship?.relationship_id}`,
                           )
                           .classList.add('invisible', 'opacity-0')
                       }
@@ -134,14 +134,14 @@ export default function Relationships({ contactId }) {
                       onMouseEnter={() =>
                         document
                           .querySelector(
-                            `#tooltip-edit-relationship-${relationship?.relationship_id}`
+                            `#tooltip-edit-relationship-${relationship?.relationship_id}`,
                           )
                           .classList.remove('invisible', 'opacity-0')
                       }
                       onMouseLeave={() =>
                         document
                           .querySelector(
-                            `#tooltip-edit-relationship-${relationship?.relationship_id}`
+                            `#tooltip-edit-relationship-${relationship?.relationship_id}`,
                           )
                           .classList.add('invisible', 'opacity-0')
                       }

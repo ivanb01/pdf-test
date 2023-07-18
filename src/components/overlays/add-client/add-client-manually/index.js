@@ -304,7 +304,7 @@ const AddClientManuallyOverlay = ({
                     onChange={(choice) => {
                       formik.setFieldValue(
                         'tags',
-                        choice.map((el) => el.label)
+                        choice.map((el) => el.label),
                       );
                     }}
                   />

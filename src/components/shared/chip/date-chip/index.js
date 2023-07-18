@@ -23,7 +23,7 @@ export default function DateChip({
     : null;
   let isHealthyCommunication = isHealthyCommuncationDate(
     lastCommunication,
-    healthyCommunicationDays
+    healthyCommunicationDays,
   );
 
   styling = isHealthyCommunication

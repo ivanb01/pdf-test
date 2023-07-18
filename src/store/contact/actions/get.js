@@ -10,5 +10,5 @@ export const getContacts = createAsyncThunk(
       type,
     });
     return data;
-  }
+  },
 );

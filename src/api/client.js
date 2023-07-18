@@ -6,7 +6,7 @@ export const getClients = () =>
 export const addClient = (client) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client`,
-    client
+    client,
   );
 
 export const updateClient = (client) =>
@@ -14,7 +14,7 @@ export const updateClient = (client) =>
 
 export const deleteClient = ({ tenant, email }) =>
   axios.delete(
-    `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client/${tenant}/${email}`
+    `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client/${tenant}/${email}`,
   );
 
 export const bulkAddClients = (clients) =>
@@ -25,17 +25,17 @@ export const bulkAddClients = (clients) =>
 export const bulkUpdateClientStatus = (client) =>
   axios.put(
     `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client/bulk`,
-    client
+    client,
   );
 
 export const bulkUpdateClientType = (client) =>
   axios.put(
     `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client/bulk`,
-    client
+    client,
   );
 
 export const bulkUpdateClientActive = (client) =>
   axios.put(
     `${process.env.NEXT_PUBLIC_CLIENT_API_BASE_URL}/v1/client/bulk`,
-    client
+    client,
   );

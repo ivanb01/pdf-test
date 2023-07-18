@@ -6,7 +6,7 @@ export const updateClient = createAsyncThunk(
   async (client, thunkAPI) => {
     const { data = {} } = await clientServices.updateClient(client);
     return data;
-  }
+  },
 );
 
 export const bulkUpdateClientStatus = createAsyncThunk(
@@ -14,7 +14,7 @@ export const bulkUpdateClientStatus = createAsyncThunk(
   async (clients, thunkAPI) => {
     const { data = {} } = await clientServices.bulkUpdateClientStatus(clients);
     return data;
-  }
+  },
 );
 
 export const bulkUpdateClientType = createAsyncThunk(
@@ -22,7 +22,7 @@ export const bulkUpdateClientType = createAsyncThunk(
   async (clients, thunkAPI) => {
     const { data = {} } = await clientServices.bulkUpdateClientType(clients);
     return data;
-  }
+  },
 );
 
 export const bulkUpdateClientActive = createAsyncThunk(
@@ -30,5 +30,5 @@ export const bulkUpdateClientActive = createAsyncThunk(
   async (clients, thunkAPI) => {
     const { data = {} } = await clientServices.bulkUpdateClientActive(clients);
     return data;
-  }
+  },
 );

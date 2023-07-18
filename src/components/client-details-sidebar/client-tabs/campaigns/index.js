@@ -230,7 +230,7 @@ export default function Campaigns({ contactId, contact }) {
             <div className="flex flex-row">
               <div className="w-[42%]">
                 <SimpleBar
-                  autoHide={true}
+                  autoHide
                   style={{ maxHeight: 'calc(100vh - 295px)' }}>
                   <Events
                     events={campaignEvents}
@@ -243,7 +243,7 @@ export default function Campaigns({ contactId, contact }) {
               </div>
               <div className="w-[58%]">
                 <SimpleBar
-                  autoHide={true}
+                  autoHide
                   style={{ maxHeight: 'calc(100vh - 295px)' }}>
                   <div className="flex flex-row border-b border-gray2 p-6">
                     {isValidDate(previewEventDate) ? (

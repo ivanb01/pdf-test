@@ -29,14 +29,14 @@ const contactsSlice = createSlice({
     });
     builder.addCase(updateCampaign.fulfilled, (state, action) => {
       const campaignIndex = state?._data.findIndex(
-        (campaign) => campaign.id === action?.payload?.id
+        (campaign) => campaign.id === action?.payload?.id,
       );
       state._data[campaignIndex] = action.payload;
     });
     builder.addCase(deleteCampaign.fulfilled, (state, action) => {
       state._data.splice(
         state._data.findIndex((campaign) => campaign.id === action.payload),
-        1
+        1,
       );
     });
     builder.addCase(addContactToCampaign.fulfilled, (state, action) => {
@@ -47,7 +47,7 @@ const contactsSlice = createSlice({
     });
     builder.addCase(addClientToCampaign.fulfilled, (state, action) => {
       const campaignIndex = state?._data.findIndex(
-        (campaign) => campaign.id === action?.payload?.campaign_id
+        (campaign) => campaign.id === action?.payload?.campaign_id,
       );
       if (state._data[campaignIndex]?.clients)
         state._data[campaignIndex]?.clients?.push(action.payload?.target_id);
@@ -55,7 +55,7 @@ const contactsSlice = createSlice({
     });
     builder.addCase(deleteClientFromCampaign.fulfilled, (state, action) => {
       const campaignIndex = state?._data.findIndex(
-        (campaign) => campaign.id === action?.payload?.campaign_id
+        (campaign) => campaign.id === action?.payload?.campaign_id,
       );
       state._data[campaignIndex].clients = state._data[
         campaignIndex

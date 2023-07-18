@@ -9,5 +9,5 @@ export const deleteContact = createAsyncThunk(
     //   email,
     // });
     return email;
-  }
+  },
 );

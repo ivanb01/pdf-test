@@ -79,7 +79,7 @@ export default function ActivityLog({ contactId }) {
   }, [refetchData, contactId]);
 
   return (
-    <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 222px)' }}>
+    <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
       <div
         className="flex bg-gray10 flex-row"
         style={{ minHeight: 'calc(100vh - 222px)' }}>

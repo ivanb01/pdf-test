@@ -40,7 +40,7 @@ const ForgotPassword = () => {
           pathname: '../reset-password',
           query: { username: values.userName },
         },
-        '../reset-password'
+        '../reset-password',
       );
     } catch (error) {
       console.log(error);

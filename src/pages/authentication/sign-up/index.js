@@ -97,17 +97,17 @@ const SignUp = () => {
               value={formik.values.tenantPhone}
             />
 
-            <div class="mb-6">
+            <div className="mb-6">
               <label
-                for="tenantTier"
-                class="block mb-2 text-sm font-medium text-gray-900">
+                htmlFor="tenantTier"
+                className="block mb-2 text-sm font-medium text-gray-900">
                 Plan
               </label>
               <select
                 onChange={formik.handleChange}
                 value={formik.values.tenantTier}
                 id="tenantTier"
-                class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                 <option selected>Select one...</option>
                 <option value="Basic">Basic</option>
                 <option value="Standard">Standard</option>

@@ -6,5 +6,5 @@ export const getClients = createAsyncThunk(
   async (thunkAPI) => {
     const { data = {} } = await clientServices.getClients();
     return data;
-  }
+  },
 );

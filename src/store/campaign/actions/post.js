@@ -6,7 +6,7 @@ export const addCampaign = createAsyncThunk(
   async (contact, thunkAPI) => {
     const { data = {} } = await campaignServices.addCampaign(contact);
     return data;
-  }
+  },
 );
 
 export const addContactToCampaign = createAsyncThunk(
@@ -14,7 +14,7 @@ export const addContactToCampaign = createAsyncThunk(
   async (payload, thunkAPI) => {
     const { data = {} } = await campaignServices.addContactToCampaign(payload);
     return data;
-  }
+  },
 );
 
 export const addClientToCampaign = createAsyncThunk(
@@ -22,5 +22,5 @@ export const addClientToCampaign = createAsyncThunk(
   async (payload, thunkAPI) => {
     const { data = {} } = await campaignServices.addClientToCampaign(payload);
     return data;
-  }
+  },
 );

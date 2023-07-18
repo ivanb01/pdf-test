@@ -137,7 +137,7 @@ const GoogleImportContacts = () => {
           {renderTable('Importable', response.importable_contacts)}
           {renderTable(
             'Not importable (missing information)',
-            response.invalid_contacts
+            response.invalid_contacts,
           )}
           {renderTable('Exist already', response.existing_contacts)}
         </div>

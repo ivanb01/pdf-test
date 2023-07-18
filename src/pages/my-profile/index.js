@@ -222,7 +222,7 @@ const index = () => {
                 className="mb-6"
               />
               <Input
-                showForgotPassword={true}
+                showForgotPassword
                 placeholder="Save Password"
                 type="checkbox"
                 className="mb-6"
@@ -264,7 +264,7 @@ const index = () => {
           <div
             className={`border border-gray-200 overflow-hidden relative h-full w-full`}
           >
-            <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+            <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               {/* <Table tableFor="clients" data={clientTypeCards} /> */}
               <Table
                 data={importsSummary}

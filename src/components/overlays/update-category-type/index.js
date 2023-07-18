@@ -18,7 +18,7 @@ const UpdateCategoryType = ({
 }) => {
   const dispatch = useDispatch();
   const [selectedContactType, setSelectedContactType] = useState(
-    contact?.category_id
+    contact?.category_id,
   );
   const [selectedStatus, setSelectedStatus] = useState(contact?.status_id);
   const [loadingButton, setLoadingButton] = useState(false);

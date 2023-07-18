@@ -7,28 +7,28 @@ export const deleteCampaign = createAsyncThunk(
   async (id, thunkAPI) => {
     const { data = {} } = await campaignServices.deleteCampaign(id);
     return data;
-  }
+  },
 );
 
 export const deleteContactFromCampaign = createAsyncThunk(
   'campaigns/deleteContactFromCampaign',
   async (payload, thunkAPI) => {
     const { data = {} } = await campaignServices.deleteContactFromCampaign(
-      payload
+      payload,
     );
     return data;
-  }
+  },
 );
 
 export const deleteClientFromCampaign = createAsyncThunk(
   'campaigns/deleteClientFromCampaign',
   async (payload, { dispatch }) => {
     const { data = {} } = await campaignServices.deleteClientFromCampaign(
-      payload
+      payload,
     );
     if (data) {
       dispatch(removeCampaignFromClient(payload?.campaign_id));
     }
     return data;
-  }
+  },
 );

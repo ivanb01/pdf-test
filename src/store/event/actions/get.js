@@ -6,25 +6,25 @@ export const getEvents = createAsyncThunk(
   async (thunkAPI) => {
     const { data = {} } = await eventServices.getEvents();
     return data;
-  }
+  },
 );
 
 export const getClientCampaignsAndEvents = createAsyncThunk(
   'events/getClientCampaignsAndEvents',
   async (email, thunkAPI) => {
     const { data = {} } = await eventServices.getClientCampaignsAndEvents(
-      email
+      email,
     );
     return data;
-  }
+  },
 );
 
 export const getContactCampaignsAndEvents = createAsyncThunk(
   'events/getContactCampaignsAndEvents',
   async (email, thunkAPI) => {
     const { data = {} } = await eventServices.getContactCampaignsAndEvents(
-      email
+      email,
     );
     return data;
-  }
+  },
 );

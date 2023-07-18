@@ -7,7 +7,7 @@ export const addContact = createAsyncThunk(
   async (contact, thunkAPI) => {
     const { data = {} } = await contactServices.addContact(contact);
     return data;
-  }
+  },
 );
 
 export const bulkAddContacts = createAsyncThunk(
@@ -18,5 +18,5 @@ export const bulkAddContacts = createAsyncThunk(
     if (response) {
       setTimeout(() => dispatch(getContacts({ active: 'active' })), 500);
     }
-  }
+  },
 );

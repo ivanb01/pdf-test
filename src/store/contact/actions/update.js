@@ -6,7 +6,7 @@ export const updateContact = createAsyncThunk(
   async (contact, thunkAPI) => {
     const { data = {} } = await contactServices.updateContact(contact);
     return data;
-  }
+  },
 );
 
 export const bulkUpdateContactStatus = createAsyncThunk(
@@ -16,7 +16,7 @@ export const bulkUpdateContactStatus = createAsyncThunk(
     //   contacts
     // );
     // return data;
-  }
+  },
 );
 
 export const bulkUpdateContactType = createAsyncThunk(
@@ -24,7 +24,7 @@ export const bulkUpdateContactType = createAsyncThunk(
   async (contacts, thunkAPI) => {
     // const { data = {} } = await contactServices.bulkUpdateContactType(contacts);
     // return data;
-  }
+  },
 );
 
 export const bulkUpdateContactActive = createAsyncThunk(
@@ -34,5 +34,5 @@ export const bulkUpdateContactActive = createAsyncThunk(
     //   contacts
     // );
     // return data;
-  }
+  },
 );

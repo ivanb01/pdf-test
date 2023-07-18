@@ -9,5 +9,5 @@ export const deleteClient = createAsyncThunk(
       email,
     });
     return email;
-  }
+  },
 );

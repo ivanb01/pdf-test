@@ -10,7 +10,7 @@ const FilterDropdown = ({
   className,
   isFilter,
   data,
-  positionClass
+  positionClass,
 }) => {
   return (
     <Menu
@@ -43,7 +43,7 @@ const FilterDropdown = ({
                     onClick={() => handleClick(null)}
                     className={classNames(
                       active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm'
+                      'block px-4 py-2 text-sm',
                     )}
                   >
                     Show All
@@ -59,7 +59,7 @@ const FilterDropdown = ({
                     onClick={() => type.handleClick(data)}
                     className={classNames(
                       active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm'
+                      'block px-4 py-2 text-sm',
                     )}
                   >
                     {type.name}

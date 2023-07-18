@@ -115,7 +115,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               style={{ height: 'calc(100vh - 438px)' }}
             >
               <SimpleBar
-                autoHide={true}
+                autoHide
                 style={{ maxHeight: 'calc(100vh - 438px)' }}
               >
                 <Table
@@ -181,7 +181,7 @@ const GoogleContactsImportSummary = ({ data }) => {
                 style={{ height: 'calc(100vh - 438px)' }}
               >
                 <SimpleBar
-                  autoHide={true}
+                  autoHide
                   style={{ maxHeight: 'calc(100vh - 438px)' }}
                 >
                   <Table

@@ -53,7 +53,7 @@ export default function SlideOver({
                       </div>
                     </div>
                     <div className="flex min-h-0 flex-1 flex-col">
-                      <SimpleBar autoHide={true} style={{ maxHeight: '100%' }}>
+                      <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                         <div className="relative mt-[30px] mb-[30px] flex-1 px-4 sm:px-6">
                           {children}
                         </div>

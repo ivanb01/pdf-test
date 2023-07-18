@@ -74,7 +74,7 @@ export default function GmailAILogs() {
                       'No AI summary - '
                     )}
                     <a href={log.email_link} className="text-blue-500" target="_blank" rel="noopener noreferrer">
-                      (view mail) <i class="fas fa-arrow-right"></i>
+                      (view mail) <i className="fas fa-arrow-right"></i>
                     </a>
                   </td>
                 </tr>

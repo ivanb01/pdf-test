@@ -214,7 +214,7 @@ const EventPreview = ({
                                       campaignEvents.events.length - 1
                                       ? 'pb-10'
                                       : '',
-                                    'relative'
+                                    'relative',
                                   )}
                                 >
                                   <>

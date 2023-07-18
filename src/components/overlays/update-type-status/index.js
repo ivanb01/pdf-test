@@ -39,7 +39,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
     let status = selectedStatus;
     if (
       [8, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-        selectedType
+        selectedType,
       )
     ) {
       status = 1;
@@ -147,14 +147,14 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
                 <CircleStepNumber number={2} className="mr-2" />
                 <Text h3>
                   {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-                    selectedType
+                    selectedType,
                   )
                     ? 'What kind of vendor?'
                     : 'In what stage of communication?'}
                 </Text>
               </div>
               {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-                selectedType
+                selectedType,
               ) ? (
                 <div className="flex flex-wrap">
                   {vendorTypes.map((type) => (

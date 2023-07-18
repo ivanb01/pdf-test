@@ -104,14 +104,14 @@ const Contacts = ({ data }) => {
     } else {
       row.classList.remove('bg-lightBlue1');
       let newUncategorized = selectedUncategorized.filter(
-        (element) => element.email != contact.email
+        (element) => element.email != contact.email,
       );
       setSelectedUncategorized(newUncategorized);
     }
   };
   const getCount = (type) => {
     let arrayOfContacts = clientTypeCards.filter(
-      (client) => client.type == type
+      (client) => client.type == type,
     );
     let count = 0;
     arrayOfContacts.forEach((contacts) => {
@@ -127,7 +127,7 @@ const Contacts = ({ data }) => {
     console.log(
       selectedUncategorized,
       selectedUncategorizedContactType,
-      selectedUncategorizedContactStatus
+      selectedUncategorizedContactStatus,
     );
   };
 

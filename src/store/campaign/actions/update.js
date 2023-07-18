@@ -6,5 +6,5 @@ export const updateCampaign = createAsyncThunk(
   async (contact, thunkAPI) => {
     const { data = {} } = await campaignServices.updateCampaign(contact);
     return data;
-  }
+  },
 );

@@ -86,7 +86,7 @@ const Professionals = ({
   const contacts = useSelector((state) => state.contacts.data.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(
-    contacts.length
+    contacts.length,
   );
 
   // useEffect(() => {
@@ -119,15 +119,15 @@ const Professionals = ({
             contact[key],
             filters[key][0],
             contact.category_1,
-            contact.status_2
-          )
+            contact.status_2,
+          ),
         );
       } else if (key == 'is_in_campaign') {
         let booleanFilter = filters[key].map(
-          (filter) => campaignFilterMeaning[filter]
+          (filter) => campaignFilterMeaning[filter],
         );
         contactsState = contactsState.filter((contact) =>
-          booleanFilter.includes(contact[key])
+          booleanFilter.includes(contact[key]),
         );
       } else {
         contactsState = contactsState.filter((contact) => {
@@ -135,7 +135,7 @@ const Professionals = ({
             return contact[key].reduce(
               (accumulator, current) =>
                 accumulator || filters[key].includes(current),
-              false
+              false,
             );
           }
           return filters[key].includes(contact[key]);
@@ -153,7 +153,7 @@ const Professionals = ({
       if (filtersCopy[filterType]) {
         if (filtersCopy[filterType].includes(selectedFilter)) {
           filtersCopy[filterType] = filtersCopy[filterType].filter(
-            (element) => element !== selectedFilter
+            (element) => element !== selectedFilter,
           );
           if (filtersCopy[filterType].length < 1) {
             delete filtersCopy[filterType];
@@ -184,7 +184,7 @@ const Professionals = ({
     let filtersCopy = { ...filters };
 
     filtersCopy[filterType] = filtersCopy[filterType].filter(
-      (element) => element !== filterToRemove
+      (element) => element !== filterToRemove,
     );
     if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
@@ -261,7 +261,7 @@ const Professionals = ({
                       label={filter}
                       className="mr-1"
                     />
-                  ))
+                  )),
                 )}
               </div>
               <div
@@ -308,7 +308,7 @@ const Professionals = ({
             className={`border border-gray-200 overflow-hidden relative h-full w-full`}
           >
             <SimpleBar
-              autoHide={true}
+              autoHide
               style={{ height: '100%', maxHeight: '100%' }}
             >
               <Table
@@ -352,7 +352,7 @@ const Professionals = ({
           tabs={tabs}
           handleClick={handleFilterClick}
           activeSelections={filters}
-          defaultOpen={true}
+          defaultOpen
         />
       </SlideOver>
     </>

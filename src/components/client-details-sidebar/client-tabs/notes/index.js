@@ -168,7 +168,7 @@ export default function Notes({ contactId }) {
   return (
     <>
       <SimpleBar
-        autoHide={true}
+        autoHide
         style={{
           maxHeight: 'calc(100vh - 222px)',
         }}>
@@ -232,7 +232,7 @@ export default function Notes({ contactId }) {
 
                               <div className={`w-full h-[84px] relative `}>
                                 <SimpleBar
-                                  autoHide={true}
+                                  autoHide
                                   style={{ maxHeight: '100%' }}>
                                   <div className="text-sm font-normal text-gray4 flex items-start">
                                     {note?.description}

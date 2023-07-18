@@ -74,7 +74,7 @@ const ResetPassword = () => {
       await Auth.forgotPasswordSubmit(
         router.query.username,
         values.code,
-        values.password
+        values.password,
       );
       displayAlert('success', 'Password has been changed successfully!', 2000);
       setTimeout(() => {

@@ -43,7 +43,7 @@ export default function Tabs({
                   current === tab.id
                     ? 'border-lightBlue3 text-lightBlue3'
                     : 'border-transparent text-gray4 hover:text-gray4 hover:border-gray4',
-                  'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm'
+                  'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm',
                 )}
               >
                 {withNumbers ? (
@@ -54,7 +54,7 @@ export default function Tabs({
                         current == tab.id
                           ? 'bg-lightBlue2 text-lightBlue3'
                           : 'bg-gray-100 text-gray-900',
-                        'hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block'
+                        'hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block',
                       )}
                     >
                       {tab.count}
@@ -80,7 +80,7 @@ export default function Tabs({
                       className={classNames(
                         current === tab.id
                           ? 'text-lightBlue3'
-                          : 'text-gray4 hover:text-gray4 hover:border-gray4'
+                          : 'text-gray4 hover:text-gray4 hover:border-gray4',
                       )}
                     >
                       {tab.name}

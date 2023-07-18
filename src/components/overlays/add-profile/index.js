@@ -47,7 +47,7 @@ const AddProfile = ({
       };
       const { data } = await contactServices.addContactProfile(
         contactId,
-        newProfile
+        newProfile,
       );
       setLoadingButton(false);
     } catch (error) {

@@ -104,7 +104,7 @@ const index = () => {
           : b[sortColumn.key].localeCompare(a[sortColumn.key]);
       } else {
         throw new Error(
-          'Invalid sort key. Key should be a string or a number.'
+          'Invalid sort key. Key should be a string or a number.',
         );
       }
     });
@@ -120,11 +120,11 @@ const index = () => {
       }`;
       agent.percentage_healthy_clients = calculateHealthyCommunication(
         agent.healthy_communication,
-        agent.unhealthy_communication
+        agent.unhealthy_communication,
       );
       agent.percentage_closed_clients = calculateClosedClients(
         agent.clients_closed,
-        agent.total_clients
+        agent.total_clients,
       );
       return agent;
     });
@@ -178,7 +178,7 @@ const index = () => {
           <Loader />
         </div>
       ) : data?.count ? (
-        <SimpleBar autoHide={true} style={{ maxHeight: 'calc(100vh - 150px)' }}>
+        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 150px)' }}>
           <Table tableFor="reports" data={data.data} />
         </SimpleBar>
       ) : (

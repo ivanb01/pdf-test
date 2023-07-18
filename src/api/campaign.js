@@ -35,7 +35,7 @@ export const assignContactToCampaign = (campaignId, contactId) => {
 
 export const unassignContactFromCampaign = (campaignId, contactId) => {
   return axiosInstance.post(
-    `campaign/${campaignId}/remove_contact/${contactId}`
+    `campaign/${campaignId}/remove_contact/${contactId}`,
   );
 };
 
@@ -52,40 +52,40 @@ export const getCampaignsByCategory = (category) => {
 export const addCampaign = (campaign) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`,
-    campaign
+    campaign,
   );
 
 export const updateCampaign = (campaign) =>
   axios.put(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`,
-    campaign
+    campaign,
   );
 
 export const deleteCampaign = (id) =>
   axios.delete(
-    `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/oxford/${id}`
+    `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/oxford/${id}`,
   );
 
 export const addContactToCampaign = (payload) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/contact/add`,
-    payload
+    payload,
   );
 
 export const addClientToCampaign = (payload) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/client/add`,
-    payload
+    payload,
   );
 
 export const deleteContactFromCampaign = (payload) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/contact/delete`,
-    payload
+    payload,
   );
 
 export const deleteClientFromCampaign = (payload) =>
   axios.post(
     `${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/client/delete`,
-    payload
+    payload,
   );

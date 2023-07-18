@@ -112,7 +112,7 @@ const NoContactPage = () => {
         {
             text: 'Continue',
             state: 'button',
-            handleClick: handleGoogleAuthorize
+            handleClick: handleGoogleAuthorize,
         },
     ];
     const list2=[

@@ -94,7 +94,7 @@ const Campaigns = () => {
       // remove from array
       let selectedContactsCopy = selectedContacts;
       selectedContactsCopy = selectedContactsCopy.filter(
-        (el) => el != contact.email
+        (el) => el != contact.email,
       );
       setSelectedContacts(selectedContactsCopy);
     }
@@ -127,7 +127,7 @@ const Campaigns = () => {
         });
       const sortDataMonth = sortDateAsc(
         dataMonth?.data,
-        'event_scheduled_time'
+        'event_scheduled_time',
       );
       setCampaignsEvents((prev) => ({ ...prev, thisMonth: sortDataMonth }));
       setLoadingEvents(false);
@@ -198,7 +198,7 @@ const Campaigns = () => {
             ) : currentCampaignsEvents.length ? (
               <div className="relative h-full">
                 <SimpleBar
-                  autoHide={true}
+                  autoHide
                   className="overflow-x-hidden"
                   style={{ maxHeight: '590px' }}
                 >

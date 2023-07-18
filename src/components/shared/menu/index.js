@@ -41,7 +41,7 @@ const MainMenu = ({
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
   const skippedEmptyState = useSelector(
-    (state) => state.global.skippedEmptyState
+    (state) => state.global.skippedEmptyState,
   );
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const count = useSelector((state) => state.global.count);
@@ -58,7 +58,7 @@ const MainMenu = ({
   useEffect(() => {
     if (!allContacts) {
       getContacts(
-        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26'
+        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26',
       ).then((data) => {
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {

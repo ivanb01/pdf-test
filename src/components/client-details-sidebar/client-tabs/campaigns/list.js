@@ -42,7 +42,7 @@ export const steps = [
 
 export const alerts = (
   handleAssignCampaignChange,
-  handleUnassignCampaignChange
+  handleUnassignCampaignChange,
 ) => [
   {
     icon: (

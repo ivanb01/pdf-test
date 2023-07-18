@@ -16,7 +16,7 @@ const EditRelationshipModal = ({
   handleFetchRelationships,
 }) => {
   const [relationshipTypeToEdit, setRelationshipTypeToEdit] = useState(
-    relationship.relationship_name
+    relationship.relationship_name,
   );
   const handleRelationshipType = (relationshipType) => {
     setRelationshipTypeToEdit(relationshipType.name);
@@ -32,7 +32,7 @@ const EditRelationshipModal = ({
       const { data } = await updateContactRelationship(
         contactId,
         relationship.relationship_id,
-        relationshipEdit
+        relationshipEdit,
       );
       setLoadingButton(false);
     } catch (error) {

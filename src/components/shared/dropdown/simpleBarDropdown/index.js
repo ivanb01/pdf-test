@@ -86,7 +86,7 @@ const Dropdown = ({
                       className={({ selected, active }) =>
                         classNames(
                           selected || active ? activeClasse : 'text-gray-900',
-                          'cursor-pointer select-none relative py-2 pl-3 pr-9'
+                          'cursor-pointer select-none relative py-2 pl-3 pr-9',
                         )
                       }
                       value={option}
@@ -96,7 +96,7 @@ const Dropdown = ({
                           <span
                             className={classNames(
                               selected ? 'font-semibold' : 'font-normal',
-                              'block truncate capitalize'
+                              'block truncate capitalize',
                             )}
                           >
                             {option.name}
@@ -106,7 +106,7 @@ const Dropdown = ({
                             <span
                               className={classNames(
                                 active ? 'text-white' : 'text-blue2',
-                                'absolute inset-y-0 right-0 flex items-center pr-4 capitalize'
+                                'absolute inset-y-0 right-0 flex items-center pr-4 capitalize',
                               )}
                             >
                               <CheckIcon

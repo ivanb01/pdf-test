@@ -198,7 +198,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               onChange={(choice) => {
                 formik.setFieldValue(
                   'tags',
-                  choice.map((el) => el.label)
+                  choice.map((el) => el.label),
                 );
               }}
             />
