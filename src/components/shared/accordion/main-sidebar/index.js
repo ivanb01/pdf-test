@@ -27,6 +27,7 @@ const MainSidebar = ({
 }) => {
   const router = useRouter();
   const contacts = useSelector((state) => state.contacts.data);
+  const count = useSelector((state) => state.global.count);
   const dispatch = useDispatch();
   const isSubtabActive = (currentSubtab) => {
     return openedSubtab == currentSubtab;
@@ -35,37 +36,8 @@ const MainSidebar = ({
   const [collapseMainTab, setCollapseMainTab] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
 
-  const getCount = (subtab) => {
-    if (subtab === 'New Records') {
-      subtab = 'New Record';
-    }
-    if (!contacts.metadata) {
-      return 0;
-    }
-    if (subtab == 'Family & Friends') {
-      const familyCount = contacts.metadata.category['Family'] || 0;
-      const friendsCount = contacts.metadata.category['Friend'] || 0;
-      return familyCount + friendsCount;
-    }
-    if (subtab == 'Unknown') {
-      return contacts.metadata.category['Unknown'] || 0;
-    }
-    if (subtab == 'Agent') {
-      return contacts.metadata.category['Agent'] || 0;
-    }
-    if (subtab == 'Vendor') {
-      let category = contacts.metadata.category;
-      const agentCount = category['Agent'] || 0;
-      const vendorCount = category['Vendor'] || 0;
-      const othersCount =
-        Object.values(category).reduce((total, count) => total + count, 0) -
-        agentCount -
-        vendorCount;
-      return othersCount;
-    }
-    return openedTab === 2
-      ? contacts.metadata.category[subtab] || 0
-      : contacts.metadata.status[subtab] || 0;
+  const getCountForSubtab = (subtab) => {
+    return count && count[subtab.count_key] ? count[subtab.count_key] : 0;
   };
 
   const narrowMenu = () => {
@@ -174,7 +146,7 @@ const MainSidebar = ({
                               ? 'text-lightBlue3'
                               : 'text-gray4'
                           }`}>
-                          {subtab.name} ({getCount(subtab.name)})
+                          {subtab.name} ({getCountForSubtab(subtab)})
                         </Text>
                       </a>
                     );
