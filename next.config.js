@@ -3,11 +3,11 @@ const path = require('path');
 module.exports = {
   reactStrictMode: true,
   sassOptions: {
-    includePaths: [path.join(__dirname, 'styles')],
+    includePaths: [path.join(__dirname, 'src/styles')],
     prependData: `@import "_variables.scss";`,
   },
-  resolve: {
-    extensions: ['.js', '.jsx'],
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   async redirects() {
     return [
