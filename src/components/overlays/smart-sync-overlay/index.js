@@ -1,7 +1,7 @@
 import Button from 'components/shared/button';
 import Text from 'components/shared/text';
 import Overlay from 'components/shared/overlay';
-import img from 'public/images/ai-overlay.svg';
+import img from '/public/images/ai-overlay.svg';
 import Image from 'next/image';
 const SmartSyncOverlay = ({ handleCloseOverlay, handleAction }) => {
   return (
