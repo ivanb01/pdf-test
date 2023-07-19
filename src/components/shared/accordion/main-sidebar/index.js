@@ -9,7 +9,6 @@ import Router from 'next/router';
 import { setExpandedMenu } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'components/shared/button';
-import GoogleContactsIcon from 'public/images/google-contacts.png';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
 import ArrowForward from '@mui/icons-material/ArrowForward';
