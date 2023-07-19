@@ -1,6 +1,6 @@
 import React from 'react';
-import AIReviewed from 'public/images/ai-reviewed.svg';
-import AI from 'public/images/ai.svg';
+import AIReviewed from '/public/images/ai-reviewed.svg';
+import AI from '/public/images/ai.svg';
 const AIChip = ({ reviewed }) => {
   return (
     <img src={reviewed ? AIReviewed.src : AI.src} alt="" />
