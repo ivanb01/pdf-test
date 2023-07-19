@@ -23,9 +23,9 @@ import StatusSelect from 'components/status-select';
 import { statuses, vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
 import SimpleBar from 'simplebar-react';
-import AI from 'public/images/ai.svg';
-import newTab from 'public/images/new-tab.svg';
-import info from 'public/images/info.svg';
+import AI from '/public/images/ai.svg';
+import newTab from '/public/images/new-tab.svg';
+import info from '/public/images/info.svg';
 import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 
@@ -138,8 +138,7 @@ const ReviewAIContact = ({
     <Overlay
       handleCloseOverlay={handleClose}
       title={title}
-      className={className}
-    >
+      className={className}>
       <div className="flex">
         <div className="w-1/2 border-r border-borderColor">
           <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
@@ -255,7 +254,7 @@ const ReviewAIContact = ({
                         onClick={() =>
                           formik.setFieldValue(
                             'selectedContactSubtype',
-                            type.id
+                            type.id,
                           )
                         }
                       />
@@ -271,7 +270,7 @@ const ReviewAIContact = ({
                 </>
               ) : (
                 ![2, 3, 8, 12, 13, 14, 15].includes(
-                  formik.values.selectedContactType
+                  formik.values.selectedContactType,
                 ) &&
                 formik.values.selectedContactType && (
                   <StatusSelect
@@ -371,8 +370,7 @@ const ReviewAIContact = ({
         <div className="flex">
           <button
             className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
-            onClick={handleClose}
-          >
+            onClick={handleClose}>
             <Delete /> <span className="ml-2">Delete from CRM</span>
           </button>
           <button
@@ -381,8 +379,7 @@ const ReviewAIContact = ({
             onClick={() => {
               setLoadingButton(true);
               submitForm();
-            }}
-          >
+            }}>
             <CheckCircle />
             <span className="ml-2">Mark as Correct</span>
           </button>
