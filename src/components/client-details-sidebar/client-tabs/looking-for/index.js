@@ -14,6 +14,8 @@ import { NYCneighborhoods } from 'global/variables';
 import SearchSelectInput from 'components/shared/search-select-input';
 import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
+// import { ArrowRightIcon } from '@heroicons/react/solid';
+import ArrowForward from '@mui/icons-material/ArrowForward';
 
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
@@ -63,6 +65,7 @@ export default function LookingFor({ contactId }) {
   //* FORMIK *//
   const [selections, setSelections] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -250,11 +253,20 @@ export default function LookingFor({ contactId }) {
   ];
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      <div className="flex bg-gray10 flex-row">
-        <div className="w-[65%] bg-gray10">
-          <div className="bg-white p-6 m-[24px]">
+      <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
+        <div className="max-w-[600px]">
+          <div className="p-6">
             <form onSubmit={formik.handleSubmit}>
-              <div className="max-w-3xl mx-auto relative">
+              <div className="mb-[60px] text-center">
+                <div className="text-black font-medium text-lg mb-3">
+                  No Property Suggested
+                </div>
+                <div className="text-black text-sm">
+                  Please fill the Property Interests so we can suggest
+                  properties for this contact
+                </div>
+              </div>
+              <div className="mx-auto relative">
                 <SearchSelectInput
                   label="Neighborhood"
                   options={NYCneighborhoods}
@@ -280,18 +292,68 @@ export default function LookingFor({ contactId }) {
                 errorText={errors.neighborhood_ids}
               /> */}
               </div>
-              <Accordion
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <Input
+                  id="bedrooms_max"
+                  type="number"
+                  label="Bedrooms Max"
+                  className="col-span-1"
+                  iconAfter={<Image src={bedroom} height={20} />}
+                  onChange={formik.handleChange}
+                  value={formik.values.bedrooms_max}
+                  error={errors.bedrooms_max && touched.bedrooms_max}
+                  errorText={errors.bedrooms_max}
+                />
+                <Input
+                  id="bathrooms_min"
+                  type="number"
+                  label="Bathrooms Min"
+                  iconAfter={<Image src={bathroom} height={20} />}
+                  className="col-span-1"
+                  onChange={formik.handleChange}
+                  value={formik.values.bathrooms_min}
+                  error={errors.bathrooms_min && touched.bathrooms_min}
+                  errorText={errors.bathrooms_min}
+                />
+                <Input
+                  id="budget_min"
+                  type="money"
+                  label="Budget Min"
+                  iconAfter={<Image src={usd} height={20} />}
+                  className="col-span-1"
+                  onChange={(val) => formik.setFieldValue('budget_min', val)}
+                  value={formik.values.budget_min}
+                  error={errors.budget_min && touched.budget_min}
+                  errorText={errors.budget_min}
+                />
+                <Input
+                  id="budget_max"
+                  type="money"
+                  label="Budget Max"
+                  iconAfter={<Image src={usd} height={20} />}
+                  className="col-span-1"
+                  onChange={(val) => formik.setFieldValue('budget_max', val)}
+                  value={formik.values.budget_max}
+                  error={errors.budget_max && touched.budget_max}
+                  errorText={errors.budget_max}
+                />
+              </div>
+              {/* <Accordion
                 tabs={tabs}
                 activeSelections={selections}
                 defaultOpen
-              />
-              <Button
-                type="submit"
-                primary
-                className="mt-6"
-                loading={loadingButton}>
-                Save
-              </Button>
+              /> */}
+              <div className="text-right">
+                <Button
+                  label="Save Property Interests"
+                  rightIcon={<ArrowForward className="h-4" />}
+                  type="submit"
+                  primary
+                  className="mt-6"
+                  loading={loadingButton}
+                  disabled={disabledButton}
+                />
+              </div>
             </form>
           </div>
         </div>
