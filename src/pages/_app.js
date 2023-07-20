@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import { Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import Head from 'next/head';
+// import Head from 'next/head';
 import store from '../store';
 import 'pages/contacts/details/styles.scss';
 import 'components/client-details-sidebar/styles.scss';
@@ -50,7 +50,7 @@ const MyApp = ({ Component, pageProps }) => {
           : false,
       );
     }
-  });
+  }, []);
 
   useEffect(() => {
     configureAmplifyAuth();
@@ -71,7 +71,6 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     if (helpEffect) {
       if (pageProps.requiresAuth && !isUserAuthenticated) {
-        console.log('redirect sign-in');
         router.push('/authentication/sign-in');
       }
       if (
@@ -123,70 +122,12 @@ const MyApp = ({ Component, pageProps }) => {
     }
   };
 
-  const cleanLocalStorage = () => {
-    localStorage.removeItem('tenantName');
-    localStorage.removeItem('userPoolId');
-    localStorage.removeItem('appClientId');
-    localStorage.removeItem('apiGatewayUrl');
-    localStorage.removeItem('token');
-  };
-
-  // if (
-  //   pageProps.requiresAuth &&
-  //   !isUserAuthenticated &&
-  //   typeof window !== 'undefined'
-  // ) {
-  //   var ranOnce = localStorage.getItem('ranOnce')
-  //     ? localStorage.getItem('ranOnce')
-  //     : false;
-  //   if (!ranOnce) {
-  //     window.location.reload();
-  //     localStorage.setItem('ranOnce', 'true');
-  //   }
-  // }
-
-  // if (!pageProps.requiresAuth && isUserAuthenticated) {
-  //   return (
-  //     <div>
-  //       <h1>Loading...</h1>
-  //     </div>
-  //   );
-  // }
-
   return (
     <>
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        ></link>
-        <script src="https://unpkg.com/flowbite@1.3.4/dist/datepicker.js"></script>
-        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.fwSettings={
-                'widget_id':150000003307
-              };
-              !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}() 
-            `,
-          }}
-        />
-        <script
-          src="https://widget.freshworks.com/widgets/150000003307.js"
-          async
-          defer
-        />
-      </Head>
-      {/* <Script src="https://unpkg.com/flowbite@1.3.3/dist/flowbite.js"></Script> */}
-      <div className="main-app-wrapper">
-        {/* <Sidebar /> */}
+      <div className={`main-app-wrapper`}>
         <div
           className={`main-page overflow-y-auto`}
-          style={{ marginTop: marginTop ? '68px' : '0px' }}
-        >
+          style={{ marginTop: marginTop ? '68px' : '0px' }}>
           <Provider store={store}>
             <Component {...pageProps} />
             {domLoaded && (
