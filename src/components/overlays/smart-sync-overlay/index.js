@@ -3,7 +3,7 @@ import Text from 'components/shared/text';
 import Overlay from 'components/shared/overlay';
 import img from '/public/images/ai-overlay.svg';
 import Image from 'next/image';
-const SmartSyncOverlay = ({ handleCloseOverlay, handleAction }) => {
+const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
   return (
     <Overlay className="max-w-[650px]" handleCloseOverlay={handleCloseOverlay}>
       <div className="p-[24px]">
@@ -32,7 +32,11 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction }) => {
           </span>
         </div>
         <div className="flex items-center justify-center mt-6">
-          <Button primary onClick={handleAction}>
+          <Button
+            className="w-[175px]"
+            loading={loading}
+            primary
+            onClick={handleAction}>
             Activate Smart Sync
           </Button>
         </div>

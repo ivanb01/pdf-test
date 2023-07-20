@@ -15,6 +15,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
+import { getGoogleAuthorizeEmail } from '@api/google';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -33,11 +34,25 @@ const MainSidebar = ({
     return openedSubtab == currentSubtab;
   };
   const pinned = useSelector((state) => state.global.expandedMenu);
+  const [loadingActivateSS, setLoadingActivateSS] = useState(false);
   const [collapseMainTab, setCollapseMainTab] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
 
   const getCountForSubtab = (subtab) => {
     return count && count[subtab.count_key] ? count[subtab.count_key] : 0;
+  };
+
+  const activateSmartSync = async () => {
+    setLoadingActivateSS(true);
+    try {
+      const { data } = await getGoogleAuthorizeEmail();
+      console.log('get google authorize', data);
+      window.location.href = data.redirect_uri;
+    } catch (error) {
+      console.log('error occurredw with google import');
+    } finally {
+      setLoadingActivateSS(false);
+    }
   };
 
   const narrowMenu = () => {
@@ -179,7 +194,11 @@ const MainSidebar = ({
         pinned ? 'w-[315px]' : 'w-[62px]'
       }`}>
       {showSSOverlay && (
-        <SmartSyncOverlay handleCloseOverlay={() => setShowSSOverlay(false)} />
+        <SmartSyncOverlay
+          handleAction={() => activateSmartSync()}
+          loading={loadingActivateSS}
+          handleCloseOverlay={() => setShowSSOverlay(false)}
+        />
       )}
       <div>
         {pinned ? expandedMenu() : narrowMenu()}
