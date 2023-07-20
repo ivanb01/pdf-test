@@ -50,7 +50,7 @@ const MyApp = ({ Component, pageProps }) => {
           : false,
       );
     }
-  }, []);
+  }, [Component]);
 
   useEffect(() => {
     configureAmplifyAuth();

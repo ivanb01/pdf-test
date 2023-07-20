@@ -156,8 +156,7 @@ const index = () => {
                 <svg
                   className="h-full w-full text-gray-300"
                   fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                  viewBox="0 0 24 24">
                   <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </span>
@@ -259,18 +258,17 @@ const index = () => {
         <TopBar text="Imports Summary" />
         <div
           className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 145px)' }}
-        >
+          style={{ height: 'calc(100vh - 145px)' }}>
           <div
-            className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-          >
+            className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               {/* <Table tableFor="clients" data={clientTypeCards} /> */}
               <Table
                 data={importsSummary}
                 tableFor="imports-summary"
-                handleClickRow={() => Router.push('/my-profile/import-details')}
-              ></Table>
+                handleClickRow={() =>
+                  Router.push('/my-profile/import-details')
+                }></Table>
             </SimpleBar>
           </div>
         </div>
@@ -302,11 +300,10 @@ const index = () => {
   ];
   return (
     <>
-      <MainMenu fixed />
+      <MainMenu />
       <div
         className="w-full flex items-center justify-center"
-        style={{ height: 'calc(100vh - 70px)' }}
-      >
+        style={{ height: 'calc(100vh - 70px)' }}>
         <div className="border-t border-gray2 flex h-full min-h-full w-full">
           <div className="w-[375px] h-full border-r border-gray2 px-1 py-5">
             {tabs.map((tab) => {
@@ -319,8 +316,7 @@ const index = () => {
                     currentTab == tab.id
                       ? 'bg-lightBlue1 text-lightBlue3'
                       : 'text-gray4 hover:text-gray5'
-                  } rounded-md`}
-                >
+                  } rounded-md`}>
                   {tab.icon}
                   {tab.name}
                 </a>
