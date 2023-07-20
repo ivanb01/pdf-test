@@ -6,7 +6,7 @@ import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
 import Image from 'next/image';
 import Accordion from 'components/shared/accordion';
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import * as Yup from 'yup';
@@ -20,32 +20,12 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms_min: Yup.number()
+    bedrooms: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0'),
-    bedrooms_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('bedrooms_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('bedrooms_min'),
-          'Max bedrooms must be greater than min bedrooms',
-        ),
-      }),
-    bathrooms_min: Yup.number()
+    bathrooms: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0'),
-    bathrooms_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('bathrooms_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('bathrooms_min'),
-          'Max bathrooms must be greater than min bathrooms',
-        ),
-      }),
     budget_min: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0'),
@@ -63,18 +43,16 @@ export default function LookingFor({ contactId }) {
   });
 
   //* FORMIK *//
-  const [selections, setSelections] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
 
   const formik = useFormik({
+    validateOnMount: true,
     initialValues: {
       neighborhood_ids: '',
       looking_action: 'sell',
-      bedrooms_min: '',
-      bedrooms_max: '',
-      bathrooms_min: '',
-      bathrooms_max: '',
+      bedrooms: '',
+      bathrooms: '',
       budget_min: '',
       budget_max: '',
     },
@@ -83,13 +61,13 @@ export default function LookingFor({ contactId }) {
       console.log('looking property', values);
       setFieldValue('budget_min', parseFloat(values.budget_min));
       setFieldValue('budget_max', parseFloat(values.budget_max));
-
+      console.log(formik.isValid);
       if (formik.isValid) {
-        handleAddSubmit({
-          ...values,
-          budget_min: parseFloat(values.budget_min),
-          budget_max: parseFloat(values.budget_max),
-        });
+        // handleAddSubmit({
+        //   ...values,
+        //   budget_min: parseFloat(values.budget_min),
+        //   budget_max: parseFloat(values.budget_max),
+        // });
       }
     },
   });
@@ -122,21 +100,13 @@ export default function LookingFor({ contactId }) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
           looking_action: lookingProperties[0].looking_action,
-          bedrooms_min:
-            lookingProperties[0].bedrooms_min != 0
-              ? lookingProperties[0].bedrooms_min
+          bedrooms:
+            lookingProperties[0].bedrooms != 0
+              ? lookingProperties[0].bedrooms
               : '',
-          bedrooms_max:
-            lookingProperties[0].bedrooms_max != 0
-              ? lookingProperties[0].bedrooms_max
-              : '',
-          bathrooms_min:
-            lookingProperties[0].bathrooms_min != 0
-              ? lookingProperties[0].bathrooms_min
-              : '',
-          bathrooms_max:
-            lookingProperties[0].bathrooms_max != 0
-              ? lookingProperties[0].bathrooms_max
+          bathrooms:
+            lookingProperties[0].bathrooms != 0
+              ? lookingProperties[0].bathrooms
               : '',
           budget_min:
             lookingProperties[0].budget_min != 0
@@ -157,6 +127,15 @@ export default function LookingFor({ contactId }) {
     fetchLookingProperties();
   }, [contactId]);
 
+  useLayoutEffect(() => {
+    console.log(formik);
+    if (formik.isValid) {
+      setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
+    }
+  }, [formik]);
+
   const valueOptions = (selectedOptions, multiselectOptions) => {
     if (!selectedOptions) {
       return null;
@@ -167,90 +146,6 @@ export default function LookingFor({ contactId }) {
     return options;
   };
 
-  const tabs = [
-    {
-      title: 'AMENITIES',
-      value: 'amenities',
-      content: (
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            id="bedrooms_min"
-            type="number"
-            label="Bedrooms Min"
-            iconAfter={<Image src={bedroom} height={20} />}
-            className="col-span-1"
-            onChange={formik.handleChange}
-            value={formik.values.bedrooms_min}
-            error={errors.bedrooms_min && touched.bedrooms_min}
-            errorText={errors.bedrooms_min}
-          />
-          <Input
-            id="bedrooms_max"
-            type="number"
-            label="Bedrooms Max"
-            className="col-span-1"
-            iconAfter={<Image src={bedroom} height={20} />}
-            onChange={formik.handleChange}
-            value={formik.values.bedrooms_max}
-            error={errors.bedrooms_max && touched.bedrooms_max}
-            errorText={errors.bedrooms_max}
-          />
-          <Input
-            id="bathrooms_min"
-            type="number"
-            label="Bathrooms Min"
-            iconAfter={<Image src={bathroom} height={20} />}
-            className="col-span-1"
-            onChange={formik.handleChange}
-            value={formik.values.bathrooms_min}
-            error={errors.bathrooms_min && touched.bathrooms_min}
-            errorText={errors.bathrooms_min}
-          />
-          <Input
-            id="bathrooms_max"
-            type="number"
-            label="Bathrooms Max"
-            className="col-span-1"
-            iconAfter={<Image src={bathroom} height={20} />}
-            onChange={formik.handleChange}
-            value={formik.values.bathrooms_max}
-            error={errors.bathrooms_max && touched.bathrooms_max}
-            errorText={errors.bathrooms_max}
-          />
-        </div>
-      ),
-    },
-    {
-      title: 'BUDGET MIN/MAX',
-      value: 'budget',
-      content: (
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            id="budget_min"
-            type="money"
-            label="Budget Min"
-            iconAfter={<Image src={usd} height={20} />}
-            className="col-span-1"
-            onChange={(val) => formik.setFieldValue('budget_min', val)}
-            value={formik.values.budget_min}
-            error={errors.budget_min && touched.budget_min}
-            errorText={errors.budget_min}
-          />
-          <Input
-            id="budget_max"
-            type="money"
-            label="Budget Max"
-            iconAfter={<Image src={usd} height={20} />}
-            className="col-span-1"
-            onChange={(val) => formik.setFieldValue('budget_max', val)}
-            value={formik.values.budget_max}
-            error={errors.budget_max && touched.budget_max}
-            errorText={errors.budget_max}
-          />
-        </div>
-      ),
-    },
-  ];
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
       <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
@@ -294,26 +189,26 @@ export default function LookingFor({ contactId }) {
               </div>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <Input
-                  id="bedrooms_max"
+                  id="bedrooms"
                   type="number"
-                  label="Bedrooms Max"
+                  label="Bedrooms"
                   className="col-span-1"
                   iconAfter={<Image src={bedroom} height={20} />}
                   onChange={formik.handleChange}
-                  value={formik.values.bedrooms_max}
-                  error={errors.bedrooms_max && touched.bedrooms_max}
-                  errorText={errors.bedrooms_max}
+                  value={formik.values.bedrooms}
+                  error={errors.bedrooms && touched.bedrooms}
+                  errorText={errors.bedrooms}
                 />
                 <Input
-                  id="bathrooms_min"
+                  id="bathrooms"
                   type="number"
-                  label="Bathrooms Min"
+                  label="Bathrooms"
                   iconAfter={<Image src={bathroom} height={20} />}
                   className="col-span-1"
                   onChange={formik.handleChange}
-                  value={formik.values.bathrooms_min}
-                  error={errors.bathrooms_min && touched.bathrooms_min}
-                  errorText={errors.bathrooms_min}
+                  value={formik.values.bathrooms}
+                  error={errors.bathrooms && touched.bathrooms}
+                  errorText={errors.bathrooms}
                 />
                 <Input
                   id="budget_min"
