@@ -2,8 +2,6 @@ import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
 export const getGoogleAuthCallback = (queryParams) => {
-  console.log('query params passsed to axios instance');
-  console.log(queryParams);
   return axiosInstance.get('google/oauthcallback', {
     params: { ...queryParams, test_callback: '/contacts/no-contact' },
   });
