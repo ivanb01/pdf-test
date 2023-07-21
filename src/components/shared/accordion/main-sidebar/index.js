@@ -15,11 +15,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
-import {
-  getGoogleAuthorizeEmail,
-  getUserConsentForGoogleContacts,
-  getUserConsentForGoogleEmail,
-} from '@api/google';
+import { getUserConsentForGoogleEmail } from '@api/google';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -54,8 +50,6 @@ const MainSidebar = ({
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');
-    } finally {
-      setLoadingActivateSS(false);
     }
   };
 
