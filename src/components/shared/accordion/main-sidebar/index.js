@@ -15,7 +15,11 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
 import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
-import { getGoogleAuthorizeEmail } from '@api/google';
+import {
+  getGoogleAuthorizeEmail,
+  getUserConsentForGoogleContacts,
+  getUserConsentForGoogleEmail,
+} from '@api/google';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -45,7 +49,7 @@ const MainSidebar = ({
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
     try {
-      const { data } = await getGoogleAuthorizeEmail();
+      const { data } = await getUserConsentForGoogleEmail();
       console.log('get google authorize', data);
       window.location.href = data.redirect_uri;
     } catch (error) {
