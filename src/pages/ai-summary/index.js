@@ -37,7 +37,7 @@ const index = () => {
   const fetchContacts = async () => {
     try {
       const response = await getUnapprovedContacts();
-      setData(response);
+      setData(response.data.data);
     } catch (error) {
       console.log('error msg', error.message);
     } finally {
@@ -65,8 +65,7 @@ const index = () => {
               selectedPeople.length > 1
                 ? 'calc(100vh - 136px);'
                 : 'calc(100vh - 68px);',
-          }}
-        >
+          }}>
           <Table
             className="pb-5"
             data={data}
@@ -90,8 +89,7 @@ const index = () => {
           client={popupData}
           className="w-[1200px]"
           title="Review AI Smart Synced Contact"
-          handleClose={() => setShowReviewOverlay(false)}
-        ></ReviewAIContact>
+          handleClose={() => setShowReviewOverlay(false)}></ReviewAIContact>
       )}
       {selectedPeople.length > 1 && (
         <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
@@ -107,8 +105,7 @@ const index = () => {
             </button>
             <button
               // rightIcon={<ArrowRightIcon height={15} />}
-              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]"
-            >
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
               <span className="ml-2">Mark as Correct</span>
             </button>
