@@ -53,6 +53,7 @@ const index = () => {
         newData = {
           ...data,
           category_id: 3,
+          approved_ai: true,
         };
       } else {
         newData = { ...data, approved_ai: true };

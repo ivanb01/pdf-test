@@ -246,8 +246,8 @@ const MainSidebar = ({
       {collapsable && (
         <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
-          className="absolute bg-white text-gray-400 cursor-pointer z-20"
-          style={{ right: '-15px', top: '29px' }}>
+          className="absolute bg-white rounded-full text-gray-400 cursor-pointer z-50"
+          style={{ right: '-15px', top: '16px' }}>
           {pinned ? (
             <div className="">
               <ArrowCircleLeftOutlined className=" text-3xl" />

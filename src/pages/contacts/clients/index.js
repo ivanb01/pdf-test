@@ -19,6 +19,7 @@ import EditContactOverlay from 'components/overlays/edit-client';
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { getUnapprovedContacts } from '@api/aiSmartSync';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
@@ -32,6 +33,7 @@ const index = () => {
   const [contactsCopy, setContactsCopy] = useState();
   const contacts = useSelector((state) => state.contacts.data);
   const allContacts = useSelector((state) => state.contacts.allContacts);
+  const [unapprovedContacts, setUnapprovedContacts] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +45,19 @@ const index = () => {
     let filteredArray = searchContacts(contactsCopy.data, term);
     dispatch(updateContacts(filteredArray.data));
   };
+
+  const fetchUnapproved = async () => {
+    try {
+      const response = await getUnapprovedContacts();
+      setUnapprovedContacts(response.data.count);
+    } catch (error) {
+      console.log('error msg', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnapproved();
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -96,6 +111,7 @@ const index = () => {
               setShowEditContact(true);
               setContactToEdit(contact);
             }}
+            unapprovedContacts={unapprovedContacts}
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchClients}
           />

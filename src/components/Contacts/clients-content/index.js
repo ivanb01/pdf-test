@@ -40,13 +40,17 @@ const buttons = [
   },
 ];
 
-const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
+const Clients = ({
+  setShowAddContactOverlay,
+  onSearch,
+  handleCardEdit,
+  unapprovedContacts,
+}) => {
   const dispatch = useDispatch();
 
   let currentView = localStorage.getItem('currentView')
     ? localStorage.getItem('currentView')
     : 0;
-
   const [filters, setFilters] = useState({});
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
@@ -211,10 +215,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {/* <GlobalAlert
-          message="You didn’t setup your Google Account yet. For a better experience of the CRM we recommend you to setup your account."
-          type="error"
-        /> */}
+        {unapprovedContacts > 0 && (
+          <GlobalAlert
+            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            type="smart-sync"
+          />
+        )}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
@@ -292,8 +298,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -309,8 +314,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
               maxWidth: '100%',
               height: '100%',
               background: '#f9fafb',
-            }}
-          >
+            }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
                 <Column
@@ -325,15 +329,10 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
         ) : (
           <div
             className="w-auto relative flex"
-            style={{ height: 'calc(100vh - 170px)' }}
-          >
+            style={{ height: 'calc(100vh - 170px)' }}>
             <div
-              className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-            >
-              <SimpleBar
-                autoHide
-                style={{ height: '100%', maxHeight: '100%' }}
-              >
+              className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
                   tableFor="contactsList"
                   categoryType="clients"
@@ -370,8 +369,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
               }
             /> */}
           </>
-        }
-      >
+        }>
         <Accordion
           tabs={tabs}
           handleClick={handleFilterClick}
