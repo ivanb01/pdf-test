@@ -1813,8 +1813,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center "
-            >
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center ">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1826,32 +1825,27 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
-            >
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
-            >
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
-            >
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Source
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
-            >
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Delete/correct
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
-            ></th>
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1871,18 +1865,16 @@ const Table = ({
                     setSelectedPeople(
                       e.target.checked
                         ? [...selectedPeople, dataItem]
-                        : selectedPeople.filter((p) => p !== dataItem)
+                        : selectedPeople.filter((p) => p !== dataItem),
                     )
                   }
                 />
                 <ContactInfo
                   data={{
                     // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
-                    name: `${getEmailParts(dataItem.agent_id).firstName} ${
-                      getEmailParts(dataItem.agent_id).lastName
-                    }`,
+                    name: `${dataItem.first_name} ${dataItem.last_name}`,
                     id: dataItem.id,
-                    email: dataItem.agent_id,
+                    email: dataItem.email,
                     // image: dataItem.profile_image_path,
                   }}
                   // handleSelect={(e, dataItem) =>
@@ -1893,7 +1885,7 @@ const Table = ({
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>
-                  {getContactTypeByTypeId(dataItem.category_id)}
+                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
                 </Chip>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
@@ -1901,12 +1893,11 @@ const Table = ({
                   statusStyle
                   className={getContactStatusColorByStatusId(
                     dataItem.category_id,
-                    dataItem.status_id
-                  )}
-                >
+                    dataItem.status_id,
+                  )}>
                   {getContactStatusByStatusId(
                     dataItem.category_id,
-                    dataItem.status_id
+                    dataItem.status_id,
                   )}
                 </Chip>
               </td>
@@ -1917,12 +1908,14 @@ const Table = ({
                 <div className="flex items-center justify-center">
                   <div className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6">
                     <Delete
+                      onClick={() => handleAction('delete', dataItem)}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
                     />
                   </div>
                   <div className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center">
                     <CheckCircle
+                      onClick={() => handleAction('approve', dataItem)}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
                     />
@@ -1932,8 +1925,7 @@ const Table = ({
               <td>
                 <div
                   className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
-                  onClick={() => handleCardEdit(dataItem)}
-                >
+                  onClick={() => handleCardEdit(dataItem)}>
                   <Edit
                     id={'edit-contact-icon-' + dataItem.id}
                     className="text-gray3 w-4 h-4"

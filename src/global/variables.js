@@ -57,6 +57,7 @@ export const contactTypes = [
   { id: 0, name: 'Client' },
   { id: 1, name: 'Professional' },
   { id: 2, name: 'Other' },
+  { id: 3, name: 'Uncategorized' },
 ];
 
 export const contactStatuses = [
@@ -651,6 +652,10 @@ export const professionalsOptions = [
   {
     id: 12,
     name: 'Agent',
+  },
+  {
+    id: 9,
+    name: 'Unspecified',
   },
 ];
 

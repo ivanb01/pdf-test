@@ -28,6 +28,7 @@ import newTab from '/public/images/new-tab.svg';
 import info from '/public/images/info.svg';
 import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
+import { useRouter } from 'next/router';
 
 const ReviewAIContact = ({
   className,
@@ -38,17 +39,16 @@ const ReviewAIContact = ({
   refetchData,
 }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const [loadingButton, setLoadingButton] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [removing, setRemoving] = useState(false);
 
   const openedTab = useSelector((state) => state.global.openedTab);
 
   const [existingContactEmailError, setExistingContactEmailError] =
     useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
-  // const resetForm = () => {
-  //   handleClose();
-  // };
 
   const options = [
     {
@@ -82,53 +82,74 @@ const ReviewAIContact = ({
           ? 0
           : client?.category_1 == 'Professional'
           ? 1
-          : 2,
+          : client?.category_1 == 'Other'
+          ? 2
+          : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: '',
       selectedStatus: client?.status_id,
     },
     onSubmit: (values) => {
       console.log(values, client);
-      // handleSubmit();
+      handleSubmit(values);
     },
   });
 
   const { errors, touched, submitForm, isSubmitting } = formik;
 
-  const handleSubmit = async (values) => {
-    setLoadingButton(true);
+  const removeFromCRM = async () => {
+    setRemoving(true);
     try {
-      if (client?.email === values.email) {
-        await editClient(values);
-      } else {
-        const { data } = await findContactByEmail({ email: values.email });
-        if (data) {
-          setExistingContactEmailError('This email already exists!');
-          setExistingContactEmail(values.email);
-        }
-      }
+      await updateContact(client?.id, { approved_ai: true, category_id: 3 });
+      handleClose();
     } catch (error) {
       console.log(error);
-      if (error.response.status === 404) {
-        setExistingContactEmailError('');
-        setExistingContactEmail('');
-        await editClient(values);
-      }
+    } finally {
+      setRemoving(false);
     }
-    setSubmitting(false);
   };
 
-  // const editClient = async (values) => {
-  //   try {
-  //     await updateContact(client?.id, values);
-  //     console.log(values, 'edit contact', client?.id);
-  //     dispatch(setRefetchData(true));
-  //     handleClose();
-  //   } catch (error) {
-  //     console.log(error);
-  //     handleClose();
-  //   }
-  // };
+  const handleSubmit = async (values) => {
+    // console.log(values);
+    /*
+     *How to mark the contact as approved:
+     *Update contact and set approved_ai = True
+     */
+    setUpdating(true);
+    try {
+      let category_id = 1;
+      let status_id = 1;
+
+      if (values.selectedContactType == 8) {
+        category_id = values.selectedContactSubtype;
+      } else {
+        category_id = values.selectedContactType;
+      }
+      if (values.selectedContactCategory == 3) {
+        category_id = 1;
+      }
+      if (values.selectedContactCategory == 0) {
+        status_id = values.selectedStatus;
+      }
+
+      let newData = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        phone_number: values.phone_number,
+        category_id: category_id,
+        status_id: status_id,
+        approved_ai: true,
+      };
+      // if uncategorized then
+      await updateContact(client?.id, newData);
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const handleChooseActivityType = (id) => {
     formik.setFieldValue('type_of_activity_id', id);
@@ -139,9 +160,9 @@ const ReviewAIContact = ({
       handleCloseOverlay={handleClose}
       title={title}
       className={className}>
-      <div className="flex">
+      <div className="flex min-h-[420px]">
         <div className="w-1/2 border-r border-borderColor">
-          <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
             <form className="p-6" onSubmit={formik.handleSubmit}>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <Input
@@ -169,6 +190,7 @@ const ReviewAIContact = ({
                   label="Email"
                   id="email"
                   className=""
+                  readonly
                   // onChange={formik.handleChange}
                   onChange={(e) => {
                     if (existingContactEmail !== e.target.value) {
@@ -217,26 +239,29 @@ const ReviewAIContact = ({
                 }
                 errorText={errors.selectedContactCategory}
               />
-              <Radio
-                options={
-                  formik.values.selectedContactCategory == 0
-                    ? clientOptions
-                    : formik.values.selectedContactCategory == 1
-                    ? professionalsOptions
-                    : othersOptions
-                }
-                label="What type?"
-                selectedOption={formik.values.selectedContactType}
-                setSelectedOption={(e) =>
-                  formik.setFieldValue('selectedContactType', e)
-                }
-                className="mb-6"
-                name="type-of-contact"
-                error={
-                  errors.selectedContactType && touched.selectedContactType
-                }
-                errorText={errors.selectedContactType}
-              />
+              {formik.values.selectedContactCategory !== 3 && (
+                <Radio
+                  options={
+                    formik.values.selectedContactCategory == 0
+                      ? clientOptions
+                      : formik.values.selectedContactCategory == 1
+                      ? professionalsOptions
+                      : othersOptions
+                  }
+                  label="What type?"
+                  selectedOption={formik.values.selectedContactType}
+                  setSelectedOption={(e) =>
+                    formik.setFieldValue('selectedContactType', e)
+                  }
+                  className="mb-6"
+                  name="type-of-contact"
+                  error={
+                    errors.selectedContactType && touched.selectedContactType
+                  }
+                  errorText={errors.selectedContactType}
+                />
+              )}
+
               {formik.values.selectedContactType == 8 ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">
@@ -269,9 +294,7 @@ const ReviewAIContact = ({
                     )}
                 </>
               ) : (
-                ![2, 3, 8, 12, 13, 14, 15].includes(
-                  formik.values.selectedContactType,
-                ) &&
+                formik.values.selectedContactCategory == 0 &&
                 formik.values.selectedContactType && (
                   <StatusSelect
                     selectedStatus={formik.values.selectedStatus}
@@ -299,10 +322,12 @@ const ReviewAIContact = ({
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="text-gray-900 font-medium text-lg">
-                    Rental Property Availability
+                  <div className="text-gray-900 font-medium text-lg max-w-[60%]">
+                    {client.email_subject}
                   </div>
-                  <div className="flex items-center text-sm text-gray-900 underline">
+                  <div
+                    onClick={() => router.push(client.email_link)}
+                    className="cursor-pointer flex items-center text-sm text-gray-900 underline">
                     View the email source
                     <img src={newTab.src} alt="" className="ml-1" />
                   </div>
@@ -310,52 +335,7 @@ const ReviewAIContact = ({
               </div>
               <hr className="my-4" />
               <div className="text-gray-900 text-sm">
-                Dear [Landlord's Name],
-                <br />
-                <br />
-                I hope this email finds you well. My name is [Your Name], and I
-                am writing to express my interest in the rental property listed
-                at [Property Address]. After browsing through various listings,
-                your property stood out to me, and I believe it could be an
-                ideal place for me to call home.
-                <br />
-                I would like to gather some additional information about the
-                property, as well as inquire about its availability. Firstly,
-                could you kindly confirm if the property is still available for
-                rent? If so, I would greatly appreciate any details you could
-                provide regarding the terms of the lease, including the monthly
-                rental amount, security deposit requirements, and any other
-                associated costs.
-                <br />
-                <br />
-                Furthermore, I am interested in learning more about the property
-                itself. Could you please provide a brief description of its
-                features, such as the number of bedrooms and bathrooms, square
-                footage, and any notable amenities? Additionally, I would be
-                grateful if you could share any photographs or floor plans to
-                help me visualize the layout. As a responsible tenant, I believe
-                in maintaining a clean and well-maintained living space. I would
-                like to inquire about the utility arrangements for the property.
-                Are the utilities included in the rental price, or would I be
-                responsible for arranging and covering these costs separately?
-                Moreover, I would like to know if there are any specific
-                requirements or criteria that you consider when selecting
-                tenants. I am a reliable and respectful individual with a stable
-                income, and I can provide references upon request. Please let me
-                know if there are any documents or forms I need to complete as
-                part of the application process. Finally, I would be grateful if
-                you could inform me of the preferred method and timing for
-                viewing the property. I would love the opportunity to schedule a
-                visit to see the space firsthand and further discuss the rental
-                details. Thank you for considering my inquiry. I look forward to
-                hearing from you and potentially taking the next steps in
-                renting this property. Should you require any additional
-                information or have any questions, please do not hesitate to
-                reach me at [Your Phone Number] or [Your Email Address]. <br />
-                <br />
-                Sincerely, <br />
-                [Your Name]
-                <br /> [Your Contact Information]
+                {client.ai_email_summary}
               </div>
             </div>
           </SimpleBar>
@@ -368,21 +348,48 @@ const ReviewAIContact = ({
           start the communication.
         </div>
         <div className="flex">
-          <button
+          <Button
+            className={`${
+              removing && 'bg-red-500'
+            } hover:bg-red-500 bg-red-50 text-red-500 hover:text-white active:bg-red-500`}
+            leftIcon={<Delete />}
+            coloredButton
+            onClick={() => removeFromCRM()}
+            loading={removing}>
+            Delete From CRM
+          </Button>
+          {/* <button
             className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
-            onClick={handleClose}>
-            <Delete /> <span className="ml-2">Delete from CRM</span>
-          </button>
-          <button
+            onClick={() => removeFromCRM()}>
+            {loading ? (
+              <CircularProgress
+                size={15}
+                sx={{ color: 'white' }}></CircularProgress>
+            ) : (
+              <>
+                <Delete /> <span className="ml-2">Delete from CRM</span>
+              </>
+            )}
+          </button> */}
+          <Button
+            className={`${
+              updating && 'bg-[#10B981]'
+            } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
+            leftIcon={<CheckCircle />}
+            coloredButton
+            onClick={() => submitForm()}
+            loading={updating}>
+            Mark as Correct
+          </Button>
+          {/* <button
             // rightIcon={<ArrowRightIcon height={15} />}
-            className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]"
+            className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px]"
             onClick={() => {
-              setLoadingButton(true);
               submitForm();
             }}>
             <CheckCircle />
             <span className="ml-2">Mark as Correct</span>
-          </button>
+          </button> */}
         </div>
       </div>
     </Overlay>

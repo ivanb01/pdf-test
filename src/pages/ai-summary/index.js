@@ -7,6 +7,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import SimpleBar from 'simplebar-react';
 import { getUnapprovedContacts } from 'api/aiSmartSync';
 import Loader from 'components/shared/loader';
+import { updateContact } from '@api/contacts';
 
 const index = () => {
   const [loading, setLoading] = useState(true);
@@ -45,9 +46,25 @@ const index = () => {
     }
   };
 
+  const handleAction = async (type, data) => {
+    try {
+      let newData;
+      if (type == 'delete') {
+        newData = {
+          ...data,
+          category_id: 3,
+        };
+      } else {
+        newData = { ...data, approved_ai: true };
+      }
+      await updateContact(newData.id, newData);
+      fetchContacts();
+    } catch (error) {}
+  };
+
   useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [showReviewOverlay]);
 
   return (
     <div className="">
@@ -63,14 +80,15 @@ const index = () => {
             height: '100%',
             maxHeight:
               selectedPeople.length > 1
-                ? 'calc(100vh - 136px);'
-                : 'calc(100vh - 68px);',
+                ? 'calc(100vh - 136px)'
+                : 'calc(100vh - 68px)',
           }}>
           <Table
             className="pb-5"
             data={data}
             tableFor="ai-summary"
             checkbox={checkbox}
+            handleAction={handleAction}
             checked={checked}
             toggleAll={toggleAll}
             selectedPeople={selectedPeople}
