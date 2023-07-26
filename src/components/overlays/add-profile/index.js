@@ -7,7 +7,6 @@ import * as contactServices from 'api/contacts';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-
 const AddProfile = ({
   handleClose,
   contactId,
@@ -29,7 +28,7 @@ const AddProfile = ({
       selectedStatus: '',
     },
     validationSchema: AddProfileSchema,
-    onSubmit: async (values, { setSubmitting }) => {      
+    onSubmit: async (values, { setSubmitting }) => {
       await addProfile();
       handleFetchProfilesRequired();
       handleClose();
@@ -55,7 +54,7 @@ const AddProfile = ({
       setLoadingButton(false);
     }
   };
-  
+
   return (
     <Overlay
       title="Add Aditional Type"
@@ -68,21 +67,15 @@ const AddProfile = ({
             <Radio
               options={categoryTypes}
               label="What kind of contact is this for you?"
-              selectedContactType={formik.values.selectedContactType}
-              changeContactType={(e) =>
-                setFieldValue('selectedContactType', e)
-              }
+              selectedOption={formik.values.selectedContactType}
+              setSelectedOption={(e) => setFieldValue('selectedContactType', e)}
               className="mb-6"
-              error={
-                errors.selectedContactType && touched.selectedContactType
-              }
+              error={errors.selectedContactType && touched.selectedContactType}
               errorText={errors.selectedContactType}
             />
             <StatusSelect
               selectedStatus={formik.values.selectedStatus}
-              setSelectedStatus={(e) =>
-                setFieldValue('selectedStatus', e)
-              }
+              setSelectedStatus={(e) => setFieldValue('selectedStatus', e)}
               label="In what stage of communication?"
               statuses={statuses}
               error={errors.selectedStatus && touched.selectedStatus}

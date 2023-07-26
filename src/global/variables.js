@@ -54,11 +54,10 @@ export const menuItems = [
 ];
 
 export const contactTypes = [
-  { id: 0, name: 'Agent' },
-  { id: 1, name: 'Vendor' },
+  { id: 0, name: 'Client' },
+  { id: 1, name: 'Professional' },
   { id: 2, name: 'Other' },
   { id: 3, name: 'Uncategorized' },
-  { id: 4, name: 'Trash' },
 ];
 
 export const contactStatuses = [
@@ -653,6 +652,29 @@ export const professionalsOptions = [
   {
     id: 12,
     name: 'Agent',
+  },
+  {
+    id: 9,
+    name: 'Unspecified',
+  },
+];
+
+export const othersOptions = [
+  {
+    id: 14,
+    name: 'Family',
+  },
+  {
+    id: 13,
+    name: 'Friend',
+  },
+  {
+    id: 2,
+    name: 'Unknown',
+  },
+  {
+    id: 3,
+    name: 'Trash',
   },
 ];
 

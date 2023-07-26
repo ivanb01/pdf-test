@@ -71,7 +71,7 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
-  return foundType ? foundType : -1;
+  return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
   console.log(category, statusId);
@@ -86,7 +86,7 @@ export const getContactStatusByStatusId = (category, statusId) => {
       }
     });
   });
-  return foundStatus ? foundStatus : -1;
+  return foundStatus ? foundStatus : '-';
 };
 
 export const getContactStatusColorByStatusId = (category, statusId) => {

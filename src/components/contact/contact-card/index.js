@@ -29,6 +29,7 @@ import AddActivity from 'components/overlays/add-activity';
 import List from '@mui/icons-material/List';
 import DropdownNoInput from 'components/shared/dropdown/dropdownNoInput';
 import Workspaces from '@mui/icons-material/Workspaces';
+import AIChip from 'components/shared/chip/ai-chip';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -104,26 +105,17 @@ export default function ContactCard({
             </span> */}
           </div>
           {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
-          
-          <div className="flex w-full items-center justify-between">
+
+          <div className="flex w-full items-center justify-between mt-4">
             <DateChip
               lastCommunication={contact.last_communication_date}
               contactStatus={contact.status_2}
               contactCategory={categoryType}
             />
-
-          { 
-            (contact.import_source === 'GmailAI' || contact.import_source === 'Gmail') &&
-            <div className={`text-white ${contact.import_source === 'Gmail' ? 'bg-gray2' : 'bg-blue2'} inline-block px-2 mt-4 rounded-full text-xs font-medium items-center`}>
-              {contact.import_source === 'GmailAI' ? 'AI' : contact.import_source}
-            </div>
-          }
-
-
+            {contact.import_source === 'GmailAI' && (
+              <AIChip reviewed={contact.approved_ai} />
+            )}
           </div>
-          
-
-
         </div>
         <div
           className={`${

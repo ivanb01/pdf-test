@@ -62,6 +62,8 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
+import { Delete } from '@mui/icons-material';
+import { CheckCircle } from '@mui/icons-material';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -85,6 +87,11 @@ const Table = ({
   campaignId,
   setCampaignId,
   titleLabel,
+  checkbox,
+  checked,
+  toggleAll,
+  selectedPeople,
+  setSelectedPeople,
 }) => {
   const types = [
     {
@@ -1798,6 +1805,139 @@ const Table = ({
       </>
     );
   };
+
+  const aiSummaryTable = () => {
+    return (
+      <>
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center ">
+              <input
+                type="checkbox"
+                className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                ref={checkbox}
+                checked={checked}
+                onChange={toggleAll}
+              />
+              Contact
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Type
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Status
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Source
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Delete/correct
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
+          </tr>
+        </thead>
+        <tbody className=" bg-white">
+          {data.map((dataItem) => (
+            <tr
+              key={dataItem.agent_id}
+              className="contact-row group bg-white group border-b border-gray-200"
+              // onClick={(event) => handleClickRow(contact, event)}
+            >
+              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                  value={dataItem.email}
+                  checked={selectedPeople.includes(dataItem)}
+                  onChange={(e) =>
+                    setSelectedPeople(
+                      e.target.checked
+                        ? [...selectedPeople, dataItem]
+                        : selectedPeople.filter((p) => p !== dataItem),
+                    )
+                  }
+                />
+                <ContactInfo
+                  data={{
+                    // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                    name: `${dataItem.first_name} ${dataItem.last_name}`,
+                    id: dataItem.id,
+                    email: dataItem.email,
+                    // image: dataItem.profile_image_path,
+                  }}
+                  // handleSelect={(e, dataItem) =>
+                  //   handleSelectContact(e, dataItem)
+                  // }
+                  // handleAction={(id, action) => handleAction(id, action)}
+                />
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip typeStyle>
+                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <Chip
+                  statusStyle
+                  className={getContactStatusColorByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}>
+                  {getContactStatusByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                {dataItem.import_source}
+              </td>
+              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                <div className="flex items-center justify-center">
+                  <div className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6">
+                    <Delete
+                      onClick={() => handleAction('delete', dataItem)}
+                      id={'edit-contact-icon-' + dataItem.id}
+                      className="group-hover/delete:text-white text-[16px]"
+                    />
+                  </div>
+                  <div className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center">
+                    <CheckCircle
+                      onClick={() => handleAction('approve', dataItem)}
+                      id={'edit-contact-icon-' + dataItem.id}
+                      className="group-hover/check:text-white text-[16px]"
+                    />
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div
+                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
+                  onClick={() => handleCardEdit(dataItem)}>
+                  <Edit
+                    id={'edit-contact-icon-' + dataItem.id}
+                    className="text-gray3 w-4 h-4"
+                  />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -1821,6 +1961,8 @@ const Table = ({
                   ? categorizedTable()
                   : tableFor == 'other'
                   ? otherTable()
+                  : tableFor == 'ai-summary'
+                  ? aiSummaryTable()
                   : tableFor == 'import-google-contacts-successful' ||
                     tableFor == 'import-google-contacts-failed'
                   ? importGoogleContactsDetails()

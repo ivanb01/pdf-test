@@ -17,20 +17,23 @@ import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import dynamic from 'next/dynamic';
-import GlobalAlert from 'components/shared/alert/global-alert';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
+import { getUnapprovedContacts } from '@api/aiSmartSync';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 
 const index = () => {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
   const contacts = useSelector((state) => state.contacts.data);
   const allContacts = useSelector((state) => state.contacts.allContacts);
+  const [unapprovedContacts, setUnapprovedContacts] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -42,6 +45,19 @@ const index = () => {
     let filteredArray = searchContacts(contactsCopy.data, term);
     dispatch(updateContacts(filteredArray.data));
   };
+
+  const fetchUnapproved = async () => {
+    try {
+      const response = await getUnapprovedContacts();
+      setUnapprovedContacts(response.data.count);
+    } catch (error) {
+      console.log('error msg', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnapproved();
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -75,6 +91,15 @@ const index = () => {
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
+  useEffect(() => {
+    if (router.query.code) {
+      toast.success('Smart Sync is activated successfully', {
+        position: 'top-center',
+        duration: 4000,
+      });
+    }
+  }, [router.query]);
+
   return (
     <Layout>
       {loading ? (
@@ -86,6 +111,7 @@ const index = () => {
               setShowEditContact(true);
               setContactToEdit(contact);
             }}
+            unapprovedContacts={unapprovedContacts}
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchClients}
           />

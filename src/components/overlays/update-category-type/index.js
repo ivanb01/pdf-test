@@ -84,8 +84,8 @@ const UpdateCategoryType = ({
               <Radio
                 options={categoryTypes}
                 label="What kind of contact is this for you?"
-                selectedContactType={selectedContactType}
-                changeContactType={setSelectedContactType}
+                selectedOption={selectedContactType}
+                setSelectedOption={setSelectedContactType}
                 className="mb-6"
               />
               <StatusSelect

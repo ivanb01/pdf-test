@@ -326,8 +326,8 @@ const AddClientManuallyOverlay = ({
             <Radio
               options={options}
               label="What kind of contact is this for you?"
-              selectedContactType={formikStep2.values.selectedContactType}
-              changeContactType={(e) =>
+              selectedOption={formikStep2.values.selectedContactType}
+              setSelectedOption={(e) =>
                 setFieldValue2('selectedContactType', e)
               }
               className="mb-6"

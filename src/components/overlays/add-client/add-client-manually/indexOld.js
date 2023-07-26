@@ -92,8 +92,8 @@ const AddClientManuallyOverlay = ({
         <Radio
           options={options}
           label="What kind of client is this for you?"
-          selectedContactType={selectedClientType}
-          changeContactType={setSelectedClientType}
+          selectedOption={selectedClientType}
+          setSelectedOption={setSelectedClientType}
           className="mb-6"
         />
         <StatusSelect
