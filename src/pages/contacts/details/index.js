@@ -61,19 +61,36 @@ export default function Details() {
   const fetchContact = async () => {
     // setLoading(true);
     try {
-      const { data } = await getContact(id);
-      setContact(data);
-      const campaignsData = await getContactCampaign(id);
-      dispatch(setCampaignsData(campaignsData.data));
-      setLoading(false);
-      const notesData = await getContactNotes(id);
-      const activityLogData = await getContactActivities(id);
-      dispatch(setNotesData(notesData.data.data));
-      dispatch(setActivityLogData(activityLogData.data.data));
-      // setLoading(false);
-      console.log('get contact', id, data);
+      const contactPromise = getContact(id);
+      const campaignsPromise = getContactCampaign(id);
+      const notesPromise = getContactNotes(id);
+      const activityLogPromise = getContactActivities(id);
+
+      const [
+        contactResponse,
+        campaignsResponse,
+        notesResponse,
+        activityLogResponse,
+      ] = await Promise.all([
+        contactPromise,
+        campaignsPromise,
+        notesPromise,
+        activityLogPromise,
+      ]);
+
+      const contactData = contactResponse.data;
+      const campaignsData = campaignsResponse.data;
+      const notesData = notesResponse.data.data;
+      const activityLogData = activityLogResponse.data.data;
+
+      setContact(contactData);
+      dispatch(setCampaignsData(campaignsData));
+      dispatch(setNotesData(notesData));
+      dispatch(setActivityLogData(activityLogData));
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
