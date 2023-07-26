@@ -29,6 +29,10 @@ const isLocalhost =
       ),
   );
 
+const isDev =
+  typeof window !== 'undefined' &&
+  Boolean(window.location.hostname.includes('dev'));
+
 const SignIn = () => {
   //* FORMIK *//
   const formik = useFormik({
