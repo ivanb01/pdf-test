@@ -87,10 +87,10 @@ export default function Details() {
       dispatch(setCampaignsData(campaignsData));
       dispatch(setNotesData(notesData));
       dispatch(setActivityLogData(activityLogData));
-
-      setLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
