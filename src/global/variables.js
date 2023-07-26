@@ -25,10 +25,13 @@ import { CheckIcon } from '@heroicons/react/solid';
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
 export const productionRedirectSignIn =
   'https://onelinecrm.com/contacts/clients';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
 export const localRedirectSignOut =
   'http://localhost:3000/authentication/sign-in';
 export const productionRedirectSignOut =
   'https://onelinecrm.com/authentication/sign-in';
+export const devRedirectSignOut =
+  'https://dev.onelinecrm.com/authentication/sign-in';
 
 export const menuItems = [
   {

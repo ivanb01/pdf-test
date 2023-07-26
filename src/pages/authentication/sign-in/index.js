@@ -10,9 +10,11 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   localRedirectSignIn,
+  devRedirectSignIn,
   productionRedirectSignIn,
   localRedirectSignOut,
   productionRedirectSignOut,
+  devRedirectSignOut,
 } from 'global/variables';
 
 const isLocalhost =
@@ -63,6 +65,7 @@ const SignIn = () => {
       if (!userPoolId || !appClientId) {
         return false;
       }
+      console.log('islocahost, isdev', isLocalhost, isDev);
       const region = userPoolId?.split('_')[0];
       const awsmobile = {
         Auth: {
@@ -77,9 +80,13 @@ const SignIn = () => {
             scope: ['email', 'profile', 'openid'],
             redirectSignIn: isLocalhost
               ? localRedirectSignIn
+              : isDev
+              ? devRedirectSignIn
               : productionRedirectSignIn,
             redirectSignOut: isLocalhost
               ? localRedirectSignOut
+              : isDev
+              ? devRedirectSignOut
               : productionRedirectSignOut,
             responseType: 'code',
           },
