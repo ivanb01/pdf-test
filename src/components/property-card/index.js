@@ -1,4 +1,7 @@
 import { formatPrice } from '@global/functions';
+import room from '/public/images/room.svg';
+import bathroom from '/public/images/bathroom.svg';
+import sqft from '/public/images/sqft.svg';
 const PropertyCard = ({ property }) => {
   return (
     <div className="border border-gray-200 rounded-[4px]">
@@ -17,7 +20,20 @@ const PropertyCard = ({ property }) => {
             {property.ZIP_CODE}
           </div>
         </div>
-        <div className="mb-3"></div>
+        <div className="mb-3 flex font-medium">
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+            <img className="mr-2" src={room.src} alt="" />
+            {property.TOTAL_ROOMS}
+          </div>
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+            <img className="mr-2" src={bathroom.src} alt="" />
+            {property.BATHROOMS}
+          </div>
+          <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+            <img className="mr-1" src={sqft.src} alt="" />
+            {property.SQUARE_FOOTAGE} sqft
+          </div>
+        </div>
         <div className="font-semibold text-gray-900 text-base">
           {formatPrice(property.PRICE)}
           {property.STATUS.toLowerCase() == 'for rent' && (

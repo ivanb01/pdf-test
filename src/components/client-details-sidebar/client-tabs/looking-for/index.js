@@ -321,6 +321,7 @@ export default function LookingFor({ contactId }) {
         STATE: 'NY',
         BEDROOMS: 1,
         PROPERTY_TYPE: 'Condop',
+        SQUARE_FOOTAGE: 2500,
       },
       {
         ID: 1204120,
@@ -463,6 +464,7 @@ export default function LookingFor({ contactId }) {
         STATE: 'NY',
         BEDROOMS: 1,
         PROPERTY_TYPE: 'Penthouse',
+        SQUARE_FOOTAGE: 1980,
       },
     ];
     setTimeout(() => {
