@@ -19,6 +19,8 @@ import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
 // import { ArrowRightIcon } from '@heroicons/react/solid';
 import ArrowForward from '@mui/icons-material/ArrowForward';
+import Loader from '@components/shared/loader';
+import PropertyCard from '@components/property-card';
 
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
@@ -49,6 +51,9 @@ export default function LookingFor({ contactId }) {
   const [lookingForState, setLookingForState] = useState(1);
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
+  const [propertyInterests, setPropertyInterests] = useState();
+  const [loadingPropertyInterests, setLoadingPropertyInterests] =
+    useState(true);
 
   const formik = useFormik({
     validateOnMount: true,
@@ -149,6 +154,326 @@ export default function LookingFor({ contactId }) {
     });
     return options;
   };
+
+  const fetchPropertyInterests = () => {
+    setLoadingPropertyInterests(true);
+    const propertyInterests = [
+      {
+        ID: 1204120,
+        PHOTOS: [
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/561/original/PI-5895t4e6ej.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729036.jpg',
+            SORT_ORDER: 1,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/559/original/PI-5895t49jjv.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729037.jpg',
+            SORT_ORDER: 2,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/560/original/PI-5895t4c3sj.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729038.jpg',
+            SORT_ORDER: 3,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/556/original/PI-5895t3pc4e.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729039.jpg',
+            SORT_ORDER: 4,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/553/original/PI-5895t30j32.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729040.jpg',
+            SORT_ORDER: 5,
+            LISTING_ID: 1204120,
+            WIDTH: 512,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/555/original/PI-5895t3j3fk.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729041.jpg',
+            SORT_ORDER: 6,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/557/original/PI-5895t3qdvj.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729042.jpg',
+            SORT_ORDER: 7,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/554/original/PI-5895t3i1e8.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729043.jpg',
+            SORT_ORDER: 8,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/558/original/PI-5895t3t2ml.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729044.jpg',
+            SORT_ORDER: 9,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/552/original/PI-5895t2esmu.jpg?1685033536',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729045.jpg',
+            SORT_ORDER: 10,
+            LISTING_ID: 1204120,
+            WIDTH: 512,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/551/original/PI-5895t1o9qg.jpg?1685033536',
+            PHOTO_TITLE: 'Floor Plan',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729046.jpg',
+            SORT_ORDER: 12,
+            LISTING_ID: 1204120,
+            WIDTH: 1001,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/562/original/PI-5895t535th.jpg?1685033539',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729047.jpg',
+            SORT_ORDER: 12,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+        ],
+        NEIGHBORHOOD_ID: 52,
+        BATHROOMS: 1,
+        COMPANY_NAME: 'Level Group Inc',
+        MAX_LEASE_TERM: 0,
+        LISTING_TITLE: 'Bennett Avenue',
+        CONDITION: 'Excellent',
+        FLOOR_NUMBER: '3',
+        STORIES: 8,
+        DESCRIPTION:
+          "Pristine, fully renovated one bedroom home with park and garden views!  \n\nEnjoy the solid new French Oak wide-plank floors throughout the efficient layout.  Create memorable meals in the open-concept kitchen with quartz countertops, white cabinetry, subway tile backsplash, high-end Haier fridge, stainless steel Whirlpool dishwasher, and GE stove and micro.  New bath with marble floors. Walk-in closet.\n\nFort Tryon Gardens is a well-managed and financially sound 7-building, 350-unit co-op perfectly situated next to the beautiful Fort Tryon Park, one of New York City's most dramatic, with breathtaking Hudson River views, the exquisite Heather Garden and the world-famous Cloisters Museum. Being next to the park is like having a billionaire's backyard.  Ample nearby commerce, including supermarkets and a diverse selection of restaurants, characterize the area. The co-op has made significant infrastructure improvements in recent years, including a brand-new roof, video intercom system, and various plumbing upgrades. The complex has a friendly and diligent staff, with resident Superintendent. Pets are welcome, including your canine friends. The building is situated near the 1-train and, best of all, the A-train express line is right across the street.\n\nAll viewings are by appointment only. The co-op allows co-purchasing and pied a terre. The Special Capital Assessment ending June 30, 024 allocates $124.05 per month to this unit.  Some photos are virtually staged.",
+        BUILDING_ID: 5641,
+        DATE_CREATE: '2023-05-25 12:53:00',
+        STREET: 'Bennett Avenue',
+        CROSS_STREET: '190/191 sts',
+        CITY: 'NEW YORK',
+        UNIT_NUMBER: '3D',
+        STREET_NUMBER: '259',
+        TOTAL_ROOMS: 3,
+        STATUS: 'For Sale',
+        AMENITIES:
+          'Elevator,Garage,Laundry,Bicycle Room,Storage,Park View,Courtyard,Pied a Terre,',
+        PRICE: 399000,
+        ADDRESS: '259 Bennett Avenue, Unit 3D',
+        NEIGHBORHOODS: 'Washington Heights',
+        STATE: 'NY',
+        BEDROOMS: 1,
+        PROPERTY_TYPE: 'Condop',
+      },
+      {
+        ID: 1204120,
+        PHOTOS: [
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/560/original/PI-5895t4c3sj.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729038.jpg',
+            SORT_ORDER: 3,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/556/original/PI-5895t3pc4e.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729039.jpg',
+            SORT_ORDER: 4,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/553/original/PI-5895t30j32.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729040.jpg',
+            SORT_ORDER: 5,
+            LISTING_ID: 1204120,
+            WIDTH: 512,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/555/original/PI-5895t3j3fk.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729041.jpg',
+            SORT_ORDER: 6,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/557/original/PI-5895t3qdvj.jpg?1685033538',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729042.jpg',
+            SORT_ORDER: 7,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/554/original/PI-5895t3i1e8.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729043.jpg',
+            SORT_ORDER: 8,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/558/original/PI-5895t3t2ml.jpg?1685033537',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729044.jpg',
+            SORT_ORDER: 9,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/552/original/PI-5895t2esmu.jpg?1685033536',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729045.jpg',
+            SORT_ORDER: 10,
+            LISTING_ID: 1204120,
+            WIDTH: 512,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/551/original/PI-5895t1o9qg.jpg?1685033536',
+            PHOTO_TITLE: 'Floor Plan',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729046.jpg',
+            SORT_ORDER: 12,
+            LISTING_ID: 1204120,
+            WIDTH: 1001,
+            HEIGHT: 768,
+          },
+          {
+            ORIGINAL_URL:
+              'https://media.perchwell.com/property_images/pictures/038/645/562/original/PI-5895t535th.jpg?1685033539',
+            PHOTO_TITLE: ' ',
+            PHOTO_URL:
+              'https://rls.realty.mx/images/assets/1204120_130729047.jpg',
+            SORT_ORDER: 12,
+            LISTING_ID: 1204120,
+            WIDTH: 1024,
+            HEIGHT: 683,
+          },
+        ],
+        NEIGHBORHOOD_ID: 52,
+        BATHROOMS: 1,
+        COMPANY_NAME: 'Level Group Inc',
+        MAX_LEASE_TERM: 0,
+        LISTING_TITLE: '5th Avenue',
+        CONDITION: 'Excellent',
+        FLOOR_NUMBER: '3',
+        STORIES: 8,
+        DESCRIPTION:
+          "Pristine, fully renovated one bedroom home with park and garden views!  \n\nEnjoy the solid new French Oak wide-plank floors throughout the efficient layout.  Create memorable meals in the open-concept kitchen with quartz countertops, white cabinetry, subway tile backsplash, high-end Haier fridge, stainless steel Whirlpool dishwasher, and GE stove and micro.  New bath with marble floors. Walk-in closet.\n\nFort Tryon Gardens is a well-managed and financially sound 7-building, 350-unit co-op perfectly situated next to the beautiful Fort Tryon Park, one of New York City's most dramatic, with breathtaking Hudson River views, the exquisite Heather Garden and the world-famous Cloisters Museum. Being next to the park is like having a billionaire's backyard.  Ample nearby commerce, including supermarkets and a diverse selection of restaurants, characterize the area. The co-op has made significant infrastructure improvements in recent years, including a brand-new roof, video intercom system, and various plumbing upgrades. The complex has a friendly and diligent staff, with resident Superintendent. Pets are welcome, including your canine friends. The building is situated near the 1-train and, best of all, the A-train express line is right across the street.\n\nAll viewings are by appointment only. The co-op allows co-purchasing and pied a terre. The Special Capital Assessment ending June 30, 024 allocates $124.05 per month to this unit.  Some photos are virtually staged.",
+        BUILDING_ID: 5641,
+        DATE_CREATE: '2023-05-25 12:53:00',
+        STREET: '5th Avenue',
+        CROSS_STREET: '184/125 sts',
+        CITY: 'NEW YORK',
+        UNIT_NUMBER: '3D',
+        STREET_NUMBER: '259',
+        TOTAL_ROOMS: 3,
+        STATUS: 'For Rent',
+        AMENITIES:
+          'Elevator,Garage,Laundry,Bicycle Room,Storage,Park View,Courtyard,Pied a Terre,',
+        PRICE: 399000,
+        ADDRESS: '5th Avenue, Unit 3C',
+        NEIGHBORHOODS: 'Washington Heights',
+        STATE: 'NY',
+        BEDROOMS: 1,
+        PROPERTY_TYPE: 'Penthouse',
+      },
+    ];
+    setTimeout(() => {
+      setPropertyInterests(propertyInterests);
+      setLoadingPropertyInterests(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    fetchPropertyInterests();
+  }, []);
 
   const PropertyDetail = ({
     className,
@@ -276,45 +601,61 @@ export default function LookingFor({ contactId }) {
           </div>
         </div>
       ) : (
-        <div className="bg-white details-tabs-fixed-height">
-          <header className="bg-gray-50 p-6">
-            <div className="flex items-center justify-between mb-4 text-sm">
-              <div className="text-gray-900 font-medium flex items-center">
-                Property Interests
-                <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                  for Rent
+        <div className="bg-white relative">
+          {loadingPropertyInterests ? (
+            <Loader message="Please wait we're searching for matched properties"></Loader>
+          ) : (
+            <>
+              <header className="bg-gray-50 p-6">
+                <div className="flex items-center justify-between mb-4 text-sm">
+                  <div className="text-gray-900 font-medium flex items-center">
+                    Property Interests
+                    <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                      for Rent
+                    </div>
+                  </div>
+                  <div className="cursor-pointer">Edit</div>
+                </div>
+                <PropertyDetail
+                  className="mb-4"
+                  label="Neighborhood"
+                  value="West Village"
+                />
+                <div className="grid grid-cols-4">
+                  <PropertyDetail
+                    label="Rooms"
+                    value="3"
+                    iconAfter={<Image src={room} height={20} />}
+                  />
+                  <PropertyDetail
+                    label="Bedrooms"
+                    value="3"
+                    iconAfter={<Image src={bedroomBlack} height={20} />}
+                  />
+                  <PropertyDetail
+                    label="Bathrooms"
+                    value="2"
+                    iconAfter={<Image src={bathroomBlack} height={20} />}
+                  />
+                  <PropertyDetail
+                    label="Price Min / Max"
+                    value="$1,100 - $2,500"
+                    textAfter="monthly"
+                  />
+                </div>
+              </header>
+              <div className="p-6">
+                <div className="mb-4 text-gray-900 text-sm font-medium">
+                  {propertyInterests.length} suggested properties
+                </div>
+                <div className="grid grid-cols-3 gap-6">
+                  {propertyInterests.map((property) => (
+                    <PropertyCard property={property}></PropertyCard>
+                  ))}
                 </div>
               </div>
-              <div className="cursor-pointer">Edit</div>
-            </div>
-            <PropertyDetail
-              className="mb-4"
-              label="Neighborhood"
-              value="West Village"
-            />
-            <div className="grid grid-cols-4">
-              <PropertyDetail
-                label="Rooms"
-                value="3"
-                iconAfter={<Image src={room} height={20} />}
-              />
-              <PropertyDetail
-                label="Bedrooms"
-                value="3"
-                iconAfter={<Image src={bedroomBlack} height={20} />}
-              />
-              <PropertyDetail
-                label="Bathrooms"
-                value="2"
-                iconAfter={<Image src={bathroomBlack} height={20} />}
-              />
-              <PropertyDetail
-                label="Price Min / Max"
-                value="$1,100 - $2,500"
-                textAfter="monthly"
-              />
-            </div>
-          </header>
+            </>
+          )}
         </div>
       )}
     </SimpleBar>

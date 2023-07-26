@@ -152,6 +152,13 @@ export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };
 
+export const formatPrice = (price) => {
+  return price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+};
+
 export const isValidDate = (date) => {
   return moment(date).isValid();
 };

@@ -24,7 +24,7 @@ import { useRef, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
-
+import { formatPrice } from '@global/functions';
 const index = () => {
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
@@ -398,12 +398,6 @@ const index = () => {
     element.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const formatPrice = (price) => {
-    return price.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
-  };
   return (
     <>
       <div className="bg-white p-6 flex items-center properties-container">
