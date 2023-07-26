@@ -10,7 +10,7 @@ const Authentication = ({ children }) => {
           <Image src={opgnyLogo} alt="" className="" />
           <div className="pt-4 md:pt-0 w-full h-full flex flex-col items-center justify-center">
             <div className=" text-sm md:text-3xl text-onelineMainColor font-bold text-center mb-4 max-w-lg">
-              ..Automate your sales process and close more deals
+              Automate your sales process and close more deals
             </div>
             <div className="w-full md:h-[350px] md:w-[350px]">
               <lottie-player

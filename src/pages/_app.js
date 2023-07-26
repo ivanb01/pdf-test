@@ -12,12 +12,7 @@ import { useRouter } from 'next/router';
 import { Toaster } from 'react-hot-toast';
 import 'shepherd.js/dist/css/shepherd.css';
 import '../styles/_global.scss';
-import {
-  localRedirectSignIn,
-  productionRedirectSignIn,
-  localRedirectSignOut,
-  productionRedirectSignOut,
-} from 'global/variables';
+import { redirectSignIn, redirectSignOut } from 'global/variables';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -102,12 +97,8 @@ const MyApp = ({ Component, pageProps }) => {
               'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost
-              ? localRedirectSignIn
-              : productionRedirectSignIn,
-            redirectSignOut: isLocalhost
-              ? localRedirectSignOut
-              : productionRedirectSignOut,
+            redirectSignIn: redirectSignIn,
+            redirectSignOut: redirectSignOut,
             responseType: 'code',
           },
         },
