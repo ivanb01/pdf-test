@@ -69,7 +69,6 @@ const SignIn = () => {
       if (!userPoolId || !appClientId) {
         return false;
       }
-      console.log('islocahost, isdev', isLocalhost, isDev);
       const region = userPoolId?.split('_')[0];
       const awsmobile = {
         Auth: {
