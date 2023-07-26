@@ -21,13 +21,14 @@ import { CheckIcon } from '@heroicons/react/solid';
 //   { id: 6, name: 'Showing Properties', colorClass: '--success-v5' },
 //   { id: 7, name: 'Submitting Offer', colorClass: '--success-v6' },
 // ];
-let origin;
-if (typeof window !== 'undefined') {
-  origin = window.location.origin;
-}
-export const redirectSignIn = `${origin}/contacts/clients`;
 
-export const redirectSignOut = `${origin}/authentication/sign-in`;
+export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
+export const productionRedirectSignIn =
+  'https://onelinecrm.com/contacts/clients';
+export const localRedirectSignOut =
+  'http://localhost:3000/authentication/sign-in';
+export const productionRedirectSignOut =
+  'https://onelinecrm.com/authentication/sign-in';
 
 export const menuItems = [
   {
