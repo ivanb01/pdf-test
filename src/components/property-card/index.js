@@ -3,6 +3,7 @@ import room from '/public/images/room.svg';
 import bathroom from '/public/images/bathroom.svg';
 import sqft from '/public/images/sqft.svg';
 import share from '/public/images/share.svg';
+import placeholder from '/public/images/img-placeholder.png';
 
 const PropertyCard = ({ property }) => {
   return (
@@ -10,7 +11,9 @@ const PropertyCard = ({ property }) => {
       <div className="h-[160px] relative">
         <img
           className="object-cover h-full w-full"
-          src={property.PHOTOS[0].PHOTO_URL}></img>
+          src={
+            property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src
+          }></img>
         <div className="flex items-center justify-between absolute bottom-2 left-2 right-2">
           <div className="flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
             for Rent
