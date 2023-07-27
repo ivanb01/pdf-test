@@ -12,10 +12,10 @@ import Button from 'components/shared/button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import ArrowCircleRightOutlined from '@mui/icons-material/ArrowCircleRightOutlined';
-import ArrowCircleLeftOutlined from '@mui/icons-material/ArrowCircleLeftOutlined';
 import { getCount } from 'api/contacts';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
+import ArrowLeft from '/public/images/arrow-circle-left.svg';
+import ArrowRight from '/public/images/arrow-circle-right.svg';
 import { getUserConsentForGoogleEmail } from '@api/google';
 const MainSidebar = ({
   tabs,
@@ -101,7 +101,7 @@ const MainSidebar = ({
             <div className="accordion w-inherit" key={tab.id}>
               <Link
                 href="#"
-                className={`flex items-center h-10 justify-between px-2 py-4 mx-3  mr-8 rounded-md ${
+                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md ${
                   openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                 }`}
                 onClick={() => {
@@ -246,17 +246,11 @@ const MainSidebar = ({
       {collapsable && (
         <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
-          className="absolute bg-white rounded-full text-gray-400 cursor-pointer z-50"
-          style={{ right: '-15px', top: '16px' }}>
-          {pinned ? (
-            <div className="">
-              <ArrowCircleLeftOutlined className=" text-3xl" />
-            </div>
-          ) : (
-            <div className="">
-              <ArrowCircleRightOutlined className=" text-3xl" />
-            </div>
-          )}
+          className="absolute cursor-pointer z-50"
+          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}>
+          <div className="">
+            <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
+          </div>
         </div>
       )}
     </div>
