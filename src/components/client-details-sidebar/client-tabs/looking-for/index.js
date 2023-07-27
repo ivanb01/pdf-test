@@ -21,6 +21,7 @@ import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
+import EditLookingFor from '@components/overlays/edit-looking-for';
 
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
@@ -48,6 +49,7 @@ export default function LookingFor({ contactId }) {
   });
 
   //* FORMIK *//
+  const [showPopup, setShowPopup] = useState(false);
   const [lookingForState, setLookingForState] = useState(1);
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
@@ -67,16 +69,14 @@ export default function LookingFor({ contactId }) {
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
-      console.log('looking property', values);
       setFieldValue('budget_min', parseFloat(values.budget_min));
       setFieldValue('budget_max', parseFloat(values.budget_max));
-      console.log(formik.isValid);
       if (formik.isValid) {
-        // handleAddSubmit({
-        //   ...values,
-        //   budget_min: parseFloat(values.budget_min),
-        //   budget_max: parseFloat(values.budget_max),
-        // });
+        handleAddSubmit({
+          ...values,
+          budget_min: parseFloat(values.budget_min),
+          budget_max: parseFloat(values.budget_max),
+        });
       }
     },
   });
@@ -104,6 +104,7 @@ export default function LookingFor({ contactId }) {
       const { data } = await contactServices.getContactLookingProperties(
         contactId,
       );
+      console.log('lookingfor properties', data);
       const lookingProperties = data.data;
       if (lookingProperties.length > 0) {
         formik.setValues({
@@ -495,37 +496,46 @@ export default function LookingFor({ contactId }) {
     );
   };
   return (
-    <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      {lookingForState == 0 ? (
-        <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
-          <div className="max-w-[600px]">
-            <div className="p-6">
-              <form onSubmit={formik.handleSubmit}>
-                <div className="mb-[60px] text-center">
-                  <div className="text-black font-medium text-lg mb-3">
-                    No Property Suggested
+    <>
+      {showPopup && (
+        <EditLookingFor
+          title="Edit Property Interests"
+          handleClose={() => setShowPopup(false)}
+        />
+      )}
+      <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
+        {lookingForState == 0 ? (
+          <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
+            <div className="max-w-[600px]">
+              <div className="p-6">
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="mb-[60px] text-center">
+                    <div className="text-black font-medium text-lg mb-3">
+                      No Property Suggested
+                    </div>
+                    <div className="text-black text-sm">
+                      Please fill the Property Interests so we can suggest
+                      properties for this contact
+                    </div>
                   </div>
-                  <div className="text-black text-sm">
-                    Please fill the Property Interests so we can suggest
-                    properties for this contact
-                  </div>
-                </div>
-                <div className="mx-auto relative">
-                  <SearchSelectInput
-                    label="Neighborhood"
-                    options={NYCneighborhoods}
-                    value={valueOptions(
-                      formik.values.neighborhood_ids,
-                      NYCneighborhoods,
-                    )}
-                    onChange={(choice) => {
-                      let choices = choice.map((el) => el.value);
-                      formik.setFieldValue('neighborhood_ids', choices);
-                    }}
-                    error={errors.neighborhood_ids && touched.neighborhood_ids}
-                    errorText={errors.neighborhood_ids}
-                  />
-                  {/* <Input
+                  <div className="mx-auto relative">
+                    <SearchSelectInput
+                      label="Neighborhood"
+                      options={NYCneighborhoods}
+                      value={valueOptions(
+                        formik.values.neighborhood_ids,
+                        NYCneighborhoods,
+                      )}
+                      onChange={(choice) => {
+                        let choices = choice.map((el) => el.value);
+                        formik.setFieldValue('neighborhood_ids', choices);
+                      }}
+                      error={
+                        errors.neighborhood_ids && touched.neighborhood_ids
+                      }
+                      errorText={errors.neighborhood_ids}
+                    />
+                    {/* <Input
                 id="neighborhood_ids"
                 type="number"
                 label="Neighborhood"
@@ -535,131 +545,140 @@ export default function LookingFor({ contactId }) {
                 error={errors.neighborhood_ids && touched.neighborhood_ids}
                 errorText={errors.neighborhood_ids}
               /> */}
-                </div>
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <Input
-                    id="bedrooms"
-                    type="number"
-                    label="Bedrooms"
-                    className="col-span-1"
-                    iconAfter={<Image src={bedroom} height={20} />}
-                    onChange={formik.handleChange}
-                    value={formik.values.bedrooms}
-                    error={errors.bedrooms && touched.bedrooms}
-                    errorText={errors.bedrooms}
-                  />
-                  <Input
-                    id="bathrooms"
-                    type="number"
-                    label="Bathrooms"
-                    iconAfter={<Image src={bathroom} height={20} />}
-                    className="col-span-1"
-                    onChange={formik.handleChange}
-                    value={formik.values.bathrooms}
-                    error={errors.bathrooms && touched.bathrooms}
-                    errorText={errors.bathrooms}
-                  />
-                  <Input
-                    id="budget_min"
-                    type="money"
-                    label="Budget Min"
-                    iconAfter={<Image src={usd} height={20} />}
-                    className="col-span-1"
-                    onChange={(val) => formik.setFieldValue('budget_min', val)}
-                    value={formik.values.budget_min}
-                    error={errors.budget_min && touched.budget_min}
-                    errorText={errors.budget_min}
-                  />
-                  <Input
-                    id="budget_max"
-                    type="money"
-                    label="Budget Max"
-                    iconAfter={<Image src={usd} height={20} />}
-                    className="col-span-1"
-                    onChange={(val) => formik.setFieldValue('budget_max', val)}
-                    value={formik.values.budget_max}
-                    error={errors.budget_max && touched.budget_max}
-                    errorText={errors.budget_max}
-                  />
-                </div>
-                {/* <Accordion
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <Input
+                      id="bedrooms"
+                      type="number"
+                      label="Bedrooms"
+                      className="col-span-1"
+                      iconAfter={<Image src={bedroom} height={20} />}
+                      onChange={formik.handleChange}
+                      value={formik.values.bedrooms}
+                      error={errors.bedrooms && touched.bedrooms}
+                      errorText={errors.bedrooms}
+                    />
+                    <Input
+                      id="bathrooms"
+                      type="number"
+                      label="Bathrooms"
+                      iconAfter={<Image src={bathroom} height={20} />}
+                      className="col-span-1"
+                      onChange={formik.handleChange}
+                      value={formik.values.bathrooms}
+                      error={errors.bathrooms && touched.bathrooms}
+                      errorText={errors.bathrooms}
+                    />
+                    <Input
+                      id="budget_min"
+                      type="money"
+                      label="Budget Min"
+                      iconAfter={<Image src={usd} height={20} />}
+                      className="col-span-1"
+                      onChange={(val) =>
+                        formik.setFieldValue('budget_min', val)
+                      }
+                      value={formik.values.budget_min}
+                      error={errors.budget_min && touched.budget_min}
+                      errorText={errors.budget_min}
+                    />
+                    <Input
+                      id="budget_max"
+                      type="money"
+                      label="Budget Max"
+                      iconAfter={<Image src={usd} height={20} />}
+                      className="col-span-1"
+                      onChange={(val) =>
+                        formik.setFieldValue('budget_max', val)
+                      }
+                      value={formik.values.budget_max}
+                      error={errors.budget_max && touched.budget_max}
+                      errorText={errors.budget_max}
+                    />
+                  </div>
+                  {/* <Accordion
                 tabs={tabs}
                 activeSelections={selections}
                 defaultOpen
               /> */}
-                <div className="text-right">
-                  <Button
-                    label="Save Property Interests"
-                    rightIcon={<ArrowForward className="h-4" />}
-                    type="submit"
-                    primary
-                    className="mt-6"
-                    loading={loadingButton}
-                    disabled={disabledButton}
-                  />
-                </div>
-              </form>
+                  <div className="text-right">
+                    <Button
+                      label="Save Property Interests"
+                      rightIcon={<ArrowForward className="h-4" />}
+                      type="submit"
+                      primary
+                      className="mt-6"
+                      loading={loadingButton}
+                      disabled={disabledButton}
+                    />
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="bg-white relative">
-          {loadingPropertyInterests ? (
-            <Loader message="Please wait we're searching for matched properties"></Loader>
-          ) : (
-            <>
-              <header className="bg-gray-50 p-6">
-                <div className="flex items-center justify-between mb-4 text-sm">
-                  <div className="text-gray-900 font-medium flex items-center">
-                    Property Interests
-                    <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                      for Rent
+        ) : (
+          <div className="bg-white relative">
+            {loadingPropertyInterests ? (
+              <Loader message="Please wait we're searching for matched properties"></Loader>
+            ) : (
+              <>
+                <header className="bg-gray-50 p-6">
+                  <div className="flex items-center justify-between mb-4 text-sm">
+                    <div className="text-gray-900 font-medium flex items-center">
+                      Property Interests
+                      <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                        for Rent
+                      </div>
+                    </div>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => setShowPopup(true)}>
+                      Edit
                     </div>
                   </div>
-                  <div className="cursor-pointer">Edit</div>
-                </div>
-                <PropertyDetail
-                  className="mb-4"
-                  label="Neighborhood"
-                  value="West Village"
-                />
-                <div className="grid grid-cols-4">
                   <PropertyDetail
-                    label="Rooms"
-                    value="3"
-                    iconAfter={<Image src={room} height={20} />}
+                    className="mb-4"
+                    label="Neighborhood"
+                    value="West Village"
                   />
-                  <PropertyDetail
-                    label="Bedrooms"
-                    value="3"
-                    iconAfter={<Image src={bedroomBlack} height={20} />}
-                  />
-                  <PropertyDetail
-                    label="Bathrooms"
-                    value="2"
-                    iconAfter={<Image src={bathroomBlack} height={20} />}
-                  />
-                  <PropertyDetail
-                    label="Price Min / Max"
-                    value="$1,100 - $2,500"
-                    textAfter="monthly"
-                  />
+                  <div className="grid grid-cols-4">
+                    <PropertyDetail
+                      label="Rooms"
+                      value="3"
+                      iconAfter={<Image src={room} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Bedrooms"
+                      value="3"
+                      iconAfter={<Image src={bedroomBlack} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Bathrooms"
+                      value="2"
+                      iconAfter={<Image src={bathroomBlack} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Price Min / Max"
+                      value="$1,100 - $2,500"
+                      textAfter="monthly"
+                    />
+                  </div>
+                </header>
+                <div className="p-6">
+                  <div className="mb-4 text-gray-900 text-sm font-medium">
+                    {propertyInterests.length} suggested properties
+                  </div>
+                  <div className="grid grid-cols-3 gap-6">
+                    {propertyInterests.map((property) => (
+                      <PropertyCard property={property}></PropertyCard>
+                    ))}
+                  </div>
                 </div>
-              </header>
-              <div className="p-6">
-                <div className="mb-4 text-gray-900 text-sm font-medium">
-                  {propertyInterests.length} suggested properties
-                </div>
-                <div className="grid grid-cols-3 gap-6">
-                  {propertyInterests.map((property) => (
-                    <PropertyCard property={property}></PropertyCard>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-    </SimpleBar>
+              </>
+            )}
+          </div>
+        )}
+      </SimpleBar>
+    </>
   );
 }
