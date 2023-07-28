@@ -77,41 +77,49 @@ const index = () => {
           <Loader />
         </div>
       ) : data ? (
-        <SimpleBar
-          autoHide={true}
-          style={{
-            height: '100%',
-            maxHeight:
-              selectedPeople.length > 1
-                ? 'calc(100vh - 136px)'
-                : 'calc(100vh - 68px)',
-          }}>
-          <Table
-            className="pb-5"
-            data={data}
-            tableFor="ai-summary"
-            checkbox={checkbox}
-            handleAction={handleAction}
-            checked={checked}
-            toggleAll={toggleAll}
-            selectedPeople={selectedPeople}
-            setSelectedPeople={setSelectedPeople}
-            handleCardEdit={(item) => {
-              setPopupData(item);
-              setShowReviewOverlay(true);
-            }}
-            handleClickRow={(data, event) => {
-              if (event.target.type == 'checkbox') {
-                return;
-              } else {
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: data.id },
-                });
-              }
-            }}
-          />
-        </SimpleBar>
+        <>
+          <SimpleBar
+            autoHide={true}
+            style={{
+              height: '100%',
+              maxHeight:
+                selectedPeople.length > 1
+                  ? 'calc(100vh - 136px)'
+                  : 'calc(100vh - 68px)',
+            }}>
+            <div className="p-6 text-gray-900 font-medium text-base">
+              <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
+                {data.length} contacts
+              </div>{' '}
+              from Smart Synced Contacts need to be reviewed
+            </div>
+            <Table
+              className="pb-5"
+              data={data}
+              tableFor="ai-summary"
+              checkbox={checkbox}
+              handleAction={handleAction}
+              checked={checked}
+              toggleAll={toggleAll}
+              selectedPeople={selectedPeople}
+              setSelectedPeople={setSelectedPeople}
+              handleCardEdit={(item) => {
+                setPopupData(item);
+                setShowReviewOverlay(true);
+              }}
+              handleClickRow={(data, event) => {
+                if (event.target.type == 'checkbox') {
+                  return;
+                } else {
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: data.id },
+                  });
+                }
+              }}
+            />
+          </SimpleBar>
+        </>
       ) : (
         <div>No Data</div>
       )}
