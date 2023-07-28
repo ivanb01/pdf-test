@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 import Chip from 'components/shared/chip';
 import { getInitials } from 'global/functions';
+import AIChip from '@components/shared/chip/ai-chip';
 const statusColors = {
   'New Lead': 'bg-lightBlue1',
   'Attempted Contact': 'bg-lightBlue2',
@@ -19,15 +20,14 @@ const statusColors = {
   'Loose Relationship': 'bg-lightBlue2',
   'Strong Relationship': 'bg-purple1',
 };
-const ContactInfo = ({ data, handleSelect, handleAction }) => {
+const ContactInfo = ({ data, handleSelect, handleAction, showAIChip }) => {
   return (
     <div className="flex items-center relative">
       {handleSelect && (
         <Input
           type="checkbox"
           className="mr-1"
-          onChange={(e) => handleSelect(e, data)}
-        ></Input>
+          onChange={(e) => handleSelect(e, data)}></Input>
       )}
       <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
         {data.image && data.image !== null ? (
@@ -45,7 +45,12 @@ const ContactInfo = ({ data, handleSelect, handleAction }) => {
         )}
       </div>
       <div className="ml-3">
-        <div className="font-medium text-gray7">{data.name}</div>
+        <div className="font-medium text-gray7 flex">
+          {data.name}{' '}
+          {showAIChip && (
+            <AIChip className="ml-2" reviewed={data.approved_ai} />
+          )}
+        </div>
         {data.email && (
           <div className="text-gray-500 font-medium">{data.email}</div>
         )}

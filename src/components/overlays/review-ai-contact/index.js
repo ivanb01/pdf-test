@@ -357,7 +357,7 @@ const ReviewAIContact = ({
             coloredButton
             onClick={() => removeFromCRM()}
             loading={removing}>
-            Delete From CRM
+            Move to Trash
           </Button>
           {/* <button
             className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"

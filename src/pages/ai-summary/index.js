@@ -40,7 +40,10 @@ const index = () => {
   const fetchContacts = async () => {
     try {
       const response = await getUnapprovedContacts();
-      setData(response.data.data);
+      let finalData = response.data.data.filter(
+        (contact) => contact.category_1 != 'Uncategorized',
+      );
+      setData(finalData);
     } catch (error) {
       console.log('error msg', error.message);
     } finally {
@@ -107,16 +110,6 @@ const index = () => {
                 setPopupData(item);
                 setShowReviewOverlay(true);
               }}
-              handleClickRow={(data, event) => {
-                if (event.target.type == 'checkbox') {
-                  return;
-                } else {
-                  router.push({
-                    pathname: '/contacts/details',
-                    query: { id: data.id },
-                  });
-                }
-              }}
             />
           </SimpleBar>
         </>
@@ -140,7 +133,7 @@ const index = () => {
           </div>
           <div className="flex">
             <button className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
-              <Delete /> <span className="ml-2">Delete from CRM</span>
+              <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               // rightIcon={<ArrowRightIcon height={15} />}

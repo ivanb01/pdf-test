@@ -65,6 +65,7 @@ import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
 import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
+import AIChip from '../chip/ai-chip';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -921,6 +922,11 @@ const Table = ({
             <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Source
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
             </th>
             <th
@@ -975,12 +981,24 @@ const Table = ({
                             name: contact.first_name + ' ' + contact.last_name,
                             email: contact.email,
                             image: contact.profile_image_path,
+                            approved_ai: contact.approved_ai,
                           }}
                         />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
+                          {contact.import_source == 'GmailAI' && (
+                            <AIChip
+                              className="mr-2"
+                              reviewed={contact.approved_ai}
+                            />
+                          )}{' '}
+                          {contact.import_source ? contact.import_source : '-'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
@@ -1720,9 +1738,9 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem) => (
+          {data.map((dataItem, index) => (
             <tr
-              key={dataItem.agent_id}
+              key={dataItem.index}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >
@@ -1855,12 +1873,19 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem) => (
+          {data.map((dataItem, index) => (
             <tr
-              key={dataItem.agent_id}
+              key={dataItem.index}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
-              onClick={(event) => handleClickRow(dataItem, event)}>
+              onClick={(e) => {
+                if (e.target.type === 'checkbox') return;
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: dataItem.id },
+                });
+              }}>
+              {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
               <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
                 <input
                   type="checkbox"
@@ -1899,7 +1924,10 @@ const Table = ({
                     '-'
                   )}
                   {dataItem.ai_email_summary && (
-                    <a href={dataItem.email_link} target="_blank">
+                    <a
+                      href={dataItem.email_link}
+                      onClick={(e) => e.stopPropagation()}
+                      target="_blank">
                       <Launch className="h-5 w-5 text-blue-500 ml-2" />
                     </a>
                   )}
@@ -1930,14 +1958,20 @@ const Table = ({
                 <div className="flex items-center justify-center">
                   <div className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6">
                     <Delete
-                      onClick={() => handleAction('delete', dataItem)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction('delete', dataItem);
+                      }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
                     />
                   </div>
                   <div className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center">
                     <CheckCircle
-                      onClick={() => handleAction('approve', dataItem)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction('approve', dataItem);
+                      }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
                     />
@@ -1947,7 +1981,11 @@ const Table = ({
               <td className="pr-6">
                 <div
                   className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
-                  onClick={() => handleCardEdit(dataItem)}>
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleCardEdit(dataItem);
+                  }}>
                   <Edit
                     id={'edit-contact-icon-' + dataItem.id}
                     className="text-gray3 w-4 h-4"

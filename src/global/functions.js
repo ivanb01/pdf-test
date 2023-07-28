@@ -74,7 +74,6 @@ export const getContactTypeByTypeId = (typeId) => {
   return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
-  console.log(category, statusId);
   let statuses = [4, 5, 6, 7].includes(category)
     ? clientStatuses
     : professionalsStatuses;
