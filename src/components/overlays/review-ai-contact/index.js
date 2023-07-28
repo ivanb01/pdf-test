@@ -325,12 +325,13 @@ const ReviewAIContact = ({
                   <div className="text-gray-900 font-medium text-lg max-w-[60%]">
                     {client.email_subject}
                   </div>
-                  <div
-                    onClick={() => router.push(client.email_link)}
+                  <a
+                    target="_blank"
+                    href={client.email_link}
                     className="cursor-pointer flex items-center text-sm text-gray-900 underline">
                     View the email source
                     <img src={newTab.src} alt="" className="ml-1" />
-                  </div>
+                  </a>
                 </div>
               </div>
               <hr className="my-4" />

@@ -351,3 +351,11 @@ tbody > div {
 .min-h-custom {
   min-height: calc(100vh - 295px) !important;
 }
+.email-summary-styling {
+  display: inline-block;
+  width: 380px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  text-align: left;
+}

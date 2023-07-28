@@ -8,8 +8,10 @@ import SimpleBar from 'simplebar-react';
 import { getUnapprovedContacts } from 'api/aiSmartSync';
 import Loader from 'components/shared/loader';
 import { updateContact } from '@api/contacts';
+import { useRouter } from 'next/router';
 
 const index = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
   const checkbox = useRef();
@@ -97,6 +99,16 @@ const index = () => {
             handleCardEdit={(item) => {
               setPopupData(item);
               setShowReviewOverlay(true);
+            }}
+            handleClickRow={(data, event) => {
+              if (event.target.type == 'checkbox') {
+                return;
+              } else {
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: data.id },
+                });
+              }
             }}
           />
         </SimpleBar>

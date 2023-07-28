@@ -16,6 +16,7 @@ import Button from '../button';
 import Error from '@mui/icons-material/Error';
 import ContactInfo from './contact-info';
 import { useSelector } from 'react-redux';
+import Launch from '@mui/icons-material/Launch';
 import {
   clientStatuses,
   allStatusesQuickEdit,
@@ -1825,6 +1826,11 @@ const Table = ({
             </th>
             <th
               scope="col"
+              className="px-3 py-3 w-1/4 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              Email Summary
+            </th>
+            <th
+              scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
@@ -1852,9 +1858,9 @@ const Table = ({
           {data.map((dataItem) => (
             <tr
               key={dataItem.agent_id}
-              className="contact-row group bg-white group border-b border-gray-200"
+              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
-            >
+              onClick={(event) => handleClickRow(dataItem, event)}>
               <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
                 <input
                   type="checkbox"
@@ -1882,6 +1888,22 @@ const Table = ({
                   // }
                   // handleAction={(id, action) => handleAction(id, action)}
                 />
+              </td>
+              <td className=" text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+                <div className=" flex items-center">
+                  {dataItem.ai_email_summary ? (
+                    <div className="email-summary-styling">
+                      {dataItem.ai_email_summary}
+                    </div>
+                  ) : (
+                    '-'
+                  )}
+                  {dataItem.ai_email_summary && (
+                    <a href={dataItem.email_link} target="_blank">
+                      <Launch className="h-5 w-5 text-blue-500 ml-2" />
+                    </a>
+                  )}
+                </div>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>
@@ -1922,7 +1944,7 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td>
+              <td className="pr-6">
                 <div
                   className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
                   onClick={() => handleCardEdit(dataItem)}>

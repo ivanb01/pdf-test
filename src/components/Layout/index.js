@@ -246,7 +246,7 @@ const Layout = ({ children }) => {
         </>
       ) : (
         <div className=" layout-fixed-height h-full w-full flex items-center justify-center">
-          <div className="border-t border-gray2 flex h-auto min-h-full w-full">
+          <div className="border-t border-gray2 flex h-full min-h-full w-full">
             <div className="h-auto border-r border-gray2 main-menu-wrapper bg-white">
               <MainSidebar
                 collapsable
