@@ -18,7 +18,7 @@ export const getProperties = (filters) => {
   }
   console.log(properties);
 
-  return axios.get(`http://dataapi.realtymx.com/listings`, {
+  return axios.get(`https://dataapi.realtymx.com/listings`, {
     params: properties,
   });
 };

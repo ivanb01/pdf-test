@@ -24,6 +24,7 @@ import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import EditLookingFor from '@components/overlays/edit-looking-for';
 import { getProperties } from '@api/realtyMX';
+import { formatPrice } from '@global/functions';
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
@@ -172,7 +173,7 @@ export default function LookingFor({ contactId }) {
 
   const fetchPropertyInterests = () => {
     setLoadingPropertyInterests(true);
-    getProperties(formik.values);
+    // getProperties(formik.values);
     const data = {
       TOTAL_COUNT: 832,
       LISTINGS: [
@@ -2235,7 +2236,9 @@ export default function LookingFor({ contactId }) {
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
                         <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          for Rent
+                          {formik.values.looking_action == 'sell'
+                            ? 'for Sale'
+                            : 'for Rent'}
                         </div>
                       </div>
                       <div
@@ -2252,23 +2255,27 @@ export default function LookingFor({ contactId }) {
                     <div className="grid grid-cols-4">
                       <PropertyDetail
                         label="Rooms"
-                        value="3"
+                        value={formik.values.bedrooms}
                         iconAfter={<Image src={room} height={20} />}
                       />
                       <PropertyDetail
                         label="Bedrooms"
-                        value="3"
+                        value={formik.values.bedrooms}
                         iconAfter={<Image src={bedroomBlack} height={20} />}
                       />
                       <PropertyDetail
                         label="Bathrooms"
-                        value="2"
+                        value={formik.values.bathrooms}
                         iconAfter={<Image src={bathroomBlack} height={20} />}
                       />
                       <PropertyDetail
                         label="Price Min / Max"
-                        value="$1,100 - $2,500"
-                        textAfter="monthly"
+                        value={`${formatPrice(
+                          formik.values.budget_min,
+                        )} - ${formatPrice(formik.values.budget_max)}`}
+                        {...(formik.values.looking_action == 'rent' && {
+                          textAfter: 'monthly',
+                        })}
                       />
                     </div>
                   </header>
