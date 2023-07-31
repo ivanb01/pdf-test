@@ -7,8 +7,9 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import SimpleBar from 'simplebar-react';
 import { getUnapprovedContacts } from 'api/aiSmartSync';
 import Loader from 'components/shared/loader';
-import { updateContact } from '@api/contacts';
+import { bulkUpdateContacts, updateContact } from '@api/contacts';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const index = () => {
   const router = useRouter();
@@ -51,26 +52,35 @@ const index = () => {
     }
   };
 
-  const handleAction = async (type, data) => {
+  const updateContactLocally = (id, newData) => {
+    const element = data.find((item) => item.id == id);
+    const updatedData = data.map((item) =>
+      item.id === id ? { ...item, ...newData } : item,
+    );
+    setData(updatedData);
+    let toastMessage = (newData.category_id = 3
+      ? `${element.first_name + ' ' + element.last_name} moved to Trash`
+      : `${element.first_name + ' ' + element.last_name} marked as correct`);
+    toast.success(toastMessage);
+  };
+  const handleAction = async (type, id) => {
     try {
-      let newData;
-      if (type == 'delete') {
-        newData = {
-          ...data,
-          category_id: 3,
-          approved_ai: true,
-        };
+      let newData = {};
+
+      if (type === 'delete') {
+        newData.category_id = 3;
+        newData.approved_ai = true;
       } else {
-        newData = { ...data, approved_ai: true };
+        newData.approved_ai = true;
       }
-      await updateContact(newData.id, newData);
-      fetchContacts();
+      updateContact(id, newData);
+      updateContactLocally(id, newData);
     } catch (error) {}
   };
 
   useEffect(() => {
     fetchContacts();
-  }, [showReviewOverlay]);
+  }, []);
 
   return (
     <div className="">
@@ -92,13 +102,18 @@ const index = () => {
             }}>
             <div className="p-6 text-gray-900 font-medium text-base">
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-                {data.length} contacts
+                {
+                  data.filter(
+                    (item) => item.category_id != 3 && item.approved_ai != true,
+                  ).length
+                }{' '}
+                contacts
               </div>{' '}
               from Smart Synced Contacts need to be reviewed
             </div>
             <Table
               className="pb-5"
-              data={data}
+              data={data.filter((data) => data.approved_ai != true)}
               tableFor="ai-summary"
               checkbox={checkbox}
               handleAction={handleAction}
@@ -118,6 +133,7 @@ const index = () => {
       )}
       {showReviewOverlay && popupData && (
         <ReviewAIContact
+          updateContactLocally={updateContactLocally}
           client={popupData}
           className="w-[1200px]"
           title="Review AI Smart Synced Contact"

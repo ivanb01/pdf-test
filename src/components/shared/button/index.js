@@ -90,7 +90,7 @@ const Button = ({
   const aiReviewButton = () => {
     return (
       <button
-        className={`${className} transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px]`}
+        className={`${className} transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px]`}
         onClick={onClick}>
         {loading ? (
           <CircularProgress

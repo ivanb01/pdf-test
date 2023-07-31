@@ -24,6 +24,8 @@ import {
   setNotesData,
   setCampaignsData,
 } from 'store/clientDetails/slice';
+import ReviewAIContact from '@components/overlays/review-ai-contact';
+import { getAIData } from '@api/aiSmartSync';
 
 export default function Details() {
   const router = useRouter();
@@ -33,6 +35,8 @@ export default function Details() {
   const refetchData = useSelector((state) => state.global.refetchData);
   const contacts = useSelector((state) => state.contacts.data.data);
   // const contact = contacts.find((contact) => contact.id == id);
+  const [showReviewOverlay, setShowReviewOverlay] = useState(false);
+  const [aiData, setAIData] = useState(null);
   const [contact, setContact] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
@@ -84,6 +88,15 @@ export default function Details() {
       const activityLogData = activityLogResponse.data.data;
 
       setContact(contactData);
+      if (
+        contactData.approved_ai != true &&
+        contactData.import_source == 'GmailAI'
+      ) {
+        const { data } = await getAIData(contactData.id);
+        setAIData(data);
+        console.log('aidata', data);
+        setShowReviewOverlay(true);
+      }
       dispatch(setCampaignsData(campaignsData));
       dispatch(setNotesData(notesData));
       dispatch(setActivityLogData(activityLogData));
@@ -114,6 +127,9 @@ export default function Details() {
   return (
     <>
       <MainMenu fixed />
+      {showReviewOverlay && (
+        <ReviewAIContact title="Review AI Imported Contact" client={aiData} />
+      )}
       <div className="client-details-page-wrapper">
         <div className="p-6 inline-block">
           <a

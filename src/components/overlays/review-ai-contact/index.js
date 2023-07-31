@@ -37,6 +37,7 @@ const ReviewAIContact = ({
   client,
   afterUpdate,
   refetchData,
+  updateContactLocally,
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -100,12 +101,13 @@ const ReviewAIContact = ({
   const removeFromCRM = async () => {
     setRemoving(true);
     try {
-      await updateContact(client?.id, { approved_ai: true, category_id: 3 });
+      let newData = { ...client, approved_ai: true, category_id: 3 };
+      setRemoving(false);
       handleClose();
+      updateContact(client?.id, newData);
+      updateContactLocally(client?.id, newData);
     } catch (error) {
       console.log(error);
-    } finally {
-      setRemoving(false);
     }
   };
 
@@ -133,6 +135,7 @@ const ReviewAIContact = ({
       }
 
       let newData = {
+        ...client,
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
@@ -142,12 +145,12 @@ const ReviewAIContact = ({
         approved_ai: true,
       };
       // if uncategorized then
-      await updateContact(client?.id, newData);
+      setUpdating(false);
       handleClose();
+      updateContact(client?.id, newData);
+      updateContactLocally(client?.id, newData);
     } catch (error) {
       console.log(error);
-    } finally {
-      setUpdating(false);
     }
   };
 
@@ -352,7 +355,7 @@ const ReviewAIContact = ({
           <Button
             className={`${
               removing && 'bg-red-500'
-            } hover:bg-red-500 bg-red-50 text-red-500 hover:text-white active:bg-red-500`}
+            } hover:bg-red-500 bg-red-50 text-red-500 hover:text-white active:bg-red-500 mr-4`}
             leftIcon={<Delete />}
             coloredButton
             onClick={() => removeFromCRM()}

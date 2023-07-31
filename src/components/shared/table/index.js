@@ -1960,7 +1960,7 @@ const Table = ({
                     <Delete
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction('delete', dataItem);
+                        handleAction('delete', dataItem.id);
                       }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
@@ -1970,7 +1970,7 @@ const Table = ({
                     <CheckCircle
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction('approve', dataItem);
+                        handleAction('approve', dataItem.id);
                       }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
