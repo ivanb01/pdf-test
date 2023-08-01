@@ -5,6 +5,7 @@ import {
   setOpenedTab,
   setOpenedSubtab,
   setRefetchData,
+  setUnapprovedContacts,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { bulkUpdateContacts, getContacts } from 'api/contacts';
@@ -33,10 +34,12 @@ const index = () => {
   const [contactsCopy, setContactsCopy] = useState();
   const contacts = useSelector((state) => state.contacts.data);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-  const [unapprovedContacts, setUnapprovedContacts] = useState();
 
   const [loading, setLoading] = useState(true);
 
+  const unapprovedContacts = useSelector(
+    (state) => state.global.unapprovedContacts,
+  );
   const refetchData = useSelector((state) => state.global.refetchData);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
@@ -49,7 +52,7 @@ const index = () => {
   const fetchUnapproved = async () => {
     try {
       const response = await getUnapprovedContacts();
-      setUnapprovedContacts(response.data.count);
+      dispatch(setUnapprovedContacts(response.data));
     } catch (error) {
       console.log('error msg', error.message);
     }
@@ -111,7 +114,7 @@ const index = () => {
               setShowEditContact(true);
               setContactToEdit(contact);
             }}
-            unapprovedContacts={unapprovedContacts}
+            unapprovedContacts={unapprovedContacts?.count}
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchClients}
           />

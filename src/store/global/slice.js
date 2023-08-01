@@ -9,6 +9,7 @@ const global = createSlice({
     count: null,
     refetchData: false,
     refetchPart: null,
+    unapprovedContacts: null,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user')
         ? JSON.parse(localStorage.getItem('user'))
@@ -43,6 +44,9 @@ const global = createSlice({
     setSkippedEmptyState(state, action) {
       state.skippedEmptyState = action.payload;
     },
+    setUnapprovedContacts(state, action) {
+      state.unapprovedContacts = action.payload;
+    },
   },
 });
 
@@ -55,5 +59,6 @@ export const {
   setExpandedMenu,
   setUser,
   setSkippedEmptyState,
+  setUnapprovedContacts,
 } = global.actions;
 export default global.reducer;

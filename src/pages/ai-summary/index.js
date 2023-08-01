@@ -44,6 +44,9 @@ const index = () => {
       let finalData = response.data.data.filter(
         (contact) => contact.category_1 != 'Uncategorized',
       );
+      finalData = finalData.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at),
+      );
       setData(finalData);
     } catch (error) {
       console.log('error msg', error.message);
