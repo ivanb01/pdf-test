@@ -51,7 +51,26 @@ const index = () => {
       setLoading(false);
     }
   };
+  const updateContactsLocally = (action, newData) => {
+    let updatedData = [...data];
 
+    newData.forEach((updateObj) => {
+      const id = updateObj.id;
+      const element = updatedData.find((item) => item.id === id);
+
+      if (element) {
+        const index = updatedData.findIndex((item) => item.id === id);
+        updatedData[index] = { ...element, ...updateObj };
+      }
+    });
+
+    setData(updatedData);
+    let toastMessage =
+      action == 2
+        ? `${selectedPeople.length} contacts moved to Trash`
+        : `${selectedPeople.length} contacts marked as correct`;
+    toast.success(toastMessage);
+  };
   const updateContactLocally = (id, newData) => {
     const element = data.find((item) => item.id == id);
     const updatedData = data.map((item) =>
@@ -76,6 +95,17 @@ const index = () => {
       updateContact(id, newData);
       updateContactLocally(id, newData);
     } catch (error) {}
+  };
+
+  const bulkUpdate = (action) => {
+    let transformedData = selectedPeople.map((item) => ({
+      id: item.id,
+      approved_ai: true,
+      category_id: action == 1 ? item.category_id : 3,
+    }));
+    bulkUpdateContacts(transformedData);
+    updateContactsLocally(action, transformedData);
+    setSelectedPeople([]);
   };
 
   useEffect(() => {
@@ -148,11 +178,13 @@ const index = () => {
             </span>
           </div>
           <div className="flex">
-            <button className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
+            <button
+              onClick={() => bulkUpdate(2)}
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
               <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
-              // rightIcon={<ArrowRightIcon height={15} />}
+              onClick={() => bulkUpdate(1)}
               className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
               <span className="ml-2">Mark as Correct</span>
