@@ -154,7 +154,7 @@ const index = () => {
     <>
       <MainMenu />
       <div className="mx-6 my-4 flex items-center justify-between">
-        <div className="text-lg text-gray4 font-medium">Agent Reports</div>
+        <div className="text-lg text-gray7 font-medium">Agent Reports</div>
         <div className="flex items-center">
           <Dropdown
             horizontal
@@ -184,8 +184,7 @@ const index = () => {
       ) : (
         <div
           className="w-full flex items-center justify-center"
-          style={{ height: 'calc(100vh - 150px)' }}
-        >
+          style={{ height: 'calc(100vh - 150px)' }}>
           No Agents in this table
         </div>
       )}
