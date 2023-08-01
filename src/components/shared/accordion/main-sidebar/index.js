@@ -212,8 +212,9 @@ const MainSidebar = ({
                     query: { start_importing: true },
                   })
                 }
-                className=" cursor-pointer text-[#2563EB] py-3 pt-6 font-bold flex items-center justify-end">
-                Import Google Contacts <ArrowForward className="ml-2 h-5" />
+                className=" group cursor-pointer text-[#2563EB] py-3 pt-6 font-medium flex items-center justify-end">
+                Import Google Contacts{' '}
+                <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
               </a>
             </div>
             <div className="w-auto bg-purple1 p-3 pb-0 text-sm m-3">
@@ -222,9 +223,9 @@ const MainSidebar = ({
               swiftly identifying their type and status.
               <a
                 onClick={() => setShowSSOverlay(true)}
-                className="cursor-pointer py-3 pt-6 flex items-center justify-end font-bold text-purple6">
+                className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6">
                 Setup Smart Sync
-                <ArrowForward className="ml-2 h-5" />
+                <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
               </a>
             </div>
           </>
