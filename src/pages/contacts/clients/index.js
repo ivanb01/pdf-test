@@ -84,7 +84,6 @@ const index = () => {
     if (allContacts.data) {
       fetchClients();
     }
-    bulkUpdateContacts();
   }, [allContacts]);
   useEffect(() => {
     if (refetchData) {

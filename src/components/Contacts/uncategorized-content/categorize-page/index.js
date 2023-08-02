@@ -33,9 +33,6 @@ const CategorizePage = ({
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
 
-  useEffect(() => {
-    bulkUpdateContacts();
-  }, []);
   const undoAllCategorizations = () => {
     bulkUpdateContacts(uncategorizedInitialState).then(() => {
       setUncategorizedContacts(uncategorizedCopy);
