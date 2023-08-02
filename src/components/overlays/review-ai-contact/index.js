@@ -252,7 +252,14 @@ const ReviewAIContact = ({
                       : othersOptions
                   }
                   label="What type?"
-                  selectedOption={formik.values.selectedContactType}
+                  selectedOption={
+                    formik.values.selectedContactCategory == 1 &&
+                    [8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+                      formik.values.selectedContactType,
+                    )
+                      ? 8
+                      : formik.values.selectedContactType
+                  }
                   setSelectedOption={(e) =>
                     formik.setFieldValue('selectedContactType', e)
                   }
@@ -264,8 +271,9 @@ const ReviewAIContact = ({
                   errorText={errors.selectedContactType}
                 />
               )}
-
-              {formik.values.selectedContactType == 8 ? (
+              {[8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+                formik.values.selectedContactType,
+              ) ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">
                     What kind of vendor?
@@ -274,7 +282,7 @@ const ReviewAIContact = ({
                     {vendorTypes.map((type) => (
                       <Chip
                         selectedStatus={
-                          type.id == formik.values.selectedContactSubtype
+                          type.id == formik.values.selectedContactType
                         }
                         key={type.id}
                         label={type.name}
