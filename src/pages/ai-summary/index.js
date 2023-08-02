@@ -80,9 +80,10 @@ const index = () => {
       item.id === id ? { ...item, ...newData } : item,
     );
     setData(updatedData);
-    let toastMessage = (newData.category_id = 3
-      ? `${element.first_name + ' ' + element.last_name} moved to Trash`
-      : `${element.first_name + ' ' + element.last_name} marked as correct`);
+    let toastMessage =
+      newData.category_id == 3
+        ? `${element.first_name + ' ' + element.last_name} moved to Trash`
+        : `${element.first_name + ' ' + element.last_name} marked as correct`;
     toast.success(toastMessage);
   };
   const handleAction = async (type, id) => {
@@ -170,7 +171,8 @@ const index = () => {
           client={popupData}
           className="w-[1200px]"
           title="Review AI Smart Synced Contact"
-          handleClose={() => setShowReviewOverlay(false)}></ReviewAIContact>
+          handleClose={() => setShowReviewOverlay(false)}
+        />
       )}
       {selectedPeople.length > 1 && (
         <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">

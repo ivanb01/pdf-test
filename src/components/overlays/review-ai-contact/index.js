@@ -29,14 +29,18 @@ import info from '/public/images/info.svg';
 import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const ReviewAIContact = ({
   className,
   handleClose,
+  showToast,
+  redirectAfterMoveToTrash,
   title,
   client,
   afterUpdate,
   refetchData,
+  hideCloseButton,
   updateContactLocally,
 }) => {
   const dispatch = useDispatch();
@@ -87,7 +91,7 @@ const ReviewAIContact = ({
           ? 2
           : 3,
       selectedContactType: client?.category_id,
-      selectedContactSubtype: '',
+      selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
     },
     onSubmit: (values) => {
@@ -103,9 +107,17 @@ const ReviewAIContact = ({
     try {
       let newData = { ...client, approved_ai: true, category_id: 3 };
       setRemoving(false);
-      handleClose();
-      updateContact(client?.id, newData);
-      updateContactLocally(client?.id, newData);
+      if (handleClose) {
+        handleClose();
+      }
+      updateContact(client.id, newData);
+      if (updateContactLocally) updateContactLocally(client?.id, newData);
+      if (redirectAfterMoveToTrash) router.push('/ai-summary');
+      if (showToast) {
+        toast.success(
+          `${newData.first_name + ' ' + newData.last_name} moved to Trash`,
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -146,9 +158,17 @@ const ReviewAIContact = ({
       };
       // if uncategorized then
       setUpdating(false);
-      handleClose();
+      if (handleClose) {
+        handleClose();
+      }
+      console.log(newData);
       updateContact(client?.id, newData);
-      updateContactLocally(client?.id, newData);
+      if (showToast) {
+        toast.success(
+          `${newData.first_name + ' ' + newData.last_name} market as correct`,
+        );
+      }
+      if (updateContactLocally) updateContactLocally(client?.id, newData);
     } catch (error) {
       console.log(error);
     }
@@ -160,7 +180,7 @@ const ReviewAIContact = ({
 
   return (
     <Overlay
-      handleCloseOverlay={handleClose}
+      handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
       className={className}>
       <div className="flex min-h-[420px]">
@@ -252,7 +272,14 @@ const ReviewAIContact = ({
                       : othersOptions
                   }
                   label="What type?"
-                  selectedOption={formik.values.selectedContactType}
+                  selectedOption={
+                    formik.values.selectedContactCategory == 1 &&
+                    [
+                      8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+                    ].includes(formik.values.selectedContactType)
+                      ? 8
+                      : formik.values.selectedContactType
+                  }
                   setSelectedOption={(e) =>
                     formik.setFieldValue('selectedContactType', e)
                   }
@@ -264,8 +291,9 @@ const ReviewAIContact = ({
                   errorText={errors.selectedContactType}
                 />
               )}
-
-              {formik.values.selectedContactType == 8 ? (
+              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+                formik.values.selectedContactType,
+              ) ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">
                     What kind of vendor?

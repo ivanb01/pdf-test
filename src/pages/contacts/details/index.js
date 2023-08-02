@@ -94,7 +94,6 @@ export default function Details() {
       ) {
         const { data } = await getAIData(contactData.id);
         setAIData(data);
-        console.log('aidata', data);
         setShowReviewOverlay(true);
       }
       dispatch(setCampaignsData(campaignsData));
@@ -128,7 +127,14 @@ export default function Details() {
     <>
       <MainMenu fixed />
       {showReviewOverlay && (
-        <ReviewAIContact title="Review AI Imported Contact" client={aiData} />
+        <ReviewAIContact
+          showToast
+          hideCloseButton
+          redirectAfterMoveToTrash
+          handleClose={() => setShowReviewOverlay(false)}
+          title="Review AI Imported Contact"
+          client={aiData}
+        />
       )}
       <div className="client-details-page-wrapper">
         <div className="p-6 inline-block">
