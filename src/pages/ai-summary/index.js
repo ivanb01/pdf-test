@@ -136,11 +136,7 @@ const index = () => {
             }}>
             <div className="p-6 text-gray-900 font-medium text-base">
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-                {
-                  data.filter(
-                    (item) => item.category_id != 3 && item.approved_ai != true,
-                  ).length
-                }{' '}
+                {data.filter((item) => item.approved_ai != true).length}{' '}
                 contacts
               </div>{' '}
               from Smart Synced Contacts need to be reviewed

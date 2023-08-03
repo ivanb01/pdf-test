@@ -40,6 +40,7 @@ const index = () => {
   const unapprovedContacts = useSelector(
     (state) => state.global.unapprovedContacts,
   );
+
   const refetchData = useSelector((state) => state.global.refetchData);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
@@ -53,6 +54,7 @@ const index = () => {
     try {
       const response = await getUnapprovedContacts();
       dispatch(setUnapprovedContacts(response.data));
+      console.log(response.data);
     } catch (error) {
       console.log('error msg', error.message);
     }
@@ -113,7 +115,11 @@ const index = () => {
               setShowEditContact(true);
               setContactToEdit(contact);
             }}
-            unapprovedContacts={unapprovedContacts?.count}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter(
+                (contact) => contact.category_1 != 'Uncategorized',
+              ).length
+            }
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchClients}
           />
