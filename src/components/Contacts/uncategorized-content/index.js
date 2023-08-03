@@ -14,7 +14,6 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Close from '@mui/icons-material/Close';
-import { bulkUpdateContacts } from 'api/contacts';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 
@@ -63,22 +62,6 @@ const Uncategorized = ({
     });
     uncategorizedInitialState.contacts = contactsArray;
     setUncategorizedCopy(uncategorizedContacts);
-
-    // let ids = [163, 166, 167, 168];
-    // let contacts = { contacts: [] };
-    // let contactsArray = [];
-    // ids.map((element) => {
-    //   let contact = {};
-    //   contact.id = element;
-    //   contact.category_id = 1;
-    //   contact.status_id = 1;
-    //   contactsArray.push(contact);
-    // });
-    // contacts.contacts = contactsArray;
-    // // console.log(contacts);
-    // bulkUpdateContacts(contacts).then((data) => {
-    //   console.log(data);
-    // });
   }, []);
   const selectAll = (event) => {
     console.log('test');

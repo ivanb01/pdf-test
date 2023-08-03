@@ -8,7 +8,6 @@ import {
   setUnapprovedContacts,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { bulkUpdateContacts, getContacts } from 'api/contacts';
 import { setContacts, updateContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';

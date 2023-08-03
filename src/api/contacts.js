@@ -133,32 +133,3 @@ export const updateContactLookingProperty = (id, property_id, property) => {
     property,
   );
 };
-
-// export const deleteContact = ({ tenant, email }) =>
-//   axios.delete(
-//     `${process.env.NEXT_PUBLIC_CONTACT_API_BASE_URL}/v1/contact/${tenant}/${email}`
-//   );
-
-// export const bulkAddContacts = (contacts) =>
-//   axios.post(
-//     `${process.env.NEXT_PUBLIC_CONTACT_API_BASE_URL}/v1/contact/bulk`,
-//     { contacts }
-//   );
-
-// export const bulkUpdateContactStatus = (contact) =>
-//   axios.put(
-//     `${process.env.NEXT_PUBLIC_CONTACT_API_BASE_URL}/v1/contact/bulk`,
-//     contact
-//   );
-
-// export const bulkUpdateContactType = (contact) =>
-//   axios.put(
-//     `${process.env.NEXT_PUBLIC_CONTACT_API_BASE_URL}/v1/contact/bulk`,
-//     contact
-//   );
-
-// export const bulkUpdateContactActive = (contact) =>
-//   axios.put(
-//     `${process.env.NEXT_PUBLIC_CONTACT_API_BASE_URL}/v1/contact/bulk`,
-//     contact
-//   );

@@ -10,8 +10,11 @@ import Loader from 'components/shared/loader';
 import { bulkUpdateContacts, updateContact } from '@api/contacts';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import { setRefetchData } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const index = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
@@ -96,7 +99,7 @@ const index = () => {
       } else {
         newData.approved_ai = true;
       }
-      updateContact(id, newData);
+      updateContact(id, newData).then(() => dispatch(setRefetchData(true)));
       updateContactLocally(id, newData);
     } catch (error) {}
   };
@@ -107,7 +110,9 @@ const index = () => {
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
     }));
-    bulkUpdateContacts(transformedData);
+    bulkUpdateContacts(transformedData).then(() =>
+      dispatch(setRefetchData(true)),
+    );
     updateContactsLocally(action, transformedData);
     setSelectedPeople([]);
   };

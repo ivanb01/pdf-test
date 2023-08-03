@@ -41,6 +41,7 @@ const CategorizePage = ({
       setUncategorizedContacts(uncategorizedCopy);
       setCategorizedInThisSession([]);
       selectFirstToCategorize();
+      dispatch(setRefetchData(true));
     });
   };
 
@@ -57,6 +58,7 @@ const CategorizePage = ({
       );
       setUncategorizedContacts((prevState) => [contactInitial, ...prevState]);
       selectFirstToCategorize();
+      dispatch(setRefetchData(true));
     });
   };
 

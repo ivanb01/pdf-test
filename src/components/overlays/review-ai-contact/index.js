@@ -110,7 +110,9 @@ const ReviewAIContact = ({
       if (handleClose) {
         handleClose();
       }
-      updateContact(client.id, newData);
+      updateContact(client.id, newData).then(() =>
+        dispatch(setRefetchData(true)),
+      );
       if (updateContactLocally) updateContactLocally(client?.id, newData);
       if (redirectAfterMoveToTrash) router.push('/ai-summary');
       if (showToast) {
@@ -162,7 +164,9 @@ const ReviewAIContact = ({
         handleClose();
       }
       console.log(newData);
-      updateContact(client?.id, newData);
+      updateContact(client?.id, newData).then(() =>
+        dispatch(setRefetchData(true)),
+      );
       if (showToast) {
         toast.success(
           `${newData.first_name + ' ' + newData.last_name} market as correct`,
