@@ -13,14 +13,13 @@ export default function SlideOver({
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog as="div" className="relative z-50" onClose={setOpen}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div
-              className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 ${className}`}
-            >
+              className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 ${className}`}>
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -28,25 +27,22 @@ export default function SlideOver({
                 enterTo="translate-x-0"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
+                leaveTo="translate-x-full">
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     <div
                       className="flex flex-shrink-0 justify-between px-6 py-5"
                       style={{
                         boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
-                      }}
-                    >
+                      }}>
                       <Dialog.Title className="text-lg font-medium text-gray-900">
                         {title}
                       </Dialog.Title>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          onClick={() => setOpen(false)}
-                        >
+                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                          onClick={() => setOpen(false)}>
                           <span className="sr-only">Close panel</span>
                           <Close className="h-6 w-6" aria-hidden="true" />
                         </button>
@@ -63,8 +59,7 @@ export default function SlideOver({
                       className="flex flex-shrink-0 justify-between px-4 py-4"
                       style={{
                         boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-                      }}
-                    >
+                      }}>
                       {buttons}
                     </div>
                   </div>

@@ -18,7 +18,7 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
         <div className="text-gray-900 font-medium text-lg text-center mb-6">
           Smart Sync Contacts from Gmail
         </div>
-        <div className="text-gray-500 text-sm text-center ">
+        <div className="text-gray-500 text-xs text-center ">
           Introducing our groundbreaking solution for seamless contact
           management:{' '}
           <span className="font-bold">Smart Synced Contacts from Gmail.</span>
