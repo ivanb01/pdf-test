@@ -1870,7 +1870,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 w-1/4 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Email Summary
             </th>
             <th
