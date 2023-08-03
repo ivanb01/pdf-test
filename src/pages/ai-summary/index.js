@@ -76,6 +76,7 @@ const index = () => {
         ? `${selectedPeople.length} contacts moved to Trash`
         : `${selectedPeople.length} contacts marked as correct`;
     toast.success(toastMessage);
+    setSelectedPeople([]);
   };
   const updateContactLocally = (id, newData) => {
     const element = data.find((item) => item.id == id);

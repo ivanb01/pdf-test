@@ -1956,7 +1956,18 @@ const Table = ({
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center">
-                  <div className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6">
+                  <div
+                    onMouseEnter={() => {
+                      document
+                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
+                        .classList.remove('invisible', 'opacity-0');
+                    }}
+                    onMouseLeave={() =>
+                      document
+                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
+                        .classList.add('invisible', 'opacity-0')
+                    }
+                    className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6 relative">
                     <Delete
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1965,8 +1976,25 @@ const Table = ({
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
                     />
+                    <div
+                      id={`tooltip-delete-${dataItem.id}-1`}
+                      role="tooltip"
+                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                      Move to Trash
+                    </div>
                   </div>
-                  <div className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center">
+                  <div
+                    onMouseEnter={() => {
+                      document
+                        .querySelector(`#tooltip-delete-${dataItem.id}-2`)
+                        .classList.remove('invisible', 'opacity-0');
+                    }}
+                    onMouseLeave={() =>
+                      document
+                        .querySelector(`#tooltip-delete-${dataItem.id}-2`)
+                        .classList.add('invisible', 'opacity-0')
+                    }
+                    className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
                     <CheckCircle
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1975,6 +2003,12 @@ const Table = ({
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
                     />
+                    <div
+                      id={`tooltip-delete-${dataItem.id}-2`}
+                      role="tooltip"
+                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                      Mark as Correct
+                    </div>
                   </div>
                 </div>
               </td>
