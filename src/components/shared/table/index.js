@@ -1880,10 +1880,7 @@ const Table = ({
               // onClick={(event) => handleClickRow(contact, event)}
               onClick={(e) => {
                 if (e.target.type === 'checkbox') return;
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: dataItem.id },
-                });
+                handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
               <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
