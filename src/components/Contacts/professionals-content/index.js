@@ -269,8 +269,7 @@ const Professionals = ({
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -302,15 +301,10 @@ const Professionals = ({
           // </SimpleBar> */}
         <div
           className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 170px)' }}
-        >
+          style={{ height: 'calc(100vh - 159px)' }}>
           <div
-            className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-          >
-            <SimpleBar
-              autoHide
-              style={{ height: '100%', maxHeight: '100%' }}
-            >
+            className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+            <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
               <Table
                 tableFor="professionals"
                 categoryType="professionals"
@@ -346,8 +340,7 @@ const Professionals = ({
                 }
               /> */}
           </>
-        }
-      >
+        }>
         <Accordion
           tabs={tabs}
           handleClick={handleFilterClick}

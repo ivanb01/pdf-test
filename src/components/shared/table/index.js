@@ -392,8 +392,8 @@ const Table = ({
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                  Added From
+                  className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                  added from
                 </th>
               </tr>
             </thead>
@@ -417,12 +417,15 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <div className="text-gray7 font-medium">
-                      {dataItem?.import_source}
-                    </div>
-                    <div className="text-gray-500 font-medium">
-                      {formatDateMDY(dataItem?.created_at)}
+                  <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                    <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
+                      {dataItem.import_source == 'GmailAI' && (
+                        <AIChip
+                          className="mr-2"
+                          reviewed={dataItem.approved_ai}
+                        />
+                      )}{' '}
+                      {dataItem.import_source ? dataItem.import_source : '-'}
                     </div>
                   </td>
                 </tr>
@@ -462,7 +465,7 @@ const Table = ({
                 {tableFor != 'in-categorization' && (
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
                     Added From
                   </th>
                 )}
@@ -522,12 +525,17 @@ const Table = ({
                   )} */}
                     </td>
                     {tableFor != 'in-categorization' && (
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          {dataItem?.import_source}
-                        </div>
-                        <div className="text-gray-500 font-medium">
-                          {formatDateMDY(dataItem?.created_at)}
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
+                          {dataItem.import_source == 'GmailAI' && (
+                            <AIChip
+                              className="mr-2"
+                              reviewed={dataItem.approved_ai}
+                            />
+                          )}{' '}
+                          {dataItem.import_source
+                            ? dataItem.import_source
+                            : '-'}
                         </div>
                       </td>
                     )}
@@ -1003,7 +1011,9 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium min-w-[200px]">
-                          {phoneNumberFormat(contact.phone_number)}
+                          {phoneNumberFormat(contact.phone_number) !== 'N/A'
+                            ? phoneNumberFormat(contact.phone_number)
+                            : '-'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
@@ -1367,6 +1377,11 @@ const Table = ({
             <th
               scope="col"
               className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              added from
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
             </th>
             <th
@@ -1423,6 +1438,17 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td> */}
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
+                          {contact.import_source == 'GmailAI' && (
+                            <AIChip
+                              className="mr-2"
+                              reviewed={contact.approved_ai}
+                            />
+                          )}{' '}
+                          {contact.import_source ? contact.import_source : '-'}
+                        </div>
+                      </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium min-w-[200px]">
                           {phoneNumberFormat(contact.phone_number)}
@@ -2032,7 +2058,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        <div className="h-full  overflow-x-auto ">
+        <div className="h-full  overflow-x-auto">
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
