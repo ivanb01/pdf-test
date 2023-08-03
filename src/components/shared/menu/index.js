@@ -15,6 +15,7 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
+import { setRefetchData } from '@store/global/slice';
 
 const MainMenu = ({
   menuItems = [
@@ -38,6 +39,7 @@ const MainMenu = ({
   fixed,
 }) => {
   const router = useRouter();
+  const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
   const skippedEmptyState = useSelector(
@@ -56,9 +58,9 @@ const MainMenu = ({
   };
 
   useEffect(() => {
-    if (!allContacts) {
+    if (!allContacts || refetchData) {
       getContacts(
-        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26',
+        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27',
       ).then((data) => {
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
@@ -67,8 +69,9 @@ const MainMenu = ({
           });
         }
       });
+      if (refetchData == true) dispatch(setRefetchData(false));
     }
-  }, [count, allContacts]);
+  }, [count, allContacts, refetchData]);
 
   const showUncategorizedButton = () => {
     return (

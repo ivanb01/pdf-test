@@ -14,6 +14,8 @@ import noCategorized from '/public/images/no-categorized.svg';
 import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
 import Chip from 'components/shared/chip';
+import { useDispatch } from 'react-redux';
+import { setRefetchData } from '@store/global/slice';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -30,6 +32,7 @@ const CategorizePage = ({
   openedSubtab,
   handleStartCategorizing,
 }) => {
+  const dispatch = useDispatch();
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
 
@@ -107,6 +110,7 @@ const CategorizePage = ({
         ...prevState,
       ]);
       afterCategorizationProcess(ids);
+      dispatch(setRefetchData(true));
     });
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
   };
