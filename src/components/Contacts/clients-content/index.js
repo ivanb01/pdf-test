@@ -81,7 +81,7 @@ const Clients = ({
     },
     {
       title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'GmailAI', 'Manually Added'],
+      content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
       value: 'import_source',
     },
     {
@@ -146,7 +146,8 @@ const Clients = ({
         contactsState = contactsState.filter(
           (contact) =>
             contact.import_source != 'Google Contacts' &&
-            contact.import_source != 'GmailAI',
+            contact.import_source != 'GmailAI' &&
+            contact.import_source != 'Gmail',
         );
       } else if (key == 'is_in_campaign') {
         let booleanFilter = filters[key].map(
