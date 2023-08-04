@@ -80,6 +80,11 @@ const Clients = ({
       onlyOneValue: true,
     },
     {
+      title: 'ADDED SOURCE',
+      content: ['Google Contacts', 'GmailAI', 'Manually Added'],
+      value: 'import_source',
+    },
+    {
       title: 'CLIENT STATUS',
       content: allStatusesQuickEdit['clients'].map((item) => item.name),
       value: 'status_2',
@@ -124,6 +129,7 @@ const Clients = ({
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
+      console.log('key', key, filters);
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(
@@ -132,6 +138,15 @@ const Clients = ({
             contact.category_1,
             contact.status_2,
           ),
+        );
+      } else if (
+        key == 'import_source' &&
+        filters['import_source'] == 'Manually Added'
+      ) {
+        contactsState = contactsState.filter(
+          (contact) =>
+            contact.import_source != 'Google Contacts' &&
+            contact.import_source != 'GmailAI',
         );
       } else if (key == 'is_in_campaign') {
         let booleanFilter = filters[key].map(

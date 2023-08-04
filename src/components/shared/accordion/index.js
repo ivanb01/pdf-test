@@ -19,8 +19,7 @@ export default function Accordion({
             as="div"
             key={tab.value}
             className=""
-            defaultOpen={defaultOpen}
-          >
+            defaultOpen={defaultOpen}>
             {({ open }) => (
               <>
                 <div className="flex flex-row mt-[16px] border-b border-gray2 pb-[6px]">
@@ -55,19 +54,34 @@ export default function Accordion({
                                     .includes(content)
                                 : null
                             }
-                            className={`my-2 mr-3 ${Object.values(activeSelections)
-                              .flat()
-                              .includes(content) ? '' : 'text-gray5'}`
+                            className={`my-2 mr-3 ${
+                              Object.values(activeSelections)
+                                .flat()
+                                .includes(content)
+                                ? ''
+                                : 'text-gray5'
+                            }`}
+                            label={
+                              content == 'GmailAI'
+                                ? 'AI Smart Synced Contact'
+                                : content
                             }
-                            label={content}
-                            onClick={handleClick(content, tab?.value, tab?.onlyOneValue)}
+                            onClick={handleClick(
+                              content,
+                              tab?.value,
+                              tab?.onlyOneValue,
+                            )}
                           />
                           <br />
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-base text-gray-500">{tab.content}</p>
+                    <p className="text-base text-gray-500">
+                      {tab.content == 'GmailAI'
+                        ? 'AI Smart Synced Contact'
+                        : tab.content}
+                    </p>
                   )}
                 </Disclosure.Panel>
               </>
