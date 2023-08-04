@@ -359,3 +359,19 @@ tbody > div {
   text-overflow: ellipsis;
   text-align: left;
 }
+
+.fade-enter {
+  opacity: 1;
+}
+
+.fade-enter-active {
+  opacity: 1;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 200ms;
+}

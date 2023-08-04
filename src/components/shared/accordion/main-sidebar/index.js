@@ -16,7 +16,11 @@ import { getCount } from 'api/contacts';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
 import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import ArrowRight from '/public/images/arrow-circle-right.svg';
-import { getUserConsentForGoogleEmail } from '@api/google';
+import { CSSTransition } from 'react-transition-group';
+import {
+  getUserConsentForGoogleEmail,
+  getUserConsentStatus,
+} from '@api/google';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -38,6 +42,7 @@ const MainSidebar = ({
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
   const [collapseMainTab, setCollapseMainTab] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
+  const [userGaveConsent, setUserGaveConsent] = useState();
 
   const getCountForSubtab = (subtab) => {
     return count && count[subtab.count_key] ? count[subtab.count_key] : 0;
@@ -53,6 +58,12 @@ const MainSidebar = ({
       console.log('error occurredw with google import');
     }
   };
+
+  useEffect(() => {
+    getUserConsentStatus().then((results) =>
+      setUserGaveConsent(results.data.scopes),
+    );
+  }, []);
 
   const narrowMenu = () => {
     return (
@@ -203,31 +214,46 @@ const MainSidebar = ({
         {pinned ? expandedMenu() : narrowMenu()}
         {pinned && (
           <>
-            <div className=" w-auto bg-[#EFF6FF] p-3 pb-0 text-sm m-3">
-              Import all your contacts from “Google Contacts” in the CRM.
-              <a
-                onClick={() =>
-                  router.push({
-                    pathname: '/contacts/no-contact/',
-                    query: { start_importing: true },
-                  })
-                }
-                className=" group cursor-pointer text-[#2563EB] py-3 pt-6 font-medium flex items-center justify-end">
-                Import Google Contacts{' '}
-                <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-              </a>
-            </div>
-            <div className="w-auto bg-purple1 p-3 pb-0 text-sm m-3">
-              <span className="font-bold">AI algorithms </span>
-              intelligently analyze each contact's information from Gmail,
-              swiftly identifying their type and status.
-              <a
-                onClick={() => setShowSSOverlay(true)}
-                className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6">
-                Setup Smart Sync
-                <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-              </a>
-            </div>
+            <CSSTransition
+              in={!userGaveConsent?.includes('contacts')}
+              timeout={500}
+              classNames="fade"
+              unmountOnExit>
+              <div className=" w-auto bg-[#EFF6FF] p-3 pb-0 text-sm m-3">
+                Import all your contacts from “Google Contacts” in the CRM.
+                <a
+                  onClick={() =>
+                    router.push({
+                      pathname: '/contacts/no-contact/',
+                      query: { start_importing: true },
+                    })
+                  }
+                  className=" group cursor-pointer text-[#2563EB] py-3 pt-6 font-medium flex items-center justify-end">
+                  Import Google Contacts{' '}
+                  <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                </a>
+              </div>
+            </CSSTransition>
+            <CSSTransition
+              in={
+                !userGaveConsent?.includes('gmail') &&
+                !userGaveConsent?.includes('contacts')
+              }
+              timeout={500}
+              classNames="fade"
+              unmountOnExit>
+              <div className={`w-auto bg-purple1 p-3 pb-0 text-sm m-3`}>
+                <span className="font-bold">AI algorithms </span>
+                intelligently analyze each contact's information from Gmail,
+                swiftly identifying their type and status.
+                <a
+                  onClick={() => setShowSSOverlay(true)}
+                  className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6">
+                  Setup Smart Sync
+                  <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                </a>
+              </div>
+            </CSSTransition>
           </>
         )}
       </div>

@@ -2,10 +2,12 @@ import { useState } from 'react';
 import Avatar from 'components/shared/avatar';
 import Text from 'components/shared/text';
 import { PhoneIcon, MailIcon } from '@heroicons/react/solid';
+import { DotsVerticalIcon } from '@heroicons/react/outline';
 import {
-  DotsVerticalIcon,
-} from '@heroicons/react/outline';
-import { TrashIcon, PencilIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
+  TrashIcon,
+  PencilIcon,
+  ExclamationCircleIcon,
+} from '@heroicons/react/solid';
 
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import DeleteClientOverlay from 'components/overlays/delete-client';
@@ -45,8 +47,8 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
     <>
       <div className="py-[24px] pl-[24px] flex flex-row justify-items-center items-center">
         <Avatar
-          initials={getInitials(client.first_name + ' ' + client.last_name)}
-          src={client.profile_image_path}
+          initials={getInitials(client?.first_name + ' ' + client?.last_name)}
+          src={client?.profile_image_path}
           // src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
         />
 
@@ -68,21 +70,34 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
                 className="h-4 w-4 text-[#9fa6b1] mr-1"
                 aria-hidden="true"
               />
-              <div className={`text-sm ${phoneNumberFormat(client?.phone_number) === 'N/A' ? 'italic mr-2' : ''}`}>{phoneNumberFormat(client?.phone_number) !== 'N/A' ? phoneNumberFormat(client?.phone_number) : 'No phone number'}</div>
-              {
-                phoneNumberFormat(client?.phone_number) === 'N/A' && 
-                <div className='group relative cursor-pointer'>
+              <div
+                className={`text-sm ${
+                  phoneNumberFormat(client?.phone_number) === 'N/A'
+                    ? 'italic mr-2'
+                    : ''
+                }`}>
+                {phoneNumberFormat(client?.phone_number) !== 'N/A'
+                  ? phoneNumberFormat(client?.phone_number)
+                  : 'No phone number'}
+              </div>
+              {phoneNumberFormat(client?.phone_number) === 'N/A' && (
+                <div className="group relative cursor-pointer">
                   <ExclamationCircleIcon
                     className="h-5 w-5 text-red-600 "
                     aria-hidden="true"
                   />
 
                   <div className="group-hover:opacity-100 opacity-0 w-[270px] pointer-events-none left-6 -top-5 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
-                    <p className="mb-2 font-semibold">Please add a phone number!</p>
-                    <p>Without a phone number the SMS events in campaign cannot run.</p>
+                    <p className="mb-2 font-semibold">
+                      Please add a phone number!
+                    </p>
+                    <p>
+                      Without a phone number the SMS events in campaign cannot
+                      run.
+                    </p>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </span>
         </div>
