@@ -24,7 +24,7 @@ import {
   setNotesData,
   setCampaignsData,
 } from 'store/clientDetails/slice';
-import ReviewAIContact from '@components/overlays/review-ai-contact';
+import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 
 export default function Details() {
@@ -127,7 +127,7 @@ export default function Details() {
     <>
       <MainMenu fixed />
       {showReviewOverlay && (
-        <ReviewAIContact
+        <ReviewContact
           showToast
           hideCloseButton
           redirectAfterMoveToTrash

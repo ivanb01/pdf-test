@@ -31,7 +31,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 
-const ReviewAIContact = ({
+const ReviewContact = ({
   className,
   handleClose,
   showToast,
@@ -43,6 +43,8 @@ const ReviewAIContact = ({
   hideCloseButton,
   updateContactLocally,
 }) => {
+  const isUnapprovedAI =
+    client.import_source == 'GmailAI' && client.approved_ai != true;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -163,7 +165,6 @@ const ReviewAIContact = ({
       if (handleClose) {
         handleClose();
       }
-      console.log(newData);
       updateContact(client?.id, newData).then(() =>
         dispatch(setRefetchData(true)),
       );
@@ -182,16 +183,69 @@ const ReviewAIContact = ({
     formik.setFieldValue('type_of_activity_id', id);
   };
 
+  const reviewAIContactButtons = () => {
+    return (
+      <>
+        <div className="flex items-center text-sm text-gray-900">
+          <img src={info.src} alt="" className="mr-1" />
+          This contact was imported from Gmail by AI. Please review so you can
+          start the communication.
+        </div>
+        <div className="flex">
+          <Button
+            className={`${
+              removing && 'bg-red-500'
+            } hover:bg-red-500 bg-red-50 text-red-500 hover:text-white active:bg-red-500 mr-4`}
+            leftIcon={<Delete />}
+            coloredButton
+            onClick={() => removeFromCRM()}
+            loading={removing}>
+            Move to Trash
+          </Button>
+          <Button
+            className={`${
+              updating && 'bg-[#10B981]'
+            } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
+            leftIcon={<CheckCircle />}
+            coloredButton
+            onClick={() => submitForm()}
+            loading={updating}>
+            Mark as Correct
+          </Button>
+        </div>
+      </>
+    );
+  };
+
+  const reviewContactButtons = () => {
+    return (
+      <>
+        <div className="flex items-center text-sm text-gray-900"></div>
+        <div className="flex">
+          <Button className={` mr-4`} white onClick={() => handleClose()}>
+            Cancel
+          </Button>
+          <Button primary onClick={() => submitForm()} loading={updating}>
+            Save Changes
+          </Button>
+        </div>
+      </>
+    );
+  };
+
   return (
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
-      className={className}>
+      className={`${className} ${!isUnapprovedAI && 'w-[635px]'}`}>
       <div className="flex min-h-[420px]">
-        <div className="w-1/2 border-r border-borderColor">
+        <div
+          className={`${
+            isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'
+          }`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
             <form className="p-6" onSubmit={formik.handleSubmit}>
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
                 <Input
                   type="text"
                   label="First Name"
@@ -346,90 +400,44 @@ const ReviewAIContact = ({
             </form>
           </SimpleBar>
         </div>
-        <div className="w-1/2">
-          <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-            <div className="p-6">
-              <div>
-                <div className="flex items-center mb-2">
-                  <img src={AI.src} alt="" />
-                  <span className="ml-1 text-gray-900 text-sm">
-                    AI Smart Synced Contact
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-gray-900 font-medium text-lg max-w-[60%]">
-                    {client.email_subject}
+        {isUnapprovedAI && (
+          <div className="w-1/2">
+            <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
+              <div className="p-6">
+                <div>
+                  <div className="flex items-center mb-2">
+                    <img src={AI.src} alt="" />
+                    <span className="ml-1 text-gray-900 text-sm">
+                      AI Smart Synced Contact
+                    </span>
                   </div>
-                  <a
-                    target="_blank"
-                    href={client.email_link}
-                    className="cursor-pointer flex items-center text-sm text-gray-900 underline">
-                    View the email source
-                    <img src={newTab.src} alt="" className="ml-1" />
-                  </a>
+                  <div className="flex items-center justify-between">
+                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">
+                      {client.email_subject}
+                    </div>
+                    <a
+                      target="_blank"
+                      href={client.email_link}
+                      className="cursor-pointer flex items-center text-sm text-gray-900 underline">
+                      View the email source
+                      <img src={newTab.src} alt="" className="ml-1" />
+                    </a>
+                  </div>
+                </div>
+                <hr className="my-4" />
+                <div className="text-gray-900 text-sm">
+                  {client.ai_email_summary}
                 </div>
               </div>
-              <hr className="my-4" />
-              <div className="text-gray-900 text-sm">
-                {client.ai_email_summary}
-              </div>
-            </div>
-          </SimpleBar>
-        </div>
+            </SimpleBar>
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
-        <div className="flex items-center text-sm text-gray-900">
-          <img src={info.src} alt="" className="mr-1" />
-          This contact was imported from Gmail by AI. Please review so you can
-          start the communication.
-        </div>
-        <div className="flex">
-          <Button
-            className={`${
-              removing && 'bg-red-500'
-            } hover:bg-red-500 bg-red-50 text-red-500 hover:text-white active:bg-red-500 mr-4`}
-            leftIcon={<Delete />}
-            coloredButton
-            onClick={() => removeFromCRM()}
-            loading={removing}>
-            Move to Trash
-          </Button>
-          {/* <button
-            className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
-            onClick={() => removeFromCRM()}>
-            {loading ? (
-              <CircularProgress
-                size={15}
-                sx={{ color: 'white' }}></CircularProgress>
-            ) : (
-              <>
-                <Delete /> <span className="ml-2">Delete from CRM</span>
-              </>
-            )}
-          </button> */}
-          <Button
-            className={`${
-              updating && 'bg-[#10B981]'
-            } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
-            leftIcon={<CheckCircle />}
-            coloredButton
-            onClick={() => submitForm()}
-            loading={updating}>
-            Mark as Correct
-          </Button>
-          {/* <button
-            // rightIcon={<ArrowRightIcon height={15} />}
-            className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px]"
-            onClick={() => {
-              submitForm();
-            }}>
-            <CheckCircle />
-            <span className="ml-2">Mark as Correct</span>
-          </button> */}
-        </div>
+        {isUnapprovedAI ? reviewAIContactButtons() : reviewContactButtons()}
       </div>
     </Overlay>
   );
 };
 
-export default ReviewAIContact;
+export default ReviewContact;

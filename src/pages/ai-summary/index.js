@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import MainMenu from 'components/shared/menu';
 import Table from 'components/shared/table';
-import ReviewAIContact from 'components/overlays/review-ai-contact';
+import ReviewContact from '@components/overlays/review-contact';
 import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import SimpleBar from 'simplebar-react';
@@ -111,7 +111,7 @@ const index = () => {
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
     }));
-    bulkUpdateContacts(transformedData).then(() =>
+    bulkUpdateContacts({ contacts: transformedData }).then(() =>
       dispatch(setRefetchData(true)),
     );
     updateContactsLocally(action, transformedData);
@@ -168,7 +168,7 @@ const index = () => {
         <div>No Data</div>
       )}
       {showReviewOverlay && popupData && (
-        <ReviewAIContact
+        <ReviewContact
           updateContactLocally={updateContactLocally}
           client={popupData}
           className="w-[1200px]"

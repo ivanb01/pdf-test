@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import { CSSTransition } from 'react-transition-group';
+import ReviewContact from '@components/overlays/review-contact';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -31,7 +32,7 @@ const index = () => {
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
-  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(true);
+  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -142,12 +143,17 @@ const index = () => {
         />
       )}
       {showEditContact && (
-        <EditContactOverlay
+        <ReviewContact
+          client={contactToEdit}
           handleClose={() => setShowEditContact(false)}
           title="Edit Client"
-          client={contactToEdit}
-          className="w-[635px]"
         />
+        // <EditContactOverlay
+        //   handleClose={() => setShowEditContact(false)}
+        //   title="Edit Client"
+        //   client={contactToEdit}
+        //   className="w-[635px]"
+        // />
       )}
     </Layout>
   );
