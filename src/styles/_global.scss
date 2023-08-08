@@ -360,6 +360,13 @@ tbody > div {
   text-align: left;
 }
 
+.ellipsis-email {
+  width: 230px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .fade-enter {
   opacity: 1;
 }
