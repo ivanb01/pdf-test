@@ -111,7 +111,7 @@ const index = () => {
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
     }));
-    bulkUpdateContacts(transformedData).then(() =>
+    bulkUpdateContacts({ contacts: transformedData }).then(() =>
       dispatch(setRefetchData(true)),
     );
     updateContactsLocally(action, transformedData);
