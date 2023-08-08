@@ -320,3 +320,8 @@ export const getEmailParts = (email) => {
 
   return { firstName, lastName };
 };
+
+export const findProfessionalSubtype = (id) => {
+  return professionalsStatuses[0].statuses.find((status) => status.id == id)
+    .name;
+};

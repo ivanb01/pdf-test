@@ -5,6 +5,7 @@ import {
   getContactStatusColorByStatusId,
   phoneNumberFormat,
   formatDateLL,
+  findProfessionalSubtype,
 } from 'global/functions';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
@@ -1852,6 +1853,17 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
+    const getSubtype = (item) => {
+      if (item.category_1 == 'Professional') {
+        return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
+          item.category_id,
+        )
+          ? ' - ' + findProfessionalSubtype(item.category_id)
+          : ' - ' + item.category_2;
+      } else {
+        return;
+      }
+    };
     return (
       <>
         <thead className="bg-gray-50">
@@ -1959,6 +1971,7 @@ const Table = ({
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>
                   {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
+                  {getSubtype(dataItem)}
                 </Chip>
               </td>
               <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
