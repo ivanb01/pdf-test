@@ -9,6 +9,7 @@ const global = createSlice({
     count: null,
     refetchData: false,
     refetchPart: null,
+    userGaveConsent: null,
     unapprovedContacts: null,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user')
@@ -47,6 +48,9 @@ const global = createSlice({
     setUnapprovedContacts(state, action) {
       state.unapprovedContacts = action.payload;
     },
+    setUserGaveConsent(state, action) {
+      state.userGaveConsent = action.payload;
+    },
   },
 });
 
@@ -60,5 +64,6 @@ export const {
   setUser,
   setSkippedEmptyState,
   setUnapprovedContacts,
+  setUserGaveConsent,
 } = global.actions;
 export default global.reducer;

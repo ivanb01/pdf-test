@@ -79,8 +79,7 @@ const GoogleContactsImportSummary = ({ data }) => {
                 allContacts?.existing_contacts.length >= 1)
                 ? 'w-1/2'
                 : 'w-full'
-            }`}
-          >
+            }`}>
             <GlobalAlert
               title={
                 allContacts?.importable_new_contacts_count === 0
@@ -112,12 +111,8 @@ const GoogleContactsImportSummary = ({ data }) => {
             />
             <div
               className="border border-gray2 rounded overflow-hidden"
-              style={{ height: 'calc(100vh - 438px)' }}
-            >
-              <SimpleBar
-                autoHide
-                style={{ maxHeight: 'calc(100vh - 438px)' }}
-              >
+              style={{ height: 'calc(100vh - 438px)' }}>
+              <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>
                 <Table
                   tableFor="import-google-contacts-successful"
                   data={importedContacts}
@@ -178,16 +173,13 @@ const GoogleContactsImportSummary = ({ data }) => {
               />
               <div
                 className="border border-gray2 rounded overflow-hidden"
-                style={{ height: 'calc(100vh - 438px)' }}
-              >
+                style={{ height: 'calc(100vh - 438px)' }}>
                 <SimpleBar
                   autoHide
-                  style={{ maxHeight: 'calc(100vh - 438px)' }}
-                >
+                  style={{ maxHeight: 'calc(100vh - 438px)' }}>
                   <Table
                     tableFor="import-google-contacts-failed"
-                    data={notImportedContacts}
-                  ></Table>
+                    data={notImportedContacts}></Table>
                 </SimpleBar>
               </div>
             </div>
@@ -199,7 +191,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               className="mr-4"
               onClick={() =>
                 router.push({
-                  pathname: '/contacts',
+                  pathname: '/contacts/clients',
                 })
               }
             />

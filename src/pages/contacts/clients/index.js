@@ -12,14 +12,14 @@ import { setContacts, updateContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
-import { getContactsSearch } from 'api/contacts';
-import { globalTabsStates } from 'global/variables';
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import dynamic from 'next/dynamic';
-import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
+import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
+import { CSSTransition } from 'react-transition-group';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
@@ -31,8 +31,7 @@ const index = () => {
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
-  const contacts = useSelector((state) => state.contacts.data);
-  const allContacts = useSelector((state) => state.contacts.allContacts);
+  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(true);
 
   const [loading, setLoading] = useState(true);
 
@@ -40,6 +39,9 @@ const index = () => {
     (state) => state.global.unapprovedContacts,
   );
 
+  const contacts = useSelector((state) => state.contacts.data);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
+  const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchData = useSelector((state) => state.global.refetchData);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
@@ -95,11 +97,12 @@ const index = () => {
     }
   }, [refetchData]);
   useEffect(() => {
-    if (router.query.code) {
-      toast.success('Smart Sync is activated successfully', {
-        position: 'top-center',
-        duration: 4000,
-      });
+    if (
+      router.query.code &&
+      userGaveConsent?.includes('gmail') &&
+      userGaveConsent?.includes('contacts')
+    ) {
+      setShowSmartSyncOverlay(true);
     }
   }, [router.query]);
 
@@ -109,6 +112,11 @@ const index = () => {
         <Loader />
       ) : (
         <>
+          {showSmartSyncOverlay && (
+            <SmartSyncActivatedOverlay
+              handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
+            />
+          )}
           <Clients
             handleCardEdit={(contact) => {
               setShowEditContact(true);

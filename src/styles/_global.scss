@@ -375,3 +375,17 @@ tbody > div {
   opacity: 0;
   transition: opacity 200ms;
 }
+
+.overlay-entering,
+.overlay-exiting,
+.overlay-exited {
+  opacity: 0;
+  display: none;
+  transition: opacity 300ms ease-in-out;
+}
+
+.overlay-entered {
+  opacity: 1;
+  display: block;
+  transition: opacity 300ms ease-in-out;
+}
