@@ -303,7 +303,9 @@ const Clients = ({
                       }
                       key={`${index}${i}`}
                       active
-                      label={filter}
+                      label={
+                        filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter
+                      }
                       className="mr-1"
                     />
                   )),
