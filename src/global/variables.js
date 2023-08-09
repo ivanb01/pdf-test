@@ -451,7 +451,7 @@ export const professionalsStatuses = [
     statuses: [
       {
         id: 8,
-        name: 'Other Vendors',
+        name: 'Vendor',
       },
       {
         id: 13,
