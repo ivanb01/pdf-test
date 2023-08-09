@@ -2043,14 +2043,30 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td className="pr-6">
+              <td className="pr-8">
                 <div
-                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
+                  onMouseEnter={() => {
+                    document
+                      .querySelector(`#tooltip-edit-${dataItem.id}-1`)
+                      .classList.remove('invisible', 'opacity-0');
+                  }}
+                  onMouseLeave={() =>
+                    document
+                      .querySelector(`#tooltip-edit-${dataItem.id}-1`)
+                      .classList.add('invisible', 'opacity-0')
+                  }
+                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
                   onClick={(e) => {
                     e.stopPropagation();
 
                     handleCardEdit(dataItem);
                   }}>
+                  <div
+                    id={`tooltip-edit-${dataItem.id}-1`}
+                    role="tooltip"
+                    className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                    Edit Contact
+                  </div>
                   <Edit
                     id={'edit-contact-icon-' + dataItem.id}
                     className="text-gray3 w-4 h-4"
