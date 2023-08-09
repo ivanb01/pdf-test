@@ -144,6 +144,7 @@ const index = () => {
       )}
       {showEditContact && (
         <ReviewContact
+          showToast
           client={contactToEdit}
           handleClose={() => setShowEditContact(false)}
           title="Edit Client"

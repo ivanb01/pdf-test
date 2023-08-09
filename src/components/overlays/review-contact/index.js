@@ -30,6 +30,7 @@ import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import TagsInput from '@components/tagsInput';
 
 const ReviewContact = ({
   className,
@@ -134,48 +135,75 @@ const ReviewContact = ({
      *Update contact and set approved_ai = True
      */
     setUpdating(true);
-    try {
-      let category_id = 1;
-      let status_id = 1;
+    let category_id = 1;
+    let status_id = 1;
 
-      if (values.selectedContactType == 8) {
-        category_id = values.selectedContactSubtype;
-      } else {
-        category_id = values.selectedContactType;
-      }
-      if (values.selectedContactCategory == 3) {
-        category_id = 1;
-      }
-      if (values.selectedContactCategory == 0) {
-        status_id = values.selectedStatus;
-      }
+    if (values.selectedContactType == 8) {
+      category_id = values.selectedContactSubtype;
+    } else {
+      category_id = values.selectedContactType;
+    }
+    if (values.selectedContactCategory == 3) {
+      category_id = 1;
+    }
+    if (values.selectedContactCategory == 0) {
+      status_id = values.selectedStatus;
+    }
 
-      let newData = {
-        ...client,
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone_number: values.phone_number,
-        category_id: category_id,
-        status_id: status_id,
-        approved_ai: true,
-      };
-      // if uncategorized then
-      setUpdating(false);
-      if (handleClose) {
-        handleClose();
-      }
-      updateContact(client?.id, newData).then(() =>
-        dispatch(setRefetchData(true)),
-      );
-      if (showToast) {
-        toast.success(
-          `${newData.first_name + ' ' + newData.last_name} market as correct`,
+    if (isUnapprovedAI) {
+      try {
+        let newData = {
+          ...client,
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          phone_number: values.phone_number,
+          category_id: category_id,
+          status_id: status_id,
+          approved_ai: true,
+        };
+        setUpdating(false);
+        if (handleClose) {
+          handleClose();
+        }
+        updateContact(client?.id, newData).then(() =>
+          dispatch(setRefetchData(true)),
         );
+        if (showToast) {
+          toast.success(
+            `${newData.first_name + ' ' + newData.last_name} marked as correct`,
+          );
+        }
+        if (updateContactLocally) updateContactLocally(client?.id, newData);
+      } catch (error) {
+        console.log(error);
       }
-      if (updateContactLocally) updateContactLocally(client?.id, newData);
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        let newData = {
+          ...client,
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          phone_number: values.phone_number,
+          lead_source: values.lead_source,
+          tags: values.tags,
+          category_id: category_id,
+          status_id: status_id,
+        };
+        updateContact(client?.id, newData).then(() => {
+          setUpdating(false);
+          dispatch(setRefetchData(true));
+          handleClose();
+          toast.success(
+            `${
+              newData.first_name + ' ' + newData.last_name
+            } updated successfully`,
+          );
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -301,6 +329,36 @@ const ReviewContact = ({
                   errorText={errors.phone_number}
                 />
               </div>
+              {!isUnapprovedAI && (
+                <>
+                  <Dropdown
+                    label="Lead Source"
+                    activeIcon={false}
+                    options={leadSourceOptions}
+                    className="mb-6"
+                    handleSelect={(source) =>
+                      (formik.values.lead_source = source.name)
+                    }
+                    initialSelect={formik.values.lead_source}
+                    placeHolder={
+                      formik.values.lead_source
+                        ? formik.values.lead_source
+                        : 'Choose'
+                    }
+                  />
+                  <TagsInput
+                    label="Tags"
+                    typeOfContact={openedTab}
+                    value={findTagsOption(formik.values.tags, openedTab)}
+                    onChange={(choice) => {
+                      formik.setFieldValue(
+                        'tags',
+                        choice.map((el) => el.label),
+                      );
+                    }}
+                  />
+                </>
+              )}
               <Radio
                 secondary
                 options={contactTypes}
@@ -312,7 +370,7 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedContactStatus', '');
                 }}
-                className="mb-6"
+                className="mb-6 mt-6"
                 name="category-of-contact"
                 error={
                   errors.selectedContactCategory &&
