@@ -425,6 +425,7 @@ export const clientStatuses = [
 ];
 
 export const vendorTypes = [
+  { id: 8, name: 'Vendor' },
   { id: 15, name: 'Lawyer' },
   { id: 16, name: 'Contractor' },
   { id: 17, name: 'Mortgage Broker' },

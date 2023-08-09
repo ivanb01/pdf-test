@@ -954,8 +954,7 @@ const Table = ({
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
             contacts.filter(
               (contact) =>
-                contact.status_2.toLowerCase() == category.name.toLowerCase() ||
-                contact.category_2.toLowerCase() == category.name.toLowerCase(),
+                contact.status_2.toLowerCase() == category.name.toLowerCase(),
             ).length ? (
               <>
                 <tr
@@ -1411,7 +1410,7 @@ const Table = ({
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
                       <Text chipText className="text-gray4">
-                        {type.name}
+                        {type.name == 'Vendor' ? 'Other Vendors' : type.name}
                       </Text>
                     </div>
                   </td>
