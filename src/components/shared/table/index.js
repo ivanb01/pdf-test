@@ -964,7 +964,9 @@ const Table = ({
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
                       <Text chipText className="text-gray4">
-                        {category.name}
+                        {category.name == 'Vendor'
+                          ? 'Other Vendors'
+                          : category.name}
                       </Text>
                     </div>
                   </td>
