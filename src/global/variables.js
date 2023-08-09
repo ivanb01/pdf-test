@@ -450,6 +450,10 @@ export const professionalsStatuses = [
     color: 'border-lightBlue3',
     statuses: [
       {
+        id: 8,
+        name: 'Other Vendors',
+      },
+      {
         id: 13,
         name: 'No Relationship',
       },
