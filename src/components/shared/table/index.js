@@ -1884,27 +1884,22 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Email Summary
-            </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Source
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              Email Summary
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Delete/correct
             </th>
             <th
@@ -1951,7 +1946,27 @@ const Table = ({
                   // handleAction={(id, action) => handleAction(id, action)}
                 />
               </td>
-              <td className=" text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip typeStyle>
+                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
+                  {getSubtype(dataItem)}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                <Chip
+                  statusStyle
+                  className={getContactStatusColorByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}>
+                  {getContactStatusByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}
+                </Chip>
+              </td>
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center">
                   {dataItem.ai_email_summary ? (
                     <div className="email-summary-styling">
@@ -1970,29 +1985,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>
-                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
-                  {getSubtype(dataItem)}
-                </Chip>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <Chip
-                  statusStyle
-                  className={getContactStatusColorByStatusId(
-                    dataItem.category_id,
-                    dataItem.status_id,
-                  )}>
-                  {getContactStatusByStatusId(
-                    dataItem.category_id,
-                    dataItem.status_id,
-                  )}
-                </Chip>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                {dataItem.import_source}
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center">
                   <div
                     onMouseEnter={() => {
