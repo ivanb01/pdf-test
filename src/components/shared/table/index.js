@@ -954,7 +954,8 @@ const Table = ({
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
             contacts.filter(
               (contact) =>
-                contact.status_2.toLowerCase() == category.name.toLowerCase(),
+                contact.status_2.toLowerCase() == category.name.toLowerCase() ||
+                contact.category_2.toLowerCase() == category.name.toLowerCase(),
             ).length ? (
               <>
                 <tr
