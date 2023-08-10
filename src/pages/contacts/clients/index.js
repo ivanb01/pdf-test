@@ -146,6 +146,7 @@ const index = () => {
         <ReviewContact
           showToast
           client={contactToEdit}
+          setClient={setContactToEdit}
           handleClose={() => setShowEditContact(false)}
           title="Edit Client"
         />

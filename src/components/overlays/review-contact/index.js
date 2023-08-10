@@ -31,6 +31,8 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
+import { getAIData } from '@api/aiSmartSync';
+import Loader from '@components/shared/loader';
 
 const ReviewContact = ({
   className,
@@ -39,6 +41,7 @@ const ReviewContact = ({
   redirectAfterMoveToTrash,
   title,
   client,
+  setClient,
   afterUpdate,
   refetchData,
   hideCloseButton,
@@ -51,12 +54,12 @@ const ReviewContact = ({
 
   const [updating, setUpdating] = useState(false);
   const [removing, setRemoving] = useState(false);
-
-  const openedTab = useSelector((state) => state.global.openedTab);
-
+  const [loadingEmail, setLoadingEmail] = useState(true);
   const [existingContactEmailError, setExistingContactEmailError] =
     useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
+
+  const openedTab = useSelector((state) => state.global.openedTab);
 
   const options = [
     {
@@ -261,6 +264,30 @@ const ReviewContact = ({
     );
   };
 
+  const fetchAISummary = async () => {
+    try {
+      const { data } = await getAIData(client.id);
+      setClient({
+        ...client,
+        ai_email_summary: data.ai_email_summary,
+        email_link: data.email_link,
+        email_subject: data.email_subject,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingEmail(false);
+    }
+  };
+
+  useEffect(() => {
+    if ('ai_email_summary' in client) {
+      setLoadingEmail(false);
+    } else {
+      fetchAISummary();
+    }
+  }, []);
+
   return (
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
@@ -459,35 +486,39 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         {isUnapprovedAI && (
-          <div className="w-1/2">
-            <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-              <div className="p-6">
-                <div>
-                  <div className="flex items-center mb-2">
-                    <img src={AI.src} alt="" />
-                    <span className="ml-1 text-gray-900 text-sm">
-                      AI Smart Synced Contact
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">
-                      {client.email_subject}
+          <div className="w-1/2 relative">
+            {loadingEmail ? (
+              <Loader />
+            ) : (
+              <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
+                <div className="p-6">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <img src={AI.src} alt="" />
+                      <span className="ml-1 text-gray-900 text-sm">
+                        AI Smart Synced Contact
+                      </span>
                     </div>
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="cursor-pointer flex items-center text-sm text-gray-900 underline">
-                      View the email source
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">
+                        {client.email_subject}
+                      </div>
+                      <a
+                        target="_blank"
+                        href={client.email_link}
+                        className="cursor-pointer flex items-center text-sm text-gray-900 underline">
+                        View the email source
+                        <img src={newTab.src} alt="" className="ml-1" />
+                      </a>
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  <div className="text-gray-900 text-sm">
+                    {client.ai_email_summary}
                   </div>
                 </div>
-                <hr className="my-4" />
-                <div className="text-gray-900 text-sm">
-                  {client.ai_email_summary}
-                </div>
-              </div>
-            </SimpleBar>
+              </SimpleBar>
+            )}
           </div>
         )}
       </div>
