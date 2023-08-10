@@ -15,6 +15,7 @@ import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-
 import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { types } from 'global/variables';
+import ReviewContact from '@components/overlays/review-contact';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -97,11 +98,12 @@ const index = () => {
       )}
 
       {showEditContact && (
-        <EditContactOverlay
+        <ReviewContact
+          showToast
+          client={contactToEdit}
+          setClient={setContactToEdit}
           handleClose={() => setShowEditContact(false)}
           title="Edit Professional"
-          client={contactToEdit}
-          className="w-[635px]"
         />
       )}
     </Layout>
