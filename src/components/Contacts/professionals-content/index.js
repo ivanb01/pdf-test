@@ -38,6 +38,11 @@ const tabs = [
     onlyOneValue: true,
   },
   {
+    title: 'ADDED SOURCE',
+    content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
+    value: 'import_source',
+  },
+  {
     title: 'PROFESSIONAL STATUSES',
     content: allStatusesQuickEdit['professionals'].map((item) => item.name),
     value: 'status_2',
@@ -128,6 +133,16 @@ const Professionals = ({
         );
         contactsState = contactsState.filter((contact) =>
           booleanFilter.includes(contact[key]),
+        );
+      } else if (
+        key == 'import_source' &&
+        filters['import_source'] == 'Manually Added'
+      ) {
+        contactsState = contactsState.filter(
+          (contact) =>
+            contact.import_source != 'Google Contacts' &&
+            contact.import_source != 'GmailAI' &&
+            contact.import_source != 'Gmail',
         );
       } else {
         contactsState = contactsState.filter((contact) => {
@@ -258,7 +273,9 @@ const Professionals = ({
                       }
                       key={`${index}${i}`}
                       active
-                      label={filter}
+                      label={
+                        filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter
+                      }
                       className="mr-1"
                     />
                   )),

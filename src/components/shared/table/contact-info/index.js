@@ -52,7 +52,11 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip }) => {
           )}
         </div>
         {data.email && (
-          <div className="text-gray-500 font-medium">{data.email}</div>
+          <div
+            title={data.email}
+            className="ellipsis-email text-gray-500 font-medium">
+            {data.email}
+          </div>
         )}
         <div className="flex flex-row">
           {data.type && <Chip typeStyle>{data.type}</Chip>}

@@ -120,7 +120,7 @@ const ReviewContact = ({
         dispatch(setRefetchData(true)),
       );
       if (updateContactLocally) updateContactLocally(client?.id, newData);
-      if (redirectAfterMoveToTrash) router.push('/ai-summary');
+      if (redirectAfterMoveToTrash) router.push('/contacts/clients');
       if (showToast) {
         toast.success(
           `${newData.first_name + ' ' + newData.last_name} moved to Trash`,

@@ -963,7 +963,9 @@ const Table = ({
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
                       <Text chipText className="text-gray4">
-                        {category.name}
+                        {category.name == 'Vendor'
+                          ? 'Other Vendors'
+                          : category.name}
                       </Text>
                     </div>
                   </td>
@@ -1408,7 +1410,7 @@ const Table = ({
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
                       <Text chipText className="text-gray4">
-                        {type.name}
+                        {type.name == 'Vendor' ? 'Other Vendors' : type.name}
                       </Text>
                     </div>
                   </td>
@@ -1882,27 +1884,22 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Email Summary
-            </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Source
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              Email Summary
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Delete/correct
             </th>
             <th
@@ -1949,7 +1946,27 @@ const Table = ({
                   // handleAction={(id, action) => handleAction(id, action)}
                 />
               </td>
-              <td className=" text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip typeStyle>
+                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
+                  {getSubtype(dataItem)}
+                </Chip>
+              </td>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                <Chip
+                  statusStyle
+                  className={getContactStatusColorByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}>
+                  {getContactStatusByStatusId(
+                    dataItem.category_id,
+                    dataItem.status_id,
+                  )}
+                </Chip>
+              </td>
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center">
                   {dataItem.ai_email_summary ? (
                     <div className="email-summary-styling">
@@ -1968,29 +1985,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>
-                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
-                  {getSubtype(dataItem)}
-                </Chip>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <Chip
-                  statusStyle
-                  className={getContactStatusColorByStatusId(
-                    dataItem.category_id,
-                    dataItem.status_id,
-                  )}>
-                  {getContactStatusByStatusId(
-                    dataItem.category_id,
-                    dataItem.status_id,
-                  )}
-                </Chip>
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                {dataItem.import_source}
-              </td>
-              <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center">
                   <div
                     onMouseEnter={() => {
@@ -2048,14 +2043,30 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td className="pr-6">
+              <td className="pr-8">
                 <div
-                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center"
+                  onMouseEnter={() => {
+                    document
+                      .querySelector(`#tooltip-edit-${dataItem.id}-1`)
+                      .classList.remove('invisible', 'opacity-0');
+                  }}
+                  onMouseLeave={() =>
+                    document
+                      .querySelector(`#tooltip-edit-${dataItem.id}-1`)
+                      .classList.add('invisible', 'opacity-0')
+                  }
+                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
                   onClick={(e) => {
                     e.stopPropagation();
 
                     handleCardEdit(dataItem);
                   }}>
+                  <div
+                    id={`tooltip-edit-${dataItem.id}-1`}
+                    role="tooltip"
+                    className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                    Edit Contact
+                  </div>
                   <Edit
                     id={'edit-contact-icon-' + dataItem.id}
                     className="text-gray3 w-4 h-4"
