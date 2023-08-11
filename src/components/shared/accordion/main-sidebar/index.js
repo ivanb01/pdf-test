@@ -116,7 +116,7 @@ const MainSidebar = ({
               <Link
                 href="#"
                 className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md ${
-                  openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
+                  openedTab == tab.id && ' text-lightBlue3'
                 }`}
                 onClick={() => {
                   if (openedTab == tab.id) {
@@ -153,16 +153,20 @@ const MainSidebar = ({
               {tab.subtab && (
                 <div
                   className={
-                    !collapseMainTab && openedTab == tab.id ? `ml-11` : `hidden`
+                    !collapseMainTab && openedTab == tab.id ? `` : `hidden`
                   }>
                   {tab.subtab.map((subtab) => {
                     return (
                       <a
                         key={`${subtab.id}`}
                         href="#"
-                        className={`transition-all duration-200 flex items-center ${
+                        className={`${
+                          !collapseMainTab &&
+                          openedTab == tab.id &&
+                          'pl-11 mx-3'
+                        } transition-all duration-200 flex items-center ${
                           isSubtabActive(`${subtab.id}`)
-                            ? 'text-lightBlue3'
+                            ? 'text-lightBlue3 bg-lightBlue1'
                             : 'text-gray4'
                         }`}
                         onClick={() => setOpenedSubtab(subtab.id)}>
