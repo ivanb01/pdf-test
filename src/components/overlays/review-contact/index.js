@@ -305,6 +305,7 @@ const ReviewContact = ({
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
                 <GlobalAlert
+                  smallText
                   noBorder
                   rounded
                   type="warning"

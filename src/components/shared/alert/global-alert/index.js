@@ -10,6 +10,7 @@ const GlobalAlert = ({
   rounded,
   onButtonClick,
   noBorder,
+  smallText,
   title,
 }) => {
   const router = useRouter();
@@ -72,7 +73,10 @@ const GlobalAlert = ({
                 {title}
               </p>
             )}
-            <p className={`text-sm font-medium ${textColor}`}>
+            <p
+              className={`${
+                smallText ? 'text-xs' : 'text-sm'
+              } font-medium ${textColor}`}>
               {message ? message : '\u00A0'}
             </p>
           </div>
