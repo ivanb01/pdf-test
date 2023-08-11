@@ -33,6 +33,9 @@ import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
 import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
+import Alert from '@components/shared/alert';
+import NotificationAlert from '@components/shared/alert/notification-alert';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const ReviewContact = ({
   className,
@@ -299,8 +302,16 @@ const ReviewContact = ({
             isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'
           }`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
-            <form className="p-6" onSubmit={formik.handleSubmit}>
-              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
+            <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
+              {client.campaign_name && (
+                <GlobalAlert
+                  noBorder
+                  rounded
+                  type="warning"
+                  message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
+                />
+              )}
+              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6 mt-6">
                 <Input
                   type="text"
                   label="First Name"
