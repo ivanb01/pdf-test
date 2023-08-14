@@ -65,29 +65,18 @@ export default function Details() {
   const fetchContact = async () => {
     // setLoading(true);
     try {
-      const contactPromise = getContact(id);
-      const campaignsPromise = getContactCampaign(id);
-      const notesPromise = getContactNotes(id);
-      const activityLogPromise = getContactActivities(id);
-
-      const [
-        contactResponse,
-        campaignsResponse,
-        notesResponse,
-        activityLogResponse,
-      ] = await Promise.all([
-        contactPromise,
-        campaignsPromise,
-        notesPromise,
-        activityLogPromise,
+      const [contactResponse, activityLogResponse] = await Promise.all([
+        getContact(id),
+        getContactActivities(id),
       ]);
 
       const contactData = contactResponse.data;
-      const campaignsData = campaignsResponse.data;
-      const notesData = notesResponse.data.data;
       const activityLogData = activityLogResponse.data.data;
 
       setContact(contactData);
+      dispatch(setActivityLogData(activityLogData));
+      setLoading(false);
+
       if (
         contactData.approved_ai != true &&
         contactData.import_source == 'GmailAI'
@@ -96,9 +85,18 @@ export default function Details() {
         setAIData(data);
         setShowReviewOverlay(true);
       }
+
+      // Fetch the other two data in parallel next
+      const [campaignsResponse, notesResponse] = await Promise.all([
+        getContactCampaign(id),
+        getContactNotes(id),
+      ]);
+
+      const campaignsData = campaignsResponse.data;
+      const notesData = notesResponse.data.data;
+
       dispatch(setCampaignsData(campaignsData));
       dispatch(setNotesData(notesData));
-      dispatch(setActivityLogData(activityLogData));
     } catch (error) {
       console.log(error);
     } finally {

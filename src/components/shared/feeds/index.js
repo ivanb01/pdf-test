@@ -21,7 +21,7 @@ import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 
 const activitiesTypes = {
@@ -32,12 +32,16 @@ const activitiesTypes = {
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
-export default function Feeds({ contactId, activities, setActivities }) {
+export default function Feeds({ contactId }) {
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
+
+  const activities = useSelector(
+    (state) => state.clientDetails.activityLogData,
+  );
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
@@ -66,12 +70,13 @@ export default function Feeds({ contactId, activities, setActivities }) {
         activityId,
         values,
       );
-      dispatch(setRefetchData(true));
       setLoadingButton(false);
       handleCloseModal();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
+    } finally {
+      dispatch(setRefetchData(true));
     }
   };
 
@@ -117,7 +122,6 @@ export default function Feeds({ contactId, activities, setActivities }) {
   };
   const handleDeleteActivity = async (activity) => {
     try {
-      setActivities((prev) => prev.filter((item) => item.id !== activity.id));
       await contactServices.deleteContactActivity(contactId, activity.id);
       dispatch(setRefetchData(true));
     } catch (error) {
@@ -152,7 +156,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <div className="flow-root bg-white p-6 h-full ">
+      <div className="flow-root bg-white p-6 h-auto ">
         <ul role="list" className="-mb-8">
           {activities
             ?.slice()
@@ -213,8 +217,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
         <Overlay
           className="w-[632px]"
           handleCloseOverlay={handleCloseModal}
-          title="Edit Activity"
-        >
+          title="Edit Activity">
           <div className="p-6 bg-white">
             <form onSubmit={formik.handleSubmit}>
               <Dropdown
@@ -238,8 +241,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}
-              ></TextArea>
+                errorText={errors.description}></TextArea>
               <div className="flex flex-row justify-end mt-6">
                 <Button
                   className="mr-3"
