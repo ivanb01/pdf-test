@@ -104,7 +104,6 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: (values) => {
-      console.log(values, client);
       handleSubmit(values);
     },
   });
@@ -197,6 +196,15 @@ const ReviewContact = ({
           category_id: category_id,
           status_id: status_id,
         };
+
+        if(client.category_id != values.selectedContactType || client.status_id != values.selectedStatus){
+          Object.assign(newData, {
+            campaign_name: null,
+            is_in_campaign: null,
+            campaign_id: null
+          });
+        }
+
         updateContact(client?.id, newData).then(() => {
           setUpdating(false);
           dispatch(setRefetchData(true));
