@@ -51,7 +51,6 @@ const MainSidebar = ({
     setLoadingActivateSS(true);
     try {
       const { data } = await getUserConsentForGoogleEmail();
-      console.log('get google authorize', data);
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');
@@ -245,7 +244,7 @@ const MainSidebar = ({
                 {!userGaveConsent?.includes('gmail') &&
                   !userGaveConsent?.includes('contacts') && (
                     <div
-                      className={`transition-all w-auto bg-purple1 p-3 pb-0 text-sm m-3`}>
+                      className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3`}>
                       Setup{' '}
                       <span className="font-bold">
                         “Smart Sync Contacts by AI”

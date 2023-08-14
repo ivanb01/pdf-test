@@ -56,7 +56,7 @@ export const getUserConsentForGoogleContacts = () => {
 
 export const getUserConsentForGoogleEmail = () => {
   return axiosInstance.get('google/authorize', {
-    params: { test_callback: '/contacts/clients', scope: 'gmail' },
+    params: { test_callback: '/contacts/clients', scope: 'contacts,gmail' },
   });
 };
 
