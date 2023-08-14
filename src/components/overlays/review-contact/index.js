@@ -36,6 +36,7 @@ import Loader from '@components/shared/loader';
 import Alert from '@components/shared/alert';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import { unassignContactFromCampaign } from '@api/campaign';
 
 const ReviewContact = ({
   className,
@@ -198,11 +199,7 @@ const ReviewContact = ({
         };
 
         if(client.category_id != values.selectedContactType || client.status_id != values.selectedStatus){
-          Object.assign(newData, {
-            campaign_name: null,
-            is_in_campaign: null,
-            campaign_id: null
-          });
+          unassignContactFromCampaign(client.campaign_id, client.id)
         }
 
         updateContact(client?.id, newData).then(() => {
