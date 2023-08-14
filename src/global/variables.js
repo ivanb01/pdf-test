@@ -61,6 +61,7 @@ export const contactTypes = [
   { id: 1, name: 'Professional' },
   { id: 2, name: 'Other' },
   { id: 3, name: 'Uncategorized' },
+  { id: 4, name: 'Trash' },
 ];
 
 export const contactStatuses = [
@@ -685,10 +686,6 @@ export const othersOptions = [
   {
     id: 2,
     name: 'Unknown',
-  },
-  {
-    id: 3,
-    name: 'Trash',
   },
 ];
 

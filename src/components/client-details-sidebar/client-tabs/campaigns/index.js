@@ -52,9 +52,8 @@ export default function Campaigns({ contactId, contact }) {
 
   const handleAssignCampaignChange = async () => {
     try {
-      const { data } = await assignContactToCampaign(campaignId, contactId);
+      await assignContactToCampaign(campaignId, contactId);
       dispatch(setRefetchData(true));
-
       setShowAssignToCampaign(false);
     } catch (error) {
       console.log(error);
@@ -63,7 +62,7 @@ export default function Campaigns({ contactId, contact }) {
 
   const handleUnassignCampaignChange = async () => {
     try {
-      const { data } = await unassignContactFromCampaign(campaignId, contactId);
+      await unassignContactFromCampaign(campaignId, contactId);
       dispatch(setRefetchData(true));
       setShowUnassignFromCampaign(false);
     } catch (error) {

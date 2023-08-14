@@ -152,6 +152,9 @@ const ReviewContact = ({
     if (values.selectedContactCategory == 3) {
       category_id = 1;
     }
+    if (values.selectedContactCategory == 4) {
+      category_id = 3;
+    }
     if (values.selectedContactCategory == 0) {
       status_id = values.selectedStatus;
     }
@@ -198,8 +201,14 @@ const ReviewContact = ({
           status_id: status_id,
         };
 
-        if(client.category_id != values.selectedContactType || client.status_id != values.selectedStatus){
-          unassignContactFromCampaign(client.campaign_id, client.id)
+        if (
+          client.category_id != category_id ||
+          client.status_id != status_id ||
+          category_id == 3
+        ) {
+          if (client.campaign_id) {
+            unassignContactFromCampaign(client.campaign_id, client.id);
+          }
         }
 
         updateContact(client?.id, newData).then(() => {
@@ -422,7 +431,7 @@ const ReviewContact = ({
                 }
                 errorText={errors.selectedContactCategory}
               />
-              {formik.values.selectedContactCategory !== 3 && (
+              {![3, 4].includes(formik.values.selectedContactCategory) && (
                 <Radio
                   options={
                     formik.values.selectedContactCategory == 0
