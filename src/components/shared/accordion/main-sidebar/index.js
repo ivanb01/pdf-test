@@ -62,9 +62,9 @@ const MainSidebar = ({
   };
 
   useEffect(() => {
-    getUserConsentStatus().then((results) =>
-      dispatch(setUserGaveConsent(results.data.scopes)),
-    );
+    getUserConsentStatus().then((results) => {
+      dispatch(setUserGaveConsent(results.data.scopes));
+    });
   }, []);
 
   const narrowMenu = () => {
@@ -255,8 +255,8 @@ const MainSidebar = ({
                       </span>{' '}
                       in order to import contact from Gmail.
                       <a
-                        onClick={() => setShowSSOverlay(true)}
-                        className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6">
+                        className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
+                        onClick={() => setShowSSOverlay(true)}>
                         Setup
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
