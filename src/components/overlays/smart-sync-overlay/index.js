@@ -4,7 +4,6 @@ import Overlay from 'components/shared/overlay';
 import img from '/public/images/smart-sync.svg';
 import img2 from '/public/images/google.svg';
 import Image from 'next/image';
-import aiAnimation from '/public/images/ai-animation.json';
 
 const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
   return (
