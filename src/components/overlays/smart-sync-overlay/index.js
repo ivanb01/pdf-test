@@ -4,6 +4,8 @@ import Overlay from 'components/shared/overlay';
 import img from '/public/images/smart-sync.svg';
 import img2 from '/public/images/google.svg';
 import Image from 'next/image';
+import aiAnimation from '/public/images/ai-animation.json';
+
 const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
   return (
     <Overlay className="max-w-[800px]">
@@ -19,7 +21,13 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
         </div>
         <div className="flex py-6">
           <div className="w-1/2 text-center border-r border-gray-200 pr-6">
-            <Image src={img} alt="header-img" />
+            <lottie-player
+              src="https://lottie.host/487b1374-b859-4451-ae1f-72a19db4ecaa/Zt3ZqjwYNm.json"
+              background="transparent"
+              speed="1"
+              style={{ height: '120px' }}
+              loop
+              autoplay></lottie-player>
             <div className="text-xs text-gray-500">
               With <strong>Smart Sync Contacts</strong>:<br /> Our intelligent
               AI algorithms intelligently analyze each contact's information,

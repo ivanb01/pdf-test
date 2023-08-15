@@ -7,7 +7,11 @@ import { useState } from 'react';
 import * as contactServices from 'api/contacts';
 import { dropped_status_id, trash_category_id } from 'global/variables';
 import { useDispatch } from 'react-redux';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import {
+  setOpenedTab,
+  setOpenedSubtab,
+  setRefetchData,
+} from 'store/global/slice';
 
 const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const dispatch = useDispatch();
@@ -17,7 +21,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const handleSubmit = async () => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.updateContact(contact?.id, {
+      await contactServices.updateContact(contact?.id, {
         // status_id: dropped_status_id,
         category_id: trash_category_id,
       });
@@ -25,6 +29,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
       contact?.category_1 == 'Professional' &&
         router.push('/contacts/professionals');
       setLoadingButton(false);
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
@@ -40,7 +45,8 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
           <div className="flex flex-col ml-2">
             <Text h3>No longer working with this contact?</Text>
             <Text p className="text-gray4 ">
-              Moving the contact to Trash will no longer be part of your contact list.
+              Moving the contact to Trash will no longer be part of your contact
+              list.
             </Text>
           </div>
         </div>
@@ -51,7 +57,12 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
             white
             className="mr-2"
           />
-          <Button loading={loadingButton} onClick={handleSubmit} label="Move to Trash" danger />
+          <Button
+            loading={loadingButton}
+            onClick={handleSubmit}
+            label="Move to Trash"
+            danger
+          />
         </div>
       </div>
     </Overlay>
