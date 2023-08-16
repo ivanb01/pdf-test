@@ -33,7 +33,7 @@ export default function Details() {
   const { id } = router.query;
 
   const refetchData = useSelector((state) => state.global.refetchData);
-  const contacts = useSelector((state) => state.contacts.data.data);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   // const contact = contacts.find((contact) => contact.id == id);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [aiData, setAIData] = useState(null);

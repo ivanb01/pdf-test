@@ -19,21 +19,16 @@ const contactsSlice = createSlice({
     updateContacts(state, action) {
       state.data.data = action.payload;
     },
-    updateContactStatus(state, action) {
-      let { id, status_id, status_2 } = action.payload;
-      let contactsCopy = current(state.data.data);
-      const newContacts = contactsCopy.map((obj) => {
-        if (obj.id === id) {
-          return {
-            ...obj,
-            status_id: status_id,
-            status_2: status_2,
-          };
-        }
-        return obj;
-      });
-      state.data.data = newContacts;
-      // store.data.data.find(contact => contact.id = action.payload)
+    updateContactLocally(state, action) {
+      const { id, ...payloadData } = action.payload;
+      state.allContacts.data = state.allContacts.data.map((contact) =>
+        contact.id === id ? { ...contact, ...payloadData } : contact,
+      );
+      if (state.data.data) {
+        state.data.data = state.data.data.map((contact) =>
+          contact.id === id ? { ...contact, ...payloadData } : contact,
+        );
+      }
     },
   },
 });
@@ -42,6 +37,6 @@ export const {
   setContacts,
   setAllContacts,
   updateContacts,
-  updateContactStatus,
+  updateContactLocally,
 } = contactsSlice.actions;
 export default contactsSlice.reducer;

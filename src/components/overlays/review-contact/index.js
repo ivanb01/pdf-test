@@ -37,6 +37,7 @@ import Alert from '@components/shared/alert';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
+import { updateContactLocally } from '@store/contacts/slice';
 
 const ReviewContact = ({
   className,
@@ -49,7 +50,7 @@ const ReviewContact = ({
   afterUpdate,
   refetchData,
   hideCloseButton,
-  updateContactLocally,
+  afterSubmit,
 }) => {
   const isUnapprovedAI =
     client.import_source == 'GmailAI' && client.approved_ai != true;
@@ -115,115 +116,110 @@ const ReviewContact = ({
     setRemoving(true);
     try {
       let newData = { ...client, approved_ai: true, category_id: 3 };
+
+      // do changes locally, remove button loader, close
+      dispatch(updateContactLocally(newData));
       setRemoving(false);
-      if (handleClose) {
-        handleClose();
-      }
+      handleClose();
+
+      // make api call in the background to update contact
       updateContact(client.id, newData).then(() =>
         dispatch(setRefetchData(true)),
       );
-      if (updateContactLocally) updateContactLocally(client?.id, newData);
+      // if aftersubmit prop is given, call the function
+      if (afterSubmit) afterSubmit(client?.id, newData);
+
+      // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
-      if (showToast) {
-        toast.success(
-          `${newData.first_name + ' ' + newData.last_name} moved to Trash`,
-        );
-      }
+
+      // show toaster message
+      toast.success(
+        `${newData.first_name + ' ' + newData.last_name} moved to Trash`,
+      );
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
 
   const handleSubmit = async (values) => {
-    // console.log(values);
-    /*
-     *How to mark the contact as approved:
-     *Update contact and set approved_ai = True
-     */
     setUpdating(true);
-    let category_id = 1;
-    let status_id = 1;
 
-    if (values.selectedContactType == 8) {
+    let category_id;
+    if (values.selectedContactCategory === 3) {
+      category_id = 1;
+    } else if (values.selectedContactCategory === 4) {
+      category_id = 3;
+    } else if (values.selectedContactType === 8) {
       category_id = values.selectedContactSubtype;
     } else {
       category_id = values.selectedContactType;
     }
-    if (values.selectedContactCategory == 3) {
-      category_id = 1;
-    }
-    if (values.selectedContactCategory == 4) {
-      category_id = 3;
-    }
-    if (values.selectedContactCategory == 0) {
-      status_id = values.selectedStatus;
-    }
 
-    if (isUnapprovedAI) {
-      try {
-        let newData = {
-          ...client,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          phone_number: values.phone_number,
-          category_id: category_id,
-          status_id: status_id,
+    const status_id =
+      values.selectedContactCategory === 0 ? values.selectedStatus : 1;
+
+    const category =
+      values.selectedContactCategory === 0
+        ? clientOptions.find((client) => client.id === category_id).name
+        : client.category_2;
+
+    const baseData = {
+      ...client,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      phone_number: values.phone_number,
+      category_id: category_id,
+      status_id: status_id,
+      category_2: category,
+      category_1: contactTypes.find(
+        (type) => type.id == values.selectedContactCategory,
+      ).name,
+    };
+
+    const newData = isUnapprovedAI
+      ? {
+          ...baseData,
           approved_ai: true,
-        };
-        setUpdating(false);
-        if (handleClose) {
-          handleClose();
         }
-        updateContact(client?.id, newData).then(() =>
-          dispatch(setRefetchData(true)),
-        );
-        if (showToast) {
-          toast.success(
-            `${newData.first_name + ' ' + newData.last_name} marked as correct`,
-          );
-        }
-        if (updateContactLocally) updateContactLocally(client?.id, newData);
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      try {
-        let newData = {
-          ...client,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          phone_number: values.phone_number,
+      : {
+          ...baseData,
           lead_source: values.lead_source,
           tags: values.tags,
-          category_id: category_id,
-          status_id: status_id,
         };
 
-        if (
-          client.category_id != category_id ||
-          client.status_id != status_id ||
-          category_id == 3
-        ) {
-          if (client.campaign_id) {
-            unassignContactFromCampaign(client.campaign_id, client.id);
-          }
+    try {
+      // remove from campaign if changing category or status or if changed to TRASH
+      if (client.category_id != category_id || client.status_id != status_id) {
+        if (client.campaign_id) {
+          unassignContactFromCampaign(client.campaign_id, client.id);
         }
-
-        updateContact(client?.id, newData).then(() => {
-          setUpdating(false);
-          dispatch(setRefetchData(true));
-          handleClose();
-          toast.success(
-            `${
-              newData.first_name + ' ' + newData.last_name
-            } updated successfully`,
-          );
-        });
-      } catch (error) {
-        console.log(error);
       }
+
+      // make changes to global state
+      dispatch(updateContactLocally(newData));
+      setUpdating(false);
+      handleClose();
+
+      // function that runs conditionally on submit if prop is given
+      if (afterSubmit) {
+        afterSubmit(client?.id, newData);
+      }
+
+      // api call to update user
+      updateContact(client?.id, newData).then(() =>
+        dispatch(setRefetchData(true)),
+      );
+
+      // toaster message
+      const action = isUnapprovedAI
+        ? 'marked as correct'
+        : 'updated successfully';
+      toast.success(
+        `${newData.first_name + ' ' + newData.last_name} ${action}`,
+      );
+    } catch (error) {
+      toast.error(error);
     }
   };
 
@@ -301,7 +297,9 @@ const ReviewContact = ({
     if ('ai_email_summary' in client) {
       setLoadingEmail(false);
     } else {
-      fetchAISummary();
+      if (isUnapprovedAI) {
+        fetchAISummary();
+      }
     }
   }, []);
 

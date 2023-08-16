@@ -21,7 +21,7 @@ import {
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
-import { setContacts, updateContactStatus } from 'store/contacts/slice';
+import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
 
 const categoryIds = {
@@ -45,7 +45,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.data.data);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
@@ -171,7 +171,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       ).name;
 
       dispatch(
-        updateContactStatus({
+        updateContactLocally({
           id: contact.id,
           status_id: status,
           status_2: statusName,

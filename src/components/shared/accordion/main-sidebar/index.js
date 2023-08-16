@@ -35,7 +35,6 @@ const MainSidebar = ({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const contacts = useSelector((state) => state.contacts.data);
   const count = useSelector((state) => state.global.count);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const pinned = useSelector((state) => state.global.expandedMenu);

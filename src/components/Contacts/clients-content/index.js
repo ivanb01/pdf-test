@@ -57,7 +57,7 @@ const Clients = ({
   const [currentButton, setCurrentButton] = useState(currentView);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-  const contacts = useSelector((state) => state.contacts.data.data);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(
     contacts.length,

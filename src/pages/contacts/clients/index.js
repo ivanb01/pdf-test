@@ -8,7 +8,11 @@ import {
   setUnapprovedContacts,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContacts, updateContacts } from 'store/contacts/slice';
+import {
+  setContacts,
+  updateContacts,
+  updateContact,
+} from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
@@ -40,7 +44,6 @@ const index = () => {
     (state) => state.global.unapprovedContacts,
   );
 
-  const contacts = useSelector((state) => state.contacts.data);
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchData = useSelector((state) => state.global.refetchData);

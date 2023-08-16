@@ -78,17 +78,11 @@ const index = () => {
     toast.success(toastMessage);
     setSelectedPeople([]);
   };
-  const updateContactLocally = (id, newData) => {
-    const element = data.find((item) => item.id == id);
+  const updateAiSummaryTable = (id, newData) => {
     const updatedData = data.map((item) =>
       item.id === id ? { ...item, ...newData } : item,
     );
     setData(updatedData);
-    let toastMessage =
-      newData.category_id == 3
-        ? `${element.first_name + ' ' + element.last_name} moved to Trash`
-        : `${element.first_name + ' ' + element.last_name} marked as correct`;
-    toast.success(toastMessage);
   };
   const handleAction = async (type, id) => {
     try {
@@ -101,7 +95,7 @@ const index = () => {
         newData.approved_ai = true;
       }
       updateContact(id, newData).then(() => dispatch(setRefetchData(true)));
-      updateContactLocally(id, newData);
+      updateAiSummaryTable(id, newData);
     } catch (error) {}
   };
 
@@ -169,7 +163,7 @@ const index = () => {
       )}
       {showReviewOverlay && popupData && (
         <ReviewContact
-          updateContactLocally={updateContactLocally}
+          afterSubmit={updateAiSummaryTable}
           client={popupData}
           className="w-[1200px]"
           title="Review AI Smart Synced Contact"
