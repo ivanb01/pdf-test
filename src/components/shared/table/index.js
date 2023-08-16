@@ -25,6 +25,7 @@ import {
   vendorTypes,
   agentTypes,
   unspecifiedTypes,
+  contactTypes,
 } from 'global/variables';
 import { useRouter } from 'next/router';
 import {
@@ -954,7 +955,9 @@ const Table = ({
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
             contacts.filter(
               (contact) =>
-                contact.status_2.toLowerCase() == category.name.toLowerCase(),
+                contact.status_id == category.id &&
+                contact.category_1 ==
+                  contactTypes.find((type) => type.id == openedTab).name,
             ).length ? (
               <>
                 <tr
@@ -973,8 +976,9 @@ const Table = ({
                 {contacts
                   .filter(
                     (contact) =>
-                      contact.status_2.toLowerCase() ==
-                      category.name.toLowerCase(),
+                      contact.status_id == category.id &&
+                      contact.category_1 ==
+                        contactTypes.find((type) => type.id == openedTab).name,
                   )
                   .map((contact) => (
                     <tr
