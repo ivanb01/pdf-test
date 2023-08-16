@@ -21,7 +21,7 @@ export default function Info({ client }) {
   const categoryType = client?.category_1?.toLowerCase() + 's';
   const [campaginName, setCampaignName] = useState('');
 
-  const initialTags = client.tags ? client.tags : [];
+  const initialTags = client?.tags ? client.tags : [];
   const [tags, setTags] = useState(initialTags);
 
   const [changeStatusModal, setChangeStatusModal] = useState(false);

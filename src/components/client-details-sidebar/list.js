@@ -8,7 +8,7 @@ import CampaignsContent from './client-tabs/campaigns';
 import LookingForContent from './client-tabs/looking-for';
 import NotesContent from './client-tabs/notes';
 
-export const tabs = (contactId, contact, handleFetchContactRequired) => [
+export const tabs = (contactId, contact) => [
   {
     id: 0,
     name: 'Activity Log',
@@ -26,13 +26,7 @@ export const tabs = (contactId, contact, handleFetchContactRequired) => [
     name: 'Campaigns',
     href: '#',
     icon: <Campaigns />,
-    content: (
-      <CampaignsContent
-        contactId={contactId}
-        contact={contact}
-        handleFetchContactRequired={handleFetchContactRequired}
-      />
-    ),
+    content: <CampaignsContent contactId={contactId} contact={contact} />,
   },
   {
     id: 2,

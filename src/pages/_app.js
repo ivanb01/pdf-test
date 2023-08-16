@@ -49,16 +49,6 @@ const MyApp = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
-    if (document.querySelector('.main-menu')) {
-      setMarginTop(
-        document.querySelector('.main-menu').classList.contains('fixed')
-          ? true
-          : false,
-      );
-    }
-  }, [Component]);
-
-  useEffect(() => {
     configureAmplifyAuth();
 
     Auth.currentSession()
@@ -135,9 +125,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
-        <div
-          className={`main-page overflow-y-auto`}
-          style={{ marginTop: marginTop ? '68px' : '0px' }}>
+        <div className={`main-page overflow-y-auto`}>
           <Provider store={store}>
             <Component {...pageProps} />
             {domLoaded && (

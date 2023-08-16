@@ -190,7 +190,7 @@ export default function ActivityLog({ contactId, source }) {
                     </div>
                     <div>
                       <a
-                        href={aiPreview.email_link}
+                        href={aiPreview?.email_link}
                         target="_blank"
                         className=" text-xs underline flex items-center text-gray-900">
                         View in Gmail
@@ -200,7 +200,7 @@ export default function ActivityLog({ contactId, source }) {
                       </a>
                     </div>
                   </div>
-                  <div className="">{aiPreview.ai_email_summary}</div>
+                  <div className="">{aiPreview?.ai_email_summary}</div>
                 </div>
               )}
             </div>

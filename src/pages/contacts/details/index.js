@@ -26,6 +26,7 @@ import {
 } from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
+import toast from 'react-hot-toast';
 
 export default function Details() {
   const router = useRouter();
@@ -36,13 +37,11 @@ export default function Details() {
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   // const contact = contacts.find((contact) => contact.id == id);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
+  const [loadingTabs, setLoadingTabs] = useState(true);
   const [aiData, setAIData] = useState(null);
   const [contact, setContact] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
-  const handleFetchContactRequired = () => {
-    setFetchContactRequired((prev) => !prev);
-  };
   const [current, setCurrent] = useState(0);
 
   const [overlays, setOverlays] = useState({
@@ -60,47 +59,45 @@ export default function Details() {
   const handleUnassignCampaignChange = (state) => () =>
     setOverlays({ unassignCampaign: state });
 
-  const localTabs = tabs(id, contact, handleFetchContactRequired);
+  const localTabs = tabs(id, contact);
 
   const fetchContact = async () => {
-    // setLoading(true);
     try {
-      const [contactResponse, activityLogResponse] = await Promise.all([
-        getContact(id),
-        getContactActivities(id),
-      ]);
+      let contact = contacts.find((contact) => contact.id == id);
+      setContact(contact);
 
-      const contactData = contactResponse.data;
+      // Fetch activityLog
+      const activityLogResponse = await getContactActivities(id);
       const activityLogData = activityLogResponse.data.data;
-
-      setContact(contactData);
       dispatch(setActivityLogData(activityLogData));
-      setLoading(false);
+      setLoadingTabs(false);
 
-      if (
-        contactData.approved_ai != true &&
-        contactData.import_source == 'GmailAI'
-      ) {
-        const { data } = await getAIData(contactData.id);
-        setAIData(data);
-        setShowReviewOverlay(true);
+      if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
+        getAIData(contact.id).then(
+          (result) => setAIData(result.data),
+          setShowReviewOverlay(true),
+        );
       }
 
-      // Fetch the other two data in parallel next
-      const [campaignsResponse, notesResponse] = await Promise.all([
-        getContactCampaign(id),
-        getContactNotes(id),
-      ]);
+      getContactCampaign(id)
+        .then((campaignsResponse) => {
+          const campaignsData = campaignsResponse.data;
+          dispatch(setCampaignsData(campaignsData));
+        })
+        .catch((error) => {
+          toast.error('Error fetching campaigns:', error);
+        });
 
-      const campaignsData = campaignsResponse.data;
-      const notesData = notesResponse.data.data;
-
-      dispatch(setCampaignsData(campaignsData));
-      dispatch(setNotesData(notesData));
+      getContactNotes(id)
+        .then((notesResponse) => {
+          const notesData = notesResponse.data;
+          dispatch(setNotesData(notesData));
+        })
+        .catch((error) => {
+          toast.error('Error fetching notes:', error);
+        });
     } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+      toast.error('Error fetchign activity log', error);
     }
   };
 
@@ -114,16 +111,17 @@ export default function Details() {
     if (refetchData) {
       fetchContact().then(() => dispatch(setRefetchData(false)));
     }
-    console.log('refetched');
   }, [refetchData]);
 
   useEffect(() => {
-    id && fetchContact();
-  }, [fetchContactRequired, id]);
+    if (contacts) {
+      id && fetchContact();
+    }
+  }, [contacts, fetchContactRequired, id]);
 
   return (
     <>
-      <MainMenu fixed />
+      <MainMenu />
       {showReviewOverlay && (
         <ReviewContact
           showToast
@@ -147,21 +145,24 @@ export default function Details() {
           </a>
         </div>
         {/* <Breadcrumbs className="bg-white pl-6 py-6 border-b border-gray-2" /> */}
-        {!id || loading ? (
-          <Loader />
-        ) : (
+        {id && (
           <div className="flex flex-row border-t border-gray-2">
             <ClientDetailsSidebar
               client={contact}
-              handleFetchContactRequired={handleFetchContactRequired}
               // afterUpdate={fetchContact}
             />
-            <Tabs
-              current={current}
-              setCurrent={setCurrent}
-              className="px-6 pb-6"
-              tabs={localTabs}
-            />
+            {loadingTabs ? (
+              <div className="w-full h-auto bg-gray10 relative">
+                <Loader />
+              </div>
+            ) : (
+              <Tabs
+                current={current}
+                setCurrent={setCurrent}
+                className="px-6 pb-6"
+                tabs={localTabs}
+              />
+            )}
           </div>
         )}
       </div>

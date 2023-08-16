@@ -179,7 +179,7 @@ const Campaigns = () => {
 
   return (
     <>
-      <MainMenu fixed />
+      <MainMenu />
       <TopBar text="Campaigns" />
       <div className="bg-gray10 campaigns-custom-height">
         <div className="grid grid-cols-3 gap-6 p-6 h-full">
@@ -200,8 +200,7 @@ const Campaigns = () => {
                 <SimpleBar
                   autoHide
                   className="overflow-x-hidden"
-                  style={{ maxHeight: '590px' }}
-                >
+                  style={{ maxHeight: '590px' }}>
                   <Table
                     tableFor="campaigns"
                     // data={

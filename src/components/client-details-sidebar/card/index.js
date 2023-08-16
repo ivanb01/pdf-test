@@ -14,7 +14,7 @@ import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
 
-export default function ClientCard({ client, handleFetchContactRequired }) {
+export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
   const [deletingContact, setDeletingContact] = useState(false);
 
@@ -53,7 +53,7 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
         />
 
         {/* profile_image_path */}
-        <div className="flex flex-col ml-[18px]">
+        <div className="flex flex-col ml-[18px] max-w-[230px]">
           <Text h1 className="">
             {client?.first_name} {client?.last_name}
           </Text>
@@ -121,7 +121,6 @@ export default function ClientCard({ client, handleFetchContactRequired }) {
           title="Edit Contact"
           className="w-[635px]"
           client={client}
-          handleFetchContactRequired={handleFetchContactRequired}
         />
       )}
     </>
