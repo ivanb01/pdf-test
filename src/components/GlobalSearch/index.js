@@ -32,7 +32,8 @@ const GlobalSearch = ({ open, onClose }) => {
                       query: { id: item?.id },
                     })
                   }
-                  className="py-2 px-3 flex gap-3 justify-between items-center hover:bg-lightBlue1 cursor-pointer">
+                  className="py-2 px-3 flex gap-3 justify-between items-center hover:bg-lightBlue1 cursor-pointer"
+                >
                   {item.profile_image_path ? (
                     <img
                       className="inline-block h-6 w-6 rounded-full"
@@ -112,7 +113,8 @@ const GlobalSearch = ({ open, onClose }) => {
           enterTo="opacity-100"
           leave="ease-in duration-200"
           leaveFrom="opacity-100"
-          leaveTo="opacity-0">
+          leaveTo="opacity-0"
+        >
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-2.5px" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto" style={{ marginTop: '139px' }}>
@@ -124,13 +126,16 @@ const GlobalSearch = ({ open, onClose }) => {
               enterTo="opacity-100 translate-y-0"
               leave="ease-in duration-200"
               leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-4">
+              leaveTo="opacity-0 translate-y-4"
+            >
               <Dialog.Panel
                 className="relative transform overflow-hidden rounded-lg text-left transition-all"
-                style={{ width: '500px' }}>
+                style={{ width: '500px' }}
+              >
                 <div
                   className="rounded-lg items-center px-[12px] py-[9px] flex gap-2.5 border border-gray-300 bg-white shadow-md"
-                  style={{ height: '50px' }}>
+                  style={{ height: '50px' }}
+                >
                   <SearchIcon className="h-5 w-5 text-gray3 cursor-pointer" />
                   <input
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -153,7 +158,8 @@ const GlobalSearch = ({ open, onClose }) => {
                   //   style={{ marginTop: '5px', maxHeight: '276px' }}>
                   <SimpleBar
                     className="rounded-lg bg-white overflow-y-auto overflow-x-hidden"
-                    style={{ marginTop: '5px', maxHeight: '276px' }}>
+                    style={{ marginTop: '5px', maxHeight: '276px' }}
+                  >
                     {renderSearchResults()}
                   </SimpleBar>
                   // </div>

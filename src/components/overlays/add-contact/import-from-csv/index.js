@@ -7,17 +7,9 @@ import upload from '/public/images/upload.svg';
 import Link from 'components/Link';
 import Image from 'next/image';
 
-const ImportFromCsv = ({
-  title,
-  handleClose,
-  setUploadingDocument,
-  setUploadedDocument,
-}) => {
+const ImportFromCsv = ({ title, handleClose, setUploadingDocument, setUploadedDocument }) => {
   return (
-    <Overlay
-      handleCloseOverlay={handleClose}
-      className="max-w-[800px]"
-      title={title}>
+    <Overlay handleCloseOverlay={handleClose} className="max-w-[800px]" title={title}>
       <div className="p-[24px]">
         <div className="text-center px-10">
           <div className="mb-6 text-center">
@@ -29,11 +21,7 @@ const ImportFromCsv = ({
           <Text p className="text-gray4 text-center mb-6 justify-center">
             Start by downloading CSV sample and fill it with your contacts.
           </Text>
-          <Button
-            label="Download CSV Sample"
-            leftIcon={<DocumentDownloadIcon />}
-            secondary
-          />
+          <Button label="Download CSV Sample" leftIcon={<DocumentDownloadIcon />} secondary />
           <Text p className="text-gray8 mt-6 justify-center">
             Don't know how?{' '}
             <Link href="#" underline className="ml-2">

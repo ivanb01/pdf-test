@@ -5,19 +5,13 @@ import ImportGoogleContacts from 'components/overlays/importing-from-gmail';
 import MainMenu from 'components/shared/menu';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  postGoogleContacts,
-  getGoogleAuthorize,
-  getGoogleAuthCallback,
-} from 'api/google';
+import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback } from 'api/google';
 
 const NoContactPage = () => {
   const router = useRouter();
 
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =
-    useState(false);
-  const [showImportGoogleContactsModal, setShowImportGoogleContactsModal] =
-    useState(false);
+  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
+  const [showImportGoogleContactsModal, setShowImportGoogleContactsModal] = useState(false);
   const [modalList, setModalList] = useState([]);
   const [googleContactResponse, setGoogleContactResponse] = useState(null);
   const [stateAfterImport, setStateAfterImport] = useState(null);
@@ -157,9 +151,7 @@ const NoContactPage = () => {
           <div className="layout-fixed-height w-full flex items-center justify-center pt-[68px] overflow-y-scroll">
             <SetupGmail
               error={errorImporting}
-              setshowAddContactManuallyOverlay={
-                setShowAddContactManuallyOverlay
-              }
+              setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
               setShowImportGoogleContactsModal={handleImportGoogleContact}
             />
           </div>

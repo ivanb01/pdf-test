@@ -12,20 +12,10 @@ import {
   getContactCampaignEventPreview,
 } from 'api/campaign';
 import Button from 'components/shared/button';
-import {
-  CheckCircleIcon,
-  MinusCircleIcon,
-  ExclamationIcon,
-  PlusIcon,
-} from '@heroicons/react/solid';
+import { CheckCircleIcon, MinusCircleIcon, ExclamationIcon, PlusIcon } from '@heroicons/react/solid';
 import AssignToCampaign from 'components/overlays/assign-to-campaign';
 import UnassignOverlay from 'components/overlays/unassign';
-import {
-  sortDateAsc,
-  formatDateMDY,
-  formatDateLThour,
-  isValidDate,
-} from 'global/functions';
+import { sortDateAsc, formatDateMDY, formatDateLThour, isValidDate } from 'global/functions';
 import { useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
 import { setRefetchData } from 'store/global/slice';
@@ -35,8 +25,7 @@ export default function Campaigns({ contactId, contact }) {
   const dispatch = useDispatch();
   const [alert, setAlert] = useState(null);
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);
-  const [showUnassignFromCampaign, setShowUnassignFromCampaign] =
-    useState(false);
+  const [showUnassignFromCampaign, setShowUnassignFromCampaign] = useState(false);
   const [fetchRequired, setFetchRequired] = useState(false);
   const [campaignId, setCampaignId] = useState();
   const [contactCampaignStatus, setContactCampaignStatus] = useState('');
@@ -45,9 +34,7 @@ export default function Campaigns({ contactId, contact }) {
   const [previewEvent, setPreviewEvent] = useState(null);
   const [previewEventDate, setPreviewEventDate] = useState(null);
   const [previewEventSubject, setPreviewEventSubject] = useState(null);
-  const campaignsData = useSelector(
-    (state) => state.clientDetails.campaignsData,
-  );
+  const campaignsData = useSelector((state) => state.clientDetails.campaignsData);
   const refetchData = useSelector((state) => state.global.refetchData);
 
   const handleAssignCampaignChange = async () => {
@@ -72,12 +59,7 @@ export default function Campaigns({ contactId, contact }) {
 
   const alerts = [
     {
-      icon: (
-        <ExclamationIcon
-          className="h-5 w-5 text-yellow-400"
-          aria-hidden="true"
-        />
-      ),
+      icon: <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />,
       text: 'To be able to receive these emails. Client must need to be assigned to this campaign.',
       button: (
         <Button
@@ -123,9 +105,7 @@ export default function Campaigns({ contactId, contact }) {
         const { data } = await getContactCampaignEventPreview(event.id);
         setPreviewEvent(data);
         console.log('eventi', data);
-        data.preview.subject
-          ? setPreviewEventSubject(`${data.preview.subject}`)
-          : setPreviewEventSubject(``);
+        data.preview.subject ? setPreviewEventSubject(`${data.preview.subject}`) : setPreviewEventSubject(``);
       }
       setPreviewEventDate(event.execute_on);
     } catch (error) {
@@ -217,7 +197,8 @@ export default function Campaigns({ contactId, contact }) {
                           : alert.type === 'warning'
                           ? 'text-yellow3'
                           : 'text-red4'
-                      }`}>
+                      }`}
+                    >
                       {alert.text}
                     </p>
                     {alert.button}
@@ -228,9 +209,7 @@ export default function Campaigns({ contactId, contact }) {
             )}
             <div className="flex flex-row">
               <div className="w-[42%]">
-                <SimpleBar
-                  autoHide
-                  style={{ maxHeight: 'calc(100vh - 295px)' }}>
+                <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 295px)' }}>
                   <Events
                     events={campaignEvents}
                     currentEvent={currentEvent}
@@ -241,9 +220,7 @@ export default function Campaigns({ contactId, contact }) {
                 </SimpleBar>
               </div>
               <div className="w-[58%]">
-                <SimpleBar
-                  autoHide
-                  style={{ maxHeight: 'calc(100vh - 295px)' }}>
+                <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 295px)' }}>
                   <div className="flex flex-row border-b border-gray2 p-6">
                     {isValidDate(previewEventDate) ? (
                       <>
@@ -261,9 +238,7 @@ export default function Campaigns({ contactId, contact }) {
                         <CalendarIcon className="text-gray4" height={20} />
                         <Text p className="text-gray4 ml-1">
                           {previewEventDate?.includes('After')
-                            ? `${parseInt(
-                                previewEventDate.replace(/[^0-9\.]/g, ''),
-                              )} days after added in Campaign`
+                            ? `${parseInt(previewEventDate.replace(/[^0-9\.]/g, ''))} days after added in Campaign`
                             : previewEventDate}
                         </Text>
                       </>
@@ -311,9 +286,7 @@ const RawHTML = ({ title, children, className = '' }) => (
     <Text h1 className="mb-3">
       {title}
     </Text>
-    <div
-      dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />') }}
-    />
+    <div dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />') }} />
   </div>
 );
 

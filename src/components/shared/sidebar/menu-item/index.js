@@ -5,9 +5,7 @@ export default function MenuItem({ item, open, ...props }) {
   return (
     <Disclosure.Button
       className={classNames(
-        item.current
-          ? 'bg-gray-100 text-gray-900'
-          : 'bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+        item.current ? 'bg-gray-100 text-gray-900' : 'bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900',
         !item.children
           ? 'group w-full flex items-center pl-7 pr-2 py-2 text-sm font-medium rounded-md'
           : 'group w-full flex items-center pr-2 py-2 text-left text-sm font-medium rounded-md',

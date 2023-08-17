@@ -43,14 +43,8 @@ const Contacts = ({ data }) => {
   const [selectedStatus, setSelectedStatus] = useState(0);
   const [selectedCard, setSelectedCard] = useState(0);
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
-  const [
-    selectedUncategorizedContactType,
-    setSelectedUncategorizedContactType,
-  ] = useState(null);
-  const [
-    selectedUncategorizedContactStatus,
-    setSelectedUncategorizedContactStatus,
-  ] = useState(null);
+  const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
+  const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
 
   //* TABS, MENUS (state for tabs, subtabs, menus etc...) ETC... *//
   const [uploadingDocument, setUploadingDocument] = useState(false);
@@ -60,20 +54,15 @@ const Contacts = ({ data }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   // SHOW/HIDE ELEMENTS
-  const [showImportFromCsvOverlay, setShowImportFromCsvOverlay] =
-    useState(false);
+  const [showImportFromCsvOverlay, setShowImportFromCsvOverlay] = useState(false);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =
-    useState(false);
-  const [showContactsSyncedOverlay, setShowContactsSyncedOverlay] =
-    useState(false);
+  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
+  const [showContactsSyncedOverlay, setShowContactsSyncedOverlay] = useState(false);
   const [showImportingOverlay, setShowImportingOverlay] = useState(false);
-  const [showSuccessfullyCategorized, setShowSuccessfullyCategorized] =
-    useState(false);
+  const [showSuccessfullyCategorized, setShowSuccessfullyCategorized] = useState(false);
   const [showStartCategorizing, setShowStartCategorizing] = useState(false);
   const [showAssignToCampaign, setShowAssignToCampaign] = useState(false);
-  const [showUnassignFromCampaign, setShowUnassignFromCampaign] =
-    useState(false);
+  const [showUnassignFromCampaign, setShowUnassignFromCampaign] = useState(false);
 
   //* FUNCTIONS *//
   const importContacts = () => {
@@ -103,16 +92,12 @@ const Contacts = ({ data }) => {
       setSelectedUncategorized((prevState) => [...prevState, contact]);
     } else {
       row.classList.remove('bg-lightBlue1');
-      let newUncategorized = selectedUncategorized.filter(
-        (element) => element.email != contact.email,
-      );
+      let newUncategorized = selectedUncategorized.filter((element) => element.email != contact.email);
       setSelectedUncategorized(newUncategorized);
     }
   };
   const getCount = (type) => {
-    let arrayOfContacts = clientTypeCards.filter(
-      (client) => client.type == type,
-    );
+    let arrayOfContacts = clientTypeCards.filter((client) => client.type == type);
     let count = 0;
     arrayOfContacts.forEach((contacts) => {
       if (contacts.data) {
@@ -124,11 +109,7 @@ const Contacts = ({ data }) => {
   };
 
   const handleCategorization = () => {
-    console.log(
-      selectedUncategorized,
-      selectedUncategorizedContactType,
-      selectedUncategorizedContactStatus,
-    );
+    console.log(selectedUncategorized, selectedUncategorizedContactType, selectedUncategorizedContactStatus);
   };
 
   const handleAddContactManually = () => {
@@ -838,10 +819,7 @@ const Contacts = ({ data }) => {
     <>
       <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
-      <div
-        className="h-full w-full flex items-center justify-center"
-        style={{ height: 'calc(100vh - 70px)' }}
-      >
+      <div className="h-full w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
         <SetupGmail
           setShowImportingOverlay={setShowImportingOverlay}
           setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
@@ -859,15 +837,8 @@ const Contacts = ({ data }) => {
           title="Add Contact"
         />
       )}
-      {showContactsSyncedOverlay && (
-        <ContactsSyncedOverlay handleCloseOverlay={handleCloseContactsSynced} />
-      )}
-      {showImportingOverlay && (
-        <ImportingFromGmail
-          progress="52"
-          handleCloseOverlay={closeImportingOverlay}
-        />
-      )}
+      {showContactsSyncedOverlay && <ContactsSyncedOverlay handleCloseOverlay={handleCloseContactsSynced} />}
+      {showImportingOverlay && <ImportingFromGmail progress="52" handleCloseOverlay={closeImportingOverlay} />}
       {showSuccessfullyCategorized && (
         <SuccessfullyCategorized
           totalCategorized={13}
@@ -876,10 +847,7 @@ const Contacts = ({ data }) => {
         />
       )}
       {showStartCategorizing && (
-        <StartCategorizing
-          uncategorizedContacts={35}
-          handleCloseOverlay={() => setShowStartCategorizing(false)}
-        />
+        <StartCategorizing uncategorizedContacts={35} handleCloseOverlay={() => setShowStartCategorizing(false)} />
       )}
       {showAssignToCampaign && (
         <AssignToCampaign
@@ -887,11 +855,7 @@ const Contacts = ({ data }) => {
           handleCloseOverlay={() => setShowAssignToCampaign(false)}
         />
       )}
-      {showUnassignFromCampaign && (
-        <UnassignOverlay
-          handleCloseOverlay={() => setShowAssignToCampaign(false)}
-        />
-      )}
+      {showUnassignFromCampaign && <UnassignOverlay handleCloseOverlay={() => setShowAssignToCampaign(false)} />}
       {showAddContactOverlay && (
         <AddContactOverlay
           title="Add Contact"

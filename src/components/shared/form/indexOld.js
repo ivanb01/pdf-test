@@ -2,13 +2,7 @@ import { useFormik } from 'formik';
 import Button from '../button';
 import Input from '../input';
 
-export default function BasicForm({
-  handleSubmit,
-  inputs = [],
-  customButtons,
-  initialValues,
-  buttonText = 'Submit',
-}) {
+export default function BasicForm({ handleSubmit, inputs = [], customButtons, initialValues, buttonText = 'Submit' }) {
   const localInitialValues = initialValues
     ? initialValues
     : inputs.reduce((obj, cur) => {
@@ -51,11 +45,7 @@ export default function BasicForm({
       {customButtons ? (
         customButtons
       ) : (
-        <Button
-          label={buttonText}
-          className="w-full flex justify-center"
-          type="submit"
-        />
+        <Button label={buttonText} className="w-full flex justify-center" type="submit" />
       )}
     </form>
   );

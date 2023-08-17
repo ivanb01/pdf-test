@@ -28,14 +28,10 @@ const isLocalhost =
       // [::1] is the IPv6 localhost address.
       window.location.hostname === '[::1]' ||
       // 127.0.0.1/8 is considered localhost for IPv4.
-      window.location.hostname.match(
-        /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
-      ),
+      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
   );
 
-const isDev =
-  typeof window !== 'undefined' &&
-  Boolean(window.location.hostname.includes('dev'));
+const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -69,11 +65,7 @@ const MyApp = ({ Component, pageProps }) => {
       if (pageProps.requiresAuth && !isUserAuthenticated) {
         router.push('/authentication/sign-in');
       }
-      if (
-        !pageProps.requiresAuth &&
-        isUserAuthenticated &&
-        !localStorage.getItem('user')
-      ) {
+      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
         router.push('/contacts/clients');
       }
     }
@@ -94,15 +86,10 @@ const MyApp = ({ Component, pageProps }) => {
           userPoolId: userPoolId,
           userPoolWebClientId: appClientId,
           oauth: {
-            domain:
-              'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
+            domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost
-              ? localRedirectSignIn
-              : isDev
-              ? devRedirectSignIn
-              : productionRedirectSignIn,
+            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
             redirectSignOut: isLocalhost
               ? localRedirectSignOut
               : isDev

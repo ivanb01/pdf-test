@@ -1,16 +1,10 @@
 import Select from 'react-select';
-import {
-  multiselectOptionsClients,
-  multiselectOptionsProfessionals,
-  tagsForProfessionals,
-} from 'global/variables';
+import { multiselectOptionsClients, multiselectOptionsProfessionals, tagsForProfessionals } from 'global/variables';
 
 const TagsInput = ({ onChange, label, value, typeOfContact }) => {
   return (
     <div className="w-full custom-chipinput-styles col-span-2">
-      {label && (
-        <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>
-      )}
+      {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
       <Select
         isMulti
         value={value}

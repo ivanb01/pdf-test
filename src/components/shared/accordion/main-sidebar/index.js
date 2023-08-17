@@ -18,10 +18,7 @@ import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import ArrowRight from '/public/images/arrow-circle-right.svg';
 import { CSSTransition } from 'react-transition-group';
 import { setUserGaveConsent } from 'store/global/slice';
-import {
-  getUserConsentForGoogleEmail,
-  getUserConsentStatus,
-} from '@api/google';
+import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google';
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -80,12 +77,12 @@ const MainSidebar = ({
                 onClick={() => {
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}>
+                }}
+              >
                 <div
-                  className={`flex items-center ${
-                    openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
-                  }`}
-                  title={tab.name}>
+                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
+                  title={tab.name}
+                >
                   {tab.icon}
                 </div>
               </Link>
@@ -97,7 +94,8 @@ const MainSidebar = ({
             <hr className="my-2 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
+            >
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
             </div>
           </>
@@ -122,18 +120,14 @@ const MainSidebar = ({
                   }
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}>
+                }}
+              >
                 <div
                   onClick={() => !tab.subtab && setOpenedTab(tab.id)}
-                  className={`flex items-center ${
-                    openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
-                  }`}>
+                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
+                >
                   {tab.icon}
-                  <Text
-                    h4
-                    className={`ml-3 ${
-                      openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
-                    }`}>
+                  <Text h4 className={`ml-3 ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
                     {tab.name}
                   </Text>
                 </div>
@@ -141,41 +135,32 @@ const MainSidebar = ({
                 {tab.subtab && (
                   <ChevronDownIcon
                     className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-                      !collapseMainTab && openedTab == tab.id
-                        ? 'rotate-180'
-                        : ''
+                      !collapseMainTab && openedTab == tab.id ? 'rotate-180' : ''
                     }`}
                   />
                 )}
               </Link>
               {tab.subtab && (
-                <div
-                  className={
-                    !collapseMainTab && openedTab == tab.id ? `` : `hidden`
-                  }>
+                <div className={!collapseMainTab && openedTab == tab.id ? `` : `hidden`}>
                   {tab.subtab.map((subtab) => {
                     return (
                       <a
                         key={`${subtab.id}`}
                         href="#"
                         className={`${
-                          !collapseMainTab &&
-                          openedTab == tab.id &&
-                          'pl-11 mx-3'
+                          !collapseMainTab && openedTab == tab.id && 'pl-11 mx-3'
                         } transition-all duration-200 flex items-center ${
-                          isSubtabActive(`${subtab.id}`)
-                            ? 'text-lightBlue3 bg-lightBlue1'
-                            : 'text-gray4'
+                          isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                         }`}
-                        onClick={() => setOpenedSubtab(subtab.id)}>
+                        onClick={() => setOpenedSubtab(subtab.id)}
+                      >
                         {subtab.icon ? subtab.icon : subtab.dot}
                         <Text
                           h4
                           className={`px-[10px] py-[10px] ${
-                            isSubtabActive(`${subtab.id}`)
-                              ? 'text-lightBlue3'
-                              : 'text-gray4'
-                          }`}>
+                            isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3' : 'text-gray4'
+                          }`}
+                        >
                           {subtab.name} ({getCountForSubtab(subtab)})
                         </Text>
                       </a>
@@ -191,7 +176,8 @@ const MainSidebar = ({
             <hr className="my-4 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
+            >
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
               <Text h4 className={`ml-3 text-gray5`}>
                 {pinned && 'Import Contacts from CSV'}
@@ -207,7 +193,8 @@ const MainSidebar = ({
     <div
       className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
         pinned ? 'w-[315px]' : 'w-[62px]'
-      }`}>
+      }`}
+    >
       {showSSOverlay && (
         <SmartSyncOverlay
           handleAction={() => activateSmartSync()}
@@ -221,46 +208,36 @@ const MainSidebar = ({
           <>
             {userGaveConsent && (
               <>
-                {userGaveConsent?.includes('gmail') &&
-                  userGaveConsent?.includes('contacts') && (
-                    <div
-                      className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm m-3`}>
-                      Import all your contacts from “Google Contacts” in the
-                      CRM.
-                      <a
-                        onClick={() =>
-                          router.push({
-                            pathname: '/contacts/no-contact/',
-                            query: { start_importing: true },
-                          })
-                        }
-                        className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-blue-600">
-                        Import Google Contacts
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
-                    </div>
-                  )}
-                {!userGaveConsent?.includes('gmail') &&
-                  !userGaveConsent?.includes('contacts') && (
-                    <div
-                      className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3`}>
-                      Setup{' '}
-                      <span className="font-bold">
-                        “Smart Sync Contacts by AI”
-                      </span>{' '}
-                      and{' '}
-                      <span className="font-bold">
-                        “Import Google Contacts”
-                      </span>{' '}
-                      in order to import contact from Gmail.
-                      <a
-                        className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
-                        onClick={() => setShowSSOverlay(true)}>
-                        Setup
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
-                    </div>
-                  )}
+                {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
+                  <div className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm m-3`}>
+                    Import all your contacts from “Google Contacts” in the CRM.
+                    <a
+                      onClick={() =>
+                        router.push({
+                          pathname: '/contacts/no-contact/',
+                          query: { start_importing: true },
+                        })
+                      }
+                      className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-blue-600"
+                    >
+                      Import Google Contacts
+                      <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                    </a>
+                  </div>
+                )}
+                {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
+                  <div className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3`}>
+                    Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
+                    <span className="font-bold">“Import Google Contacts”</span> in order to import contact from Gmail.
+                    <a
+                      className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
+                      onClick={() => setShowSSOverlay(true)}
+                    >
+                      Setup
+                      <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                    </a>
+                  </div>
+                )}
               </>
             )}
           </>
@@ -274,7 +251,8 @@ const MainSidebar = ({
               query: { start_importing: true },
             })
           }
-          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md">
+          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md"
+        >
           <AccountCircle className="h-5" />
         </a>
       )}
@@ -283,7 +261,8 @@ const MainSidebar = ({
         <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
           className="absolute cursor-pointer z-10"
-          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}>
+          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}
+        >
           <div className="">
             <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
           </div>

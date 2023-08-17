@@ -28,25 +28,18 @@ const index = () => {
     let other = {
       ...allContacts,
       data: allContacts.data.filter(
-        (contact) =>
-          contact.category_id === 13 ||
-          contact.category_id === 14 ||
-          contact.category_id === 2,
+        (contact) => contact.category_id === 13 || contact.category_id === 14 || contact.category_id === 2,
       ),
     };
     const contacts = other.data;
     const contactsFamilyFriends = contacts.filter(
       (contact) => contact.category_id === 13 || contact.category_id === 14,
     );
-    const contactsUnknown = contacts.filter(
-      (contact) => contact.category_id === 2,
-    );
+    const contactsUnknown = contacts.filter((contact) => contact.category_id === 2);
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
-    openedSubtab === 0
-      ? setActualContact(contactsFamilyFriends)
-      : setActualContact(contactsUnknown);
+    openedSubtab === 0 ? setActualContact(contactsFamilyFriends) : setActualContact(contactsUnknown);
     setLoading(false);
   };
 
@@ -75,8 +68,7 @@ const index = () => {
     <Layout>
       {loading ? (
         <Loader />
-      ) : (openedSubtab == 0 && familyAndFriends?.length) ||
-        (openedSubtab == 1 && unknown?.length) ? (
+      ) : (openedSubtab == 0 && familyAndFriends?.length) || (openedSubtab == 1 && unknown?.length) ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             <div className="p-6 flex items-center justify-between">
@@ -94,13 +86,8 @@ const index = () => {
               </div>
             </div>
 
-            <div
-              className="w-auto relative flex"
-              style={{ height: 'calc(100vh - 160px)' }}
-            >
-              <div
-                className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-              >
+            <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+              <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                   <Table tableFor="other" data={actualContact} />
                 </SimpleBar>

@@ -44,9 +44,7 @@ const MainMenu = ({
   const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
-  const skippedEmptyState = useSelector(
-    (state) => state.global.skippedEmptyState,
-  );
+  const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const count = useSelector((state) => state.global.count);
   const [openGlobalSearch, setOpenGlobalSearch] = useState(false);
@@ -64,9 +62,7 @@ const MainMenu = ({
 
   useEffect(() => {
     if (!allContacts || refetchData) {
-      getContacts(
-        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27',
-      ).then((data) => {
+      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27').then((data) => {
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
           router.push({
@@ -79,11 +75,7 @@ const MainMenu = ({
   }, [count, allContacts, refetchData]);
 
   const showUncategorizedButton = () => {
-    return (
-      allContacts &&
-      allContacts.filter((contact) => contact.category_1 == 'Uncategorized')
-        .length > 0
-    );
+    return allContacts && allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length > 0;
   };
 
   const classNames = (...classes) => {
@@ -94,15 +86,11 @@ const MainMenu = ({
     <div
       className={`${
         fixed && 'fixed top-0 left-0 right-0'
-      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
+      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}
+    >
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
-          <Image
-            src={oneLineLogo}
-            alt=""
-            onClick={() => Router.push('/contacts/clients')}
-            className="cursor-pointer"
-          />
+          <Image src={oneLineLogo} alt="" onClick={() => Router.push('/contacts/clients')} className="cursor-pointer" />
         </div>
         <div className="menu-links">
           <ul className="flex items-center">
@@ -110,12 +98,9 @@ const MainMenu = ({
               return (
                 <MenuLink
                   key={item.id}
-                  className={`mr-5 ${
-                    router.pathname.split('/')[1] == item.url.split('/')[1]
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() => router.push(item.url)}>
+                  className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
+                  onClick={() => router.push(item.url)}
+                >
                   {item.name}
                 </MenuLink>
               );
@@ -124,22 +109,15 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
-        {allContacts &&
-          allContacts.length > 0 &&
-          router.pathname.startsWith('/contacts/clients') && (
-            <SearchIcon
-              className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
-              onClick={() => {
-                setOpenGlobalSearch(true);
-              }}
-            />
-          )}
-        {openGlobalSearch && (
-          <GlobalSearch
-            open={openGlobalSearch}
-            onClose={() => setOpenGlobalSearch(false)}
+        {allContacts && allContacts.length > 0 && router.pathname.startsWith('/contacts/clients') && (
+          <SearchIcon
+            className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
+            onClick={() => {
+              setOpenGlobalSearch(true);
+            }}
           />
         )}
+        {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
         {showUncategorizedButton() && (
           <Button
             label="Categorize Contacts"
@@ -159,7 +137,8 @@ const MainMenu = ({
             className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
               FreshworksWidget('open');
-            }}>
+            }}
+          >
             <ContactSupport className="h-[20px]" />
             {/* Need help? */}
           </button>
@@ -193,7 +172,8 @@ const MainMenu = ({
             enterTo="transform opacity-100 scale-100"
             leave="transition ease-in duration-75"
             leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95">
+            leaveTo="transform opacity-0 scale-95"
+          >
             <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
@@ -205,9 +185,7 @@ const MainMenu = ({
                 </div>
                 <div className="max-w-[165px] w-full">
                   {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}
-                  <p className="truncate text-sm font-medium text-gray4">
-                    {user?.email ? user?.email : user}
-                  </p>
+                  <p className="truncate text-sm font-medium text-gray4">{user?.email ? user?.email : user}</p>
                 </div>
               </div>
               <div className="py-1">
@@ -217,11 +195,9 @@ const MainMenu = ({
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => Router.push('/my-profile')}>
-                      <Settings
-                        className="text-gray4 mr-3 h-5 w-5"
-                        aria-hidden="true"
-                      />
+                      onClick={() => Router.push('/my-profile')}
+                    >
+                      <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>
                   )}
@@ -230,14 +206,10 @@ const MainMenu = ({
                   {({ active }) => (
                     <a
                       href="#"
-                      className={
-                        'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
-                      }
-                      onClick={handleSignOut}>
-                      <Logout
-                        className="text-gray4 mr-3 h-5 w-5"
-                        aria-hidden="true"
-                      />
+                      className={'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'}
+                      onClick={handleSignOut}
+                    >
+                      <Logout className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Logout
                     </a>
                   )}

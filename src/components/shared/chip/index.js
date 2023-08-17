@@ -69,9 +69,7 @@ export default function Chip({
   return (
     <>
       {lastCommunication ? (
-        <div
-          className={`${className} mt-4 inline-block rounded-full px-3 text-xs font-medium items-center ${styling}`}
-        >
+        <div className={`${className} mt-4 inline-block rounded-full px-3 text-xs font-medium items-center ${styling}`}>
           {/*the icon below depends from lastcommuncation category type */}
           <Mail className="w-4 mr-1" />
           <span>{lastCommunicationLabel}</span>
@@ -79,23 +77,16 @@ export default function Chip({
       ) : (
         <div
           onClick={onClick}
-          className={`${
-            selectedStatus && 'border-lightBlue3 text-lightBlue3'
-          } ${secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'} ${
-            !notClickable &&
-            'hover:border-lightBlue3 hover:border transition-all cursor-pointer'
-          }  ${
+          className={`${selectedStatus && 'border-lightBlue3 text-lightBlue3'} ${
+            secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'
+          } ${!notClickable && 'hover:border-lightBlue3 hover:border transition-all cursor-pointer'}  ${
             active && 'border-lightBlue3 text-lightBlue3'
           } border inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
         >
           {label}
           {closable && (
             <span className="ml-1" onClick={() => removeChip(label)}>
-              <Close
-                className={`h-3 w-3 ${
-                  active ? 'text-lightBlue3' : 'text-gray4'
-                }`}
-              />
+              <Close className={`h-3 w-3 ${active ? 'text-lightBlue3' : 'text-gray4'}`} />
             </span>
           )}
         </div>

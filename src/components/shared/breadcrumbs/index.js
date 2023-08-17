@@ -15,19 +15,14 @@ export default function Breadcrumbs({ className, ...props }) {
             <div className="flex items-center">
               <a
                 href="#"
-                className={`mr-4 text-sm font-medium text-gray-500 hover:text-gray6 ${
-                  page.current && 'text-gray6'
-                } `}
+                className={`mr-4 text-sm font-medium text-gray-500 hover:text-gray6 ${page.current && 'text-gray6'} `}
                 aria-current={page.current ? 'page' : undefined}
                 onClick={() => Router.push('/contacts/clients')}
               >
                 {page.name}
               </a>
               {index + 1 != pages.length && (
-                <ChevronRightIcon
-                  className="flex-shrink-0 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
+                <ChevronRightIcon className="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />
               )}
             </div>
           </li>

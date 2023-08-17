@@ -18,45 +18,30 @@ import SimpleBar from 'simplebar-react';
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms_min: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
+    bedrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     bedrooms_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('bedrooms_min', {
         is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('bedrooms_min'),
-          'Max bedrooms must be greater than min bedrooms',
-        ),
+        then: Yup.number().min(Yup.ref('bedrooms_min'), 'Max bedrooms must be greater than min bedrooms'),
       }),
-    bathrooms_min: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
+    bathrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     bathrooms_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('bathrooms_min', {
         is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('bathrooms_min'),
-          'Max bathrooms must be greater than min bathrooms',
-        ),
+        then: Yup.number().min(Yup.ref('bathrooms_min'), 'Max bathrooms must be greater than min bathrooms'),
       }),
-    budget_min: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
     budget_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('budget_min', {
         is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('budget_min'),
-          'Max budget must be greater than min budget',
-        ),
+        then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
       }),
   });
 
@@ -96,10 +81,7 @@ export default function LookingFor({ contactId }) {
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.addContactLookingProperty(
-        contactId,
-        values,
-      );
+      const res = await contactServices.addContactLookingProperty(contactId, values);
       console.log('add', res);
       setLoadingButton(false);
       toast.success('Changes were successfully saved');
@@ -111,38 +93,18 @@ export default function LookingFor({ contactId }) {
 
   const fetchLookingProperties = async () => {
     try {
-      const { data } = await contactServices.getContactLookingProperties(
-        contactId,
-      );
+      const { data } = await contactServices.getContactLookingProperties(contactId);
       const lookingProperties = data.data;
       if (lookingProperties.length > 0) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
           looking_action: lookingProperties[0].looking_action,
-          bedrooms_min:
-            lookingProperties[0].bedrooms_min != 0
-              ? lookingProperties[0].bedrooms_min
-              : '',
-          bedrooms_max:
-            lookingProperties[0].bedrooms_max != 0
-              ? lookingProperties[0].bedrooms_max
-              : '',
-          bathrooms_min:
-            lookingProperties[0].bathrooms_min != 0
-              ? lookingProperties[0].bathrooms_min
-              : '',
-          bathrooms_max:
-            lookingProperties[0].bathrooms_max != 0
-              ? lookingProperties[0].bathrooms_max
-              : '',
-          budget_min:
-            lookingProperties[0].budget_min != 0
-              ? lookingProperties[0].budget_min
-              : '',
-          budget_max:
-            lookingProperties[0].budget_max != 0
-              ? lookingProperties[0].budget_max
-              : '',
+          bedrooms_min: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
+          bedrooms_max: lookingProperties[0].bedrooms_max != 0 ? lookingProperties[0].bedrooms_max : '',
+          bathrooms_min: lookingProperties[0].bathrooms_min != 0 ? lookingProperties[0].bathrooms_min : '',
+          bathrooms_max: lookingProperties[0].bathrooms_max != 0 ? lookingProperties[0].bathrooms_max : '',
+          budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
+          budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
       }
     } catch (error) {
@@ -258,10 +220,7 @@ export default function LookingFor({ contactId }) {
                 <SearchSelectInput
                   label="Neighborhood"
                   options={NYCneighborhoods}
-                  value={valueOptions(
-                    formik.values.neighborhood_ids,
-                    NYCneighborhoods,
-                  )}
+                  value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
                   onChange={(choice) => {
                     let choices = choice.map((el) => el.value);
                     formik.setFieldValue('neighborhood_ids', choices);
@@ -280,16 +239,8 @@ export default function LookingFor({ contactId }) {
                 errorText={errors.neighborhood_ids}
               /> */}
               </div>
-              <Accordion
-                tabs={tabs}
-                activeSelections={selections}
-                defaultOpen
-              />
-              <Button
-                type="submit"
-                primary
-                className="mt-6"
-                loading={loadingButton}>
+              <Accordion tabs={tabs} activeSelections={selections} defaultOpen />
+              <Button type="submit" primary className="mt-6" loading={loadingButton}>
                 Save
               </Button>
             </form>

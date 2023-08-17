@@ -178,12 +178,9 @@ const Layout = ({ children }) => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-  const skippedEmptyState = useSelector(
-    (state) => state.global.skippedEmptyState,
-  );
+  const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
 
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =
-    useState(false);
+  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
   const [showImportingOverlay, setShowImportingOverlay] = useState(false);
 
   const handleOpenedTab = (tab) => {
@@ -210,7 +207,6 @@ const Layout = ({ children }) => {
       dispatch(setCount(data.data));
     });
   }, []);
-
 
   return (
     <>

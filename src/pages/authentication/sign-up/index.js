@@ -16,8 +16,7 @@ const planValues = [
   { id: 'basic', name: 'Basic' },
   { id: 'pro', name: 'Pro' },
 ];
-const apiURL =
-  'https://cjylzkf22j.execute-api.us-east-1.amazonaws.com/prod//registration';
+const apiURL = 'https://cjylzkf22j.execute-api.us-east-1.amazonaws.com/prod//registration';
 
 const SignUp = () => {
   //* FORMIK *//
@@ -54,10 +53,7 @@ const SignUp = () => {
         </Text>
         <div className="text-sm leading-5 font-normal text-gray4">
           Already have an account?{' '}
-          <Link
-            href="#"
-            className="underline"
-            onClick={() => Router.push('sign-in')}>
+          <Link href="#" className="underline" onClick={() => Router.push('sign-in')}>
             Sign In
           </Link>
           {/* <Text p className="text-gray4 mt-10 mb-6">
@@ -98,16 +94,15 @@ const SignUp = () => {
             />
 
             <div className="mb-6">
-              <label
-                htmlFor="tenantTier"
-                className="block mb-2 text-sm font-medium text-gray-900">
+              <label htmlFor="tenantTier" className="block mb-2 text-sm font-medium text-gray-900">
                 Plan
               </label>
               <select
                 onChange={formik.handleChange}
                 value={formik.values.tenantTier}
                 id="tenantTier"
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              >
                 <option selected>Select one...</option>
                 <option value="Basic">Basic</option>
                 <option value="Standard">Standard</option>

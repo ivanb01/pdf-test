@@ -17,11 +17,7 @@ import * as Yup from 'yup';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import ContactInfo from 'components/shared/table/contact-info';
 
-const AddRelationshipModal = ({
-  handleClose,
-  contactId,
-  handleFetchRelationships,
-}) => {
+const AddRelationshipModal = ({ handleClose, contactId, handleFetchRelationships }) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
   const AddRelationshipSchema = Yup.object().shape({
@@ -64,9 +60,7 @@ const AddRelationshipModal = ({
         image: item.profile_image_path,
       }));
       setContactsSearched(filterData);
-      filterData.length > 0
-        ? setContactsDropdown(true)
-        : setContactsDropdown(false);
+      filterData.length > 0 ? setContactsDropdown(true) : setContactsDropdown(false);
     } catch (error) {
       console.log(error);
     }
@@ -155,15 +149,10 @@ const AddRelationshipModal = ({
   // };
 
   return (
-    <Overlay
-      title="Add Relationship"
-      handleCloseOverlay={handleCloseAddModal}
-      className="w-[632px]"
-    >
+    <Overlay title="Add Relationship" handleCloseOverlay={handleCloseAddModal} className="w-[632px]">
       <div className="p-5 pt-0">
         <Text p className="text-gray4">
-          This contact has the same interest as you. You are looking togother
-          for a property to buy/rent/invest.
+          This contact has the same interest as you. You are looking togother for a property to buy/rent/invest.
         </Text>
         <div className="my-6 relative">
           <Input
@@ -185,9 +174,7 @@ const AddRelationshipModal = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div
-              className={`z-20 shadow rounded overflow-hidden absolute top-16 w-[100%] bg-white h-40`}
-            >
+            <div className={`z-20 shadow rounded overflow-hidden absolute top-16 w-[100%] bg-white h-40`}>
               <SimpleBar style={{ maxHeight: '100%' }}>
                 {contactsSearched.map((contact) => (
                   <div
@@ -220,11 +207,11 @@ const AddRelationshipModal = ({
             <div className="flex flex-row p-3 bg-gray-50">
               <div className="flex flex-row justify-between w-[100%] text-sm">
                 <ContactInfo
-                    data={{
-                      name: relationshipToAdd.relationship_person,
-                      email: relationshipToAdd.relationship_email,
-                      image: relationshipToAdd.relationship_image,
-                    }}
+                  data={{
+                    name: relationshipToAdd.relationship_person,
+                    email: relationshipToAdd.relationship_email,
+                    image: relationshipToAdd.relationship_image,
+                  }}
                 />
                 <div className="flex flex-row items-center">
                   <Dropdown
@@ -233,9 +220,7 @@ const AddRelationshipModal = ({
                     options={relationshipsTypes}
                     className="mb-1 w-52"
                     activeClasses="bg-lightBlue1"
-                    handleSelect={(relationshipType) =>
-                      handleChooseRelationshipType(relationshipType)
-                    }
+                    handleSelect={(relationshipType) => handleChooseRelationshipType(relationshipType)}
                   ></Dropdown>
                   <MinusCircleIcon
                     onClick={removeRelationship}
@@ -248,28 +233,16 @@ const AddRelationshipModal = ({
           )}
         </div>
 
-        {!errors.related_to_contact_id &&
-          errors.relationship_name &&
-          touched.relationship_name && (
-            <NotificationAlert className="mt-2 p-2" type={'error'}>
-              {errors.relationship_name}
-            </NotificationAlert>
-          )}
+        {!errors.related_to_contact_id && errors.relationship_name && touched.relationship_name && (
+          <NotificationAlert className="mt-2 p-2" type={'error'}>
+            {errors.relationship_name}
+          </NotificationAlert>
+        )}
 
         <form onSubmit={formik.handleSubmit}>
           <div className="flex flex-row justify-end mt-5">
-            <Button
-              className="mr-3 "
-              white
-              label="Cancel"
-              onClick={handleCloseAddModal}
-            />
-            <Button
-              type="submit"
-              primary
-              label="Save"
-              loading={loadingButton}
-            />
+            <Button className="mr-3 " white label="Cancel" onClick={handleCloseAddModal} />
+            <Button type="submit" primary label="Save" loading={loadingButton} />
           </div>
         </form>
       </div>

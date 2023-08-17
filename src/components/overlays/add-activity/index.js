@@ -12,15 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 import toast from 'react-hot-toast';
 
-const AddActivity = ({
-  className,
-  handleClose,
-  title,
-  client,
-  afterUpdate,
-  setAddActivityPopup,
-  refetchData,
-}) => {
+const AddActivity = ({ className, handleClose, title, client, afterUpdate, setAddActivityPopup, refetchData }) => {
   const dispatch = useDispatch();
   const steps = [
     {
@@ -116,18 +108,8 @@ const AddActivity = ({
           <div className="flex items-center justify-between pt-6 ">
             <div></div>
             <div>
-              <Button
-                className="mr-3"
-                white
-                label="Cancel"
-                onClick={() => setAddActivityPopup(false)}
-              />
-              <Button
-                type="submit"
-                primary
-                label="Save"
-                loading={loadingButton}
-              />
+              <Button className="mr-3" white label="Cancel" onClick={() => setAddActivityPopup(false)} />
+              <Button type="submit" primary label="Save" loading={loadingButton} />
             </div>
           </div>
         </form>

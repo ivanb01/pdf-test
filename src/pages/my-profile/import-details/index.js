@@ -61,11 +61,7 @@ const ImportDetails = () => {
       <MainMenu />
       <div className="p-6 flex items-center justify-between border-b border-gray2">
         <div className="flex items-center justify-between w-full">
-          <Text
-            h3
-            className="text-gray7"
-            onBackClick={() => Router.push('/my-profile')}
-          >
+          <Text h3 className="text-gray7" onBackClick={() => Router.push('/my-profile')}>
             Import Details
           </Text>
           <div className="flex items-center justify-self-end">

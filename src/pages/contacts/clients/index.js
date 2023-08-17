@@ -1,18 +1,9 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import {
-  setOpenedTab,
-  setOpenedSubtab,
-  setRefetchData,
-  setUnapprovedContacts,
-} from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchData, setUnapprovedContacts } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setContacts,
-  updateContacts,
-  updateContact,
-} from 'store/contacts/slice';
+import { setContacts, updateContacts, updateContact } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
@@ -40,9 +31,7 @@ const index = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const unapprovedContacts = useSelector(
-    (state) => state.global.unapprovedContacts,
-  );
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
@@ -76,9 +65,7 @@ const index = () => {
   const fetchClients = () => {
     let clients = {
       ...allContacts,
-      data: allContacts.data.filter((contact) =>
-        [4, 5, 6, 7].includes(contact.category_id),
-      ),
+      data: allContacts.data.filter((contact) => [4, 5, 6, 7].includes(contact.category_id)),
     };
     dispatch(setContacts(clients));
     setContactsCopy(clients);
@@ -101,11 +88,7 @@ const index = () => {
     }
   }, [refetchData]);
   useEffect(() => {
-    if (
-      router.query.code &&
-      userGaveConsent?.includes('gmail') &&
-      userGaveConsent?.includes('contacts')
-    ) {
+    if (router.query.code && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts')) {
       setShowSmartSyncOverlay(true);
     }
   }, [router.query]);
@@ -117,9 +100,7 @@ const index = () => {
       ) : (
         <>
           {showSmartSyncOverlay && (
-            <SmartSyncActivatedOverlay
-              handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
-            />
+            <SmartSyncActivatedOverlay handleCloseOverlay={() => setShowSmartSyncOverlay(false)} />
           )}
           <Clients
             handleCardEdit={(contact) => {
@@ -127,9 +108,7 @@ const index = () => {
               setContactToEdit(contact);
             }}
             unapprovedContacts={
-              unapprovedContacts?.data.filter(
-                (contact) => contact.category_1 != 'Uncategorized',
-              ).length
+              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
             }
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchClients}

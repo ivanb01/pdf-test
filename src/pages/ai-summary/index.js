@@ -27,8 +27,7 @@ const index = () => {
 
   useLayoutEffect(() => {
     if (data) {
-      const isIndeterminate =
-        selectedPeople.length > 0 && selectedPeople.length < data.length;
+      const isIndeterminate = selectedPeople.length > 0 && selectedPeople.length < data.length;
       setChecked(selectedPeople.length === data.length);
       setIndeterminate(isIndeterminate);
       checkbox.current.indeterminate = isIndeterminate;
@@ -44,12 +43,8 @@ const index = () => {
   const fetchContacts = async () => {
     try {
       const response = await getUnapprovedContacts();
-      let finalData = response.data.data.filter(
-        (contact) => contact.category_1 != 'Uncategorized',
-      );
-      finalData = finalData.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at),
-      );
+      let finalData = response.data.data.filter((contact) => contact.category_1 != 'Uncategorized');
+      finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setData(finalData);
     } catch (error) {
       console.log('error msg', error.message);
@@ -79,9 +74,7 @@ const index = () => {
     setSelectedPeople([]);
   };
   const updateAiSummaryTable = (id, newData) => {
-    const updatedData = data.map((item) =>
-      item.id === id ? { ...item, ...newData } : item,
-    );
+    const updatedData = data.map((item) => (item.id === id ? { ...item, ...newData } : item));
     setData(updatedData);
   };
   const handleAction = async (type, id) => {
@@ -105,9 +98,7 @@ const index = () => {
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
     }));
-    bulkUpdateContacts({ contacts: transformedData }).then(() =>
-      dispatch(setRefetchData(true)),
-    );
+    bulkUpdateContacts({ contacts: transformedData }).then(() => dispatch(setRefetchData(true)));
     updateContactsLocally(action, transformedData);
     setSelectedPeople([]);
   };
@@ -129,15 +120,12 @@ const index = () => {
             autoHide={true}
             style={{
               height: '100%',
-              maxHeight:
-                selectedPeople.length > 1
-                  ? 'calc(100vh - 136px)'
-                  : 'calc(100vh - 68px)',
-            }}>
+              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 136px)' : 'calc(100vh - 68px)',
+            }}
+          >
             <div className="p-6 text-gray-900 font-medium text-base">
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-                {data.filter((item) => item.approved_ai != true).length}{' '}
-                contacts
+                {data.filter((item) => item.approved_ai != true).length} contacts
               </div>{' '}
               from Smart Synced Contacts need to be reviewed
             </div>
@@ -173,20 +161,19 @@ const index = () => {
       {selectedPeople.length > 1 && (
         <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
           <div className="flex items-center text-sm text-gray-900">
-            Selected:{' '}
-            <span className="font-bold ml-1">
-              {selectedPeople.length} contacts
-            </span>
+            Selected: <span className="font-bold ml-1">{selectedPeople.length} contacts</span>
           </div>
           <div className="flex">
             <button
               onClick={() => bulkUpdate(2)}
-              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
+            >
               <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               onClick={() => bulkUpdate(1)}
-              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]"
+            >
               <CheckCircle />
               <span className="ml-2">Mark as Correct</span>
             </button>

@@ -12,9 +12,7 @@ const global = createSlice({
     userGaveConsent: null,
     unapprovedContacts: null,
     user:
-      typeof window !== 'undefined' && localStorage.getItem('user')
-        ? JSON.parse(localStorage.getItem('user'))
-        : null,
+      typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     skippedEmptyState:
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')

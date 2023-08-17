@@ -54,10 +54,7 @@ export default function GmailAILeads() {
             <tbody>
               {leads.map((lead, index) => (
                 <React.Fragment key={index}>
-                  <tr
-                    className={lead.result.stored ? 'bg-green-200' : 'bg-red-200'}
-                    onClick={() => toggleRow(index)}
-                  >
+                  <tr className={lead.result.stored ? 'bg-green-200' : 'bg-red-200'} onClick={() => toggleRow(index)}>
                     <td className="px-4 py-2">{lead.email.from}</td>
                     <td className="px-4 py-2">{lead.result.first_name}</td>
                     <td className="px-4 py-2">{lead.result.last_name}</td>

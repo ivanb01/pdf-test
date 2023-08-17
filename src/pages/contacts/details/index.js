@@ -13,17 +13,9 @@ import { useEffect } from 'react';
 import * as contactServices from 'api/contacts';
 import Loader from 'components/shared/loader';
 import { setRefetchData } from 'store/global/slice';
-import {
-  getContactNotes,
-  getContact,
-  getContactActivities,
-} from 'api/contacts';
+import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
-import {
-  setActivityLogData,
-  setNotesData,
-  setCampaignsData,
-} from 'store/clientDetails/slice';
+import { setActivityLogData, setNotesData, setCampaignsData } from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
@@ -50,14 +42,10 @@ export default function Details() {
     assignCampaign: false,
     unassignCampaign: false,
   });
-  const handleDeleteClientChange = (state) => () =>
-    setOverlays({ deleteClient: state });
-  const handleEditClientChange = (state) => () =>
-    setOverlays({ editClient: state });
-  const handleAssignCampaignChange = (state) => () =>
-    setOverlays({ assignCampaign: state });
-  const handleUnassignCampaignChange = (state) => () =>
-    setOverlays({ unassignCampaign: state });
+  const handleDeleteClientChange = (state) => () => setOverlays({ deleteClient: state });
+  const handleEditClientChange = (state) => () => setOverlays({ editClient: state });
+  const handleAssignCampaignChange = (state) => () => setOverlays({ assignCampaign: state });
+  const handleUnassignCampaignChange = (state) => () => setOverlays({ unassignCampaign: state });
 
   const localTabs = tabs(id, contact);
 
@@ -73,10 +61,7 @@ export default function Details() {
       setLoadingTabs(false);
 
       if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
-        getAIData(contact.id).then(
-          (result) => setAIData(result.data),
-          setShowReviewOverlay(true),
-        );
+        getAIData(contact.id).then((result) => setAIData(result.data), setShowReviewOverlay(true));
       }
 
       getContactCampaign(id)
@@ -134,14 +119,9 @@ export default function Details() {
       )}
       <div className="client-details-page-wrapper">
         <div className="p-6 inline-block">
-          <a
-            href="#"
-            onClick={() => router.back()}
-            className="items-center flex">
+          <a href="#" onClick={() => router.back()} className="items-center flex">
             <Image className="cursor-pointer" src={backArrow} />
-            <div className="ml-2 font-medium">
-              Back to {contact?.category_1}s
-            </div>
+            <div className="ml-2 font-medium">Back to {contact?.category_1}s</div>
           </a>
         </div>
         {/* <Breadcrumbs className="bg-white pl-6 py-6 border-b border-gray-2" /> */}

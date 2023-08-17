@@ -153,24 +153,12 @@ const index = () => {
           <div className="mt-1 sm:mt-0 sm:col-span-2 mb-6">
             <div className="flex items-center">
               <span className="h-[100px] w-[100px] rounded-full overflow-hidden bg-gray-100 mr-2">
-                <svg
-                  className="h-full w-full text-gray-300"
-                  fill="currentColor"
-                  viewBox="0 0 24 24">
+                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </span>
-              <Button
-                leftIcon={<PencilIcon className="h-[16px]" />}
-                white
-                label="Change"
-                className="mr-2"
-              />
-              <Button
-                leftIcon={<TrashIcon className="h-[16px]" />}
-                white
-                label="Remove"
-              />
+              <Button leftIcon={<PencilIcon className="h-[16px]" />} white label="Change" className="mr-2" />
+              <Button leftIcon={<TrashIcon className="h-[16px]" />} white label="Remove" />
             </div>
           </div>
           <div className="w-[40%]">
@@ -209,41 +197,19 @@ const index = () => {
           <hr className="my-5" />
           {changePasswordVisible && (
             <div className="w-1/3">
-              <Input
-                type="password"
-                label="Current Password"
-                className="mb-6"
-              />
+              <Input type="password" label="Current Password" className="mb-6" />
               <Input type="password" label="New Password" className="mb-6" />
-              <Input
-                type="password"
-                label="Re-write New Password"
-                className="mb-6"
-              />
-              <Input
-                showForgotPassword
-                placeholder="Save Password"
-                type="checkbox"
-                className="mb-6"
-              />
+              <Input type="password" label="Re-write New Password" className="mb-6" />
+              <Input showForgotPassword placeholder="Save Password" type="checkbox" className="mb-6" />
               <hr className="my-5" />
             </div>
           )}
           <div className="flex items-center">
             {!changePasswordVisible ? (
-              <Button
-                white
-                label="Change Password"
-                onClick={() => setChangePasswordVisible(true)}
-              />
+              <Button white label="Change Password" onClick={() => setChangePasswordVisible(true)} />
             ) : (
               <>
-                <Button
-                  label="Cancel"
-                  white
-                  className="mr-3"
-                  onClick={() => setChangePasswordVisible(false)}
-                />
+                <Button label="Cancel" white className="mr-3" onClick={() => setChangePasswordVisible(false)} />
                 <Button label="Save Changes" primary />
               </>
             )}
@@ -256,19 +222,15 @@ const index = () => {
     return (
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         <TopBar text="Imports Summary" />
-        <div
-          className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 145px)' }}>
-          <div
-            className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 145px)' }}>
+          <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               {/* <Table tableFor="clients" data={clientTypeCards} /> */}
               <Table
                 data={importsSummary}
                 tableFor="imports-summary"
-                handleClickRow={() =>
-                  Router.push('/my-profile/import-details')
-                }></Table>
+                handleClickRow={() => Router.push('/my-profile/import-details')}
+              ></Table>
             </SimpleBar>
           </div>
         </div>
@@ -301,9 +263,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <div
-        className="w-full flex items-center justify-center"
-        style={{ height: 'calc(100vh - 70px)' }}>
+      <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
         <div className="border-t border-gray2 flex h-full min-h-full w-full">
           <div className="w-[375px] h-full border-r border-gray2 px-1 py-5">
             {tabs.map((tab) => {
@@ -313,10 +273,9 @@ const index = () => {
                   href="#"
                   onClick={() => setCurrentTab(tab.id)}
                   className={`p-3 flex items-center ${
-                    currentTab == tab.id
-                      ? 'bg-lightBlue1 text-lightBlue3'
-                      : 'text-gray4 hover:text-gray5'
-                  } rounded-md`}>
+                    currentTab == tab.id ? 'bg-lightBlue1 text-lightBlue3' : 'text-gray4 hover:text-gray5'
+                  } rounded-md`}
+                >
                   {tab.icon}
                   {tab.name}
                 </a>

@@ -7,13 +7,7 @@ import * as contactServices from 'api/contacts';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-const AddProfile = ({
-  handleClose,
-  contactId,
-  categoryTypes,
-  statuses,
-  handleFetchProfilesRequired,
-}) => {
+const AddProfile = ({ handleClose, contactId, categoryTypes, statuses, handleFetchProfilesRequired }) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
   const AddProfileSchema = Yup.object().shape({
@@ -44,10 +38,7 @@ const AddProfile = ({
         category_id: formik.values.selectedContactType,
         status_id: formik.values.selectedStatus,
       };
-      const { data } = await contactServices.addContactProfile(
-        contactId,
-        newProfile,
-      );
+      const { data } = await contactServices.addContactProfile(contactId, newProfile);
       setLoadingButton(false);
     } catch (error) {
       console.log(error);
@@ -56,10 +47,7 @@ const AddProfile = ({
   };
 
   return (
-    <Overlay
-      title="Add Aditional Type"
-      handleCloseOverlay={handleClose}
-      className="w-auto min-w-[635px] max-w-[730px]">
+    <Overlay title="Add Aditional Type" handleCloseOverlay={handleClose} className="w-auto min-w-[635px] max-w-[730px]">
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
           <div>
@@ -84,18 +72,8 @@ const AddProfile = ({
 
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-row justify-end mt-5">
-              <Button
-                className="mr-3 "
-                white
-                label="Cancel"
-                onClick={handleClose}
-              />
-              <Button
-                type="submit"
-                primary
-                label="Save Changes"
-                loading={loadingButton}
-              />
+              <Button className="mr-3 " white label="Cancel" onClick={handleClose} />
+              <Button type="submit" primary label="Save Changes" loading={loadingButton} />
             </div>
           </form>
         </div>

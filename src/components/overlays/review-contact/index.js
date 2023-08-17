@@ -52,16 +52,14 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
 }) => {
-  const isUnapprovedAI =
-    client.import_source == 'GmailAI' && client.approved_ai != true;
+  const isUnapprovedAI = client.import_source == 'GmailAI' && client.approved_ai != true;
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [updating, setUpdating] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(true);
-  const [existingContactEmailError, setExistingContactEmailError] =
-    useState('');
+  const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -123,9 +121,7 @@ const ReviewContact = ({
       handleClose();
 
       // make api call in the background to update contact
-      updateContact(client.id, newData).then(() =>
-        dispatch(setRefetchData(true)),
-      );
+      updateContact(client.id, newData).then(() => dispatch(setRefetchData(true)));
       // if aftersubmit prop is given, call the function
       if (afterSubmit) afterSubmit(client?.id, newData);
 
@@ -133,9 +129,7 @@ const ReviewContact = ({
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
 
       // show toaster message
-      toast.success(
-        `${newData.first_name + ' ' + newData.last_name} moved to Trash`,
-      );
+      toast.success(`${newData.first_name + ' ' + newData.last_name} moved to Trash`);
     } catch (error) {
       toast.error(error);
     }
@@ -155,8 +149,7 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id =
-      values.selectedContactCategory === 0 ? values.selectedStatus : 1;
+    const status_id = values.selectedContactCategory === 0 ? values.selectedStatus : 1;
 
     const category =
       values.selectedContactCategory === 0
@@ -172,9 +165,7 @@ const ReviewContact = ({
       category_id: category_id,
       status_id: status_id,
       category_2: category,
-      category_1: contactTypes.find(
-        (type) => type.id == values.selectedContactCategory,
-      ).name,
+      category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
 
     const newData = isUnapprovedAI
@@ -207,17 +198,11 @@ const ReviewContact = ({
       }
 
       // api call to update user
-      updateContact(client?.id, newData).then(() =>
-        dispatch(setRefetchData(true)),
-      );
+      updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
 
       // toaster message
-      const action = isUnapprovedAI
-        ? 'marked as correct'
-        : 'updated successfully';
-      toast.success(
-        `${newData.first_name + ' ' + newData.last_name} ${action}`,
-      );
+      const action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
+      toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
     } catch (error) {
       toast.error(error);
     }
@@ -232,8 +217,7 @@ const ReviewContact = ({
       <>
         <div className="flex items-center text-sm text-gray-900">
           <img src={info.src} alt="" className="mr-1" />
-          This contact was imported from Gmail by AI. Please review so you can
-          start the communication.
+          This contact was imported from Gmail by AI. Please review so you can start the communication.
         </div>
         <div className="flex">
           <Button
@@ -309,10 +293,7 @@ const ReviewContact = ({
       title={title}
       className={`${className} ${!isUnapprovedAI && 'w-[635px]'}`}>
       <div className="flex min-h-[420px]">
-        <div
-          className={`${
-            isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'
-          }`}>
+        <div className={`${isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'}`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
@@ -359,16 +340,8 @@ const ReviewContact = ({
                     formik.setFieldValue('email', e.target.value);
                   }}
                   value={formik.values.email}
-                  error={
-                    (errors.email && touched.email) || existingContactEmailError
-                  }
-                  errorText={
-                    errors.email
-                      ? errors.email
-                      : existingContactEmailError
-                      ? existingContactEmailError
-                      : null
-                  }
+                  error={(errors.email && touched.email) || existingContactEmailError}
+                  errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
                 />
                 <Input
                   type="phone_number"
@@ -387,15 +360,9 @@ const ReviewContact = ({
                     activeIcon={false}
                     options={leadSourceOptions}
                     className="mb-6"
-                    handleSelect={(source) =>
-                      (formik.values.lead_source = source.name)
-                    }
+                    handleSelect={(source) => (formik.values.lead_source = source.name)}
                     initialSelect={formik.values.lead_source}
-                    placeHolder={
-                      formik.values.lead_source
-                        ? formik.values.lead_source
-                        : 'Choose'
-                    }
+                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                   <TagsInput
                     label="Tags"
@@ -423,10 +390,7 @@ const ReviewContact = ({
                 }}
                 className="mb-6 mt-6"
                 name="category-of-contact"
-                error={
-                  errors.selectedContactCategory &&
-                  touched.selectedContactCategory
-                }
+                error={errors.selectedContactCategory && touched.selectedContactCategory}
                 errorText={errors.selectedContactCategory}
               />
               {![3, 4].includes(formik.values.selectedContactCategory) && (
@@ -441,64 +405,43 @@ const ReviewContact = ({
                   label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
-                    [
-                      8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-                    ].includes(formik.values.selectedContactType)
+                    [8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType)
                       ? 8
                       : formik.values.selectedContactType
                   }
-                  setSelectedOption={(e) =>
-                    formik.setFieldValue('selectedContactType', e)
-                  }
+                  setSelectedOption={(e) => formik.setFieldValue('selectedContactType', e)}
                   className="mb-6"
                   name="type-of-contact"
-                  error={
-                    errors.selectedContactType && touched.selectedContactType
-                  }
+                  error={errors.selectedContactType && touched.selectedContactType}
                   errorText={errors.selectedContactType}
                 />
               )}
-              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-                formik.values.selectedContactType,
-              ) ? (
+              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType) ? (
                 <>
-                  <div className="text-gray7 mb-3 text-sm font-medium">
-                    What kind of vendor?
-                  </div>
+                  <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                   <div className="flex flex-wrap">
                     {vendorTypes.map((type) => (
                       <Chip
-                        selectedStatus={
-                          type.id == formik.values.selectedContactSubtype
-                        }
+                        selectedStatus={type.id == formik.values.selectedContactSubtype}
                         key={type.id}
                         label={type.name}
                         className="mr-3 mb-3"
-                        onClick={() =>
-                          formik.setFieldValue(
-                            'selectedContactSubtype',
-                            type.id,
-                          )
-                        }
+                        onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       />
                     ))}
                   </div>
-                  {errors.selectedContactSubtype &&
-                    touched.selectedContactSubtype &&
-                    errors.selectedContactSubtype && (
-                      <NotificationAlert className="mt-2 p-2" type={'error'}>
-                        {errors.selectedContactSubtype}
-                      </NotificationAlert>
-                    )}
+                  {errors.selectedContactSubtype && touched.selectedContactSubtype && errors.selectedContactSubtype && (
+                    <NotificationAlert className="mt-2 p-2" type={'error'}>
+                      {errors.selectedContactSubtype}
+                    </NotificationAlert>
+                  )}
                 </>
               ) : (
                 formik.values.selectedContactCategory == 0 &&
                 formik.values.selectedContactType && (
                   <StatusSelect
                     selectedStatus={formik.values.selectedStatus}
-                    setSelectedStatus={(e) =>
-                      formik.setFieldValue('selectedStatus', e)
-                    }
+                    setSelectedStatus={(e) => formik.setFieldValue('selectedStatus', e)}
                     label="In what stage of communication?"
                     statuses={statuses}
                     error={errors.selectedStatus && touched.selectedStatus}
@@ -519,27 +462,22 @@ const ReviewContact = ({
                   <div>
                     <div className="flex items-center mb-2">
                       <img src={AI.src} alt="" />
-                      <span className="ml-1 text-gray-900 text-sm">
-                        AI Smart Synced Contact
-                      </span>
+                      <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">
-                        {client.email_subject}
-                      </div>
+                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
                       <a
                         target="_blank"
                         href={client.email_link}
-                        className="cursor-pointer flex items-center text-sm text-gray-900 underline">
+                        className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                        rel="noreferrer">
                         View the email source
                         <img src={newTab.src} alt="" className="ml-1" />
                       </a>
                     </div>
                   </div>
                   <hr className="my-4" />
-                  <div className="text-gray-900 text-sm">
-                    {client.ai_email_summary}
-                  </div>
+                  <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
                 </div>
               </SimpleBar>
             )}

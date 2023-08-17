@@ -23,38 +23,23 @@ const statusColors = {
 const ContactInfo = ({ data, handleSelect, handleAction, showAIChip }) => {
   return (
     <div className="flex items-center relative">
-      {handleSelect && (
-        <Input
-          type="checkbox"
-          className="mr-1"
-          onChange={(e) => handleSelect(e, data)}></Input>
-      )}
+      {handleSelect && <Input type="checkbox" className="mr-1" onChange={(e) => handleSelect(e, data)}></Input>}
       <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
         {data.image && data.image !== null ? (
-          <img
-            className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400"
-            src={data.image}
-          />
+          <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400" src={data.image} />
         ) : (
           // <Image className="h-10 w-10 rounded-full" src={src} alt="" />
           <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-            <span className="text-sm font-medium leading-none text-white">
-              {getInitials(data.name).toUpperCase()}
-            </span>
+            <span className="text-sm font-medium leading-none text-white">{getInitials(data.name).toUpperCase()}</span>
           </span>
         )}
       </div>
       <div className="ml-3">
         <div className="font-medium text-gray7 flex">
-          {data.name}{' '}
-          {showAIChip && (
-            <AIChip className="ml-2" reviewed={data.approved_ai} />
-          )}
+          {data.name} {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
         </div>
         {data.email && (
-          <div
-            title={data.email}
-            className="ellipsis-email text-gray-500 font-medium">
+          <div title={data.email} className="ellipsis-email text-gray-500 font-medium">
             {data.email}
           </div>
         )}

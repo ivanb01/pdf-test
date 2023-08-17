@@ -35,8 +35,7 @@ const ResetPassword = () => {
   };
 
   const [loadingButton, setLoadingButton] = useState(false);
-  const passwordRules =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
+  const passwordRules = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
 
   const ResetPasswordSchema = Yup.object().shape({
     code: Yup.string().required('Field can not be empty'),
@@ -71,11 +70,7 @@ const ResetPassword = () => {
   const handleSubmit = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
-      await Auth.forgotPasswordSubmit(
-        router.query.username,
-        values.code,
-        values.password,
-      );
+      await Auth.forgotPasswordSubmit(router.query.username, values.code, values.password);
       displayAlert('success', 'Password has been changed successfully!', 2000);
       setTimeout(() => {
         router.push('sign-in/credentials');
@@ -93,21 +88,16 @@ const ResetPassword = () => {
         {alert.showAlert && alert.alertType == 'success' && (
           <NotificationAlert className="mb-8 p-4" type={alert.alertType}>
             <div className="flex items-center">
-              <CheckCircleRoundedIcon className="text-green-400 mr-3.5" />{' '}
-              {alert.alertText}
+              <CheckCircleRoundedIcon className="text-green-400 mr-3.5" /> {alert.alertText}
             </div>
           </NotificationAlert>
         )}
-        <Text
-          onBackClick={() => router.back()}
-          title
-          className="text-gray5 mb-6"
-        >
+        <Text onBackClick={() => router.back()} title className="text-gray5 mb-6">
           Reset Password
         </Text>
         <Text p className="text-gray4 mb-6">
-          You have received a security code in your email. Please write that
-          code below, and then set a new password for your account.
+          You have received a security code in your email. Please write that code below, and then set a new password for
+          your account.
         </Text>
         <form onSubmit={formik.handleSubmit}>
           <Input
@@ -126,11 +116,7 @@ const ResetPassword = () => {
             className="mb-6"
             onChange={formik.handleChange}
             error={errors.password && touched.password}
-            errorText={
-              errors.password == 'StrongPasswordRequired'
-                ? null
-                : errors.password
-            }
+            errorText={errors.password == 'StrongPasswordRequired' ? null : errors.password}
           />
           <Input
             type="password"
@@ -138,15 +124,8 @@ const ResetPassword = () => {
             id="confirmPassword"
             className="mb-6"
             onChange={formik.handleChange}
-            error={
-              (errors.confirmPassword && touched.confirmPassword) ||
-              errors.password == 'StrongPasswordRequired'
-            }
-            errorText={
-              errors.password == 'StrongPasswordRequired'
-                ? null
-                : errors.confirmPassword
-            }
+            error={(errors.confirmPassword && touched.confirmPassword) || errors.password == 'StrongPasswordRequired'}
+            errorText={errors.password == 'StrongPasswordRequired' ? null : errors.confirmPassword}
           />
           {errors.password == 'StrongPasswordRequired' && (
             <NotificationAlert className="mb-8 p-4" type="error">
@@ -171,11 +150,7 @@ const ResetPassword = () => {
           />
         </form>
         <div className="flex items-center justify-between my-6">
-          <Link
-            href="#"
-            className="font-medium text-sm"
-            onClick={() => router.push('sign-in/credentials')}
-          >
+          <Link href="#" className="font-medium text-sm" onClick={() => router.push('sign-in/credentials')}>
             Back to sign in?
           </Link>
         </div>

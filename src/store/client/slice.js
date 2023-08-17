@@ -28,9 +28,7 @@ const clientsSlice = createSlice({
       };
     });
     builder.addCase(updateClient.fulfilled, (state, action) => {
-      const clientIndex = state?._data.findIndex(
-        (client) => client.email === action?.payload?.email,
-      );
+      const clientIndex = state?._data.findIndex((client) => client.email === action?.payload?.email);
       state._data[clientIndex] = action.payload;
     });
     builder.addCase(deleteClient.fulfilled, (state, action) => {
@@ -47,17 +45,13 @@ const clientsSlice = createSlice({
     });
     builder.addCase(bulkUpdateClientStatus.fulfilled, (state, action) => {
       state._data = state._data?.map((client) => {
-        let newClient = action.meta.arg?.clients?.find(
-          (updatedClient) => client.email === updatedClient.email,
-        );
+        let newClient = action.meta.arg?.clients?.find((updatedClient) => client.email === updatedClient.email);
         return newClient ? { ...client, status: newClient.status } : client;
       });
     });
     builder.addCase(bulkUpdateClientType.fulfilled, (state, action) => {
       state._data = state._data?.map((client) => {
-        let newClient = action.meta.arg?.clients?.find(
-          (updatedClient) => client.email === updatedClient.email,
-        );
+        let newClient = action.meta.arg?.clients?.find((updatedClient) => client.email === updatedClient.email);
         return newClient ? { ...client, type: newClient.type } : client;
       });
     });

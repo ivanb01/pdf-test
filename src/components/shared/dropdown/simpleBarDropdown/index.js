@@ -26,9 +26,7 @@ const Dropdown = ({
 }) => {
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
-  const firstSelect = dropdownValue
-    ? options.find((item) => item.name === dropdownValue)
-    : null;
+  const firstSelect = dropdownValue ? options.find((item) => item.name === dropdownValue) : null;
   const [selected, setSelected] = useState(firstSelect);
   return (
     <div className={className}>
@@ -43,10 +41,7 @@ const Dropdown = ({
           <>
             {label && (
               <Listbox.Label className="block text-sm font-medium text-gray6">
-                {label}{' '}
-                {optional && (
-                  <span className="text-gray3 ml-1">(Optional)</span>
-                )}
+                {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
               </Listbox.Label>
             )}
             <div className="relative">
@@ -63,10 +58,7 @@ const Dropdown = ({
                     {dropdownValue && dropdownValue.name}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <ChevronDownIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
+                    <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                   </span>
                 </Listbox.Button>
               )}
@@ -109,10 +101,7 @@ const Dropdown = ({
                                 'absolute inset-y-0 right-0 flex items-center pr-4 capitalize',
                               )}
                             >
-                              <CheckIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
                             </span>
                           ) : null}
                         </>

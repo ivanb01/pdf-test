@@ -141,9 +141,7 @@ function TourInstance() {
 export default function Tour(props) {
   return (
     <>
-      <ShepherdTour
-        steps={props.for == 'clients' ? clientSteps : uncategorizedSteps}
-        tourOptions={tourOptions}>
+      <ShepherdTour steps={props.for == 'clients' ? clientSteps : uncategorizedSteps} tourOptions={tourOptions}>
         <TourInstance />
       </ShepherdTour>
     </>

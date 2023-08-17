@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  PlusCircleIcon,
-  PencilIcon,
-  MinusCircleIcon,
-} from '@heroicons/react/solid';
+import { PlusCircleIcon, PencilIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import Text from 'components/shared/text';
 import Avatar from 'components/shared/avatar';
 import AddRelationshipModal from './addRelationship';
@@ -17,8 +13,7 @@ export default function Relationships({ contactId }) {
   const [relationships, setRelationships] = useState([]);
   const [relationshipToEdit, setRelationshipToEdit] = useState(null);
 
-  const [fetchRelationshipsRequired, setFetchRelationshipsRequired] =
-    useState(false);
+  const [fetchRelationshipsRequired, setFetchRelationshipsRequired] = useState(false);
   const handleFetchRelationshipsRequired = () => {
     setFetchRelationshipsRequired((prev) => !prev);
   };
@@ -48,9 +43,7 @@ export default function Relationships({ contactId }) {
 
   const handleDeleteRelationship = async (id) => {
     try {
-      setRelationships((prev) =>
-        prev.filter((relationship) => relationship?.relationship_id !== id),
-      );
+      setRelationships((prev) => prev.filter((relationship) => relationship?.relationship_id !== id));
       toast.success('Relationship was deleted successfully');
       await deleteContactRelationship(contactId, id);
       // handleFetchRelationshipsRequired();
@@ -67,11 +60,7 @@ export default function Relationships({ contactId }) {
             Relationship(s)
           </Text>
           <div className="group relative cursor-pointer mr-2">
-            <PlusCircleIcon
-              className="text-gray3"
-              height={20}
-              onClick={() => setAddModal(true)}
-            />
+            <PlusCircleIcon className="text-gray3" height={20} onClick={() => setAddModal(true)} />
             <div className="group-hover:opacity-100 opacity-0 right-0 bottom-6 whitespace-nowrap inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
               Add Relationship
             </div>
@@ -84,38 +73,29 @@ export default function Relationships({ contactId }) {
             </Text>
           ) : (
             relationships.map((relationship) => (
-              <div
-                key={relationship?.relationship_id}
-                className="flex flex-row p-3 hover:bg-lightBlue1 group"
-              >
+              <div key={relationship?.relationship_id} className="flex flex-row p-3 hover:bg-lightBlue1 group">
                 <div className="flex flex-row justify-between w-[100%] text-sm">
                   <ContactInfo
-                      data={{
-                        name: `${relationship?.first_name} ${relationship?.last_name}`,
-                        email: relationship?.relationship_name,
-                        image: relationship?.profile_image_path,
-                      }}
+                    data={{
+                      name: `${relationship?.first_name} ${relationship?.last_name}`,
+                      email: relationship?.relationship_name,
+                      image: relationship?.profile_image_path,
+                    }}
                   />
                   <div className="flex flex-row items-center">
                     <div
                       className="cursor-pointer relative"
                       onMouseEnter={() =>
                         document
-                          .querySelector(
-                            `#tooltip-delete-relationship-${relationship?.relationship_id}`,
-                          )
+                          .querySelector(`#tooltip-delete-relationship-${relationship?.relationship_id}`)
                           .classList.remove('invisible', 'opacity-0')
                       }
                       onMouseLeave={() =>
                         document
-                          .querySelector(
-                            `#tooltip-delete-relationship-${relationship?.relationship_id}`,
-                          )
+                          .querySelector(`#tooltip-delete-relationship-${relationship?.relationship_id}`)
                           .classList.add('invisible', 'opacity-0')
                       }
-                      onClick={() =>
-                        handleDeleteRelationship(relationship?.relationship_id)
-                      }
+                      onClick={() => handleDeleteRelationship(relationship?.relationship_id)}
                     >
                       <MinusCircleIcon
                         className="text-gray3 hover:text-red4 mr-2 opacity-0 group-hover:opacity-100"
@@ -133,16 +113,12 @@ export default function Relationships({ contactId }) {
                       className="cursor-pointer relative"
                       onMouseEnter={() =>
                         document
-                          .querySelector(
-                            `#tooltip-edit-relationship-${relationship?.relationship_id}`,
-                          )
+                          .querySelector(`#tooltip-edit-relationship-${relationship?.relationship_id}`)
                           .classList.remove('invisible', 'opacity-0')
                       }
                       onMouseLeave={() =>
                         document
-                          .querySelector(
-                            `#tooltip-edit-relationship-${relationship?.relationship_id}`,
-                          )
+                          .querySelector(`#tooltip-edit-relationship-${relationship?.relationship_id}`)
                           .classList.add('invisible', 'opacity-0')
                       }
                       onClick={() => {
@@ -150,10 +126,7 @@ export default function Relationships({ contactId }) {
                         setRelationshipToEdit(relationship);
                       }}
                     >
-                      <PencilIcon
-                        className="text-gray3 opacity-0 group-hover:opacity-100"
-                        height={20}
-                      />
+                      <PencilIcon className="text-gray3 opacity-0 group-hover:opacity-100" height={20} />
                       <div
                         id={`tooltip-edit-relationship-${relationship?.relationship_id}`}
                         role="tooltip"

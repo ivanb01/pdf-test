@@ -10,11 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setSkippedEmptyState } from 'store/global/slice';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-const SetupGmail = ({
-  error,
-  setshowAddContactManuallyOverlay,
-  setShowImportGoogleContactsModal,
-}) => {
+const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoogleContactsModal }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -31,9 +27,8 @@ const SetupGmail = ({
           Setup Gmail Account to Import Contacts
         </Text>
         <Text paragraph className="text-gray4 mb-6">
-          Automatically sync your google contacts. Run this process once you
-          have new contacts added to your google contacts. We will automatically
-          add them to your uncategorized contacts in the CRM.
+          Automatically sync your google contacts. Run this process once you have new contacts added to your google
+          contacts. We will automatically add them to your uncategorized contacts in the CRM.
         </Text>
         <Button
           className="mb-4"
@@ -44,7 +39,8 @@ const SetupGmail = ({
               pathname: '/contacts/no-contact/',
               query: { start_importing: true },
             })
-          }></Button>
+          }
+        ></Button>
         <Text paragraph className="text-gray8 mb-4 justify-center">
           or
         </Text>
@@ -63,11 +59,10 @@ const SetupGmail = ({
             router.push({
               pathname: '/contacts/clients',
             });
-          }}>
+          }}
+        >
           <span>Skip for now, maybe later</span>
-          <div className={`ml-2 -mr-0.5`}>
-            {<ArrowRightIcon className="w-4 h-4 " />}
-          </div>
+          <div className={`ml-2 -mr-0.5`}>{<ArrowRightIcon className="w-4 h-4 " />}</div>
         </div>
       </div>
     </>

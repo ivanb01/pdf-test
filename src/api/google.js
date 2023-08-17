@@ -27,12 +27,7 @@ export const getGoogleAuthorizeEmail = () => {
   });
 };
 
-export const getGmailLeadsAI = (
-  gmail_labels = 'INBOX,UNREAD',
-  gmail_limit = 3,
-  temperature = 0,
-  ai_enabled = true,
-) => {
+export const getGmailLeadsAI = (gmail_labels = 'INBOX,UNREAD', gmail_limit = 3, temperature = 0, ai_enabled = true) => {
   return axiosInstance.get('gmail/ai/leads', {
     params: {
       gmail_labels: gmail_labels,

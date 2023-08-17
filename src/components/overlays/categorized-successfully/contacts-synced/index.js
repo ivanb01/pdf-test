@@ -7,18 +7,15 @@ import Overlay from 'components/shared/overlay';
 
 const ContactsSyncedOverlay = ({ title, handleCloseOverlay }) => {
   return (
-    <Overlay
-      handleCloseOverlay={handleCloseOverlay}
-      title={title}
-      className="max-w-[600px]">
+    <Overlay handleCloseOverlay={handleCloseOverlay} title={title} className="max-w-[600px]">
       <div className="p-6 text-center">
         <Image src={contactsSynced} />
         <Text h2 className="max-w-xs mx-auto mb-3 leading-[1.4] mt-6">
           Contacts Synced Successfully! Now, Make Sure to Categorize them.
         </Text>
         <Text p className="text-gray4 max-w-xl mx-auto">
-          Your contacts were uploaded succesfully in the CRM. Make sure to
-          categorize them, so your communication will be healthy.
+          Your contacts were uploaded succesfully in the CRM. Make sure to categorize them, so your communication will
+          be healthy.
         </Text>
       </div>
       <div className="flex items-center justify-between p-6 space-x-2 rounded-b">
