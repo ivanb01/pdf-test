@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import oneLineLogo from '/public/images/oneline_logo_white.svg';
 import MenuLink from 'components/Link/MenuLink';
@@ -6,7 +6,7 @@ import Router, { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
 import Button from '../button';
 import { useSelector } from 'react-redux';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
 import { setRefetchData } from '@store/global/slice';
+import { SearchIcon } from '@heroicons/react/outline';
+import GlobalSearch from '@components/GlobalSearch';
 
 const MainMenu = ({
   menuItems = [
@@ -47,7 +49,7 @@ const MainMenu = ({
   );
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const count = useSelector((state) => state.global.count);
-
+  const [openGlobalSearch, setOpenGlobalSearch] = useState(false);
   const handleSignOut = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
@@ -56,6 +58,9 @@ const MainMenu = ({
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
+  useEffect(() => {
+    console.log(router.pathname, 'pathname');
+  }, []);
 
   useEffect(() => {
     if (!allContacts || refetchData) {
@@ -119,11 +124,27 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
+        {allContacts &&
+          allContacts.length > 0 &&
+          router.pathname.startsWith('/contacts/clients') && (
+            <SearchIcon
+              className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
+              onClick={() => {
+                setOpenGlobalSearch(true);
+              }}
+            />
+          )}
+        {openGlobalSearch && (
+          <GlobalSearch
+            open={openGlobalSearch}
+            onClose={() => setOpenGlobalSearch(false)}
+          />
+        )}
         {showUncategorizedButton() && (
           <Button
             label="Categorize Contacts"
             narrow
-            className="mr-4"
+            className="mr-4 ml-4"
             onClick={() =>
               router.push({
                 pathname: '/contacts/uncategorized',
@@ -165,7 +186,6 @@ const MainMenu = ({
               </a>
             </Menu.Button>
           </div>
-
           <Transition
             as={Fragment}
             enter="transition ease-out duration-100"

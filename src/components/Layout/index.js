@@ -211,12 +211,6 @@ const Layout = ({ children }) => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log('test');
-    // getCount().then((data) => {
-    //   dispatch(setCount(data.data));
-    // });
-  }, [allContacts]);
 
   return (
     <>
