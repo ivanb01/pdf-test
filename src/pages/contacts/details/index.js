@@ -151,18 +151,13 @@ export default function Details() {
               client={contact}
               // afterUpdate={fetchContact}
             />
-            {loadingTabs ? (
-              <div className="w-full h-auto bg-gray10 relative">
-                <Loader />
-              </div>
-            ) : (
-              <Tabs
-                current={current}
-                setCurrent={setCurrent}
-                className="px-6 pb-6"
-                tabs={localTabs}
-              />
-            )}
+            <Tabs
+              loadingTabs={loadingTabs}
+              current={current}
+              setCurrent={setCurrent}
+              className="px-6 pb-6"
+              tabs={localTabs}
+            />
           </div>
         )}
       </div>
