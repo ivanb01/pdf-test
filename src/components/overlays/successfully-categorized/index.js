@@ -5,11 +5,7 @@ import img from '/public/images/categorized.png';
 import img2 from '/public/images/categorized-all.svg';
 import Image from 'next/image';
 
-const SuccessfullyCategorized = ({
-  totalCategorized,
-  totalUncategorized,
-  handleCloseOverlay,
-}) => {
+const SuccessfullyCategorized = ({ totalCategorized, totalUncategorized, handleCloseOverlay }) => {
   let title = '';
   let image = null;
   if (totalCategorized == totalUncategorized) {
@@ -41,9 +37,8 @@ const SuccessfullyCategorized = ({
             </div>
             {title}
             <Text p className="text-gray4 text-center max-w-md my-0 mx-auto">
-              You're once step closer to closing more deals.{' '}
-              <strong>75% of salespeople</strong> don't have an organized client
-              list.
+              You're once step closer to closing more deals. <strong>75% of salespeople</strong> don't have an organized
+              client list.
             </Text>
             <div className="flex items-center justify-between mt-6">
               <Button secondary onClick={handleCloseOverlay}>

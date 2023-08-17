@@ -164,32 +164,18 @@ const EventPreview = ({
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
-          <div
-            className={`absolute inset-0 overflow-hidden ${
-              overlay && 'bg-[#42424280]'
-            }`}
-          >
+          <div className={`absolute inset-0 overflow-hidden ${overlay && 'bg-[#42424280]'}`}>
             <div
-              className={`pointer-events-none fixed ${
-                topClass ? topClass : 'top-[222px]'
-              } ${
+              className={`pointer-events-none fixed ${topClass ? topClass : 'top-[222px]'} ${
                 overlay && ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
-              } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ${
-                overlay && ' h-[550px]'
-              }`}
+              } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ${overlay && ' h-[550px]'}`}
             >
               <Transition.Child
                 as={Fragment}
-                enter={`${
-                  !overlay &&
-                  'transform transition ease-in-out duration-500 sm:duration-700'
-                } `}
+                enter={`${!overlay && 'transform transition ease-in-out duration-500 sm:duration-700'} `}
                 enterFrom="translate-x-full"
                 enterTo="translate-x-0"
-                leave={`${
-                  !overlay &&
-                  'transform transition ease-in-out duration-500 sm:duration-700'
-                } `}
+                leave={`${!overlay && 'transform transition ease-in-out duration-500 sm:duration-700'} `}
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
@@ -210,16 +196,12 @@ const EventPreview = ({
                                 <li
                                   key={event.name}
                                   className={classNames(
-                                    eventIdx !==
-                                      campaignEvents.events.length - 1
-                                      ? 'pb-10'
-                                      : '',
+                                    eventIdx !== campaignEvents.events.length - 1 ? 'pb-10' : '',
                                     'relative',
                                   )}
                                 >
                                   <>
-                                    {eventIdx !==
-                                    campaignEvents.events.length - 1 ? (
+                                    {eventIdx !== campaignEvents.events.length - 1 ? (
                                       <div
                                         className="absolute left-3.5 top-3.5 -ml-px mt-0.5 h-full w-0.5 bg-gray3"
                                         aria-hidden="true"
@@ -233,22 +215,17 @@ const EventPreview = ({
                                       // }
                                       aria-current="step"
                                     >
-                                      <span
-                                        className="flex h-9 items-center"
-                                        aria-hidden="true"
-                                      >
+                                      <span className="flex h-9 items-center" aria-hidden="true">
                                         <span
                                           className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 ${
-                                            `Event ${eventIdx + 1}` ==
-                                            eventInfo?.event_name
+                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
                                               ? 'border-lightBlue3'
                                               : 'border-gray3'
                                           } bg-white`}
                                         >
                                           <span
                                             className={`h-3 w-3 rounded-full ${
-                                              `Event ${eventIdx + 1}` ==
-                                              eventInfo?.event_name
+                                              `Event ${eventIdx + 1}` == eventInfo?.event_name
                                                 ? 'bg-lightBlue3'
                                                 : 'bg-gray3'
                                             }`}
@@ -256,25 +233,19 @@ const EventPreview = ({
                                         </span>
                                       </span>
                                       <span
-                                        onClick={() =>
-                                          setCurrentEvent(eventIdx + 1)
-                                        }
+                                        onClick={() => setCurrentEvent(eventIdx + 1)}
                                         className={`${
-                                          `Event ${eventIdx + 1}` ==
-                                            eventInfo?.event_name &&
-                                          'bg-lightBlue1 '
+                                          `Event ${eventIdx + 1}` == eventInfo?.event_name && 'bg-lightBlue1 '
                                         } ml-3 flex min-w-0 flex-col p-[10px] hover:bg-lightBlue1 w-full cursor-pointer`}
                                       >
                                         <span
                                           className={`${
-                                            `Event ${eventIdx + 1}` ==
-                                            eventInfo?.event_name
+                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
                                               ? 'font-bold'
                                               : 'font-medium'
                                           } text-xs text-gray7 uppercase`}
                                         >
-                                          Event {eventIdx + 1}:{' '}
-                                          {event.event_type}
+                                          Event {eventIdx + 1}: {event.event_type}
                                         </span>
                                       </span>
                                     </a>
@@ -336,10 +307,7 @@ const EventPreview = ({
                                   onClick={() => setShowEventPreview(false)}
                                 >
                                   <span className="sr-only">Close panel</span>
-                                  <Close
-                                    className="h-6 w-6"
-                                    aria-hidden="true"
-                                  />
+                                  <Close className="h-6 w-6" aria-hidden="true" />
                                 </button>
                               </div>
                             </div>

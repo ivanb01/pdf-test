@@ -27,8 +27,7 @@ export default function ContactCard({
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const status =
-    contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
+  const status = contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
   // const [dropdownVal, setDropdownVal] = useState(
@@ -41,7 +40,8 @@ export default function ContactCard({
         key={contact.id}
         className={`${
           dropdownOpened && 'border-t-4'
-        } relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
+        } relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}
+      >
         {dropdownOpened && (
           <DropdownNoInput
             selectedOption={contact?.status_2}
@@ -53,21 +53,14 @@ export default function ContactCard({
             }}
           />
         )}
-        <div
-          className="p-4 cursor-pointer"
-          onClick={() => handleCardClick(contact)}>
+        <div className="p-4 cursor-pointer" onClick={() => handleCardClick(contact)}>
           <div className="flex w-full items-center justify-between">
             {contact.profile_image_path ? (
-              <img
-                className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-400"
-                src={contact.profile_image_path}
-              />
+              <img className="h-8 w-8 flex-shrink-0 rounded-full bg-gray-400" src={contact.profile_image_path} />
             ) : (
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-400">
                 <span className="text-sm font-medium leading-none text-white">
-                  {getInitials(
-                    contact.first_name + ' ' + contact.last_name,
-                  ).toUpperCase()}
+                  {getInitials(contact.first_name + ' ' + contact.last_name).toUpperCase()}
                 </span>
               </span>
             )}
@@ -91,15 +84,14 @@ export default function ContactCard({
               contactStatus={contact.status_2}
               contactCategory={categoryType}
             />
-            {contact.import_source === 'GmailAI' && (
-              <AIChip reviewed={contact.approved_ai} />
-            )}
+            {contact.import_source === 'GmailAI' && <AIChip reviewed={contact.approved_ai} />}
           </div>
         </div>
         <div
           className={`${
             !dropdownOpened && 'h-0 opacity-0'
-          } pointer-events-none group-hover:pointer-events-auto group-hover:h-[49px] group-hover:opacity-100 transition-all`}>
+          } pointer-events-none group-hover:pointer-events-auto group-hover:h-[49px] group-hover:opacity-100 transition-all`}
+        >
           <div className="border-t border-gray-200 px-4 py-[10px] flex items-center justify-end">
             <div
               className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
@@ -107,32 +99,21 @@ export default function ContactCard({
                 document
                   .querySelector('#tooltip-edit-contact-' + contact.id)
                   .classList.remove('invisible', 'opacity-0');
-                document
-                  .querySelector('#edit-contact-icon-' + contact.id)
-                  .classList.add('text-gray4');
-                document
-                  .querySelector('#edit-contact-icon-' + contact.id)
-                  .classList.remove('text-gray3');
+                document.querySelector('#edit-contact-icon-' + contact.id).classList.add('text-gray4');
+                document.querySelector('#edit-contact-icon-' + contact.id).classList.remove('text-gray3');
               }}
               onMouseLeave={() => {
-                document
-                  .querySelector('#tooltip-edit-contact-' + contact.id)
-                  .classList.add('invisible', 'opacity-0');
-                document
-                  .querySelector('#edit-contact-icon-' + contact.id)
-                  .classList.add('text-gray3');
-                document
-                  .querySelector('#edit-contact-icon-' + contact.id)
-                  .classList.remove('text-gray4');
+                document.querySelector('#tooltip-edit-contact-' + contact.id).classList.add('invisible', 'opacity-0');
+                document.querySelector('#edit-contact-icon-' + contact.id).classList.add('text-gray3');
+                document.querySelector('#edit-contact-icon-' + contact.id).classList.remove('text-gray4');
               }}
-              onClick={() => handleCardEdit(contact)}>
-              <Edit
-                id={'edit-contact-icon-' + contact.id}
-                className="text-gray3 w-4 h-4"
-              />
+              onClick={() => handleCardEdit(contact)}
+            >
+              <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
               <div
                 id={'tooltip-edit-contact-' + contact.id}
-                className="inline-block bottom-11 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                className="inline-block bottom-11 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700"
+              >
                 Edit Contact
               </div>
             </div>
@@ -171,33 +152,22 @@ export default function ContactCard({
                 document
                   .querySelector('#tooltip-add-activity-' + contact.id)
                   .classList.remove('invisible', 'opacity-0');
-                document
-                  .querySelector('#add-activity-icon-' + contact.id)
-                  .classList.add('text-gray4');
-                document
-                  .querySelector('#add-activity-icon-' + contact.id)
-                  .classList.remove('text-gray3');
+                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray4');
+                document.querySelector('#add-activity-icon-' + contact.id).classList.remove('text-gray3');
               }}
               onMouseLeave={() => {
-                document
-                  .querySelector('#tooltip-add-activity-' + contact.id)
-                  .classList.add('invisible', 'opacity-0');
-                document
-                  .querySelector('#add-activity-icon-' + contact.id)
-                  .classList.add('text-gray3');
-                document
-                  .querySelector('#add-activity-icon-' + contact.id)
-                  .classList.remove('text-gray4');
+                document.querySelector('#tooltip-add-activity-' + contact.id).classList.add('invisible', 'opacity-0');
+                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray3');
+                document.querySelector('#add-activity-icon-' + contact.id).classList.remove('text-gray4');
               }}
-              onClick={() => handleAddActivity(contact)}>
-              <List
-                id={'add-activity-icon-' + contact.id}
-                className="text-gray3 w-4 h-4"
-              />
+              onClick={() => handleAddActivity(contact)}
+            >
+              <List id={'add-activity-icon-' + contact.id} className="text-gray3 w-4 h-4" />
               <div
                 id={'tooltip-add-activity-' + contact.id}
                 role="tooltip"
-                className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
                 Add Activity
               </div>
             </div>
@@ -207,26 +177,17 @@ export default function ContactCard({
                 document
                   .querySelector('#tooltip-change-status-' + contact.id)
                   .classList.remove('invisible', 'opacity-0');
-                document
-                  .querySelector('#change-status-icon-' + contact.id)
-                  .classList.add('text-gray4');
-                document
-                  .querySelector('#change-status-icon-' + contact.id)
-                  .classList.remove('text-gray3');
+                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
+                document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray3');
               }}
               onMouseLeave={() => {
-                document
-                  .querySelector('#tooltip-change-status-' + contact.id)
-                  .classList.add('invisible', 'opacity-0');
-                document
-                  .querySelector('#change-status-icon-' + contact.id)
-                  .classList.add('text-gray3');
-                document
-                  .querySelector('#change-status-icon-' + contact.id)
-                  .classList.remove('text-gray4');
+                document.querySelector('#tooltip-change-status-' + contact.id).classList.add('invisible', 'opacity-0');
+                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
+                document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray4');
               }}
               // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-              onClick={() => setDropdownOpened(!dropdownOpened)}>
+              onClick={() => setDropdownOpened(!dropdownOpened)}
+            >
               {/* <SimpleBarDropdown
                 options={allStatusesQuickEdit[categoryType]}
                 activeIcon={false}
@@ -245,14 +206,12 @@ export default function ContactCard({
                 handleDropdownClosed={(item) => setDropdownOpened(item)}
                 noOptionChange={contact?.is_in_campaign==="assigned"}
               ></SimpleBarDropdown> */}
-              <Workspaces
-                id={'change-status-icon-' + contact.id}
-                className="text-gray3 w-4 h-4"
-              />
+              <Workspaces id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
               <div
                 id={'tooltip-change-status-' + contact.id}
                 role="tooltip"
-                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+              >
                 Change Status
               </div>
             </div>

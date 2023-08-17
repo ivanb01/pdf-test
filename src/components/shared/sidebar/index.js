@@ -14,9 +14,7 @@ export default function Sidebar() {
               {({ open }) => (
                 <>
                   <MenuItem open={open} item={item} />
-                  {Array.isArray(item.children) && item.children.length > 0 && (
-                    <SubmenuItem item={item} />
-                  )}
+                  {Array.isArray(item.children) && item.children.length > 0 && <SubmenuItem item={item} />}
                 </>
               )}
             </Disclosure>

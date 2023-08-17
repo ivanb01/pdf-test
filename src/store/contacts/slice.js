@@ -33,10 +33,5 @@ const contactsSlice = createSlice({
   },
 });
 
-export const {
-  setContacts,
-  setAllContacts,
-  updateContacts,
-  updateContactLocally,
-} = contactsSlice.actions;
+export const { setContacts, setAllContacts, updateContacts, updateContactLocally } = contactsSlice.actions;
 export default contactsSlice.reducer;

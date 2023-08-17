@@ -29,9 +29,7 @@ const Dropdown = ({
   errorText,
   ...props
 }) => {
-  const firstSelect = initialSelect
-    ? options?.find((item) => item.name === initialSelect)
-    : null;
+  const firstSelect = initialSelect ? options?.find((item) => item.name === initialSelect) : null;
   const [selected, setSelected] = useState(firstSelect);
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
@@ -52,46 +50,33 @@ const Dropdown = ({
           <>
             <div className={horizontal && 'flex items-center'}>
               {label && (
-                <Listbox.Label
-                  className={`block text-sm font-medium text-gray6 mr-2`}
-                >
-                  {label}{' '}
-                  {optional && (
-                    <span className="text-gray3 ml-1">(Optional)</span>
-                  )}
+                <Listbox.Label className={`block text-sm font-medium text-gray6 mr-2`}>
+                  {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
                 </Listbox.Label>
               )}
               <div className="mt-1 relative">
                 <Listbox.Button
-                  className={`${
-                    selectClasses ? selectClasses : 'bg-white border rounded-md'
-                  } ${inputWidth} relative ${
+                  className={`${selectClasses ? selectClasses : 'bg-white border rounded-md'} ${inputWidth} relative ${
                     !inputWidth && 'w-full'
                   } border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
                 >
                   <span
                     className={`${
-                      selectedOption === 'statusColor' &&
-                      `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
+                      selectedOption === 'statusColor' && `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
                     }`}
                   ></span>
 
                   {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
                   <span
-                    className={`flex items-center truncate capitalize ${
-                      !selected && placeHolder && 'text-gray6'
-                    } ${selected && selected.name && 'text-gray8'} ${
-                      selectedOption === 'statusColor' && selected && 'pl-4'
-                    }`}
+                    className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-gray6'} ${
+                      selected && selected.name && 'text-gray8'
+                    } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}
                   >
                     {!selected && placeHolder && placeHolder}
                     {selected && selected.name}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <ChevronDownIcon
-                      className="h-5 w-5 text-gray3"
-                      aria-hidden="true"
-                    />
+                    <ChevronDownIcon className="h-5 w-5 text-gray3" aria-hidden="true" />
                   </span>
                 </Listbox.Button>
 
@@ -132,10 +117,7 @@ const Dropdown = ({
                                   'absolute inset-y-0 right-0 flex items-center pr-4 capitalize',
                                 )}
                               >
-                                <CheckIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
+                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>
                             ) : null}
                           </>

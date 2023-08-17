@@ -34,9 +34,7 @@ export default function ActivityLog({ contactId, source }) {
 
   const refetchData = useSelector((state) => state.global.refetchData);
 
-  const activityLogData = useSelector(
-    (state) => state.clientDetails.activityLogData,
-  );
+  const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
@@ -91,9 +89,7 @@ export default function ActivityLog({ contactId, source }) {
 
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      <div
-        className="flex bg-gray10 flex-row"
-        style={{ minHeight: 'calc(100vh - 222px)' }}>
+      <div className="flex bg-gray10 flex-row" style={{ minHeight: 'calc(100vh - 222px)' }}>
         <div className="w-1/2 bg-gray10 p-[24px] pr-0">
           <div className="bg-white flex flex-row justify-between p-6">
             <Text className="text-gray7" p>
@@ -120,9 +116,7 @@ export default function ActivityLog({ contactId, source }) {
                     className="mb-6 w-[100%]"
                     // activeClasses="bg-lightBlue1"
                     handleSelect={(item) => handleChooseActivityType(item.id)}
-                    error={
-                      errors.type_of_activity_id && touched.type_of_activity_id
-                    }
+                    error={errors.type_of_activity_id && touched.type_of_activity_id}
                     errorText={errors.type_of_activity_id}
                   />
                   <TextArea
@@ -134,18 +128,8 @@ export default function ActivityLog({ contactId, source }) {
                     error={errors.description && touched.description}
                     errorText={errors.description}></TextArea>
                   <div className="flex flex-row justify-end mt-6">
-                    <Button
-                      className="mr-3"
-                      white
-                      label="Cancel"
-                      onClick={() => setToggleAddActivity(false)}
-                    />
-                    <Button
-                      type="submit"
-                      primary
-                      label="Save"
-                      loading={loadingButton}
-                    />
+                    <Button className="mr-3" white label="Cancel" onClick={() => setToggleAddActivity(false)} />
+                    <Button type="submit" primary label="Save" loading={loadingButton} />
                   </div>
                 </form>
               </div>
@@ -192,7 +176,8 @@ export default function ActivityLog({ contactId, source }) {
                       <a
                         href={aiPreview?.email_link}
                         target="_blank"
-                        className=" text-xs underline flex items-center text-gray-900">
+                        className=" text-xs underline flex items-center text-gray-900"
+                        rel="noreferrer">
                         View in Gmail
                         <span className="ml-1">
                           <img src={linkIcon.src} />

@@ -86,8 +86,7 @@ const GoogleImportContacts = () => {
       bgColor = 'bg-green-100';
       borderColor = 'border-green-500';
     } else if (data === 'Successfull') {
-      result =
-        "Awesome! Your contacts have been imported successfully. It's time to categorize them!";
+      result = "Awesome! Your contacts have been imported successfully. It's time to categorize them!";
       textColor = 'text-blue-700';
       bgColor = 'bg-blue-100';
       borderColor = 'border-blue-500';
@@ -100,9 +99,7 @@ const GoogleImportContacts = () => {
     }
 
     return (
-      <div
-        className={`border-l-4 px-4 py-2 ${borderColor} ${bgColor} ${textColor} font-bold mb-4 mt-2`}
-      >
+      <div className={`border-l-4 px-4 py-2 ${borderColor} ${bgColor} ${textColor} font-bold mb-4 mt-2`}>
         <p>{result}</p>
       </div>
     );
@@ -113,9 +110,7 @@ const GoogleImportContacts = () => {
       {loading ? (
         <div className="text-center py-8">Importing Google Contacts...</div>
       ) : error ? (
-        <div className="text-center text-red-600 py-8">
-          Error: {error.message}
-        </div>
+        <div className="text-center text-red-600 py-8">Error: {error.message}</div>
       ) : (
         <div>
           <div className="flex justify-between items-center mb-8">
@@ -135,10 +130,7 @@ const GoogleImportContacts = () => {
           {importNeeded(response.db_insertion)}
           {renderTable('Imported', response.importable_new_contacts)}
           {renderTable('Importable', response.importable_contacts)}
-          {renderTable(
-            'Not importable (missing information)',
-            response.invalid_contacts,
-          )}
+          {renderTable('Not importable (missing information)', response.invalid_contacts)}
           {renderTable('Exist already', response.existing_contacts)}
         </div>
       )}

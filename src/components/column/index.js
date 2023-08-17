@@ -13,11 +13,7 @@ import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
 import AddActivity from 'components/overlays/add-activity';
 import toast from 'react-hot-toast';
-import {
-  clientStatuses,
-  professionalsStatuses,
-  healthLastCommunicationDate,
-} from 'global/variables';
+import { clientStatuses, professionalsStatuses, healthLastCommunicationDate } from 'global/variables';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
@@ -49,28 +45,15 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
-  const category =
-    openedTab == 0
-      ? 'client'
-      : openedTab == 1
-      ? 'professional'
-      : 'uncategorized';
+  const category = openedTab == 0 ? 'client' : openedTab == 1 ? 'professional' : 'uncategorized';
 
   const [filteredContacts, setFilteredContacts] = useState(
-    contacts?.filter(
-      (contact) =>
-        contact.status_id == status.id &&
-        contact.category_1.toLowerCase() == category,
-    ),
+    contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
   );
 
   useEffect(() => {
     setFilteredContacts(
-      contacts?.filter(
-        (contact) =>
-          contact.status_id == status.id &&
-          contact.category_1.toLowerCase() == category,
-      ),
+      contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
     );
   }, [openedSubtab, contacts]);
 
@@ -124,10 +107,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatus = async (status, contact) => {
     try {
-      if (
-        contact?.is_in_campaign === 'assigned' &&
-        contact?.status_id !== status
-      ) {
+      if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
         setStatusIdToUpdate(status);
         setChangeStatusModal(true);
         setContactToModify(contact);
@@ -142,10 +122,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatusAndCampaign = async () => {
     try {
-      await unassignContactFromCampaign(
-        contactToModify.campaign_id,
-        contactToModify.id,
-      );
+      await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
       await changeStatus(statusIdToUpdate, contactToModify);
       console.log('unassin then change status');
 
@@ -158,17 +135,12 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const changeStatus = async (status, contact) => {
     try {
       const statusId = status; // example status id to search for
-      const categoryStatuses =
-        categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+      const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
 
-      const foundStatus = categoryStatuses.find(
-        (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1,
-      );
+      const foundStatus = categoryStatuses.find((status) => status.statuses.findIndex((s) => s.id === statusId) !== -1);
       const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
       console.log('tesr', foundStatus);
-      let statusName = foundStatus.statuses.find(
-        (foundstatus) => foundstatus.id == status,
-      ).name;
+      let statusName = foundStatus.statuses.find((foundstatus) => foundstatus.id == status).name;
 
       dispatch(
         updateContactLocally({
@@ -177,11 +149,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           status_2: statusName,
         }),
       );
-      toast.success(
-        `${
-          contact.first_name + ' ' + contact.last_name
-        } moved to ${statusName}`,
-      );
+      toast.success(`${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`);
 
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
@@ -189,9 +157,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       // change status locally
       console.log('changeStatus', contact, contact.id, status, res);
       // setDropdownOpened(false);
-      const { data } = await contactServices.getContacts(
-        categoryIds[contact?.category_1],
-      );
+      const { data } = await contactServices.getContacts(categoryIds[contact?.category_1]);
       dispatch(setContacts(data));
     } catch (error) {
       console.log(error);
@@ -210,35 +176,25 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
         />
       )}
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
-      <div
-        className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
+      <div className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
             <div className="group relative cursor-pointer">
-              <InformationCircleIcon
-                className="h-5 w-5 text-gray3 hover:text-gray4"
-                aria-hidden="true"
-              />
+              <InformationCircleIcon className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />
               <div
                 className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${
                   status?.name === 'New Lead' ? 'left-0' : 'right-0'
-                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}
+              >
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
-                    : `${
-                        healthLastCommunicationDate[categoryType][status?.name]
-                      } days`
+                    : `${healthLastCommunicationDate[categoryType][status?.name]} days`
                 } in order to maintain healthy communication.`}</p>
-                <p className="mb-2">
-                  Chip statuses of communication in cards represent:
-                </p>
+                <p className="mb-2">Chip statuses of communication in cards represent:</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center mr-2">
                     <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
@@ -255,9 +211,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
         </div>
 
         {/* <Checkbox label={status.name} /> */}
-        <a
-          href="#"
-          onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
+        <a href="#" onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
           {sortAsc ? (
             <svg
               className="sort-asc sort fill-gray5"
@@ -266,7 +220,8 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-ascending"
               width="20"
               height="20"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           ) : (
@@ -277,7 +232,8 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-descending"
               width="20"
               height="20"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
@@ -288,7 +244,8 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           overflowX: 'hidden',
           maxHeight: '100%',
           height: 'calc(100vh - 224px) !important',
-        }}>
+        }}
+      >
         <div className="p-[16px] contact-column-custom-height">
           {filteredContacts.map((contact, index) => (
             <ContactCard

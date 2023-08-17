@@ -17,34 +17,18 @@ const eventStatusesCirclesBorders = {
   scheduled: 'border-lightBlue3',
   canceled: 'border-red3',
 };
-export default function Events({
-  className,
-  events = [],
-  currentEvent,
-  setCurrentEvent,
-  eventPreview,
-}) {
+export default function Events({ className, events = [], currentEvent, setCurrentEvent, eventPreview }) {
   return (
     <div className={`${className}`}>
       <nav aria-label="Progress">
         <ol role="list" className="overflow-hidden">
           {events.map((event, eventIdx) => (
-            <li
-              key={event.name}
-              className={classNames(
-                eventIdx !== events.length - 1 ? 'pb-10' : '',
-                'relative',
-              )}
-            >
+            <li key={event.name} className={classNames(eventIdx !== events.length - 1 ? 'pb-10' : '', 'relative')}>
               <>
                 {eventIdx !== events.length - 1 ? (
                   <div
                     className={`-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full 
-                    ${
-                      event?.status
-                        ? eventStatusesBgColors[event?.status]
-                        : 'bg-gray-300'
-                    }`}
+                    ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
                     aria-hidden="true"
                   />
                 ) : null}
@@ -59,19 +43,11 @@ export default function Events({
                   <div className="h-9 flex items-center">
                     <span
                       className={`relative z-0 w-8 h-8 flex items-center justify-center lightBlue3 rounded-full bg-white border-2
-                      ${
-                        event?.status
-                          ? eventStatusesCirclesBorders[event?.status]
-                          : 'border-gray-300'
-                      }`}
+                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : 'border-gray-300'}`}
                     >
                       <span
                         className={`h-[18px] w-[18px] flex items-center justify-center text-xs font-medium text-white rounded-full 
-                      ${
-                        event?.status
-                          ? eventStatusesBgColors[event?.status]
-                          : 'bg-gray-300'
-                      }`}
+                      ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
                       >
                         {eventIdx + 1}
                       </span>
@@ -99,9 +75,7 @@ export default function Events({
                           {isValidDate(event.execute_on)
                             ? formatDateLT(event.execute_on)
                             : event.execute_on?.includes('After')
-                            ? `${parseInt(
-                                event.execute_on.replace(/[^0-9\.]/g, ''),
-                              )} days after added in Campaign`
+                            ? `${parseInt(event.execute_on.replace(/[^0-9\.]/g, ''))} days after added in Campaign`
                             : event.execute_on}
                         </div>
                       </div>

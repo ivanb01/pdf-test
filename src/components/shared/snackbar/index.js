@@ -16,11 +16,9 @@ const Snackbar = ({
     <div
       className={`p-4 border border-[#D14343] bg-[#FDF4F4] flex ${
         fullWidth ? 'w-full' : 'w-[480px]'
-      } rounded-lg justify-between ${topLeft && 'absolute top-4 left-4'} ${
-        topRight && 'absolute top-4 right-4'
-      } ${bottomLeft && 'absolute bottom-4 left-4'} ${
-        bottomRight && 'absolute bottom-4 right-4'
-      }`}
+      } rounded-lg justify-between ${topLeft && 'absolute top-4 left-4'} ${topRight && 'absolute top-4 right-4'} ${
+        bottomLeft && 'absolute bottom-4 left-4'
+      } ${bottomRight && 'absolute bottom-4 right-4'}`}
     >
       <div className="flex">
         <div className="mr-2">
@@ -32,11 +30,7 @@ const Snackbar = ({
         </div>
       </div>
       <div className="inline-block">
-        <XIcon
-          className="text-[#7D2828] cursor-pointer"
-          height={15}
-          onClick={handleClose}
-        />
+        <XIcon className="text-[#7D2828] cursor-pointer" height={15} onClick={handleClose} />
       </div>
     </div>
   );

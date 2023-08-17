@@ -51,11 +51,7 @@ const ForgotPassword = () => {
 
   return (
     <Authentication>
-      <Text
-        onBackClick={() => router.push('credentials')}
-        title
-        className="text-gray5 mb-6"
-      >
+      <Text onBackClick={() => router.push('credentials')} title className="text-gray5 mb-6">
         Forgot Password
       </Text>
       <Text p className="text-gray4 mb-6">
@@ -70,19 +66,10 @@ const ForgotPassword = () => {
           error={errors.userName && touched.userName}
           errorText={errors.userName}
         />
-        <Button
-          type="submit"
-          label="Send code"
-          className="bg-blue2 w-full justify-center"
-          loading={loadingButton}
-        />
+        <Button type="submit" label="Send code" className="bg-blue2 w-full justify-center" loading={loadingButton} />
       </form>
       <div className="flex items-center justify-between my-6">
-        <Link
-          href="#"
-          className="font-medium text-sm"
-          onClick={() => router.push('credentials')}
-        >
+        <Link href="#" className="font-medium text-sm" onClick={() => router.push('credentials')}>
           Back to sign in?
         </Link>
       </div>

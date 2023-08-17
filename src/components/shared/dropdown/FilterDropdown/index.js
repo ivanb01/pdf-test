@@ -2,16 +2,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { classNames } from 'global/functions';
 
-const FilterDropdown = ({
-  label,
-  types,
-  handleClick,
-  icon,
-  className,
-  isFilter,
-  data,
-  positionClass,
-}) => {
+const FilterDropdown = ({ label, types, handleClick, icon, className, isFilter, data, positionClass }) => {
   return (
     <Menu as="div" className={'relative inline-block text-left ' + className}>
       <div>
@@ -28,11 +19,13 @@ const FilterDropdown = ({
         enterTo="transform opacity-100 scale-100"
         leave="transition ease-in duration-75"
         leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95">
+        leaveTo="transform opacity-0 scale-95"
+      >
         <Menu.Items
           className={`origin-top-right absolute ${
             positionClass ? positionClass : 'left-0'
-          } mt-2 w-56 z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none `}>
+          } mt-2 w-56 z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none `}
+        >
           <div className="py-1">
             {isFilter && (
               <Menu.Item>
@@ -40,10 +33,8 @@ const FilterDropdown = ({
                   <a
                     href="#"
                     onClick={() => handleClick(null)}
-                    className={classNames(
-                      active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm',
-                    )}>
+                    className={classNames(active ? 'bg-gray1 text-gray8' : 'text-gray6', 'block px-4 py-2 text-sm')}
+                  >
                     Show All
                   </a>
                 )}
@@ -55,10 +46,8 @@ const FilterDropdown = ({
                   <a
                     href="#"
                     onClick={() => type.handleClick(data)}
-                    className={classNames(
-                      active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm',
-                    )}>
+                    className={classNames(active ? 'bg-gray1 text-gray8' : 'text-gray6', 'block px-4 py-2 text-sm')}
+                  >
                     {type.name}
                   </a>
                 )}

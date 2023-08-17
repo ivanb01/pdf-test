@@ -27,11 +27,8 @@ const contactsSlice = createSlice({
       };
     });
     builder.addCase(updateContact.fulfilled, (state, action) => {
-      const contactIndex = state?._data.findIndex(
-        (contact) => contact.email === action?.payload?.email,
-      );
+      const contactIndex = state?._data.findIndex((contact) => contact.email === action?.payload?.email);
       state._data[contactIndex] = action.payload;
-
     });
     builder.addCase(deleteContact.fulfilled, (state, action) => {
       state._data.splice(
@@ -47,18 +44,14 @@ const contactsSlice = createSlice({
     });
     builder.addCase(bulkUpdateContactStatus.fulfilled, (state, action) => {
       state._data = state._data?.map((contact) => {
-        let newContact = action.meta.arg?.contacts?.find(
-          (updatedContact) => contact.email === updatedContact.email,
-        );
+        let newContact = action.meta.arg?.contacts?.find((updatedContact) => contact.email === updatedContact.email);
         return newContact ? { ...contact, status: newContact.status } : contact;
       });
     });
     builder.addCase(bulkUpdateContactType.fulfilled, (state, action) => {
       console.log(action);
       state._data = state._data?.map((contact) => {
-        let newContact = action.meta.arg?.contacts?.find(
-          (updatedContact) => contact.email === updatedContact.email,
-        );
+        let newContact = action.meta.arg?.contacts?.find((updatedContact) => contact.email === updatedContact.email);
         return newContact ? { ...contact, type: newContact.type } : contact;
       });
     });

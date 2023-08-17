@@ -2,15 +2,7 @@ import Text from 'components/shared/text';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-const StatusSelect = ({
-  label,
-  selectedStatus,
-  setSelectedStatus,
-  className,
-  statuses,
-  error,
-  errorText,
-}) => {
+const StatusSelect = ({ label, selectedStatus, setSelectedStatus, className, statuses, error, errorText }) => {
   return (
     <div>
       {label && (
@@ -50,9 +42,7 @@ const StatusSelect = ({
                         label={status.name}
                         key={status.id}
                         className="mb-4"
-                        selectedStatus={
-                          selectedStatus == status.id ? true : false
-                        }
+                        selectedStatus={selectedStatus == status.id ? true : false}
                         onClick={() => {
                           setSelectedStatus(status.id);
                         }}

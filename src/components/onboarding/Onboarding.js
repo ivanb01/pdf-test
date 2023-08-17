@@ -27,7 +27,8 @@ const Onboarding = ({ handleOnboardingOverlayVisibile, visible }) => {
           headerImg={img_step_one}
           introductionPopup
           handleOnboardingOverlayVisibile={handleOnboardingOverlayVisibile}
-          visible={visible}>
+          visible={visible}
+        >
           <span></span>
           <Button type="button" primary onClick={() => nextStep()}>
             Next
@@ -43,7 +44,8 @@ const Onboarding = ({ handleOnboardingOverlayVisibile, visible }) => {
           headerImg={img_step_two}
           introductionPopup
           handleOnboardingOverlayVisibile={handleOnboardingOverlayVisibile}
-          visible={visible}>
+          visible={visible}
+        >
           <Button secondary outlined onClick={() => prevStep()}>
             Back
           </Button>
@@ -61,14 +63,12 @@ const Onboarding = ({ handleOnboardingOverlayVisibile, visible }) => {
           headerImg={img_step_three}
           introductionPopup
           handleOnboardingOverlayVisibile={handleOnboardingOverlayVisibile}
-          visible={visible}>
+          visible={visible}
+        >
           <Button secondary outlined onClick={() => prevStep()}>
             Back
           </Button>
-          <Button
-            type="button"
-            primary
-            onClick={handleOnboardingOverlayVisibile(false)}>
+          <Button type="button" primary onClick={handleOnboardingOverlayVisibile(false)}>
             Start Exploring
           </Button>
         </IntroductionOverlay>

@@ -6,8 +6,12 @@ import { useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
-import { phoneNumberInputFormat, revertPhoneNumberInputFormat
-, moneyNumberInputFormat, revertMoneyNumberInputFormat} from 'global/functions';
+import {
+  phoneNumberInputFormat,
+  revertPhoneNumberInputFormat,
+  moneyNumberInputFormat,
+  revertMoneyNumberInputFormat,
+} from 'global/functions';
 
 const Input = ({
   className,
@@ -36,16 +40,13 @@ const Input = ({
 }) => {
   let errorClasses = '';
   if (error) {
-    errorClasses =
-      'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500';
+    errorClasses = 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500';
   }
 
   const textInput = () => {
     return iconBefore ? (
       <>
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          {iconBefore}
-        </div>
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">{iconBefore}</div>
         <input
           type={type}
           name={name ? name : id}
@@ -61,10 +62,7 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
       </>
@@ -85,15 +83,10 @@ const Input = ({
         />
         {error ? (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         ) : (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            {iconAfter}
-          </div>
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">{iconAfter}</div>
         )}
       </>
     ) : (
@@ -118,10 +111,7 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
       </>
@@ -148,17 +138,12 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
         <div
           onClick={() => setShowPassword(!showPassword)}
-          className={`absolute cursor-pointer inset-y-0 ${
-            error ? 'right-7' : 'right-0'
-          } pr-3 flex items-center`}
+          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}
         >
           {showPassword ? (
             <VisibilityIcon className="text-gray-400" />
@@ -170,28 +155,28 @@ const Input = ({
     );
   };
 
-  const [phoneValue, setPhoneValue] = useState(type=='phone_number' && phoneNumberInputFormat(value));
-  
+  const [phoneValue, setPhoneValue] = useState(type == 'phone_number' && phoneNumberInputFormat(value));
+
   const handlePhoneChange = (val) => {
     setPhoneValue(phoneNumberInputFormat(val));
 
-    if(val) {
+    if (val) {
       onChange(revertPhoneNumberInputFormat(val));
     } else {
       onChange(null);
     }
-  }
+  };
 
   const InputPhone = () => {
     return (
       <>
         <input
-          type='text'
+          type="text"
           name={name ? name : id}
           id={id}
           placeholder={placeholder}
           onInput={onInput}
-          onChange={(e)=>handlePhoneChange(e.target.value)}
+          onChange={(e) => handlePhoneChange(e.target.value)}
           onKeyDown={onKeyDown}
           value={phoneValue}
           readOnly={saved || readonly}
@@ -205,10 +190,7 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
       </>
@@ -216,8 +198,11 @@ const Input = ({
   };
 
   const moneyNumberInputFormat = (number) => {
-    if(!number) return null;
-    return number.toString().replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (!number) return null;
+    return number
+      .toString()
+      .replace(/,/g, '')
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
   const revertMoneyNumberInputFormat = (value) => {
@@ -225,36 +210,34 @@ const Input = ({
   };
 
   const [moneyValue, setMoneyValue] = useState(null);
-  
+
   const handleMoneyInputChange = (val) => {
     // setMoneyValue(moneyNumberInputFormat(val));
-    if(val) {
+    if (val) {
       onChange(revertMoneyNumberInputFormat(val));
     } else {
       onChange('');
-      setMoneyValue(null)
+      setMoneyValue(null);
     }
-  }
+  };
 
-  useEffect(()=>{
-    if( type == 'money' ) {
-      setMoneyValue(moneyNumberInputFormat(value))
+  useEffect(() => {
+    if (type == 'money') {
+      setMoneyValue(moneyNumberInputFormat(value));
     }
-  },[value])
+  }, [value]);
 
   const moneyInput = () => {
     return iconBefore ? (
       <>
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          {iconBefore}
-        </div>
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">{iconBefore}</div>
         <input
-          type='text'
+          type="text"
           name={name ? name : id}
           id={id}
           placeholder={placeholder}
           onInput={onInput}
-          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onChange={(e) => handleMoneyInputChange(e.target.value)}
           onKeyDown={onKeyDown}
           value={moneyValue}
           className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
@@ -263,22 +246,19 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
       </>
     ) : iconAfter ? (
       <>
         <input
-          type='text'
+          type="text"
           name={name ? name : id}
           id={id}
           placeholder={placeholder}
           onInput={onInput}
-          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onChange={(e) => handleMoneyInputChange(e.target.value)}
           onKeyDown={onKeyDown}
           value={moneyValue}
           className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
@@ -287,26 +267,21 @@ const Input = ({
         />
         {error ? (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         ) : (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            {iconAfter}
-          </div>
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">{iconAfter}</div>
         )}
       </>
     ) : (
       <>
         <input
-          type='text'
+          type="text"
           name={name ? name : id}
           id={id}
           placeholder={placeholder}
           onInput={onInput}
-          onChange={(e)=>handleMoneyInputChange(e.target.value)}
+          onChange={(e) => handleMoneyInputChange(e.target.value)}
           onKeyDown={onKeyDown}
           value={moneyValue}
           readOnly={saved || readonly}
@@ -320,10 +295,7 @@ const Input = ({
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
       </>
@@ -363,9 +335,7 @@ const Input = ({
 
   const checkboxInput = () => {
     return (
-      <div
-        className={`checkbox-item flex items-center justify-between ${className}`}
-      >
+      <div className={`checkbox-item flex items-center justify-between ${className}`}>
         <div className="relative flex items-center">
           <div className="flex items-center h-5">
             <input
@@ -386,11 +356,7 @@ const Input = ({
           </div>
         </div>
         {showForgotPassword && (
-          <Link
-            href="#"
-            className="font-medium text-sm"
-            onClick={() => Router.push('sign-in/forgot-password')}
-          >
+          <Link href="#" className="font-medium text-sm" onClick={() => Router.push('sign-in/forgot-password')}>
             Forgot Password?
           </Link>
         )}
@@ -402,8 +368,7 @@ const Input = ({
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
-          {label}{' '}
-          {optional && <span className="text-gray3 ml-1">(Optional)</span>}
+          {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
         </Text>
       )}
       {secondaryLabel && (
@@ -411,9 +376,7 @@ const Input = ({
           {secondaryLabel}{' '}
         </Text>
       )}
-      <div
-        className={`${type == 'checkbox' ? '' : 'mt-1 relative rounded-md'}`}
-      >
+      <div className={`${type == 'checkbox' ? '' : 'mt-1 relative rounded-md'}`}>
         {type == 'phone'
           ? phoneInput()
           : type == 'phone_number'

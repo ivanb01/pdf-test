@@ -51,9 +51,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     } else {
       // remove from array
       let selectedContactsCopy = selectedContacts;
-      selectedContactsCopy = selectedContactsCopy.filter(
-        (el) => el != contact.email,
-      );
+      selectedContactsCopy = selectedContactsCopy.filter((el) => el != contact.email);
       setSelectedContacts(selectedContactsCopy);
     }
   };
@@ -124,29 +122,20 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   const fetchData = async (openCategory) => {
     setLoading(true);
-    getCampaignsByCategory(isClient ? 'Client' : 'Professional').then(
-      (data) => {
-        campaigns.forEach((campaign, index) => {
-          campaigns[index].subtab = data.data.campaigns
-            .filter(
-              (fetchedCampaign) =>
-                fetchedCampaign.contact_category_2 == campaign.value,
-            )
-            .sort((a, b) => (a.campaign_id > b.campaign_id ? 1 : -1));
-        });
-        let campaignId = localStorage.getItem('openCampaign')
-          ? localStorage.getItem('openCampaign')
-          : null;
-        // console.log('ttttttttttt', openedCampaign, campaignId);
-        handleOpenCategory(openCategory, campaignId);
-      },
-    );
+    getCampaignsByCategory(isClient ? 'Client' : 'Professional').then((data) => {
+      campaigns.forEach((campaign, index) => {
+        campaigns[index].subtab = data.data.campaigns
+          .filter((fetchedCampaign) => fetchedCampaign.contact_category_2 == campaign.value)
+          .sort((a, b) => (a.campaign_id > b.campaign_id ? 1 : -1));
+      });
+      let campaignId = localStorage.getItem('openCampaign') ? localStorage.getItem('openCampaign') : null;
+      // console.log('ttttttttttt', openedCampaign, campaignId);
+      handleOpenCategory(openCategory, campaignId);
+    });
   };
 
   useEffect(() => {
-    let category = localStorage.getItem('openCampaignCategory')
-      ? localStorage.getItem('openCampaignCategory')
-      : 0;
+    let category = localStorage.getItem('openCampaignCategory') ? localStorage.getItem('openCampaignCategory') : 0;
     fetchData(category);
   }, []);
 
@@ -174,10 +163,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     let filteredArray = contacts?.filter((item) => {
       const fullName = `${item.contact_name}`.toLowerCase();
       const fullEmail = `${item.contact_email}`.toLowerCase();
-      return (
-        fullName.includes(trimmedSearchValue) ||
-        fullEmail.includes(trimmedSearchValue)
-      );
+      return fullName.includes(trimmedSearchValue) || fullEmail.includes(trimmedSearchValue);
     });
     // setCampaignViewContacts(filteredArray);
     return filteredArray;
@@ -187,16 +173,10 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     console.log('testing');
     const contactsInCurrentCampaign =
       currentButton == 0
-        ? currentCampaign?.contacts?.filter(
-            (contact) => contact.contact_campaign_status == 'assigned',
-          )
+        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
         : currentButton == 1
-        ? currentCampaign?.contacts?.filter(
-            (contact) => contact.contact_campaign_status == 'never_assigned',
-          )
-        : currentCampaign?.contacts?.filter(
-            (contact) => contact.contact_campaign_status == 'unassigned',
-          );
+        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'never_assigned')
+        : currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'unassigned');
 
     const filteredArr = handleSearch(searchTerm, contactsInCurrentCampaign);
 
@@ -233,9 +213,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                 <div className="flex items-center">
                   <Search
                     placeholder={`Search ${
-                      campaigns[openedCampaignCategory].value
-                        ? campaigns[openedCampaignCategory].value
-                        : ''
+                      campaigns[openedCampaignCategory].value ? campaigns[openedCampaignCategory].value : ''
                     }`}
                     className="mr-3"
                     onInput={(event) => setSearchTerm(event.target.value)}
@@ -244,12 +222,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}
-                    onClick={setCurrentButton}></ButtonsSlider>
+                    onClick={setCurrentButton}
+                  ></ButtonsSlider>
                 </div>
               </div>
               <div className={`w-auto h-auto`}>
-                <div
-                  className={`border border-gray-200 overflow-hidden relative h-full border-l-0 border-b-0`}>
+                <div className={`border border-gray-200 overflow-hidden relative h-full border-l-0 border-b-0`}>
                   <SimpleBar autoHide style={{ maxHeight: '520px' }}>
                     <Table
                       campaignId={currentCampaign.campaign_id}

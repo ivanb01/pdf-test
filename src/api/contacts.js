@@ -84,15 +84,8 @@ export const addContactRelationship = (id, relationship) => {
   return axiosInstance.post(`contact/${id}/relationship`, relationship);
 };
 
-export const updateContactRelationship = (
-  id,
-  relationship_id,
-  relationship,
-) => {
-  return axiosInstance.put(
-    `contact/${id}/relationship/${relationship_id}`,
-    relationship,
-  );
+export const updateContactRelationship = (id, relationship_id, relationship) => {
+  return axiosInstance.put(`contact/${id}/relationship/${relationship_id}`, relationship);
 };
 
 export const deleteContactRelationship = (id, relationship_id) => {
@@ -128,8 +121,5 @@ export const addContactLookingProperty = (id, property) => {
 };
 
 export const updateContactLookingProperty = (id, property_id, property) => {
-  return axiosInstance.put(
-    `contact/${id}/property_looking_for/${property_id}`,
-    property,
-  );
+  return axiosInstance.put(`contact/${id}/property_looking_for/${property_id}`, property);
 };

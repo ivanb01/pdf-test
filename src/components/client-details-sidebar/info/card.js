@@ -9,9 +9,7 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
       </Text>
       <div className="flex flex-row">
         {typeof content === 'object' ? (
-          content.map((chip) => (
-            <Chip notClickable secondary key={chip} label={chip} />
-          ))
+          content.map((chip) => <Chip notClickable secondary key={chip} label={chip} />)
         ) : iconContent ? (
           <div className="flex flex-row items-center">
             <Text className="text-gray7 pl-3" p>
@@ -22,11 +20,7 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
         ) : (
           <div className="flex items-center pl-3">
             {showDot >= 0 && (
-              <span
-                className={`block h-2 w-2 mr-1 rounded-full ${
-                  showDot ? 'bg-green5' : 'bg-red3'
-                }`}
-              />
+              <span className={`block h-2 w-2 mr-1 rounded-full ${showDot ? 'bg-green5' : 'bg-red3'}`} />
             )}
             <Text className="text-gray7 italic" p>
               {content}

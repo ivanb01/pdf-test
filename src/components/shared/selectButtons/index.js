@@ -1,17 +1,7 @@
-const SelectButtons = ({
-  selectValues,
-  label,
-  setAddNew,
-  currentSelected,
-  ...props
-}) => {
+const SelectButtons = ({ selectValues, label, setAddNew, currentSelected, ...props }) => {
   return (
     <div className="text-left col-span-full">
-      {label && (
-        <label className="block text-sm font-medium text-gray6">
-          {label}
-        </label>
-      )}
+      {label && <label className="block text-sm font-medium text-gray6">{label}</label>}
       <div className="mt-2 select-box flex flex-wrap align-center">
         {selectValues.map((selectValue) => {
           return (

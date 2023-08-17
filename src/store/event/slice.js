@@ -1,9 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-  getEvents,
-  getClientCampaignsAndEvents,
-  getContactCampaignsAndEvents,
-} from './actions';
+import { getEvents, getClientCampaignsAndEvents, getContactCampaignsAndEvents } from './actions';
 
 const eventsSlice = createSlice({
   name: 'events',
@@ -16,9 +12,7 @@ const eventsSlice = createSlice({
   reducers: {
     removeCampaignFromClient(state, action) {
       state.client?.campaigns.splice(
-        state.client?.campaigns?.findIndex(
-          (campaign) => campaign.id === action.payload,
-        ),
+        state.client?.campaigns?.findIndex((campaign) => campaign.id === action.payload),
         1,
       );
     },

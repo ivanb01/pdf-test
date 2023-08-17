@@ -3,11 +3,7 @@ import AIReviewed from '/public/images/ai-reviewed.svg';
 import AI from '/public/images/ai.svg';
 const AIChip = ({ reviewed, className }) => {
   return (
-    <img
-      className={className}
-      src={reviewed ? AIReviewed.src : AI.src}
-      alt=""
-    />
+    <img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />
     // <div
     //   className={`text-white ${
     //     reviewed ? 'bg-green5' : 'bg-blue2'

@@ -8,18 +8,9 @@ import { PlusIcon } from '@heroicons/react/outline';
 import { DocumentDownloadIcon } from '@heroicons/react/outline';
 import Link from 'components/Link';
 
-const AddContactOverlay = ({
-  title,
-  addManually,
-  importCsv,
-  handleClose,
-  progress,
-}) => {
+const AddContactOverlay = ({ title, addManually, importCsv, handleClose, progress }) => {
   return (
-    <Overlay
-      title={title}
-      handleCloseOverlay={handleClose}
-      className="max-w-[1000px]">
+    <Overlay title={title} handleCloseOverlay={handleClose} className="max-w-[1000px]">
       <div className="p-[24px]">
         <div className="flex pb-10">
           <div className="text-center px-10 border-r border-gray2">
@@ -30,8 +21,7 @@ const AddContactOverlay = ({
               Add Contact Manually
             </Text>
             <Text p className="text-gray4 text-center mb-6">
-              Add Contact manually and categorize based on the engagement
-              status.
+              Add Contact manually and categorize based on the engagement status.
             </Text>
             <Button
               label="Add Manually"

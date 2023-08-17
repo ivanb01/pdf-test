@@ -4,11 +4,7 @@ import * as contactServices from 'api/contacts';
 import { allStatusesQuickEdit, leadSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
-import {
-  getContactCampaign,
-  getCampaign,
-  unassignContactFromCampaign,
-} from 'api/campaign';
+import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
 import TagsInput from 'components/tagsInput';
 import DateChip from 'components/shared/chip/date-chip';
@@ -151,10 +147,7 @@ export default function Info({ client }) {
           <TagsInput
             label="Tags"
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
-            value={findTagsOption(
-              tags,
-              client?.category_1 === 'Client' ? 0 : 1,
-            )}
+            value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));
             }}
@@ -171,24 +164,14 @@ export default function Info({ client }) {
           />
 
           {campaginName ? (
-            <InfoCard
-              label="Campaign"
-              showDot={client?.campaign_id ? client?.campaign_id : 0}
-              content={campaginName}
-            />
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
-            <InfoCard
-              label="Campaign"
-              showDot={client?.campaign_id ? client?.campaign_id : 0}
-              content=""
-            />
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content="" />
           )}
           <InfoCard
             label="Last Communication"
             content={
-              client?.last_communication_date
-                ? formatDateMDY(client?.last_communication_date)
-                : 'No Communication'
+              client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'
             }
             iconContent={
               client?.last_communication_date ? (
@@ -204,10 +187,7 @@ export default function Info({ client }) {
         </div>
       )}
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
     </>
   );

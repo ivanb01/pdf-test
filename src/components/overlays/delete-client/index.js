@@ -7,11 +7,7 @@ import { useState } from 'react';
 import * as contactServices from 'api/contacts';
 import { dropped_status_id, trash_category_id } from 'global/variables';
 import { useDispatch } from 'react-redux';
-import {
-  setOpenedTab,
-  setOpenedSubtab,
-  setRefetchData,
-} from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
 
 const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const dispatch = useDispatch();
@@ -26,8 +22,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
         category_id: trash_category_id,
       });
       contact?.category_1 == 'Client' && router.push('/contacts/clients');
-      contact?.category_1 == 'Professional' &&
-        router.push('/contacts/professionals');
+      contact?.category_1 == 'Professional' && router.push('/contacts/professionals');
       setLoadingButton(false);
       dispatch(setRefetchData(true));
     } catch (error) {
@@ -45,24 +40,13 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
           <div className="flex flex-col ml-2">
             <Text h3>No longer working with this contact?</Text>
             <Text p className="text-gray4 ">
-              Moving the contact to Trash will no longer be part of your contact
-              list.
+              Moving the contact to Trash will no longer be part of your contact list.
             </Text>
           </div>
         </div>
         <div className="flex flex-row justify-end mt-4">
-          <Button
-            onClick={handleCloseOverlay}
-            label="Cancel"
-            white
-            className="mr-2"
-          />
-          <Button
-            loading={loadingButton}
-            onClick={handleSubmit}
-            label="Move to Trash"
-            danger
-          />
+          <Button onClick={handleCloseOverlay} label="Cancel" white className="mr-2" />
+          <Button loading={loadingButton} onClick={handleSubmit} label="Move to Trash" danger />
         </div>
       </div>
     </Overlay>

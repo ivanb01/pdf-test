@@ -1,16 +1,15 @@
 module.exports = {
   important: true,
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     backgroundImage: {
       sidebar: "url('../public/images/sidebar.png')",
-      'oxford-gradient':
-        'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
+      'oxford-gradient': 'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
     },
     background: {},
+    backdropBlur: {
+      '2.5px': '2.5px',
+    },
     extend: {
       colors: {
         gray1: '#F3F4F6',

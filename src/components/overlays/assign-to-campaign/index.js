@@ -15,18 +15,11 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
     subtitle =
       'Contacts can easily be assigned to campaigns based on their stage in the sales process and type of contact. These campaigns help you stay engaged and connected with your clients.';
   } else if (contacts.first_name) {
-    title =
-      'Assign ' +
-      contacts.first_name +
-      ' ' +
-      contacts.last_name +
-      ' in campaign?';
-    subtitle =
-      'Assigned client will get emails/events from campaign. Your communication will be improved and healthy';
+    title = 'Assign ' + contacts.first_name + ' ' + contacts.last_name + ' in campaign?';
+    subtitle = 'Assigned client will get emails/events from campaign. Your communication will be improved and healthy';
   } else if (contacts.length) {
     title = 'Assign ' + contacts.length + ' Clients in Campaign?';
-    subtitle =
-      'Assigned client will get emails/events from campaign. Your communication will be improved and healthy';
+    subtitle = 'Assigned client will get emails/events from campaign. Your communication will be improved and healthy';
     image = img2;
   }
 
@@ -56,7 +49,8 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
                 onClick={() => {
                   setLoadingButton(true);
                   onSubmit();
-                }}>
+                }}
+              >
                 Assign to Campaign
               </Button>
             </div>

@@ -43,11 +43,7 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
           {unhealthyCount}
         </div>
       </div>
-      <span
-        className={`italic text-xs ${
-          getPercentage() > 80 ? 'text-[#059669]' : 'text-red-500'
-        }`}
-      >
+      <span className={`italic text-xs ${getPercentage() > 80 ? 'text-[#059669]' : 'text-red-500'}`}>
         {getPercentage()}% healthy
       </span>
     </div>

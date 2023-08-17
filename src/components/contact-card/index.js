@@ -8,15 +8,12 @@ const Column = ({ contacts = [], filter }) => {
   useEffect(() => {
     if (filter) {
       const data = contacts?.data;
-      if (Array.isArray(data) && data.length > 0)
-        setCardData(data?.filter(({ type }) => type === filter));
+      if (Array.isArray(data) && data.length > 0) setCardData(data?.filter(({ type }) => type === filter));
     } else setCardData(contacts?.data || []);
   }, [filter]);
   return (
     <div className="flex flex-col border-r border-gray2">
-      <div
-        className={`flex flex-row w-[280px] items-center p-[16px] ${contacts.className}`}
-      >
+      <div className={`flex flex-row w-[280px] items-center p-[16px] ${contacts.className}`}>
         <Checkbox label={contacts.name} />
         <MenuAlt2Icon className="text-gray3 ml-auto" height={20} />
       </div>

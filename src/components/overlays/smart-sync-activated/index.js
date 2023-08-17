@@ -15,9 +15,8 @@ const SmartSyncActivatedOverlay = ({ handleCloseOverlay, loading }) => {
           Smart Sync and Google Contacts: Turned On
         </div>
         <div className="text-gray-500 text-xs text-center mb-6">
-          From now on each new contact that you will communicate in Gmail will
-          be imported here and categorized by AI., and you can import Google
-          Contacts
+          From now on each new contact that you will communicate in Gmail will be imported here and categorized by AI.,
+          and you can import Google Contacts
         </div>
         <div className="text-gray-500 text-xs text-center mb-6">
           Each new contact that you import will have the{' '}
@@ -27,11 +26,7 @@ const SmartSyncActivatedOverlay = ({ handleCloseOverlay, loading }) => {
           chip and you need to review in order to start communication
         </div>
         <div className="flex items-center justify-center mt-6">
-          <Button
-            className="w-[175px]"
-            loading={loading}
-            primary
-            onClick={handleCloseOverlay}>
+          <Button className="w-[175px]" loading={loading} primary onClick={handleCloseOverlay}>
             Okay, thank you
           </Button>
         </div>

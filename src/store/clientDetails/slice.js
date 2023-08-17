@@ -20,6 +20,5 @@ const clientDetails = createSlice({
   },
 });
 
-export const { setActivityLogData, setNotesData, setCampaignsData } =
-  clientDetails.actions;
+export const { setActivityLogData, setNotesData, setCampaignsData } = clientDetails.actions;
 export default clientDetails.reducer;

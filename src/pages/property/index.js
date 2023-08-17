@@ -196,8 +196,7 @@ const index = () => {
     FREEMONTH: '',
     CITY: 'NEW YORK',
     BROKER_NOTE: 'Original Price: 399000\rEmail agent. Register client name.',
-    STREETEASY_LINK:
-      'http://streeteasy.com/building/259-bennett-avenue-new_york',
+    STREETEASY_LINK: 'http://streeteasy.com/building/259-bennett-avenue-new_york',
     UNIT_NUMBER: '3D',
     OFFICE_ID: 848,
     VENDOR_AGENT_ID: '',
@@ -205,8 +204,7 @@ const index = () => {
     AGENT_NAME: 'Stephen Love',
     TOTAL_ROOMS: 3,
     STATUS: 'For Sale',
-    AMENITIES:
-      'Elevator,Garage,Laundry,Bicycle Room,Storage,Park View,Courtyard,Pied a Terre,',
+    AMENITIES: 'Elevator,Garage,Laundry,Bicycle Room,Storage,Park View,Courtyard,Pied a Terre,',
     KEYCODE: '',
     IDX: 1,
     NETRENT: '',
@@ -388,10 +386,7 @@ const index = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
-  const center = useMemo(
-    () => ({ lat: data.LATITUDE, lng: data.LONGITUDE }),
-    [],
-  );
+  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), []);
 
   const scrollToMap = () => {
     var element = document.querySelector('#map-section');
@@ -412,13 +407,15 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         <div
           onClick={scrollRight}
-          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
+          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
+        >
           <ArrowForward className="text-white md:text-2xl text-sm" />
         </div>
         {!hideLeftArrow && (
           <div
             onClick={scrollLeft}
-            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
+            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
+          >
             <ArrowBack className="text-white md:text-2xl text-sm" />
           </div>
         )}
@@ -497,7 +494,8 @@ const index = () => {
               <Image src={location} alt="" />
               <div
                 className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
-                onClick={() => scrollToMap()}>
+                onClick={() => scrollToMap()}
+              >
                 {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
               </div>
             </div>
@@ -505,23 +503,17 @@ const index = () => {
           <div>
             <div className="md:flex hidden mt-0 clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && (
-                <span className="font-normal">&nbsp;month</span>
-              )}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>
             <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && (
-                <span className="font-normal">&nbsp;month</span>
-              )}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>
           </div>
         </div>
         <div className="max-w-[700px] md:mt-10 mt-5 pb-10">
           <div className="property-details">
-            <div className="text-gray7 text-xl mb-6 font-medium">
-              Property Details
-            </div>
+            <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
             <div className="flex">
               {propertyDetails.map(
                 (propertyDetail, index) =>
@@ -530,9 +522,7 @@ const index = () => {
                       <div className="md:block hidden">
                         <Image src={propertyDetail.icon} />
                       </div>
-                      <span className="md:mx-2 mr-2 font-semibold">
-                        {propertyDetail.value}
-                      </span>
+                      <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
                       {propertyDetail.name}
                     </div>
                   ),
@@ -541,9 +531,7 @@ const index = () => {
             <div className="mt-6">{data.DESCRIPTION}</div>
           </div>
           <div className="mt-10">
-            <div className="text-gray7 text-xl mb-6 font-medium">
-              Property Amenities
-            </div>
+            <div className="text-gray7 text-xl mb-6 font-medium">Property Amenities</div>
             <div className="flex flex-wrap">
               {propertyAmenities.map(
                 (amenity, index) =>
@@ -557,34 +545,25 @@ const index = () => {
             </div>
           </div>
           <div className="mt-10">
-            <div className="text-gray7 text-xl mb-6 font-medium">
-              Other Details
-            </div>
+            <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
             <div className="flex flex-wrap">
               {otherDetails.map(
                 (detail, index) =>
                   detail.value && (
                     <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
                       <div className="text-gray4 text-sm">{detail.name}</div>
-                      <div className="text-sm text-gray7 mt-1">
-                        {detail.value}
-                      </div>
+                      <div className="text-sm text-gray7 mt-1">{detail.value}</div>
                     </div>
                   ),
               )}
             </div>
           </div>
           <div className="mt-10 mb-[100px]">
-            <div className="text-gray7 text-xl font-medium">
-              Property Location
-            </div>
+            <div className="text-gray7 text-xl font-medium">Property Location</div>
             <div className="text-gray5 my-2">{data.ADDRESS}</div>
             <div className="" id="map-section">
               {isLoaded && (
-                <GoogleMap
-                  mapContainerClassName="map-container"
-                  center={center}
-                  zoom={15}>
+                <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
                   <MarkerF
                     key="marker_1"
                     position={{

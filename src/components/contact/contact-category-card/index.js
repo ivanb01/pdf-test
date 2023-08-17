@@ -1,15 +1,6 @@
 import Text from 'components/shared/text';
 
-const ContactCategoryCard = ({
-  title,
-  description,
-  icon,
-  className,
-  setSelectedCard,
-  id,
-  name,
-  selectedCard,
-}) => {
+const ContactCategoryCard = ({ title, description, icon, className, setSelectedCard, id, name, selectedCard }) => {
   return (
     <div
       className={`${

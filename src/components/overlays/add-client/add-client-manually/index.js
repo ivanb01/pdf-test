@@ -33,12 +33,7 @@ const globalTabs = {
   'Add Professional': 1,
 };
 
-const AddClientManuallyOverlay = ({
-  handleClose,
-  title,
-  options,
-  statuses,
-}) => {
+const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => {
   const steps = [
     {
       id: 1,
@@ -49,8 +44,7 @@ const AddClientManuallyOverlay = ({
     { id: 2, name: 'Type and Status', href: '#' },
   ];
 
-  const [existingContactEmailError, setExistingContactEmailError] =
-    useState('');
+  const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -62,9 +56,7 @@ const AddClientManuallyOverlay = ({
   const AddContactSchema = Yup.object().shape({
     first_name: Yup.string().required('Field can not be empty'),
     last_name: Yup.string().required('Field can not be empty'),
-    email: Yup.string()
-      .required('Field can not be empty')
-      .email('Not a proper email'),
+    email: Yup.string().required('Field can not be empty').email('Not a proper email'),
     phone_number: Yup.string()
       // .required('Field can not be empty')
       .matches(phoneNumberRules, {
@@ -112,12 +104,7 @@ const AddClientManuallyOverlay = ({
       setSubmitting(false);
     },
   });
-  const {
-    errors,
-    touched,
-    submitForm: submitForm1,
-    isSubmitting: isSubmitting1,
-  } = formik;
+  const { errors, touched, submitForm: submitForm1, isSubmitting: isSubmitting1 } = formik;
 
   //* FORMIK-STEP-2 *//
   const formikStep2 = useFormik({
@@ -170,9 +157,7 @@ const AddClientManuallyOverlay = ({
         formikStep2.values.selectedContactType == 8
           ? formikStep2.values.selectedContactSubtype
           : formikStep2.values.selectedContactType;
-      let status = formikStep2.values.selectedStatus
-        ? formikStep2.values.selectedStatus
-        : 1;
+      let status = formikStep2.values.selectedStatus ? formikStep2.values.selectedStatus : 1;
 
       const contactToAdd = {
         ...formik.values,
@@ -256,16 +241,9 @@ const AddClientManuallyOverlay = ({
                       formik.setFieldValue('email', e.target.value);
                     }}
                     value={formik.values.email}
-                    error={
-                      (errors.email && touched.email) ||
-                      existingContactEmailError
-                    }
+                    error={(errors.email && touched.email) || existingContactEmailError}
                     errorText={
-                      errors.email
-                        ? errors.email
-                        : existingContactEmailError
-                        ? existingContactEmailError
-                        : null
+                      errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null
                     }
                   />
 
@@ -273,9 +251,7 @@ const AddClientManuallyOverlay = ({
                     type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={(val) =>
-                      formik.setFieldValue('phone_number', val)
-                    }
+                    onChange={(val) => formik.setFieldValue('phone_number', val)}
                     value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
@@ -288,15 +264,9 @@ const AddClientManuallyOverlay = ({
                     label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
-                    handleSelect={(source) =>
-                      (formik.values.lead_source = source.name)
-                    }
+                    handleSelect={(source) => (formik.values.lead_source = source.name)}
                     initialSelect={formik.values.lead_source}
-                    placeHolder={
-                      formik.values.lead_source
-                        ? formik.values.lead_source
-                        : 'Choose'
-                    }
+                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                   <TagsInput
                     typeOfContact={openedTab}
@@ -327,32 +297,22 @@ const AddClientManuallyOverlay = ({
               options={options}
               label="What kind of contact is this for you?"
               selectedOption={formikStep2.values.selectedContactType}
-              setSelectedOption={(e) =>
-                setFieldValue2('selectedContactType', e)
-              }
+              setSelectedOption={(e) => setFieldValue2('selectedContactType', e)}
               className="mb-6"
-              error={
-                errors2.selectedContactType && touched2.selectedContactType
-              }
+              error={errors2.selectedContactType && touched2.selectedContactType}
               errorText={errors2.selectedContactType}
             />
             {formikStep2.values.selectedContactType == 8 ? (
               <>
-                <div className="text-gray7 mb-3 text-sm font-medium">
-                  What kind of vendor?
-                </div>
+                <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                 <div className="flex flex-wrap">
                   {vendorTypes.map((type) => (
                     <Chip
-                      selectedStatus={
-                        type.id == formikStep2.values.selectedContactSubtype
-                      }
+                      selectedStatus={type.id == formikStep2.values.selectedContactSubtype}
                       key={type.id}
                       label={type.name}
                       className="mr-3 mb-3"
-                      onClick={() =>
-                        setFieldValue2('selectedContactSubtype', type.id)
-                      }
+                      onClick={() => setFieldValue2('selectedContactSubtype', type.id)}
                     />
                   ))}
                 </div>

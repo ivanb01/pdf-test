@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import {
-  ChatAltIcon,
-  TagIcon,
-  UserCircleIcon,
-  PhoneIcon,
-  MailIcon,
-  ChatAlt2Icon,
-} from '@heroicons/react/solid';
+import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
 import { formatDateAgo } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
@@ -39,9 +32,7 @@ export default function Feeds({ contactId }) {
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
 
-  const activities = useSelector(
-    (state) => state.clientDetails.activityLogData,
-  );
+  const activities = useSelector((state) => state.clientDetails.activityLogData);
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
@@ -65,11 +56,7 @@ export default function Feeds({ contactId }) {
   const handleUpdateSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      await contactServices.updateContactActivity(
-        contactId,
-        activityId,
-        values,
-      );
+      await contactServices.updateContactActivity(contactId, activityId, values);
       setLoadingButton(false);
       handleCloseModal();
     } catch (error) {
@@ -97,9 +84,7 @@ export default function Feeds({ contactId }) {
     });
     setActivityId(activity.id);
     setActivityModal(true);
-    const found = activityTypes.find(
-      (element) => element.id == activity.type_of_activity_id,
-    );
+    const found = activityTypes.find((element) => element.id == activity.type_of_activity_id);
     setActivityTypeToEdit(found.name);
   };
 
@@ -181,20 +166,14 @@ export default function Feeds({ contactId }) {
                       <div className="min-w-0 flex-1">
                         <p className="mt-0.5 text-sm text-gray-500">
                           {/* Commented 6d ago */}
-                          {formatDateAgo(
-                            activityItem.updated_at
-                              ? activityItem.updated_at
-                              : activityItem.created_at,
-                          )}
+                          {formatDateAgo(activityItem.updated_at ? activityItem.updated_at : activityItem.created_at)}
                         </p>
 
                         <div className="mt-2 text-sm text-gray6">
                           <p>
                             {activityItem.description
                               ? activityItem.description
-                              : placeholderDescription(
-                                  activityItem.type_of_activity_id,
-                                )}
+                              : placeholderDescription(activityItem.type_of_activity_id)}
                           </p>
                         </div>
                       </div>
@@ -214,10 +193,7 @@ export default function Feeds({ contactId }) {
         </ul>
       </div>
       {activityModal && (
-        <Overlay
-          className="w-[632px]"
-          handleCloseOverlay={handleCloseModal}
-          title="Edit Activity">
+        <Overlay className="w-[632px]" handleCloseOverlay={handleCloseModal} title="Edit Activity">
           <div className="p-6 bg-white">
             <form onSubmit={formik.handleSubmit}>
               <Dropdown
@@ -229,9 +205,7 @@ export default function Feeds({ contactId }) {
                 // activeClasses="bg-lightBlue1"
                 handleSelect={(item) => handleChooseActivityType(item.id)}
                 initialSelect={activityTypeToEdit}
-                error={
-                  errors.type_of_activity_id && touched.type_of_activity_id
-                }
+                error={errors.type_of_activity_id && touched.type_of_activity_id}
                 errorText={errors.type_of_activity_id}
               />
               <TextArea
@@ -241,20 +215,11 @@ export default function Feeds({ contactId }) {
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}></TextArea>
+                errorText={errors.description}
+              ></TextArea>
               <div className="flex flex-row justify-end mt-6">
-                <Button
-                  className="mr-3"
-                  white
-                  label="Cancel"
-                  onClick={handleCloseModal}
-                />
-                <Button
-                  type="submit"
-                  primary
-                  label="Save"
-                  loading={loadingButton}
-                />
+                <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
+                <Button type="submit" primary label="Save" loading={loadingButton} />
               </div>
             </form>
           </div>

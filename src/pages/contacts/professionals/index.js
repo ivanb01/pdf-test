@@ -1,11 +1,7 @@
 import Layout from 'components/Layout';
 import Professionals from 'components/Contacts/professionals-content';
 import { useState, useEffect } from 'react';
-import {
-  setOpenedTab,
-  setOpenedSubtab,
-  setRefetchData,
-} from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { setContacts, updateContacts } from 'store/contacts/slice';
@@ -42,9 +38,7 @@ const index = () => {
 
     let professionals = {
       ...allContacts,
-      data: allContacts.data.filter((contact) =>
-        professionalsTypes.includes(contact.category_id),
-      ),
+      data: allContacts.data.filter((contact) => professionalsTypes.includes(contact.category_id)),
     };
     // getContacts(professionalsTypes).then((data) => {
     //   console.log(data.data, professionals);

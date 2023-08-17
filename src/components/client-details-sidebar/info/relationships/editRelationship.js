@@ -9,15 +9,8 @@ import { updateContactRelationship } from 'api/contacts';
 import { relationshipsTypes } from 'global/variables';
 import ContactInfo from 'components/shared/table/contact-info';
 
-const EditRelationshipModal = ({
-  handleClose,
-  contactId,
-  relationship,
-  handleFetchRelationships,
-}) => {
-  const [relationshipTypeToEdit, setRelationshipTypeToEdit] = useState(
-    relationship.relationship_name,
-  );
+const EditRelationshipModal = ({ handleClose, contactId, relationship, handleFetchRelationships }) => {
+  const [relationshipTypeToEdit, setRelationshipTypeToEdit] = useState(relationship.relationship_name);
   const handleRelationshipType = (relationshipType) => {
     setRelationshipTypeToEdit(relationshipType.name);
   };
@@ -29,11 +22,7 @@ const EditRelationshipModal = ({
       const relationshipEdit = {
         relationship_name: relationshipTypeToEdit,
       };
-      const { data } = await updateContactRelationship(
-        contactId,
-        relationship.relationship_id,
-        relationshipEdit,
-      );
+      const { data } = await updateContactRelationship(contactId, relationship.relationship_id, relationshipEdit);
       setLoadingButton(false);
     } catch (error) {
       console.log(error);
@@ -49,11 +38,7 @@ const EditRelationshipModal = ({
   };
 
   return (
-    <Overlay
-      title="Edit Relationship"
-      handleCloseOverlay={handleClose}
-      className="w-[632px]"
-    >
+    <Overlay title="Edit Relationship" handleCloseOverlay={handleClose} className="w-[632px]">
       <div className="p-5 pt-0">
         <div className="flex flex-col my-2">
           <div className="flex flex-row p-3 bg-gray-50 group">
@@ -72,9 +57,7 @@ const EditRelationshipModal = ({
                   options={relationshipsTypes}
                   className="mb-1 w-52"
                   activeClasses="bg-lightBlue1"
-                  handleSelect={(relationshipType) =>
-                    handleRelationshipType(relationshipType)
-                  }
+                  handleSelect={(relationshipType) => handleRelationshipType(relationshipType)}
                   initialSelect={relationshipTypeToEdit}
                 ></Dropdown>
               </div>
@@ -83,18 +66,8 @@ const EditRelationshipModal = ({
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-row justify-end mt-5">
-              <Button
-                className="mr-3 "
-                white
-                label="Cancel"
-                onClick={handleClose}
-              />
-              <Button
-                type="submit"
-                primary
-                label="Save"
-                loading={loadingButton}
-              />
+              <Button className="mr-3 " white label="Cancel" onClick={handleClose} />
+              <Button type="submit" primary label="Save" loading={loadingButton} />
             </div>
           </form>
         </div>

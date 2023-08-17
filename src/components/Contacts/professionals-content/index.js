@@ -75,11 +75,7 @@ const buttons = [
   },
 ];
 
-const Professionals = ({
-  setShowAddContactOverlay,
-  onSearch,
-  handleCardEdit,
-}) => {
+const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({});
@@ -90,9 +86,7 @@ const Professionals = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(
-    contacts.length,
-  );
+  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
 
   // useEffect(() => {
   //   const delayDebounceFn = setTimeout(() => {
@@ -120,24 +114,12 @@ const Professionals = ({
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
-          filterLastCommuncationDate(
-            contact[key],
-            filters[key][0],
-            contact.category_1,
-            contact.status_2,
-          ),
+          filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
         );
       } else if (key == 'is_in_campaign') {
-        let booleanFilter = filters[key].map(
-          (filter) => campaignFilterMeaning[filter],
-        );
-        contactsState = contactsState.filter((contact) =>
-          booleanFilter.includes(contact[key]),
-        );
-      } else if (
-        key == 'import_source' &&
-        filters['import_source'] == 'Manually Added'
-      ) {
+        let booleanFilter = filters[key].map((filter) => campaignFilterMeaning[filter]);
+        contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
+      } else if (key == 'import_source' && filters['import_source'] == 'Manually Added') {
         contactsState = contactsState.filter(
           (contact) =>
             contact.import_source != 'Google Contacts' &&
@@ -147,11 +129,7 @@ const Professionals = ({
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
-            return contact[key].reduce(
-              (accumulator, current) =>
-                accumulator || filters[key].includes(current),
-              false,
-            );
+            return contact[key].reduce((accumulator, current) => accumulator || filters[key].includes(current), false);
           }
           return filters[key].includes(contact[key]);
         });
@@ -161,46 +139,38 @@ const Professionals = ({
     dispatch(updateContacts(contactsState));
   };
 
-  const handleFilterClick =
-    (selectedFilter, filterType, isOnlyOneFilter) => () => {
-      let filtersCopy = { ...filters };
+  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    let filtersCopy = { ...filters };
 
-      if (filtersCopy[filterType]) {
-        if (filtersCopy[filterType].includes(selectedFilter)) {
-          filtersCopy[filterType] = filtersCopy[filterType].filter(
-            (element) => element !== selectedFilter,
-          );
-          if (filtersCopy[filterType].length < 1) {
-            delete filtersCopy[filterType];
-          }
-        } else {
-          if (isOnlyOneFilter) {
-            filtersCopy[filterType] = [selectedFilter];
-          } else {
-            filtersCopy[filterType] = [
-              ...filtersCopy[filterType],
-              selectedFilter,
-            ];
-          }
+    if (filtersCopy[filterType]) {
+      if (filtersCopy[filterType].includes(selectedFilter)) {
+        filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
+        if (filtersCopy[filterType].length < 1) {
+          delete filtersCopy[filterType];
         }
       } else {
-        filtersCopy[filterType] = [selectedFilter];
+        if (isOnlyOneFilter) {
+          filtersCopy[filterType] = [selectedFilter];
+        } else {
+          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+        }
       }
+    } else {
+      filtersCopy[filterType] = [selectedFilter];
+    }
 
-      // console.log('filters', filtersCopy)
-      setFilters(filtersCopy);
+    // console.log('filters', filtersCopy)
+    setFilters(filtersCopy);
 
-      if (Object.keys(filtersCopy).length === 0) {
-        setFiltersCleared(true);
-      }
-    };
+    if (Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
+    }
+  };
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...filters };
 
-    filtersCopy[filterType] = filtersCopy[filterType].filter(
-      (element) => element !== filterToRemove,
-    );
+    filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== filterToRemove);
     if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
     }
@@ -226,11 +196,7 @@ const Professionals = ({
               {professionalsStatuses[openedSubtab].statusMainTitle}
             </Text>
             <div className="flex items-center justify-self-end">
-              <Search
-                placeholder="Search"
-                className="mr-4 text-sm"
-                onInput={(event) => onSearch(event.target.value)}
-              />
+              <Search placeholder="Search" className="mr-4 text-sm" onInput={(event) => onSearch(event.target.value)} />
               <Button
                 secondary
                 leftIcon={<FilterList className="w-5 h-5" />}
@@ -268,14 +234,10 @@ const Professionals = ({
                   filters[key].map((filter, i) => (
                     <Chip
                       closable
-                      removeChip={(filterToRemove) =>
-                        removeFilter(filterToRemove, key)
-                      }
+                      removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={
-                        filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter
-                      }
+                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
                       className="mr-1"
                     />
                   )),
@@ -286,7 +248,8 @@ const Professionals = ({
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}>
+                }}
+              >
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -316,17 +279,10 @@ const Professionals = ({
           //     )}
           //   </div>
           // </SimpleBar> */}
-        <div
-          className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 159px)' }}>
-          <div
-            className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 159px)' }}>
+          <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-              <Table
-                tableFor="professionals"
-                categoryType="professionals"
-                handleCardEdit={handleCardEdit}
-              />
+              <Table tableFor="professionals" categoryType="professionals" handleCardEdit={handleCardEdit} />
             </SimpleBar>
           </div>
         </div>
@@ -357,13 +313,9 @@ const Professionals = ({
                 }
               /> */}
           </>
-        }>
-        <Accordion
-          tabs={tabs}
-          handleClick={handleFilterClick}
-          activeSelections={filters}
-          defaultOpen
-        />
+        }
+      >
+        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
       </SlideOver>
     </>
   );

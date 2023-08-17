@@ -19,9 +19,7 @@ const IntroductionOverlay = ({
               {headerImg && <Image src={headerImg} alt="header-img" />}
             </div>
             <div className="text-center sm:mt-0">
-              <Dialog.Title
-                as="h3"
-                className="text-lg leading-6 font-medium text-gray-900">
+              <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                 {dialogTitle}
               </Dialog.Title>
               <div className="mt-2 px-5">
@@ -29,9 +27,7 @@ const IntroductionOverlay = ({
               </div>
             </div>
           </div>
-          <div className="flex justify-between mt-5 sm:mt-6 sm:gap-3 sm:grid-flow-row-dense">
-            {children}
-          </div>
+          <div className="flex justify-between mt-5 sm:mt-6 sm:gap-3 sm:grid-flow-row-dense">{children}</div>
         </>
       )}
     </Overlay>
