@@ -20,19 +20,33 @@ import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 
 const MainMenu = ({
-                    menuItems = [{
-                      id: 0, name: 'Contacts', url: '/contacts/clients',
-                    }, {
-                      id: 1, name: 'Campaigns', url: '/campaigns',
-                    }, {
-                      id: 2, name: 'Reports', url: '/reports',
-                    }], className, fixed,
-                  }) => {
+  menuItems = [
+    {
+      id: 0,
+      name: 'Contacts',
+      url: '/contacts/clients',
+    },
+    {
+      id: 1,
+      name: 'Campaigns',
+      url: '/campaigns',
+    },
+    {
+      id: 2,
+      name: 'Reports',
+      url: '/reports',
+    },
+  ],
+  className,
+  fixed,
+}) => {
   const router = useRouter();
   const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
-  const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
+  const skippedEmptyState = useSelector(
+    (state) => state.global.skippedEmptyState,
+  );
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const count = useSelector((state) => state.global.count);
   const [openGlobalSearch, setOpenGlobalSearch] = useState(false);
@@ -45,12 +59,14 @@ const MainMenu = ({
     router.push('/authentication/sign-in');
   };
   useEffect(() => {
-    console.log(router.pathname,"pathname")
+    console.log(router.pathname, 'pathname');
   }, []);
 
   useEffect(() => {
     if (!allContacts || refetchData) {
-      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27').then((data) => {
+      getContacts(
+        '1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27',
+      ).then((data) => {
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
           router.push({
@@ -63,64 +79,92 @@ const MainMenu = ({
   }, [count, allContacts, refetchData]);
 
   const showUncategorizedButton = () => {
-    return (allContacts && allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length > 0);
+    return (
+      allContacts &&
+      allContacts.filter((contact) => contact.category_1 == 'Uncategorized')
+        .length > 0
+    );
   };
 
   const classNames = (...classes) => {
     return classes.filter(Boolean).join(' ');
   };
 
-  return (<div
-    className={`${fixed && 'fixed top-0 left-0 right-0'} main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
-    <div className='flex items-center'>
-      <div className='menu-logo mr-6 flex items-center'>
-        <Image
-          src={oneLineLogo}
-          alt=''
-          onClick={() => Router.push('/contacts/clients')}
-          className='cursor-pointer'
-        />
+  return (
+    <div
+      className={`${
+        fixed && 'fixed top-0 left-0 right-0'
+      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
+      <div className="flex items-center">
+        <div className="menu-logo mr-6 flex items-center">
+          <Image
+            src={oneLineLogo}
+            alt=""
+            onClick={() => Router.push('/contacts/clients')}
+            className="cursor-pointer"
+          />
+        </div>
+        <div className="menu-links">
+          <ul className="flex items-center">
+            {menuItems.map((item, index) => {
+              return (
+                <MenuLink
+                  key={item.id}
+                  className={`mr-5 ${
+                    router.pathname.split('/')[1] == item.url.split('/')[1]
+                      ? 'active'
+                      : ''
+                  }`}
+                  onClick={() => router.push(item.url)}>
+                  {item.name}
+                </MenuLink>
+              );
+            })}
+          </ul>
+        </div>
       </div>
-      <div className='menu-links'>
-        <ul className='flex items-center'>
-          {menuItems.map((item, index) => {
-            return (<MenuLink
-              key={item.id}
-              className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-              onClick={() => router.push(item.url)}>
-              {item.name}
-            </MenuLink>);
-          })}
-        </ul>
-      </div>
-    </div>
-    <div className='flex items-center'>
-      {allContacts && allContacts.length > 0 && router.pathname.startsWith("/contacts/clients") && <SearchIcon
-        className='h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer'
-        onClick={() => {
-          setOpenGlobalSearch(true);
-        }} />}
-      {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
-      {showUncategorizedButton() && (<Button
-        label='Categorize Contacts'
-        narrow
-        className='mr-4 ml-4'
-        onClick={() => router.push({
-          pathname: '/contacts/uncategorized', query: { categorize: true },
-        })}
-      />)}
-      <div className=''>
-        <button
-          label='Need Help?'
-          className=' text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white'
-          onClick={() => {
-            FreshworksWidget('open');
-          }}>
-          <ContactSupport className='h-[20px]' />
-          {/* Need help? */}
-        </button>
-      </div>
-      {/* <Button
+      <div className="flex items-center">
+        {allContacts &&
+          allContacts.length > 0 &&
+          router.pathname.startsWith('/contacts/clients') && (
+            <SearchIcon
+              className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
+              onClick={() => {
+                setOpenGlobalSearch(true);
+              }}
+            />
+          )}
+        {openGlobalSearch && (
+          <GlobalSearch
+            open={openGlobalSearch}
+            onClose={() => setOpenGlobalSearch(false)}
+          />
+        )}
+        {showUncategorizedButton() && (
+          <Button
+            label="Categorize Contacts"
+            narrow
+            className="mr-4 ml-4"
+            onClick={() =>
+              router.push({
+                pathname: '/contacts/uncategorized',
+                query: { categorize: true },
+              })
+            }
+          />
+        )}
+        <div className="">
+          <button
+            label="Need Help?"
+            className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
+            onClick={() => {
+              FreshworksWidget('open');
+            }}>
+            <ContactSupport className="h-[20px]" />
+            {/* Need help? */}
+          </button>
+        </div>
+        {/* <Button
           label="Import Google Contacts"
           className="mr-4 "
           onClick={() =>
@@ -130,72 +174,79 @@ const MainMenu = ({
             })
           }
         /> */}
-      <Menu as='div' className='relative inline-block text-left'>
-        <div>
-          <Menu.Button className=''>
-            <a href='#'>
-              <img
-                className='inline-block h-8 w-8 rounded-full'
-                src='https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
-                alt=''
-              />
-            </a>
-          </Menu.Button>
-        </div>
-        <Transition
-          as={Fragment}
-          enter='transition ease-out duration-100'
-          enterFrom='transform opacity-0 scale-95'
-          enterTo='transform opacity-100 scale-100'
-          leave='transition ease-in duration-75'
-          leaveFrom='transform opacity-100 scale-100'
-          leaveTo='transform opacity-0 scale-95'>
-          <Menu.Items
-            className='absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
-            <div className='py-5 px-4 flex items-center'>
-              <div className='mr-3'>
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <Menu.Button className="">
+              <a href="#">
                 <img
-                  className='inline-block h-10 w-10 rounded-full'
-                  src='https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
-                  alt=''
+                  className="inline-block h-8 w-8 rounded-full"
+                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                  alt=""
                 />
-              </div>
-              <div className='max-w-[165px] w-full'>
-                {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}
-                <p className='truncate text-sm font-medium text-gray4'>
-                  {user?.email ? user?.email : user}
-                </p>
-              </div>
-            </div>
-            <div className='py-1'>
-              <Menu.Item>
-                {({ active }) => (<a
-                  className={' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'}
-                  onClick={() => Router.push('/my-profile')}>
-                  <Settings
-                    className='text-gray4 mr-3 h-5 w-5'
-                    aria-hidden='true'
+              </a>
+            </Menu.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95">
+            <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="py-5 px-4 flex items-center">
+                <div className="mr-3">
+                  <img
+                    className="inline-block h-10 w-10 rounded-full"
+                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                    alt=""
                   />
-                  Settings
-                </a>)}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (<a
-                  href='#'
-                  className={'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'}
-                  onClick={handleSignOut}>
-                  <Logout
-                    className='text-gray4 mr-3 h-5 w-5'
-                    aria-hidden='true'
-                  />
-                  Logout
-                </a>)}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-      {/* <a href="#" onClick={() => Router.push('/my-profile')}>
+                </div>
+                <div className="max-w-[165px] w-full">
+                  {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}
+                  <p className="truncate text-sm font-medium text-gray4">
+                    {user?.email ? user?.email : user}
+                  </p>
+                </div>
+              </div>
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      className={
+                        ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
+                      }
+                      onClick={() => Router.push('/my-profile')}>
+                      <Settings
+                        className="text-gray4 mr-3 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                      Settings
+                    </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={
+                        'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
+                      }
+                      onClick={handleSignOut}>
+                      <Logout
+                        className="text-gray4 mr-3 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                      Logout
+                    </a>
+                  )}
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
+        {/* <a href="#" onClick={() => Router.push('/my-profile')}>
           <img
             className="inline-block h-8 w-8 rounded-full"
             src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
@@ -205,8 +256,9 @@ const MainMenu = ({
         <button className="text-white ml-2" onClick={handleSignOut}>
           Sign out
         </button> */}
+      </div>
     </div>
-  </div>);
+  );
 };
 
 export default MainMenu;
