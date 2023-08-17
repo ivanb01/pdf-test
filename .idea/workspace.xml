@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="add printWidth 120">
-      <change beforePath="$PROJECT_DIR$/src/components/GlobalSearch/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalSearch/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/menu/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/menu/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +37,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "f/erza/GlobalSearch",
+    "git-widget-placeholder": "development",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

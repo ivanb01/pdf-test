@@ -86,8 +86,7 @@ const MainMenu = ({
     <div
       className={`${
         fixed && 'fixed top-0 left-0 right-0'
-      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}
-    >
+      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
           <Image src={oneLineLogo} alt="" onClick={() => Router.push('/contacts/clients')} className="cursor-pointer" />
@@ -99,8 +98,7 @@ const MainMenu = ({
                 <MenuLink
                   key={item.id}
                   className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-                  onClick={() => router.push(item.url)}
-                >
+                  onClick={() => router.push(item.url)}>
                   {item.name}
                 </MenuLink>
               );
@@ -109,7 +107,7 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
-        {allContacts && allContacts.length > 0 && router.pathname.startsWith('/contacts/clients') && (
+        {allContacts && allContacts.length > 0 && (
           <SearchIcon
             className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
             onClick={() => {
@@ -137,8 +135,7 @@ const MainMenu = ({
             className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
               FreshworksWidget('open');
-            }}
-          >
+            }}>
             <ContactSupport className="h-[20px]" />
             {/* Need help? */}
           </button>
@@ -172,8 +169,7 @@ const MainMenu = ({
             enterTo="transform opacity-100 scale-100"
             leave="transition ease-in duration-75"
             leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-          >
+            leaveTo="transform opacity-0 scale-95">
             <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
@@ -195,8 +191,7 @@ const MainMenu = ({
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => Router.push('/my-profile')}
-                    >
+                      onClick={() => Router.push('/my-profile')}>
                       <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>
@@ -207,8 +202,7 @@ const MainMenu = ({
                     <a
                       href="#"
                       className={'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'}
-                      onClick={handleSignOut}
-                    >
+                      onClick={handleSignOut}>
                       <Logout className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Logout
                     </a>
