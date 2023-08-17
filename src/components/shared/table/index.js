@@ -1004,7 +1004,7 @@ const Table = ({
         </tbody>
         {addActivityPopup && (
           <AddActivity
-            client={contactToModify}
+            clientId={contactToModify.id}
             className="min-w-[550px]"
             title={`Add Activity`}
             setAddActivityPopup={setAddActivityPopup}
@@ -1275,7 +1275,7 @@ const Table = ({
         </tbody>
         {addActivityPopup && (
           <AddActivity
-            client={contactToModify}
+            clientId={contactToModify.id}
             className="min-w-[550px]"
             title={`Add Activity`}
             setAddActivityPopup={setAddActivityPopup}

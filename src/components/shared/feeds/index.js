@@ -16,6 +16,7 @@ import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
+import { toast } from 'react-hot-toast';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -117,6 +118,7 @@ export default function Feeds({ contactId }) {
     try {
       await contactServices.deleteContactActivity(contactId, activity.id);
       dispatch(setRefetchData(true));
+      toast.success('Activity log was deleted successfully!');
     } catch (error) {
       console.log(error);
     }
