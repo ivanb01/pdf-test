@@ -231,20 +231,14 @@ export default function Notes({ contactId }) {
                               </Text>
 
                               <div className={`w-full h-[84px] relative `}>
-                                <SimpleBar
-                                  autoHide
-                                  style={{ maxHeight: '100%' }}>
+                                <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                                   <div className="text-sm font-normal text-gray4 flex items-start">
                                     {note?.description}
                                   </div>
                                 </SimpleBar>
                               </div>
                               <Text className="text-gray4 text-xs mt-2">
-                                {formatDateLL(
-                                  note.updated_at
-                                    ? note.updated_at
-                                    : note.created_at,
-                                )}
+                                {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
                               </Text>
                             </div>
                             <div className="flex">
@@ -299,18 +293,8 @@ export default function Notes({ contactId }) {
                 error={errors.description && touched.description}
                 errorText={errors.description}></TextArea>
               <div className="flex flex-row justify-end mt-6">
-                <Button
-                  className="mr-3"
-                  white
-                  label="Cancel"
-                  onClick={handleCloseModal}
-                />
-                <Button
-                  type="submit"
-                  primary
-                  label="Save"
-                  loading={loadingButton}
-                />
+                <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
+                <Button type="submit" primary label="Save" loading={loadingButton} />
               </div>
             </form>
           </div>

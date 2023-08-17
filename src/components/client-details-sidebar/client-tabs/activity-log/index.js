@@ -158,11 +158,11 @@ export default function ActivityLog({ contactId, source }) {
             (activityLogData?.length == 0 ? (
               <div className="flow-root bg-white h-auto py-8">
                 <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
-                  <Image src={noActivitLog}></Image>
-                  <Text h3 className="text-gray7 mb-2 mt-4 text-center">
+                  <Image height={40} src={noActivitLog}></Image>
+                  <Text h3 className="text-gray7 mb-2 mt-4 text-center text-sm">
                     There is no activity logged for this contact
                   </Text>
-                  <Text p className="text-gray4 relative text-center">
+                  <Text p className="text-gray4 relative text-center text-xs">
                     All activities related with this contact will be shown here.
                   </Text>
                 </div>
