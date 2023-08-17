@@ -141,14 +141,8 @@ export default function Notes({ contactId }) {
   ];
 
   const fetchContactNotes = async () => {
-    // const { data } = await contactServices.getContactNotes(contactId, {
-    //   search_term: searchTerm,
-    // });
-    // const { data } = await contactServices.getContactNotes(contactId);
-
-    // console.log('all notes', activityLogData);
-    setNotes(notesData);
-    setNotesOriginal(notesData);
+    setNotes(notesData.data);
+    setNotesOriginal(notesData.data);
   };
 
   useEffect(() => {
