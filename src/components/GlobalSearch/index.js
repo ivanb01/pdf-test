@@ -11,27 +11,16 @@ const GlobalSearch = ({ open, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const contactsData = useSelector((state) => state.contacts.allContacts.data);
   const router = useRouter();
-  const uniqueCategories = [
-    ...new Set(contactsData.map((item) => item.category_1)),
-  ];
+  const uniqueCategories = [...new Set(contactsData.map((item) => item.category_1))];
   const cancelButtonRef = useRef(null);
 
   const renderSearchResults = () => {
     return uniqueCategories.map((category) => {
-      const filteredItems = contactsData.filter(
-        (d) =>
-          (d.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            d.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            d.last_name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          d.category_1 === category,
-      );
-
+      const filteredItems = searchItems(category);
       if (filteredItems.length > 0) {
         return (
           <div key={category}>
-            <h2 className="text-xs leading-5 font-medium py-2.5 px-[13px] bg-gray-50">
-              {category.toUpperCase()}
-            </h2>
+            <h2 className="text-xs leading-5 font-medium py-2.5 px-[13px] bg-gray-50">{category.toUpperCase()}</h2>
             <ul className="bg-white z-10">
               {filteredItems.map((item) => (
                 <li
@@ -53,9 +42,7 @@ const GlobalSearch = ({ open, onClose }) => {
                   ) : (
                     <span className="inline-flex h-6 w-6  items-center justify-center rounded-full bg-gray-400">
                       <span className="text-sm font-medium leading-none text-white">
-                        {getInitials(
-                          item.first_name + ' ' + item.last_name,
-                        ).toUpperCase()}
+                        {getInitials(item.first_name + ' ' + item.last_name).toUpperCase()}
                       </span>
                     </span>
                   )}
@@ -63,9 +50,7 @@ const GlobalSearch = ({ open, onClose }) => {
                     <h5 className="text-sm leading-5 font-normal">
                       {item.first_name} {item.last_name}
                     </h5>
-                    <h6 className="text-xs leading-4 font-normal text-gray-500">
-                      {item.email}
-                    </h6>
+                    <h6 className="text-xs leading-4 font-normal text-gray-500">{item.email}</h6>
                   </div>
                   <div className="px-1.5 py-1 rounded bg-gray-100">
                     <h1 className="text-xs font-medium text-gray-800 font-sf-pro-text uppercase leading-4">
@@ -83,24 +68,29 @@ const GlobalSearch = ({ open, onClose }) => {
     });
   };
 
+  const searchItems = (category) => {
+    return contactsData.filter(
+      (d) =>
+        searchTerm.split(' ').every((word) => {
+          const lowercaseWord = word.toLowerCase();
+          return (
+            d.email.toLowerCase().includes(lowercaseWord) ||
+            d.first_name.toLowerCase().includes(lowercaseWord) ||
+            d.last_name.toLowerCase().includes(lowercaseWord)
+          );
+        }) && d.category_1 === category,
+    );
+  };
   const renderNoResultsMessage = () => {
     const noResults = uniqueCategories.every((category) => {
-      const filteredItems = contactsData.filter(
-        (d) =>
-          (d.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            d.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            d.last_name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          d.category_1 === category,
-      );
+      const filteredItems = searchItems(category);
       return filteredItems.length === 0;
     });
 
     if (searchTerm.length > 0 && noResults) {
       return (
         <div className="p-3 bg-white text-center h-[200px] flex flex-col items-center justify-center rounded-lg">
-          <h6 className="text-sm leading-5 font-medium text-gray-900 mb-[11px]">
-            No results found
-          </h6>
+          <h6 className="text-sm leading-5 font-medium text-gray-900 mb-[11px]">No results found</h6>
           <p className="text-sm leading-5 font-normal text-gray-600">
             We can’t find anything with that term at the moment,
             <br />
@@ -114,12 +104,7 @@ const GlobalSearch = ({ open, onClose }) => {
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative"
-        initialFocus={cancelButtonRef}
-        onClose={onClose}
-        style={{ zIndex: '9999' }}>
+      <Dialog as="div" className="relative" initialFocus={cancelButtonRef} onClose={onClose} style={{ zIndex: '9999' }}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -130,9 +115,7 @@ const GlobalSearch = ({ open, onClose }) => {
           leaveTo="opacity-0">
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-2.5px" />
         </Transition.Child>
-        <div
-          className="fixed inset-0 overflow-y-auto"
-          style={{ marginTop: '139px' }}>
+        <div className="fixed inset-0 overflow-y-auto" style={{ marginTop: '139px' }}>
           <div className="flex justify-center text-center">
             <Transition.Child
               as={Fragment}
