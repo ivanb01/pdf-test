@@ -4,6 +4,8 @@ import { SearchIcon } from '@heroicons/react/outline';
 import { useSelector } from 'react-redux';
 import CancelSharpIcon from '@mui/icons-material/CancelSharp';
 import { useRouter } from 'next/router';
+import SimpleBar from 'simplebar-react';
+import { getInitials } from '@global/functions';
 
 const GlobalSearch = ({ open, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,11 +44,21 @@ const GlobalSearch = ({ open, onClose }) => {
                     })
                   }
                   className="py-2 px-3 flex gap-3 justify-between items-center hover:bg-lightBlue1 cursor-pointer">
-                  <img
-                    className="inline-block h-6 w-6 rounded-full"
-                    src={item.profile_image_path}
-                    alt={item.first_name}
-                  />
+                  {item.profile_image_path ? (
+                    <img
+                      className="inline-block h-6 w-6 rounded-full"
+                      src={item.profile_image_path}
+                      alt={item.first_name}
+                    />
+                  ) : (
+                    <span className="inline-flex h-6 w-6  items-center justify-center rounded-full bg-gray-400">
+                      <span className="text-sm font-medium leading-none text-white">
+                        {getInitials(
+                          item.first_name + ' ' + item.last_name,
+                        ).toUpperCase()}
+                      </span>
+                    </span>
+                  )}
                   <div className="flex-1">
                     <h5 className="text-sm leading-5 font-normal">
                       {item.first_name} {item.last_name}
@@ -153,11 +165,15 @@ const GlobalSearch = ({ open, onClose }) => {
                   )}
                 </div>
                 {searchTerm.length > 0 && (
-                  <div
-                    className="rounded-lg bg-white overflow-scroll"
+                  // <div
+                  //   className="rounded-lg bg-white overflow-y-auto overflow-x-hidden"
+                  //   style={{ marginTop: '5px', maxHeight: '276px' }}>
+                  <SimpleBar
+                    className="rounded-lg bg-white overflow-y-auto overflow-x-hidden"
                     style={{ marginTop: '5px', maxHeight: '276px' }}>
                     {renderSearchResults()}
-                  </div>
+                  </SimpleBar>
+                  // </div>
                 )}
                 {searchTerm.length > 0 && renderNoResultsMessage()}
               </Dialog.Panel>
