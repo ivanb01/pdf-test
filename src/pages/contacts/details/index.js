@@ -61,7 +61,10 @@ export default function Details() {
       setLoadingTabs(false);
 
       if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
-        getAIData(contact.id).then((result) => setAIData(result.data), setShowReviewOverlay(true));
+        getAIData(contact.id).then((result) => {
+          setAIData(result.data);
+          setShowReviewOverlay(true);
+        });
       }
 
       getContactCampaign(id)

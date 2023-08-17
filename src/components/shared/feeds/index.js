@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
 import { formatDateAgo } from 'global/functions';
 import Text from 'components/shared/text';
@@ -87,6 +87,14 @@ export default function Feeds({ contactId }) {
     const found = activityTypes.find((element) => element.id == activity.type_of_activity_id);
     setActivityTypeToEdit(found.name);
   };
+
+  useEffect(() => {
+    if (activityModal) {
+      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
+    } else {
+      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
+    }
+  }, [activityModal]);
 
   const placeholderDescription = (activity_type) => {
     if (activity_type == 1) {
@@ -215,8 +223,7 @@ export default function Feeds({ contactId }) {
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}
-              ></TextArea>
+                errorText={errors.description}></TextArea>
               <div className="flex flex-row justify-end mt-6">
                 <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
                 <Button type="submit" primary label="Save" loading={loadingButton} />
