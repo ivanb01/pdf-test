@@ -136,7 +136,7 @@ export default function Info({ client }) {
               noOptionChange={isContactInCampaign}
             />
           )}
-          {client.import_source == 'GmailAI' && <InfoCard label="Import Source" content={client.import_source} />}
+          <InfoCard label="Import Source" content={client.import_source} />
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (

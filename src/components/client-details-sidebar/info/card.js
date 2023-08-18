@@ -26,7 +26,8 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
             <Text className={`text-gray7`} p>
               {label == 'Import Source' ? (
                 <div className="flex items-center">
-                  <AIChip className="mr-1" /> {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
+                  {content == 'GmailAI' && <AIChip reviewed={true} className="mr-1" />}
+                  {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
                 </div>
               ) : (
                 content
