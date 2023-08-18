@@ -1,3 +1,4 @@
+import AIChip from '@components/shared/chip/ai-chip';
 import Chip from 'components/shared/chip';
 import Text from 'components/shared/text';
 
@@ -12,18 +13,24 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
           content.map((chip) => <Chip notClickable secondary key={chip} label={chip} />)
         ) : iconContent ? (
           <div className="flex flex-row items-center">
-            <Text className="text-gray7 pl-3" p>
+            <Text className="text-gray7" p>
               {content}
             </Text>
             {iconContent}
           </div>
         ) : (
-          <div className="flex items-center pl-3">
+          <div className="flex items-center">
             {showDot >= 0 && (
               <span className={`block h-2 w-2 mr-1 rounded-full ${showDot ? 'bg-green5' : 'bg-red3'}`} />
             )}
-            <Text className="text-gray7 italic" p>
-              {content}
+            <Text className={`text-gray7`} p>
+              {label == 'Import Source' ? (
+                <div className="flex items-center">
+                  <AIChip className="mr-1" /> {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
+                </div>
+              ) : (
+                content
+              )}
             </Text>
           </div>
         )}
