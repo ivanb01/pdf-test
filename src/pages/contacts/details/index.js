@@ -63,7 +63,7 @@ export default function Details() {
       });
   };
   const getAISummary = () => {
-    getAIData(contact.id)
+    getAIData(id)
       .then((result) => {
         setAIData(result.data);
         setShowReviewOverlay(true);
@@ -73,19 +73,15 @@ export default function Details() {
       });
   };
   const fetchContact = async () => {
-    try {
-      let contact = contacts.find((contact) => contact.id == id);
-      setContact(contact);
-      await getActivityLog();
-      setLoadingTabs(false);
-      if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
-        getAISummary();
-      }
-      getCampaigns();
-      getNotes();
-    } catch (error) {
-      toast.error('Error fetching all', error);
+    let contactData = contacts.find((contact) => contact.id == id);
+    setContact(contactData);
+    if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
+      getAISummary();
     }
+    await getActivityLog();
+    setLoadingTabs(false);
+    getCampaigns();
+    getNotes();
   };
 
   useEffect(() => {

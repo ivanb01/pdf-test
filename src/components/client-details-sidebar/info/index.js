@@ -136,7 +136,7 @@ export default function Info({ client }) {
               noOptionChange={isContactInCampaign}
             />
           )}
-          <InfoCard label="Import Source" content={client.import_source} />
+          <InfoCard label="Import Source" content={client.import_source} client={client} />
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
