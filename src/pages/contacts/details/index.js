@@ -8,7 +8,7 @@ import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { setRefetchData } from 'store/global/slice';
+import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
 import { setActivityLogData, setNotesData, setCampaignsData } from 'store/clientDetails/slice';
@@ -22,6 +22,7 @@ export default function Details() {
   const dispatch = useDispatch();
   const { id } = router.query;
 
+  const refetchPart = useSelector((state) => state.global.refetchPart);
   const refetchData = useSelector((state) => state.global.refetchData);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   // const contact = contacts.find((contact) => contact.id == id);
@@ -34,45 +35,65 @@ export default function Details() {
 
   const localTabs = tabs(id, contact);
 
+  const getActivityLog = async () => {
+    const activityLogResponse = await getContactActivities(id).catch((error) => {
+      toast.error('Error fetching activity log: ', error);
+    });
+    const activityLogData = activityLogResponse.data.data;
+    dispatch(setActivityLogData(activityLogData));
+  };
+  const getNotes = () => {
+    getContactNotes(id)
+      .then((notesResponse) => {
+        const notesData = notesResponse.data;
+        dispatch(setNotesData(notesData));
+      })
+      .catch((error) => {
+        toast.error('Error fetching notes:', error);
+      });
+  };
+  const getCampaigns = () => {
+    getContactCampaign(id)
+      .then((campaignsResponse) => {
+        const campaignsData = campaignsResponse.data;
+        dispatch(setCampaignsData(campaignsData));
+      })
+      .catch((error) => {
+        toast.error('Error fetching campaigns:', error);
+      });
+  };
+  const getAISummary = () => {
+    getAIData(contact.id)
+      .then((result) => {
+        setAIData(result.data);
+        setShowReviewOverlay(true);
+      })
+      .catch((error) => {
+        toast.error('Error fetching ai summary:', error);
+      });
+  };
   const fetchContact = async () => {
     try {
       let contact = contacts.find((contact) => contact.id == id);
       setContact(contact);
-
-      // Fetch activityLog
-      const activityLogResponse = await getContactActivities(id);
-      const activityLogData = activityLogResponse.data.data;
-      dispatch(setActivityLogData(activityLogData));
+      await getActivityLog();
       setLoadingTabs(false);
-
       if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
-        getAIData(contact.id).then((result) => {
-          setAIData(result.data);
-          setShowReviewOverlay(true);
-        });
+        getAISummary();
       }
-
-      getContactCampaign(id)
-        .then((campaignsResponse) => {
-          const campaignsData = campaignsResponse.data;
-          dispatch(setCampaignsData(campaignsData));
-        })
-        .catch((error) => {
-          toast.error('Error fetching campaigns:', error);
-        });
-
-      getContactNotes(id)
-        .then((notesResponse) => {
-          const notesData = notesResponse.data;
-          dispatch(setNotesData(notesData));
-        })
-        .catch((error) => {
-          toast.error('Error fetching notes:', error);
-        });
+      getCampaigns();
+      getNotes();
     } catch (error) {
-      toast.error('Error fetchign activity log', error);
+      toast.error('Error fetching all', error);
     }
   };
+
+  useEffect(() => {
+    if (refetchPart == 'notes') {
+      getNotes();
+      dispatch(setRefetchPart(null));
+    }
+  }, [refetchPart]);
 
   useEffect(() => {
     if (refetchData) {
