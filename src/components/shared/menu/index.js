@@ -15,7 +15,7 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setRefetchData } from '@store/global/slice';
+import { setCount, setRefetchCount, setRefetchData } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 
@@ -41,6 +41,7 @@ const MainMenu = ({
   fixed,
 }) => {
   const router = useRouter();
+  const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
@@ -61,18 +62,37 @@ const MainMenu = ({
   }, []);
 
   useEffect(() => {
-    if (!allContacts || refetchData) {
-      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27').then((data) => {
+    const fetchContacts = async () => {
+      try {
+        const data = await getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27');
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
           router.push({
             pathname: '/contacts/no-contact',
           });
         }
-      });
-      if (refetchData == true) dispatch(setRefetchData(false));
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (refetchData === true) dispatch(setRefetchData(false));
+    };
+    console.log('allContacts', allContacts);
+    if (!allContacts?.length || refetchData) {
+      fetchContacts();
     }
-  }, [count, allContacts, refetchData]);
+  }, [allContacts, refetchData]);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      getCount().then((data) => {
+        dispatch(setCount(data.data));
+      });
+    };
+    if (refetchData) {
+      fetchCount();
+    }
+  }, [refetchData]);
 
   const showUncategorizedButton = () => {
     return allContacts && allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length > 0;

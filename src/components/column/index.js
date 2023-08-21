@@ -19,6 +19,7 @@ import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
+import { setRefetchCount, setRefetchData } from '@store/global/slice';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -151,14 +152,12 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       );
       toast.success(`${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`);
 
+      // change status locally
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
       });
-      // change status locally
-      console.log('changeStatus', contact, contact.id, status, res);
       // setDropdownOpened(false);
-      const { data } = await contactServices.getContacts(categoryIds[contact?.category_1]);
-      dispatch(setContacts(data));
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }

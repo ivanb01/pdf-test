@@ -60,6 +60,7 @@ import { getEmailParts } from 'global/functions';
 import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
+import { setRefetchCount } from '@store/global/slice';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -724,6 +725,7 @@ const Table = ({
           await changeStatus(status, contact);
           console.log('change status');
         }
+        dispatch(setRefetchData(true));
       } catch (error) {
         console.log(error);
       }
