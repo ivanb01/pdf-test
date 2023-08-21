@@ -15,7 +15,7 @@ import Button from 'components/shared/button';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
 import { useDispatch, useSelector } from 'react-redux';
-import { setRefetchData } from 'store/global/slice';
+import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 
 const activitiesTypes = {
@@ -26,14 +26,30 @@ const activitiesTypes = {
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
-export default function Feeds({ contactId }) {
+export default function Feeds({ contactId, activities, setActivities }) {
+  const placeholderDescription = (activity_type) => {
+    if (activity_type == 1) {
+      return 'Email Sent to contact';
+    }
+    if (activity_type == 2) {
+      return 'SMS sent to contact';
+    }
+    if (activity_type == 3) {
+      return 'Phone Call with contact';
+    }
+    if (activity_type == 4) {
+      return 'Contacted on Social Media';
+    }
+    if (activity_type == 5) {
+      return 'Contacted in person';
+    }
+  };
+
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
-
-  const activities = useSelector((state) => state.clientDetails.activityLogData);
 
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
@@ -48,25 +64,11 @@ export default function Feeds({ contactId }) {
     },
     validationSchema: AddActivitySchema,
     onSubmit: (values) => {
-      handleUpdateSubmit(values);
+      handleUpdateActivity(values);
     },
   });
 
   const { errors, touched, resetForm } = formik;
-
-  const handleUpdateSubmit = async (values) => {
-    setLoadingButton(true);
-    try {
-      await contactServices.updateContactActivity(contactId, activityId, values);
-      setLoadingButton(false);
-      handleCloseModal();
-    } catch (error) {
-      console.log(error);
-      setLoadingButton(false);
-    } finally {
-      dispatch(setRefetchData(true));
-    }
-  };
 
   const handleCloseModal = () => {
     setActivityModal(false);
@@ -89,6 +91,39 @@ export default function Feeds({ contactId }) {
     setActivityTypeToEdit(found.name);
   };
 
+  const handleUpdateActivity = async (values) => {
+    setLoadingButton(true);
+    try {
+      const updatedActivity = activities.map((activity) => {
+        if (activity.id === activityId) {
+          return { ...activity, ...values };
+        }
+        return activity;
+      });
+      setActivities(updatedActivity);
+      setLoadingButton(false);
+      handleCloseModal();
+      contactServices
+        .updateContactActivity(contactId, activityId, values)
+        .then(() => dispatch(setRefetchPart('activity-log')));
+      toast.success('Activity log updated successfully!');
+    } catch (error) {
+      toast.error('There was an error while editing activity log: ', error);
+      setLoadingButton(false);
+    }
+  };
+  const handleDeleteActivity = async (activity) => {
+    try {
+      setActivities(activities.filter((item) => item.id != activity.id));
+      toast.success('Activity log was deleted successfully!');
+      contactServices
+        .deleteContactActivity(contactId, activity.id)
+        .then(() => dispatch(setRefetchPart('activity-log')));
+    } catch (error) {
+      toast.error('There was a problem deleting the activity!');
+    }
+  };
+
   useEffect(() => {
     if (activityModal) {
       document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
@@ -96,33 +131,6 @@ export default function Feeds({ contactId }) {
       document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
     }
   }, [activityModal]);
-
-  const placeholderDescription = (activity_type) => {
-    if (activity_type == 1) {
-      return 'Email Sent to contact';
-    }
-    if (activity_type == 2) {
-      return 'SMS sent to contact';
-    }
-    if (activity_type == 3) {
-      return 'Phone Call with contact';
-    }
-    if (activity_type == 4) {
-      return 'Contacted on Social Media';
-    }
-    if (activity_type == 5) {
-      return 'Contacted in person';
-    }
-  };
-  const handleDeleteActivity = async (activity) => {
-    try {
-      await contactServices.deleteContactActivity(contactId, activity.id);
-      dispatch(setRefetchData(true));
-      toast.success('Activity log was deleted successfully!');
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const types = [
     {
@@ -189,14 +197,16 @@ export default function Feeds({ contactId }) {
                       </div>
                     </>
                   </div>
-                  <div className="flex">
-                    <FilterDropdown
-                      types={types}
-                      icon={<More className="w-5" />}
-                      data={activityItem}
-                      positionClass="right-0"
-                    />
-                  </div>
+                  {activityItem.contact_id && (
+                    <div className="flex">
+                      <FilterDropdown
+                        types={types}
+                        icon={<More className="w-5" />}
+                        data={activityItem}
+                        positionClass="right-0"
+                      />
+                    </div>
+                  )}
                 </div>
               </li>
             ))}

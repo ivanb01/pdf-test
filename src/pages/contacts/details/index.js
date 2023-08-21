@@ -92,6 +92,9 @@ export default function Details() {
     if (refetchPart == 'notes') {
       getNotes();
       dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'activity-log') {
+      getActivityLog();
+      dispatch(setRefetchPart(null));
     }
   }, [refetchPart]);
 

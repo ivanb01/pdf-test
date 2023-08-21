@@ -7,11 +7,11 @@ import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
 import TextArea from 'components/shared/textarea';
 import { useDispatch } from 'react-redux';
-import { setRefetchData } from 'store/global/slice';
+import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import toast from 'react-hot-toast';
 import { addContactActivity } from 'api/contacts';
 
-const AddActivity = ({ className, handleClose, title, clientId, afterUpdate, setAddActivityPopup, refetchData }) => {
+const AddActivity = ({ setActivities, className, handleClose, title, clientId, setAddActivityPopup }) => {
   const dispatch = useDispatch();
 
   const [loadingButton, setLoadingButton] = useState(false);
@@ -36,15 +36,14 @@ const AddActivity = ({ className, handleClose, title, clientId, afterUpdate, set
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
-      await addContactActivity(clientId, values);
+      setActivities((prevActivities) => [values, ...prevActivities]);
       toast.success(`Activity added successfully!`);
-    } catch (error) {
-      toast.error('Activity log could not be added. An error occurred.');
-    } finally {
       setLoadingButton(false);
       resetForm();
       handleClose();
-      dispatch(setRefetchData(true));
+      addContactActivity(clientId, values).then(() => dispatch(setRefetchPart('activity-log')));
+    } catch (error) {
+      toast.error('Activity log could not be added. An error occurred.');
     }
   };
 
