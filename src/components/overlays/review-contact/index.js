@@ -98,6 +98,8 @@ const ReviewContact = ({
           ? 1
           : client?.category_1 == 'Other'
           ? 2
+          : client?.category_1 === 'Trash'
+          ? 4
           : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,

@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="add printWidth 120">
-      <change beforePath="$PROJECT_DIR$/src/components/shared/menu/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/menu/index.js" afterDir="false" />
+    <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="remove restrictions for search icon">
+      <change afterPath="$PROJECT_DIR$/src/pages/contacts/trash/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Layout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Layout/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/accordion/main-sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/accordion/main-sidebar/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/global/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contacts/other/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/contacts/other/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,14 +44,14 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "development",
+    "git-widget-placeholder": "f/erza/TrashPage",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "settings.editor.selected.configurable": "configurable.tailwindcss",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }

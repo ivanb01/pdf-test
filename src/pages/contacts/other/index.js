@@ -1,10 +1,9 @@
 import SimpleBar from 'simplebar-react';
 import Table from 'components/shared/table';
 import Other from 'components/Contacts/other-content';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from 'components/Layout';
 import Loader from 'components/shared/loader';
-import { useEffect } from 'react';
 import { getContacts } from 'api/contacts';
 import Text from 'components/shared/text';
 import Search from 'components/shared/input/search';
@@ -24,6 +23,9 @@ const index = () => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
 
+  useEffect(() => {
+    console.log(actualContact, 'actualContact');
+  }, [actualContact]);
   const fetchOther = () => {
     let other = {
       ...allContacts,
@@ -101,8 +103,7 @@ const index = () => {
             src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
             loop
             autoplay
-            style={{ width: '420px', height: '300px' }}
-          ></lottie-player>
+            style={{ width: '420px', height: '300px' }}></lottie-player>
           <Text h3 className="text-gray7 mt-4 mb-2 text-center">
             {openedSubtab == 0
               ? 'You have no contacts categorized as family and friends.'

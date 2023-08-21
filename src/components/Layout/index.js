@@ -14,6 +14,7 @@ import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
 import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
 import { useRouter } from 'next/router';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Loader from 'components/shared/loader';
 import ContactPage from '@mui/icons-material/ContactPage';
 import Diversity3 from '@mui/icons-material/Diversity3';
@@ -172,6 +173,13 @@ const Layout = ({ children }) => {
         //   count: 0,
         // },
       ],
+    },
+    {
+      id: 4,
+      name: 'Trash',
+      label: 'Trash',
+      href: 'trash',
+      icon: <DeleteIcon className={'w-4 h-4'} />,
     },
   ]);
 
