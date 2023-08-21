@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="add printWidth 120">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/activity-log/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/activity-log/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/looking-for/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/looking-for/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/notes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/notes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/add-activity/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/add-activity/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/dropdown/FilterDropdown/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/dropdown/FilterDropdown/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/feeds/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/feeds/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/input/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/shared/menu/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/menu/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/overlay/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/overlay/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/authentication/sign-in/credentials/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/sign-in/credentials/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +51,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "development",
+    "git-widget-placeholder": "f/erza/MaxBudgetBug",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
