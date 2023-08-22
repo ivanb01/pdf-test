@@ -916,7 +916,7 @@ const Table = ({
                             <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
-                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                              className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
                               Edit Contact
                             </div>
                           </div>
@@ -1712,6 +1712,16 @@ const Table = ({
               </td>
               <td className="pl-3 pr-6 py-3 text-gray-500 text-center w-20">
                 <div
+                  onMouseEnter={() =>
+                    document
+                      .querySelector('#tooltip-restore-contact-' + person.id)
+                      .classList.remove('invisible', 'opacity-0')
+                  }
+                  onMouseLeave={() =>
+                    document
+                      .querySelector('#tooltip-restore-contact-' + person.id)
+                      .classList.add('invisible', 'opacity-0')
+                  }
                   className={
                     'h-7 w-7 cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center'
                   }>
@@ -1722,6 +1732,12 @@ const Table = ({
                       handleCardEdit(person);
                     }}
                   />
+                  <div
+                    style={{ width: '126px' }}
+                    id={'tooltip-restore-contact-' + person.id}
+                    className="inline-block -right-4 top-[35px] z-50 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                    Restore Contact
+                  </div>
                 </div>
               </td>
             </tr>

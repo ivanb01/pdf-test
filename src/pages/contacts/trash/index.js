@@ -70,7 +70,7 @@ const index = () => {
           </div>
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)', overflow: 'hidden' }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
-              <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
                   tableFor={'trash'}
                   data={onSearch(searchTerm)}
