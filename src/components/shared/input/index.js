@@ -6,12 +6,7 @@ import { useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
-import {
-  phoneNumberInputFormat,
-  revertPhoneNumberInputFormat,
-  moneyNumberInputFormat,
-  revertMoneyNumberInputFormat,
-} from 'global/functions';
+import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
 
 const Input = ({
   className,
@@ -197,49 +192,41 @@ const Input = ({
     );
   };
 
-  const moneyNumberInputFormat = (number) => {
-    if (!number) return null;
-    return number
-      .toString()
-      .replace(/,/g, '')
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
-  const revertMoneyNumberInputFormat = (value) => {
-    return value.replace(/,/g, '');
-  };
-
-  const [moneyValue, setMoneyValue] = useState(null);
-
-  const handleMoneyInputChange = (val) => {
-    // setMoneyValue(moneyNumberInputFormat(val));
-    if (val) {
-      onChange(revertMoneyNumberInputFormat(val));
-    } else {
-      onChange('');
-      setMoneyValue(null);
-    }
-  };
-
-  useEffect(() => {
-    if (type == 'money') {
-      setMoneyValue(moneyNumberInputFormat(value));
-    }
-  }, [value]);
-
   const moneyInput = () => {
+    const formatNumber = (num) => {
+      if (num === undefined || num === null) return '';
+      const parts = num.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
+    };
+
+    const unformatNumber = (str) => {
+      return str.replace(/,/g, '');
+    };
+    const [inputValue, setInputValue] = useState(formatNumber(value) || '');
+
+    useEffect(() => {
+      setInputValue(formatNumber(value));
+    }, [value]);
+
+    const handleChange = (event) => {
+      const newValue = unformatNumber(event.target.value);
+      if (/^\d*\.?\d*$/.test(newValue)) {
+        setInputValue(formatNumber(newValue));
+        if (onChange) {
+          onChange(newValue);
+        }
+      }
+    };
     return iconBefore ? (
       <>
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">{iconBefore}</div>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
+          name={name ? name : id}
           className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
@@ -254,13 +241,10 @@ const Input = ({
       <>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
+          name={name ? name : id}
           className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
@@ -277,14 +261,10 @@ const Input = ({
       <>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
-          readOnly={saved || readonly}
+          name={name ? name : id}
           className={
             saved
               ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'

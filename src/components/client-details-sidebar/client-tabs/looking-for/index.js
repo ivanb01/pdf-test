@@ -34,14 +34,18 @@ export default function LookingFor({ contactId }) {
         is: (val) => val && val >= 0,
         then: Yup.number().min(Yup.ref('bathrooms_min'), 'Max bathrooms must be greater than min bathrooms'),
       }),
-    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().min(0, 'Budget Min should be greater than 0').typeError('Budget Min should be an integer'),
     budget_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('budget_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
+      .typeError('Budget Max should be an integer')
+      .when('budget_min', (budget_min, schema) => {
+        if (budget_min === undefined || isNaN(budget_min)) {
+          return;
+        } else {
+          return schema
+            .required('Budget Max is required when Budget Min is present')
+            .typeError('Budget Max should be an integer')
+            .moreThan(budget_min, 'Budget Max be greater than Budget Min');
+        }
       }),
   });
 
@@ -61,16 +65,13 @@ export default function LookingFor({ contactId }) {
       budget_max: '',
     },
     validationSchema: LookingPropertySchema,
-    onSubmit: (values, { setFieldValue }) => {
-      console.log('looking property', values);
-      setFieldValue('budget_min', parseFloat(values.budget_min));
-      setFieldValue('budget_max', parseFloat(values.budget_max));
-
+    onSubmit: (values) => {
+      console.log(values, 'valuesssssss');
       if (formik.isValid) {
         handleAddSubmit({
           ...values,
-          budget_min: parseFloat(values.budget_min),
-          budget_max: parseFloat(values.budget_max),
+          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
         });
       }
     },
@@ -190,7 +191,10 @@ export default function LookingFor({ contactId }) {
             label="Budget Min"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            onChange={(val) => formik.setFieldValue('budget_min', val)}
+            name={'budget_min'}
+            onChange={(newValue) => {
+              formik.setFieldValue('budget_min', newValue);
+            }}
             value={formik.values.budget_min}
             error={errors.budget_min && touched.budget_min}
             errorText={errors.budget_min}
@@ -201,7 +205,10 @@ export default function LookingFor({ contactId }) {
             label="Budget Max"
             iconAfter={<Image src={usd} height={20} />}
             className="col-span-1"
-            onChange={(val) => formik.setFieldValue('budget_max', val)}
+            name={'budget_max'}
+            onChange={(newValue) => {
+              formik.setFieldValue('budget_max', newValue);
+            }}
             value={formik.values.budget_max}
             error={errors.budget_max && touched.budget_max}
             errorText={errors.budget_max}
