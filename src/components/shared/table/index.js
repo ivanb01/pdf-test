@@ -23,7 +23,6 @@ import { useSelector } from 'react-redux';
 import Launch from '@mui/icons-material/Launch';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Menu, Transition } from '@headlessui/react';
-import EditIcon from '@mui/icons-material/Edit';
 import {
   clientStatuses,
   allStatusesQuickEdit,
@@ -66,6 +65,7 @@ import { getEmailParts } from 'global/functions';
 import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
+import RedoIcon from '@mui/icons-material/Redo';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -1654,15 +1654,10 @@ const Table = ({
         <thead>
           <tr className="bg-gray-50 text-gray-500" style={{ height: '60px' }}>
             <th
-              style={{ width: '300px' }}
+              style={{ width: '400px' }}
               scope="col"
               className="pl-6 py-3 pr-2 text-left font-medium text-xs leading-4 font-medium tracking-wider">
               CLIENT
-            </th>
-            <th
-              scope="col"
-              className=" flex-grow  py-3 px-2  text-center font-medium text-xs leading-4 font-medium tracking-wider">
-              PHONE
             </th>
             <th
               scope="col"
@@ -1671,9 +1666,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="flex-grow pl-2 pr-6 py-3  text-center font-medium text-xs leading-4 font-medium tracking-wider">
-              ACTIONS
-            </th>
+              className="flex-grow pl-2 pr-6 py-3  text-center font-medium text-xs leading-4 font-medium tracking-wider"></th>
           </tr>
         </thead>
         <tbody>
@@ -1688,7 +1681,7 @@ const Table = ({
               key={person.id}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
               style={{ height: '76px' }}>
-              <td className=" pl-6 py-3 pr-2 " style={{ width: '300px' }}>
+              <td className=" pl-6 py-3 pr-2 " style={{ width: '400px' }}>
                 <div className={'flex gap-4'}>
                   <div>
                     {person.profile_image_path ? (
@@ -1713,53 +1706,23 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td className="px-3 py-2  text-gray-800 text-center text-sm leading-5 font-medium">
-                {person.phone_number ?? '-'}
-              </td>
+
               <td className=" px-3 py-2 text-gray-800 text-center text-sm leading-5 font-medium">
                 {getDateFormat(person.updated_at)}
               </td>
-              <td className="pl-3 pr-6 py-3 text-gray-500 text-center">
-                <Menu as="div" className="relative inline-block text-left">
-                  <div>
-                    <Menu.Button
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2">
-                      <MoreHorizIcon aria-hidden="true" className={'h-5 w-5 group-hover:text-sky-500'} />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95">
-                    <Menu.Items
-                      className=" absolute right-0  z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      onClick={(e) => e.stopPropagation()}>
-                      <div className="py-1">
-                        <Menu.Item className={'py-2 px-4 h-11'} onClick={() => handleCardEdit(person)}>
-                          {({ active }) => (
-                            <div className={`flex gap-3 flex items-center ${active && 'bg-lightBlue1'}`}>
-                              <EditIcon className={'text-gray-500 h-5 w-5'} />
-                              <span className={'text-sm leading-5 font-normal text-gray-700'}>Edit</span>
-                            </div>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item className={'py-2 px-4 h-11'}>
-                          {({ active }) => (
-                            <div className={`flex gap-3 flex items-center ${active && 'bg-lightBlue1'}`}>
-                              <RestoreFromTrashIcon className={'text-gray-500 h-5 w-5'} />
-                              <span className={'text-sm leading-5 font-normal text-gray-700'}>Restore from Trash</span>
-                            </div>
-                          )}
-                        </Menu.Item>
-                      </div>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+              <td className="pl-3 pr-6 py-3 text-gray-500 text-center w-20">
+                <div
+                  className={
+                    'h-7 w-7 cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center'
+                  }>
+                  <RedoIcon
+                    className={'text-gray-500 h-4 w-4 ml-0'}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCardEdit(person);
+                    }}
+                  />
+                </div>
               </td>
             </tr>
           ))}
@@ -1781,9 +1744,7 @@ const Table = ({
         </svg>
         <h5 className={'text-sm leading-5 font-medium text-gray-900'}>Trash is Empty</h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
-          Contacts that you don’t need to be in communication with
-          <br />
-          are going to be listed here.
+          Contacts that you don’t need to be in communication with are going to be listed here.
         </p>
       </div>
     );
@@ -1791,8 +1752,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        {/*//TODO uncomment this*/}
-        <div className={` ${tableFor !== 'trash' && 'h-full overflow-x-auto'}`}>
+        <div className={'h-full overflow-x-auto'}>
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
