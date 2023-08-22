@@ -38,6 +38,7 @@ import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ReviewContact = ({
   className,
@@ -98,6 +99,8 @@ const ReviewContact = ({
           ? 1
           : client?.category_1 == 'Other'
           ? 2
+          : client?.category_1 === 'Trash'
+          ? 4
           : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
@@ -180,8 +183,50 @@ const ReviewContact = ({
         };
 
     try {
-      // remove from campaign if changing category or status or if changed to TRASH
+      let shouldExecuteRemainingCode = true;
+      let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
+      if (router.pathname.includes('trash')) {
+        if (newData.category_id !== 3) {
+          await updateContact(client?.id, newData)
+            .then(() => dispatch(setRefetchData(true)))
+            .finally(() => {
+              shouldExecuteRemainingCode = false;
+              setUpdating(false);
+              handleClose();
+              updating === false &&
+                toast.custom((t) => (
+                  <div
+                    className={`${
+                      t.visible ? 'animate-enter' : 'animate-leave'
+                    } bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+                    style={{ width: '316px' }}>
+                    <div className="flex gap-2 p-4 ">
+                      <CheckCircleIcon className={'text-green-500'} />
+                      <h1 className={'text-sm leading-5 font-medium'}>
+                        {newData.first_name} {newData.last_name}
+                        {' restored successfully!'}
+                      </h1>
+                    </div>
+                    <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
+                      <button
+                        onClick={() => {
+                          updateContact(client?.id, { ...newData, category_id: 3 }).then(() =>
+                            dispatch(setRefetchData(true)),
+                          );
+                          toast.dismiss(t.id);
+                        }}
+                        className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                        Undo
+                      </button>
+                    </div>
+                  </div>
+                ));
+              return;
+            });
+        }
+      }
       if (client.category_id != category_id || client.status_id != status_id) {
+        // remove from campaign if changing category or status or if changed to TRASH
         if (client.campaign_id) {
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
@@ -201,8 +246,10 @@ const ReviewContact = ({
       updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
 
       // toaster message
-      const action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
-      toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
+
+      if (shouldExecuteRemainingCode) {
+        toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
+      }
     } catch (error) {
       toast.error(error);
     }
@@ -254,7 +301,7 @@ const ReviewContact = ({
             Cancel
           </Button>
           <Button primary onClick={() => submitForm()} loading={updating}>
-            Save Changes
+            {router.pathname.includes('/trash') ? 'Restore Client' : 'Save Contact'}
           </Button>
         </div>
       </>
