@@ -17,6 +17,7 @@ import { activityTypes } from 'global/variables';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
+import { setActivityLogData } from '@store/clientDetails/slice';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -100,7 +101,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
         }
         return activity;
       });
-      setActivities(updatedActivity);
+      dispatch(setActivityLogData(updatedActivity));
       setLoadingButton(false);
       handleCloseModal();
       contactServices
@@ -114,7 +115,8 @@ export default function Feeds({ contactId, activities, setActivities }) {
   };
   const handleDeleteActivity = async (activity) => {
     try {
-      setActivities(activities.filter((item) => item.id != activity.id));
+      const filteredActivities = activities.filter((item) => item.id !== activity.id);
+      dispatch(setActivityLogData(filteredActivities));
       toast.success('Activity log was deleted successfully!');
       contactServices
         .deleteContactActivity(contactId, activity.id)
@@ -165,7 +167,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
             ?.slice()
             .sort((a, b) => b.id - a.id)
             .map((activityItem, activityItemIdx) => (
-              <li key={activityItem.id}>
+              <li key={activityItem.activityItemIdx}>
                 <div className="relative pb-8 flex justify-between">
                   {activityItemIdx !== activities.length - 1 ? (
                     <span

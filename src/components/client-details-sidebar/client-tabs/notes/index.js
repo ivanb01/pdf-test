@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
+import { setNotesData } from '@store/clientDetails/slice';
 
 export default function Notes({ contactId }) {
   const dispatch = useDispatch();
@@ -71,8 +72,7 @@ export default function Notes({ contactId }) {
         created_at: new Date().toISOString(),
       };
       handleCloseModal();
-      setNotes((prevNotes) => [...prevNotes, newNote]);
-      setNotesOriginal((prevNotes) => [...prevNotes, newNote]);
+      dispatch(setNotesData([...(notesData || []), newNote]));
       toast.success('Note added successfully');
       contactServices.addContactNote(contactId, values).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
@@ -84,6 +84,8 @@ export default function Notes({ contactId }) {
   const handleUpdateSubmit = async (values) => {
     try {
       setLoadingButton(false);
+      const updatedNotes = notesData.map((note) => (note.id === noteId ? { ...note, ...values } : note));
+      dispatch(setNotesData(updatedNotes));
       handleCloseModal();
       contactServices.updateContactNote(contactId, noteId, values).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
@@ -110,9 +112,9 @@ export default function Notes({ contactId }) {
 
   const handleDeleteNote = async (note) => {
     try {
-      setNotes((prev) => prev.filter((item) => item.id !== note.id));
-      setNotesOriginal((prev) => prev.filter((item) => item.id !== note.id));
-      contactServices.deleteContactNote(contactId, note.id).then(() => setRefetchPart('notes'));
+      let notesAfterDelete = notes.filter((item) => item.id !== note.id);
+      dispatch(setNotesData(notesAfterDelete));
+      contactServices.deleteContactNote(contactId, note.id).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
       console.log(error);
     }
@@ -144,8 +146,8 @@ export default function Notes({ contactId }) {
   ];
 
   const fetchContactNotes = async () => {
-    setNotes(notesData.data);
-    setNotesOriginal(notesData.data);
+    setNotes(notesData);
+    setNotesOriginal(notesData);
   };
 
   useEffect(() => {

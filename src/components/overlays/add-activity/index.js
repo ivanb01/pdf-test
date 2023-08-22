@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import toast from 'react-hot-toast';
 import { addContactActivity } from 'api/contacts';
+import { setActivityLogData } from '@store/clientDetails/slice';
 
 const AddActivity = ({ setActivities, className, handleClose, title, clientId, setAddActivityPopup }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const AddActivity = ({ setActivities, className, handleClose, title, clientId, s
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
-      setActivities((prevActivities) => [values, ...prevActivities]);
+      dispatch(setActivityLogData((prevStoreData) => [...(prevStoreData || []), values]));
       toast.success(`Activity added successfully!`);
       setLoadingButton(false);
       resetForm();

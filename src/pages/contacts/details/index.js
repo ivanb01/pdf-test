@@ -39,14 +39,14 @@ export default function Details() {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
       toast.error('Error fetching activity log: ', error);
     });
-    const activityLogData = activityLogResponse.data.data;
-    dispatch(setActivityLogData(activityLogData));
+    const activityLogData = activityLogResponse.data;
+    dispatch(setActivityLogData(activityLogData.data));
   };
   const getNotes = () => {
     getContactNotes(id)
       .then((notesResponse) => {
         const notesData = notesResponse.data;
-        dispatch(setNotesData(notesData));
+        dispatch(setNotesData(notesData.data));
       })
       .catch((error) => {
         toast.error('Error fetching notes:', error);
