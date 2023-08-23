@@ -45,7 +45,6 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
 }) => {
-  const isUnapprovedAI = client.import_source == 'GmailAI' && client.approved_ai != true;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -56,6 +55,9 @@ const ReviewContact = ({
   const [existingContactEmail, setExistingContactEmail] = useState('');
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
+
+  const isUnapprovedAI =
+    client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
 
   const options = [
     {
