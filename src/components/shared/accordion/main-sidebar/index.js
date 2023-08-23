@@ -19,6 +19,7 @@ import ArrowRight from '/public/images/arrow-circle-right.svg';
 import { CSSTransition } from 'react-transition-group';
 import { setUserGaveConsent } from 'store/global/slice';
 import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google';
+
 const MainSidebar = ({
   tabs,
   openedTab,
@@ -71,18 +72,16 @@ const MainSidebar = ({
             <div className="accordion w-inherit" key={tab.id}>
               <Link
                 href="#"
-                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md ${
+                className={`flex  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md ${
                   openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                 }`}
                 onClick={() => {
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}
-              >
+                }}>
                 <div
-                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
-                  title={tab.name}
-                >
+                  className={`flex items-center  ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
+                  title={tab.name}>
                   {tab.icon}
                 </div>
               </Link>
@@ -94,8 +93,7 @@ const MainSidebar = ({
             <hr className="my-2 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
-            >
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
             </div>
           </>
@@ -103,16 +101,19 @@ const MainSidebar = ({
       </>
     );
   };
+
   const expandedMenu = () => {
     return (
       <>
         {tabs.map((tab) => {
           return (
-            <div className="accordion w-inherit" key={tab.id}>
+            <div className={`accordion w-inherit`} key={tab.id}>
               <Link
                 href="#"
-                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md ${
-                  openedTab == tab.id && ' text-lightBlue3'
+                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 ${
+                  tabs.length === tab.id + 1 && 'border-t px-2.5'
+                } ${openedTab == tab.id && ' text-lightBlue3'} ${
+                  openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''
                 }`}
                 onClick={() => {
                   if (openedTab == tab.id) {
@@ -120,14 +121,16 @@ const MainSidebar = ({
                   }
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}
-              >
+                }}>
                 <div
                   onClick={() => !tab.subtab && setOpenedTab(tab.id)}
-                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
-                >
+                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
                   {tab.icon}
-                  <Text h4 className={`ml-3 ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+                  <Text
+                    h4
+                    className={` ${tabs.length === tab.id + 1 ? 'ml-1' : 'ml-3'} ${
+                      openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'
+                    }`}>
                     {tab.name}
                   </Text>
                 </div>
@@ -152,15 +155,13 @@ const MainSidebar = ({
                         } transition-all duration-200 flex items-center ${
                           isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                         }`}
-                        onClick={() => setOpenedSubtab(subtab.id)}
-                      >
+                        onClick={() => setOpenedSubtab(subtab.id)}>
                         {subtab.icon ? subtab.icon : subtab.dot}
                         <Text
                           h4
                           className={`px-[10px] py-[10px] ${
                             isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3' : 'text-gray4'
-                          }`}
-                        >
+                          }`}>
                           {subtab.name} ({getCountForSubtab(subtab)})
                         </Text>
                       </a>
@@ -176,8 +177,7 @@ const MainSidebar = ({
             <hr className="my-4 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
-            >
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
               <Text h4 className={`ml-3 text-gray5`}>
                 {pinned && 'Import Contacts from CSV'}
@@ -189,12 +189,14 @@ const MainSidebar = ({
     );
   };
 
+  useEffect(() => {
+    console.log(pinned, 'pinned');
+  }, [pinned]);
   return (
     <div
       className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
         pinned ? 'w-[315px]' : 'w-[62px]'
-      }`}
-    >
+      }`}>
       {showSSOverlay && (
         <SmartSyncOverlay
           handleAction={() => activateSmartSync()}
@@ -209,7 +211,7 @@ const MainSidebar = ({
             {userGaveConsent && (
               <>
                 {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
-                  <div className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm m-3`}>
+                  <div className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
                     Import all your contacts from “Google Contacts” in the CRM.
                     <a
                       onClick={() =>
@@ -218,8 +220,7 @@ const MainSidebar = ({
                           query: { start_importing: true },
                         })
                       }
-                      className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-blue-600"
-                    >
+                      className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-blue-600">
                       Import Google Contacts
                       <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                     </a>
@@ -231,8 +232,7 @@ const MainSidebar = ({
                     <span className="font-bold">“Import Google Contacts”</span> in order to import contact from Gmail.
                     <a
                       className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
-                      onClick={() => setShowSSOverlay(true)}
-                    >
+                      onClick={() => setShowSSOverlay(true)}>
                       Setup
                       <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                     </a>
@@ -251,8 +251,7 @@ const MainSidebar = ({
               query: { start_importing: true },
             })
           }
-          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md"
-        >
+          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md">
           <AccountCircle className="h-5" />
         </a>
       )}
@@ -261,8 +260,7 @@ const MainSidebar = ({
         <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
           className="absolute cursor-pointer z-10"
-          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}
-        >
+          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}>
           <div className="">
             <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
           </div>

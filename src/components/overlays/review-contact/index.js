@@ -4,17 +4,10 @@ import Overlay from 'components/shared/overlay';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Dropdown from 'components/shared/dropdown';
-import {
-  clientOptions,
-  leadSourceOptions,
-  othersOptions,
-  phoneNumberRules,
-  professionalsOptions,
-} from 'global/variables';
+import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
-import { updateContact, findContactByEmail } from 'api/contacts';
-import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
-import * as Yup from 'yup';
+import { updateContact } from 'api/contacts';
+import { findTagsOption } from 'global/functions';
 import { setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
@@ -33,11 +26,11 @@ import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
 import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
-import Alert from '@components/shared/alert';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ReviewContact = ({
   className,
@@ -52,7 +45,6 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
 }) => {
-  const isUnapprovedAI = client.import_source == 'GmailAI' && client.approved_ai != true;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -61,8 +53,11 @@ const ReviewContact = ({
   const [loadingEmail, setLoadingEmail] = useState(true);
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
-
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
+
+  const isUnapprovedAI =
+    client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
 
   const options = [
     {
@@ -98,6 +93,8 @@ const ReviewContact = ({
           ? 1
           : client?.category_1 == 'Other'
           ? 2
+          : client?.category_1 === 'Trash'
+          ? 4
           : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
@@ -133,6 +130,12 @@ const ReviewContact = ({
     } catch (error) {
       toast.error(error);
     }
+  };
+  const restoreContact = (newData) => {
+    dispatch(updateContactLocally(newData));
+    updateContact(newData.id, newData).catch(() => {
+      toast.error('An error occurred, please refresh page');
+    });
   };
 
   const handleSubmit = async (values) => {
@@ -180,8 +183,40 @@ const ReviewContact = ({
         };
 
     try {
-      // remove from campaign if changing category or status or if changed to TRASH
+      let shouldExecuteRemainingCode = true;
+      let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
+      if (router.pathname.includes('trash')) {
+        if (newData.category_id !== 3) {
+          shouldExecuteRemainingCode = false;
+          toast.custom((t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+              style={{ width: '316px' }}>
+              <div className="flex gap-2 p-4 ">
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>
+                  {newData.first_name} {newData.last_name}
+                  {' restored successfully!'}
+                </h1>
+              </div>
+              <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
+                <button
+                  onClick={() => {
+                    restoreContact({ ...newData, category_id: 3 });
+                    toast.dismiss(t.id);
+                  }}
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  Undo
+                </button>
+              </div>
+            </div>
+          ));
+        }
+      }
       if (client.category_id != category_id || client.status_id != status_id) {
+        // remove from campaign if changing category or status or if changed to TRASH
         if (client.campaign_id) {
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
@@ -201,8 +236,10 @@ const ReviewContact = ({
       updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
 
       // toaster message
-      const action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
-      toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
+
+      if (shouldExecuteRemainingCode) {
+        toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
+      }
     } catch (error) {
       toast.error(error);
     }
@@ -254,7 +291,7 @@ const ReviewContact = ({
             Cancel
           </Button>
           <Button primary onClick={() => submitForm()} loading={updating}>
-            Save Changes
+            {router.pathname.includes('/trash') ? 'Restore Contact' : 'Save Changes'}
           </Button>
         </div>
       </>

@@ -40,7 +40,16 @@ export const formatDate = (eventDate, hideTime) => {
   });
   return hideTime ? `${monthName} ${day}, ${year}` : `${monthName} ${day}, ${year} ${time}`;
 };
+export const getDateFormat = (timestamp) => {
+  const dateObj = new Date(timestamp);
 
+  const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0');
+  const day = dateObj.getUTCDate().toString().padStart(2, '0');
+  const year = dateObj.getUTCFullYear();
+
+  const mmddyyyyFormat = `${month}/${day}/${year}`;
+  return mmddyyyyFormat;
+};
 export const removeClientFromArray = (clientList, clientEmail) => {
   return clientList.filter(function (el) {
     return el.email != clientEmail;

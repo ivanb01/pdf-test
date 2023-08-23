@@ -9,12 +9,13 @@ import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
+import { useRouter } from 'next/router';
 import ReviewContact from '@components/overlays/review-contact';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
   const [deletingContact, setDeletingContact] = useState(false);
-
+  const router = useRouter();
   const types = [
     {
       name: (
@@ -80,7 +81,10 @@ export default function ClientCard({ client }) {
           </span>
         </div>
         <div className="ml-auto mr-4">
-          <FilterDropdown types={types} icon={<DotsVerticalIcon height={20} />} />
+          <FilterDropdown
+            types={client && client.category_id === 3 ? [types[0]] : types}
+            icon={<DotsVerticalIcon height={20} />}
+          />
         </div>
       </div>
 
