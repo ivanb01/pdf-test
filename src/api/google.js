@@ -1,9 +1,9 @@
 import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
-export const getGoogleAuthCallback = (queryParams) => {
+export const getGoogleAuthCallback = (queryParams, callback) => {
   return axiosInstance.get('google/oauthcallback', {
-    params: { ...queryParams, test_callback: '/contacts/no-contact' },
+    params: { ...queryParams, test_callback: callback },
   });
 };
 

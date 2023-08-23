@@ -63,7 +63,7 @@ const NoContactPage = () => {
 
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      const { data } = await getGoogleAuthCallback(queryParams);
+      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/no-contact');
       console.log('google auth callback', data);
       if (!data.error) {
         setEmptyModal(false);

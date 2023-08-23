@@ -10,6 +10,7 @@ import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
 import { useRouter } from 'next/router';
+import ReviewContact from '@components/overlays/review-contact';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -89,12 +90,7 @@ export default function ClientCard({ client }) {
 
       {deletingContact && <DeleteClientOverlay handleCloseOverlay={() => setDeletingContact(false)} contact={client} />}
       {editingContact && (
-        <EditClientOverlay
-          handleClose={() => setEditingContact(false)}
-          title="Edit Contact"
-          className="w-[635px]"
-          client={client}
-        />
+        <ReviewContact handleClose={() => setEditingContact(false)} client={client} title="Edit Contact" />
       )}
     </>
   );

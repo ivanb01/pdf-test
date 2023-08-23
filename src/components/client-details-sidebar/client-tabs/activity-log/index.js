@@ -8,7 +8,7 @@ import Button from 'components/shared/button';
 import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
-import noActivitLog from '/public/images/no_activitylog.svg';
+import noActivityLog from '/public/images/no_activitylog.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
@@ -20,6 +20,7 @@ import Loader from '@components/shared/loader';
 import { getAIData } from '@api/aiSmartSync';
 import AIChip from '@components/shared/chip/ai-chip';
 import linkIcon from '/public/images/link.svg';
+import AddActivity from '@components/overlays/add-activity';
 
 export default function ActivityLog({ contactId, source }) {
   const dispatch = useDispatch();
@@ -27,19 +28,11 @@ export default function ActivityLog({ contactId, source }) {
   const [aiPreviewLoading, setAiPreviewLoading] = useState(true);
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
-  const handleToggleAddActicity = () => {
-    formik.resetForm();
-    setToggleAddActivity(!toggleAddActivity);
-  };
 
   const refetchData = useSelector((state) => state.global.refetchData);
 
   const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
-
-  const AddActivitySchema = Yup.object().shape({
-    type_of_activity_id: Yup.string().required('No selected activity'),
-    // description: Yup.string().required('Description required'),
-  });
+  const [activityLogLocal, setActivityLogLocal] = useState(activityLogData);
 
   const fetchAiPreview = async (id) => {
     try {
@@ -55,37 +48,17 @@ export default function ActivityLog({ contactId, source }) {
     fetchAiPreview(contactId);
   }, []);
 
-  //* FORMIK *//
-  const formik = useFormik({
-    initialValues: {
-      type_of_activity_id: '',
-      description: '',
-    },
-    validationSchema: AddActivitySchema,
-    onSubmit: (values) => {
-      handleAddActivitySubmit(values);
-    },
-  });
-
-  const { errors, touched, resetForm } = formik;
-
-  const handleAddActivitySubmit = async (values) => {
-    setLoadingButton(true);
-    try {
-      await contactServices.addContactActivity(contactId, values);
-      dispatch(setRefetchData(true));
-      setLoadingButton(false);
-      resetForm();
-      handleToggleAddActicity();
-    } catch (error) {
-      console.log(error);
-      setLoadingButton(false);
+  useEffect(() => {
+    if (toggleAddActivity) {
+      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
+    } else {
+      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
     }
-  };
+  }, [toggleAddActivity]);
 
-  const handleChooseActivityType = (id) => {
-    formik.setFieldValue('type_of_activity_id', id);
-  };
+  useEffect(() => {
+    setActivityLogLocal(activityLogData);
+  }, [activityLogData]);
 
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
@@ -95,54 +68,32 @@ export default function ActivityLog({ contactId, source }) {
             <Text className="text-gray7" p>
               Activities
             </Text>
-            <div onClick={handleToggleAddActicity} className=" cursor-pointer">
+            <div onClick={() => setToggleAddActivity(!toggleAddActivity)} className=" cursor-pointer">
               {!toggleAddActivity ? (
-                <PlusCircleIcon className="text-gray3" height={20} />
+                <PlusCircleIcon className="text-gray3 px-4" height={20} />
               ) : (
-                <MinusCircleIcon className="text-red4" height={20} />
+                <MinusCircleIcon className="text-red4 px-4" height={20} />
               )}
             </div>
           </div>
           {toggleAddActivity && (
-            <>
-              <hr className="mx-6" />
-              <div className="bg-white p-6">
-                <form onSubmit={formik.handleSubmit}>
-                  <Dropdown
-                    label="Type"
-                    placeHolder="Choose"
-                    activeIcon={false}
-                    options={activityTypes}
-                    className="mb-6 w-[100%]"
-                    // activeClasses="bg-lightBlue1"
-                    handleSelect={(item) => handleChooseActivityType(item.id)}
-                    error={errors.type_of_activity_id && touched.type_of_activity_id}
-                    errorText={errors.type_of_activity_id}
-                  />
-                  <TextArea
-                    className="min-h-[120px]"
-                    id="description"
-                    label="Description"
-                    handleChange={formik.handleChange}
-                    value={formik.values.description}
-                    error={errors.description && touched.description}
-                    errorText={errors.description}></TextArea>
-                  <div className="flex flex-row justify-end mt-6">
-                    <Button className="mr-3" white label="Cancel" onClick={() => setToggleAddActivity(false)} />
-                    <Button type="submit" primary label="Save" loading={loadingButton} />
-                  </div>
-                </form>
-              </div>
-            </>
+            <AddActivity
+              clientId={contactId}
+              setActivities={setActivityLogLocal}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setToggleAddActivity}
+              handleClose={() => setToggleAddActivity(false)}
+            />
           )}
           <div className="mx-6">
             <hr />
           </div>
-          {activityLogData &&
-            (activityLogData?.length == 0 ? (
+          {activityLogLocal &&
+            (activityLogLocal.length == 0 ? (
               <div className="flow-root bg-white h-auto py-8">
                 <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
-                  <Image height={40} src={noActivitLog}></Image>
+                  <Image height={40} src={noActivityLog}></Image>
                   <Text h3 className="text-gray7 mb-2 mt-4 text-center text-sm">
                     There is no activity logged for this contact
                   </Text>
@@ -152,11 +103,7 @@ export default function ActivityLog({ contactId, source }) {
                 </div>
               </div>
             ) : (
-              <Feeds
-                contactId={contactId}
-                // activities={activities}
-                // setActivities={setActivities}
-              />
+              <Feeds contactId={contactId} activities={activityLogLocal} setActivities={setActivityLogLocal} />
             ))}
         </div>
 

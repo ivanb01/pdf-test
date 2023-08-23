@@ -1,7 +1,13 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab, setRefetchData, setUnapprovedContacts } from 'store/global/slice';
+import {
+  setOpenedTab,
+  setOpenedSubtab,
+  setRefetchData,
+  setUnapprovedContacts,
+  setUserGaveConsent,
+} from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts, updateContacts, updateContact } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -15,6 +21,7 @@ import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import { CSSTransition } from 'react-transition-group';
 import ReviewContact from '@components/overlays/review-contact';
+import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -87,11 +94,28 @@ const index = () => {
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
+
+  useEffect(() => {
+    const queryParams = {};
+    for (const [key, value] of Object.entries(router.query)) {
+      queryParams[key] = value;
+    }
+    if (Object.keys(queryParams).length > 0) {
+      if (queryParams?.code) {
+        getGoogleAuthCallback(queryParams, '/contacts/clients').then(() => {
+          getUserConsentStatus().then((results) => {
+            dispatch(setUserGaveConsent(results.data.scopes));
+          });
+        });
+      }
+    }
+  }, [router.query]);
+
   useEffect(() => {
     if (router.query.code && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts')) {
       setShowSmartSyncOverlay(true);
     }
-  }, [router.query]);
+  }, [userGaveConsent, router.query]);
 
   return (
     <Layout>

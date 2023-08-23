@@ -66,6 +66,7 @@ import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
+import { setRefetchCount } from '@store/global/slice';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -731,6 +732,7 @@ const Table = ({
           await changeStatus(status, contact);
           console.log('change status');
         }
+        dispatch(setRefetchData(true));
       } catch (error) {
         console.log(error);
       }
@@ -1011,7 +1013,7 @@ const Table = ({
         </tbody>
         {addActivityPopup && (
           <AddActivity
-            client={contactToModify}
+            clientId={contactToModify.id}
             className="min-w-[550px]"
             title={`Add Activity`}
             setAddActivityPopup={setAddActivityPopup}
@@ -1282,7 +1284,7 @@ const Table = ({
         </tbody>
         {addActivityPopup && (
           <AddActivity
-            client={contactToModify}
+            clientId={contactToModify.id}
             className="min-w-[550px]"
             title={`Add Activity`}
             setAddActivityPopup={setAddActivityPopup}

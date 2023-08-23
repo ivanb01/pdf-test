@@ -19,6 +19,7 @@ import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
+import { setRefetchCount, setRefetchData } from '@store/global/slice';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -151,14 +152,12 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
       );
       toast.success(`${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`);
 
+      // change status locally
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
       });
-      // change status locally
-      console.log('changeStatus', contact, contact.id, status, res);
       // setDropdownOpened(false);
-      const { data } = await contactServices.getContacts(categoryIds[contact?.category_1]);
-      dispatch(setContacts(data));
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -168,7 +167,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
     <div className="flex flex-col border-r border-gray2">
       {addActivityPopup && (
         <AddActivity
-          client={clientToModify}
+          clientId={clientToModify.id}
           className="min-w-[550px]"
           title={`Add Activity`}
           setAddActivityPopup={setAddActivityPopup}
@@ -187,8 +186,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               <div
                 className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${
                   status?.name === 'New Lead' ? 'left-0' : 'right-0'
-                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}
-              >
+                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
@@ -220,8 +218,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-ascending"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           ) : (
@@ -232,8 +229,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-descending"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
@@ -244,8 +240,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
           overflowX: 'hidden',
           maxHeight: '100%',
           height: 'calc(100vh - 224px) !important',
-        }}
-      >
+        }}>
         <div className="p-[16px] contact-column-custom-height">
           {filteredContacts.map((contact, index) => (
             <ContactCard

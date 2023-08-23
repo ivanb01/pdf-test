@@ -136,7 +136,28 @@ export default function Info({ client }) {
               noOptionChange={isContactInCampaign}
             />
           )}
-
+          <InfoCard label="Import Source" content={client.import_source} client={client} />
+          {campaginName ? (
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
+          ) : (
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content="" />
+          )}
+          <InfoCard
+            label="Last Communication"
+            content={
+              client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'
+            }
+            iconContent={
+              client?.last_communication_date ? (
+                <DateChip
+                  lastCommunication={client.last_communication_date}
+                  contactStatus={client.status_2}
+                  contactCategory={categoryType}
+                  className="ml-2 !mt-0  pt-0"
+                />
+              ) : null
+            }
+          />
           {/* <ChipInput
             label="Tags"
             selections={tags}
@@ -161,28 +182,6 @@ export default function Info({ client }) {
             handleSelect={(source) => handleChangeSource(source.name)}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
-          />
-
-          {campaginName ? (
-            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
-          ) : (
-            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content="" />
-          )}
-          <InfoCard
-            label="Last Communication"
-            content={
-              client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'
-            }
-            iconContent={
-              client?.last_communication_date ? (
-                <DateChip
-                  lastCommunication={client.last_communication_date}
-                  contactStatus={client.status_2}
-                  contactCategory={categoryType}
-                  className="ml-2 !mt-0  pt-0"
-                />
-              ) : null
-            }
           />
         </div>
       )}
