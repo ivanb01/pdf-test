@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MainMenu from 'components/shared/menu';
 import ClientDetailsSidebar from 'components/client-details-sidebar';
 import Tabs from 'components/shared/tabs';
@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
@@ -106,6 +105,16 @@ export default function Details() {
     }
   }, [contacts, fetchContactRequired, id]);
 
+  const [backUrl, setBackUrl] = useState(null);
+  const tempUrl = contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other' ? contact?.category_1 : `${contact?.category_1}s`;
+  useEffect(() => {
+
+
+    if (contact?.category_1) {
+      setBackUrl(`/contacts/${(tempUrl).toLowerCase()}`);
+    }
+  }, [contact]);
+
   return (
     <>
       <MainMenu />
@@ -115,25 +124,28 @@ export default function Details() {
           hideCloseButton
           redirectAfterMoveToTrash
           handleClose={() => setShowReviewOverlay(false)}
-          title="Review AI Imported Contact"
+          title='Review AI Imported Contact'
           client={aiData}
         />
       )}
-      <div className="client-details-page-wrapper">
+      <div className='client-details-page-wrapper'>
         {!contact ? (
-          <div className="relative h-full" style={{ height: 'calc(100vh - 68px) !important' }}>
+          <div className='relative h-full' style={{ height: 'calc(100vh - 68px) !important' }}>
             <Loader />
           </div>
         ) : (
           <>
-            <div className="p-6 inline-block">
-              <a href="#" onClick={() => router.back()} className="items-center flex">
-                <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">Back to {contact?.category_1}s</div>
+            <div className='p-6 inline-block'>
+              <a href='#' onClick={() => {
+                backUrl !== null ? router.push(backUrl) : router.back();
+              }} className='items-center flex'>
+                <Image className='cursor-pointer' src={backArrow} />
+                <div className='ml-2 font-medium'>Back
+                  to {tempUrl}</div>
               </a>
             </div>
             {id && (
-              <div className="flex flex-row border-t border-gray-2">
+              <div className='flex flex-row border-t border-gray-2'>
                 <ClientDetailsSidebar
                   client={contact}
                   // afterUpdate={fetchContact}
@@ -142,7 +154,7 @@ export default function Details() {
                   loadingTabs={loadingTabs}
                   current={current}
                   setCurrent={setCurrent}
-                  className="px-6 pb-6"
+                  className='px-6 pb-6'
                   tabs={localTabs}
                 />
               </div>

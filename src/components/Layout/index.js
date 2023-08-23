@@ -179,7 +179,7 @@ const Layout = ({ children }) => {
       name: 'Trash',
       label: 'Trash',
       href: 'trash',
-      icon: <DeleteIcon className={'w-4 h-4'} />,
+      icon: <DeleteIcon className={'w-5 h-5'} />,
     },
   ]);
 
@@ -188,8 +188,6 @@ const Layout = ({ children }) => {
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
 
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
-  const [showImportingOverlay, setShowImportingOverlay] = useState(false);
 
   const handleOpenedTab = (tab) => {
     dispatch(setOpenedTab(tab));
