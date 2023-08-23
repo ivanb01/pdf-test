@@ -1760,7 +1760,7 @@ const Table = ({
         </svg>
         <h5 className={'text-sm leading-5 font-medium text-gray-900'}>Trash is Empty</h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
-          Contacts that you don’t need to be in communication with are going to be listed here.
+          Contacts that you moved to trash will be listed here
         </p>
       </div>
     );

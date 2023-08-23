@@ -14,7 +14,6 @@ import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
 import { searchContacts } from 'global/functions';
-import EditContactOverlay from 'components/overlays/edit-client';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
