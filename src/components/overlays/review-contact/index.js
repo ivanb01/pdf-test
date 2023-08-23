@@ -4,17 +4,10 @@ import Overlay from 'components/shared/overlay';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Dropdown from 'components/shared/dropdown';
-import {
-  clientOptions,
-  leadSourceOptions,
-  othersOptions,
-  phoneNumberRules,
-  professionalsOptions,
-} from 'global/variables';
+import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
-import { updateContact, findContactByEmail } from 'api/contacts';
-import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
-import * as Yup from 'yup';
+import { updateContact } from 'api/contacts';
+import { findTagsOption } from 'global/functions';
 import { setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
@@ -33,13 +26,11 @@ import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
 import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
-import Alert from '@components/shared/alert';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { setAllContacts } from 'store/contacts/slice';
 
 const ReviewContact = ({
   className,
@@ -139,14 +130,7 @@ const ReviewContact = ({
     }
   };
   const restoreContact = (newData) => {
-    const updatedData = allContacts.map((item) => {
-      if (item.id === newData.id) {
-        return newData;
-      } else {
-        return item;
-      }
-    });
-    setAllContacts(updatedData);
+    dispatch(updateContactLocally(newData));
     updateContact(newData.id, newData).catch(() => {
       toast.error('An error occurred, please refresh page');
     });
