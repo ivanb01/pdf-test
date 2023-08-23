@@ -201,6 +201,7 @@ const ReviewContact = ({
       let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
       if (router.pathname.includes('trash')) {
         if (newData.category_id !== 3) {
+          shouldExecuteRemainingCode = false;
           toast.custom((t) => (
             <div
               className={`${
