@@ -140,11 +140,17 @@ const ReviewContact = ({
     }
   };
   const restoreContact = (newData) => {
-    console.log(newData,"newData")
-    const updatedData = allContacts.map((item) => (item.id === newData.id ? newData : item));
-    console.log(updatedData,"updatedData")
+    const updatedData = allContacts.map((item) => {
+      if (item.id === newData.id) {
+        return newData;
+      } else {
+        return item;
+      }
+    });
     setAllContacts(updatedData);
-    updateContact(newData.id, newData)
+    updateContact(newData.id, newData).catch(() => {
+      toast.error('An error occurred, please refresh page');
+    });
   };
 
   const handleSubmit = async (values) => {
@@ -219,7 +225,7 @@ const ReviewContact = ({
                   <div className='flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100'>
                     <button
                       onClick={() => {
-                        restoreContact( { ...newData, category_id: 3 });
+                        restoreContact({ ...newData, category_id: 3 });
                         toast.dismiss(t.id);
                       }}
                       className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'>
