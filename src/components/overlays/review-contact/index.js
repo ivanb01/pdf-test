@@ -305,7 +305,7 @@ const ReviewContact = ({
             Cancel
           </Button>
           <Button primary onClick={() => submitForm()} loading={updating}>
-            {router.pathname.includes('/trash') ? 'Restore Client' : 'Save Changes'}
+            {router.pathname.includes('/trash') ? 'Restore Contact' : 'Save Changes'}
           </Button>
         </div>
       </>
