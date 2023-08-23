@@ -185,6 +185,7 @@ const ReviewContact = ({
       let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
       if (router.pathname.includes('trash')) {
         if (newData.category_id !== 3) {
+          shouldExecuteRemainingCode = false;
           toast.custom((t) => (
             <div
               className={`${
@@ -288,7 +289,7 @@ const ReviewContact = ({
             Cancel
           </Button>
           <Button primary onClick={() => submitForm()} loading={updating}>
-            {router.pathname.includes('/trash') ? 'Restore Client' : 'Save Changes'}
+            {router.pathname.includes('/trash') ? 'Restore Contact' : 'Save Changes'}
           </Button>
         </div>
       </>
