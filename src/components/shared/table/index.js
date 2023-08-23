@@ -1726,14 +1726,12 @@ const Table = ({
                   }
                   className={
                     'h-7 w-7 cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center'
-                  }>
-                  <RedoIcon
-                    className={'text-gray-500 h-4 w-4 ml-0'}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCardEdit(person);
-                    }}
-                  />
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCardEdit(person);
+                  }}>
+                  <RedoIcon className={'text-gray-500 h-4 w-4 ml-0'} />
                   <div
                     style={{ width: '126px' }}
                     id={'tooltip-restore-contact-' + person.id}
