@@ -8,7 +8,7 @@ import Search from '@components/shared/input/search';
 import SimpleBar from 'simplebar-react';
 import Table from '@components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
-
+import { setOpenedTab } from 'store/global/slice';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -16,6 +16,13 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
+
+
+  useEffect(() => {
+    dispatch(setOpenedTab(4))
+  }, []);
+
+
   useEffect(() => {
     if (allContacts.data === undefined) {
       getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')
@@ -28,16 +35,12 @@ const index = () => {
     }
 
     if (allContacts.data !== undefined) {
-      console.log('hello here');
       setLoading(false);
       onSearch(searchTerm);
     }
   }, []);
-  // useEffect(() => {
-  //   allContacts && console.log(allContacts.data.filter((d) => d.category_id === 3));
-  // }, [allContacts]);
+
   const onSearch = (searchTerm) => {
-    console.log(allContacts.data.filter((d) => d.category_id === 3));
     const filteredItems =
       allContacts &&
       allContacts.data.filter(
