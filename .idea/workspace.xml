@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="add printWidth 120">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/activity-log/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/activity-log/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/looking-for/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/looking-for/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/notes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/client-details-sidebar/client-tabs/notes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/add-activity/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/add-activity/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/review-contact/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/dropdown/FilterDropdown/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/dropdown/FilterDropdown/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/feeds/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/feeds/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/input/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/menu/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/menu/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/overlay/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/overlay/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/authentication/sign-in/credentials/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/sign-in/credentials/index.js" afterDir="false" />
+    <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="implement trash table">
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/edit-client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/edit-client/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +15,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="development" />
+        <entry key="$PROJECT_DIR$" value="f/erza/MaxBudgetBug" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -62,7 +48,7 @@
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -151,7 +137,23 @@
       <option name="project" value="LOCAL" />
       <updated>1692263333449</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Fix default error message of formik, and make budget max required when budget min is not empty">
+      <option name="closed" value="true" />
+      <created>1692633812938</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1692633812938</updated>
+    </task>
+    <task id="LOCAL-00009" summary="implement trash table">
+      <option name="closed" value="true" />
+      <created>1692695508396</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1692695508396</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,6 +175,8 @@
     <MESSAGE value="implement global search in contacts page" />
     <MESSAGE value="fix images and add scrollBar" />
     <MESSAGE value="add printWidth 120" />
-    <option name="LAST_COMMIT_MESSAGE" value="add printWidth 120" />
+    <MESSAGE value="Fix default error message of formik, and make budget max required when budget min is not empty" />
+    <MESSAGE value="implement trash table" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement trash table" />
   </component>
 </project>
