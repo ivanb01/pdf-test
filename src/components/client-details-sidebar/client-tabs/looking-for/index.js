@@ -42,7 +42,7 @@ export default function LookingFor({ contactId }) {
           return;
         } else {
           return schema
-            .required('Budget Max is required when Budget Min is present')
+            .required('Filed can not be left blank.')
             .typeError('Budget Max should be an integer')
             .moreThan(budget_min, 'Budget Max be greater than Budget Min');
         }
@@ -132,23 +132,23 @@ export default function LookingFor({ contactId }) {
       title: 'AMENITIES',
       value: 'amenities',
       content: (
-        <div className="grid grid-cols-2 gap-4">
+        <div className='grid grid-cols-2 gap-4'>
           <Input
-            id="bedrooms_min"
-            type="number"
-            label="Bedrooms Min"
+            id='bedrooms_min'
+            type='number'
+            label='Bedrooms Min'
             iconAfter={<Image src={bedroom} height={20} />}
-            className="col-span-1"
+            className='col-span-1'
             onChange={formik.handleChange}
             value={formik.values.bedrooms_min}
             error={errors.bedrooms_min && touched.bedrooms_min}
             errorText={errors.bedrooms_min}
           />
           <Input
-            id="bedrooms_max"
-            type="number"
-            label="Bedrooms Max"
-            className="col-span-1"
+            id='bedrooms_max'
+            type='number'
+            label='Bedrooms Max'
+            className='col-span-1'
             iconAfter={<Image src={bedroom} height={20} />}
             onChange={formik.handleChange}
             value={formik.values.bedrooms_max}
@@ -156,21 +156,21 @@ export default function LookingFor({ contactId }) {
             errorText={errors.bedrooms_max}
           />
           <Input
-            id="bathrooms_min"
-            type="number"
-            label="Bathrooms Min"
+            id='bathrooms_min'
+            type='number'
+            label='Bathrooms Min'
             iconAfter={<Image src={bathroom} height={20} />}
-            className="col-span-1"
+            className='col-span-1'
             onChange={formik.handleChange}
             value={formik.values.bathrooms_min}
             error={errors.bathrooms_min && touched.bathrooms_min}
             errorText={errors.bathrooms_min}
           />
           <Input
-            id="bathrooms_max"
-            type="number"
-            label="Bathrooms Max"
-            className="col-span-1"
+            id='bathrooms_max'
+            type='number'
+            label='Bathrooms Max'
+            className='col-span-1'
             iconAfter={<Image src={bathroom} height={20} />}
             onChange={formik.handleChange}
             value={formik.values.bathrooms_max}
@@ -184,13 +184,13 @@ export default function LookingFor({ contactId }) {
       title: 'BUDGET MIN/MAX',
       value: 'budget',
       content: (
-        <div className="grid grid-cols-2 gap-4">
+        <div className='grid grid-cols-2 gap-4'>
           <Input
-            id="budget_min"
-            type="money"
-            label="Budget Min"
+            id='budget_min'
+            type='money'
+            label='Budget Min'
             iconAfter={<Image src={usd} height={20} />}
-            className="col-span-1"
+            className='col-span-1'
             name={'budget_min'}
             onChange={(newValue) => {
               formik.setFieldValue('budget_min', newValue);
@@ -200,11 +200,11 @@ export default function LookingFor({ contactId }) {
             errorText={errors.budget_min}
           />
           <Input
-            id="budget_max"
-            type="money"
-            label="Budget Max"
+            id='budget_max'
+            type='money'
+            label='Budget Max'
             iconAfter={<Image src={usd} height={20} />}
-            className="col-span-1"
+            className='col-span-1'
             name={'budget_max'}
             onChange={(newValue) => {
               formik.setFieldValue('budget_max', newValue);
@@ -219,13 +219,13 @@ export default function LookingFor({ contactId }) {
   ];
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      <div className="flex bg-gray10 flex-row">
-        <div className="w-[65%] bg-gray10">
-          <div className="bg-white p-6 m-[24px]">
+      <div className='flex bg-gray10 flex-row'>
+        <div className='w-[65%] bg-gray10'>
+          <div className='bg-white p-6 m-[24px]'>
             <form onSubmit={formik.handleSubmit}>
-              <div className="max-w-3xl mx-auto relative">
+              <div className='max-w-3xl mx-auto relative'>
                 <SearchSelectInput
-                  label="Neighborhood"
+                  label='Neighborhood'
                   options={NYCneighborhoods}
                   value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
                   onChange={(choice) => {
@@ -247,7 +247,7 @@ export default function LookingFor({ contactId }) {
               /> */}
               </div>
               <Accordion tabs={tabs} activeSelections={selections} defaultOpen />
-              <Button type="submit" primary className="mt-6" loading={loadingButton}>
+              <Button type='submit' primary className='mt-6' loading={loadingButton}>
                 Save
               </Button>
             </form>
