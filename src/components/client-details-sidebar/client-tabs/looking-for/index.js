@@ -42,7 +42,7 @@ export default function LookingFor({ contactId }) {
           return;
         } else {
           return schema
-            .required('Filed can not be left blank.')
+            .required('Field can not be left blank.')
             .typeError('Budget Max should be an integer')
             .moreThan(budget_min, 'Budget Max be greater than Budget Min');
         }
