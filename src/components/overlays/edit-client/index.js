@@ -100,7 +100,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
   const editClient = async (values) => {
     try {
       await updateContact(client?.id, values);
-      console.log(values, 'edit contact', client?.id);
+      console.log(values, 'edit contacttt', client?.id);
       dispatch(setRefetchData(true));
       handleClose();
     } catch (error) {
