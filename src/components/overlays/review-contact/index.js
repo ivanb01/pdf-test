@@ -33,18 +33,18 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const ReviewContact = ({
-                         className,
-                         handleClose,
-                         showToast,
-                         redirectAfterMoveToTrash,
-                         title,
-                         client,
-                         setClient,
-                         afterUpdate,
-                         refetchData,
-                         hideCloseButton,
-                         afterSubmit,
-                       }) => {
+  className,
+  handleClose,
+  showToast,
+  redirectAfterMoveToTrash,
+  title,
+  client,
+  setClient,
+  afterUpdate,
+  refetchData,
+  hideCloseButton,
+  afterSubmit,
+}) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -55,6 +55,7 @@ const ReviewContact = ({
   const [existingContactEmail, setExistingContactEmail] = useState('');
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const isUnapprovedAI =
     client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
@@ -90,12 +91,12 @@ const ReviewContact = ({
         client?.category_1 == 'Client'
           ? 0
           : client?.category_1 == 'Professional'
-            ? 1
-            : client?.category_1 == 'Other'
-              ? 2
-              : client?.category_1 === 'Trash'
-                ? 4
-                : 3,
+          ? 1
+          : client?.category_1 == 'Other'
+          ? 2
+          : client?.category_1 === 'Trash'
+          ? 4
+          : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
@@ -173,14 +174,14 @@ const ReviewContact = ({
 
     const newData = isUnapprovedAI
       ? {
-        ...baseData,
-        approved_ai: true,
-      }
+          ...baseData,
+          approved_ai: true,
+        }
       : {
-        ...baseData,
-        lead_source: values.lead_source,
-        tags: values.tags,
-      };
+          ...baseData,
+          lead_source: values.lead_source,
+          tags: values.tags,
+        };
 
     try {
       let shouldExecuteRemainingCode = true;
@@ -194,20 +195,20 @@ const ReviewContact = ({
                 t.visible ? 'animate-enter' : 'animate-leave'
               } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
               style={{ width: '316px' }}>
-              <div className='flex gap-2 p-4 '>
+              <div className="flex gap-2 p-4 ">
                 <CheckCircleIcon className={'text-green-500'} />
                 <h1 className={'text-sm leading-5 font-medium'}>
                   {newData.first_name} {newData.last_name}
                   {'restored in Contacts successfully!'}
                 </h1>
               </div>
-              <div className='flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100'>
+              <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
                 <button
                   onClick={() => {
                     restoreContact({ ...newData, category_id: 3 });
                     toast.dismiss(t.id);
                   }}
-                  className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'>
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
                   Undo
                 </button>
               </div>
@@ -249,17 +250,43 @@ const ReviewContact = ({
     formik.setFieldValue('type_of_activity_id', id);
   };
   useEffect(() => {
-    console.log(formik.dirty, 'formikkkk.dirty');
-  }, [formik]);
+    if (formik.dirty) {
+      const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
+      if (selectedContactCategory == 0 && selectedContactType && selectedStatus) {
+        //if client
+        setSubmitDisabled(false);
+      } else if (selectedContactCategory == 1 && selectedContactType) {
+        //if professional
+        if (selectedContactType == 8) {
+          if (selectedContactSubtype) {
+            setSubmitDisabled(false);
+          } else {
+            setSubmitDisabled(true);
+          }
+        } else {
+          setSubmitDisabled(false);
+        }
+      } else if (selectedContactCategory == 2 && selectedContactType) {
+        // if other
+        setSubmitDisabled(false);
+      } else if (selectedContactCategory == 3 || selectedContactCategory == 4) {
+        setSubmitDisabled(false);
+      } else {
+        setSubmitDisabled(true);
+      }
+    } else {
+      setSubmitDisabled(true);
+    }
+  }, [formik.values, formik.dirty]);
 
   const reviewAIContactButtons = () => {
     return (
       <>
-        <div className='flex items-center text-sm text-gray-900'>
-          <img src={info.src} alt='' className='mr-1' />
+        <div className="flex items-center text-sm text-gray-900">
+          <img src={info.src} alt="" className="mr-1" />
           This contact was imported from Gmail by AI. Please review so you can start the communication.
         </div>
-        <div className='flex'>
+        <div className="flex">
           <Button
             className={`${
               removing && 'bg-red-500'
@@ -288,12 +315,12 @@ const ReviewContact = ({
   const reviewContactButtons = () => {
     return (
       <>
-        <div className='flex items-center text-sm text-gray-900'></div>
-        <div className='flex'>
+        <div className="flex items-center text-sm text-gray-900"></div>
+        <div className="flex">
           <Button className={` mr-4`} white onClick={() => handleClose()}>
             Cancel
           </Button>
-          <Button primary onClick={() => submitForm()} loading={updating}>
+          <Button disabled={submitDisabled} primary onClick={() => submitForm()} loading={updating}>
             {router.pathname.includes('/trash') ? 'Restore Contact' : 'Save Changes'}
           </Button>
         </div>
@@ -332,45 +359,45 @@ const ReviewContact = ({
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
       className={`${className} ${!isUnapprovedAI && 'w-[635px]'}`}>
-      <div className='flex min-h-[420px]'>
+      <div className="flex min-h-[420px]">
         <div className={`${isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'}`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
-            <form className='p-6 pt-0' onSubmit={formik.handleSubmit}>
+            <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
                 <GlobalAlert
                   smallText
                   noBorder
                   rounded
-                  type='warning'
+                  type="warning"
                   message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
                 />
               )}
-              <div className='grid grid-cols-2 gap-4 gap-y-4 mb-6 mt-6'>
+              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6 mt-6">
                 <Input
-                  type='text'
-                  label='First Name'
-                  id='first_name'
-                  className=''
+                  type="text"
+                  label="First Name"
+                  id="first_name"
+                  className=""
                   onChange={formik.handleChange}
                   value={formik.values.first_name}
                   error={errors.first_name && touched.first_name}
                   errorText={errors.first_name}
                 />
                 <Input
-                  type='text'
-                  label='Last Name'
-                  id='last_name'
-                  className=''
+                  type="text"
+                  label="Last Name"
+                  id="last_name"
+                  className=""
                   onChange={formik.handleChange}
                   value={formik.values.last_name}
                   error={errors.last_name && touched.last_name}
                   errorText={errors.last_name}
                 />
                 <Input
-                  type='email'
-                  label='Email'
-                  id='email'
-                  className=''
+                  type="email"
+                  label="Email"
+                  id="email"
+                  className=""
                   readonly
                   // onChange={formik.handleChange}
                   onChange={(e) => {
@@ -384,9 +411,9 @@ const ReviewContact = ({
                   errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
                 />
                 <Input
-                  type='phone_number'
-                  label='Phone'
-                  id='phone_number'
+                  type="phone_number"
+                  label="Phone"
+                  id="phone_number"
                   onChange={(val) => formik.setFieldValue('phone_number', val)}
                   value={formik.values.phone_number}
                   error={errors.phone_number && touched.phone_number}
@@ -396,16 +423,16 @@ const ReviewContact = ({
               {!isUnapprovedAI && (
                 <>
                   <Dropdown
-                    label='Lead Source'
+                    label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
-                    className='mb-6'
+                    className="mb-6"
                     handleSelect={(source) => (formik.values.lead_source = source.name)}
                     initialSelect={formik.values.lead_source}
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                   <TagsInput
-                    label='Tags'
+                    label="Tags"
                     typeOfContact={openedTab}
                     value={findTagsOption(formik.values.tags, openedTab)}
                     onChange={(choice) => {
@@ -420,7 +447,7 @@ const ReviewContact = ({
               <Radio
                 secondary
                 options={contactTypes}
-                label='What kind of contact is this for you?'
+                label="What kind of contact is this for you?"
                 selectedOption={formik.values.selectedContactCategory}
                 setSelectedOption={(e) => {
                   formik.setFieldValue('selectedContactCategory', e);
@@ -428,8 +455,8 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedContactStatus', '');
                 }}
-                className='mb-6 mt-6'
-                name='category-of-contact'
+                className="mb-6 mt-6"
+                name="category-of-contact"
                 error={errors.selectedContactCategory && touched.selectedContactCategory}
                 errorText={errors.selectedContactCategory}
               />
@@ -439,10 +466,10 @@ const ReviewContact = ({
                     formik.values.selectedContactCategory == 0
                       ? clientOptions
                       : formik.values.selectedContactCategory == 1
-                        ? professionalsOptions
-                        : othersOptions
+                      ? professionalsOptions
+                      : othersOptions
                   }
-                  label='What type?'
+                  label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
                     [8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType)
@@ -450,28 +477,28 @@ const ReviewContact = ({
                       : formik.values.selectedContactType
                   }
                   setSelectedOption={(e) => formik.setFieldValue('selectedContactType', e)}
-                  className='mb-6'
-                  name='type-of-contact'
+                  className="mb-6"
+                  name="type-of-contact"
                   error={errors.selectedContactType && touched.selectedContactType}
                   errorText={errors.selectedContactType}
                 />
               )}
               {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType) ? (
                 <>
-                  <div className='text-gray7 mb-3 text-sm font-medium'>What kind of vendor?</div>
-                  <div className='flex flex-wrap'>
+                  <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
+                  <div className="flex flex-wrap">
                     {vendorTypes.map((type) => (
                       <Chip
                         selectedStatus={type.id == formik.values.selectedContactSubtype}
                         key={type.id}
                         label={type.name}
-                        className='mr-3 mb-3'
+                        className="mr-3 mb-3"
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       />
                     ))}
                   </div>
                   {errors.selectedContactSubtype && touched.selectedContactSubtype && errors.selectedContactSubtype && (
-                    <NotificationAlert className='mt-2 p-2' type={'error'}>
+                    <NotificationAlert className="mt-2 p-2" type={'error'}>
                       {errors.selectedContactSubtype}
                     </NotificationAlert>
                   )}
@@ -482,7 +509,7 @@ const ReviewContact = ({
                   <StatusSelect
                     selectedStatus={formik.values.selectedStatus}
                     setSelectedStatus={(e) => formik.setFieldValue('selectedStatus', e)}
-                    label='In what stage of communication?'
+                    label="In what stage of communication?"
                     statuses={statuses}
                     error={errors.selectedStatus && touched.selectedStatus}
                     errorText={errors.selectedStatus}
@@ -493,38 +520,38 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         {isUnapprovedAI && (
-          <div className='w-1/2 relative'>
+          <div className="w-1/2 relative">
             {loadingEmail ? (
               <Loader />
             ) : (
               <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-                <div className='p-6'>
+                <div className="p-6">
                   <div>
-                    <div className='flex items-center mb-2'>
-                      <img src={AI.src} alt='' />
-                      <span className='ml-1 text-gray-900 text-sm'>AI Smart Synced Contact</span>
+                    <div className="flex items-center mb-2">
+                      <img src={AI.src} alt="" />
+                      <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                     </div>
-                    <div className='flex items-center justify-between'>
-                      <div className='text-gray-900 font-medium text-lg max-w-[60%]'>{client.email_subject}</div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
                       <a
-                        target='_blank'
+                        target="_blank"
                         href={client.email_link}
-                        className='cursor-pointer flex items-center text-sm text-gray-900 underline'
-                        rel='noreferrer'>
+                        className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                        rel="noreferrer">
                         View the email source
-                        <img src={newTab.src} alt='' className='ml-1' />
+                        <img src={newTab.src} alt="" className="ml-1" />
                       </a>
                     </div>
                   </div>
-                  <hr className='my-4' />
-                  <div className='text-gray-900 text-sm'>{client.ai_email_summary}</div>
+                  <hr className="my-4" />
+                  <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
                 </div>
               </SimpleBar>
             )}
           </div>
         )}
       </div>
-      <div className='flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu'>
+      <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
         {isUnapprovedAI ? reviewAIContactButtons() : reviewContactButtons()}
       </div>
     </Overlay>
