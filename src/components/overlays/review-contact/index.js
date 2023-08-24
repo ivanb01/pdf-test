@@ -250,7 +250,7 @@ const ReviewContact = ({
     formik.setFieldValue('type_of_activity_id', id);
   };
   useEffect(() => {
-    if (formik.dirty) {
+    if (formik.dirty || isUnapprovedAI) {
       const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
       if (selectedContactCategory == 0 && selectedContactType && selectedStatus) {
         //if client
@@ -303,6 +303,7 @@ const ReviewContact = ({
             } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
             leftIcon={<CheckCircle />}
             coloredButton
+            disabled={submitDisabled}
             onClick={() => submitForm()}
             loading={updating}>
             Mark as Correct
