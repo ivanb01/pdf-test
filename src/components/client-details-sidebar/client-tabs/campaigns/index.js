@@ -18,7 +18,7 @@ import UnassignOverlay from 'components/overlays/unassign';
 import { sortDateAsc, formatDateMDY, formatDateLThour, isValidDate } from 'global/functions';
 import { useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
-import { setRefetchData } from 'store/global/slice';
+import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { useDispatch } from 'react-redux';
 
 export default function Campaigns({ contactId, contact }) {
@@ -40,7 +40,7 @@ export default function Campaigns({ contactId, contact }) {
   const handleAssignCampaignChange = async () => {
     try {
       await assignContactToCampaign(campaignId, contactId);
-      dispatch(setRefetchData(true));
+      dispatch(setRefetchPart('campaigns'));
       setShowAssignToCampaign(false);
     } catch (error) {
       console.log(error);
@@ -50,7 +50,7 @@ export default function Campaigns({ contactId, contact }) {
   const handleUnassignCampaignChange = async () => {
     try {
       await unassignContactFromCampaign(campaignId, contactId);
-      dispatch(setRefetchData(true));
+      dispatch(setRefetchPart('campaigns'));
       setShowUnassignFromCampaign(false);
     } catch (error) {
       console.log(error);
@@ -149,7 +149,7 @@ export default function Campaigns({ contactId, contact }) {
 
   useEffect(() => {
     fetchContactCampaign();
-  }, [contactId, contact, refetchData]);
+  }, [contactId, contact, refetchData, campaignsData]);
   return (
     <>
       {showAssignToCampaign && (
@@ -197,8 +197,7 @@ export default function Campaigns({ contactId, contact }) {
                           : alert.type === 'warning'
                           ? 'text-yellow3'
                           : 'text-red4'
-                      }`}
-                    >
+                      }`}>
                       {alert.text}
                     </p>
                     {alert.button}

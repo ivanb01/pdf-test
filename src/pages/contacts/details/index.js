@@ -41,6 +41,9 @@ export default function Details() {
     const activityLogData = activityLogResponse.data;
     dispatch(setActivityLogData(activityLogData.data));
   };
+  const getContactData = () => {
+    getContact(id).then((result) => setContact(result.data));
+  };
   const getNotes = () => {
     getContactNotes(id)
       .then((notesResponse) => {
@@ -90,6 +93,10 @@ export default function Details() {
     } else if (refetchPart == 'activity-log') {
       getActivityLog();
       dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'campaigns') {
+      getCampaigns();
+      getContactData();
+      dispatch(setRefetchPart(null));
     }
   }, [refetchPart]);
 
@@ -106,12 +113,13 @@ export default function Details() {
   }, [contacts, fetchContactRequired, id]);
 
   const [backUrl, setBackUrl] = useState(null);
-  const tempUrl = contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other' ? contact?.category_1 : `${contact?.category_1}s`;
+  const tempUrl =
+    contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+      ? contact?.category_1
+      : `${contact?.category_1}s`;
   useEffect(() => {
-
-
     if (contact?.category_1) {
-      setBackUrl(`/contacts/${(tempUrl).toLowerCase()}`);
+      setBackUrl(`/contacts/${tempUrl.toLowerCase()}`);
     }
   }, [contact]);
 
@@ -124,28 +132,30 @@ export default function Details() {
           hideCloseButton
           redirectAfterMoveToTrash
           handleClose={() => setShowReviewOverlay(false)}
-          title='Review AI Imported Contact'
+          title="Review AI Imported Contact"
           client={aiData}
         />
       )}
-      <div className='client-details-page-wrapper'>
+      <div className="client-details-page-wrapper">
         {!contact ? (
-          <div className='relative h-full' style={{ height: 'calc(100vh - 68px) !important' }}>
+          <div className="relative h-full" style={{ height: 'calc(100vh - 68px) !important' }}>
             <Loader />
           </div>
         ) : (
           <>
-            <div className='p-6 inline-block'>
-              <a href='#' onClick={() => {
-                backUrl !== null ? router.push(backUrl) : router.back();
-              }} className='items-center flex'>
-                <Image className='cursor-pointer' src={backArrow} />
-                <div className='ml-2 font-medium'>Back
-                  to {tempUrl}</div>
+            <div className="p-6 inline-block">
+              <a
+                href="#"
+                onClick={() => {
+                  backUrl !== null ? router.push(backUrl) : router.back();
+                }}
+                className="items-center flex">
+                <Image className="cursor-pointer" src={backArrow} />
+                <div className="ml-2 font-medium">Back to {tempUrl}</div>
               </a>
             </div>
             {id && (
-              <div className='flex flex-row border-t border-gray-2'>
+              <div className="flex flex-row border-t border-gray-2">
                 <ClientDetailsSidebar
                   client={contact}
                   // afterUpdate={fetchContact}
@@ -154,7 +164,7 @@ export default function Details() {
                   loadingTabs={loadingTabs}
                   current={current}
                   setCurrent={setCurrent}
-                  className='px-6 pb-6'
+                  className="px-6 pb-6"
                   tabs={localTabs}
                 />
               </div>
