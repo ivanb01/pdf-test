@@ -50,6 +50,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
+  const [searchTerm, setSearchTerm]= useState('')
 
   const handleViewChange = (viewId) => {
     setCurrentButton(viewId);
@@ -93,14 +94,6 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     'Not In Campaign': null,
   };
 
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     onSearch(searchTerm);
-  //     // Send Axios request here
-  //   }, 2000);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchTerm]);
 
   useEffect(() => {
     if (contacts.length === contactsOriginalLength) {
@@ -117,7 +110,6 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
 
     let contactsState = contactsOriginal;
     Object.keys(filters).map((key) => {
-      console.log('key', key, filters);
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
@@ -208,7 +200,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               {/* {openedTab} - {openedSubtab} */}
             </Text>
             <div className="flex items-center justify-self-end">
-              <Search placeholder="Search" className="mr-4 text-sm" onInput={(event) => onSearch(event.target.value)} />
+              <Search placeholder="Search" className="mr-4 text-sm" onInput={(event) => setSearchTerm(event.target.value)} />
               <Button
                 secondary
                 leftIcon={<FilterList className="w-5 h-5" />}
@@ -286,7 +278,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
           >
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <Column key={index} status={status} categoryType="clients" handleCardEdit={handleCardEdit} />
+                <Column key={index} status={status} categoryType="clients" handleCardEdit={handleCardEdit} filter={searchTerm} />
               ))}
             </div>
           </SimpleBar>
@@ -294,7 +286,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 170px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table tableFor="contactsList" categoryType="clients" handleCardEdit={handleCardEdit} />
+                <Table tableFor="contactsList" categoryType="clients" handleCardEdit={handleCardEdit} searchTerm={searchTerm} />
               </SimpleBar>
             </div>
           </div>

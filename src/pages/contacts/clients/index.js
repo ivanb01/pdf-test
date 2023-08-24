@@ -134,7 +134,6 @@ const index = () => {
               unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
             }
             setShowAddContactOverlay={setShowAddContactOverlay}
-            onSearch={searchClients}
           />
           {/* <Tour for={'clients'} /> */}
         </>
@@ -142,7 +141,7 @@ const index = () => {
       {showAddContactOverlay && (
         <AddClientManuallyOverlay
           handleClose={() => setShowAddContactOverlay(false)}
-          title="Add Client"
+          title='Add Client'
           options={clientOptions}
           statuses={clientStatuses}
         />
@@ -153,7 +152,7 @@ const index = () => {
           client={contactToEdit}
           setClient={setContactToEdit}
           handleClose={() => setShowEditContact(false)}
-          title="Edit Client"
+          title='Edit Client'
         />
         // <EditContactOverlay
         //   handleClose={() => setShowEditContact(false)}
