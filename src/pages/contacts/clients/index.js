@@ -45,11 +45,6 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
-  const searchClients = (term) => {
-    let filteredArray = searchContacts(contactsCopy.data, term);
-    dispatch(updateContacts(filteredArray.data));
-  };
-
   const fetchUnapproved = async () => {
     try {
       const response = await getUnapprovedContacts();
