@@ -77,7 +77,7 @@ const index = () => {
     setContactsCopy(clients);
     setLoading(false);
     dispatch(setOpenedTab(0));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
   useEffect(() => {
     setLoading(true);
@@ -89,7 +89,7 @@ const index = () => {
     if (refetchData) {
       fetchClients();
       dispatch(setOpenedTab(0));
-      dispatch(setOpenedSubtab(0));
+      // dispatch(setOpenedSubtab(0));
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);

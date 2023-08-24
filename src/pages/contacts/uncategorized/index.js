@@ -73,7 +73,7 @@ const index = () => {
     let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
     setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {

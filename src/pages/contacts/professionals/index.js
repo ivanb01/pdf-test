@@ -48,7 +48,7 @@ const index = () => {
     setProfessionalsCopy(professionals);
     setLoading(false);
     dispatch(setOpenedTab(1));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {

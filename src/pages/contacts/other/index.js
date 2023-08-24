@@ -51,7 +51,7 @@ const index = () => {
       fetchOther();
     }
     dispatch(setOpenedTab(3));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   }, [allContacts]);
 
   useEffect(() => {
