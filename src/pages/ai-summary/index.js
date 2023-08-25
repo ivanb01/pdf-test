@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
+import backBtn from '/public/images/back.svg';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -121,8 +122,7 @@ const index = () => {
             style={{
               height: '100%',
               maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 136px)' : 'calc(100vh - 68px)',
-            }}
-          >
+            }}>
             <div className="p-6 text-gray-900 font-medium text-base">
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
                 {data.filter((item) => item.approved_ai != true).length} contacts
@@ -147,7 +147,34 @@ const index = () => {
           </SimpleBar>
         </>
       ) : (
-        <div>No Data</div>
+        <div className="flex items-center justify-center relative">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+            <lottie-player
+              src="https://lottie.host/873e33e8-5a6a-4cad-99ec-2bd892b75859/0ws0cu3bNT.json"
+              background="transparent"
+              speed="1"
+              style={{ height: '300px' }}
+              loop
+              autoplay></lottie-player>
+            <div className="mt-[50px] text-gray-900 text-center">
+              <div className="font-semibold text-lg">Well Done!</div>
+              <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
+            </div>
+            <div
+              onClick={() => router.push('/contacts/clients')}
+              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
+              <img className="mr-2" src={backBtn.src} alt="" />
+              Back to Contacts
+            </div>
+          </div>
+          <lottie-player
+            src="https://lottie.host/44832648-5dda-448a-8762-d7636963a564/8IkBu8xsfM.json"
+            background="transparent"
+            speed="1"
+            style={{ width: '100%', height: 'calc(100vh - 68px)' }}
+            loop
+            autoplay></lottie-player>
+        </div>
       )}
       {showReviewOverlay && popupData && (
         <ReviewContact
@@ -166,14 +193,12 @@ const index = () => {
           <div className="flex">
             <button
               onClick={() => bulkUpdate(2)}
-              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
-            >
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
               <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               onClick={() => bulkUpdate(1)}
-              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]"
-            >
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
               <span className="ml-2">Mark as Correct</span>
             </button>
