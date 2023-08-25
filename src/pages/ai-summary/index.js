@@ -115,7 +115,7 @@ const index = () => {
         <div style={{ height: 'calc(100vh - 68px)' }} className="relative">
           <Loader />
         </div>
-      ) : data ? (
+      ) : data && data.filter((data) => data.approved_ai != true).length ? (
         <>
           <SimpleBar
             autoHide={true}
