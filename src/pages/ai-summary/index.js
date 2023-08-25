@@ -150,13 +150,12 @@ const index = () => {
         <div className="flex items-center justify-center relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
             <lottie-player
-              src="https://lottie.host/873e33e8-5a6a-4cad-99ec-2bd892b75859/0ws0cu3bNT.json"
+              src="https://lottie.host/0e91f34e-3785-4a43-9e41-edffb9f7a164/wqi0RYRuUw.json"
               background="transparent"
               speed="1"
               style={{ height: '300px' }}
-              loop
               autoplay></lottie-player>
-            <div className="mt-[50px] text-gray-900 text-center">
+            <div className="-mt-10 text-gray-900 text-center">
               <div className="font-semibold text-lg">Well Done!</div>
               <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
             </div>
