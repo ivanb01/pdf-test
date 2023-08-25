@@ -172,7 +172,6 @@ const index = () => {
             background="transparent"
             speed="1"
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}
-            loop
             autoplay></lottie-player>
         </div>
       )}
