@@ -1137,7 +1137,7 @@ const Table = ({
               {contacts
                 .filter((contact) => searchTerm.split(' ').every((word) => {
                   const lowercaseWord = word.toLowerCase();
-                  return contact.email.toLowerCase().includes(lowercaseWord) || contact.last_name.toLowerCase().includes(lowercaseWord);
+                  return contact.first_name.toLowerCase().includes(lowercaseWord) || contact.last_name.toLowerCase().includes(lowercaseWord);
                 }) && contact.category_id == type.id)
                 .map((contact) => (
                   <tr
