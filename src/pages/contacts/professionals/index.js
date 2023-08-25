@@ -48,6 +48,7 @@ const index = () => {
     setProfessionalsCopy(professionals);
     setLoading(false);
     dispatch(setOpenedTab(1));
+    console.log(professionals,"professionals")
     // dispatch(setOpenedSubtab(0));
   };
 

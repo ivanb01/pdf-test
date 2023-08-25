@@ -1102,6 +1102,26 @@ const Table = ({
         </tr>
         </thead>
         <tbody className='bg-white'>
+        {/*(d) =>*/}
+        {/*searchTerm.split(' ').every((word) => {*/}
+        {/*  const lowercaseWord = word.toLowerCase();*/}
+        {/*  return (*/}
+        {/*  d.email.toLowerCase().includes(lowercaseWord) ||*/}
+        {/*  d.first_name.toLowerCase().includes(lowercaseWord) ||*/}
+        {/*  d.last_name.toLowerCase().includes(lowercaseWord)*/}
+        {/*  );*/}
+        {/*})*/}
+
+        {/*{contactsStatuses[openedSubtab].statuses.map((category, index) =>*/}
+        {/*  contacts.filter(*/}
+        {/*    (contact) =>*/}
+        {/*      searchTerm.split(' ').every((word) => {*/}
+        {/*        const lowercaseWord = word.toLowerCase();*/}
+        {/*        return contact.first_name.toLowerCase().includes(lowercaseWord) || contact.last_name.toLowerCase().includes(lowercaseWord);*/}
+        {/*      }) &&*/}
+        {/*      contact.status_id == category.id &&*/}
+        {/*      contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,*/}
+        {/*  )*/}
         {professionalTypes.map((type, index) =>
           contacts.filter((contact) => contact.category_id == type.id).length ? (
             <>
@@ -1115,7 +1135,10 @@ const Table = ({
                 </td>
               </tr>
               {contacts
-                .filter((contact) => contact.category_id == type.id)
+                .filter((contact) => searchTerm.split(' ').every((word) => {
+                  const lowercaseWord = word.toLowerCase();
+                  return contact.first_name.toLowerCase().includes(lowercaseWord) || contact.last_name.toLowerCase().includes(lowercaseWord);
+                }) && contact.category_id == type.id)
                 .map((contact) => (
                   <tr
                     key={contact.id}
