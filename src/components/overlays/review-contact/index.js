@@ -8,7 +8,7 @@ import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions }
 import Input from 'components/shared/input';
 import { updateContact } from 'api/contacts';
 import { findTagsOption } from 'global/functions';
-import { setRefetchData } from 'store/global/slice';
+import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
@@ -246,6 +246,9 @@ const ReviewContact = ({
       updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
 
       // toaster message
+      if (router.pathname.toLowerCase().includes('details')) {
+        dispatch(setOpenedSubtab(0));
+      }
 
       if (shouldExecuteRemainingCode) {
         toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
