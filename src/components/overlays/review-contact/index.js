@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Overlay from 'components/shared/overlay';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions }
 import Input from 'components/shared/input';
 import { updateContact } from 'api/contacts';
 import { findTagsOption } from 'global/functions';
-import { setRefetchData } from 'store/global/slice';
+import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
@@ -56,6 +56,7 @@ const ReviewContact = ({
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
   const [submitDisabled, setSubmitDisabled] = useState(true);
+  const initialClientCategoryId = useRef(client.category_1);
 
   const isUnapprovedAI =
     client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
@@ -222,6 +223,14 @@ const ReviewContact = ({
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
+      if (newData.category_id === 3 && router.pathname.includes('details')) {
+        const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
+        const targetCategory = ['trash', 'uncategorized', 'other'].includes(lowercaseCategory)
+          ? lowercaseCategory
+          : `${lowercaseCategory}s`;
+
+        router.push(targetCategory);
+      }
 
       // make changes to global state
       dispatch(updateContactLocally(newData));
@@ -237,6 +246,9 @@ const ReviewContact = ({
       updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
 
       // toaster message
+      if (router.pathname.toLowerCase().includes('details')) {
+        dispatch(setOpenedSubtab(0));
+      }
 
       if (shouldExecuteRemainingCode) {
         toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
