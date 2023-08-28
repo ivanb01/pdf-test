@@ -33,7 +33,8 @@ const index = () => {
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
-  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(false);
+  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(true);
+  const [activatingSmartSync, setActivatingSmartSync] = useState(true);
 
   const [loading, setLoading] = useState(true);
 
@@ -95,9 +96,12 @@ const index = () => {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
-      if (queryParams?.code) {
+      if (queryParams?.code && queryParams?.prompt == 'consent') {
+        setActivatingSmartSync(true);
+        setShowSmartSyncOverlay(true);
         getGoogleAuthCallback(queryParams, '/contacts/clients').then(() => {
           getUserConsentStatus().then((results) => {
+            setActivatingSmartSync(false);
             dispatch(setUserGaveConsent(results.data.scopes));
           });
         });
@@ -106,7 +110,12 @@ const index = () => {
   }, [router.query]);
 
   useEffect(() => {
-    if (router.query.code && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts')) {
+    if (
+      router.query.code &&
+      router.query.prompt == 'consent' &&
+      userGaveConsent?.includes('gmail') &&
+      userGaveConsent?.includes('contacts')
+    ) {
       setShowSmartSyncOverlay(true);
     }
   }, [userGaveConsent, router.query]);
@@ -118,7 +127,10 @@ const index = () => {
       ) : (
         <>
           {showSmartSyncOverlay && (
-            <SmartSyncActivatedOverlay handleCloseOverlay={() => setShowSmartSyncOverlay(false)} />
+            <SmartSyncActivatedOverlay
+              activatingSmartSync={activatingSmartSync}
+              handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
+            />
           )}
           <Clients
             handleCardEdit={(contact) => {
@@ -136,7 +148,7 @@ const index = () => {
       {showAddContactOverlay && (
         <AddClientManuallyOverlay
           handleClose={() => setShowAddContactOverlay(false)}
-          title='Add Client'
+          title="Add Client"
           options={clientOptions}
           statuses={clientStatuses}
         />
@@ -147,7 +159,7 @@ const index = () => {
           client={contactToEdit}
           setClient={setContactToEdit}
           handleClose={() => setShowEditContact(false)}
-          title='Edit Client'
+          title="Edit Client"
         />
         // <EditContactOverlay
         //   handleClose={() => setShowEditContact(false)}
