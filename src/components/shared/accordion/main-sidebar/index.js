@@ -66,9 +66,11 @@ const MainSidebar = ({
   };
 
   useEffect(() => {
-    getUserConsentStatus().then((results) => {
-      dispatch(setUserGaveConsent(results.data.scopes));
-    });
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus().then((results) => {
+        dispatch(setUserGaveConsent(results.data.scopes));
+      });
+    }
   }, []);
 
   const narrowMenu = () => {
