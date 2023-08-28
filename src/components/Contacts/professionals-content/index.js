@@ -91,18 +91,18 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
 
   useEffect(() => {
     if (contacts.length) {
-      dispatch(setProfessionals(contacts));
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(setProfessionals(contacts));
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
       setFiltersCleared(false);
       return;
     }
 
-    let contactsState = contacts;
+    let contactsState = contacts.filter((contact) => contact.category_1 == 'Professional');
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>

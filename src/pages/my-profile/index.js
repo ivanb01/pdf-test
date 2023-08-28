@@ -7,14 +7,18 @@ import { PencilIcon } from '@heroicons/react/solid';
 import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
 import { ShieldCheckIcon } from '@heroicons/react/solid';
+import Security from '@mui/icons-material/Security';
 import { useState } from 'react';
 import Table from 'components/shared/table';
 import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
+import aiIcon from '/public/images/ai-icon.svg';
+import googleIcon from '/public/images/google-icon.svg';
 
 const index = () => {
   const [currentTab, setCurrentTab] = useState(1);
+  const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   // const importsSummary = [
   //   {
@@ -188,7 +192,33 @@ const index = () => {
       <>
         <TopBar text="Account Management" />
         <div className="p-6">
-          <Text h3 className="mb-1">
+          <div className="font-medium">Connected Social Media Accounts</div>
+          <div className="text-sm text-gray-700 mt-6 mb-3">Smart Sync Contacts and Google Contacts from Gmail</div>
+          <div className="max-w-[750px] rounded-[4px] border border-gray-200 p-6 flex">
+            <div className="text-center max-w-[265px] mr-6">
+              <img className="m-auto" src={aiIcon.src} alt="" />
+              <div className=" mt-6 text-xs text-gray-500">
+                With <strong>Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze each
+                contact's information, swiftly identifying their type, status, and most importantly, their interests.
+              </div>
+            </div>
+            <div className="text-center max-w-[265px]">
+              <img className="m-auto" src={googleIcon.src} alt="" />
+              <div className=" mt-6 text-xs text-gray-500">
+                With <strong>"Import Google Contacts"</strong> you will be able to import your contacts that are already
+                in your "Google Contact" list.
+              </div>
+            </div>
+            <div></div>
+          </div>
+          <hr className="my-6" />
+          <div className="font-medium">Delete Your Account</div>
+          <div className="text-sm text-gray-700 mt-1 mb-6">
+            By deleting your account, you will no longer be able to access any information within the platform or login
+            to Oneline.
+          </div>
+          <Button white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} />
+          {/* <Text h3 className="mb-1">
             Password
           </Text>
           <Text p className="text-gray4">
@@ -213,7 +243,7 @@ const index = () => {
                 <Button label="Save Changes" primary />
               </>
             )}
-          </div>
+          </div> */}
         </div>
       </>
     );
@@ -229,8 +259,7 @@ const index = () => {
               <Table
                 data={importsSummary}
                 tableFor="imports-summary"
-                handleClickRow={() => Router.push('/my-profile/import-details')}
-              ></Table>
+                handleClickRow={() => Router.push('/my-profile/import-details')}></Table>
             </SimpleBar>
           </div>
         </div>
@@ -250,7 +279,7 @@ const index = () => {
     {
       id: 1,
       name: 'Account Management',
-      icon: <ShieldCheckIcon height={20} className="mr-3" />,
+      icon: <Security height={20} className="mr-3" />,
       tabContent: accountManagementTab(),
     },
     // {
@@ -274,8 +303,7 @@ const index = () => {
                   onClick={() => setCurrentTab(tab.id)}
                   className={`p-3 flex items-center ${
                     currentTab == tab.id ? 'bg-lightBlue1 text-lightBlue3' : 'text-gray4 hover:text-gray5'
-                  } rounded-md`}
-                >
+                  } rounded-md`}>
                   {tab.icon}
                   {tab.name}
                 </a>
