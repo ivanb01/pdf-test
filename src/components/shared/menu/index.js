@@ -15,7 +15,7 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setCount, setRefetchCount, setRefetchData } from '@store/global/slice';
+import { setCount, setOpenedTab, setRefetchCount, setRefetchData } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 
@@ -109,7 +109,15 @@ const MainMenu = ({
       } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
-          <Image src={oneLineLogo} alt="" onClick={() => Router.push('/contacts/clients')} className="cursor-pointer" />
+          <Image
+            src={oneLineLogo}
+            alt=""
+            onClick={() => {
+              dispatch(setOpenedTab(0));
+              router.push('/contacts/clients');
+            }}
+            className="cursor-pointer"
+          />
         </div>
         <div className="menu-links">
           <ul className="flex items-center">
