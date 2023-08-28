@@ -41,6 +41,7 @@ const MainSidebar = ({
   const [showSSOverlay, setShowSSOverlay] = useState(false);
 
   const getCountForTabOrSubtab = (count_key) => {
+    console.log('');
     return count && count[count_key] ? count[count_key] : 0;
   };
 
