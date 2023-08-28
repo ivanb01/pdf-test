@@ -50,6 +50,8 @@ const Layout = ({ children }) => {
       label: 'Clients in the Funnel',
       href: 'clients',
       icon: <Group className="h-5 w-5" />,
+      count: 0,
+      count_key: 'clients_total',
       subtab: [
         {
           id: 0,
@@ -87,6 +89,8 @@ const Layout = ({ children }) => {
       label: 'Professionals',
       href: 'professionals',
       icon: <PermContactCalendar className="h-5 w-5" />,
+      count: 0,
+      count_key: 'professionals_total',
       subtab: [
         {
           id: 0,
@@ -116,6 +120,8 @@ const Layout = ({ children }) => {
       name: 'Other',
       label: 'Other Contacts',
       href: 'other',
+      count: 0,
+      count_key: 'other_total',
       icon: <ContactPage className="h-5 w-5" />,
       subtab: [
         {
@@ -151,6 +157,8 @@ const Layout = ({ children }) => {
       name: 'Uncategorized',
       label: 'Uncategorized Contacts',
       href: 'uncategorized',
+      count: 0,
+      count_key: 'uncategorized_total',
       icon: <Error className="h-5 w-5" />,
       subtab: [
         {
@@ -179,6 +187,8 @@ const Layout = ({ children }) => {
       name: 'Trash',
       label: 'Trash',
       href: 'trash',
+      count: 0,
+      count_key: 'trash',
       icon: <DeleteIcon className={'w-5 h-5'} />,
     },
   ]);
@@ -187,7 +197,6 @@ const Layout = ({ children }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
-
 
   const handleOpenedTab = (tab) => {
     dispatch(setOpenedTab(tab));
