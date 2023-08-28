@@ -158,7 +158,7 @@ const Layout = ({ children }) => {
       label: 'Uncategorized Contacts',
       href: 'uncategorized',
       count: 0,
-      count_key: 'uncategorized_total',
+      count_key: 'uncategorized_new_records',
       icon: <Error className="h-5 w-5" />,
       subtab: [
         {

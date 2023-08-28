@@ -41,7 +41,9 @@ const MainSidebar = ({
   const [showSSOverlay, setShowSSOverlay] = useState(false);
 
   const getCountForTabOrSubtab = (count_key) => {
-    console.log('');
+    if (count_key === 'other_total') {
+      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
+    }
     return count && count[count_key] ? count[count_key] : 0;
   };
 
