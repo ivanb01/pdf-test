@@ -707,7 +707,7 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.allContacts.data);
+    const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
@@ -1046,7 +1046,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.allContacts.data);
+    const contactsOriginal = useSelector((state) => state.contacts.professionals);
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
@@ -1107,26 +1107,6 @@ const Table = ({
           </tr>
         </thead>
         <tbody className="bg-white">
-          {/*(d) =>*/}
-          {/*searchTerm.split(' ').every((word) => {*/}
-          {/*  const lowercaseWord = word.toLowerCase();*/}
-          {/*  return (*/}
-          {/*  d.email.toLowerCase().includes(lowercaseWord) ||*/}
-          {/*  d.first_name.toLowerCase().includes(lowercaseWord) ||*/}
-          {/*  d.last_name.toLowerCase().includes(lowercaseWord)*/}
-          {/*  );*/}
-          {/*})*/}
-
-          {/*{contactsStatuses[openedSubtab].statuses.map((category, index) =>*/}
-          {/*  contacts.filter(*/}
-          {/*    (contact) =>*/}
-          {/*      searchTerm.split(' ').every((word) => {*/}
-          {/*        const lowercaseWord = word.toLowerCase();*/}
-          {/*        return contact.first_name.toLowerCase().includes(lowercaseWord) || contact.last_name.toLowerCase().includes(lowercaseWord);*/}
-          {/*      }) &&*/}
-          {/*      contact.status_id == category.id &&*/}
-          {/*      contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,*/}
-          {/*  )*/}
           {professionalTypes.map((type, index) =>
             contacts.filter((contact) => contact.category_id == type.id).length ? (
               <>
@@ -1847,12 +1827,3 @@ const Table = ({
 };
 
 export default Table;
-
-//if any table was broken after classname 'h-full' was adden we need to set 'h-full' just for 'contactList' table
-{
-  /* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
-<div className={`${tableFor == 'contactsList' ? 'h-full' : ''} flex flex-col`} >
-  <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} overflow-x-auto`} >
-    <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} inline-block min-w-full align-middle`}>
-      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */
-}

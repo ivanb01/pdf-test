@@ -11,35 +11,47 @@ import SlideOver from 'components/shared/slideOver';
 import { useState, useEffect } from 'react';
 import Accordion from 'components/shared/accordion';
 import {
-  professionalsStatuses, professioonalStatusMainTitlesUpdated, allStatusesQuickEdit, filtersForLastCommunicationDate,
+  professionalsStatuses,
+  professioonalStatusMainTitlesUpdated,
+  allStatusesQuickEdit,
+  filtersForLastCommunicationDate,
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateContacts } from 'store/contacts/slice';
+import { setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
 
-const tabs = [{
-  title: 'PROFESSIONAL TYPES',
-  content: multiselectOptionsProfessionals.map((option) => option.label),
-  value: 'category_2',
-}, {
-  title: 'LAST COMMUNICATION',
-  content: Object.keys(filtersForLastCommunicationDate),
-  value: 'last_communication_date',
-  onlyOneValue: true,
-}, {
-  title: 'ADDED SOURCE', content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'], value: 'import_source',
-}, {
-  title: 'PROFESSIONAL STATUSES',
-  content: allStatusesQuickEdit['professionals'].map((item) => item.name),
-  value: 'status_2',
-}, {
-  title: 'CAMPAIGN', content: ['In Campaign', 'Not In Campaign'], value: 'is_in_campaign',
-}, // {
+const tabs = [
+  {
+    title: 'PROFESSIONAL TYPES',
+    content: multiselectOptionsProfessionals.map((option) => option.label),
+    value: 'category_2',
+  },
+  {
+    title: 'LAST COMMUNICATION',
+    content: Object.keys(filtersForLastCommunicationDate),
+    value: 'last_communication_date',
+    onlyOneValue: true,
+  },
+  {
+    title: 'ADDED SOURCE',
+    content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
+    value: 'import_source',
+  },
+  {
+    title: 'PROFESSIONAL STATUSES',
+    content: allStatusesQuickEdit['professionals'].map((item) => item.name),
+    value: 'status_2',
+  },
+  {
+    title: 'CAMPAIGN',
+    content: ['In Campaign', 'Not In Campaign'],
+    value: 'is_in_campaign',
+  }, // {
   //   title: 'TAGS',
   //   content: multiselectOptionsProfessionals.map((option) => option.label),
   //   value: 'tags',
@@ -47,14 +59,20 @@ const tabs = [{
 ];
 
 const campaignFilterMeaning = {
-  'In Campaign': 'assigned', 'Not In Campaign': null,
+  'In Campaign': 'assigned',
+  'Not In Campaign': null,
 };
 
-const buttons = [{
-  id: 0, icon: <ViewColumn className='h-5 w-5' />,
-}, {
-  id: 1, icon: <TableRows className='h-5 w-5' />,
-}];
+const buttons = [
+  {
+    id: 0,
+    icon: <ViewColumn className="h-5 w-5" />,
+  },
+  {
+    id: 1,
+    icon: <TableRows className="h-5 w-5" />,
+  },
+];
 
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
@@ -66,41 +84,39 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
+  const professionals = useSelector((state) => state.contacts.professionals);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
   const [searchTerm, setSearchTerm] = useState(' ');
 
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     onSearch(searchTerm);
-  //     // Send Axios request here
-  //   }, 2000);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchTerm]);
-
   useEffect(() => {
-    if (contacts.length === contactsOriginalLength) {
-      setContactsOriginal([...contacts]);
+    if (contacts.length) {
+      dispatch(setProfessionals(contacts));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(updateContacts(contactsOriginal));
+      dispatch(setProfessionals(contacts));
       setFiltersCleared(false);
       return;
     }
 
-    let contactsState = contactsOriginal;
+    let contactsState = contacts;
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
-        contactsState = contactsState.filter((contact) => filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2));
+        contactsState = contactsState.filter((contact) =>
+          filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
+        );
       } else if (key == 'is_in_campaign') {
         let booleanFilter = filters[key].map((filter) => campaignFilterMeaning[filter]);
         contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
       } else if (key == 'import_source' && filters['import_source'] == 'Manually Added') {
-        contactsState = contactsState.filter((contact) => contact.import_source != 'Google Contacts' && contact.import_source != 'GmailAI' && contact.import_source != 'Gmail');
+        contactsState = contactsState.filter(
+          (contact) =>
+            contact.import_source != 'Google Contacts' &&
+            contact.import_source != 'GmailAI' &&
+            contact.import_source != 'Gmail',
+        );
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
@@ -111,7 +127,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
       }
     });
 
-    dispatch(updateContacts(contactsState));
+    dispatch(setProfessionals(contactsState));
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -163,80 +179,84 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
   }, [filters]);
   useEffect(() => {
     setSearchTerm('');
-    console.log(openedSubtab, 'openedSubtab');
   }, [openedSubtab]);
-  useEffect(() => {
 
-    console.log(searchTerm, 'searchTerm');
-  }, [searchTerm]);
-
-  return (<>
-    <div className='absolute left-0 top-0 right-0 bottom-0 flex flex-col'>
-      <div className='p-6 flex items-center justify-between'>
-        <div className='flex items-center justify-between w-full'>
-          <Text h3 className='text-gray7 text-xl'>
-            {professionalsStatuses[openedSubtab].statusMainTitle}
-          </Text>
-          <div className='flex items-center justify-self-end'>
-            <Search placeholder='Search' className='mr-4 text-sm'
-                    value={searchTerm}
-                    onInput={(event) => setSearchTerm(event.target.value)} />
-            <Button
-              secondary
-              leftIcon={<FilterList className='w-5 h-5' />}
-              iconSize='w-5 h-5'
-              label='Filter'
-              className='mr-4'
-              onClick={() => setOpen(true)}
-            />
-            {/* <ButtonsSlider
+  return (
+    <>
+      <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+        <div className="p-6 flex items-center justify-between">
+          <div className="flex items-center justify-between w-full">
+            <Text h3 className="text-gray7 text-xl">
+              {professionalsStatuses[openedSubtab].statusMainTitle}
+            </Text>
+            <div className="flex items-center justify-self-end">
+              <Search
+                placeholder="Search"
+                className="mr-4 text-sm"
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+              />
+              <Button
+                secondary
+                leftIcon={<FilterList className="w-5 h-5" />}
+                iconSize="w-5 h-5"
+                label="Filter"
+                className="mr-4"
+                onClick={() => setOpen(true)}
+              />
+              {/* <ButtonsSlider
                 noCount
                 buttons={buttons}
                 currentButton={currentButton}
                 onClick={setCurrentButton}
                 className="mr-4"
               /> */}
-            <Button
-              primary
-              leftIcon={<Add className='w-5 h-5' />}
-              iconSize='w-5 h-5'
-              label='Add Professional'
-              onClick={setShowAddContactOverlay}
-            />
-          </div>
-        </div>
-      </div>
-      {Object.keys(filters).length > 0 && (<div className='w-full border-t border-gray2 px-6 py-3'>
-        <div className='flex justify-between'>
-          <div className='flex flex-wrap items-center w-[100%]'>
-            <div className='mr-2 text-gray5 text-sm '>
-              {contacts.length}
-              {contacts.length == 1 ? ' result' : ' results'} for:
+              <Button
+                primary
+                leftIcon={<Add className="w-5 h-5" />}
+                iconSize="w-5 h-5"
+                label="Add Professional"
+                onClick={setShowAddContactOverlay}
+              />
             </div>
-            {Object.keys(filters).map((key, index) => filters[key].map((filter, i) => (<Chip
-              closable
-              removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
-              key={`${index}${i}`}
-              active
-              label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
-              className='mr-1'
-            />)))}
-          </div>
-          <div
-            className='flex flex-row items-center cursor-pointer'
-            onClick={() => {
-              setFiltersCleared(true);
-              setFilters({});
-            }}
-          >
-            <TrashIcon height={20} className='text-gray3 mr-1' />
-            <Text p className='whitespace-nowrap'>
-              Clear Filter
-            </Text>
           </div>
         </div>
-      </div>)}
-      {/* // <SimpleBar
+        {Object.keys(filters).length > 0 && (
+          <div className="w-full border-t border-gray2 px-6 py-3">
+            <div className="flex justify-between">
+              <div className="flex flex-wrap items-center w-[100%]">
+                <div className="mr-2 text-gray5 text-sm ">
+                  {professionals.length}
+                  {professionals.length == 1 ? ' result' : ' results'} for:
+                </div>
+                {Object.keys(filters).map((key, index) =>
+                  filters[key].map((filter, i) => (
+                    <Chip
+                      closable
+                      removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
+                      key={`${index}${i}`}
+                      active
+                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      className="mr-1"
+                    />
+                  )),
+                )}
+              </div>
+              <div
+                className="flex flex-row items-center cursor-pointer"
+                onClick={() => {
+                  setFiltersCleared(true);
+                  setFilters({});
+                }}>
+                <TrashIcon height={20} className="text-gray3 mr-1" />
+                <Text p className="whitespace-nowrap">
+                  Clear Filter
+                </Text>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* // <SimpleBar
           //   autoHide={true}
           //   style={{
           //     maxWidth: '100%',
@@ -257,30 +277,37 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
           //     )}
           //   </div>
           // </SimpleBar> */}
-      <div className='w-auto relative flex' style={{ height: 'calc(100vh - 159px)' }}>
-        <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-          <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-            <Table tableFor='professionals' categoryType='professionals' handleCardEdit={handleCardEdit}
-                   searchTerm={searchTerm} />
-          </SimpleBar>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 159px)' }}>
+          <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+            <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
+              <Table
+                tableFor="professionals"
+                categoryType="professionals"
+                handleCardEdit={handleCardEdit}
+                searchTerm={searchTerm}
+              />
+            </SimpleBar>
+          </div>
         </div>
       </div>
-    </div>
-    <SlideOver
-      open={open}
-      setOpen={setOpen}
-      title='Professional Filters'
-      className='top-[70px]'
-      buttons={<>
-        {Object.values(filters).flat().length > 0 && (<Button
-          white
-          label='Clear Filter'
-          onClick={() => {
-            setFiltersCleared(true);
-            setFilters({});
-          }}
-        />)}
-        {/* <Button
+      <SlideOver
+        open={open}
+        setOpen={setOpen}
+        title="Professional Filters"
+        className="top-[70px]"
+        buttons={
+          <>
+            {Object.values(filters).flat().length > 0 && (
+              <Button
+                white
+                label="Clear Filter"
+                onClick={() => {
+                  setFiltersCleared(true);
+                  setFilters({});
+                }}
+              />
+            )}
+            {/* <Button
                 onClick={filterContacts}
                 primary
                 label="See Results"
@@ -288,11 +315,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
                   !Object.values(filters).flat().length && !filtersCleared
                 }
               /> */}
-      </>}
-    >
-      <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
-    </SlideOver>
-  </>);
+          </>
+        }>
+        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
+      </SlideOver>
+    </>
+  );
 };
 
 export default Professionals;
