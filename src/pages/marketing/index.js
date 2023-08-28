@@ -4,6 +4,9 @@ const index = () => {
   return (
     <>
       <MainMenu />
+      <div className={'bg-marketing-gradient'} style={{ height: '230px' }}>
+        erza
+      </div>
     </>
   );
 };

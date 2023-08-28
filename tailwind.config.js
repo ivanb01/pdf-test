@@ -5,6 +5,7 @@ module.exports = {
     backgroundImage: {
       sidebar: "url('../public/images/sidebar.png')",
       'oxford-gradient': 'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
+      'marketing-gradient': 'linear-gradient(180deg, #0FA2EA 0%, #A5A9FF 100%)',
     },
     background: {},
     backdropBlur: {
