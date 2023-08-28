@@ -15,6 +15,7 @@ import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
+import googleLogo from '/public/images/googleicon.svg';
 
 const index = () => {
   const [currentTab, setCurrentTab] = useState(1);
@@ -194,7 +195,7 @@ const index = () => {
         <div className="p-6">
           <div className="font-medium">Connected Social Media Accounts</div>
           <div className="text-sm text-gray-700 mt-6 mb-3">Smart Sync Contacts and Google Contacts from Gmail</div>
-          <div className="max-w-[750px] rounded-[4px] border border-gray-200 p-6 flex">
+          <div className="max-w-[760px] rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
               <div className=" mt-6 text-xs text-gray-500">
@@ -202,14 +203,23 @@ const index = () => {
                 contact's information, swiftly identifying their type, status, and most importantly, their interests.
               </div>
             </div>
-            <div className="text-center max-w-[265px]">
+            <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={googleIcon.src} alt="" />
               <div className=" mt-6 text-xs text-gray-500">
                 With <strong>"Import Google Contacts"</strong> you will be able to import your contacts that are already
                 in your "Google Contact" list.
               </div>
             </div>
-            <div></div>
+            <div className="self-center">
+              <a href="" className="flex">
+                <div className="flex justify-center items-center p-[10px] border border-r-transparent border-gray-300 rounded-l-[4px]">
+                  <img src={googleLogo.src} alt="" className="object-cover" />
+                </div>
+                <div className=" px-4 py-[10px] border border-gray-300 rounded-r-[4px] text-gray-700 font-medium text-sm">
+                  Connect
+                </div>
+              </a>
+            </div>
           </div>
           <hr className="my-6" />
           <div className="font-medium">Delete Your Account</div>
