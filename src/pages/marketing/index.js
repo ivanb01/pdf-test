@@ -1,5 +1,11 @@
+import MainMenu from '@components/shared/menu';
+
 const index = () => {
-  return <div>Marketing</div>;
+  return (
+    <>
+      <MainMenu />
+    </>
+  );
 };
 
 export default index;
