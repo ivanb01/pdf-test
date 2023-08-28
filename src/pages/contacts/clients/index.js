@@ -33,8 +33,8 @@ const index = () => {
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
   const [contactsCopy, setContactsCopy] = useState();
-  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(true);
-  const [activatingSmartSync, setActivatingSmartSync] = useState(true);
+  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(false);
+  const [activatingSmartSync, setActivatingSmartSync] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
