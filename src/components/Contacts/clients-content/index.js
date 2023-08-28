@@ -255,7 +255,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      label={filter}
                       className="mr-1"
                     />
                   )),

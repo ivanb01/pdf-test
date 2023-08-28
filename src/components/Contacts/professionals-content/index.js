@@ -22,6 +22,7 @@ import { setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
+import { clientStatuses } from 'global/variables';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
 
@@ -174,6 +175,19 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
     }
   };
 
+  const getFilterCount = () => {
+    if (openedSubtab == 1) {
+      return professionals.filter((contact) => contact.category_id == 12 && contact.category_1 == 'Professional')
+        .length;
+    } else if (openedSubtab == 2) {
+      return professionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional').length;
+    } else {
+      return professionals.filter(
+        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
+      ).length;
+    }
+  };
+
   useEffect(() => {
     filterContacts();
   }, [filters]);
@@ -226,8 +240,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {professionals.length}
-                  {professionals.length == 1 ? ' result' : ' results'} for:
+                  {getFilterCount()}
+                  {getFilterCount() == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
@@ -236,7 +250,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      label={filter}
                       className="mr-1"
                     />
                   )),
