@@ -217,12 +217,12 @@ const MainSidebar = ({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <img src={checkmark.src} className="h-[17px] w-[17px]" />
-                        <div className="ml-[6px] font-medium">Smart Sync: Activated</div>
+                        <div className="ml-[6px] font-medium">Smart Sync: Active</div>
                       </div>
                       <div className="group relative cursor-pointer">
                         <Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />
                         <div
-                          className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none 'right-0' top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                          className={`group-hover:opacity-100 opacity-0 w-[300px] pointer-events-none right-0 top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
                           <p className="">
                             From now on each new contact that you will communicate in Gmail will be synced here and
                             categorized by AI.
@@ -234,7 +234,7 @@ const MainSidebar = ({
                     <div className="flex items-center mb-4">
                       <div className="flex items-center">
                         <img src={googleContactsIcon.src} className="h-[17px] w-[17px]" />
-                        <div className="ml-[6px] font-medium">Google Contacts: Activated</div>
+                        <div className="ml-[6px] font-medium">Google Contacts: Active</div>
                       </div>
                       <div></div>
                     </div>
