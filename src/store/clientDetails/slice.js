@@ -19,7 +19,7 @@ const clientDetails = createSlice({
       state.campaignsData = action.payload;
     },
     setLookingForData(state, action) {
-      state.lookingFor = action.payload;
+      state.lookingForData = action.payload;
     },
   },
 });

@@ -3,7 +3,6 @@ import Chip from 'components/shared/chip';
 import Text from 'components/shared/text';
 
 export default function InfoCard({ label, showDot, content, iconContent, client }) {
-  console.log(content);
   return (
     <div className="flex flex-col my-3">
       <Text className="text-gray6 mb-1" h4>

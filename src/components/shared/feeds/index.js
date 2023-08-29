@@ -167,7 +167,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
             ?.slice()
             .sort((a, b) => b.id - a.id)
             .map((activityItem, activityItemIdx) => (
-              <li key={activityItem.activityItemIdx}>
+              <li key={activityItemIdx}>
                 <div className="relative pb-8 flex justify-between">
                   {activityItemIdx !== activities.length - 1 ? (
                     <span

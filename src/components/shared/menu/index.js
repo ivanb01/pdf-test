@@ -59,9 +59,6 @@ const MainMenu = ({
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
-  useEffect(() => {
-    console.log(router.pathname, 'pathname');
-  }, []);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -79,7 +76,6 @@ const MainMenu = ({
 
       if (refetchData === true) dispatch(setRefetchData(false));
     };
-    console.log('allContacts', allContacts);
     if (!allContacts?.length || refetchData) {
       fetchContacts();
     }

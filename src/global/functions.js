@@ -302,3 +302,13 @@ export const getEmailParts = (email) => {
 export const findProfessionalSubtype = (id) => {
   return professionalsStatuses[0].statuses.find((status) => status.id == id).name;
 };
+
+export const valueOptions = (selectedOptions, multiselectOptions) => {
+  if (!selectedOptions) {
+    return null;
+  }
+  const options = selectedOptions.map((el) => {
+    return multiselectOptions.find((option) => option.value === el);
+  });
+  return options;
+};

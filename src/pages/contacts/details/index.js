@@ -10,7 +10,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { getContactNotes, getContact, getContactActivities, getContactLookingProperties } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
-import { setActivityLogData, setNotesData, setCampaignsData, setLookingFor } from 'store/clientDetails/slice';
+import {
+  setActivityLogData,
+  setNotesData,
+  setCampaignsData,
+  setLookingFor,
+  setLookingForData,
+} from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
@@ -48,10 +54,11 @@ export default function Details() {
     getContactLookingProperties(id)
       .then((propertiesResponse) => {
         const propertiesData = propertiesResponse.data;
-        dispatch(setLookingFor(propertiesData.data));
+        dispatch(setLookingForData(propertiesData.data));
       })
       .catch((error) => {
-        toast.error('Error fetching notes:', error);
+        console.log(error);
+        toast.error('Error fetching looking for:', error);
       });
   };
   const getNotes = () => {
@@ -107,6 +114,9 @@ export default function Details() {
     } else if (refetchPart == 'campaigns') {
       getCampaigns();
       getContactData();
+      dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'looking-for') {
+      getLookingFor();
       dispatch(setRefetchPart(null));
     }
   }, [refetchPart]);

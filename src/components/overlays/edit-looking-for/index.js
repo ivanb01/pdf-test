@@ -10,41 +10,35 @@ import bedroom from '/public/images/bedroom.svg';
 import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
+import { valueOptions } from '@global/functions';
+import { useState } from 'react';
 
-const EditLookingFor = ({ title, handleClose, className }) => {
+const EditLookingFor = ({ title, handleClose, className, data }) => {
+  const [loadingButton, setLoadingButton] = useState(false);
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
-    bathrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
-    budget_min: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
+    bedrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    bathrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
     budget_max: Yup.number()
       .integer('Must be integer')
       .min(0, 'Minimum value is 0')
       .when('budget_min', {
         is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('budget_min'),
-          'Max budget must be greater than min budget',
-        ),
+        then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
       }),
   });
 
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
-      neighborhood_ids: '',
+      neighborhood_ids: data.neighborhood_ids,
       looking_action: 'sell',
-      bedrooms: '',
-      bathrooms: '',
-      budget_min: '',
-      budget_max: '',
+      bedrooms: data.bedrooms_max,
+      bathrooms: data.bathrooms_max,
+      budget_min: data.budget_min,
+      budget_max: data.budget_max,
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
@@ -56,11 +50,16 @@ const EditLookingFor = ({ title, handleClose, className }) => {
         budget_max: parseFloat(values.budget_max),
       });
       if (formik.isValid) {
-        // handleAddSubmit({
-        //   ...values,
-        //   budget_min: parseFloat(values.budget_min),
-        //   budget_max: parseFloat(values.budget_max),
-        // });
+        handleAddSubmit({
+          neighborhood_ids: values.neighborhood_ids,
+          looking_action: values.looking_action,
+          bedrooms_min: values.bedrooms,
+          bedrooms_max: values.bedrooms,
+          bathrooms_min: values.bathrooms,
+          bathrooms_max: values.bathrooms,
+          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
+        });
       }
     },
   });
@@ -70,26 +69,13 @@ const EditLookingFor = ({ title, handleClose, className }) => {
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.addContactLookingProperty(
-        contactId,
-        values,
-      );
+      const res = await contactServices.addContactLookingProperty(data.contact_id, values);
       setLoadingButton(false);
       toast.success('Changes were successfully saved');
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
     }
-  };
-
-  const valueOptions = (selectedOptions, multiselectOptions) => {
-    if (!selectedOptions) {
-      return null;
-    }
-    const options = selectedOptions.map((el) => {
-      return multiselectOptions.find((option) => option.value === el);
-    });
-    return options;
   };
 
   return (
@@ -104,10 +90,7 @@ const EditLookingFor = ({ title, handleClose, className }) => {
             <SearchSelectInput
               label="Neighborhood"
               options={NYCneighborhoods}
-              value={valueOptions(
-                formik.values.neighborhood_ids,
-                NYCneighborhoods,
-              )}
+              value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
               onChange={(choice) => {
                 let choices = choice.map((el) => el.value);
                 formik.setFieldValue('neighborhood_ids', choices);
@@ -163,18 +146,13 @@ const EditLookingFor = ({ title, handleClose, className }) => {
             />
           </div>
           <div className="text-right">
-            <Button
-              white
-              label="Cancel"
-              className="mr-2"
-              onClick={handleClose}
-            />
+            <Button white label="Cancel" className="mr-2" onClick={handleClose} />
             <Button
               label="Save Changes"
               type="submit"
               primary
               className="mt-6"
-              // loading={loadingButton}
+              loading={loadingButton}
               // disabled={disabledButton}
             />
           </div>
