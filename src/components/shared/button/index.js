@@ -5,6 +5,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import googleLogo from '/public/images/googleicon.svg';
 
 const Button = ({
+  title,
   children,
   coloredButton,
   label,
@@ -72,7 +73,10 @@ const Button = ({
   const googleBtn = () => {
     return (
       <a
-        className="flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center"
+        className={`${
+          disabled && 'pointer-events-none opacity-50'
+        } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
+        title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
         onClick={onClick}>
         {loading ? (
           <div className="p-[10px] pb-[5px]">

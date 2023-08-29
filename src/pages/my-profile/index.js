@@ -236,6 +236,7 @@ const index = () => {
               <Button
                 googleButton
                 loading={loadingActivate}
+                disabled={consentGiven()}
                 onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
                 {consentGiven() ? 'Disconnect' : 'Connect'}
               </Button>
@@ -247,7 +248,7 @@ const index = () => {
             By deleting your account, you will no longer be able to access any information within the platform or login
             to Oneline.
           </div>
-          <Button white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} />
+          <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} />
           {/* <Text h3 className="mb-1">
             Password
           </Text>
