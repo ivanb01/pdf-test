@@ -51,8 +51,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
     {
       id: 0,
       name: 'Client',
-      description:
-        'Clients are renters, buyers, landlords or tenants that you can close a deal with and earn income.',
+      description: 'Clients are renters, buyers, landlords or tenants that you can close a deal with and earn income.',
       icon: <UserGroupIcon height={25} className="text-lightBlue3" />,
     },
     {
@@ -78,9 +77,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
   const AddContactSchema = Yup.object().shape({
     first_name: Yup.string().required('Field can not be empty'),
     last_name: Yup.string().required('Field can not be empty'),
-    email: Yup.string()
-      .required('Field can not be empty')
-      .email('Not a proper email'),
+    email: Yup.string().required('Field can not be empty').email('Not a proper email'),
     phone_number: Yup.string()
       // .required('Field can not be empty')
       .matches(phoneNumberRules, {
@@ -107,14 +104,14 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const { data } = await findContactByEmail({email: values.email});
-        if(data) {
+        const { data } = await findContactByEmail({ email: values.email });
+        if (data) {
           setExistingContactEmailError('This email already exists!');
           setExistingContactEmail(values.email);
-        }    
+        }
       } catch (error) {
         console.log(error);
-        if(error.response.status === 404) {
+        if (error.response.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
           setCurrentStep(currentStep + 1);
@@ -170,9 +167,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       console.log('contact to add: ', contactToAdd);
 
       const res = await addContact(contactToAdd);
-      const { data } = await getContacts(
-        categoryIds[selectedContact],
-      );
+      const { data } = await getContacts(categoryIds[selectedContact]);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -186,9 +181,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       dispatch(setOpenedTab(selectedContact));
       dispatch(setOpenedSubtab(subtabValue));
       router.push({
-        pathname: `/contacts/${
-          selectedContact === 0 ? 'clients' : 'professionals'
-        }`,
+        pathname: `/contacts/${selectedContact === 0 ? 'clients' : 'professionals'}`,
       });
       handleClose();
     } catch (error) {
@@ -264,22 +257,22 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     id="email"
                     // onChange={formik.handleChange}
                     onChange={(e) => {
-                      if(existingContactEmail !== e.target.value) {
+                      if (existingContactEmail !== e.target.value) {
                         setExistingContactEmailError('');
                       }
-                      formik.setFieldValue('email', e.target.value);                
+                      formik.setFieldValue('email', e.target.value);
                     }}
                     value={formik.values.email}
-                    error={(errors.email && touched.email) || (existingContactEmailError)}
-                    errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
+                    error={(errors.email && touched.email) || existingContactEmailError}
+                    errorText={
+                      errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null
+                    }
                   />
                   <Input
                     type="phone_number"
                     label="Phone"
                     id="phone_number"
-                    onChange={(val) =>
-                      formik.setFieldValue('phone_number', val)
-                    }
+                    onChange={(val) => formik.setFieldValue('phone_number', val)}
                     value={formik.values.phone_number}
                     placeholder="ex: (555) 555-5555"
                     error={errors.phone_number && touched.phone_number}
@@ -291,9 +284,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
-                    handleSelect={(source) =>
-                      (formik.values.lead_source = source.name)
-                    }
+                    handleSelect={(source) => (formik.values.lead_source = source.name)}
                     initialSelect={formik.values.lead_source}
                     placeHolder={'Choose'}
                   />
@@ -314,27 +305,19 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
         ) : (
           <div>
             <Radio
-              options={
-                selectedContact === 0 ? clientOptions : professionalsOptions
-              }
+              options={selectedContact === 0 ? clientOptions : professionalsOptions}
               label="What kind of contact is this for you?"
-              selectedContactType={formik2.values.selectedContactType}
-              changeContactType={(e) =>
-                setFieldValue2('selectedContactType', e)
-              }
+              selectedOption={formik2.values.selectedContactType}
+              setSelectedOption={(e) => setFieldValue2('selectedContactType', e)}
               className="mb-6"
-              error={
-                errors2.selectedContactType && touched2.selectedContactType
-              }
+              error={errors2.selectedContactType && touched2.selectedContactType}
               errorText={errors2.selectedContactType}
             />
             <StatusSelect
               selectedStatus={formik2.values.selectedStatus}
               setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
               label="In what stage of communication?"
-              statuses={
-                selectedContact === 0 ? clientStatuses : professionalsStatuses
-              }
+              statuses={selectedContact === 0 ? clientStatuses : professionalsStatuses}
               error={errors2.selectedStatus && touched2.selectedStatus}
               errorText={errors2.selectedStatus}
             />

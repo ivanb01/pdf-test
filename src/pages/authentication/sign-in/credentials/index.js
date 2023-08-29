@@ -31,7 +31,7 @@ const SignIn = () => {
   const signInWithGoogle = async () => {
     try {
       await Auth.federatedSignIn({ provider: 'Google' });
-      user = await Auth.currentAuthenticatedUser();
+      let user = await Auth.currentAuthenticatedUser();
       console.log('the user is here: ', user);
     } catch (error) {
       console.log('fail', error);
@@ -62,8 +62,7 @@ const SignIn = () => {
   const [newPasswordRequired, setNewPasswordRequired] = useState(false);
   const [cognitoUser, setCognitoUser] = useState(null);
   const [loadingButton, setLoadingButton] = useState(null);
-  const passwordRules =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
+  const passwordRules = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
 
   //* FORMIK change password*//
   const NewPasswordRequiredSchema = Yup.object().shape({
@@ -148,10 +147,7 @@ const SignIn = () => {
   const handleSubmit = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
-      const user = await Auth.signIn(
-        values.userName.toLowerCase(),
-        values.password,
-      );
+      const user = await Auth.signIn(values.userName.toLowerCase(), values.password);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
 
@@ -179,15 +175,11 @@ const SignIn = () => {
           {alert.showAlert && alert.alertType == 'success' && (
             <NotificationAlert className="mb-8 p-4" type={alert.alertType}>
               <div className="flex items-center">
-                <CheckCircleRoundedIcon className="text-green-400 mr-3.5" />{' '}
-                {alert.alertText}
+                <CheckCircleRoundedIcon className="text-green-400 mr-3.5" /> {alert.alertText}
               </div>
             </NotificationAlert>
           )}
-          <Text
-            title
-            className="text-gray5 mb-6"
-            onBackClick={() => router.push('/authentication/sign-in')}>
+          <Text title className="text-gray5 mb-6" onBackClick={() => router.push('/authentication/sign-in')}>
             Change password
           </Text>
           <Text p className="text-gray4 mb-6 text-center">
@@ -202,11 +194,7 @@ const SignIn = () => {
               className="mb-6"
               onChange={formikPass.handleChange}
               error={errorsPass.password && touchedPass.password}
-              errorText={
-                errorsPass.password == 'StrongPasswordRequired'
-                  ? null
-                  : errorsPass.password
-              }
+              errorText={errorsPass.password == 'StrongPasswordRequired' ? null : errorsPass.password}
             />
             <Input
               type="password"
@@ -218,11 +206,7 @@ const SignIn = () => {
                 (errorsPass.confirmPassword && touchedPass.confirmPassword) ||
                 errorsPass.password == 'StrongPasswordRequired'
               }
-              errorText={
-                errorsPass.password == 'StrongPasswordRequired'
-                  ? null
-                  : errorsPass.confirmPassword
-              }
+              errorText={errorsPass.password == 'StrongPasswordRequired' ? null : errorsPass.confirmPassword}
             />
             {errorsPass.password == 'StrongPasswordRequired' && (
               <NotificationAlert className="mb-8 p-4" type="error">
@@ -239,19 +223,11 @@ const SignIn = () => {
               </NotificationAlert>
             )}
             {alert.showAlert && alert.alertType == 'error' && (
-              <NotificationAlert
-                className="mt-3 mb-6 p-4"
-                type={alert.alertType}>
+              <NotificationAlert className="mt-3 mb-6 p-4" type={alert.alertType}>
                 {alert.alertText}
               </NotificationAlert>
             )}
-            <Button
-              loading={loadingButton}
-              type="submit"
-              primary
-              label="Save"
-              className="w-full justify-center"
-            />
+            <Button loading={loadingButton} type="submit" primary label="Save" className="w-full justify-center" />
           </form>
         </div>
       ) : (
@@ -259,8 +235,7 @@ const SignIn = () => {
           {alert.showAlert && alert.alertType == 'success' && (
             <NotificationAlert className="mb-8 p-4" type={alert.alertType}>
               <div className="flex items-center">
-                <CheckCircleRoundedIcon className="text-green-400 mr-3.5" />{' '}
-                {alert.alertText}
+                <CheckCircleRoundedIcon className="text-green-400 mr-3.5" /> {alert.alertText}
               </div>
             </NotificationAlert>
           )}
@@ -331,10 +306,7 @@ const SignIn = () => {
               className="pointer-events-none mr-2 opacity-0"
             />
           </div> */}
-          <GoogleButton
-            onClick={signInWithGoogle}
-            label="Sign in with Google"
-          />
+          <GoogleButton onClick={signInWithGoogle} label="Sign in with Google" />
         </div>
       )}
     </Authentication>

@@ -103,9 +103,7 @@ const index = () => {
           ? a[sortColumn.key].localeCompare(b[sortColumn.key])
           : b[sortColumn.key].localeCompare(a[sortColumn.key]);
       } else {
-        throw new Error(
-          'Invalid sort key. Key should be a string or a number.',
-        );
+        throw new Error('Invalid sort key. Key should be a string or a number.');
       }
     });
     setData((prevState) => {
@@ -115,17 +113,12 @@ const index = () => {
 
   const initializeData = () => {
     data.data.map((agent) => {
-      agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${
-        getEmailParts(agent.agent_id).lastName
-      }`;
+      agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${getEmailParts(agent.agent_id).lastName}`;
       agent.percentage_healthy_clients = calculateHealthyCommunication(
         agent.healthy_communication,
         agent.unhealthy_communication,
       );
-      agent.percentage_closed_clients = calculateClosedClients(
-        agent.clients_closed,
-        agent.total_clients,
-      );
+      agent.percentage_closed_clients = calculateClosedClients(agent.clients_closed, agent.total_clients);
       return agent;
     });
   };
@@ -154,7 +147,7 @@ const index = () => {
     <>
       <MainMenu />
       <div className="mx-6 my-4 flex items-center justify-between">
-        <div className="text-lg text-gray4 font-medium">Agent Reports</div>
+        <div className="text-lg text-gray7 font-medium">Agent Reports</div>
         <div className="flex items-center">
           <Dropdown
             horizontal
@@ -182,10 +175,7 @@ const index = () => {
           <Table tableFor="reports" data={data.data} />
         </SimpleBar>
       ) : (
-        <div
-          className="w-full flex items-center justify-center"
-          style={{ height: 'calc(100vh - 150px)' }}
-        >
+        <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 150px)' }}>
           No Agents in this table
         </div>
       )}

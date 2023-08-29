@@ -7,10 +7,7 @@ import { ArrowRightIcon } from '@heroicons/react/outline';
 
 const CategorizedSuccessfullyOverlay = ({ title, handleCloseOverlay }) => {
   return (
-    <Overlay
-      handleCloseOverlay={handleCloseOverlay}
-      title={title}
-      className="max-w-[600px]">
+    <Overlay handleCloseOverlay={handleCloseOverlay} title={title} className="max-w-[600px]">
       <div className="p-6 text-center">
         <Image width={350} src={categorizedSuccessfully} />
         <Text h2 className="max-w-lg mx-auto mb-3 leading-[1.4] mt-6">
@@ -18,8 +15,7 @@ const CategorizedSuccessfullyOverlay = ({ title, handleCloseOverlay }) => {
         </Text>
         <Text p className="text-gray4 max-w-lg mx-auto">
           You're once step closer to closing more deals. <br />
-          <strong>75% of salespeople</strong> don't have an organized client
-          list.
+          <strong>75% of salespeople</strong> don't have an organized client list.
         </Text>
       </div>
       <div className="flex items-center justify-between p-6 space-x-2 rounded-b">

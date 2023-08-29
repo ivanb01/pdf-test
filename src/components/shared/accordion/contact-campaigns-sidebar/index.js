@@ -69,43 +69,25 @@ const ContactCampaignsSidebar = ({
                       setOpenedTab(tab.id);
                     }}
                   >
-                    <div
-                      className={`flex items-center ${
-                        openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
-                      }`}
-                    >
+                    <div className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
                       {tab.icon}
-                      <Text
-                        h4
-                        className={`ml-3 ${
-                          openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
-                        }`}
-                      >
+                      <Text h4 className={`ml-3 ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
                         {tab.name}
                       </Text>
                     </div>
                     <ChevronDownIcon
                       className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-                        !collapseMainTab && openedTab == tab.id
-                          ? 'rotate-180'
-                          : ''
+                        !collapseMainTab && openedTab == tab.id ? 'rotate-180' : ''
                       }`}
                     />
                   </Link>
-                  <div
-                    className={
-                      !collapseMainTab && openedTab == tab.id
-                        ? `ml-11`
-                        : `hidden`
-                    }
-                  >
+                  <div className={!collapseMainTab && openedTab == tab.id ? `ml-11` : `hidden`}>
                     {
                       //tab.subtab.map((subtab) => {
                       tab.subtab
                         .map((subtab) => ({
                           ...subtab,
-                          reOrderId:
-                            orderCampaignsSubtabs[subtab['campaign_name']],
+                          reOrderId: orderCampaignsSubtabs[subtab['campaign_name']],
                         }))
                         .sort(function (a, b) {
                           if (a.reOrderId < b.reOrderId) {
@@ -122,25 +104,18 @@ const ContactCampaignsSidebar = ({
                               key={`${subtab.campaign_id}`}
                               href="#"
                               className={`transition-all duration-200 flex items-center ${
-                                isSubtabActive(`${subtab.campaign_id}`)
-                                  ? 'text-lightBlue3'
-                                  : 'text-gray4'
+                                isSubtabActive(`${subtab.campaign_id}`) ? 'text-lightBlue3' : 'text-gray4'
                               }`}
-                              onClick={() =>
-                                setOpenedSubtab(subtab.campaign_id)
-                              }
+                              onClick={() => setOpenedSubtab(subtab.campaign_id)}
                             >
                               {subtab.icon ? subtab.icon : subtab.dot}
                               <Text
                                 h4
                                 className={`px-[10px] py-[10px] ${
-                                  isSubtabActive(`${subtab.campaign_id}`)
-                                    ? 'text-lightBlue3'
-                                    : 'text-gray4'
+                                  isSubtabActive(`${subtab.campaign_id}`) ? 'text-lightBlue3' : 'text-gray4'
                                 }`}
                               >
-                                {subtab.campaign_name} (
-                                {subtab.contact_assigned_count}/
+                                {subtab.campaign_name} ({subtab.contact_assigned_count}/
                                 {subtab.contact_unassigned_count +
                                   subtab.contact_assigned_count +
                                   subtab.contact_never_assigned_count}

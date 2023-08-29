@@ -37,11 +37,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
   const editContact = async () => {
     setIsSubmitting(true);
     let status = selectedStatus;
-    if (
-      [8, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-        selectedType,
-      )
-    ) {
+    if ([8, 12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(selectedType)) {
       status = 1;
     }
     try {
@@ -61,8 +57,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
     try {
       if (
         contact?.is_in_campaign === 'assigned' &&
-        (contact?.status_id !== selectedStatus ||
-          contact?.category_id !== selectedType)
+        (contact?.status_id !== selectedStatus || contact?.category_id !== selectedType)
       ) {
         setChangeStatusModal(true);
       } else {
@@ -131,11 +126,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
                 {types.map((type, index) => {
                   return (
                     <div key={index}>
-                      <ContactTypeSelect
-                        type={type}
-                        setSelectedType={setSelectedType}
-                        selectedType={selectedType}
-                      />
+                      <ContactTypeSelect type={type} setSelectedType={setSelectedType} selectedType={selectedType} />
                     </div>
                   );
                 })}
@@ -146,16 +137,12 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
               <div className="flex items-center mb-6">
                 <CircleStepNumber number={2} className="mr-2" />
                 <Text h3>
-                  {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-                    selectedType,
-                  )
+                  {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(selectedType)
                     ? 'What kind of vendor?'
                     : 'In what stage of communication?'}
                 </Text>
               </div>
-              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(
-                selectedType,
-              ) ? (
+              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(selectedType) ? (
                 <div className="flex flex-wrap">
                   {vendorTypes.map((type) => (
                     <Chip
@@ -172,11 +159,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
                   className="px-9"
                   selectedStatus={selectedStatus}
                   setSelectedStatus={setSelectedStatus}
-                  statuses={
-                    [8, 9, 12].includes(selectedType)
-                      ? professionalsStatuses
-                      : clientStatuses
-                  }
+                  statuses={[8, 9, 12].includes(selectedType) ? professionalsStatuses : clientStatuses}
                 />
               )}
             </div>
@@ -185,10 +168,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
       </MultiStepOverlay>
 
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
     </>
   );

@@ -1,10 +1,9 @@
 import SimpleBar from 'simplebar-react';
 import Table from 'components/shared/table';
 import Other from 'components/Contacts/other-content';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from 'components/Layout';
 import Loader from 'components/shared/loader';
-import { useEffect } from 'react';
 import { getContacts } from 'api/contacts';
 import Text from 'components/shared/text';
 import Search from 'components/shared/input/search';
@@ -24,29 +23,25 @@ const index = () => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
 
+  useEffect(() => {
+    console.log(actualContact, 'actualContact');
+  }, [actualContact]);
   const fetchOther = () => {
     let other = {
       ...allContacts,
       data: allContacts.data.filter(
-        (contact) =>
-          contact.category_id === 13 ||
-          contact.category_id === 14 ||
-          contact.category_id === 2,
+        (contact) => contact.category_id === 13 || contact.category_id === 14 || contact.category_id === 2,
       ),
     };
     const contacts = other.data;
     const contactsFamilyFriends = contacts.filter(
       (contact) => contact.category_id === 13 || contact.category_id === 14,
     );
-    const contactsUnknown = contacts.filter(
-      (contact) => contact.category_id === 2,
-    );
+    const contactsUnknown = contacts.filter((contact) => contact.category_id === 2);
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
-    openedSubtab === 0
-      ? setActualContact(contactsFamilyFriends)
-      : setActualContact(contactsUnknown);
+    openedSubtab === 0 ? setActualContact(contactsFamilyFriends) : setActualContact(contactsUnknown);
     setLoading(false);
   };
 
@@ -56,7 +51,7 @@ const index = () => {
       fetchOther();
     }
     dispatch(setOpenedTab(3));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   }, [allContacts]);
 
   useEffect(() => {
@@ -75,8 +70,7 @@ const index = () => {
     <Layout>
       {loading ? (
         <Loader />
-      ) : (openedSubtab == 0 && familyAndFriends?.length) ||
-        (openedSubtab == 1 && unknown?.length) ? (
+      ) : (openedSubtab == 0 && familyAndFriends?.length) || (openedSubtab == 1 && unknown?.length) ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             <div className="p-6 flex items-center justify-between">
@@ -94,13 +88,8 @@ const index = () => {
               </div>
             </div>
 
-            <div
-              className="w-auto relative flex"
-              style={{ height: 'calc(100vh - 160px)' }}
-            >
-              <div
-                className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-              >
+            <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+              <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                   <Table tableFor="other" data={actualContact} />
                 </SimpleBar>
@@ -114,8 +103,7 @@ const index = () => {
             src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
             loop
             autoplay
-            style={{ width: '420px', height: '300px' }}
-          ></lottie-player>
+            style={{ width: '420px', height: '300px' }}></lottie-player>
           <Text h3 className="text-gray7 mt-4 mb-2 text-center">
             {openedSubtab == 0
               ? 'You have no contacts categorized as family and friends.'

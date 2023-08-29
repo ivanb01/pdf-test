@@ -23,12 +23,11 @@ import { CheckIcon } from '@heroicons/react/solid';
 // ];
 
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
-export const productionRedirectSignIn =
-  'https://onelinecrm.com/contacts/clients';
-export const localRedirectSignOut =
-  'http://localhost:3000/authentication/sign-in';
-export const productionRedirectSignOut =
-  'https://onelinecrm.com/authentication/sign-in';
+export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
+export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
+export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
+export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
 
 export const menuItems = [
   {
@@ -54,8 +53,8 @@ export const menuItems = [
 ];
 
 export const contactTypes = [
-  { id: 0, name: 'Agent' },
-  { id: 1, name: 'Vendor' },
+  { id: 0, name: 'Client' },
+  { id: 1, name: 'Professional' },
   { id: 2, name: 'Other' },
   { id: 3, name: 'Uncategorized' },
   { id: 4, name: 'Trash' },
@@ -136,6 +135,7 @@ export const types = [
       { id: 24, hidden: true, name: 'appraiser' },
       { id: 25, hidden: true, name: 'handyman' },
       { id: 26, hidden: true, name: 'architect' },
+      { id: 27, hidden: true, name: 'software' },
     ],
   },
   {
@@ -422,6 +422,7 @@ export const clientStatuses = [
 ];
 
 export const vendorTypes = [
+  { id: 8, name: 'Vendor' },
   { id: 15, name: 'Lawyer' },
   { id: 16, name: 'Contractor' },
   { id: 17, name: 'Mortgage Broker' },
@@ -434,6 +435,7 @@ export const vendorTypes = [
   { id: 24, name: 'Appraiser' },
   { id: 25, name: 'Handyman' },
   { id: 26, name: 'Architect' },
+  { id: 27, name: 'Software' },
 ];
 
 export const agentTypes = [{ id: 12, name: 'Agent' }];
@@ -445,6 +447,10 @@ export const professionalsStatuses = [
     statusMainTitle: 'Vendor',
     color: 'border-lightBlue3',
     statuses: [
+      {
+        id: 8,
+        name: 'Vendor',
+      },
       {
         id: 13,
         name: 'No Relationship',
@@ -500,6 +506,10 @@ export const professionalsStatuses = [
       {
         id: 26,
         name: 'Architect',
+      },
+      {
+        id: 27,
+        name: 'Software',
       },
     ],
   },
@@ -654,6 +664,25 @@ export const professionalsOptions = [
     id: 12,
     name: 'Agent',
   },
+  {
+    id: 9,
+    name: 'Unspecified',
+  },
+];
+
+export const othersOptions = [
+  {
+    id: 14,
+    name: 'Family',
+  },
+  {
+    id: 13,
+    name: 'Friend',
+  },
+  {
+    id: 2,
+    name: 'Unknown',
+  },
 ];
 
 export const eventStatusesIcons = {
@@ -773,6 +802,7 @@ export const multiselectOptionsProfessionals = [
   { value: 'appraiser', label: 'Appraiser' },
   { value: 'Handyman', label: 'Handyman' },
   { value: 'Architect', label: 'Architect' },
+  { value: 'Software', label: 'Software' },
 ];
 
 export const tagsForProfessionals = [

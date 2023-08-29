@@ -3,18 +3,12 @@ import Text from 'components/shared/text';
 import Button from 'components/shared/button';
 import Search from 'components/shared/input/search';
 import SimpleBar from 'simplebar-react';
-import {
-  statuses,
-  clientStatuses,
-  professionalsStatuses,
-  types,
-} from 'global/variables';
+import { statuses, clientStatuses, professionalsStatuses, types } from 'global/variables';
 import Table from 'components/shared/table';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Close from '@mui/icons-material/Close';
-import { bulkUpdateContacts } from 'api/contacts';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 
@@ -63,22 +57,6 @@ const Uncategorized = ({
     });
     uncategorizedInitialState.contacts = contactsArray;
     setUncategorizedCopy(uncategorizedContacts);
-
-    // let ids = [163, 166, 167, 168];
-    // let contacts = { contacts: [] };
-    // let contactsArray = [];
-    // ids.map((element) => {
-    //   let contact = {};
-    //   contact.id = element;
-    //   contact.category_id = 1;
-    //   contact.status_id = 1;
-    //   contactsArray.push(contact);
-    // });
-    // contacts.contacts = contactsArray;
-    // // console.log(contacts);
-    // bulkUpdateContacts(contacts).then((data) => {
-    //   console.log(data);
-    // });
   }, []);
   const selectAll = (event) => {
     console.log('test');
@@ -88,8 +66,7 @@ const Uncategorized = ({
       <>
         {uncategorizedCopy?.length ? (
           <>
-            <div
-              className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
+            <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
               <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                 <Table
                   tableFor="uncategorized"
@@ -115,7 +92,8 @@ const Uncategorized = ({
               <Button
                 className="bg-purple6"
                 rightIcon={<ArrowForward className=" h-[18px] w-[18px]" />}
-                onClick={() => handleStartCategorizing(true)}>
+                onClick={() => handleStartCategorizing(true)}
+              >
                 Let's go
               </Button>
             </div>
@@ -126,7 +104,8 @@ const Uncategorized = ({
               src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
               loop
               autoplay
-              style={{ width: '420px', height: '300px' }}></lottie-player>
+              style={{ width: '420px', height: '300px' }}
+            ></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               {openedSubtab == 0
                 ? 'Yay, well done! No uncategorized new records.'
@@ -163,10 +142,7 @@ const Uncategorized = ({
                   />
                 </div>
                 <div>
-                  <Close
-                    className="text-gray3 cursor-pointer"
-                    onClick={() => handleStartCategorizing(false)}
-                  />
+                  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />
                 </div>
               </>
             ) : (
@@ -194,9 +170,7 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div
-          className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 160px)' }}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}
@@ -204,18 +178,10 @@ const Uncategorized = ({
               selectedUncategorized={selectedUncategorized}
               setSelectedUncategorized={setSelectedUncategorized}
               handleSelectUncategorized={handleSelectUncategorized}
-              selectedUncategorizedContactType={
-                selectedUncategorizedContactType
-              }
-              setSelectedUncategorizedContactType={
-                setSelectedUncategorizedContactType
-              }
-              selectedUncategorizedContactStatus={
-                selectedUncategorizedContactStatus
-              }
-              setSelectedUncategorizedContactStatus={
-                setSelectedUncategorizedContactStatus
-              }
+              selectedUncategorizedContactType={selectedUncategorizedContactType}
+              setSelectedUncategorizedContactType={setSelectedUncategorizedContactType}
+              selectedUncategorizedContactStatus={selectedUncategorizedContactStatus}
+              setSelectedUncategorizedContactStatus={setSelectedUncategorizedContactStatus}
               uncategorizedInitialState={uncategorizedInitialState}
               uncategorizedCopy={uncategorizedCopy}
               openedSubtab={openedSubtab}

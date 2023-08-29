@@ -38,18 +38,11 @@ const MultiStepOverlay = ({
           <div className="p-6">
             {!hideHeader && (
               <nav aria-label="Progress" className="mb-10">
-                <ol
-                  role="list"
-                  className="space-y-4 md:flex md:space-y-0 md:space-x-8"
-                >
+                <ol role="list" className="space-y-4 md:flex md:space-y-0 md:space-x-8">
                   {steps.map(
                     (step) =>
                       !step.hidden && (
-                        <li
-                          key={step.name}
-                          className="md:flex-1"
-                          onClick={() => changeStep && changeStep(step.id)}
-                        >
+                        <li key={step.name} className="md:flex-1" onClick={() => changeStep && changeStep(step.id)}>
                           {currentStep >= step.id ? (
                             <a
                               href={step.href}
@@ -58,9 +51,7 @@ const MultiStepOverlay = ({
                               <span className="text-xs text-lightBlue3 font-semibold tracking-wide uppercase group-hover:text-lightBlue5">
                                 Step {step.id}
                               </span>
-                              <span className="text-sm font-medium">
-                                {step.name}
-                              </span>
+                              <span className="text-sm font-medium">{step.name}</span>
                             </a>
                           ) : (
                             <a
@@ -70,9 +61,7 @@ const MultiStepOverlay = ({
                               <span className="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray6">
                                 Step {step.id}
                               </span>
-                              <span className="text-sm font-medium">
-                                {step.name}
-                              </span>
+                              <span className="text-sm font-medium">{step.name}</span>
                             </a>
                           )}
                         </li>
@@ -97,12 +86,7 @@ const MultiStepOverlay = ({
               )}
             </div>
             <div>
-              <Button
-                className="mr-3"
-                label="Cancel"
-                white
-                onClick={handleClose}
-              ></Button>
+              <Button className="mr-3" label="Cancel" white onClick={handleClose}></Button>
               {currentStep != steps.length && (
                 <Button
                   label="Next"

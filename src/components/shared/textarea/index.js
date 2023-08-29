@@ -1,27 +1,11 @@
-import NotificationAlert from "../alert/notification-alert";
+import NotificationAlert from '../alert/notification-alert';
 
-const TextArea = ({
-  rows,
-  name,
-  id,
-  value,
-  handleChange,
-  label,
-  optional,
-  className,
-  error,
-  errorText,
-  ...props
-}) => {
+const TextArea = ({ rows, name, id, value, handleChange, label, optional, className, error, errorText, ...props }) => {
   return (
     <div className={`text-left col-span-full`}>
       {label && (
-        <label
-          htmlFor={name}
-          className="block text-sm font-medium text-gray6 mb-1"
-        >
-          {label}{' '}
-          {optional && <span className="text-[#8F95B2] ml-1">(Optional)</span>}
+        <label htmlFor={name} className="block text-sm font-medium text-gray6 mb-1">
+          {label} {optional && <span className="text-[#8F95B2] ml-1">(Optional)</span>}
         </label>
       )}
       <div>

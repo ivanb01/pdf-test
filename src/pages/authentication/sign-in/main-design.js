@@ -43,10 +43,7 @@ const SignIn = () => {
         </Text>
         <Text p className="text-gray4 mb-[50px]">
           Don't have an account?{' '}
-          <Link
-            href="#"
-            className="underline"
-            onClick={() => Router.push('sign-up')}>
+          <Link href="#" className="underline" onClick={() => Router.push('sign-up')}>
             Sign Up
           </Link>
         </Text>
@@ -63,13 +60,7 @@ const SignIn = () => {
         </Text> */}
         <form onSubmit={formik.handleSubmit}>
           <Input type="email" label="Email" id="email" className="mb-6" />
-          <Input
-            type="password"
-            label="Password"
-            id="password"
-            className="mb-6"
-            onChange={formik.handleChange}
-          />
+          <Input type="password" label="Password" id="password" className="mb-6" onChange={formik.handleChange} />
           <Input
             type="checkbox"
             placeholder="Remember Me"
@@ -78,12 +69,7 @@ const SignIn = () => {
             showForgotPassword
             onChange={formik.handleChange}
           />
-          <Button
-            type="submit"
-            primary
-            label="Save"
-            className="w-full justify-center"
-          />
+          <Button type="submit" primary label="Save" className="w-full justify-center" />
         </form>
         {/* <BasicForm inputs={inputs} handleSubmit={handleSubmit} /> */}
         {/* <Input label="Email address" optional className="mb-6" />

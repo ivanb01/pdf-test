@@ -23,18 +23,11 @@ const index = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [categorizing, setCategorizing] = useState(false);
-  const [uncategorizedContactsOriginal, setUncategorizedContactsOriginal] =
-    useState([]);
+  const [uncategorizedContactsOriginal, setUncategorizedContactsOriginal] = useState([]);
   const [uncategorizedContacts, setUncategorizedContacts] = useState([]);
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
-  const [
-    selectedUncategorizedContactType,
-    setSelectedUncategorizedContactType,
-  ] = useState(null);
-  const [
-    selectedUncategorizedContactStatus,
-    setSelectedUncategorizedContactStatus,
-  ] = useState(null);
+  const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
+  const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
 
   const handleSelectUncategorized = (contact, event) => {
     console.log(contact, event.target.checked);
@@ -44,9 +37,7 @@ const index = () => {
       setSelectedUncategorized((prevState) => [...prevState, contact]);
     } else {
       row.classList.remove('bg-lightBlue1');
-      let newUncategorized = selectedUncategorized.filter(
-        (element) => element.id !== contact.id,
-      );
+      let newUncategorized = selectedUncategorized.filter((element) => element.id !== contact.id);
       setSelectedUncategorized(newUncategorized);
     }
   };
@@ -62,10 +53,7 @@ const index = () => {
   };
 
   const searchUncategorized = (term) => {
-    let filteredArray = searchContacts(
-      uncategorizedContactsOriginal.data,
-      term,
-    );
+    let filteredArray = searchContacts(uncategorizedContactsOriginal.data, term);
     setUncategorizedContacts(filteredArray.data);
   };
 
@@ -82,12 +70,10 @@ const index = () => {
     //   console.log(data.data, uncategorized);
     // });
 
-    let contacts = uncategorized.data.filter(
-      (element) => element.category_id == openedSubtab + 1,
-    );
+    let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
     setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
@@ -127,15 +113,9 @@ const index = () => {
             selectedUncategorized={selectedUncategorized}
             setSelectedUncategorized={setSelectedUncategorized}
             selectedUncategorizedContactType={selectedUncategorizedContactType}
-            setSelectedUncategorizedContactType={
-              setSelectedUncategorizedContactType
-            }
-            selectedUncategorizedContactStatus={
-              selectedUncategorizedContactStatus
-            }
-            setSelectedUncategorizedContactStatus={
-              setSelectedUncategorizedContactStatus
-            }
+            setSelectedUncategorizedContactType={setSelectedUncategorizedContactType}
+            selectedUncategorizedContactStatus={selectedUncategorizedContactStatus}
+            setSelectedUncategorizedContactStatus={setSelectedUncategorizedContactStatus}
             handleSelectUncategorized={handleSelectUncategorized}
             onSearch={searchUncategorized}
           />

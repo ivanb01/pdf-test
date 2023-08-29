@@ -3,24 +3,15 @@ import { Dialog, Transition } from '@headlessui/react';
 import Close from '@mui/icons-material/Close';
 import SimpleBar from 'simplebar-react';
 
-export default function SlideOver({
-  open,
-  setOpen,
-  title,
-  buttons,
-  children,
-  className,
-}) {
+export default function SlideOver({ open, setOpen, title, buttons, children, className }) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog as="div" className="relative z-50" onClose={setOpen}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div
-              className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 ${className}`}
-            >
+            <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 ${className}`}>
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -38,13 +29,11 @@ export default function SlideOver({
                         boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
                       }}
                     >
-                      <Dialog.Title className="text-lg font-medium text-gray-900">
-                        {title}
-                      </Dialog.Title>
+                      <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
                           onClick={() => setOpen(false)}
                         >
                           <span className="sr-only">Close panel</span>
@@ -54,9 +43,7 @@ export default function SlideOver({
                     </div>
                     <div className="flex min-h-0 flex-1 flex-col">
                       <SimpleBar autoHide style={{ maxHeight: '100%' }}>
-                        <div className="relative mt-[30px] mb-[30px] flex-1 px-4 sm:px-6">
-                          {children}
-                        </div>
+                        <div className="relative mt-[30px] mb-[30px] flex-1 px-4 sm:px-6">{children}</div>
                       </SimpleBar>
                     </div>
                     <div

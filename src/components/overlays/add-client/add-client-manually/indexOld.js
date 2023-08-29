@@ -52,34 +52,10 @@ const AddClientManuallyOverlay = ({
         </div> */}
         <div>
           <form onSubmit={formik.handleSubmit}>
-            <Input
-              type="text"
-              label="First Name"
-              id="firstName"
-              className="mb-6"
-              onChange={formik.handleChange}
-            />
-            <Input
-              type="text"
-              label="Last Name"
-              id="lastName"
-              className="mb-6"
-              onChange={formik.handleChange}
-            />
-            <Input
-              type="email"
-              label="Email"
-              id="phone"
-              className="mb-6"
-              onChange={formik.handleChange}
-            />
-            <Input
-              type="phone"
-              label="Phone"
-              id="phone"
-              className="mb-6"
-              onChange={formik.handleChange}
-            />
+            <Input type="text" label="First Name" id="firstName" className="mb-6" onChange={formik.handleChange} />
+            <Input type="text" label="Last Name" id="lastName" className="mb-6" onChange={formik.handleChange} />
+            <Input type="email" label="Email" id="phone" className="mb-6" onChange={formik.handleChange} />
+            <Input type="phone" label="Phone" id="phone" className="mb-6" onChange={formik.handleChange} />
             <Button type="submit" primary label="Save" />
           </form>
           {/* <BasicForm
@@ -92,8 +68,8 @@ const AddClientManuallyOverlay = ({
         <Radio
           options={options}
           label="What kind of client is this for you?"
-          selectedContactType={selectedClientType}
-          changeContactType={setSelectedClientType}
+          selectedOption={selectedClientType}
+          setSelectedOption={setSelectedClientType}
           className="mb-6"
         />
         <StatusSelect

@@ -6,14 +6,7 @@ import Image from 'next/image';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from 'react';
 
-const ImportGoogleContacts = ({
-  title,
-  handleCloseOverlay,
-  list,
-  stateAfterImport,
-  motionImage,
-  emptyModal,
-}) => {
+const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImport, motionImage, emptyModal }) => {
   const [loadingButton, setLoadingButton] = useState(false);
   const [mainTitle, setMainTitle] = useState(title);
   const titleAfterImport = {
@@ -22,11 +15,9 @@ const ImportGoogleContacts = ({
     Failed: 'Something went wrong!',
   };
   const subtitleAfterImport = {
-    'Not needed':
-      'There are no contacts to be imported from your Google Account.',
+    'Not needed': 'There are no contacts to be imported from your Google Account.',
     Successful: 'Your contacts have been imported successfully.',
-    Failed:
-      'Please contact dev@opgny.com so we can help you get your contacts imported.',
+    Failed: 'Please contact dev@opgny.com so we can help you get your contacts imported.',
   };
 
   useEffect(() => {
@@ -34,10 +25,7 @@ const ImportGoogleContacts = ({
   }, [stateAfterImport]);
 
   return (
-    <Overlay
-      title={mainTitle}
-      handleCloseOverlay={handleCloseOverlay}
-      className="min-w-[512px] max-w-[512px]">
+    <Overlay title={mainTitle} handleCloseOverlay={handleCloseOverlay} className="min-w-[512px] max-w-[512px]">
       <div className="p-[24px]">
         <div className="">
           <div className="">
@@ -51,7 +39,8 @@ const ImportGoogleContacts = ({
                     speed="1"
                     style={{ width: '160px', height: '128px' }}
                     loop
-                    autoplay></lottie-player>
+                    autoplay
+                  ></lottie-player>
                 ) : (
                   <Image src={img} alt="header-img" />
                 )
@@ -69,30 +58,18 @@ const ImportGoogleContacts = ({
                   {subtitleAfterImport[stateAfterImport]}
                 </Text>
                 <div className="flex justify-center">
-                  <Button
-                    className="my-4"
-                    label="Okay"
-                    onClick={handleCloseOverlay}
-                  />
+                  <Button className="my-4" label="Okay" onClick={handleCloseOverlay} />
                 </div>
               </>
             ) : list && list.length ? (
               list.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex ${
-                    item.state === 'button'
-                      ? 'flex-row justify-end mt-5'
-                      : 'justify-center'
-                  }`}>
+                  className={`flex ${item.state === 'button' ? 'flex-row justify-end mt-5' : 'justify-center'}`}
+                >
                   {item.state === 'button' ? (
                     <>
-                      <Button
-                        className="mr-3 "
-                        white
-                        label="Cancel"
-                        onClick={handleCloseOverlay}
-                      />
+                      <Button className="mr-3 " white label="Cancel" onClick={handleCloseOverlay} />
                       <Button
                         label={item.text}
                         loading={loadingButton}
@@ -107,9 +84,7 @@ const ImportGoogleContacts = ({
                       <Text p className="text-gray7 text-center">
                         {item.text}
                       </Text>
-                      {item.state === 'finished' ? (
-                        <CheckCircleIcon className="h-5 w-5 text-green6" />
-                      ) : null}
+                      {item.state === 'finished' ? <CheckCircleIcon className="h-5 w-5 text-green6" /> : null}
                     </>
                   )}
                 </div>

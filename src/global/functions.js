@@ -30,20 +30,7 @@ export const formatDate = (eventDate, hideTime) => {
   let dateObj = new Date(eventDate * 1000);
   const year = dateObj.getFullYear();
   const day = dateObj.getDate();
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthIndex = dateObj.getMonth();
   const monthName = months[monthIndex];
   const time = dateObj.toLocaleString('en-US', {
@@ -51,11 +38,18 @@ export const formatDate = (eventDate, hideTime) => {
     hour12: true,
     minute: 'numeric',
   });
-  return hideTime
-    ? `${monthName} ${day}, ${year}`
-    : `${monthName} ${day}, ${year} ${time}`;
+  return hideTime ? `${monthName} ${day}, ${year}` : `${monthName} ${day}, ${year} ${time}`;
 };
+export const getDateFormat = (timestamp) => {
+  const dateObj = new Date(timestamp);
 
+  const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0');
+  const day = dateObj.getUTCDate().toString().padStart(2, '0');
+  const year = dateObj.getUTCFullYear();
+
+  const mmddyyyyFormat = `${month}/${day}/${year}`;
+  return mmddyyyyFormat;
+};
 export const removeClientFromArray = (clientList, clientEmail) => {
   return clientList.filter(function (el) {
     return el.email != clientEmail;
@@ -71,13 +65,10 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
-  return foundType ? foundType : -1;
+  return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
-  console.log(category, statusId);
-  let statuses = [4, 5, 6, 7].includes(category)
-    ? clientStatuses
-    : professionalsStatuses;
+  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;
   let foundStatus = null;
   statuses.forEach((allStatuses) => {
     allStatuses.statuses.filter((type) => {
@@ -86,13 +77,11 @@ export const getContactStatusByStatusId = (category, statusId) => {
       }
     });
   });
-  return foundStatus ? foundStatus : -1;
+  return foundStatus ? foundStatus : '-';
 };
 
 export const getContactStatusColorByStatusId = (category, statusId) => {
-  let statuses = [4, 5, 6, 7].includes(category)
-    ? clientStatuses
-    : professionalsStatuses;
+  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;
   let foundStatus = null;
   statuses.forEach((allStatuses) => {
     allStatuses.statuses.filter((type) => {
@@ -107,13 +96,9 @@ export const getContactStatusColorByStatusId = (category, statusId) => {
 export const searchContacts = (originalArray, term) => {
   let filteredContacts = originalArray.filter((item) => {
     const fullName = `${item.first_name}${item.last_name}`.toLowerCase();
-    const reversedFullName =
-      `${item.last_name}${item.first_name}`.toLowerCase();
+    const reversedFullName = `${item.last_name}${item.first_name}`.toLowerCase();
     const trimmedSearchValue = term.replace(/\s+/g, '').toLowerCase();
-    return (
-      fullName.includes(trimmedSearchValue) ||
-      reversedFullName.includes(trimmedSearchValue)
-    );
+    return fullName.includes(trimmedSearchValue) || reversedFullName.includes(trimmedSearchValue);
   });
 
   let contactsState = {};
@@ -226,8 +211,7 @@ export const phoneNumberInputFormat = (phoneNumber) => {
   // console.log(phoneNumber, number,'foormating')
   if (number.length < 4) return number;
   if (number.length < 7) return number.replace(/(\d{3})(\d{1})/, '($1) - $2');
-  if (number.length < 11)
-    return number.replace(/(\d{3})(\d{3})(\d{1})/, '($1) - $2 - $3');
+  if (number.length < 11) return number.replace(/(\d{3})(\d{3})(\d{1})/, '($1) - $2 - $3');
   return number.replace(/(\d{3})(\d{3})(\d{4})/, '($1) - $2 - $3');
 };
 
@@ -238,41 +222,30 @@ export const revertPhoneNumberInputFormat = (phoneNumber) => {
   return `+1${number}`;
 };
 
-export const filterLastCommuncationDate = (
-  date,
-  filterDateString,
-  categoryType,
-  status,
-) => {
+export const filterLastCommuncationDate = (date, filterDateString, categoryType, status) => {
   // console.log('filteringdate', date, filterDateString, categoryType, status);
 
   const filterForDate = filtersForLastCommunicationDate[filterDateString];
   if (filterForDate === 'healthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
-    const healthyCommunicationDays =
-      healthLastCommunicationDate[contactType][status];
+    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
     return isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
   if (filterForDate === 'unhealthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
-    const healthyCommunicationDays =
-      healthLastCommunicationDate[contactType][status];
+    const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
     return !isHealthyCommuncationDate(date, healthyCommunicationDays);
   }
   if (filterForDate === 'today') {
     return isToday(date);
   }
 
-  const filterDate = moment()
-    .startOf('date')
-    .subtract(filterForDate[0], filterForDate[1]);
+  const filterDate = moment().startOf('date').subtract(filterForDate[0], filterForDate[1]);
   return moment(date).isSameOrBefore(filterDate);
 };
 
 export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-  const healthyCommunicationDate = moment()
-    .startOf('date')
-    .subtract(healthyCommunicationDays, 'days');
+  const healthyCommunicationDate = moment().startOf('date').subtract(healthyCommunicationDays, 'days');
   const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
 
   return isHealthyCommunication;
@@ -284,10 +257,7 @@ export const findTagsOption = (selectedOptions, typeOfContact) => {
   }
   const options = selectedOptions.map((label) => {
     const value = label;
-    let multiselectOptions =
-      typeOfContact === 0
-        ? multiselectOptionsClients
-        : multiselectOptionsProfessionals;
+    let multiselectOptions = typeOfContact === 0 ? multiselectOptionsClients : multiselectOptionsProfessionals;
     const option = multiselectOptions.find((option) => option.value === value);
     return {
       value: value,
@@ -327,4 +297,8 @@ export const getEmailParts = (email) => {
   firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
 
   return { firstName, lastName };
+};
+
+export const findProfessionalSubtype = (id) => {
+  return professionalsStatuses[0].statuses.find((status) => status.id == id).name;
 };

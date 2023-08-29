@@ -49,7 +49,7 @@ export default function Chip({
   if (typeStyle) {
     return (
       <div
-        className={`${className} text-[#474D66] min-h-[28px] text-[11px] uppercase px-3 py-1 bg-gray1 rounded-[4px] font-medium mr-3 flex items-center`}
+        className={`${className} text-[#474D66] min-h-[28px] text-[11px] uppercase px-3 py-1 bg-gray1 rounded-[4px] font-medium mr-3 inline-flex items-center`}
       >
         {children ? children : label}
       </div>
@@ -59,7 +59,7 @@ export default function Chip({
   if (statusStyle) {
     return (
       <div
-        className={`${className} min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 rounded-xl mr-3 flex items-center`}
+        className={`${className} min-h-[28px] text-xs font-medium text-gray8 py-1 px-2 rounded-xl mr-3 inline-flex items-center`}
       >
         {children ? children : label}
       </div>
@@ -69,9 +69,7 @@ export default function Chip({
   return (
     <>
       {lastCommunication ? (
-        <div
-          className={`${className} mt-4 inline-block rounded-full px-3 text-xs font-medium items-center ${styling}`}
-        >
+        <div className={`${className} mt-4 inline-block rounded-full px-3 text-xs font-medium items-center ${styling}`}>
           {/*the icon below depends from lastcommuncation category type */}
           <Mail className="w-4 mr-1" />
           <span>{lastCommunicationLabel}</span>
@@ -79,23 +77,16 @@ export default function Chip({
       ) : (
         <div
           onClick={onClick}
-          className={`${
-            selectedStatus && 'border-lightBlue3 text-lightBlue3'
-          } ${secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'} ${
-            !notClickable &&
-            'hover:border-lightBlue3 hover:border transition-all cursor-pointer'
-          }  ${
+          className={`${selectedStatus && 'border-lightBlue3 text-lightBlue3'} ${
+            secondary && 'bg-gray1 text-[#474D66] mr-2 text-xs'
+          } ${!notClickable && 'hover:border-lightBlue3 hover:border transition-all cursor-pointer'}  ${
             active && 'border-lightBlue3 text-lightBlue3'
           } border inline-flex items-center justify-center px-2 py-0.5 rounded-full text-sm font-medium ${className}`}
         >
           {label}
           {closable && (
             <span className="ml-1" onClick={() => removeChip(label)}>
-              <Close
-                className={`h-3 w-3 ${
-                  active ? 'text-lightBlue3' : 'text-gray4'
-                }`}
-              />
+              <Close className={`h-3 w-3 ${active ? 'text-lightBlue3' : 'text-gray4'}`} />
             </span>
           )}
         </div>

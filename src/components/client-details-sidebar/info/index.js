@@ -4,11 +4,7 @@ import * as contactServices from 'api/contacts';
 import { allStatusesQuickEdit, leadSourceOptions } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
-import {
-  getContactCampaign,
-  getCampaign,
-  unassignContactFromCampaign,
-} from 'api/campaign';
+import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
 import TagsInput from 'components/tagsInput';
 import DateChip from 'components/shared/chip/date-chip';
@@ -18,10 +14,10 @@ import { setRefetchData } from 'store/global/slice';
 
 export default function Info({ client }) {
   const dispatch = useDispatch();
-  const categoryType = client?.category_1.toLowerCase() + 's';
+  const categoryType = client?.category_1?.toLowerCase() + 's';
   const [campaginName, setCampaignName] = useState('');
 
-  const initialTags = client.tags ? client.tags : [];
+  const initialTags = client?.tags ? client.tags : [];
   const [tags, setTags] = useState(initialTags);
 
   const [changeStatusModal, setChangeStatusModal] = useState(false);
@@ -140,7 +136,28 @@ export default function Info({ client }) {
               noOptionChange={isContactInCampaign}
             />
           )}
-
+          <InfoCard label="Import Source" content={client.import_source} client={client} />
+          {campaginName ? (
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
+          ) : (
+            <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content="" />
+          )}
+          <InfoCard
+            label="Last Communication"
+            content={
+              client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'
+            }
+            iconContent={
+              client?.last_communication_date ? (
+                <DateChip
+                  lastCommunication={client.last_communication_date}
+                  contactStatus={client.status_2}
+                  contactCategory={categoryType}
+                  className="ml-2 !mt-0  pt-0"
+                />
+              ) : null
+            }
+          />
           {/* <ChipInput
             label="Tags"
             selections={tags}
@@ -151,10 +168,7 @@ export default function Info({ client }) {
           <TagsInput
             label="Tags"
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
-            value={findTagsOption(
-              tags,
-              client?.category_1 === 'Client' ? 0 : 1,
-            )}
+            value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));
             }}
@@ -169,45 +183,10 @@ export default function Info({ client }) {
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
           />
-
-          {campaginName ? (
-            <InfoCard
-              label="Campaign"
-              showDot={client?.campaign_id ? client?.campaign_id : 0}
-              content={campaginName}
-            />
-          ) : (
-            <InfoCard
-              label="Campaign"
-              showDot={client?.campaign_id ? client?.campaign_id : 0}
-              content=""
-            />
-          )}
-          <InfoCard
-            label="Last Communication"
-            content={
-              client?.last_communication_date
-                ? formatDateMDY(client?.last_communication_date)
-                : 'No Communication'
-            }
-            iconContent={
-              client?.last_communication_date ? (
-                <DateChip
-                  lastCommunication={client.last_communication_date}
-                  contactStatus={client.status_2}
-                  contactCategory={categoryType}
-                  className="ml-2 !mt-0  pt-0"
-                />
-              ) : null
-            }
-          />
         </div>
       )}
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
     </>
   );

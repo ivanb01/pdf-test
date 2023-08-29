@@ -8,40 +8,34 @@ import CampaignsContent from './client-tabs/campaigns';
 import LookingForContent from './client-tabs/looking-for';
 import NotesContent from './client-tabs/notes';
 
-export const tabs = (contactId, contact, handleFetchContactRequired) => [
+export const tabs = (contactId, contact) => [
   {
     id: 0,
-    name: 'Campaigns',
+    name: 'Activity Log',
     href: '#',
-    icon: <Campaigns />,
-    content: (
-      <CampaignsContent
-        contactId={contactId}
-        contact={contact}
-        handleFetchContactRequired={handleFetchContactRequired}
-      />
-    ),
+    icon: <List />,
+    content: <ActivityLogContent contactId={contactId} source={contact?.import_source} />,
   },
   {
     id: 1,
+    name: 'Campaigns',
+    href: '#',
+    icon: <Campaigns />,
+    content: <CampaignsContent contactId={contactId} contact={contact} />,
+  },
+  {
+    id: 2,
     name: 'Looking for',
     href: '#',
     icon: <Home />,
     content: <LookingForContent contactId={contactId} />,
   },
   {
-    id: 2,
+    id: 3,
     name: 'Notes',
     href: '#',
     icon: <Note />,
     content: <NotesContent contactId={contactId} />,
-  },
-  {
-    id: 3,
-    name: 'Activity Log',
-    href: '#',
-    icon: <List />,
-    content: <ActivityLogContent contactId={contactId} />,
   },
 ];
 

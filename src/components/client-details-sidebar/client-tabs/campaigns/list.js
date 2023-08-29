@@ -1,10 +1,5 @@
 import Button from 'components/shared/button';
-import {
-  CheckCircleIcon,
-  MinusCircleIcon,
-  ExclamationIcon,
-  PlusIcon,
-} from '@heroicons/react/solid';
+import { CheckCircleIcon, MinusCircleIcon, ExclamationIcon, PlusIcon } from '@heroicons/react/solid';
 
 export const steps = [
   {
@@ -40,23 +35,12 @@ export const steps = [
   },
 ];
 
-export const alerts = (
-  handleAssignCampaignChange,
-  handleUnassignCampaignChange,
-) => [
+export const alerts = (handleAssignCampaignChange, handleUnassignCampaignChange) => [
   {
-    icon: (
-      <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
-    ),
+    icon: <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />,
     text: 'To be able to receive these emails. Client must need to be assigned to this campaign.',
     button: (
-      <Button
-        className="p-0"
-        label="Assign"
-        leftIcon={<PlusIcon />}
-        primary
-        onClick={handleAssignCampaignChange}
-      />
+      <Button className="p-0" label="Assign" leftIcon={<PlusIcon />} primary onClick={handleAssignCampaignChange} />
     ),
     type: 'warning',
   },

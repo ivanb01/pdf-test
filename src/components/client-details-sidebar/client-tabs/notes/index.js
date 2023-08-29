@@ -19,7 +19,9 @@ import { formatDateLL } from 'global/functions';
 import SimpleBar from 'simplebar-react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { setRefetchData } from 'store/global/slice';
+import { setRefetchPart } from 'store/global/slice';
+import { toast } from 'react-hot-toast';
+import { setNotesData } from '@store/clientDetails/slice';
 
 export default function Notes({ contactId }) {
   const dispatch = useDispatch();
@@ -62,29 +64,32 @@ export default function Notes({ contactId }) {
   const { errors, touched, resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
-    setLoadingButton(true);
     try {
-      await contactServices.addContactNote(contactId, values);
-      dispatch(setRefetchData(true));
-      // setFetchRequired((prev) => !prev);
-      // setNotes(prev=>[...prev, tagToAdd])
-      setLoadingButton(false);
+      const newNote = {
+        id: Date.now().toString(),
+        title: values.title,
+        description: values.description,
+        created_at: new Date().toISOString(),
+      };
       handleCloseModal();
+      dispatch(setNotesData([...(notesData || []), newNote]));
+      toast.success('Note added successfully');
+      contactServices.addContactNote(contactId, values).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
-      console.log(error);
+      toast.error(error);
       setLoadingButton(false);
     }
   };
 
   const handleUpdateSubmit = async (values) => {
-    setLoadingButton(true);
     try {
-      await contactServices.updateContactNote(contactId, noteId, values);
-      dispatch(setRefetchData(true));
       setLoadingButton(false);
+      const updatedNotes = notesData.map((note) => (note.id === noteId ? { ...note, ...values } : note));
+      dispatch(setNotesData(updatedNotes));
       handleCloseModal();
+      contactServices.updateContactNote(contactId, noteId, values).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
-      console.log(error);
+      toast.error(error);
       setLoadingButton(false);
     }
   };
@@ -107,9 +112,9 @@ export default function Notes({ contactId }) {
 
   const handleDeleteNote = async (note) => {
     try {
-      setNotes((prev) => prev.filter((item) => item.id !== note.id));
-      await contactServices.deleteContactNote(contactId, note.id);
-      dispatch(setRefetchData(true));
+      let notesAfterDelete = notes.filter((item) => item.id !== note.id);
+      dispatch(setNotesData(notesAfterDelete));
+      contactServices.deleteContactNote(contactId, note.id).then(() => dispatch(setRefetchPart('notes')));
     } catch (error) {
       console.log(error);
     }
@@ -141,19 +146,13 @@ export default function Notes({ contactId }) {
   ];
 
   const fetchContactNotes = async () => {
-    // const { data } = await contactServices.getContactNotes(contactId, {
-    //   search_term: searchTerm,
-    // });
-    // const { data } = await contactServices.getContactNotes(contactId);
-
-    // console.log('all notes', activityLogData);
     setNotes(notesData);
     setNotesOriginal(notesData);
   };
 
   useEffect(() => {
     fetchContactNotes();
-  }, [refetchData, contactId]);
+  }, [contactId, notesData]);
 
   const onSearch = (term) => {
     const trimmedTerm = term.replace(/\s+/g, '').toLowerCase();
@@ -231,37 +230,26 @@ export default function Notes({ contactId }) {
                               </Text>
 
                               <div className={`w-full h-[84px] relative `}>
-                                <SimpleBar
-                                  autoHide
-                                  style={{ maxHeight: '100%' }}>
+                                <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                                   <div className="text-sm font-normal text-gray4 flex items-start">
                                     {note?.description}
                                   </div>
                                 </SimpleBar>
                               </div>
                               <Text className="text-gray4 text-xs mt-2">
-                                {formatDateLL(
-                                  note.updated_at
-                                    ? note.updated_at
-                                    : note.created_at,
-                                )}
+                                {formatDateLL(note.updated_at ? note.updated_at : note.created_at)}
                               </Text>
                             </div>
-                            <div className="flex">
-                              <FilterDropdown
-                                types={types}
-                                icon={<More className="w-5" />}
-                                data={note}
-                                positionClass="right-0"
-                              />
-                              {/* <a href="" className="mr-4">
-                            <Edit className="w-4" />
-                          </a>
-                          <a href="">
-                            <Delete className="w-4" />
-                          </a> 
-                      */}
-                            </div>
+                            {note.agent_id && (
+                              <div className="flex">
+                                <FilterDropdown
+                                  types={types}
+                                  icon={<More className="w-5" />}
+                                  data={note}
+                                  positionClass="right-0"
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -273,10 +261,7 @@ export default function Notes({ contactId }) {
       </SimpleBar>
 
       {noteModal && (
-        <Overlay
-          className="w-[632px]"
-          handleCloseOverlay={handleCloseModal}
-          title={`${formType} Note`}>
+        <Overlay className="w-[632px]" handleCloseOverlay={handleCloseModal} title={`${formType} Note`}>
           <div className="p-6 bg-white">
             <form onSubmit={formik.handleSubmit}>
               <Input
@@ -299,18 +284,8 @@ export default function Notes({ contactId }) {
                 error={errors.description && touched.description}
                 errorText={errors.description}></TextArea>
               <div className="flex flex-row justify-end mt-6">
-                <Button
-                  className="mr-3"
-                  white
-                  label="Cancel"
-                  onClick={handleCloseModal}
-                />
-                <Button
-                  type="submit"
-                  primary
-                  label="Save"
-                  loading={loadingButton}
-                />
+                <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
+                <Button type="submit" primary label="Save" loading={loadingButton} />
               </div>
             </form>
           </div>

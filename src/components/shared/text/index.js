@@ -37,18 +37,11 @@ const Text = ({
   }
   return (
     <div className={`${className} ${styles} relative flex items-center`}>
-      {funnelArrow && (
-        <div className="absolute -left-3 leading-[1.4]">{'>'}</div>
-      )}
+      {funnelArrow && <div className="absolute -left-3 leading-[1.4]">{'>'}</div>}
       {onBackClick && (
         <div className="inline-block">
           <div className="mr-2 cursor-pointer flex items-center">
-            <Image
-              height={20}
-              width={20}
-              src={backArrow}
-              onClick={onBackClick}
-            />
+            <Image height={20} width={20} src={backArrow} onClick={onBackClick} />
           </div>
         </div>
       )}

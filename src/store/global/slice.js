@@ -7,12 +7,13 @@ const global = createSlice({
     openedSubtab: 0,
     expandedMenu: true,
     count: null,
+    refetchCount: false,
     refetchData: false,
     refetchPart: null,
+    userGaveConsent: null,
+    unapprovedContacts: null,
     user:
-      typeof window !== 'undefined' && localStorage.getItem('user')
-        ? JSON.parse(localStorage.getItem('user'))
-        : null,
+      typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     skippedEmptyState:
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')
@@ -21,6 +22,9 @@ const global = createSlice({
   reducers: {
     setCount(state, action) {
       state.count = action.payload;
+    },
+    setRefetchCount(state, action) {
+      state.refetchCount = action.payload;
     },
     setRefetchData(state, action) {
       state.refetchData = action.payload;
@@ -43,11 +47,18 @@ const global = createSlice({
     setSkippedEmptyState(state, action) {
       state.skippedEmptyState = action.payload;
     },
+    setUnapprovedContacts(state, action) {
+      state.unapprovedContacts = action.payload;
+    },
+    setUserGaveConsent(state, action) {
+      state.userGaveConsent = action.payload;
+    },
   },
 });
 
 export const {
   setCount,
+  setRefetchCount,
   setRefetchData,
   setRefetchPart,
   setOpenedTab,
@@ -55,5 +66,7 @@ export const {
   setExpandedMenu,
   setUser,
   setSkippedEmptyState,
+  setUnapprovedContacts,
+  setUserGaveConsent,
 } = global.actions;
 export default global.reducer;

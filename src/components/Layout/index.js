@@ -14,6 +14,7 @@ import SetupGmail from 'components/SetupGmail';
 import { setAllContacts } from 'store/contacts/slice';
 import AddContactManuallyOverlay from 'components/overlays/add-contact/add-contact-manually';
 import { useRouter } from 'next/router';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Loader from 'components/shared/loader';
 import ContactPage from '@mui/icons-material/ContactPage';
 import Diversity3 from '@mui/icons-material/Diversity3';
@@ -49,6 +50,8 @@ const Layout = ({ children }) => {
       label: 'Clients in the Funnel',
       href: 'clients',
       icon: <Group className="h-5 w-5" />,
+      count: 0,
+      count_key: 'clients_total',
       subtab: [
         {
           id: 0,
@@ -86,6 +89,8 @@ const Layout = ({ children }) => {
       label: 'Professionals',
       href: 'professionals',
       icon: <PermContactCalendar className="h-5 w-5" />,
+      count: 0,
+      count_key: 'professionals_total',
       subtab: [
         {
           id: 0,
@@ -115,6 +120,8 @@ const Layout = ({ children }) => {
       name: 'Other',
       label: 'Other Contacts',
       href: 'other',
+      count: 0,
+      count_key: 'other_total',
       icon: <ContactPage className="h-5 w-5" />,
       subtab: [
         {
@@ -150,6 +157,8 @@ const Layout = ({ children }) => {
       name: 'Uncategorized',
       label: 'Uncategorized Contacts',
       href: 'uncategorized',
+      count: 0,
+      count_key: 'uncategorized_new_records',
       icon: <Error className="h-5 w-5" />,
       subtab: [
         {
@@ -173,18 +182,21 @@ const Layout = ({ children }) => {
         // },
       ],
     },
+    {
+      id: 4,
+      name: 'Trash',
+      label: 'Trash',
+      href: 'trash',
+      count: 0,
+      count_key: 'trash',
+      icon: <DeleteIcon className={'w-5 h-5'} />,
+    },
   ]);
 
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-  const skippedEmptyState = useSelector(
-    (state) => state.global.skippedEmptyState,
-  );
-
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] =
-    useState(false);
-  const [showImportingOverlay, setShowImportingOverlay] = useState(false);
+  const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
 
   const handleOpenedTab = (tab) => {
     dispatch(setOpenedTab(tab));
@@ -210,13 +222,6 @@ const Layout = ({ children }) => {
       dispatch(setCount(data.data));
     });
   }, []);
-
-  useEffect(() => {
-    console.log('test');
-    // getCount().then((data) => {
-    //   dispatch(setCount(data.data));
-    // });
-  }, [allContacts]);
 
   return (
     <>
@@ -246,7 +251,7 @@ const Layout = ({ children }) => {
         </>
       ) : (
         <div className=" layout-fixed-height h-full w-full flex items-center justify-center">
-          <div className="border-t border-gray2 flex h-auto min-h-full w-full">
+          <div className="border-t border-gray2 flex h-full min-h-full w-full">
             <div className="h-auto border-r border-gray2 main-menu-wrapper bg-white">
               <MainSidebar
                 collapsable

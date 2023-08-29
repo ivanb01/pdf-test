@@ -6,12 +6,7 @@ import { useEffect, useState } from 'react';
 import UpdateCategoryType from 'components/overlays/update-category-type';
 import UpdateTypeStatus from 'components/overlays/update-type-status';
 import AddProfile from 'components/overlays/add-profile';
-import {
-  clientStatuses,
-  professionalsStatuses,
-  clientOptions,
-  professionalsOptions,
-} from 'global/variables';
+import { clientStatuses, professionalsStatuses, clientOptions, professionalsOptions } from 'global/variables';
 import * as contactServices from 'api/contacts';
 import { useRouter } from 'next/router';
 import Chip from 'components/shared/chip';
@@ -55,10 +50,8 @@ export default function CategoryTypes({ client }) {
     // },
   ];
 
-  const categoryTypes =
-    client.category_1 == 'Client' ? clientOptions : professionalsOptions;
-  const contactStatuses =
-    client.category_1 == 'Client' ? clientStatuses : professionalsStatuses;
+  const categoryTypes = client?.category_1 == 'Client' ? clientOptions : professionalsOptions;
+  const contactStatuses = client?.category_1 == 'Client' ? clientStatuses : professionalsStatuses;
 
   const [contactProfiles, setContactProfiles] = useState([]);
   const [fetchProfilesRequired, setFetchProfilesRequired] = useState(false);
@@ -71,7 +64,6 @@ export default function CategoryTypes({ client }) {
       const { data } = await contactServices.getContactProfiles(client?.id);
       const allProfiles = data?.data;
       allProfiles.unshift(client);
-      console.log('allprofiles', allProfiles);
       setContactProfiles(allProfiles);
       setLoadingProfiles(false);
     } catch (error) {
@@ -79,9 +71,10 @@ export default function CategoryTypes({ client }) {
     }
   };
   useEffect(() => {
-    setLoadingProfiles(true);
-
-    fetchProfiles();
+    if (client) {
+      setLoadingProfiles(true);
+      fetchProfiles();
+    }
   }, [client, fetchProfilesRequired]);
 
   return (
@@ -89,11 +82,8 @@ export default function CategoryTypes({ client }) {
       <div className="pl-[24px] py-[12px] flex flex-row justify-items-center items-center border-y border-gray-2">
         <div
           className={`flex flex-row ${
-            contactProfiles.length > 1
-              ? 'bg-gray-50 rounded-lg px-3 py-1.5 w-[312px] overflow-scroll'
-              : ''
-          }`}
-        >
+            contactProfiles.length > 1 ? 'bg-gray-50 rounded-lg px-3 py-1.5 w-[312px] overflow-scroll' : ''
+          }`}>
           {contactProfiles.length > 1 ? (
             contactProfiles.map((profile) => (
               <div
@@ -109,8 +99,7 @@ export default function CategoryTypes({ client }) {
                     ? 'bg-white border border-borderColor text-gray-700'
                     : 'bg-gray-50 border border-gray-50 text-gray-500'
                 }
-                    hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}
-              >
+                    hover:bg-white hover:border-borderColor transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2`}>
                 {profile?.category_2}
               </div>
             ))
@@ -132,18 +121,12 @@ export default function CategoryTypes({ client }) {
             // </div>
           )}
         </div>
-        <div className="ml-auto mr-4">
-          <FilterDropdown
-            types={types}
-            icon={<DotsVerticalIcon height={20} />}
-          />
-        </div>
+        {/* <div className="ml-auto mr-4">
+          <FilterDropdown types={types} icon={<DotsVerticalIcon height={20} />} />
+        </div> */}
       </div>
       {editModal && (
-        <UpdateTypeStatus
-          contact={client}
-          handleClose={() => setEditModal(false)}
-        />
+        <UpdateTypeStatus contact={client} handleClose={() => setEditModal(false)} />
         // <UpdateCategoryType
         //   handleClose={handleCloseEditModal}
         //   contact={client}

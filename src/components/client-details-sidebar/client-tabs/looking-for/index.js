@@ -28,25 +28,20 @@ import { formatPrice } from '@global/functions';
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
-    bathrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
-    budget_min: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0'),
-    // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
+    bedrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    bathrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().min(0, 'Budget Min should be greater than 0').typeError('Budget Min should be an integer'),
     budget_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('budget_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(
-          Yup.ref('budget_min'),
-          'Max budget must be greater than min budget',
-        ),
+      .typeError('Budget Max should be an integer')
+      .when('budget_min', (budget_min, schema) => {
+        if (budget_min === undefined || isNaN(budget_min)) {
+          return;
+        } else {
+          return schema
+            .required('Field can not be left blank.')
+            .typeError('Budget Max should be an integer')
+            .moreThan(budget_min, 'Budget Max be greater than Budget Min');
+        }
       }),
   });
 
@@ -57,8 +52,7 @@ export default function LookingFor({ contactId }) {
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [propertyInterests, setPropertyInterests] = useState();
-  const [loadingPropertyInterests, setLoadingPropertyInterests] =
-    useState(true);
+  const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const formik = useFormik({
     validateOnMount: true,
@@ -71,19 +65,13 @@ export default function LookingFor({ contactId }) {
       budget_max: '',
     },
     validationSchema: LookingPropertySchema,
-    onSubmit: (values, { setFieldValue }) => {
-      setFieldValue('budget_min', parseFloat(values.budget_min));
-      setFieldValue('budget_max', parseFloat(values.budget_max));
+    onSubmit: (values) => {
+      console.log(values, 'valuesssssss');
       if (formik.isValid) {
         handleAddSubmit({
-          looking_action: values.looking_action,
-          neighborhood_ids: values.neighborhood_ids,
-          bedrooms_min: values.bedrooms,
-          bedrooms_max: values.bedrooms,
-          bathrooms_min: values.bathrooms,
-          bathrooms_max: values.bathrooms,
-          budget_min: parseFloat(values.budget_min),
-          budget_max: parseFloat(values.budget_max),
+          ...values,
+          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
         });
       }
     },
@@ -94,10 +82,7 @@ export default function LookingFor({ contactId }) {
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.addContactLookingProperty(
-        contactId,
-        values,
-      );
+      const res = await contactServices.addContactLookingProperty(contactId, values);
       console.log('add', res);
       setLoadingButton(false);
       toast.success('Changes were successfully saved');
@@ -111,31 +96,16 @@ export default function LookingFor({ contactId }) {
 
   const fetchLookingProperties = async () => {
     try {
-      const { data } = await contactServices.getContactLookingProperties(
-        contactId,
-      );
-      console.log('lookingfor properties', data);
+      const { data } = await contactServices.getContactLookingProperties(contactId);
       const lookingProperties = data.data;
       if (lookingProperties.length > 0) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
           looking_action: lookingProperties[0].looking_action,
-          bedrooms:
-            lookingProperties[0].bedrooms_min != 0
-              ? lookingProperties[0].bedrooms_min
-              : '',
-          bathrooms:
-            lookingProperties[0].bathrooms_min != 0
-              ? lookingProperties[0].bathrooms_min
-              : '',
-          budget_min:
-            lookingProperties[0].budget_min != 0
-              ? lookingProperties[0].budget_min
-              : '',
-          budget_max:
-            lookingProperties[0].budget_max != 0
-              ? lookingProperties[0].budget_max
-              : '',
+          bedrooms: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
+          bathrooms: lookingProperties[0].bathrooms_min != 0 ? lookingProperties[0].bathrooms_min : '',
+          budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
+          budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
         setLookingForState(1);
         fetchPropertyInterests();
@@ -185,22 +155,18 @@ export default function LookingFor({ contactId }) {
           ID: 1215844,
           PHOTOS: [
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/1103.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/1103.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901588.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901588.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1215844,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8144.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8144.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901589.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901589.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -210,41 +176,34 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/screenshot_2023_07_13_at_12_10_34_pm.png',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901590.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901590.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1215844,
               WIDTH: 1024,
               HEIGHT: 682,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8145.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8145.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901591.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901591.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1215844,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8146.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8146.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901592.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901592.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1215844,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8147.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/552a8147.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901593.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901593.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -254,8 +213,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/screenshot_2023_07_13_at_12_10_54_pm.png',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901594.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901594.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -265,8 +223,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_lobby.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901595.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901595.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -276,8 +233,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_club_room.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901596.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901596.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -287,8 +243,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_club_room_2.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901597.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901597.jpg',
               SORT_ORDER: 10,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -298,8 +253,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/screenshot_2023_07_13_at_12_11_41_pm.png',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901598.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901598.jpg',
               SORT_ORDER: 11,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -309,8 +263,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_fitness_center.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901599.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901599.jpg',
               SORT_ORDER: 12,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -320,8 +273,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/screenshot_2023_07_13_at_12_12_15_pm.png',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901600.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901600.jpg',
               SORT_ORDER: 13,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -331,8 +283,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_outdoor_seating.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901601.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901601.jpg',
               SORT_ORDER: 14,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -342,8 +293,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/austin_nichols_courtyard_at_night.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215844_130901602.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215844_130901602.jpg',
               SORT_ORDER: 15,
               LISTING_ID: 1215844,
               WIDTH: 1024,
@@ -390,8 +340,7 @@ export default function LookingFor({ contactId }) {
           FREEMONTH: '',
           CITY: 'Brooklyn',
           BROKER_NOTE: 'Call Rolan',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/184-kent-avenue-brooklyn',
+          STREETEASY_LINK: 'http://streeteasy.com/building/184-kent-avenue-brooklyn',
           UNIT_NUMBER: 'D612',
           OFFICE_ID: 1123,
           VENDOR_AGENT_ID: '',
@@ -456,8 +405,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(4).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926421.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926421.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -467,8 +415,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(12).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926422.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926422.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -478,8 +425,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(11).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926423.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926423.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -489,8 +435,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(10).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926424.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926424.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -500,8 +445,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(2).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926425.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926425.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -511,8 +455,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(9).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926426.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926426.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -522,8 +465,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(13).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926427.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926427.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -533,8 +475,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(5).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926428.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926428.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -544,8 +485,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(7).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926429.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926429.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -555,8 +495,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/228_Metropolitan_8_-_0_(8).jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217381_130926430.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217381_130926430.jpg',
               SORT_ORDER: 10,
               LISTING_ID: 1217381,
               WIDTH: 1024,
@@ -664,77 +603,63 @@ export default function LookingFor({ contactId }) {
           ID: 1218023,
           PHOTOS: [
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/1105.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/1105.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937135.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937135.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/285.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/285.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937136.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937136.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/375.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/375.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937137.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937137.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/483.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/483.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937138.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937138.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/574.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/574.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937139.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937139.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/670.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/670.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937140.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937140.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/771.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/771.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937141.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937141.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1218023,
               WIDTH: 1024,
@@ -744,19 +669,16 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/1520_myrtle_avenue_2.jpg',
               PHOTO_TITLE: 'Floor Plan',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937143.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937143.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1218023,
               WIDTH: 1024,
               HEIGHT: 725,
             },
             {
-              ORIGINAL_URL:
-                'https://brickandmortar.resoftsys.com/assets/uploads/property_images/848.jpg',
+              ORIGINAL_URL: 'https://brickandmortar.resoftsys.com/assets/uploads/property_images/848.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1218023_130937142.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1218023_130937142.jpg',
               SORT_ORDER: 10,
               LISTING_ID: 1218023,
               WIDTH: 1024,
@@ -902,8 +824,7 @@ export default function LookingFor({ contactId }) {
           CROSS_STREET: 'Avenue S/Avenue T',
           FREEMONTH: '',
           CITY: 'Brooklyn',
-          BROKER_NOTE:
-            'By Appointment Only\rCompensation Remarks: 1 Month Commission Fee\rLease Term: TwelveMonths',
+          BROKER_NOTE: 'By Appointment Only\rCompensation Remarks: 1 Month Commission Fee\rLease Term: TwelveMonths',
           STREETEASY_LINK: '',
           UNIT_NUMBER: '6I',
           OFFICE_ID: 692,
@@ -968,8 +889,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/eb729b7c-aeab-4dcf-ad8a-0b8778913b4b/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860194.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860194.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1213091,
               WIDTH: 1024,
@@ -979,8 +899,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/b72bb2c0-a8a7-43a4-902e-bfdc1efc396e/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860195.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860195.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1213091,
               WIDTH: 1024,
@@ -990,8 +909,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/e999c897-7172-45b2-81ea-0a8a0c362810/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860196.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860196.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1213091,
               WIDTH: 1024,
@@ -1001,8 +919,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/e0928be0-da16-4384-9afb-d5dbd53cf5f5/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860197.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860197.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1213091,
               WIDTH: 1024,
@@ -1012,8 +929,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/16ec5a92-1e13-4102-903b-aa0803694815/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860198.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860198.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1213091,
               WIDTH: 1024,
@@ -1023,19 +939,16 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_192/0/a213e3c3-5468-41b6-ad4c-88593f997358/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860199.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860199.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1213091,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_39/0/c69f260b-ff12-462e-8613-b335d55a50f2/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_39/0/c69f260b-ff12-462e-8613-b335d55a50f2/origin.jpg',
               PHOTO_TITLE: 'Floor Plan',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213091_130860200.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213091_130860200.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1213091,
               WIDTH: 712,
@@ -1081,10 +994,8 @@ export default function LookingFor({ contactId }) {
           CROSS_STREET: '9th & 10th Avenues',
           FREEMONTH: '',
           CITY: 'NEW YORK',
-          BROKER_NOTE:
-            'Agent Shows\rCompensation Remarks: Contact Agent\rLease Term: TwelveMonths',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/430-west-34-street-new_york',
+          BROKER_NOTE: 'Agent Shows\rCompensation Remarks: Contact Agent\rLease Term: TwelveMonths',
+          STREETEASY_LINK: 'http://streeteasy.com/building/430-west-34-street-new_york',
           UNIT_NUMBER: '10L',
           OFFICE_ID: 910,
           VENDOR_AGENT_ID: '',
@@ -1092,8 +1003,7 @@ export default function LookingFor({ contactId }) {
           AGENT_NAME: 'Batsheva Loeb',
           TOTAL_ROOMS: 2.5,
           STATUS: 'For Rent',
-          AMENITIES:
-            'Doorman,Elevator,Laundry,Bicycle Room,Storage,Roof Deck,City View,Pied a Terre,',
+          AMENITIES: 'Doorman,Elevator,Laundry,Bicycle Room,Storage,Roof Deck,City View,Pied a Terre,',
           KEYCODE: '',
           IDX: 1,
           NETRENT: '',
@@ -1150,8 +1060,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1750633_116522384.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213118_130860864.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213118_130860864.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1213118,
               WIDTH: 1024,
@@ -1161,8 +1070,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1750633_116522382.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213118_130860865.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213118_130860865.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1213118,
               WIDTH: 1024,
@@ -1172,8 +1080,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1750633_116522385.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213118_130860866.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213118_130860866.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1213118,
               WIDTH: 1024,
@@ -1183,8 +1090,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1750633_116522383.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213118_130860867.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213118_130860867.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1213118,
               WIDTH: 1024,
@@ -1194,8 +1100,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1750633_116522386.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1213118_130860868.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1213118_130860868.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1213118,
               WIDTH: 455,
@@ -1241,10 +1146,8 @@ export default function LookingFor({ contactId }) {
           CROSS_STREET: 'Lexington Ave/3rd Ave',
           FREEMONTH: '',
           CITY: 'New York',
-          BROKER_NOTE:
-            'Please email: moran@bondnewyork.com\rLease Term: TwelveMonths',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/167-east-33-street-manhattan',
+          BROKER_NOTE: 'Please email: moran@bondnewyork.com\rLease Term: TwelveMonths',
+          STREETEASY_LINK: 'http://streeteasy.com/building/167-east-33-street-manhattan',
           UNIT_NUMBER: '4B',
           OFFICE_ID: 187,
           VENDOR_AGENT_ID: '',
@@ -1308,8 +1211,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708173.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888924.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888924.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1319,8 +1221,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708174.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888925.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888925.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1330,8 +1231,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708175.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888926.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888926.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1341,8 +1241,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708177.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888927.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888927.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1352,8 +1251,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708179.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888928.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888928.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1363,8 +1261,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708182.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888929.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888929.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1374,8 +1271,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708187.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888930.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888930.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1385,8 +1281,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://images.realty.mx/ecda8ff7933831de47cded3bb238b613/images/assets/1757407_116708188.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1214996_130888931.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1214996_130888931.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1214996,
               WIDTH: 1024,
@@ -1432,10 +1327,8 @@ export default function LookingFor({ contactId }) {
           CROSS_STREET: 'Lexington Ave/3rd Ave',
           FREEMONTH: '',
           CITY: 'New York',
-          BROKER_NOTE:
-            'Please email: moran@bondnewyork.com\rLease Term: TwelveMonths',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/167-east-33-street-manhattan',
+          BROKER_NOTE: 'Please email: moran@bondnewyork.com\rLease Term: TwelveMonths',
+          STREETEASY_LINK: 'http://streeteasy.com/building/167-east-33-street-manhattan',
           UNIT_NUMBER: '3B',
           OFFICE_ID: 187,
           VENDOR_AGENT_ID: '',
@@ -1496,110 +1389,90 @@ export default function LookingFor({ contactId }) {
           ID: 1215273,
           PHOTOS: [
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_46/0/7282a161-b476-49f9-9d90-c9423055cd70/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_46/0/7282a161-b476-49f9-9d90-c9423055cd70/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893219.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893219.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 684,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_46/0/059c5e66-c4ca-48c1-935d-56dd77b4eaa6/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_46/0/059c5e66-c4ca-48c1-935d-56dd77b4eaa6/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893220.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893220.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 684,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_46/0/f03b6b4b-52a2-4169-8b8b-cce30a279fbc/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_46/0/f03b6b4b-52a2-4169-8b8b-cce30a279fbc/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893221.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893221.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 684,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_46/0/9c679eb0-afbf-47fd-b2b4-dac18aeadac0/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_46/0/9c679eb0-afbf-47fd-b2b4-dac18aeadac0/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893222.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893222.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 684,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_26/0/e256227b-18ea-4380-8e35-9e0bd7dd59d0/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_26/0/e256227b-18ea-4380-8e35-9e0bd7dd59d0/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893223.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893223.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_63/0/fecfc1e5-c303-4e2c-bc2f-e152cf26514a/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_63/0/fecfc1e5-c303-4e2c-bc2f-e152cf26514a/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893224.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893224.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 680,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_25/0/0ffa4cae-af03-4618-b92d-8c99ad0cc657/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_25/0/0ffa4cae-af03-4618-b92d-8c99ad0cc657/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893225.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893225.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_26/0/261293fd-2735-450a-a886-c5bb2a573bcc/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_26/0/261293fd-2735-450a-a886-c5bb2a573bcc/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893226.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893226.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_26/0/3ae0bfca-35a3-46b6-b06b-392dda54017c/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_26/0/3ae0bfca-35a3-46b6-b06b-392dda54017c/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893227.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893227.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1215273,
               WIDTH: 1024,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_26/0/57e7af71-e449-400a-a0f2-16fc7d2bcc90/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_26/0/57e7af71-e449-400a-a0f2-16fc7d2bcc90/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1215273_130893228.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1215273_130893228.jpg',
               SORT_ORDER: 10,
               LISTING_ID: 1215273,
               WIDTH: 1024,
@@ -1646,8 +1519,7 @@ export default function LookingFor({ contactId }) {
           FREEMONTH: '',
           CITY: 'New York',
           BROKER_NOTE: 'Agent Shows\rLease Term: TwelveMonths',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/421-west-57-street-new_york',
+          STREETEASY_LINK: 'http://streeteasy.com/building/421-west-57-street-new_york',
           UNIT_NUMBER: '2E',
           OFFICE_ID: 910,
           VENDOR_AGENT_ID: '',
@@ -1709,99 +1581,81 @@ export default function LookingFor({ contactId }) {
           ID: 1216897,
           PHOTOS: [
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/7141b27b-525f-42b5-84a2-bbf307e9b555/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/7141b27b-525f-42b5-84a2-bbf307e9b555/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919167.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919167.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 571,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/ebcfd20c-96c2-4fd6-8f7d-4db194a3c929/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/ebcfd20c-96c2-4fd6-8f7d-4db194a3c929/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919168.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919168.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 573,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/6a0d54d4-2b94-4643-a7ab-893a046a15a4/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/6a0d54d4-2b94-4643-a7ab-893a046a15a4/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919169.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919169.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 574,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/46c57b1b-50b6-4b52-a062-805344e93166/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/46c57b1b-50b6-4b52-a062-805344e93166/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919170.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919170.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 576,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/ffc5d7e3-8c3a-440a-b4d5-7a358a223426/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/ffc5d7e3-8c3a-440a-b4d5-7a358a223426/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919171.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919171.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 575,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/44398049-3b8a-4f82-a0e9-e56afb20c3f8/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/44398049-3b8a-4f82-a0e9-e56afb20c3f8/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919172.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919172.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 577,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/9edaf8cb-93e7-4bf8-bd3a-3bbb8c5a5be2/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/9edaf8cb-93e7-4bf8-bd3a-3bbb8c5a5be2/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919173.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919173.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 577,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/c71dc05f-fdfe-4a15-b90a-2e1a83f2ac29/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/c71dc05f-fdfe-4a15-b90a-2e1a83f2ac29/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919174.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919174.jpg',
               SORT_ORDER: 8,
               LISTING_ID: 1216897,
               WIDTH: 1024,
               HEIGHT: 573,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_38/0/534f5100-9172-428a-a63a-114ad8bb1401/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_38/0/534f5100-9172-428a-a63a-114ad8bb1401/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1216897_130919175.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1216897_130919175.jpg',
               SORT_ORDER: 9,
               LISTING_ID: 1216897,
               WIDTH: 1024,
@@ -1909,66 +1763,54 @@ export default function LookingFor({ contactId }) {
           ID: 1217287,
           PHOTOS: [
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_37/0/917c48c5-8faf-4b22-9cc9-5a8d9892c39c/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_37/0/917c48c5-8faf-4b22-9cc9-5a8d9892c39c/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924731.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924731.jpg',
               SORT_ORDER: 1,
               LISTING_ID: 1217287,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_37/0/666b8e83-ba2d-4f80-aef3-62a8ab1e7054/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_37/0/666b8e83-ba2d-4f80-aef3-62a8ab1e7054/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924732.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924732.jpg',
               SORT_ORDER: 2,
               LISTING_ID: 1217287,
               WIDTH: 1024,
               HEIGHT: 683,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_56/0/1f97e2c7-036a-49d9-90a8-938689436680/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_56/0/1f97e2c7-036a-49d9-90a8-938689436680/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924733.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924733.jpg',
               SORT_ORDER: 3,
               LISTING_ID: 1217287,
               WIDTH: 512,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_56/0/1511fe37-c4e9-4a80-95d1-53abba86d356/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_56/0/1511fe37-c4e9-4a80-95d1-53abba86d356/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924734.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924734.jpg',
               SORT_ORDER: 4,
               LISTING_ID: 1217287,
               WIDTH: 512,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_56/0/30886827-c3e3-4ed0-8997-163bfb0bc2f6/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_56/0/30886827-c3e3-4ed0-8997-163bfb0bc2f6/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924735.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924735.jpg',
               SORT_ORDER: 5,
               LISTING_ID: 1217287,
               WIDTH: 512,
               HEIGHT: 768,
             },
             {
-              ORIGINAL_URL:
-                'https://www.compass.com/m/p-ohp_7,op_37/0/b509c0fc-4e44-409c-bc44-453720a009d0/origin.jpg',
+              ORIGINAL_URL: 'https://www.compass.com/m/p-ohp_7,op_37/0/b509c0fc-4e44-409c-bc44-453720a009d0/origin.jpg',
               PHOTO_TITLE: ' ',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924736.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924736.jpg',
               SORT_ORDER: 6,
               LISTING_ID: 1217287,
               WIDTH: 1024,
@@ -1978,8 +1820,7 @@ export default function LookingFor({ contactId }) {
               ORIGINAL_URL:
                 'https://www.compass.com/m/p-ohp_7,op_231/0/eabc1b8d-c004-460e-a318-0dd2e822216e/origin.jpg',
               PHOTO_TITLE: 'Floor Plan',
-              PHOTO_URL:
-                'https://rls.realty.mx/images/assets/1217287_130924737.jpg',
+              PHOTO_URL: 'https://rls.realty.mx/images/assets/1217287_130924737.jpg',
               SORT_ORDER: 7,
               LISTING_ID: 1217287,
               WIDTH: 593,
@@ -2026,8 +1867,7 @@ export default function LookingFor({ contactId }) {
           FREEMONTH: '',
           CITY: 'NEW YORK',
           BROKER_NOTE: 'Agent Shows\rLease Term: Negotiable',
-          STREETEASY_LINK:
-            'http://streeteasy.com/building/430-west-34-street-new_york',
+          STREETEASY_LINK: 'http://streeteasy.com/building/430-west-34-street-new_york',
           UNIT_NUMBER: '7A',
           OFFICE_ID: 910,
           VENDOR_AGENT_ID: '',
@@ -2035,8 +1875,7 @@ export default function LookingFor({ contactId }) {
           AGENT_NAME: 'Anthony Lucia',
           TOTAL_ROOMS: 2.5,
           STATUS: 'For Rent',
-          AMENITIES:
-            'Doorman,Elevator,Laundry,Bicycle Room,Storage,Roof Deck,City View,Pied a Terre,',
+          AMENITIES: 'Doorman,Elevator,Laundry,Bicycle Room,Storage,Roof Deck,City View,Pied a Terre,',
           KEYCODE: '',
           IDX: 1,
           NETRENT: '',
@@ -2090,13 +1929,7 @@ export default function LookingFor({ contactId }) {
     }, 2000);
   };
 
-  const PropertyDetail = ({
-    className,
-    label,
-    value,
-    iconAfter,
-    textAfter,
-  }) => {
+  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
       <div className={`${className} text-sm`}>
         <div className="mb-1 text-gray-500 font-medium">{label}</div>
@@ -2109,12 +1942,7 @@ export default function LookingFor({ contactId }) {
   };
   return (
     <>
-      {showPopup && (
-        <EditLookingFor
-          title="Edit Property Interests"
-          handleClose={() => setShowPopup(false)}
-        />
-      )}
+      {showPopup && <EditLookingFor title="Edit Property Interests" handleClose={() => setShowPopup(false)} />}
       {loading ? (
         <div className="relative details-tabs-fixed-height bg-white">
           <Loader></Loader>
@@ -2127,29 +1955,21 @@ export default function LookingFor({ contactId }) {
                 <div className="p-6">
                   <form onSubmit={formik.handleSubmit}>
                     <div className="mb-[60px] text-center">
-                      <div className="text-black font-medium text-lg mb-3">
-                        No Property Suggested
-                      </div>
+                      <div className="text-black font-medium text-lg mb-3">No Property Suggested</div>
                       <div className="text-black text-sm">
-                        Please fill the Property Interests so we can suggest
-                        properties for this contact
+                        Please fill the Property Interests so we can suggest properties for this contact
                       </div>
                     </div>
                     <div className="mx-auto relative">
                       <SearchSelectInput
                         label="Neighborhood"
                         options={NYCneighborhoods}
-                        value={valueOptions(
-                          formik.values.neighborhood_ids,
-                          NYCneighborhoods,
-                        )}
+                        value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
                         onChange={(choice) => {
                           let choices = choice.map((el) => el.value);
                           formik.setFieldValue('neighborhood_ids', choices);
                         }}
-                        error={
-                          errors.neighborhood_ids && touched.neighborhood_ids
-                        }
+                        error={errors.neighborhood_ids && touched.neighborhood_ids}
                         errorText={errors.neighborhood_ids}
                       />
                     </div>
@@ -2182,9 +2002,7 @@ export default function LookingFor({ contactId }) {
                         label="Budget Min"
                         iconAfter={<Image src={usd} height={20} />}
                         className="col-span-1"
-                        onChange={(val) =>
-                          formik.setFieldValue('budget_min', val)
-                        }
+                        onChange={(val) => formik.setFieldValue('budget_min', val)}
                         value={formik.values.budget_min}
                         error={errors.budget_min && touched.budget_min}
                         errorText={errors.budget_min}
@@ -2195,9 +2013,7 @@ export default function LookingFor({ contactId }) {
                         label="Budget Max"
                         iconAfter={<Image src={usd} height={20} />}
                         className="col-span-1"
-                        onChange={(val) =>
-                          formik.setFieldValue('budget_max', val)
-                        }
+                        onChange={(val) => formik.setFieldValue('budget_max', val)}
                         value={formik.values.budget_max}
                         error={errors.budget_max && touched.budget_max}
                         errorText={errors.budget_max}
@@ -2224,9 +2040,7 @@ export default function LookingFor({ contactId }) {
               </div>
             </div>
           ) : (
-            <div
-              className="bg-white relative"
-              style={{ minHeight: 'calc(100vh - 222px)' }}>
+            <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
               {loadingPropertyInterests ? (
                 <Loader message="Please wait we're searching for matched properties"></Loader>
               ) : (
@@ -2236,22 +2050,14 @@ export default function LookingFor({ contactId }) {
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
                         <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {formik.values.looking_action == 'sell'
-                            ? 'for Sale'
-                            : 'for Rent'}
+                          {formik.values.looking_action == 'sell' ? 'for Sale' : 'for Rent'}
                         </div>
                       </div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => setShowPopup(true)}>
+                      <div className="cursor-pointer" onClick={() => setShowPopup(true)}>
                         Edit
                       </div>
                     </div>
-                    <PropertyDetail
-                      className="mb-4"
-                      label="Neighborhood"
-                      value="West Village"
-                    />
+                    <PropertyDetail className="mb-4" label="Neighborhood" value="West Village" />
                     <div className="grid grid-cols-4">
                       <PropertyDetail
                         label="Rooms"
@@ -2270,9 +2076,7 @@ export default function LookingFor({ contactId }) {
                       />
                       <PropertyDetail
                         label="Price Min / Max"
-                        value={`${formatPrice(
-                          formik.values.budget_min,
-                        )} - ${formatPrice(formik.values.budget_max)}`}
+                        value={`${formatPrice(formik.values.budget_min)} - ${formatPrice(formik.values.budget_max)}`}
                         {...(formik.values.looking_action == 'rent' && {
                           textAfter: 'monthly',
                         })}
@@ -2295,12 +2099,9 @@ export default function LookingFor({ contactId }) {
                       <div className="flex items-center justify-center flex-col text-center mt-6">
                         <img src={lookingForEmpty.src} alt="" />
                         <div className="mt-6 text-sm">
-                          <div className="text-gray-900 font-medium">
-                            No matched properties for this contact yet.
-                          </div>
+                          <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
                           <div className="text-gray-500 mt-[6px]">
-                            Whenever we have property that matched these
-                            interest, will list here.
+                            Whenever we have property that matched these interest, will list here.
                           </div>
                         </div>
                       </div>

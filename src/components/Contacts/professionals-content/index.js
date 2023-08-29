@@ -18,10 +18,11 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateContacts } from 'store/contacts/slice';
+import { setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
+import { clientStatuses } from 'global/variables';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
 
@@ -38,6 +39,11 @@ const tabs = [
     onlyOneValue: true,
   },
   {
+    title: 'ADDED SOURCE',
+    content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
+    value: 'import_source',
+  },
+  {
     title: 'PROFESSIONAL STATUSES',
     content: allStatusesQuickEdit['professionals'].map((item) => item.name),
     value: 'status_2',
@@ -46,8 +52,7 @@ const tabs = [
     title: 'CAMPAIGN',
     content: ['In Campaign', 'Not In Campaign'],
     value: 'is_in_campaign',
-  },
-  // {
+  }, // {
   //   title: 'TAGS',
   //   content: multiselectOptionsProfessionals.map((option) => option.label),
   //   value: 'tags',
@@ -70,11 +75,7 @@ const buttons = [
   },
 ];
 
-const Professionals = ({
-  setShowAddContactOverlay,
-  onSearch,
-  handleCardEdit,
-}) => {
+const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({});
@@ -83,109 +84,85 @@ const Professionals = ({
   const [currentButton, setCurrentButton] = useState(0);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-  const contacts = useSelector((state) => state.contacts.data.data);
-  const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(
-    contacts.length,
-  );
-
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     onSearch(searchTerm);
-  //     // Send Axios request here
-  //   }, 2000);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchTerm]);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const professionals = useSelector((state) => state.contacts.professionals);
+  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
+  const [searchTerm, setSearchTerm] = useState(' ');
 
   useEffect(() => {
-    if (contacts.length === contactsOriginalLength) {
-      setContactsOriginal([...contacts]);
+    if (contacts.length) {
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(updateContacts(contactsOriginal));
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
       setFiltersCleared(false);
       return;
     }
 
-    let contactsState = contactsOriginal;
+    let contactsState = contacts.filter((contact) => contact.category_1 == 'Professional');
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
-          filterLastCommuncationDate(
-            contact[key],
-            filters[key][0],
-            contact.category_1,
-            contact.status_2,
-          ),
+          filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
         );
       } else if (key == 'is_in_campaign') {
-        let booleanFilter = filters[key].map(
-          (filter) => campaignFilterMeaning[filter],
-        );
-        contactsState = contactsState.filter((contact) =>
-          booleanFilter.includes(contact[key]),
+        let booleanFilter = filters[key].map((filter) => campaignFilterMeaning[filter]);
+        contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
+      } else if (key == 'import_source' && filters['import_source'] == 'Manually Added') {
+        contactsState = contactsState.filter(
+          (contact) =>
+            contact.import_source != 'Google Contacts' &&
+            contact.import_source != 'GmailAI' &&
+            contact.import_source != 'Gmail',
         );
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
-            return contact[key].reduce(
-              (accumulator, current) =>
-                accumulator || filters[key].includes(current),
-              false,
-            );
+            return contact[key].reduce((accumulator, current) => accumulator || filters[key].includes(current), false);
           }
           return filters[key].includes(contact[key]);
         });
       }
     });
 
-    dispatch(updateContacts(contactsState));
+    dispatch(setProfessionals(contactsState));
   };
 
-  const handleFilterClick =
-    (selectedFilter, filterType, isOnlyOneFilter) => () => {
-      let filtersCopy = { ...filters };
+  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    let filtersCopy = { ...filters };
 
-      if (filtersCopy[filterType]) {
-        if (filtersCopy[filterType].includes(selectedFilter)) {
-          filtersCopy[filterType] = filtersCopy[filterType].filter(
-            (element) => element !== selectedFilter,
-          );
-          if (filtersCopy[filterType].length < 1) {
-            delete filtersCopy[filterType];
-          }
-        } else {
-          if (isOnlyOneFilter) {
-            filtersCopy[filterType] = [selectedFilter];
-          } else {
-            filtersCopy[filterType] = [
-              ...filtersCopy[filterType],
-              selectedFilter,
-            ];
-          }
+    if (filtersCopy[filterType]) {
+      if (filtersCopy[filterType].includes(selectedFilter)) {
+        filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
+        if (filtersCopy[filterType].length < 1) {
+          delete filtersCopy[filterType];
         }
       } else {
-        filtersCopy[filterType] = [selectedFilter];
+        if (isOnlyOneFilter) {
+          filtersCopy[filterType] = [selectedFilter];
+        } else {
+          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+        }
       }
+    } else {
+      filtersCopy[filterType] = [selectedFilter];
+    }
 
-      // console.log('filters', filtersCopy)
-      setFilters(filtersCopy);
+    // console.log('filters', filtersCopy)
+    setFilters(filtersCopy);
 
-      if (Object.keys(filtersCopy).length === 0) {
-        setFiltersCleared(true);
-      }
-    };
+    if (Object.keys(filtersCopy).length === 0) {
+      setFiltersCleared(true);
+    }
+  };
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...filters };
 
-    filtersCopy[filterType] = filtersCopy[filterType].filter(
-      (element) => element !== filterToRemove,
-    );
+    filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== filterToRemove);
     if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
     }
@@ -198,9 +175,25 @@ const Professionals = ({
     }
   };
 
+  const getFilterCount = () => {
+    if (openedSubtab == 1) {
+      return professionals.filter((contact) => contact.category_id == 12 && contact.category_1 == 'Professional')
+        .length;
+    } else if (openedSubtab == 2) {
+      return professionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional').length;
+    } else {
+      return professionals.filter(
+        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
+      ).length;
+    }
+  };
+
   useEffect(() => {
     filterContacts();
   }, [filters]);
+  useEffect(() => {
+    setSearchTerm('');
+  }, [openedSubtab]);
 
   return (
     <>
@@ -214,7 +207,8 @@ const Professionals = ({
               <Search
                 placeholder="Search"
                 className="mr-4 text-sm"
-                onInput={(event) => onSearch(event.target.value)}
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
               />
               <Button
                 secondary
@@ -246,16 +240,14 @@ const Professionals = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {contacts.length}
-                  {contacts.length == 1 ? ' result' : ' results'} for:
+                  {getFilterCount()}
+                  {getFilterCount() == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
                     <Chip
                       closable
-                      removeChip={(filterToRemove) =>
-                        removeFilter(filterToRemove, key)
-                      }
+                      removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
                       label={filter}
@@ -269,8 +261,7 @@ const Professionals = ({
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -300,21 +291,14 @@ const Professionals = ({
           //     )}
           //   </div>
           // </SimpleBar> */}
-        <div
-          className="w-auto relative flex"
-          style={{ height: 'calc(100vh - 170px)' }}
-        >
-          <div
-            className={`border border-gray-200 overflow-hidden relative h-full w-full`}
-          >
-            <SimpleBar
-              autoHide
-              style={{ height: '100%', maxHeight: '100%' }}
-            >
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 159px)' }}>
+          <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
+            <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
               <Table
                 tableFor="professionals"
                 categoryType="professionals"
                 handleCardEdit={handleCardEdit}
+                searchTerm={searchTerm}
               />
             </SimpleBar>
           </div>
@@ -346,14 +330,8 @@ const Professionals = ({
                 }
               /> */}
           </>
-        }
-      >
-        <Accordion
-          tabs={tabs}
-          handleClick={handleFilterClick}
-          activeSelections={filters}
-          defaultOpen
-        />
+        }>
+        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
       </SlideOver>
     </>
   );

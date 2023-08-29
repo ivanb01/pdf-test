@@ -16,9 +16,7 @@ const StartCategorizing = ({ uncategorizedContacts, handleCloseOverlay }) => {
               You have {uncategorizedContacts} Uncategorized Contacts
             </Text>
             <Text p className="text-gray4 text-center ">
-              <span className="text-[#0E7490]">
-                “Categorized contacts are results of a healthy communication.”
-              </span>
+              <span className="text-[#0E7490]">“Categorized contacts are results of a healthy communication.”</span>
               <br />
               Why wait? Start to Improve your communication.
             </Text>
@@ -26,10 +24,7 @@ const StartCategorizing = ({ uncategorizedContacts, handleCloseOverlay }) => {
               <Button primary>Start with 10</Button>
             </div>
             <div className="text-center mt-6">
-              <a
-                href="#"
-                className="text-gray4 underline text-sm"
-                onClick={handleCloseOverlay}>
+              <a href="#" className="text-gray4 underline text-sm" onClick={handleCloseOverlay}>
                 Skip for now
               </a>
             </div>

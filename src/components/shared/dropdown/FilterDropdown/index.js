@@ -2,16 +2,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { classNames } from 'global/functions';
 
-const FilterDropdown = ({
-  label,
-  types,
-  handleClick,
-  icon,
-  className,
-  isFilter,
-  data,
-  positionClass,
-}) => {
+const FilterDropdown = ({ label, types, handleClick, icon, className, isFilter, data, positionClass }) => {
   return (
     <Menu as="div" className={'relative inline-block text-left ' + className}>
       <div>
@@ -40,10 +31,7 @@ const FilterDropdown = ({
                   <a
                     href="#"
                     onClick={() => handleClick(null)}
-                    className={classNames(
-                      active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm',
-                    )}>
+                    className={classNames(active ? 'bg-gray1 text-gray8' : 'text-gray6', 'block px-4 py-2 text-sm')}>
                     Show All
                   </a>
                 )}
@@ -55,10 +43,7 @@ const FilterDropdown = ({
                   <a
                     href="#"
                     onClick={() => type.handleClick(data)}
-                    className={classNames(
-                      active ? 'bg-gray1 text-gray8' : 'text-gray6',
-                      'block px-4 py-2 text-sm',
-                    )}>
+                    className={classNames(active ? 'bg-gray1 text-gray8' : 'text-gray6', 'block px-4 py-2 text-sm')}>
                     {type.name}
                   </a>
                 )}

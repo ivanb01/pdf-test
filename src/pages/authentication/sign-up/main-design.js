@@ -31,10 +31,7 @@ const SignUp = () => {
         </Text>
         <div className="text-sm leading-5 font-normal text-gray4">
           Already have an account?{' '}
-          <Link
-            href="#"
-            className="underline"
-            onClick={() => Router.push('sign-in')}>
+          <Link href="#" className="underline" onClick={() => Router.push('sign-in')}>
             Sign In
           </Link>
           <Text p className="text-gray4 mt-10 mb-6">
@@ -49,37 +46,12 @@ const SignUp = () => {
             Or continue with
           </Text>
           <form onSubmit={formik.handleSubmit}>
-            <Input
-              type="text"
-              label="First Name"
-              id="firstName"
-              className="mb-6"
-            />
-            <Input
-              type="text"
-              label="Last Name"
-              id="lastName"
-              className="mb-6"
-            />
+            <Input type="text" label="First Name" id="firstName" className="mb-6" />
+            <Input type="text" label="Last Name" id="lastName" className="mb-6" />
             <Input type="email" label="Email" id="phone" className="mb-6" />
-            <Input
-              type="password"
-              label="Password"
-              id="password"
-              className="mb-6"
-            />
-            <Input
-              type="password"
-              label="Confirm Password"
-              id="confirmPassword"
-              className="mb-6"
-            />
-            <Button
-              type="submit"
-              primary
-              label="Save"
-              className="w-full justify-center"
-            />
+            <Input type="password" label="Password" id="password" className="mb-6" />
+            <Input type="password" label="Confirm Password" id="confirmPassword" className="mb-6" />
+            <Button type="submit" primary label="Save" className="w-full justify-center" />
           </form>
           {/* <BasicForm inputs={inputs} handleSubmit={handleSubmit} /> */}
         </div>

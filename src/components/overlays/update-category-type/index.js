@@ -10,16 +10,9 @@ import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 
-const UpdateCategoryType = ({
-  handleClose,
-  contact,
-  categoryTypes,
-  statuses,
-}) => {
+const UpdateCategoryType = ({ handleClose, contact, categoryTypes, statuses }) => {
   const dispatch = useDispatch();
-  const [selectedContactType, setSelectedContactType] = useState(
-    contact?.category_id,
-  );
+  const [selectedContactType, setSelectedContactType] = useState(contact?.category_id);
   const [selectedStatus, setSelectedStatus] = useState(contact?.status_id);
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -45,8 +38,7 @@ const UpdateCategoryType = ({
     try {
       if (
         contact?.is_in_campaign === 'assigned' &&
-        (contact?.status_id !== selectedStatus ||
-          contact?.category_id !== selectedContactType)
+        (contact?.status_id !== selectedStatus || contact?.category_id !== selectedContactType)
       ) {
         setChangeStatusModal(true);
       } else {
@@ -73,19 +65,15 @@ const UpdateCategoryType = ({
 
   return (
     <>
-      <Overlay
-        title="Edit Type"
-        handleCloseOverlay={handleClose}
-        className="w-auto min-w-[635px] max-w-[730px]"
-      >
+      <Overlay title="Edit Type" handleCloseOverlay={handleClose} className="w-auto min-w-[635px] max-w-[730px]">
         <div className="p-5 pt-0">
           <div className="flex flex-col my-2">
             <div>
               <Radio
                 options={categoryTypes}
                 label="What kind of contact is this for you?"
-                selectedContactType={selectedContactType}
-                changeContactType={setSelectedContactType}
+                selectedOption={selectedContactType}
+                setSelectedOption={setSelectedContactType}
                 className="mb-6"
               />
               <StatusSelect
@@ -98,12 +86,7 @@ const UpdateCategoryType = ({
 
             <form onSubmit={handleSubmit}>
               <div className="flex flex-row justify-end mt-5">
-                <Button
-                  className="mr-3 "
-                  white
-                  label="Cancel"
-                  onClick={handleClose}
-                />
+                <Button className="mr-3 " white label="Cancel" onClick={handleClose} />
                 <Button
                   type="submit"
                   primary
@@ -120,10 +103,7 @@ const UpdateCategoryType = ({
       </Overlay>
 
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
     </>
   );

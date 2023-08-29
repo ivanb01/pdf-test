@@ -32,8 +32,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
 
   const dispatch = useDispatch();
 
-  const [existingContactEmailError, setExistingContactEmailError] =
-    useState('');
+  const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
   const [loadingButton, setLoadingButton] = useState(false);
@@ -47,9 +46,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
   const AddContactSchema = Yup.object().shape({
     first_name: Yup.string().required('Field can not be empty'),
     last_name: Yup.string().required('Field can not be empty'),
-    email: Yup.string()
-      .required('Field can not be empty')
-      .email('Not a proper email'),
+    email: Yup.string().required('Field can not be empty').email('Not a proper email'),
     phone_number: Yup.string()
       // .required('Field can not be empty')
       .matches(phoneNumberRules, {
@@ -103,7 +100,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
   const editClient = async (values) => {
     try {
       await updateContact(client?.id, values);
-      console.log(values, 'edit contact', client?.id);
+      console.log(values, 'edit contacttt', client?.id);
       dispatch(setRefetchData(true));
       handleClose();
     } catch (error) {
@@ -158,16 +155,8 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
                 formik.setFieldValue('email', e.target.value);
               }}
               value={formik.values.email}
-              error={
-                (errors.email && touched.email) || existingContactEmailError
-              }
-              errorText={
-                errors.email
-                  ? errors.email
-                  : existingContactEmailError
-                  ? existingContactEmailError
-                  : null
-              }
+              error={(errors.email && touched.email) || existingContactEmailError}
+              errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
             />
             <Input
               type="phone_number"
@@ -183,13 +172,9 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               activeIcon={false}
               options={leadSourceOptions}
               className="col-span-2"
-              handleSelect={(source) =>
-                (formik.values.lead_source = source.name)
-              }
+              handleSelect={(source) => (formik.values.lead_source = source.name)}
               initialSelect={formik.values.lead_source}
-              placeHolder={
-                formik.values.lead_source ? formik.values.lead_source : 'Choose'
-              }
+              placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
             <TagsInput
               label="Tags"
@@ -208,12 +193,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
       <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
         <div></div>
         <div>
-          <Button
-            className="mr-3"
-            label="Cancel"
-            white
-            onClick={handleClose}
-          ></Button>
+          <Button className="mr-3" label="Cancel" white onClick={handleClose}></Button>
           <Button
             label="Save"
             loading={loadingButton}

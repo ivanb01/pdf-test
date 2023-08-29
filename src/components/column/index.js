@@ -13,68 +13,59 @@ import EditContactOverlay from 'components/overlays/edit-client';
 import { useRouter } from 'next/router';
 import AddActivity from 'components/overlays/add-activity';
 import toast from 'react-hot-toast';
-import {
-  clientStatuses,
-  professionalsStatuses,
-  healthLastCommunicationDate,
-} from 'global/variables';
+import { clientStatuses, professionalsStatuses, healthLastCommunicationDate } from 'global/variables';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
-import { setContacts, updateContactStatus } from 'store/contacts/slice';
+import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
+import { setRefetchCount, setRefetchData } from '@store/global/slice';
 
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
 
-const Column = ({ status, filter, categoryType, handleCardEdit }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  // const [cardData, setCardData] = useState(contacts?.data || []);
-  // useEffect(() => {
-  //   if (filter) {
-  //     const data = contacts?.data;
-  //     if (Array.isArray(data) && data.length > 0)
-  //       setCardData(data?.filter(({ type }) => type === filter));
-  //   } else setCardData(contacts?.data || []);
-  // }, [filter]);
-  // console.log(status);
+
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
-  const [dropdownOpened, setDropdownOpened] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.data.data);
+  const contacts = useSelector((state) => state.contacts.clients);
+  const clients = useSelector((state) => state.contacts.clients);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
-  const category =
-    openedTab == 0
-      ? 'client'
-      : openedTab == 1
-      ? 'professional'
-      : 'uncategorized';
+  const category = 'client';
 
   const [filteredContacts, setFilteredContacts] = useState(
-    contacts?.filter(
-      (contact) =>
-        contact.status_id == status.id &&
-        contact.category_1.toLowerCase() == category,
-    ),
+    contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
   );
+
+  useEffect(() => {
+    setFilteredContacts(
+      contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+    );
+  }, [openedSubtab, contacts]);
 
   useEffect(() => {
     setFilteredContacts(
       contacts?.filter(
         (contact) =>
-          contact.status_id == status.id &&
-          contact.category_1.toLowerCase() == category,
+          contact.status_id === status.id &&
+          contact.category_1.toLowerCase() === category &&
+          searchTerm.split(' ').every((word) => {
+            const lowercaseWord = word.toLowerCase();
+            return (
+              contact.first_name.toLowerCase().includes(lowercaseWord) ||
+              contact.last_name.toLowerCase().includes(lowercaseWord)
+            );
+          }),
       ),
     );
-  }, [openedSubtab, contacts]);
-
-  // console.log(filteredContacts);
+  }, [searchTerm, contacts]);
 
   const handleCardClick = (contact) => {
     router.push({
@@ -124,10 +115,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatus = async (status, contact) => {
     try {
-      if (
-        contact?.is_in_campaign === 'assigned' &&
-        contact?.status_id !== status
-      ) {
+      if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
         setStatusIdToUpdate(status);
         setChangeStatusModal(true);
         setContactToModify(contact);
@@ -142,10 +130,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
 
   const handleChangeStatusAndCampaign = async () => {
     try {
-      await unassignContactFromCampaign(
-        contactToModify.campaign_id,
-        contactToModify.id,
-      );
+      await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
       await changeStatus(statusIdToUpdate, contactToModify);
       console.log('unassin then change status');
 
@@ -158,41 +143,28 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
   const changeStatus = async (status, contact) => {
     try {
       const statusId = status; // example status id to search for
-      const categoryStatuses =
-        categoryType === 'clients' ? clientStatuses : professionalsStatuses;
+      const categoryStatuses = categoryType === 'clients' ? clientStatuses : professionalsStatuses;
 
-      const foundStatus = categoryStatuses.find(
-        (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1,
-      );
+      const foundStatus = categoryStatuses.find((status) => status.statuses.findIndex((s) => s.id === statusId) !== -1);
       const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
       console.log('tesr', foundStatus);
-      let statusName = foundStatus.statuses.find(
-        (foundstatus) => foundstatus.id == status,
-      ).name;
+      let statusName = foundStatus.statuses.find((foundstatus) => foundstatus.id == status).name;
 
       dispatch(
-        updateContactStatus({
+        updateContactLocally({
           id: contact.id,
           status_id: status,
           status_2: statusName,
         }),
       );
-      toast.success(
-        `${
-          contact.first_name + ' ' + contact.last_name
-        } moved to ${statusName}`,
-      );
+      toast.success(`${contact.first_name + ' ' + contact.last_name} moved to ${statusName}`);
 
+      // change status locally
       const res = await contactServices.updateContact(contact.id, {
         status_id: status,
       });
-      // change status locally
-      console.log('changeStatus', contact, contact.id, status, res);
       // setDropdownOpened(false);
-      const { data } = await contactServices.getContacts(
-        categoryIds[contact?.category_1],
-      );
-      dispatch(setContacts(data));
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
     }
@@ -202,7 +174,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
     <div className="flex flex-col border-r border-gray2">
       {addActivityPopup && (
         <AddActivity
-          client={clientToModify}
+          clientId={clientToModify.id}
           className="min-w-[550px]"
           title={`Add Activity`}
           setAddActivityPopup={setAddActivityPopup}
@@ -210,21 +182,14 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
         />
       )}
       {changeStatusModal && (
-        <ChangeStatus
-          handleCloseOverlay={() => setChangeStatusModal(false)}
-          onSubmit={handleChangeStatusAndCampaign}
-        />
+        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
-      <div
-        className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
+      <div className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
             <div className="group relative cursor-pointer">
-              <InformationCircleIcon
-                className="h-5 w-5 text-gray3 hover:text-gray4"
-                aria-hidden="true"
-              />
+              <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
               <div
                 className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${
                   status?.name === 'New Lead' ? 'left-0' : 'right-0'
@@ -232,13 +197,9 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
-                    : `${
-                        healthLastCommunicationDate[categoryType][status?.name]
-                      } days`
+                    : `${healthLastCommunicationDate[categoryType][status?.name]} days`
                 } in order to maintain healthy communication.`}</p>
-                <p className="mb-2">
-                  Chip statuses of communication in cards represent:
-                </p>
+                <p className="mb-2">Chip statuses of communication in cards represent:</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center mr-2">
                     <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
@@ -255,9 +216,7 @@ const Column = ({ status, filter, categoryType, handleCardEdit }) => {
         </div>
 
         {/* <Checkbox label={status.name} /> */}
-        <a
-          href="#"
-          onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
+        <a href="#" onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
           {sortAsc ? (
             <svg
               className="sort-asc sort fill-gray5"

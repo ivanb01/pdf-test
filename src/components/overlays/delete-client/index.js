@@ -7,7 +7,7 @@ import { useState } from 'react';
 import * as contactServices from 'api/contacts';
 import { dropped_status_id, trash_category_id } from 'global/variables';
 import { useDispatch } from 'react-redux';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
 
 const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const dispatch = useDispatch();
@@ -17,14 +17,14 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const handleSubmit = async () => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.updateContact(contact?.id, {
+      await contactServices.updateContact(contact?.id, {
         // status_id: dropped_status_id,
         category_id: trash_category_id,
       });
       contact?.category_1 == 'Client' && router.push('/contacts/clients');
-      contact?.category_1 == 'Professional' &&
-        router.push('/contacts/professionals');
+      contact?.category_1 == 'Professional' && router.push('/contacts/professionals');
       setLoadingButton(false);
+      dispatch(setRefetchData(true));
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
@@ -45,12 +45,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
           </div>
         </div>
         <div className="flex flex-row justify-end mt-4">
-          <Button
-            onClick={handleCloseOverlay}
-            label="Cancel"
-            white
-            className="mr-2"
-          />
+          <Button onClick={handleCloseOverlay} label="Cancel" white className="mr-2" />
           <Button loading={loadingButton} onClick={handleSubmit} label="Move to Trash" danger />
         </div>
       </div>
