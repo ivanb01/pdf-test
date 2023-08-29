@@ -65,14 +65,6 @@ const MainSidebar = ({
     return openedSubtab == currentSubtab;
   };
 
-  useEffect(() => {
-    if (userGaveConsent == null || userGaveConsent == undefined) {
-      getUserConsentStatus().then((results) => {
-        dispatch(setUserGaveConsent(results.data.scopes));
-      });
-    }
-  }, []);
-
   const narrowMenu = () => {
     return (
       <>

@@ -15,9 +15,10 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setCount, setOpenedTab, setRefetchCount, setRefetchData } from '@store/global/slice';
+import { setCount, setOpenedTab, setRefetchCount, setRefetchData, setUserGaveConsent } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
+import { getUserConsentStatus } from '@api/google';
 
 const MainMenu = ({
   menuItems = [
@@ -41,6 +42,7 @@ const MainMenu = ({
   fixed,
 }) => {
   const router = useRouter();
+  const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
@@ -101,6 +103,14 @@ const MainMenu = ({
   const classNames = (...classes) => {
     return classes.filter(Boolean).join(' ');
   };
+
+  useEffect(() => {
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus().then((results) => {
+        dispatch(setUserGaveConsent(results.data.scopes));
+      });
+    }
+  }, []);
 
   return (
     <div

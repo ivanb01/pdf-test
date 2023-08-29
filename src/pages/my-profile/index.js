@@ -15,12 +15,34 @@ import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
-import googleLogo from '/public/images/googleicon.svg';
+import { useSelector } from 'react-redux';
+import { getUserConsentForGoogleEmail } from '@api/google';
 
 const index = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+  const [loadingActivate, setLoadingActivate] = useState(false);
+  const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
+
+  const consentGiven = () => {
+    return userGaveConsent && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts');
+  };
+
+  const activateGoogleConsent = async () => {
+    setLoadingActivate(true);
+    try {
+      const { data } = await getUserConsentForGoogleEmail();
+      window.location.href = data.redirect_uri;
+    } catch (error) {
+      console.log('error occurredw with google import');
+    }
+  };
+
+  const deactivateGoogleConsent = () => {
+    console.log('deactivate');
+  };
+
   // const importsSummary = [
   //   {
   //     id: 0,
@@ -195,7 +217,7 @@ const index = () => {
         <div className="p-6">
           <div className="font-medium">Connected Social Media Accounts</div>
           <div className="text-sm text-gray-700 mt-6 mb-3">Smart Sync Contacts and Google Contacts from Gmail</div>
-          <div className="max-w-[760px] rounded-[4px] border border-gray-200 p-6 flex">
+          <div className=" w-fit rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
               <div className=" mt-6 text-xs text-gray-500">
@@ -211,14 +233,12 @@ const index = () => {
               </div>
             </div>
             <div className="self-center">
-              <a href="" className="flex">
-                <div className="flex justify-center items-center p-[10px] border border-r-transparent border-gray-300 rounded-l-[4px]">
-                  <img src={googleLogo.src} alt="" className="object-cover" />
-                </div>
-                <div className=" px-4 py-[10px] border border-gray-300 rounded-r-[4px] text-gray-700 font-medium text-sm">
-                  Connect
-                </div>
-              </a>
+              <Button
+                googleButton
+                loading={loadingActivate}
+                onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
+                {consentGiven() ? 'Disconnect' : 'Connect'}
+              </Button>
             </div>
           </div>
           <hr className="my-6" />
