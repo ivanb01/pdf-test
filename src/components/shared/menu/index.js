@@ -30,7 +30,7 @@ const MainMenu = ({
     {
       id: 1,
       name: 'Campaigns',
-      url: '/campaigns',
+      url: '/campaigns/client-campaigns',
     },
     {
       id: 2,
