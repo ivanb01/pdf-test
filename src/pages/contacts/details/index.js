@@ -8,9 +8,9 @@ import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
-import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
+import { getContactNotes, getContact, getContactActivities, getContactLookingProperties } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
-import { setActivityLogData, setNotesData, setCampaignsData } from 'store/clientDetails/slice';
+import { setActivityLogData, setNotesData, setCampaignsData, setLookingFor } from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
@@ -43,6 +43,16 @@ export default function Details() {
   };
   const getContactData = () => {
     getContact(id).then((result) => setContact(result.data));
+  };
+  const getLookingFor = () => {
+    getContactLookingProperties(id)
+      .then((propertiesResponse) => {
+        const propertiesData = propertiesResponse.data;
+        dispatch(setLookingFor(propertiesData.data));
+      })
+      .catch((error) => {
+        toast.error('Error fetching notes:', error);
+      });
   };
   const getNotes = () => {
     getContactNotes(id)
@@ -83,6 +93,7 @@ export default function Details() {
     await getActivityLog();
     setLoadingTabs(false);
     getCampaigns();
+    getLookingFor();
     getNotes();
   };
 

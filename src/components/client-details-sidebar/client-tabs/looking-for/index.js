@@ -9,7 +9,6 @@ import bathroom from '/public/images/bathroom.svg';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
 import usd from '/public/images/usd.svg';
 import Image from 'next/image';
-import Accordion from 'components/shared/accordion';
 import { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
@@ -18,13 +17,14 @@ import { NYCneighborhoods } from 'global/variables';
 import SearchSelectInput from 'components/shared/search-select-input';
 import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
-// import { ArrowRightIcon } from '@heroicons/react/solid';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import EditLookingFor from '@components/overlays/edit-looking-for';
 import { getProperties } from '@api/realtyMX';
 import { formatPrice } from '@global/functions';
+import { useSelector } from 'react-redux';
+
 export default function LookingFor({ contactId }) {
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
@@ -44,6 +44,8 @@ export default function LookingFor({ contactId }) {
         }
       }),
   });
+
+  const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
 
   //* FORMIK *//
   const [loading, setLoading] = useState(true);
@@ -94,10 +96,9 @@ export default function LookingFor({ contactId }) {
     }
   };
 
-  const fetchLookingProperties = async () => {
+  const fetchLookingProperties = () => {
     try {
-      const { data } = await contactServices.getContactLookingProperties(contactId);
-      const lookingProperties = data.data;
+      const lookingProperties = lookingForData.data;
       if (lookingProperties.length > 0) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
