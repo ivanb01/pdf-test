@@ -38,7 +38,7 @@ export default function Accordion({ tabs = [], handleClick, activeSelections, de
                             className={`my-2 mr-3 ${
                               Object.values(activeSelections).flat().includes(content) ? '' : 'text-gray5'
                             }`}
-                            label={content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
+                            label={content}
                             onClick={handleClick(content, tab?.value, tab?.onlyOneValue)}
                           />
                           <br />
@@ -46,9 +46,7 @@ export default function Accordion({ tabs = [], handleClick, activeSelections, de
                       ))}
                     </div>
                   ) : (
-                    <p className="text-base text-gray-500">
-                      {tab.content == 'GmailAI' ? 'AI Smart Synced Contact' : tab.content}
-                    </p>
+                    <p className="text-base text-gray-500">{tab.content}</p>
                   )}
                 </Disclosure.Panel>
               </>

@@ -2,12 +2,13 @@ import Image from 'next/image';
 import { ChevronRightIcon } from '@heroicons/react/solid';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import googleButton from '@components/shared/button/google-button';
+import googleLogo from '/public/images/googleicon.svg';
 
 const Button = ({
+  title,
   children,
   coloredButton,
-  label = 'Test',
+  label,
   primary = true,
   secondary,
   ternary,
@@ -25,6 +26,7 @@ const Button = ({
   social,
   closeButton,
   bigButton,
+  googleButton,
   secondaryDanger,
   rounded,
   special,
@@ -68,6 +70,32 @@ const Button = ({
   if (special) {
     bgColor = 'bg-gradient-to-r from-green-400 to-blue-500';
   }
+
+  const googleBtn = () => {
+    return (
+      <a
+        className={`${
+          disabled && 'pointer-events-none opacity-50'
+        } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
+        title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
+        onClick={onClick}>
+        {loading ? (
+          <div className="p-[10px] pb-[5px]">
+            <CircularProgress size={15} sx={{ color: 'lightBlue3' }}></CircularProgress>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-center items-center p-[10px] border-r">
+              <img src={googleLogo.src} alt="" className="object-cover" />
+            </div>
+            <div className="min-w-[90px] flex justify-center items-center p-[10px] px-4 text-gray-700 font-medium text-sm">
+              {label ? label : children}
+            </div>
+          </>
+        )}
+      </a>
+    );
+  };
   const narrowButton = () => {
     return (
       <button
@@ -187,31 +215,6 @@ const Button = ({
       </button>
     );
   };
-  const googleBtn = () => {
-    return (
-      <a
-        className={`${
-          disabled && 'pointer-events-none opacity-50'
-        } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
-        title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
-        onClick={onClick}>
-        {loading ? (
-          <div className="p-[10px] pb-[5px]">
-            <CircularProgress size={15} sx={{ color: 'lightBlue3' }}></CircularProgress>
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-center items-center p-[10px] border-r">
-              <img src={googleLogo.src} alt="" className="object-cover" />
-            </div>
-            <div className="min-w-[90px] flex justify-center items-center p-[10px] px-4 text-gray-700 font-medium text-sm">
-              {label ? label : children}
-            </div>
-          </>
-        )}
-      </a>
-    );
-  };
   const transparentButton = () => {
     return (
       <button
@@ -223,6 +226,7 @@ const Button = ({
       </button>
     );
   };
+
   if (social) return socialButton();
   else if (coloredButton) return aiReviewButton();
   else if (narrow) return narrowButton();
@@ -230,8 +234,8 @@ const Button = ({
   else if (ternary) return ternaryBtn();
   else if (bigButton) return bigBtn();
   else if (rounded) return roundedBtn();
-  else if (transparent) return transparentButton();
   else if (googleButton) return googleBtn();
+  else if (transparent) return transparentButton();
   else return generalButton();
 };
 

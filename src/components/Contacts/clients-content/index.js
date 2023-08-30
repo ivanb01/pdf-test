@@ -95,17 +95,17 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
 
   useEffect(() => {
     if (contacts.length) {
-      dispatch(setClients(contacts));
+      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(setClients(contacts));
+      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
       setFiltersCleared(false);
       return;
     }
-    let contactsState = contacts;
+    let contactsState = contacts.filter((contact) => contact.category_1 == 'Client');
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -132,7 +132,6 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     });
 
     dispatch(setClients(contactsState));
-    console.log(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -255,7 +254,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      label={filter}
                       className="mr-1"
                     />
                   )),

@@ -18,7 +18,11 @@ import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import ArrowRight from '/public/images/arrow-circle-right.svg';
 import { CSSTransition } from 'react-transition-group';
 import { setUserGaveConsent } from 'store/global/slice';
+import CheckCircle from '@mui/icons-material/CheckCircle';
 import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google';
+import googleContactsIcon from '/public/images/google-contacts.png';
+import checkmark from '/public/images/checkmark.svg';
+import Info from '@mui/icons-material/Info';
 
 const MainSidebar = ({
   tabs,
@@ -41,7 +45,9 @@ const MainSidebar = ({
   const [showSSOverlay, setShowSSOverlay] = useState(false);
 
   const getCountForTabOrSubtab = (count_key) => {
-    console.log('');
+    if (count_key === 'other_total') {
+      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
+    }
     return count && count[count_key] ? count[count_key] : 0;
   };
 
@@ -58,12 +64,6 @@ const MainSidebar = ({
   const isSubtabActive = (currentSubtab) => {
     return openedSubtab == currentSubtab;
   };
-
-  useEffect(() => {
-    getUserConsentStatus().then((results) => {
-      dispatch(setUserGaveConsent(results.data.scopes));
-    });
-  }, []);
 
   const narrowMenu = () => {
     return (
@@ -206,7 +206,31 @@ const MainSidebar = ({
               <>
                 {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
                   <div className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
-                    Import all your contacts from “Google Contacts” in the CRM.
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <img src={checkmark.src} className="h-[17px] w-[17px]" />
+                        <div className="ml-[6px] font-medium">Smart Sync: Active</div>
+                      </div>
+                      <div className="group relative cursor-pointer">
+                        <Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />
+                        <div
+                          className={`group-hover:opacity-100 opacity-0 w-[300px] pointer-events-none right-0 top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                          <p className="">
+                            From now on each new contact that you will communicate in Gmail will be synced here and
+                            categorized by AI.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="my-3" />
+                    <div className="flex items-center mb-4">
+                      <div className="flex items-center">
+                        <img src={googleContactsIcon.src} className="h-[17px] w-[17px]" />
+                        <div className="ml-[6px] font-medium">Google Contacts: Active</div>
+                      </div>
+                      <div></div>
+                    </div>
+                    Click this button whenever you want to import your Google Contacts
                     <a
                       onClick={() =>
                         router.push({
@@ -214,7 +238,7 @@ const MainSidebar = ({
                           query: { start_importing: true },
                         })
                       }
-                      className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-blue-600">
+                      className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600">
                       Import Google Contacts
                       <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                     </a>
