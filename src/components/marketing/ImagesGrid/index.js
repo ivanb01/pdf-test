@@ -1,4 +1,5 @@
-const ImagesGrid = ({ src, id, fileName, fileSize, uploadPercentage, deleteImage }) => {
+const ImagesGrid = ({ src, id, fileName, fileSize, uploadPercentage, deleteImage, totalFileSize }) => {
+  console.log(totalFileSize, 'totalFileSize');
   function bytesToKiloOrMegabytes(bytesValue) {
     if (bytesValue < 1024 * 1024) {
       const kilobytes = bytesValue / 1024;
@@ -32,7 +33,7 @@ const ImagesGrid = ({ src, id, fileName, fileSize, uploadPercentage, deleteImage
           </div>
         </div>
         <span className={'text-xs leading-4 font-medium text-gray-500'}>
-          {bytesToKiloOrMegabytes(fileSize)} of 22 MB
+          {bytesToKiloOrMegabytes(fileSize)} of {bytesToKiloOrMegabytes(totalFileSize)}
         </span>
       </div>
       <div>

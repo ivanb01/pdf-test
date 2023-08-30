@@ -2,12 +2,18 @@ import Overlay from '@components/shared/overlay';
 import Input from '@components/shared/input';
 import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImagesGrid from '@components/marketing/ImagesGrid';
 import SimpleBar from 'simplebar-react';
 
 const RequestCustomDesign = ({ handleOverlayClose }) => {
+  const [totalFileSize, setTotalFileSize] = useState(0);
   const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const calculatedTotalFileSize = images.length > 0 && images.reduce((sum, obj) => sum + obj.fileSize, 0);
+    setTotalFileSize(calculatedTotalFileSize);
+  }, [images]);
   const generateRandomID = () => {
     let randomID = '';
     for (let i = 0; i < 5; i++) {
@@ -115,8 +121,9 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
               </div>
             </div>
           </div>
-          <SimpleBar style={{ height: '300px' }}>
-            {images.length > 0 && images.map((image) => <ImagesGrid {...image} deleteImage={deleteImage} />)}
+          <SimpleBar style={{ height: '250px' }}>
+            {images.length > 0 &&
+              images.map((image) => <ImagesGrid {...image} deleteImage={deleteImage} totalFileSize={totalFileSize} />)}
           </SimpleBar>
         </div>
         <div className={'w-px bg-gray-200'}></div>

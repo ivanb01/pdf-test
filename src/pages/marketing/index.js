@@ -22,11 +22,11 @@ const index = () => {
     },
     {
       img: 'https://i.imgur.com/bvOqrCp.png',
-      name: 'Template Title here 4,',
+      name: 'Template Title here 4',
     },
     {
       img: 'https://i.imgur.com/mf3rhBo.png',
-      name: 'Template Title here 5,',
+      name: 'Template Title here 5',
     },
   ];
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,7 +38,7 @@ const index = () => {
       content: (
         <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
           {cards.map((card) => {
-            if (card.name.includes(searchTerm)) {
+            if (card.name.toLowerCase().includes(searchTerm.toLowerCase())) {
               return <MarketingCard {...card} />;
             }
           })}
@@ -52,7 +52,7 @@ const index = () => {
       content: (
         <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
           {cards.splice(2).map((card) => {
-            if (card.name.includes(searchTerm)) {
+            if (card.name.toLowerCase().includes(searchTerm.toLowerCase())) {
               return <MarketingCard {...card} />;
             }
           })}
