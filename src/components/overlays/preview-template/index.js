@@ -9,7 +9,7 @@ const PreviewTemplate = ({ name, handleCloseOverlay }) => {
 
   return (
     <>
-      <Overlay title={name && name} handleCloseOverlay={handleCloseOverlay} className="w-[800px]">
+      <Overlay title={`Preview ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[800px]">
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 308px)', marginTop: '24px' }} className={'px-6'}>
           <img className="w-full object-cover rounded-lg" src="https://i.imgur.com/u3yJjo7.png" />
         </SimpleBar>

@@ -25,7 +25,7 @@ const OrderTemplate = ({ name, handleCloseOverlay }) => {
               <Input type="text" label="Phone Number" id="phoneNumber" optional />
             </div>
             <Input type="text" label="Listing url" id="listingUrl" />
-            <TextArea className="min-h-[120px]" id="note" label="Note"></TextArea>
+            <TextArea className="min-h-[120px]" id="note" label="Note" optional></TextArea>
             <div className={'grid grid-cols-2 gap-6'}>
               <Input
                 type="date"
