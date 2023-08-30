@@ -5,7 +5,7 @@ const TextArea = ({ rows, name, id, value, handleChange, label, optional, classN
     <div className={`text-left col-span-full`}>
       {label && (
         <label htmlFor={name} className="block text-sm font-medium text-gray6 mb-1">
-          {label} {optional && <span className="text-[#8F95B2] ml-1">(Optional)</span>}
+          {label} {optional && <span className="text-[#8F95B2] ml-1">(optional)</span>}
         </label>
       )}
       <div>
