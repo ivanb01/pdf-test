@@ -5,7 +5,8 @@ module.exports = {
     backgroundImage: {
       sidebar: "url('../public/images/sidebar.png')",
       'oxford-gradient': 'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
-      'marketing-gradient': 'linear-gradient(180deg, #0FA2EA 0%, #A5A9FF 100%)',
+      'marketing-header-gradient': 'linear-gradient(180deg, #0FA2EA 0%, #A5A9FF 100%)',
+      'marketing-footer-gradient': 'linear-gradient(270deg, #3895CA 12.64%, #4338CA 100%)',
     },
     background: {},
     backdropBlur: {
@@ -13,6 +14,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        transparentBlack: '#00000080',
         gray1: '#F3F4F6',
         gray2: '#E5E7EB',
         gray3: '#9CA3AF',

@@ -3,12 +3,22 @@ import { classNames } from 'global/functions';
 import { useState } from 'react';
 import Loader from '../loader';
 
-export default function Tabs({ tabs = [], className, withNumbers, current, setCurrent, loadingTabs, ...props }) {
+export default function Tabs({
+  tabs = [],
+  className,
+  withNumbers,
+  current,
+  setCurrent,
+  loadingTabs,
+  navClassName,
+  wrapperClassName,
+  ...props
+}) {
   const handleSetCurrent = (id) => () => {
     setCurrent(id);
   };
   return (
-    <div className="w-full h-auto bg-gray10">
+    <div className={`w-full h-auto bg-gray10 ${wrapperClassName}`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
@@ -26,7 +36,7 @@ export default function Tabs({ tabs = [], className, withNumbers, current, setCu
       </div>
       <div className={`hidden sm:block ${className} bg-white`}>
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8 " aria-label="Tabs">
+          <nav className={`-mb-px flex space-x-8 ${navClassName}`} aria-label="Tabs">
             {tabs.map((tab) => (
               <a
                 key={tab.name}
@@ -51,20 +61,7 @@ export default function Tabs({ tabs = [], className, withNumbers, current, setCu
                   </>
                 ) : (
                   <>
-                    <div className="mr-3">
-                      {/* <Image
-                        src={tab.icon}
-                        height={20}
-                        className={classNames(
-                          current === tab.id
-                            ? 'text-lightBlue3'
-                            : 'text-gray4 group-hover:gray4'
-                        )}
-                        aria-hidden="true"
-                      /> */}
-
-                      {tab.icon}
-                    </div>
+                    {tab.icon && <div className="mr-3">{tab.icon}</div>}
                     <span
                       className={classNames(
                         current === tab.id ? 'text-lightBlue3' : 'text-gray4 hover:text-gray4 hover:border-gray4',

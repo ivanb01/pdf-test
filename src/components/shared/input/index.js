@@ -7,6 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const Input = ({
   className,
@@ -138,8 +139,7 @@ const Input = ({
         )}
         <div
           onClick={() => setShowPassword(!showPassword)}
-          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}
-        >
+          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}>
           {showPassword ? (
             <VisibilityIcon className="text-gray-400" />
           ) : (
@@ -293,8 +293,7 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
-          >
+            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
             <option>US</option>
             <option>CA</option>
             <option>EU</option>
@@ -344,6 +343,27 @@ const Input = ({
     );
   };
 
+  const dateInput = () => {
+    return (
+      <>
+        <input
+          type={'date'}
+          placeholder={'dd/mm/yyyy'}
+          className={
+            'relative w-full py-[9px] px-[13px] border border-gray-300 rounded-md h-10 text-sm leading-5 font-normal text-gray-500 placeholder:text-gray-500'
+          }
+        />
+        <div className={'absolute text-gray-300 mr-[13px]'} style={{ marginTop: '-34px', right: 0 }}>
+          <CalendarTodayIcon className={'h-5 w-5'} />
+        </div>
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+          </div>
+        )}
+      </>
+    );
+  };
   return (
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
@@ -367,6 +387,8 @@ const Input = ({
           ? passwordInput()
           : type == 'money'
           ? moneyInput()
+          : type === 'date'
+          ? dateInput()
           : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
