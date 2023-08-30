@@ -28,7 +28,7 @@ import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 
-export default function LookingFor({ contactId }) {
+export default function LookingFor({ contactId, category }) {
   const dispatch = useDispatch();
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
@@ -61,11 +61,14 @@ export default function LookingFor({ contactId }) {
   const [propertyInterests, setPropertyInterests] = useState();
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
+  const getLookingAction = () => {
+    return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
+  };
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
       neighborhood_ids: '',
-      looking_action: 'sell',
+      looking_action: getLookingAction(),
       bedrooms: '',
       bathrooms: '',
       budget_min: '',
@@ -73,7 +76,6 @@ export default function LookingFor({ contactId }) {
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values) => {
-      console.log(values, 'valuesssssss');
       if (formik.isValid) {
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids,
@@ -98,30 +100,28 @@ export default function LookingFor({ contactId }) {
       setLoadingButton(false);
       toast.success('Property interests saved successfully!');
       dispatch(setRefetchPart('looking-for'));
+      setLookingForState(1);
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
-    } finally {
-      setLookingForState(1);
     }
   };
 
-  const fetchLookingProperties = () => {
+  const fetchLookingProperties = async () => {
     try {
       const lookingProperties = lookingForData;
-      console.log(lookingProperties);
-      if (lookingProperties.length > 0) {
+      if (lookingProperties[0]) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
-          looking_action: lookingProperties[0].looking_action,
           bedrooms: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
           bathrooms: lookingProperties[0].bathrooms_min != 0 ? lookingProperties[0].bathrooms_min : '',
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
         setLookingForState(1);
-        fetchPropertyInterests();
+        fetchPropertyInterests(lookingProperties[0]);
       } else {
+        console.log('sett');
         setLookingForState(0);
       }
     } catch (error) {
@@ -132,7 +132,7 @@ export default function LookingFor({ contactId }) {
   };
 
   useEffect(() => {
-    fetchLookingProperties();
+    if (lookingForData != null) fetchLookingProperties();
   }, [contactId, lookingForData, refetchData]);
 
   useLayoutEffect(() => {
@@ -143,20 +143,55 @@ export default function LookingFor({ contactId }) {
     }
   }, [formik]);
 
-  const fetchPropertyInterests = async () => {
+  const fetchPropertyInterests = async (values) => {
     setLoadingPropertyInterests(true);
-    const data = await fetchJsonp('https://dataapi.realtymx.com/listings?apikey=4d7139716e6b4a72&callback=callback').then((res) => res.json()).then((data) => {return data});
+    let filters = values;
+    let params = {
+      apikey: '4d7139716e6b4a72',
+      callback: 'callback',
+    };
+    params['status'] = getLookingAction();
+    if (filters.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
+    if (filters.budget_min) params['priceMin'] = filters.budget_min;
+    if (filters.budget_max) params['priceMax'] = filters.budget_max;
+    if (filters.bedrooms_min) {
+      params['bedsMin'] = filters.bedrooms_min;
+    }
+    if (filters.bedrooms_max) {
+      params['bedsMax'] = filters.bedrooms_max;
+    }
+
+    if (filters.bathrooms_min) {
+      params['bathMin'] = filters.bathrooms_min;
+    }
+    if (filters.bathrooms_max) {
+      params['bathMax'] = filters.bathrooms_max;
+    }
+
+    const urlParams = new URLSearchParams({
+      ...params,
+    });
+
+    const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+
+    console.log(url);
+    const data = await fetchJsonp(url)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+
     setPropertyInterests(data.LISTINGS);
     setLoadingPropertyInterests(false);
   };
 
   const getNeighborhoodValue = () => {
-    let neighborhoods = []
-    formik.values.neighborhood_ids.forEach(element => {
-      neighborhoods.push(NYCneighborhoods.find(neighborhood => neighborhood.value == element).label)
+    let neighborhoods = [];
+    formik.values.neighborhood_ids.forEach((element) => {
+      neighborhoods.push(NYCneighborhoods.find((neighborhood) => neighborhood.value == element).label);
     });
-    return neighborhoods.join(", ");
-  }
+    return neighborhoods.join(', ');
+  };
 
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
@@ -171,7 +206,13 @@ export default function LookingFor({ contactId }) {
   };
   return (
     <>
-      {showPopup && <EditLookingFor data={lookingForData[0]} title="Edit Property Interests" handleClose={() => setShowPopup(false)} />}
+      {showPopup && (
+        <EditLookingFor
+          data={lookingForData[0]}
+          title="Edit Property Interests"
+          handleClose={() => setShowPopup(false)}
+        />
+      )}
       {loading ? (
         <div className="relative details-tabs-fixed-height bg-white">
           <Loader></Loader>
@@ -279,7 +320,7 @@ export default function LookingFor({ contactId }) {
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
                         <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {formik.values.looking_action == 'sell' ? 'for Sale' : 'for Rent'}
+                          {formik.values.looking_action == 1 ? 'for Sale' : 'for Rent'}
                         </div>
                       </div>
                       <div className="cursor-pointer" onClick={() => setShowPopup(true)}>
@@ -306,7 +347,7 @@ export default function LookingFor({ contactId }) {
                       <PropertyDetail
                         label="Price Min / Max"
                         value={`${formatPrice(formik.values.budget_min)} - ${formatPrice(formik.values.budget_max)}`}
-                        {...(formik.values.looking_action == 'rent' && {
+                        {...(formik.values.looking_action == 2 && {
                           textAfter: 'monthly',
                         })}
                       />
@@ -319,8 +360,8 @@ export default function LookingFor({ contactId }) {
                           {propertyInterests.length} suggested properties
                         </div>
                         <div className="grid grid-cols-3 gap-6">
-                          {propertyInterests.map((property) => (
-                            <PropertyCard property={property}></PropertyCard>
+                          {propertyInterests.map((property, index) => (
+                            <PropertyCard key={index} property={property}></PropertyCard>
                           ))}
                         </div>
                       </>

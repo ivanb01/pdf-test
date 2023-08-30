@@ -45,7 +45,7 @@ export default function ActivityLog({ contactId, source }) {
     }
   };
   useEffect(() => {
-    fetchAiPreview(contactId);
+    if (source == 'GmailAI') fetchAiPreview(contactId);
   }, []);
 
   useEffect(() => {

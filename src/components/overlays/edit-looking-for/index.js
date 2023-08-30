@@ -12,8 +12,12 @@ import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
 import { valueOptions } from '@global/functions';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setRefetchPart } from '@store/global/slice';
+import { toast } from 'react-hot-toast';
 
 const EditLookingFor = ({ title, handleClose, className, data }) => {
+  const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
@@ -72,6 +76,8 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
       const res = await contactServices.addContactLookingProperty(data.contact_id, values);
       setLoadingButton(false);
       toast.success('Changes were successfully saved');
+      dispatch(setRefetchPart('looking-for'));
+      handleClose();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
