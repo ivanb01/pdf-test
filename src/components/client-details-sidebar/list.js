@@ -28,7 +28,7 @@ export const tabs = (contactId, contact) => [
     name: 'Looking for',
     href: '#',
     icon: <Home />,
-    content: <LookingForContent category={contact.category_2} contactId={contactId} />,
+    content: <LookingForContent category={contact?.category_2} contactId={contactId} />,
   },
   {
     id: 3,
