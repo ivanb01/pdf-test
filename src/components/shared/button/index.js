@@ -34,6 +34,7 @@ const Button = ({
   iconSize,
   narrow,
   color,
+  transparent,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
@@ -214,6 +215,17 @@ const Button = ({
       </button>
     );
   };
+  const transparentButton = () => {
+    return (
+      <button
+        style={{ padding: '7px 11px', boxSizing: 'border-box' }}
+        className={`text-white bg-transparent flex gap-2 justify-center items-center ${className}`}
+        onClick={onClick}>
+        {leftIcon && <div>{leftIcon}</div>}
+        {label && <span className={'text-xs leading-4 font-medium'}>{label}</span>}
+      </button>
+    );
+  };
 
   if (social) return socialButton();
   else if (coloredButton) return aiReviewButton();
@@ -223,6 +235,7 @@ const Button = ({
   else if (bigButton) return bigBtn();
   else if (rounded) return roundedBtn();
   else if (googleButton) return googleBtn();
+  else if (transparent) return transparentButton();
   else return generalButton();
 };
 

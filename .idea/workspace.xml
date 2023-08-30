@@ -4,8 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="implement trash table">
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/edit-client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/edit-client/index.js" afterDir="false" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
+      <change afterPath="$PROJECT_DIR$/src/components/marketing/ImagesGrid/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/marketing/MarketingCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/marketing/MarketingFooter/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlays/order-template/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlays/preview-template/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlays/request-custom-design/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/button/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/button/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/input/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/input/search/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/search/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/input/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marketing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marketing/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,40 +28,27 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/MaxBudgetBug" />
+        <entry key="$PROJECT_DIR$" value="f/erza/CategoryCount" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 2
-}</component>
-  <component name="ProjectId" id="2U1K7ZpIo8POnIdcwgqiHaF0SPt" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "f/erza/MaxBudgetBug",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
+    "git-widget-placeholder": "f/erza/MarketingPage",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images" />
+      <recent name="$PROJECT_DIR$/src/assets" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -66,117 +66,43 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="0a0f4eb5-8ffe-4118-b530-6b3be422677f" name="Changes" comment="" />
-      <created>1692101479711</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1692101479711</updated>
-      <workItem from="1692101481780" duration="1681000" />
-      <workItem from="1692103702394" duration="34620000" />
-      <workItem from="1692259652072" duration="4456000" />
-    </task>
-    <task id="LOCAL-00001" summary="implement global search (search input)">
+    <task id="LOCAL-00001" summary="add main menu">
       <option name="closed" value="true" />
-      <created>1692188551054</created>
+      <created>1693217023222</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1692188551054</updated>
+      <updated>1693217023222</updated>
     </task>
-    <task id="LOCAL-00002" summary="implement global search (search input)">
+    <task id="LOCAL-00002" summary="add gradient">
       <option name="closed" value="true" />
-      <created>1692189141559</created>
+      <created>1693217871179</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1692189141559</updated>
+      <updated>1693217871179</updated>
     </task>
-    <task id="LOCAL-00003" summary="implement global search in contacts page">
+    <task id="LOCAL-00003" summary="improve others sum and uncategorized sum">
       <option name="closed" value="true" />
-      <created>1692256370172</created>
+      <created>1693218293738</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1692256370172</updated>
+      <updated>1693218293738</updated>
     </task>
-    <task id="LOCAL-00004" summary="implement global search in contacts page">
-      <option name="closed" value="true" />
-      <created>1692260003793</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1692260003793</updated>
-    </task>
-    <task id="LOCAL-00005" summary="implement global search in contacts page">
-      <option name="closed" value="true" />
-      <created>1692260060310</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1692260060310</updated>
-    </task>
-    <task id="LOCAL-00006" summary="fix images and add scrollBar">
-      <option name="closed" value="true" />
-      <created>1692263273717</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1692263273717</updated>
-    </task>
-    <task id="LOCAL-00007" summary="add printWidth 120">
-      <option name="closed" value="true" />
-      <created>1692263333449</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1692263333449</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Fix default error message of formik, and make budget max required when budget min is not empty">
-      <option name="closed" value="true" />
-      <created>1692633812938</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1692633812938</updated>
-    </task>
-    <task id="LOCAL-00009" summary="implement trash table">
-      <option name="closed" value="true" />
-      <created>1692695508396</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1692695508396</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="implement global search (search input)" />
-    <MESSAGE value="implement global search in contacts page" />
-    <MESSAGE value="fix images and add scrollBar" />
-    <MESSAGE value="add printWidth 120" />
-    <MESSAGE value="Fix default error message of formik, and make budget max required when budget min is not empty" />
-    <MESSAGE value="implement trash table" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement trash table" />
+    <MESSAGE value="check formatter issues" />
+    <MESSAGE value="add main menu" />
+    <MESSAGE value="add gradient" />
+    <MESSAGE value="improve others sum and uncategorized sum" />
+    <MESSAGE value="implement marketing page UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement marketing page UI" />
   </component>
 </project>
