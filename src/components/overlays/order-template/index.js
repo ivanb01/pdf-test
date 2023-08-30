@@ -17,14 +17,14 @@ const OrderTemplate = ({ name, handleCloseOverlay }) => {
         <div className={'flex-1 '}>
           <form className={'flex flex-col gap-6 '}>
             <div className={'grid grid-cols-2 gap-6'}>
-              <Input type="text" label="Name" id="name" placeholder={'Enter Name'} />
-              <Input type="text" label="Lastname" id="lastname" placeholder={'Enter Name'} />
+              <Input type="text" label="Name" id="name" />
+              <Input type="text" label="Lastname" id="lastname" />
             </div>
             <div className={'grid grid-cols-2 gap-6'}>
-              <Input type="email" label="Email address" id="email" placeholder={'Enter Email'} />
-              <Input type="text" label="Phone Number" id="phoneNumber" placeholder={'+1(123) 123 1234'} />
+              <Input type="email" label="Email address" id="email" />
+              <Input type="text" label="Phone Number" id="phoneNumber" optional />
             </div>
-            <Input type="text" label="Lasting url" id="lastingUrl" placeholder={'Enter url'} />
+            <Input type="text" label="Listing url" id="listingUrl" />
             <TextArea className="min-h-[120px]" id="note" label="Note"></TextArea>
             <div className={'grid grid-cols-2 gap-6'}>
               <Input
