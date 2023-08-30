@@ -174,7 +174,6 @@ export default function LookingFor({ contactId, category }) {
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 
-    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -210,6 +209,7 @@ export default function LookingFor({ contactId, category }) {
         <EditLookingFor
           data={lookingForData[0]}
           title="Edit Property Interests"
+          className="w-[580px]"
           handleClose={() => setShowPopup(false)}
         />
       )}

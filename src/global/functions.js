@@ -312,3 +312,7 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
   });
   return options;
 };
+
+export const getBaseUrl = () => {
+  return window.location.origin;
+};

@@ -1,22 +1,31 @@
-import { formatPrice } from '@global/functions';
+import { formatPrice, getBaseUrl } from '@global/functions';
 import room from '/public/images/room.svg';
 import bathroom from '/public/images/bathroom.svg';
 import sqft from '/public/images/sqft.svg';
 import share from '/public/images/share.svg';
 import placeholder from '/public/images/img-placeholder.png';
-
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 const PropertyCard = ({ property }) => {
+  const router = useRouter();
   return (
     <div className="border border-gray-200 rounded-[4px]">
       <div className="h-[160px] relative">
-        <img
-          className="object-cover h-full w-full"
-          src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
+        <a href={`${getBaseUrl()}/property?id=${property.ID}`} target="_blank">
+          <img
+            className="object-cover h-full w-full"
+            src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
+        </a>
         <div className="flex items-center justify-between absolute bottom-2 left-2 right-2">
           <div className="flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
             {property.STATUS}
           </div>
-          <a href="#">
+          <a
+            className="cursor-pointer"
+            onClick={() => {
+              navigator.clipboard.writeText(`${getBaseUrl()}/property/${property.ID}`);
+              toast.success('Link copied to clipboard');
+            }}>
             <img className="h-7 w-7" src={share.src} alt="" />
           </a>
         </div>

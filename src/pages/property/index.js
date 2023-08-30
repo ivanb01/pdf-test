@@ -24,10 +24,16 @@ import { useRef, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { formatPrice } from '@global/functions';
+import fetchJsonp from 'fetch-jsonp';
+import Loader from '@components/shared/loader';
 const index = () => {
+  const router = useRouter();
+  const id = router.query.id;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
+  const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
@@ -386,14 +392,42 @@ const index = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
-  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), []);
+  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), [data.LATITUDE, data.LONGITUDE]);
 
   const scrollToMap = () => {
     var element = document.querySelector('#map-section');
     element.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return (
+  useEffect(() => {
+    const fetchProperty = async () => {
+      let params = {
+        apikey: '4d7139716e6b4a72',
+        callback: 'callback',
+        id: id,
+      };
+      const urlParams = new URLSearchParams({
+        ...params,
+      });
+      const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+
+      await fetchJsonp(url)
+        .then((res) => res.json())
+        .then((data) => {
+          setData(data.LISTINGS[0]);
+          setLoading(false);
+        });
+    };
+    if (id) {
+      fetchProperty();
+    }
+  }, [id]);
+
+  return loading ? (
+    <div className="h-full w-full relative">
+      <Loader />
+    </div>
+  ) : (
     <>
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
@@ -401,15 +435,13 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         <div
           onClick={scrollRight}
-          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
-        >
+          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
           <ArrowForward className="text-white md:text-2xl text-sm" />
         </div>
         {!hideLeftArrow && (
           <div
             onClick={scrollLeft}
-            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
-          >
+            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
             <ArrowBack className="text-white md:text-2xl text-sm" />
           </div>
         )}
@@ -455,23 +487,6 @@ const index = () => {
             </SimpleBar>
           </>
         )}
-        {/* <div className="w-1/2 h-full pr-3 left-image">
-          <Image
-            src={pictures[0]}
-            // style={{ backgroundImage: `url("${pictures[0]}")` }}
-            className="next-image h-full w-full bg-cover bg-no-repeat"
-          />
-        </div>
-        <div className="w-1/2 grid grid-cols-2 grid-rows-2 gap-3">
-          {pictures.slice(1).map((picture, index) => (
-            <Image
-              key={index}
-              src={picture}
-              // style={{ backgroundImage: `url("${picture}")` }}
-              className="h-full bg-cover bg-no-repeat"
-            />
-          ))}
-        </div> */}
       </div>
       <div className="properties-container">
         <div className="flex md:flex-row flex-col justify-between border-gray2 border-b md:pb-0 pb-[20px]">
@@ -488,14 +503,13 @@ const index = () => {
               <Image src={location} alt="" />
               <div
                 className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
-                onClick={() => scrollToMap()}
-              >
+                onClick={() => scrollToMap()}>
                 {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
               </div>
             </div>
           </div>
           <div>
-            <div className="md:flex hidden mt-0 clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+            <div className="md:flex hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
               {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>
@@ -574,5 +588,4 @@ const index = () => {
     </>
   );
 };
-
 export default index;
