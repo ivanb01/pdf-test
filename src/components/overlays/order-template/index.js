@@ -5,7 +5,7 @@ import Button from '@components/shared/button';
 
 const OrderTemplate = ({ name, handleCloseOverlay }) => {
   return (
-    <Overlay title={name} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
+    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
       <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
         <div className={'flex-1'}>
           <img
