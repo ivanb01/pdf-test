@@ -177,7 +177,6 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -369,37 +368,39 @@ export default function LookingFor({ contactId, category }) {
                             <PropertyCard key={index} property={property}></PropertyCard>
                           ))}
                         </div>
-                        <nav
-                          className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                          aria-label="Pagination">
-                          <div className="hidden sm:block">
-                            <p className="text-sm text-gray-700">
-                              Showing <span className="font-medium">{(page - 1) * 21 + 1}</span> to{' '}
-                              <span className="font-medium">{Math.min(page * 21, allPropertiesCount)}</span> of{' '}
-                              <span className="font-medium">{allPropertiesCount}</span> results
-                            </p>
-                          </div>
-                          <div className="flex flex-1 justify-between sm:justify-end">
-                            <a
-                              href="#"
-                              onClick={() => {
-                                fetchPropertyInterests(lookingForData[0], page - 1);
-                                setPage(page - 1);
-                              }}
-                              className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                              Previous
-                            </a>
-                            <a
-                              href="#"
-                              onClick={() => {
-                                fetchPropertyInterests(lookingForData[0], page + 1);
-                                setPage(page + 1);
-                              }}
-                              className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                              Next
-                            </a>
-                          </div>
-                        </nav>
+                        {allPropertiesCount.length > 21 && (
+                          <nav
+                            className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
+                            aria-label="Pagination">
+                            <div className="hidden sm:block">
+                              <p className="text-sm text-gray-700">
+                                Showing <span className="font-medium">{(page - 1) * 21 + 1}</span> to{' '}
+                                <span className="font-medium">{Math.min(page * 21, allPropertiesCount)}</span> of{' '}
+                                <span className="font-medium">{allPropertiesCount}</span> results
+                              </p>
+                            </div>
+                            <div className="flex flex-1 justify-between sm:justify-end">
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchPropertyInterests(lookingForData[0], page - 1);
+                                  setPage(page - 1);
+                                }}
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Previous
+                              </a>
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchPropertyInterests(lookingForData[0], page + 1);
+                                  setPage(page + 1);
+                                }}
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Next
+                              </a>
+                            </div>
+                          </nav>
+                        )}
                       </>
                     ) : (
                       <div className="flex items-center justify-center flex-col text-center mt-6">

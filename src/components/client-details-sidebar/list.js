@@ -8,36 +8,39 @@ import CampaignsContent from './client-tabs/campaigns';
 import LookingForContent from './client-tabs/looking-for';
 import NotesContent from './client-tabs/notes';
 
-export const tabs = (contactId, contact) => [
-  {
-    id: 0,
-    name: 'Activity Log',
-    href: '#',
-    icon: <List />,
-    content: <ActivityLogContent contactId={contactId} source={contact?.import_source} />,
-  },
-  {
-    id: 1,
-    name: 'Campaigns',
-    href: '#',
-    icon: <Campaigns />,
-    content: <CampaignsContent contactId={contactId} contact={contact} />,
-  },
-  {
-    id: 2,
-    name: 'Looking for',
-    href: '#',
-    icon: <Home />,
-    content: <LookingForContent category={contact?.category_2} contactId={contactId} />,
-  },
-  {
-    id: 3,
-    name: 'Notes',
-    href: '#',
-    icon: <Note />,
-    content: <NotesContent contactId={contactId} />,
-  },
-];
+export const tabs = (contactId, contact) => {
+  const allTabs = [
+    {
+      id: 0,
+      name: 'Activity Log',
+      href: '#',
+      icon: <List />,
+      content: <ActivityLogContent contactId={contactId} source={contact?.import_source} />,
+    },
+    {
+      id: 1,
+      name: 'Campaigns',
+      href: '#',
+      icon: <Campaigns />,
+      content: <CampaignsContent contactId={contactId} contact={contact} />,
+    },
+    {
+      id: 2,
+      name: 'Looking for',
+      href: '#',
+      icon: <Home />,
+      content: <LookingForContent category={contact?.category_2} contactId={contactId} />,
+    },
+    {
+      id: 3,
+      name: 'Notes',
+      href: '#',
+      icon: <Note />,
+      content: <NotesContent contactId={contactId} />,
+    },
+  ];
+  return contact?.category_1 != 'Client' ? allTabs.filter((tab) => tab.name !== 'Looking for') : allTabs;
+};
 
 export const inputs = [
   {
