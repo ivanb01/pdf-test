@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AIReviewed from '/public/images/ai-reviewed.svg';
 import AI from '/public/images/ai.svg';
+import MyTooltip from '@components/shared/my-tooltip';
+
 const AIChip = ({ reviewed, className }) => {
+  const [closeTooltip, setCloseTooltip] = useState(true);
   return (
-    <img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />
+    <>
+      <MyTooltip/>
+    </>
+  // <img onMouseEnter={() => setCloseTooltip(true)} className={className}
+  //      src={reviewed ? AIReviewed.src : AI.src} alt='' />
     // <div
     //   className={`text-white ${
     //     reviewed ? 'bg-green5' : 'bg-blue2'
