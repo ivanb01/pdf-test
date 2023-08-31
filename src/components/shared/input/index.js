@@ -368,7 +368,7 @@ const Input = ({
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
-          {label} {optional && <span className="text-gray3 ml-1">(optional)</span>}
+          {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
         </Text>
       )}
       {secondaryLabel && (
