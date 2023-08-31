@@ -65,6 +65,7 @@ export default function LookingFor({ contactId, category }) {
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
+    console.log(category);
     return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
   };
   const formik = useFormik({
@@ -325,7 +326,7 @@ export default function LookingFor({ contactId, category }) {
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
                         <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {formik.values.looking_action == 1 ? 'for Sale' : 'for Rent'}
+                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
                         </div>
                       </div>
                       <div className="cursor-pointer" onClick={() => setShowPopup(true)}>
