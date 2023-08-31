@@ -536,7 +536,7 @@ const index = () => {
                   ),
               )}
             </div>
-            <div className="mt-6">{data.DESCRIPTION}</div>
+            <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
           </div>
           <div className="mt-10">
             <div className="text-gray7 text-xl mb-6 font-medium">Property Amenities</div>

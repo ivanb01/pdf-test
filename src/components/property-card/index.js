@@ -16,19 +16,17 @@ const PropertyCard = ({ property }) => {
             className="object-cover h-full w-full"
             src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
         </a>
-        <div className="flex items-center justify-between absolute bottom-2 left-2 right-2">
-          <div className="flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
-            {property.STATUS}
-          </div>
-          <a
-            className="cursor-pointer"
-            onClick={() => {
-              navigator.clipboard.writeText(`${getBaseUrl()}/property/${property.ID}`);
-              toast.success('Link copied to clipboard');
-            }}>
-            <img className="h-7 w-7" src={share.src} alt="" />
-          </a>
+        <div className="absolute bottom-2 left-2 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
+          {property.STATUS}
         </div>
+        <a
+          className="cursor-pointer absolute bottom-2 right-2"
+          onClick={() => {
+            navigator.clipboard.writeText(`${getBaseUrl()}/property/${property.ID}`);
+            toast.success('Link copied to clipboard');
+          }}>
+          <img className="h-7 w-7" src={share.src} alt="" />
+        </a>
       </div>
       <div className="p-3 text-sm">
         <div className="mb-4">
