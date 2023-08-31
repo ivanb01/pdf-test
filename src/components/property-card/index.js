@@ -6,6 +6,7 @@ import share from '/public/images/share.svg';
 import placeholder from '/public/images/img-placeholder.png';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import link from '/public/images/link-2.svg';
 const PropertyCard = ({ property }) => {
   const router = useRouter();
   return (
@@ -25,7 +26,7 @@ const PropertyCard = ({ property }) => {
             navigator.clipboard.writeText(`${getBaseUrl()}/property/${property.ID}`);
             toast.success('Link copied to clipboard');
           }}>
-          <img className="h-7 w-7" src={share.src} alt="" />
+          <img className="h-7 w-7" src={link.src} alt="" />
         </a>
       </div>
       <div className="p-3 text-sm">

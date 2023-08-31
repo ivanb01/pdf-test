@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
+import Link from '@mui/icons-material/Link';
 
 export default function LookingFor({ contactId, category }) {
   const dispatch = useDispatch();
