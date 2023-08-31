@@ -83,7 +83,7 @@ export default function LookingFor({ contactId, category }) {
       if (formik.isValid) {
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids,
-          looking_action: values.looking_action,
+          looking_action: getLookingAction(),
           bedrooms_min: values.bedrooms,
           bedrooms_max: values.bedrooms,
           bathrooms_min: values.bathrooms,
@@ -353,7 +353,7 @@ export default function LookingFor({ contactId, category }) {
                       <PropertyDetail
                         label="Price Min / Max"
                         value={`${formatPrice(formik.values.budget_min)} - ${formatPrice(formik.values.budget_max)}`}
-                        {...(formik.values.looking_action == 2 && {
+                        {...(getLookingAction() == 2 && {
                           textAfter: 'monthly',
                         })}
                       />
