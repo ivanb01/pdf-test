@@ -30,12 +30,17 @@ const MainMenu = ({
     {
       id: 1,
       name: 'Campaigns',
-      url: '/campaigns',
+      url: '/campaigns/client-campaigns',
     },
     {
       id: 2,
       name: 'Reports',
       url: '/reports',
+    },
+    {
+      id: 3,
+      name: 'Marketing',
+      url: '/marketing',
     },
   ],
   className,

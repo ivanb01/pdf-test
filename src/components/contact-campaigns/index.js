@@ -186,10 +186,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   return (
     <>
       <MainMenu />
-      <TopBar
-        text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
-        onBackClick={() => router.push('/campaigns')}
-      />
+      <TopBar text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'} />
       <div className="border-t border-gray2 flex contact-campaigns-fixed-height">
         <div className="h-auto border-r border-gray2">
           <ContactCampaignsSidebar
@@ -222,8 +219,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}
-                    onClick={setCurrentButton}
-                  ></ButtonsSlider>
+                    onClick={setCurrentButton}></ButtonsSlider>
                 </div>
               </div>
               <div className={`w-auto h-auto`}>
