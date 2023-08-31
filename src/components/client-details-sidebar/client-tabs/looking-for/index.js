@@ -361,14 +361,14 @@ export default function LookingFor({ contactId, category }) {
                     {propertyInterests && propertyInterests.length ? (
                       <>
                         <div className="mb-4 text-gray-900 text-sm font-medium">
-                          {propertyInterests.length} suggested properties
+                          {allPropertiesCount} suggested properties
                         </div>
                         <div className="grid grid-cols-3 gap-6">
                           {propertyInterests.map((property, index) => (
                             <PropertyCard key={index} property={property}></PropertyCard>
                           ))}
                         </div>
-                        {allPropertiesCount.length > 21 && (
+                        {allPropertiesCount > 21 && (
                           <nav
                             className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
                             aria-label="Pagination">

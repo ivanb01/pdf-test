@@ -23,7 +23,7 @@ export default function Events({ className, events = [], currentEvent, setCurren
       <nav aria-label="Progress">
         <ol role="list" className="overflow-hidden">
           {events.map((event, eventIdx) => (
-            <li key={event.name} className={classNames(eventIdx !== events.length - 1 ? 'pb-10' : '', 'relative')}>
+            <li key={eventIdx} className={classNames(eventIdx !== events.length - 1 ? 'pb-10' : '', 'relative')}>
               <>
                 {eventIdx !== events.length - 1 ? (
                   <div
