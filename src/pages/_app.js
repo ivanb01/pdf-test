@@ -112,7 +112,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
-        <div className={`main-page overflow-y-auto`}>
+        <div className={`main-page`}>
           <Provider store={store}>
             <Component {...pageProps} />
             {domLoaded && (

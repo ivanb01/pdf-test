@@ -5,6 +5,7 @@ import { useState } from 'react';
 import MarketingCard from '@components/marketing/MarketingCard';
 import MarketingFooter from '@components/marketing/MarketingFooter';
 import { useEffect } from 'react';
+import SimpleBar from 'simplebar-react';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -67,7 +68,7 @@ const index = () => {
   }, []);
 
   return (
-    <>
+    <SimpleBar style={{ maxHeight: '100%' }}>
       <MainMenu />
       <div
         className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
@@ -91,7 +92,7 @@ const index = () => {
         />
       </div>
       <MarketingFooter />
-    </>
+    </SimpleBar>
   );
 };
 
