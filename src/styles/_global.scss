@@ -443,7 +443,7 @@ tbody > div {
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border-color: #474d66;
+  border: 1px solid #474d66;
   outline-color: #474d66;
 }
 
