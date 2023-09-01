@@ -23,6 +23,7 @@ import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google'
 import googleContactsIcon from '/public/images/google-contacts.png';
 import checkmark from '/public/images/checkmark.svg';
 import Info from '@mui/icons-material/Info';
+import TooltipComponent from '@components/shared/tooltip';
 
 const MainSidebar = ({
   tabs,
@@ -211,16 +212,17 @@ const MainSidebar = ({
                         <img src={checkmark.src} className="h-[17px] w-[17px]" />
                         <div className="ml-[6px] font-medium">Smart Sync: Active</div>
                       </div>
-                      <div className="group relative cursor-pointer">
-                        <Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />
-                        <div
-                          className={`group-hover:opacity-100 opacity-0 w-[300px] pointer-events-none right-0 top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                      <TooltipComponent
+                        side={'bottom'}
+                        align={'start'}
+                        triggerElement={<Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+                        <div className={`w-[270px] pointer-events-none text-xs text-white bg-neutral1 rounded-lg`}>
                           <p className="">
                             From now on each new contact that you will communicate in Gmail will be synced here and
                             categorized by AI.
                           </p>
                         </div>
-                      </div>
+                      </TooltipComponent>
                     </div>
                     <hr className="my-3" />
                     <div className="flex items-center mb-4">
