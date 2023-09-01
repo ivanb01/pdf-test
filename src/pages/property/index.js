@@ -263,7 +263,7 @@ const index = () => {
 
   const [hideLeftArrow, setHideLeftArrow] = useState(false);
 
-  const [propertyDetails, setPropertyDetails] = useState([
+  const propertyDetails = [
     {
       id: 0,
       name: 'Rooms',
@@ -282,14 +282,8 @@ const index = () => {
       value: data.BATHROOMS,
       icon: bathrooms,
     },
-    // {
-    //   id: 3,
-    //   name: 'Balcony',
-    //   value: data.,
-    //   icon: balcony,
-    // },
-  ]);
-  const [propertyAmenities, setPropertyAmenities] = useState([
+  ];
+  const propertyAmenities = [
     {
       id: 0,
       name: 'TV',
@@ -326,8 +320,8 @@ const index = () => {
       value: true,
       icon: smoke,
     },
-  ]);
-  const [otherDetails, setOtherDetails] = useState([
+  ];
+  const otherDetails = [
     {
       id: 0,
       name: 'Available Date',
@@ -378,7 +372,7 @@ const index = () => {
       name: 'Year Built',
       value: '1920',
     },
-  ]);
+  ];
 
   const scrollRight = () => {
     document.querySelector('.simplebar-content-wrapper').scrollLeft +=

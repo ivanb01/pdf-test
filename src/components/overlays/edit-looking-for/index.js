@@ -23,14 +23,18 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
     neighborhood_ids: Yup.array().required('Field is required'),
     bedrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     bathrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    budget_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    // budget_min: Yup.number().transform((o, v) => Number(v.replace(/,/g, ''))).min(0, 'Minimum value is 0'),
+    budget_min: Yup.number().min(0, 'Budget Min should be greater than 0').typeError('Budget Min should be an integer'),
     budget_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('budget_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(Yup.ref('budget_min'), 'Max budget must be greater than min budget'),
+      .typeError('Budget Max should be an integer')
+      .when('budget_min', (budget_min, schema) => {
+        if (budget_min === undefined || isNaN(budget_min)) {
+          return;
+        } else {
+          return schema
+            .required('Field can not be left blank.')
+            .typeError('Budget Max should be an integer')
+            .moreThan(budget_min, 'Budget Max be greater than Budget Min');
+        }
       }),
   });
 

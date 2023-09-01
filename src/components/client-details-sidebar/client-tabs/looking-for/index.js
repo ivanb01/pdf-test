@@ -193,9 +193,10 @@ export default function LookingFor({ contactId, category }) {
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
     formik.values.neighborhood_ids.forEach((element) => {
-      neighborhoods.push(NYCneighborhoods.find((neighborhood) => neighborhood.value == element).label);
+      const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+      neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
     });
-    return neighborhoods.join(', ');
+    return neighborhoods.length ? neighborhoods.join(', ') : null;
   };
 
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
@@ -229,7 +230,7 @@ export default function LookingFor({ contactId, category }) {
             <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
               <div className="max-w-[600px]">
                 <div className="p-6">
-                  <form onSubmit={formik.handleSubmit}>
+                  <form key={contactId} onSubmit={formik.handleSubmit}>
                     <div className="mb-[60px] text-center">
                       <div className="text-black font-medium text-lg mb-3">No Property Suggested</div>
                       <div className="text-black text-sm">
