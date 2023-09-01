@@ -77,7 +77,7 @@ const index = () => {
   };
   useEffect(() => {
     setLoading(true);
-    if (allContacts.data) {
+    if (allContacts?.data) {
       fetchClients();
     }
   }, [allContacts]);
