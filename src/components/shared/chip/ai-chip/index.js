@@ -16,14 +16,14 @@ const AIChip = ({ reviewed, className }) => {
               title={'New Contact'}
               reviewed
               description={
-                ' This contact is new, and you haven’t review it yet. For review, click on card to see more details.'
+                'This contact is new, and you haven’t reviewed it yet. After you review it, the chip will turn green.'
               }
             />
           ) : (
             <ChipText
               title={'Reviewed Contact'}
               reviewed={false}
-              description={'Once you review and “Mark as Correct” the chip turns green.'}
+              description={'This AI contact has been reviewed and approved.'}
             />
           )}
         </div>
