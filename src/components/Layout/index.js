@@ -264,7 +264,7 @@ const Layout = ({ children }) => {
                 setOpenedSubtab={(tab) => handleOpenedSubtab(tab)}
               />
             </div>
-            <div className="border-t border-gray2 flex h-auto min-h-full w-full">
+            <div className=" flex h-auto min-h-full w-full">
               <div className="w-full relative">{children}</div>
             </div>
           </div>
