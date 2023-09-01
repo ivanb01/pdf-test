@@ -33,8 +33,7 @@ const GlobalAlert = ({ overlay, type, message, rounded, onButtonClick, noBorder,
     <div
       className={`${!noBorder && 'border border-textColor'} z-40 ${
         overlay && 'absolute top-[90px] left-1/2 -translate-x-1/2 min-w-[400px] max-w-[800px]'
-      } ${rounded && 'rounded-md'} ${bgColor} p-4 `}
-    >
+      } ${rounded && 'rounded-md'} ${bgColor} p-4 `}>
       <div className="flex justify-between items-center">
         <div className={`flex ${title || noBorder ? 'items-start' : 'items-center'}`}>
           <div>
@@ -48,14 +47,12 @@ const GlobalAlert = ({ overlay, type, message, rounded, onButtonClick, noBorder,
           </div>
           <div className="ml-3">
             {title && <p className={`text-sm font-semibold mb-2 ${textColor}`}>{title}</p>}
-            <p className={`${smallText ? 'text-xs' : 'text-sm'} font-medium ${textColor}`}>
-              {message ? message : '\u00A0'}
-            </p>
+            <p className={`${smallText ? 'text-xs' : 'text-sm'} ${textColor}`}>{message ? message : '\u00A0'}</p>
           </div>
         </div>
         {onButtonClick && <Button white>Set up now</Button>}
         {type == 'smart-sync' && (
-          <a onClick={() => router.push('/ai-summary')} className="text-blue-700 cursor-pointer font-medium text-sm">
+          <a onClick={() => router.push('/ai-summary')} className="text-blue-700 cursor-pointer text-sm">
             See Summary
             <ArrowForward className="h-4 group-hover:translate-x-1 transition-all" />
           </a>
