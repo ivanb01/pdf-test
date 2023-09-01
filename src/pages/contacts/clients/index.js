@@ -21,6 +21,7 @@ import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated
 import { CSSTransition } from 'react-transition-group';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
+import { bulkUpdateContacts } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -89,6 +90,28 @@ const index = () => {
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
+  useEffect(() => {
+    console.log(allContacts?.data && allContacts?.data?.filter((contact) => contact.import_source == 'GmailAI'));
+    let updateContacts = [
+      {
+        id: 208442,
+        approved_ai: false,
+      },
+      {
+        id: 147889,
+        approved_ai: false,
+      },
+      {
+        id: 142426,
+        approved_ai: false,
+      },
+      {
+        id: 168179,
+        approved_ai: false,
+      },
+    ];
+    bulkUpdateContacts({ contacts: updateContacts });
+  }, [allContacts]);
 
   useEffect(() => {
     const queryParams = {};
