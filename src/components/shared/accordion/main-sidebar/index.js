@@ -23,7 +23,7 @@ import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google'
 import googleContactsIcon from '/public/images/google-contacts.png';
 import checkmark from '/public/images/checkmark.svg';
 import Info from '@mui/icons-material/Info';
-import MyTooltip from '@components/shared/my-tooltip';
+import TooltipComponent from '@components/shared/tooltip';
 
 const MainSidebar = ({
   tabs,
@@ -80,12 +80,10 @@ const MainSidebar = ({
                 onClick={() => {
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}
-              >
+                }}>
                 <div
                   className={`flex items-center  ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
-                  title={tab.name}
-                >
+                  title={tab.name}>
                   {tab.icon}
                 </div>
               </Link>
@@ -97,8 +95,7 @@ const MainSidebar = ({
             <hr className="my-2 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
-            >
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
             </div>
           </>
@@ -126,12 +123,10 @@ const MainSidebar = ({
                   }
                   setOpenedTab(tab.id);
                   router.push(tab.href);
-                }}
-              >
+                }}>
                 <div
                   onClick={() => !tab.subtab && setOpenedTab(tab.id)}
-                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'} `}
-                >
+                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
                   {tab.icon}
                   <Text h4 className={`px-[10px] py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
                     {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
@@ -158,15 +153,13 @@ const MainSidebar = ({
                         } transition-all duration-200 flex items-center ${
                           isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                         }`}
-                        onClick={() => setOpenedSubtab(subtab.id)}
-                      >
+                        onClick={() => setOpenedSubtab(subtab.id)}>
                         {subtab.icon ? subtab.icon : subtab.dot}
                         <Text
                           h4
                           className={`px-[10px] py-[10px] ${
                             isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3' : 'text-gray4'
-                          }`}
-                        >
+                          }`}>
                           {subtab.name} ({getCountForTabOrSubtab(subtab.count_key)})
                         </Text>
                       </a>
@@ -182,8 +175,7 @@ const MainSidebar = ({
             <hr className="my-4 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
-            >
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
               <Text h4 className={`ml-3 text-gray5`}>
                 {pinned && 'Import Contacts from CSV'}
@@ -199,8 +191,7 @@ const MainSidebar = ({
     <div
       className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
         pinned ? 'w-[315px]' : 'w-[62px]'
-      }`}
-    >
+      }`}>
       {showSSOverlay && (
         <SmartSyncOverlay
           handleAction={() => activateSmartSync()}
@@ -221,18 +212,17 @@ const MainSidebar = ({
                         <img src={checkmark.src} className="h-[17px] w-[17px]" />
                         <div className="ml-[6px] font-medium">Smart Sync: Active</div>
                       </div>
-                      <MyTooltip
+                      <TooltipComponent
                         side={'bottom'}
                         align={'start'}
-                        triggerElement={<Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />}
-                      >
+                        triggerElement={<Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />}>
                         <div className={`w-[270px] pointer-events-none text-xs text-white bg-neutral1 rounded-lg`}>
                           <p className="">
                             From now on each new contact that you will communicate in Gmail will be synced here and
                             categorized by AI.
                           </p>
                         </div>
-                      </MyTooltip>
+                      </TooltipComponent>
                     </div>
                     <hr className="my-3" />
                     <div className="flex items-center mb-4">
@@ -250,8 +240,7 @@ const MainSidebar = ({
                           query: { start_importing: true },
                         })
                       }
-                      className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600"
-                    >
+                      className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600">
                       Import Google Contacts
                       <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                     </a>
@@ -263,8 +252,7 @@ const MainSidebar = ({
                     <span className="font-bold">“Import Google Contacts”</span> in order to import contact from Gmail.
                     <a
                       className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
-                      onClick={() => setShowSSOverlay(true)}
-                    >
+                      onClick={() => setShowSSOverlay(true)}>
                       Setup
                       <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                     </a>
@@ -283,8 +271,7 @@ const MainSidebar = ({
               query: { start_importing: true },
             })
           }
-          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md"
-        >
+          className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md">
           <AccountCircle className="h-5" />
         </a>
       )}
@@ -293,8 +280,7 @@ const MainSidebar = ({
         <div
           onClick={() => dispatch(setExpandedMenu(!pinned))}
           className="absolute cursor-pointer z-10"
-          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}
-        >
+          style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}>
           <div className="">
             <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
           </div>

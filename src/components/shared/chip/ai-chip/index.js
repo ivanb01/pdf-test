@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import AIReviewed from '/public/images/ai-reviewed.svg';
 import AI from '/public/images/ai.svg';
-import MyTooltip from '@components/shared/my-tooltip';
+import TooltipComponent from '@components/shared/tooltip';
 
 const AIChip = ({ reviewed, className }) => {
   return (
     <>
-      <MyTooltip
+      <TooltipComponent
         side={'right'}
         align="center"
-        triggerElement={<img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />}
-      >
+        triggerElement={<img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />}>
         <div style={{ width: '230px' }} className={'flex flex-col gap-4'}>
           {!reviewed ? (
             <ChipText
@@ -28,7 +27,7 @@ const AIChip = ({ reviewed, className }) => {
             />
           )}
         </div>
-      </MyTooltip>
+      </TooltipComponent>
     </>
   );
 };

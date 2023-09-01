@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
 import { setRefetchCount, setRefetchData } from '@store/global/slice';
-import MyTooltip from '@components/shared/my-tooltip';
+import TooltipComponent from '@components/shared/tooltip';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -189,17 +189,15 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
-            <MyTooltip
+            <TooltipComponent
               side={'bottom'}
               align={'start'}
               triggerElement={
                 <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
-              }
-            >
+              }>
               <div
                 // style={{ width: '300px' }}
-                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}
-              >
+                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
@@ -217,7 +215,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
                   </div>
                 </div>
               </div>
-            </MyTooltip>
+            </TooltipComponent>
           )}
         </div>
 
@@ -231,8 +229,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-ascending"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           ) : (
@@ -243,8 +240,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
               id="mdi-sort-alphabetical-descending"
               width="20"
               height="20"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
@@ -255,8 +251,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
           overflowX: 'hidden',
           maxHeight: '100%',
           height: 'calc(100vh - 224px) !important',
-        }}
-      >
+        }}>
         <div className="p-[16px] contact-column-custom-height">
           {filteredContacts.map((contact, index) => (
             <ContactCard

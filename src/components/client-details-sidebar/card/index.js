@@ -11,7 +11,7 @@ import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
 import { useRouter } from 'next/router';
 import ReviewContact from '@components/overlays/review-contact';
-import MyTooltip from '@components/shared/my-tooltip';
+import TooltipComponent from '@components/shared/tooltip';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -69,16 +69,15 @@ export default function ClientCard({ client }) {
                   : 'No phone number'}
               </div>
               {phoneNumberFormat(client?.phone_number) === 'N/A' && (
-                <MyTooltip
+                <TooltipComponent
                   side={'right'}
                   align={'center'}
-                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}
-                >
+                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}>
                   <div style={{ width: '238px' }} className=" pointer-events-none  text-xs font-medium text-white ">
                     <p className="mb-2 font-semibold">Please add a phone number!</p>
                     <p>Without a phone number the SMS events in campaign cannot run.</p>
                   </div>
-                </MyTooltip>
+                </TooltipComponent>
               )}
             </div>
           </span>
