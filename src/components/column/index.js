@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
 import { setRefetchCount, setRefetchData } from '@store/global/slice';
+import TooltipComponent from '@components/shared/tooltip';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -188,12 +189,15 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
-            <div className="group relative cursor-pointer">
-              <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+            <TooltipComponent
+              side={'bottom'}
+              align={'start'}
+              triggerElement={
+                <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+              }>
               <div
-                className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${
-                  status?.name === 'New Lead' ? 'left-0' : 'right-0'
-                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                // style={{ width: '300px' }}
+                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
@@ -211,7 +215,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </TooltipComponent>
           )}
         </div>
 
