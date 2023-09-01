@@ -4,6 +4,7 @@ import Tabs from '@components/shared/tabs';
 import { useState } from 'react';
 import MarketingCard from '@components/marketing/MarketingCard';
 import MarketingFooter from '@components/marketing/MarketingFooter';
+import { useEffect } from 'react';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -60,6 +61,10 @@ const index = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    document.querySelector('.main-menu').classList.add('main-menu-important');
+  }, []);
 
   return (
     <>
