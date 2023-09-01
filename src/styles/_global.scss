@@ -438,13 +438,13 @@ tbody > div {
 
 .TooltipContent {
   border-radius: 8px;
-  background-color: #474D66;
+  background-color: #474d66;
   user-select: none;
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border-color: #474D66;
-  outline-color: #474D66;
+  border-color: #474d66;
+  outline-color: #474d66;
 }
 
 .TooltipContent[data-state='delayed-open'][data-side='top'] {
@@ -464,11 +464,10 @@ tbody > div {
 }
 
 .TooltipArrow {
-  fill: #474D66;
+  fill: #474d66;
   height: 8px;
   width: 18px;
 }
-
 
 @keyframes slideUpAndFade {
   from {

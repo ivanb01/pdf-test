@@ -77,7 +77,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   const handleSortAsc = () => {
     setFilteredContacts(
-      filteredContacts.sort(function(a, b) {
+      filteredContacts.sort(function (a, b) {
         if (a.first_name < b.first_name) {
           return -1;
         }
@@ -92,7 +92,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   const handleSortDesc = () => {
     setFilteredContacts(
-      filteredContacts.sort(function(a, b) {
+      filteredContacts.sort(function (a, b) {
         if (a.first_name < b.first_name) {
           return 1;
         }
@@ -172,11 +172,11 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   };
 
   return (
-    <div className='flex flex-col border-r border-gray2'>
+    <div className="flex flex-col border-r border-gray2">
       {addActivityPopup && (
         <AddActivity
           clientId={clientToModify.id}
-          className='min-w-[550px]'
+          className="min-w-[550px]"
           title={`Add Activity`}
           setAddActivityPopup={setAddActivityPopup}
           handleClose={() => setAddActivityPopup(false)}
@@ -186,29 +186,33 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
       <div className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
-        <div className='flex justify-start'>
-          <p className='text-sm mr-1'>{status.name}</p>
+        <div className="flex justify-start">
+          <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
-            <MyTooltip side={'bottom'}
-                       align={'start'}
-                       triggerElement={<InformationCircleIcon className='h-4 w-4 text-gray3 hover:text-gray4'
-                                                              aria-hidden='true' />}>
+            <MyTooltip
+              side={'bottom'}
+              align={'start'}
+              triggerElement={
+                <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+              }
+            >
               <div
                 // style={{ width: '300px' }}
-                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                <p className='mb-2'>{`You must interact with these clients every ${
+                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}
+              >
+                <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
                     : `${healthLastCommunicationDate[categoryType][status?.name]} days`
                 } in order to maintain healthy communication.`}</p>
-                <p className='mb-2'>Chip statuses of communication in cards represent:</p>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center mr-2'>
-                    <span className='h-[13px] w-[13px] rounded bg-green5 mr-1' />
+                <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center mr-2">
+                    <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
                     <span>Healthy Communication</span>
                   </div>
-                  <div className='flex items-center'>
-                    <span className='h-[13px] w-[13px] rounded bg-red5 mr-1' />
+                  <div className="flex items-center">
+                    <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
                     <span>Unhealthy Communication</span>
                   </div>
                 </div>
@@ -218,30 +222,30 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         </div>
 
         {/* <Checkbox label={status.name} /> */}
-        <a href='#' onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
+        <a href="#" onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
           {sortAsc ? (
             <svg
-              className='sort-asc sort fill-gray5'
-              xmlns='http://www.w3.org/2000/svg'
-              version='1.1'
-              id='mdi-sort-alphabetical-ascending'
-              width='20'
-              height='20'
-              viewBox='0 0 24 24'>
-              <path
-                d='M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z' />
+              className="sort-asc sort fill-gray5"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              id="mdi-sort-alphabetical-ascending"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           ) : (
             <svg
-              className='sort-desc sort fill-gray7'
-              xmlns='http://www.w3.org/2000/svg'
-              version='1.1'
-              id='mdi-sort-alphabetical-descending'
-              width='20'
-              height='20'
-              viewBox='0 0 24 24'>
-              <path
-                d='M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z' />
+              className="sort-desc sort fill-gray7"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              id="mdi-sort-alphabetical-descending"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
         </a>
@@ -251,8 +255,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
           overflowX: 'hidden',
           maxHeight: '100%',
           height: 'calc(100vh - 224px) !important',
-        }}>
-        <div className='p-[16px] contact-column-custom-height'>
+        }}
+      >
+        <div className="p-[16px] contact-column-custom-height">
           {filteredContacts.map((contact, index) => (
             <ContactCard
               handleCardEdit={handleCardEdit}
