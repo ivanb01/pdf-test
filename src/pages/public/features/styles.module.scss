@@ -1,0 +1,39 @@
+.divider1 {
+  margin-bottom: 100px;
+
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 50px;
+  }
+}
+
+.divider2 {
+  margin-bottom: 60px;
+
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 80px;
+  }
+}
+
+.divider3 {
+  margin-bottom: 10px;
+
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 80px;
+  }
+}
+
+.divider4 {
+  margin-bottom: 200px;
+
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 80px;
+  }
+}
+
+.divider5 {
+  margin-bottom: 120px;
+
+  @media screen and (max-width: $screen-md) {
+    margin-bottom: 75px;
+  }
+}
