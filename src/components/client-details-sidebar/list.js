@@ -84,7 +84,7 @@ export const inputs = [
   {
     id: 'tags',
     type: 'tag',
-    label: 'Tags',
+    label: 'Priority',
   },
   {
     id: 'Source',

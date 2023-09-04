@@ -113,8 +113,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
       title={title}
-      className={className}
-    >
+      className={className}>
       <div className="p-5">
         {/* <div className="flex items-center mb-6">
           <Avatar size="large" className="mr-4" />
@@ -177,7 +176,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
             <TagsInput
-              label="Tags"
+              label="Priority"
               typeOfContact={openedTab}
               value={findTagsOption(formik.values.tags, openedTab)}
               onChange={(choice) => {
@@ -201,8 +200,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
             onClick={() => {
               setLoadingButton(true);
               submitForm();
-            }}
-          ></Button>
+            }}></Button>
         </div>
       </div>
     </Overlay>

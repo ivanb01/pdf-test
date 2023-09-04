@@ -83,7 +83,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
       value: 'is_in_campaign',
     },
     {
-      title: 'TAGS',
+      title: 'PRIORITY',
       content: multiselectOptionsClients.map((option) => option.label),
       value: 'tags',
     },

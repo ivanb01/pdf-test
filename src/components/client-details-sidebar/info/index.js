@@ -166,7 +166,7 @@ export default function Info({ client }) {
             addChip={addTag}
           /> */}
           <TagsInput
-            label="Tags"
+            label="Priority"
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
             value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
             onChange={(choice) => {

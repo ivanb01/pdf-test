@@ -445,7 +445,7 @@ const ReviewContact = ({
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                   <TagsInput
-                    label="Tags"
+                    label="Priority"
                     typeOfContact={openedTab}
                     value={findTagsOption(formik.values.tags, openedTab)}
                     onChange={(choice) => {
