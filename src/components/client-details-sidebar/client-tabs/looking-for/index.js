@@ -199,24 +199,25 @@ export default function LookingFor({ contactId, category }) {
     return neighborhoods.length ? neighborhoods.join(', ') : null;
   };
 
-  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
-    return (
-      <div className={`${className} text-sm`}>
-        <div className="mb-1 text-gray-500 font-medium">{label}</div>
-        <div className="text-gray-900 flex items-center">
-          <span className="mr-1">{value}</span> {iconAfter && iconAfter}{' '}
-          {textAfter && <span className="text-gray-500">{textAfter}</span>}
-        </div>
-      </div>
-    );
-  };
-
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
   const getToNumber = () => {
     return Math.min(page * 21, allPropertiesCount);
   };
+
+  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
+    return (
+      <div className={`${className} text-sm`}>
+        <div className="mb-1 text-gray-500 font-medium">{label}</div>
+        <div className="text-gray-900 flex items-center">
+          <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
+          {textAfter && <span className="text-gray-500">{textAfter}</span>}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       {showPopup && (
@@ -360,7 +361,9 @@ export default function LookingFor({ contactId, category }) {
                       />
                       <PropertyDetail
                         label="Price Min / Max"
-                        value={`${formatPrice(formik.values.budget_min)} - ${formatPrice(formik.values.budget_max)}`}
+                        value={`${
+                          formatPrice(formik.values.budget_min) ? formatPrice(formik.values.budget_min) : 'Any'
+                        } - ${formatPrice(formik.values.budget_max) ? formatPrice(formik.values.budget_max) : 'Any'}`}
                         {...(getLookingAction() == 2 && {
                           textAfter: 'monthly',
                         })}

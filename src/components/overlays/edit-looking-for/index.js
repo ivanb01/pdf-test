@@ -43,20 +43,16 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
     initialValues: {
       neighborhood_ids: data.neighborhood_ids,
       looking_action: 'sell',
-      bedrooms: data.bedrooms_max,
-      bathrooms: data.bathrooms_max,
-      budget_min: data.budget_min,
-      budget_max: data.budget_max,
+      bedrooms: data.bedrooms_max ? data.bedrooms_max : null,
+      bathrooms: data.bathrooms_max ? data.bathrooms_max : null,
+      budget_min: data.budget_min ? data.budget_min : null,
+      budget_max: data.budget_max ? data.budget_max : null,
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
       setFieldValue('budget_min', parseFloat(values.budget_min));
       setFieldValue('budget_max', parseFloat(values.budget_max));
-      console.log({
-        ...values,
-        budget_min: parseFloat(values.budget_min),
-        budget_max: parseFloat(values.budget_max),
-      });
+
       if (formik.isValid) {
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids,
@@ -165,7 +161,7 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
               primary
               className="mt-6"
               loading={loadingButton}
-              // disabled={disabledButton}
+              disabled={!formik.isValid}
             />
           </div>
         </form>
