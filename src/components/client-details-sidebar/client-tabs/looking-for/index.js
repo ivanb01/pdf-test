@@ -95,7 +95,7 @@ export default function LookingFor({ contactId, category }) {
     },
   });
 
-  const { errors, touched } = formik;
+  const { errors, touched, resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
@@ -105,6 +105,7 @@ export default function LookingFor({ contactId, category }) {
       toast.success('Property interests saved successfully!');
       dispatch(setRefetchPart('looking-for'));
       setLookingForState(1);
+      resetForm();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
