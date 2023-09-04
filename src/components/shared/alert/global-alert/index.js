@@ -1,8 +1,8 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 import Button from 'components/shared/button';
-import { InfoRounded } from '@mui/icons-material';
 import { ArrowForward } from '@mui/icons-material';
 import { useRouter } from 'next/router';
+import ErrorIcon from '@mui/icons-material/Error';
 const GlobalAlert = ({ overlay, type, message, rounded, onButtonClick, noBorder, smallText, title }) => {
   const router = useRouter();
   let bgColor =
@@ -40,7 +40,7 @@ const GlobalAlert = ({ overlay, type, message, rounded, onButtonClick, noBorder,
             {type == 'error' ? (
               <XCircleIcon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
             ) : type == 'smart-sync' || type == 'warning' ? (
-              <InfoRounded className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
+              <ErrorIcon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
             ) : (
               <CheckCircleIcon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
             )}
