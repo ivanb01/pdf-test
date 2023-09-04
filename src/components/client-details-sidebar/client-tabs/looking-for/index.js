@@ -210,6 +210,13 @@ export default function LookingFor({ contactId, category }) {
       </div>
     );
   };
+
+  const getFromNumber = () => {
+    return (page - 1) * 21 + 1;
+  };
+  const getToNumber = () => {
+    return Math.min(page * 21, allPropertiesCount);
+  };
   return (
     <>
       {showPopup && (
@@ -377,30 +384,34 @@ export default function LookingFor({ contactId, category }) {
                             aria-label="Pagination">
                             <div className="hidden sm:block">
                               <p className="text-sm text-gray-700">
-                                Showing <span className="font-medium">{(page - 1) * 21 + 1}</span> to{' '}
-                                <span className="font-medium">{Math.min(page * 21, allPropertiesCount)}</span> of{' '}
+                                Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
+                                <span className="font-medium">{getToNumber()}</span> of{' '}
                                 <span className="font-medium">{allPropertiesCount}</span> results
                               </p>
                             </div>
                             <div className="flex flex-1 justify-between sm:justify-end">
-                              <a
-                                href="#"
-                                onClick={() => {
-                                  fetchPropertyInterests(lookingForData[0], page - 1);
-                                  setPage(page - 1);
-                                }}
-                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                                Previous
-                              </a>
-                              <a
-                                href="#"
-                                onClick={() => {
-                                  fetchPropertyInterests(lookingForData[0], page + 1);
-                                  setPage(page + 1);
-                                }}
-                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                                Next
-                              </a>
+                              {getFromNumber() != 1 && (
+                                <a
+                                  href="#"
+                                  onClick={() => {
+                                    fetchPropertyInterests(lookingForData[0], page - 1);
+                                    setPage(page - 1);
+                                  }}
+                                  className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                  Previous
+                                </a>
+                              )}
+                              {getToNumber() != allPropertiesCount && (
+                                <a
+                                  href="#"
+                                  onClick={() => {
+                                    fetchPropertyInterests(lookingForData[0], page + 1);
+                                    setPage(page + 1);
+                                  }}
+                                  className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                  Next
+                                </a>
+                              )}
                             </div>
                           </nav>
                         )}
