@@ -63,6 +63,8 @@ import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
 import { setRefetchCount } from '@store/global/slice';
+import TooltipComponent from '../tooltip';
+import { healthLastCommunicationDate } from 'global/variables';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -828,9 +830,36 @@ const Table = ({
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
-                      <Text chipText className="text-gray4">
+                      <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
+                      <TooltipComponent
+                        side={'bottom'}
+                        align={'start'}
+                        triggerElement={
+                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                        }>
+                        <div
+                          // style={{ width: '300px' }}
+                          className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                          <p className="mb-2">{`You must interact with these clients every ${
+                            healthLastCommunicationDate[categoryType][status?.name] === 1
+                              ? 'day'
+                              : `${healthLastCommunicationDate[categoryType][status?.name]} days`
+                          } in order to maintain healthy communication.`}</p>
+                          <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center mr-2">
+                              <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
+                              <span>Healthy Communication</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
+                              <span>Unhealthy Communication</span>
+                            </div>
+                          </div>
+                        </div>
+                      </TooltipComponent>
                     </div>
                   </td>
                 </tr>
