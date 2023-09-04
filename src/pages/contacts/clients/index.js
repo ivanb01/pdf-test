@@ -1,27 +1,18 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import {
-  setOpenedTab,
-  setOpenedSubtab,
-  setRefetchData,
-  setUnapprovedContacts,
-  setUserGaveConsent,
-} from 'store/global/slice';
+import { setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContacts, updateContacts, updateContact } from 'store/contacts/slice';
+import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
-import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
-import { CSSTransition } from 'react-transition-group';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
-import { bulkUpdateContacts } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -90,28 +81,6 @@ const index = () => {
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
-  useEffect(() => {
-    console.log(allContacts?.data && allContacts?.data?.filter((contact) => contact.import_source == 'GmailAI'));
-    let updateContacts = [
-      {
-        id: 208442,
-        approved_ai: false,
-      },
-      {
-        id: 147889,
-        approved_ai: false,
-      },
-      {
-        id: 142426,
-        approved_ai: false,
-      },
-      {
-        id: 168179,
-        approved_ai: false,
-      },
-    ];
-    bulkUpdateContacts({ contacts: updateContacts });
-  }, [allContacts]);
 
   useEffect(() => {
     const queryParams = {};
