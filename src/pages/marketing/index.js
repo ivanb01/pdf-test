@@ -6,6 +6,7 @@ import MarketingCard from '@components/marketing/MarketingCard';
 import MarketingFooter from '@components/marketing/MarketingFooter';
 import { useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
+import MarketingEmptyState from '@components/marketing/MarketingEmptyState';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -32,19 +33,22 @@ const index = () => {
     },
   ];
   const [searchTerm, setSearchTerm] = useState('');
+  const filteredCards = cards.filter((card) => card.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
   const localTabs = [
     {
       id: 0,
       name: 'Digital Design',
       href: '#',
       content: (
-        <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
-          {cards.map((card) => {
-            if (card.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-              return <MarketingCard {...card} />;
-            }
-          })}
-        </div>
+        <>
+          {filteredCards.length > 0 && (
+            <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
+              {filteredCards.length > 0 && filteredCards.map((card) => <MarketingCard key={card.id} {...card} />)}
+            </div>
+          )}
+          {filteredCards.length === 0 && <MarketingEmptyState />}
+        </>
       ),
     },
     {
@@ -52,13 +56,14 @@ const index = () => {
       name: 'Printed Design',
       href: '#',
       content: (
-        <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
-          {cards.splice(2).map((card) => {
-            if (card.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-              return <MarketingCard {...card} />;
-            }
-          })}
-        </div>
+        <>
+          {filteredCards.length > 0 && (
+            <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
+              {filteredCards.length > 0 && filteredCards.map((card) => <MarketingCard key={card.id} {...card} />)}
+            </div>
+          )}
+          {filteredCards.length === 0 && <MarketingEmptyState />}
+        </>
       ),
     },
   ];
