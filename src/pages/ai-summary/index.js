@@ -13,7 +13,6 @@ import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import backBtn from '/public/images/back.svg';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -41,9 +40,6 @@ const index = () => {
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
-  useEffect(() => {
-    console.log(data, 'data');
-  }, [data]);
 
   const fetchContacts = async () => {
     try {
@@ -69,53 +65,32 @@ const index = () => {
         updatedData[index] = { ...element, ...updateObj };
       }
     });
-    setData(updatedData);
 
+    setData(updatedData);
+    let toastMessage =
+      action == 2
+        ? `${selectedPeople.length} contacts moved to Trash`
+        : `${selectedPeople.length} contacts marked as correct`;
+    toast.success(toastMessage);
     setSelectedPeople([]);
   };
   const updateAiSummaryTable = (id, newData) => {
     const updatedData = data.map((item) => (item.id === id ? { ...item, ...newData } : item));
     setData(updatedData);
   };
-  const handleAction = async (type, data) => {
+  const handleAction = async (type, id) => {
     try {
       let newData = {};
+
       if (type === 'delete') {
         newData.category_id = 3;
         newData.approved_ai = true;
       } else {
         newData.approved_ai = true;
       }
-      toast.custom(
-        (t) => (
-          <div
-            className={`${
-              t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
-            <div className='flex gap-2 p-4 word-break items-center'>
-              <CheckCircleIcon className={'text-green-500'} />
-              <h1 className={'text-sm leading-5 font-medium'}>
-                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `"Marked as Correct!`}
-              </h1>
-            </div>
-            <div className='flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100'>
-              <button
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  updateContact(data.id, { ...newData, approved_ai: false }).then(() => dispatch(setRefetchData(true)));
-                  updateAiSummaryTable(data.id, { ...newData, approved_ai: false });
-                }}
-                className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'>
-                Undo
-              </button>
-            </div>
-          </div>
-        ), { duration: 0 },
-      );
-      updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
-      updateAiSummaryTable(data.id, newData);
-    } catch (error) {
-    }
+      updateContact(id, newData).then(() => dispatch(setRefetchData(true)));
+      updateAiSummaryTable(id, newData);
+    } catch (error) {}
   };
 
   const bulkUpdate = (action) => {
@@ -123,51 +98,9 @@ const index = () => {
       id: item.id,
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
-      first_name: item.first_name,
-      last_name: item.last_name,
-    }));
-    let restoredData = selectedPeople.map((item) => ({
-      id: item.id,
-      approved_ai: false,
-      category_id: item.category_id,
-      first_name: item.first_name,
-      last_name: item.last_name,
     }));
     bulkUpdateContacts({ contacts: transformedData }).then(() => dispatch(setRefetchData(true)));
     updateContactsLocally(action, transformedData);
-    let toastMessage =
-      action == 2
-        ? `${selectedPeople.length} contacts moved to Trash`
-        : `${selectedPeople.length} contacts marked as correct`;
-    {
-      selectedPeople.length > 0 && toast.custom(
-        (t) => (
-          <div
-            className={`${
-              t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
-            <div className='flex gap-2 p-4 word-break'>
-              <CheckCircleIcon className={'text-green-500'} />
-              <h1 className={'text-sm leading-5 font-medium'}>
-                {toastMessage}
-              </h1>
-            </div>
-            <div className='flex rounded-tr-lg rounded-br-lg  p-4 bg-gray-600 text-gray-100'>
-              <button
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  bulkUpdateContacts({ contacts: restoredData }).then(() => dispatch(setRefetchData(true)));
-                  updateContactsLocally(action, restoredData);
-                }}
-                className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'>
-                Undo
-              </button>
-            </div>
-          </div>
-        ),
-        { duration: 900000 },
-      );
-    }
     setSelectedPeople([]);
   };
 
@@ -176,10 +109,10 @@ const index = () => {
   }, []);
 
   return (
-    <div className=''>
+    <div className="">
       <MainMenu />
       {loading ? (
-        <div style={{ height: 'calc(100vh - 68px)' }} className='relative'>
+        <div style={{ height: 'calc(100vh - 68px)' }} className="relative">
           <Loader />
         </div>
       ) : data && data.filter((data) => data.approved_ai != true).length ? (
@@ -190,18 +123,16 @@ const index = () => {
               height: '100%',
               maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 136px)' : 'calc(100vh - 68px)',
             }}>
-            <div className='p-6 text-gray-900 font-medium text-base'>
-              <div
-                className=' p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block'>
+            <div className="p-6 text-gray-900 font-medium text-base">
+              <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
                 {data.filter((item) => item.approved_ai != true).length} contacts
-              </div>
-              {' '}
+              </div>{' '}
               from Smart Synced Contacts need to be reviewed
             </div>
             <Table
-              className='pb-5'
+              className="pb-5"
               data={data.filter((data) => data.approved_ai != true)}
-              tableFor='ai-summary'
+              tableFor="ai-summary"
               checkbox={checkbox}
               handleAction={handleAction}
               checked={checked}
@@ -216,29 +147,29 @@ const index = () => {
           </SimpleBar>
         </>
       ) : (
-        <div className='flex items-center justify-center relative'>
-          <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50'>
+        <div className="flex items-center justify-center relative">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
             <lottie-player
-              src='https://lottie.host/0e91f34e-3785-4a43-9e41-edffb9f7a164/wqi0RYRuUw.json'
-              background='transparent'
-              speed='1'
+              src="https://lottie.host/0e91f34e-3785-4a43-9e41-edffb9f7a164/wqi0RYRuUw.json"
+              background="transparent"
+              speed="1"
               style={{ height: '300px' }}
               autoplay></lottie-player>
-            <div className='-mt-10 text-gray-900 text-center'>
-              <div className='font-semibold text-lg'>Well Done!</div>
-              <div className='mt-3'>You reviewed all contacts imported by AI from Gmail.</div>
+            <div className="-mt-10 text-gray-900 text-center">
+              <div className="font-semibold text-lg">Well Done!</div>
+              <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
             </div>
             <div
               onClick={() => router.push('/contacts/clients')}
-              className='cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm'>
-              <img className='mr-2' src={backBtn.src} alt='' />
+              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
+              <img className="mr-2" src={backBtn.src} alt="" />
               Back to Contacts
             </div>
           </div>
           <lottie-player
-            src='https://lottie.host/44832648-5dda-448a-8762-d7636963a564/8IkBu8xsfM.json'
-            background='transparent'
-            speed='1'
+            src="https://lottie.host/44832648-5dda-448a-8762-d7636963a564/8IkBu8xsfM.json"
+            background="transparent"
+            speed="1"
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}
             autoplay></lottie-player>
         </div>
@@ -247,30 +178,27 @@ const index = () => {
         <ReviewContact
           afterSubmit={updateAiSummaryTable}
           client={popupData}
-          className='w-[1200px]'
-          title='Review AI Smart Synced Contact'
+          className="w-[1200px]"
+          title="Review AI Smart Synced Contact"
           handleClose={() => setShowReviewOverlay(false)}
         />
       )}
       {selectedPeople.length > 1 && (
-        <div
-          className='bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu'>
-          <div className='flex items-center text-sm text-gray-900'>
-            Selected: <span className='font-bold ml-1'>{selectedPeople.length} contacts</span>
+        <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
+          <div className="flex items-center text-sm text-gray-900">
+            Selected: <span className="font-bold ml-1">{selectedPeople.length} contacts</span>
           </div>
-          <div className='flex'>
+          <div className="flex">
             <button
-              onClick={() => {
-                bulkUpdate(2);
-              }}
-              className='hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500'>
-              <Delete /> <span className='ml-2'>Move to Trash</span>
+              onClick={() => bulkUpdate(2)}
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
+              <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               onClick={() => bulkUpdate(1)}
-              className='hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]'>
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
-              <span className='ml-2'>Mark as Correct</span>
+              <span className="ml-2">Mark as Correct</span>
             </button>
           </div>
         </div>
