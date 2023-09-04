@@ -9,20 +9,16 @@ import {
   getInitials,
   getDateFormat,
 } from 'global/functions';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
 import { useState } from 'react';
 import EventStatus from 'components/event-status';
-import { InformationCircleIcon } from '@heroicons/react/solid';
 import Text from '../text';
-import Button from '../button';
 import Error from '@mui/icons-material/Error';
-import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import ContactInfo from './contact-info';
 import { useSelector } from 'react-redux';
 import Launch from '@mui/icons-material/Launch';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { Menu, Transition } from '@headlessui/react';
 import {
   clientStatuses,
   allStatusesQuickEdit,
@@ -650,19 +646,19 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 NEW RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 UPDATED RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 ERROR RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">

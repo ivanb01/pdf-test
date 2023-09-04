@@ -21,7 +21,7 @@ import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
 import { setRefetchCount, setRefetchData } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
-
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -192,9 +192,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
             <TooltipComponent
               side={'bottom'}
               align={'start'}
-              triggerElement={
-                <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
-              }>
+              triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
               <div
                 // style={{ width: '300px' }}
                 className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
