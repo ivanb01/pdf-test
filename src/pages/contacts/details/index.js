@@ -37,7 +37,6 @@ export default function Details() {
   const [contact, setContact] = useState(null);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
   const [current, setCurrent] = useState(0);
-
   const localTabs = tabs(id, contact);
 
   const getActivityLog = async () => {
