@@ -224,18 +224,6 @@ const TabBar = ({ tab }) => {
     setOpenedTab(0);
     setOpenedSubtab(0);
     dispatch(setExpandedTab({ id: 0, opened: true }));
-    return () => {
-      {
-        tabs.map((tab) => {
-          dispatch(
-            setExpandedTab({
-              id: tab.id,
-              opened: false,
-            }),
-          );
-        });
-      }
-    };
   }, []);
   const isSubtabActive = (currentSubtab, tabId) => {
     return openedSubtab == currentSubtab && openedTab == tabId;
