@@ -23,9 +23,6 @@ const index = () => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
 
-  useEffect(() => {
-    console.log(actualContact, 'actualContact');
-  }, [actualContact]);
   const fetchOther = () => {
     let other = {
       ...allContacts,
