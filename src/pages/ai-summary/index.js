@@ -95,7 +95,7 @@ const index = () => {
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
-                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `"Marked as Correct!`}
+                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `"Marked as Correct"!`}
               </h1>
             </div>
             <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
@@ -138,7 +138,7 @@ const index = () => {
     let toastMessage =
       action == 2
         ? `${selectedPeople.length} contacts moved to Trash`
-        : `${selectedPeople.length} contacts marked as correct`;
+        : `${selectedPeople.length} contacts "Marked as Correct"!`;
     {
       selectedPeople.length > 0 &&
         toast.custom(
