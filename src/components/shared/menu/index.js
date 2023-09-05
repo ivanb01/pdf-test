@@ -137,7 +137,10 @@ const MainMenu = ({
                 <MenuLink
                   key={item.id}
                   className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-                  onClick={() => router.push(item.url)}>
+                  onClick={() => {
+                    dispatch(setOpenedTab(0));
+                    router.push(item.url);
+                  }}>
                   {item.name}
                 </MenuLink>
               );
