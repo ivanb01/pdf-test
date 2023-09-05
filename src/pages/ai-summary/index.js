@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import backBtn from '/public/images/back.svg';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,9 @@ const index = () => {
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
+  useEffect(() => {
+    console.log(data, 'data');
+  }, [data]);
 
   const fetchContacts = async () => {
     try {
@@ -65,31 +69,52 @@ const index = () => {
         updatedData[index] = { ...element, ...updateObj };
       }
     });
-
     setData(updatedData);
-    let toastMessage =
-      action == 2
-        ? `${selectedPeople.length} contacts moved to Trash`
-        : `${selectedPeople.length} contacts marked as correct`;
-    toast.success(toastMessage);
+
     setSelectedPeople([]);
   };
   const updateAiSummaryTable = (id, newData) => {
     const updatedData = data.map((item) => (item.id === id ? { ...item, ...newData } : item));
     setData(updatedData);
   };
-  const handleAction = async (type, id) => {
+  const handleAction = async (type, data) => {
     try {
       let newData = {};
-
       if (type === 'delete') {
         newData.category_id = 3;
         newData.approved_ai = true;
       } else {
         newData.approved_ai = true;
       }
-      updateContact(id, newData).then(() => dispatch(setRefetchData(true)));
-      updateAiSummaryTable(id, newData);
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `"Marked as Correct!`}
+              </h1>
+            </div>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+              <button
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  updateContact(data.id, { ...newData, approved_ai: false }).then(() => dispatch(setRefetchData(true)));
+                  updateAiSummaryTable(data.id, { ...newData, approved_ai: false });
+                }}
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                Undo
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 0 },
+      );
+      updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
+      updateAiSummaryTable(data.id, newData);
     } catch (error) {}
   };
 
@@ -98,9 +123,50 @@ const index = () => {
       id: item.id,
       approved_ai: true,
       category_id: action == 1 ? item.category_id : 3,
+      first_name: item.first_name,
+      last_name: item.last_name,
+    }));
+    let restoredData = selectedPeople.map((item) => ({
+      id: item.id,
+      approved_ai: false,
+      category_id: item.category_id,
+      first_name: item.first_name,
+      last_name: item.last_name,
     }));
     bulkUpdateContacts({ contacts: transformedData }).then(() => dispatch(setRefetchData(true)));
     updateContactsLocally(action, transformedData);
+    let toastMessage =
+      action == 2
+        ? `${selectedPeople.length} contacts moved to Trash`
+        : `${selectedPeople.length} contacts marked as correct`;
+    {
+      selectedPeople.length > 0 &&
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+              <div className="flex gap-2 p-4 word-break">
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>{toastMessage}</h1>
+              </div>
+              <div className="flex rounded-tr-lg rounded-br-lg  p-4 bg-gray-600 text-gray-100">
+                <button
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    bulkUpdateContacts({ contacts: restoredData }).then(() => dispatch(setRefetchData(true)));
+                    updateContactsLocally(action, restoredData);
+                  }}
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  Undo
+                </button>
+              </div>
+            </div>
+          ),
+          { duration: 900000 },
+        );
+    }
     setSelectedPeople([]);
   };
 
@@ -190,7 +256,9 @@ const index = () => {
           </div>
           <div className="flex">
             <button
-              onClick={() => bulkUpdate(2)}
+              onClick={() => {
+                bulkUpdate(2);
+              }}
               className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
               <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
