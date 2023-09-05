@@ -41,7 +41,8 @@ export default function Details() {
 
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
-      toast.error('Error fetching activity log: ', error);
+      console.log(error);
+      toast.error('Error fetching activity log');
     });
     const activityLogData = activityLogResponse.data;
     dispatch(setActivityLogData(activityLogData.data));
@@ -57,7 +58,7 @@ export default function Details() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error('Error fetching looking for:', error);
+        toast.error('Error fetching looking for');
       });
   };
   const getNotes = () => {
@@ -67,7 +68,8 @@ export default function Details() {
         dispatch(setNotesData(notesData.data));
       })
       .catch((error) => {
-        toast.error('Error fetching notes:', error);
+        console.log(error);
+        toast.error('Error fetching notes');
       });
   };
   const getCampaigns = () => {
@@ -77,7 +79,8 @@ export default function Details() {
         dispatch(setCampaignsData(campaignsData));
       })
       .catch((error) => {
-        toast.error('Error fetching campaigns:', error);
+        console.log(error);
+        toast.error('Error fetching campaigns');
       });
   };
   const getAISummary = () => {
@@ -87,10 +90,18 @@ export default function Details() {
         setShowReviewOverlay(true);
       })
       .catch((error) => {
-        toast.error('Error fetching ai summary:', error);
+        console.log(error);
+        toast.error('Error fetching ai summary');
       });
   };
+  const resetData = () => {
+    dispatch(setLookingForData(null));
+    dispatch(setNotesData(null));
+    dispatch(setCampaignsData(null));
+    dispatch(setActivityLogData(null));
+  };
   const fetchContact = async () => {
+    resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
     if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {

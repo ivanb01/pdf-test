@@ -27,9 +27,11 @@ import { useSelector } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
+import { useRouter } from 'next/router';
 import Link from '@mui/icons-material/Link';
 
 export default function LookingFor({ contactId, category }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
@@ -65,7 +67,6 @@ export default function LookingFor({ contactId, category }) {
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
-    console.log(category);
     return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
   };
   const formik = useFormik({
@@ -193,11 +194,14 @@ export default function LookingFor({ contactId, category }) {
 
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
-    formik.values.neighborhood_ids.forEach((element) => {
-      const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-      neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-    });
-    return neighborhoods.length ? neighborhoods.join(', ') : null;
+
+    if (formik.values.neighborhood_ids.length) {
+      formik.values.neighborhood_ids.forEach((element) => {
+        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+      });
+      return neighborhoods.length ? neighborhoods.join(', ') : null;
+    } else return null;
   };
 
   const getFromNumber = () => {
@@ -218,6 +222,10 @@ export default function LookingFor({ contactId, category }) {
       </div>
     );
   };
+
+  useEffect(() => {
+    resetForm();
+  }, [router.pathname]);
 
   return (
     <>
