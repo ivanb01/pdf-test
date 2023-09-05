@@ -173,9 +173,9 @@ export default function Info({ client }) {
               handleChangeTags(choice.map((el) => el.label));
             }}
           />
-
           <Dropdown
             label="Lead Source"
+            openClassName={'pb-64'}
             activeIcon={false}
             options={leadSourceOptions}
             className="my-3"

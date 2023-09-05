@@ -27,6 +27,7 @@ const Dropdown = ({
   white,
   error,
   errorText,
+  openClassName,
   ...props
 }) => {
   const firstSelect = initialSelect ? options?.find((item) => item.name === initialSelect) : null;
@@ -53,7 +54,7 @@ const Dropdown = ({
                   {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
                 </Listbox.Label>
               )}
-              <div className={`mt-1 relative ${open && 'pb-64'}`}>
+              <div className={`mt-1 relative ${open && openClassName}`}>
                 <Listbox.Button
                   className={`${selectClasses ? selectClasses : 'bg-white border rounded-md'} ${inputWidth} relative ${
                     !inputWidth && 'w-full'
