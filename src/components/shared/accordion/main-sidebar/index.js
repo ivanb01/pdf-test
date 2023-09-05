@@ -24,33 +24,15 @@ import googleContactsIcon from '/public/images/google-contacts.png';
 import checkmark from '/public/images/checkmark.svg';
 import Info from '@mui/icons-material/Info';
 import TooltipComponent from '@components/shared/tooltip';
-
-const MainSidebar = ({
-  tabs,
-  openedTab,
-  openedSubtab,
-  setOpenedTab,
-  setOpenedSubtab,
-  className,
-  collapsable,
-  importContacts,
-}) => {
+import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const count = useSelector((state) => state.global.count);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const pinned = useSelector((state) => state.global.expandedMenu);
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
-  const [collapseMainTab, setCollapseMainTab] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
-
-  const getCountForTabOrSubtab = (count_key) => {
-    if (count_key === 'other_total') {
-      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
-    }
-    return count && count[count_key] ? count[count_key] : 0;
-  };
 
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
@@ -60,10 +42,6 @@ const MainSidebar = ({
     } catch (error) {
       console.log('error occurredw with google import');
     }
-  };
-
-  const isSubtabActive = (currentSubtab) => {
-    return openedSubtab == currentSubtab;
   };
 
   const narrowMenu = () => {
@@ -108,67 +86,7 @@ const MainSidebar = ({
     return (
       <>
         {tabs.map((tab) => {
-          return (
-            <div className={`accordion w-inherit`} key={tab.id}>
-              <Link
-                href="#"
-                className={`flex items-center h-10 justify-between px-2 py-4 mx-3 ${
-                  tabs.length === tab.id + 1 && 'border-t'
-                } ${openedTab == tab.id && ' text-lightBlue3'} ${
-                  openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''
-                }`}
-                onClick={() => {
-                  if (openedTab == tab.id) {
-                    setCollapseMainTab(!collapseMainTab);
-                  }
-                  setOpenedTab(tab.id);
-                  router.push(tab.href);
-                }}>
-                <div
-                  onClick={() => !tab.subtab && setOpenedTab(tab.id)}
-                  className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
-                  {tab.icon}
-                  <Text h4 className={`px-[10px] py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-                    {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
-                  </Text>
-                </div>
-
-                {tab.subtab && (
-                  <ChevronDownIcon
-                    className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-                      !collapseMainTab && openedTab == tab.id ? 'rotate-180' : ''
-                    }`}
-                  />
-                )}
-              </Link>
-              {tab.subtab && (
-                <div className={!collapseMainTab && openedTab == tab.id ? `` : `hidden`}>
-                  {tab.subtab.map((subtab) => {
-                    return (
-                      <a
-                        key={`${subtab.id}`}
-                        href="#"
-                        className={`${
-                          !collapseMainTab && openedTab == tab.id && 'pl-11 mx-3'
-                        } transition-all duration-200 flex items-center ${
-                          isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
-                        }`}
-                        onClick={() => setOpenedSubtab(subtab.id)}>
-                        {subtab.icon ? subtab.icon : subtab.dot}
-                        <Text
-                          h4
-                          className={`px-[10px] py-[10px] ${
-                            isSubtabActive(`${subtab.id}`) ? 'text-lightBlue3' : 'text-gray4'
-                          }`}>
-                          {subtab.name} ({getCountForTabOrSubtab(subtab.count_key)})
-                        </Text>
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
+          return <TabBar tab={tab} />;
         })}
         {importContacts && (
           <>
@@ -291,3 +209,80 @@ const MainSidebar = ({
 };
 
 export default MainSidebar;
+
+const TabBar = ({ tab }) => {
+  const dispatch = useDispatch();
+  const openedTab = useSelector((state) => state.global.openedTab);
+  const openedSubtab = useSelector((state) => state.global.openedSubtab);
+
+  const isSubtabActive = (currentSubtab, tabId) => {
+    return openedSubtab == currentSubtab && openedTab == tabId;
+  };
+  useEffect(() => {
+    console.log(openedTab, 'openedTab');
+  }, [openedTab]);
+
+  const router = useRouter();
+  const count = useSelector((state) => state.global.count);
+  const getCountForTabOrSubtab = (count_key) => {
+    if (count_key === 'other_total') {
+      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
+    }
+    return count && count[count_key] ? count[count_key] : 0;
+  };
+  const [collapseMainTab, setCollapseMainTab] = useState(true);
+  return (
+    <div className={`accordion w-inherit`} key={tab.id}>
+      <Link
+        href="#"
+        className={`flex items-center h-10 justify-between px-2 py-4 mx-3 ${tab.id === 4 && 'border-t'} ${
+          openedTab === tab.id && ' text-lightBlue3'
+        } ${openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''}`}
+        onClick={() => {
+          tab.id === 4 && router.push(tab.href);
+          setCollapseMainTab(!collapseMainTab);
+        }}>
+        <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
+          {tab.icon}
+          <Text h4 className={`px-[10px] py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+            {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
+          </Text>
+        </div>
+
+        {tab.subtab && (
+          <ChevronDownIcon
+            className={`text-gray3 h-5 w-5 transition-all duration-300 ${!collapseMainTab ? 'rotate-180' : ''}`}
+          />
+        )}
+      </Link>
+      {tab.subtab && (
+        <div className={!collapseMainTab ? `` : `hidden`}>
+          {tab.subtab.map((subtab) => {
+            return (
+              <a
+                key={`${subtab.id}`}
+                href="#"
+                className={` pl-11 mx-3 transition-all duration-200 flex items-center ${
+                  isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                }`}
+                onClick={() => {
+                  dispatch(setOpenedTab(tab.id));
+                  dispatch(setOpenedSubtab(subtab.id));
+                  router.push(tab.href);
+                }}>
+                {subtab.icon ? subtab.icon : subtab.dot}
+                <Text
+                  h4
+                  className={`px-[10px] py-[10px] ${
+                    isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
+                  }`}>
+                  {subtab.name} ({getCountForTabOrSubtab(subtab.count_key)})
+                </Text>
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};

@@ -200,7 +200,7 @@ const Layout = ({ children }) => {
 
   const handleOpenedTab = (tab) => {
     dispatch(setOpenedTab(tab));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
   const handleOpenedSubtab = (subtab) => {
     dispatch(setOpenedSubtab(subtab));
