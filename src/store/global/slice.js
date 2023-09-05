@@ -5,6 +5,22 @@ const global = createSlice({
   initialState: {
     openedTab: 0,
     openedSubtab: 0,
+    tabs: [
+      { id: 0, opened: false },
+      {
+        id: 1,
+        opened: false,
+      },
+      {
+        id: 2,
+        opened: false,
+      },
+      {
+        id: 3,
+        opened: false,
+      },
+      { id: 4, opened: false },
+    ],
     expandedMenu: true,
     count: null,
     refetchCount: false,
@@ -53,6 +69,11 @@ const global = createSlice({
     setUserGaveConsent(state, action) {
       state.userGaveConsent = action.payload;
     },
+    setExpandedTab(state, action) {
+      console.log(action.payload);
+      const tabToChange = state.tabs.find((tab) => tab.id === action.payload.id);
+      tabToChange.opened = action.payload.opened;
+    },
   },
 });
 
@@ -68,5 +89,6 @@ export const {
   setSkippedEmptyState,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setExpandedTab,
 } = global.actions;
 export default global.reducer;
