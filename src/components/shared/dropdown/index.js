@@ -66,7 +66,7 @@ const Dropdown = ({
 
                   {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
                   <span
-                    className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-gray6'} ${
+                    className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-[#808080]'} ${
                       selected && selected.label && 'text-gray8'
                     } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}

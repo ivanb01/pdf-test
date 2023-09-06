@@ -903,10 +903,11 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <div className="p-6 pb-0">
+      <div className="p-6 border border-b">
         <div className="flex">
           <SearchSelectInput
             options={NYCneighborhoods}
+            className="mr-4"
             placeholder="in: Choose Neighborhood"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
@@ -915,6 +916,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
+            className="mr-4"
             placeholder="for: Choose"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
@@ -923,6 +925,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
+            className="mr-4"
             placeholder="type: Choose"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
@@ -931,6 +934,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
+            className="mr-4"
             placeholder="Bedrooms: -"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
@@ -939,6 +943,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
+            className="mr-4"
             placeholder="Bathrooms: -"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
