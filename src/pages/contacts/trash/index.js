@@ -9,6 +9,7 @@ import SimpleBar from 'simplebar-react';
 import Table from '@components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
 import { setOpenedTab } from 'store/global/slice';
+import GlobalAlert from '@components/shared/alert/global-alert';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -16,12 +17,11 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
-
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   useEffect(() => {
-    dispatch(setOpenedTab(4))
+    dispatch(setOpenedTab(4));
   }, []);
-
 
   useEffect(() => {
     if (allContacts.data === undefined) {
@@ -39,6 +39,9 @@ const index = () => {
       onSearch(searchTerm);
     }
   }, []);
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
 
   const onSearch = (searchTerm) => {
     const filteredItems =
@@ -60,6 +63,12 @@ const index = () => {
         <Loader />
       ) : (
         <>
+          {unapprovedContactsLength > 0 && (
+            <GlobalAlert
+              message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+              type="smart-sync"
+            />
+          )}
           <div className={'flex justify-between items-center p-6'}>
             <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
             <Search

@@ -28,6 +28,7 @@ const index = () => {
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
   const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
   const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
     console.log(contact, event.target.checked);
@@ -108,6 +109,9 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+            }
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}
