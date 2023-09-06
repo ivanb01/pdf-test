@@ -240,7 +240,7 @@ const TabBar = ({ tab }) => {
   };
 
   const findOpenedId = (tabId) => {
-    return tabs.find((tab) => tab.id === tabId);
+    return tabs.length > 0 && tabs.find((tab) => tab.id === tabId);
   };
 
   const handleTabClick = () => {

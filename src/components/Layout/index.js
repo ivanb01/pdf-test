@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setInitializeTabs } from 'store/global/slice';
 import Group from '@mui/icons-material/Group';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import Error from '@mui/icons-material/Error';
@@ -192,9 +192,16 @@ const Layout = ({ children }) => {
       icon: <DeleteIcon className={'w-5 h-5'} />,
     },
   ]);
+  const { tabs: storeTabs } = useSelector((state) => state.global);
+  useLayoutEffect(() => {
+    if (storeTabs.length === 0) {
+      dispatch(setInitializeTabs(tabs.length));
+    }
+  }, [storeTabs]);
 
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
 
