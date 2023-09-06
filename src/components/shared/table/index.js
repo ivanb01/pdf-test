@@ -396,7 +396,7 @@ const Table = ({
                       {dataItem.import_source == 'GmailAI' && (
                         <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
                       )}{' '}
-                      {dataItem.import_source ? dataItem.import_source : '-'}
+                      {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
                     </div>
                   </td>
                 </tr>
@@ -491,7 +491,7 @@ const Table = ({
                           {dataItem.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
                           )}{' '}
-                          {dataItem.import_source ? dataItem.import_source : '-'}
+                          {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
                         </div>
                       </td>
                     )}
@@ -799,7 +799,7 @@ const Table = ({
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Source
+              Added From
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
@@ -906,7 +906,7 @@ const Table = ({
                           {contact.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={contact.approved_ai} />
                           )}{' '}
-                          {contact.import_source ? contact.import_source : '-'}
+                          {contact.import_source ? contact.import_source : 'Manually Added'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
@@ -1184,7 +1184,7 @@ const Table = ({
                           {contact.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={contact.approved_ai} />
                           )}{' '}
-                          {contact.import_source ? contact.import_source : '-'}
+                          {contact.import_source ? contact.import_source : 'Manually Added'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
