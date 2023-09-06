@@ -95,21 +95,18 @@ const Layout = ({ children }) => {
         {
           id: 0,
           name: 'Vendor',
-          dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
           count_key: 'professionals_vendor',
         },
         {
           id: 1,
           name: 'Agent',
-          dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
           count_key: 'professional_agent',
         },
         {
           id: 2,
           name: 'Unspecified',
-          dot: <span className="h-2 w-2 rounded-full bg-gray3" />,
           count: 0,
           count_key: 'professional_unspecified',
         },
@@ -127,14 +124,12 @@ const Layout = ({ children }) => {
         {
           id: 0,
           name: 'Family & Friends',
-          icon: <Diversity3 className="h-4 w-4" />,
           count: 0,
           count_key: 'other_family_friends',
         },
         {
           id: 1,
           name: 'Unknown',
-          icon: <Help className="h-4 w-4" />,
           count: 0,
           count_key: 'uncategorized_unknown',
         },
@@ -164,7 +159,6 @@ const Layout = ({ children }) => {
         {
           id: 0,
           name: 'New Records',
-          icon: <Group className="h-4 w-4" />,
           count: 0,
           count_key: 'uncategorized_new_records',
         },
@@ -262,7 +256,6 @@ const Layout = ({ children }) => {
             <div className="h-auto border-r border-gray2 main-menu-wrapper bg-white">
               <MainSidebar
                 collapsable
-                // importContacts={importContacts}
                 className=""
                 tabs={tabs}
                 openedTab={openedTab}
