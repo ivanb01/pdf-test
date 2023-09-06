@@ -42,6 +42,11 @@ const MainMenu = ({
       name: 'Marketing',
       url: '/marketing',
     },
+    {
+      id: 4,
+      name: 'Properties',
+      url: '/properties',
+    },
   ],
   className,
   fixed,
