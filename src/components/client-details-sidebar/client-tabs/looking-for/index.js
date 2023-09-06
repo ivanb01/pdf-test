@@ -67,7 +67,11 @@ export default function LookingFor({ contactId, category }) {
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
-    return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
+    return category.toLowerCase() == 'buyer'
+      ? 1
+      : category.toLowerCase() === 'landlord' || category.toLowerCase() === 'seller'
+      ? 19
+      : 2;
   };
   const formik = useFormik({
     validateOnMount: true,
