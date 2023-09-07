@@ -20,7 +20,6 @@ import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
-import EditLookingFor from '@components/overlays/edit-looking-for';
 import { getProperties } from '@api/realtyMX';
 import { formatPrice, valueOptions } from '@global/functions';
 import { useSelector } from 'react-redux';
@@ -29,6 +28,7 @@ import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
 import Link from '@mui/icons-material/Link';
+import LookingForPopup from '@components/overlays/looking-for-popup';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -59,7 +59,8 @@ export default function LookingFor({ contactId, category }) {
   const [page, setPage] = useState(1);
   const [allPropertiesCount, setAllPropertiesCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
   const [lookingForState, setLookingForState] = useState(0);
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
@@ -229,12 +230,19 @@ export default function LookingFor({ contactId, category }) {
 
   return (
     <>
-      {showPopup && (
-        <EditLookingFor
+      {showAddPopup && (
+        <LookingForPopup
+          title="Add Property Interests"
+          className="w-[580px]"
+          handleClose={() => setShowAddPopup(false)}
+        />
+      )}
+      {showEditPopup && (
+        <LookingForPopup
           data={lookingForData[0]}
           title="Edit Property Interests"
           className="w-[580px]"
-          handleClose={() => setShowPopup(false)}
+          handleClose={() => setShowEditPopup(false)}
         />
       )}
       {loading ? (
@@ -243,7 +251,7 @@ export default function LookingFor({ contactId, category }) {
         </div>
       ) : (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          {lookingForState == 0 ? (
+          {/* {lookingForState == 0 ? (
             <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
               <div className="max-w-[600px]">
                 <div className="p-6">
@@ -313,11 +321,6 @@ export default function LookingFor({ contactId, category }) {
                         errorText={errors.budget_max}
                       />
                     </div>
-                    {/* <Accordion
-                tabs={tabs}
-                activeSelections={selections}
-                defaultOpen
-              /> */}
                     <div className="text-right">
                       <Button
                         label="Save Property Interests"
@@ -333,117 +336,117 @@ export default function LookingFor({ contactId, category }) {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
-              {loadingPropertyInterests ? (
-                <Loader message="Please wait we're searching for matched properties"></Loader>
-              ) : (
-                <>
-                  <header className="bg-gray-50 p-6">
-                    <div className="flex items-center justify-between mb-4 text-sm">
-                      <div className="text-gray-900 font-medium flex items-center">
-                        Property Interests
-                        <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
-                        </div>
-                      </div>
-                      <div className="cursor-pointer" onClick={() => setShowPopup(true)}>
-                        Edit
+          ) : ( */}
+          <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
+            {loadingPropertyInterests ? (
+              <Loader message="Please wait we're searching for matched properties"></Loader>
+            ) : (
+              <>
+                <header className="bg-gray-50 p-6">
+                  <div className="flex items-center justify-between mb-4 text-sm">
+                    <div className="text-gray-900 font-medium flex items-center">
+                      Property Interests
+                      <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                        {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
                       </div>
                     </div>
-                    <PropertyDetail className="mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
-                    <div className="grid grid-cols-4">
-                      <PropertyDetail
-                        label="Rooms"
-                        value={formik.values.bedrooms}
-                        iconAfter={<Image src={room} height={20} />}
-                      />
-                      <PropertyDetail
-                        label="Bedrooms"
-                        value={formik.values.bedrooms}
-                        iconAfter={<Image src={bedroomBlack} height={20} />}
-                      />
-                      <PropertyDetail
-                        label="Bathrooms"
-                        value={formik.values.bathrooms}
-                        iconAfter={<Image src={bathroomBlack} height={20} />}
-                      />
-                      <PropertyDetail
-                        label="Price Min / Max"
-                        value={`${
-                          formatPrice(formik.values.budget_min) ? formatPrice(formik.values.budget_min) : 'Any'
-                        } - ${formatPrice(formik.values.budget_max) ? formatPrice(formik.values.budget_max) : 'Any'}`}
-                        {...(getLookingAction() == 2 && {
-                          textAfter: 'monthly',
-                        })}
-                      />
+                    <div className="cursor-pointer" onClick={() => setShowEditPopup(true)}>
+                      Edit
                     </div>
-                  </header>
-                  <div className="p-6">
-                    {propertyInterests && propertyInterests.length ? (
-                      <>
-                        <div className="mb-4 text-gray-900 text-sm font-medium">
-                          {allPropertiesCount} suggested properties
-                        </div>
-                        <div className="grid grid-cols-3 gap-6">
-                          {propertyInterests.map((property, index) => (
-                            <PropertyCard key={index} property={property}></PropertyCard>
-                          ))}
-                        </div>
-                        {allPropertiesCount > 21 && (
-                          <nav
-                            className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                            aria-label="Pagination">
-                            <div className="hidden sm:block">
-                              <p className="text-sm text-gray-700">
-                                Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                                <span className="font-medium">{getToNumber()}</span> of{' '}
-                                <span className="font-medium">{allPropertiesCount}</span> results
-                              </p>
-                            </div>
-                            <div className="flex flex-1 justify-between sm:justify-end">
-                              {getFromNumber() != 1 && (
-                                <a
-                                  href="#"
-                                  onClick={() => {
-                                    fetchPropertyInterests(lookingForData[0], page - 1);
-                                    setPage(page - 1);
-                                  }}
-                                  className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                                  Previous
-                                </a>
-                              )}
-                              {getToNumber() != allPropertiesCount && (
-                                <a
-                                  href="#"
-                                  onClick={() => {
-                                    fetchPropertyInterests(lookingForData[0], page + 1);
-                                    setPage(page + 1);
-                                  }}
-                                  className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                                  Next
-                                </a>
-                              )}
-                            </div>
-                          </nav>
-                        )}
-                      </>
-                    ) : (
-                      <div className="flex items-center justify-center flex-col text-center mt-6">
-                        <img src={lookingForEmpty.src} alt="" />
-                        <div className="mt-6 text-sm">
-                          <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
-                          <div className="text-gray-500 mt-[6px]">
-                            Whenever we have property that matched these interest, will list here.
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
-                </>
-              )}
-            </div>
-          )}
+                  <PropertyDetail className="mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
+                  <div className="grid grid-cols-4">
+                    <PropertyDetail
+                      label="Rooms"
+                      value={formik.values.bedrooms}
+                      iconAfter={<Image src={room} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Bedrooms"
+                      value={formik.values.bedrooms}
+                      iconAfter={<Image src={bedroomBlack} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Bathrooms"
+                      value={formik.values.bathrooms}
+                      iconAfter={<Image src={bathroomBlack} height={20} />}
+                    />
+                    <PropertyDetail
+                      label="Price Min / Max"
+                      value={`${
+                        formatPrice(formik.values.budget_min) ? formatPrice(formik.values.budget_min) : 'Any'
+                      } - ${formatPrice(formik.values.budget_max) ? formatPrice(formik.values.budget_max) : 'Any'}`}
+                      {...(getLookingAction() == 2 && {
+                        textAfter: 'monthly',
+                      })}
+                    />
+                  </div>
+                </header>
+                <div className="p-6">
+                  {propertyInterests && propertyInterests.length ? (
+                    <>
+                      <div className="mb-4 text-gray-900 text-sm font-medium">
+                        {allPropertiesCount} suggested properties
+                      </div>
+                      <div className="grid grid-cols-3 gap-6">
+                        {propertyInterests.map((property, index) => (
+                          <PropertyCard key={index} property={property}></PropertyCard>
+                        ))}
+                      </div>
+                      {allPropertiesCount > 21 && (
+                        <nav
+                          className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
+                          aria-label="Pagination">
+                          <div className="hidden sm:block">
+                            <p className="text-sm text-gray-700">
+                              Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
+                              <span className="font-medium">{getToNumber()}</span> of{' '}
+                              <span className="font-medium">{allPropertiesCount}</span> results
+                            </p>
+                          </div>
+                          <div className="flex flex-1 justify-between sm:justify-end">
+                            {getFromNumber() != 1 && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchPropertyInterests(lookingForData[0], page - 1);
+                                  setPage(page - 1);
+                                }}
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Previous
+                              </a>
+                            )}
+                            {getToNumber() != allPropertiesCount && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchPropertyInterests(lookingForData[0], page + 1);
+                                  setPage(page + 1);
+                                }}
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Next
+                              </a>
+                            )}
+                          </div>
+                        </nav>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center flex-col text-center mt-6">
+                      <img src={lookingForEmpty.src} alt="" />
+                      <div className="mt-6 text-sm">
+                        <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
+                        <div className="text-gray-500 mt-[6px]">
+                          Whenever we have property that matched these interest, will list here.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+          {/* )} */}
         </SimpleBar>
       )}
     </>

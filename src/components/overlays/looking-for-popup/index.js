@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
 
-const EditLookingFor = ({ title, handleClose, className, data }) => {
+const LookingForPopup = ({ title, handleClose, className, data }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const LookingPropertySchema = Yup.object().shape({
@@ -170,4 +170,4 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
   );
 };
 
-export default EditLookingFor;
+export default LookingForPopup;
