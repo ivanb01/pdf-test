@@ -11,6 +11,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Close from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -26,6 +27,7 @@ const Uncategorized = ({
   setCategorizing,
   handleStartCategorizing,
   onSearch,
+  unapprovedContacts,
 }) => {
   //* DATA *//
 
@@ -92,8 +94,7 @@ const Uncategorized = ({
               <Button
                 className="bg-purple6"
                 rightIcon={<ArrowForward className=" h-[18px] w-[18px]" />}
-                onClick={() => handleStartCategorizing(true)}
-              >
+                onClick={() => handleStartCategorizing(true)}>
                 Let's go
               </Button>
             </div>
@@ -104,8 +105,7 @@ const Uncategorized = ({
               src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
               loop
               autoplay
-              style={{ width: '420px', height: '300px' }}
-            ></lottie-player>
+              style={{ width: '420px', height: '300px' }}></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               {openedSubtab == 0
                 ? 'Yay, well done! No uncategorized new records.'
@@ -123,6 +123,12 @@ const Uncategorized = ({
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+        {unapprovedContacts > 0 && (
+          <GlobalAlert
+            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            type="smart-sync"
+          />
+        )}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             {categorizing ? (

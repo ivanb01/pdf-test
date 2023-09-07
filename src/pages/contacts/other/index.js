@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const fetchOther = () => {
     let other = {
@@ -62,6 +64,9 @@ const index = () => {
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
   };
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
 
   return (
     <Layout>
@@ -70,6 +75,12 @@ const index = () => {
       ) : (openedSubtab == 0 && familyAndFriends?.length) || (openedSubtab == 1 && unknown?.length) ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+            {unapprovedContactsLength > 0 && (
+              <GlobalAlert
+                message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+                type="smart-sync"
+              />
+            )}
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center justify-between w-full">
                 <Text h3 className="text-gray7 text-xl">
@@ -84,7 +95,6 @@ const index = () => {
                 </div>
               </div>
             </div>
-
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%' }}>

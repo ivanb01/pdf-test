@@ -23,7 +23,7 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const refetchData = useSelector((state) => state.global.refetchData);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
     dispatch(setProfessionals(filteredArray.data));
@@ -75,6 +75,9 @@ const index = () => {
           <Professionals
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchProfessionals}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter((contact) => contact.category_1 !== 'Uncategorized').length
+            }
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);
