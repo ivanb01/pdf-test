@@ -260,13 +260,13 @@ const TabBar = ({ tab }) => {
     <div className={`accordion w-inherit`} key={tab.id}>
       <Link
         href="#"
-        className={`flex items-center h-10 justify-between px-2 py-4 mx-3 ${tab.id === 4 && 'border-t'} ${
+        className={`flex items-center h-10 justify-between pl-2  pr-3 py-3 mx-3 ${tab.id === 4 && 'border-t'} ${
           openedTab === tab.id && ' text-lightBlue3'
         } ${openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''}`}
         onClick={handleTabClick}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
           {tab.icon}
-          <Text h4 className={`px-[10px] py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+          <Text h4 className={`px-3 py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
             {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
           </Text>
         </div>
@@ -286,14 +286,14 @@ const TabBar = ({ tab }) => {
               <a
                 key={`${subtab.id}`}
                 href="#"
-                className={` pl-11 mx-3 transition-all duration-200 flex items-center ${
+                className={`px-[52px] transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
                 {subtab.icon ? subtab.icon : subtab.dot}
                 <Text
                   h4
-                  className={`px-[10px] py-[10px] ${
+                  className={` ${subtab.icon || (subtab.dot && 'pl-[10px]')} py-[10px] ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {subtab.name} ({getCountForTabOrSubtab(subtab.count_key)})
