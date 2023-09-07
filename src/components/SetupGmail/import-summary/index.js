@@ -46,7 +46,7 @@ const GoogleContactsImportSummary = ({ data }) => {
   useEffect(() => {
     setAllContacts(data);
     setImportedContacts(data?.importable_new_contacts);
-    setNotImportedContacts([...data?.invalid_contacts, ...data?.existing_contacts]);
+    setNotImportedContacts([...data?.invalid_contacts]);
   }, [data]);
 
   return (
@@ -68,8 +68,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               (allContacts?.existing_contacts && allContacts?.existing_contacts.length >= 1)
                 ? 'w-1/2'
                 : 'w-full'
-            }`}
-          >
+            }`}>
             <GlobalAlert
               title={
                 allContacts?.importable_new_contacts_count === 0
@@ -109,35 +108,35 @@ const GoogleContactsImportSummary = ({ data }) => {
               </SimpleBar>
             </div>
           </div>
-          {((allContacts?.invalid_contacts && allContacts?.invalid_contacts_count >= 1) ||
-            (allContacts?.existing_contacts && allContacts?.existing_contacts.length >= 1)) && (
+          {allContacts?.invalid_contacts && (
             <div className="p-6 w-1/2">
               <GlobalAlert
                 title={`
                                 ${
-                                  allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length === 1
-                                    ? '1 Contact was unable to be imported'
-                                    : ''
+                                  allContacts?.invalid_contacts_count === 1 ? '1 Contact was unable to be imported' : ''
                                 } 
                                 ${
-                                  allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length > 1
-                                    ? `${
-                                        allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length
-                                      } Contacts were unable to be imported`
+                                  allContacts?.invalid_contacts_count >= 0
+                                    ? `${allContacts?.invalid_contacts_count} Contacts were unable to be imported`
                                     : ''
                                 } 
                             `}
                 message={`
                                 ${
-                                  allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length === 1
+                                  allContacts?.invalid_contacts_count === 1
                                     ? 'This contact was unable to be imported. See the error message below.'
                                     : ''
                                 }
                                 ${
-                                  allContacts?.invalid_contacts_count + allContacts?.existing_contacts.length > 1
+                                  allContacts?.invalid_contacts_count > 0
                                     ? 'These contacts were unable to be imported. See the error message below.'
                                     : ''
                                 }
+                                 ${
+                                   allContacts?.invalid_contacts_count === 0
+                                     ? 'There are no contacts that were unable to be imported in the CRM.'
+                                     : ''
+                                 }
                             `}
                 type="error"
                 rounded
