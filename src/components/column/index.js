@@ -199,7 +199,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
-                    : healthLastCommunicationDate[categoryType][status?.name] + 'days'
+                    : healthLastCommunicationDate[categoryType][status?.name] + ' days'
                 } in order to maintain healthy communication.`}</p>
                 <p className="mb-2">Chip statuses of communication in cards represent:</p>
                 <div className="flex items-center justify-between">

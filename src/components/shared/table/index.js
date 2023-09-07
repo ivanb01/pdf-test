@@ -843,9 +843,9 @@ const Table = ({
                           // style={{ width: '300px' }}
                           className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                           <p className="mb-2">{`You must interact with these clients every ${
-                            healthLastCommunicationDate[categoryType][status?.name] === 1
+                            healthLastCommunicationDate[categoryType][category?.name] === 1
                               ? 'day'
-                              : `${healthLastCommunicationDate[categoryType][status?.name]} days`
+                              : `${healthLastCommunicationDate[categoryType][category?.name]} days`
                           } in order to maintain healthy communication.`}</p>
                           <p className="mb-2">Chip statuses of communication in cards represent:</p>
                           <div className="flex items-center justify-between">
