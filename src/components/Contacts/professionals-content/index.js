@@ -25,6 +25,7 @@ import Chip from 'components/shared/chip';
 import { clientStatuses } from 'global/variables';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const tabs = [
   {
@@ -75,7 +76,7 @@ const buttons = [
   },
 ];
 
-const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
+const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({});
@@ -198,6 +199,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+        {unapprovedContacts > 0 && (
+          <GlobalAlert
+            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            type="smart-sync"
+          />
+        )}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">

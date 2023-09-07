@@ -82,6 +82,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       email: '',
       phone_number: '',
       lead_source: '',
+      import_source: 'Manually Added',
       tags: [],
     },
     validationSchema: AddContactSchema,
