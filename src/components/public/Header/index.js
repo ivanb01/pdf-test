@@ -15,14 +15,14 @@ const links = [
     href: '/public/features',
     label: 'Features'
   },
-  {
+  /*{
     href: '/properties',
     label: 'Properties'
   },
   {
     href: '/agents',
     label: 'Agents'
-  },
+  },*/
   {
     href: '/public/pricing',
     label: 'Pricing'
