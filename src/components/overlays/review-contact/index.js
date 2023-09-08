@@ -228,7 +228,7 @@ const ReviewContact = ({
                 <CheckCircleIcon className={'text-green-500'} />
                 <h1 className={'text-sm leading-5 font-medium'}>
                   {newData.first_name} {newData.last_name}
-                  {'restored in Contacts successfully!'}
+                  {' restored in Contacts successfully!'}
                 </h1>
               </div>
               <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
