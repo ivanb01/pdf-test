@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
 
-const LookingForPopup = ({ title, handleClose, className, data }) => {
+const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const LookingPropertySchema = Yup.object().shape({
@@ -64,17 +64,18 @@ const LookingForPopup = ({ title, handleClose, className, data }) => {
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
-      neighborhood_ids: data.neighborhood_ids,
-      looking_action: 'sell',
-      bedrooms: data.bedrooms_max ? data.bedrooms_max : null,
-      bathrooms: data.bathrooms_max ? data.bathrooms_max : null,
-      budget_min: data.budget_min ? data.budget_min : null,
-      budget_max: data.budget_max ? data.budget_max : null,
+      neighborhood_ids: data?.neighborhood_ids ? data.neighborhood_ids : '',
+      looking_action: action,
+      bedrooms: data?.bedrooms_max ? data.bedrooms_max : '',
+      bathrooms: data?.bathrooms_max ? data.bathrooms_max : '',
+      budget_min: data?.budget_min ? data.budget_min : '',
+      budget_max: data?.budget_max ? data.budget_max : '',
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
-      setFieldValue('budget_min', parseFloat(values.budget_min));
-      setFieldValue('budget_max', parseFloat(values.budget_max));
+      console.log(values.budget_min ? parseFloat(values.budget_min) : null);
+      setFieldValue('budget_min', values.budget_min ? parseFloat(values.budget_min) : null);
+      setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
       if (formik.isValid) {
         handleAddSubmit({
@@ -84,8 +85,8 @@ const LookingForPopup = ({ title, handleClose, className, data }) => {
           bedrooms_max: values.bedrooms ? values.bedrooms : null,
           bathrooms_min: values.bathrooms ? values.bathrooms : null,
           bathrooms_max: values.bathrooms ? values.bathrooms : null,
-          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
-          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
+          budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
         });
       }
     },
@@ -193,4 +194,4 @@ const LookingForPopup = ({ title, handleClose, className, data }) => {
   );
 };
 
-export default LookingForPopup;
+export default EditLookingForPopup;

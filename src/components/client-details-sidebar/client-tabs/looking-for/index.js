@@ -28,9 +28,12 @@ import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
 import Link from '@mui/icons-material/Link';
-import LookingForPopup from '@components/overlays/looking-for-popup';
-import { PencilIcon } from '@heroicons/react/solid';
+import LookingForPopup from '@components/overlays/edit-looking-for-popup';
+import { ExclamationIcon, PencilIcon, PlusIcon } from '@heroicons/react/solid';
 import ArrowLeft from '/public/images/arrow-circle-left.svg';
+import Alert from '@components/shared/alert';
+import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
+import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -93,8 +96,8 @@ export default function LookingFor({ contactId, category }) {
           bedrooms_max: values.bedrooms,
           bathrooms_min: values.bathrooms,
           bathrooms_max: values.bathrooms,
-          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
-          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
+          budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
         });
       }
     },
@@ -109,7 +112,6 @@ export default function LookingFor({ contactId, category }) {
       setLoadingButton(false);
       toast.success('Property interests saved successfully!');
       dispatch(setRefetchPart('looking-for'));
-      setLookingForState(1);
       resetForm();
     } catch (error) {
       console.log(error);
@@ -117,7 +119,7 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  const fetchLookingProperties = async () => {
+  const initializePropertyInterests = async () => {
     try {
       const lookingProperties = lookingForData;
       if (lookingProperties[0]) {
@@ -128,11 +130,7 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
-        setLookingForState(1);
-        fetchPropertyInterests(lookingProperties[0], 1);
-      } else {
-        console.log('sett');
-        setLookingForState(0);
+        fetchProperties(lookingProperties[0], 1);
       }
     } catch (error) {
       console.log(error);
@@ -141,19 +139,7 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  useEffect(() => {
-    if (lookingForData != null) fetchLookingProperties();
-  }, [contactId, lookingForData, refetchData]);
-
-  useLayoutEffect(() => {
-    if (formik.isValid) {
-      setDisabledButton(false);
-    } else {
-      setDisabledButton(true);
-    }
-  }, [formik]);
-
-  const fetchPropertyInterests = async (values, page) => {
+  const fetchProperties = async (values, page) => {
     setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
@@ -163,20 +149,20 @@ export default function LookingFor({ contactId, category }) {
       page: page,
     };
     params['status'] = getLookingAction();
-    if (filters.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
-    if (filters.budget_min) params['priceMin'] = filters.budget_min;
-    if (filters.budget_max) params['priceMax'] = filters.budget_max;
-    if (filters.bedrooms_min) {
+    if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
+    if (filters?.budget_min) params['priceMin'] = filters.budget_min;
+    if (filters?.budget_max) params['priceMax'] = filters.budget_max;
+    if (filters?.bedrooms_min) {
       params['bedsMin'] = filters.bedrooms_min;
     }
-    if (filters.bedrooms_max) {
+    if (filters?.bedrooms_max) {
       params['bedsMax'] = filters.bedrooms_max;
     }
 
-    if (filters.bathrooms_min) {
+    if (filters?.bathrooms_min) {
       params['bathMin'] = filters.bathrooms_min;
     }
-    if (filters.bathrooms_max) {
+    if (filters?.bathrooms_max) {
       params['bathMax'] = filters.bathrooms_max;
     }
 
@@ -215,6 +201,25 @@ export default function LookingFor({ contactId, category }) {
     return Math.min(page * 21, allPropertiesCount);
   };
 
+  useEffect(() => {
+    resetForm();
+  }, [router.pathname]);
+
+  useEffect(() => {
+    if (lookingForData != null) initializePropertyInterests();
+    else {
+      fetchProperties(formik.values, 1);
+    }
+  }, [contactId, lookingForData, refetchData]);
+
+  useLayoutEffect(() => {
+    if (formik.isValid) {
+      setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
+    }
+  }, [formik]);
+
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
       <div className={`${className} text-sm`}>
@@ -227,21 +232,20 @@ export default function LookingFor({ contactId, category }) {
     );
   };
 
-  useEffect(() => {
-    resetForm();
-  }, [router.pathname]);
-
   return (
     <>
       {showAddPopup && (
-        <LookingForPopup
+        <AddLookingForPopup
+          action={getLookingAction()}
+          contactId={contactId}
           title="Add Property Interests"
           className="w-[580px]"
           handleClose={() => setShowAddPopup(false)}
         />
       )}
       {showEditPopup && (
-        <LookingForPopup
+        <EditLookingForPopup
+          action={getLookingAction()}
           data={lookingForData[0]}
           title="Edit Property Interests"
           className="w-[580px]"
@@ -259,64 +263,88 @@ export default function LookingFor({ contactId, category }) {
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                <header className={`transition-all bg-gray-50 p-6`}>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="text-gray-900 font-medium flex items-center">
-                      Property Interests
-                      <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                        {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                {!lookingForData[0] ? (
+                  <Alert type="orange">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <ExclamationIcon className="h-5 w-5 text-orange-600" aria-hidden="true" />
+                      </div>
+                      <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
+                        <p className={`text-sm text-orange-800`}>
+                          To receive more precise property recommendations tailored to your client's preferences, kindly
+                          specify the property interests.
+                        </p>
+                        <Button
+                          className="p-0"
+                          label="Add Interests"
+                          leftIcon={<PlusIcon />}
+                          primary
+                          onClick={() => setShowAddPopup(true)}
+                        />
                       </div>
                     </div>
-                    <div className="flex items-center">
-                      <Button
-                        className="min-w-fit mr-4"
-                        onClick={() => setShowEditPopup(true)}
-                        white
-                        leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
-                        Edit
-                      </Button>
-                      <div onClick={() => setExpandedHeader(!expandedHeader)} className="cursor-pointer z-10">
-                        <div className="">
-                          <img
-                            className={`transition-all h-7 ${expandedHeader ? 'rotate-90' : '-rotate-90'}`}
-                            src={ArrowLeft.src}
-                          />
+                  </Alert>
+                ) : (
+                  <header className={`transition-all bg-gray-50 p-6`}>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="text-gray-900 font-medium flex items-center">
+                        Property Interests
+                        <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <Button
+                          className="min-w-fit mr-4"
+                          onClick={() => setShowEditPopup(true)}
+                          white
+                          leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
+                          Edit
+                        </Button>
+                        <div onClick={() => setExpandedHeader(!expandedHeader)} className="cursor-pointer z-10">
+                          <div className="">
+                            <img
+                              className={`transition-all h-7 ${expandedHeader ? 'rotate-90' : '-rotate-90'}`}
+                              src={ArrowLeft.src}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  {expandedHeader && (
-                    <>
-                      <PropertyDetail className="mt-4 mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
-                      <div className="grid grid-cols-4">
-                        <PropertyDetail
-                          label="Rooms"
-                          value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                          iconAfter={<Image src={room} height={20} />}
-                        />
-                        <PropertyDetail
-                          label="Bedrooms"
-                          value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                          iconAfter={<Image src={bedroomBlack} height={20} />}
-                        />
-                        <PropertyDetail
-                          label="Bathrooms"
-                          value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
-                          iconAfter={<Image src={bathroomBlack} height={20} />}
-                        />
-                        <PropertyDetail
-                          label="Price Min / Max"
-                          value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
-                            formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
-                          }`}
-                          {...(getLookingAction() == 2 && {
-                            textAfter: 'monthly',
-                          })}
-                        />
-                      </div>
-                    </>
-                  )}
-                </header>
+                    {expandedHeader && (
+                      <>
+                        <PropertyDetail className="mt-4 mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
+                        <div className="grid grid-cols-4">
+                          <PropertyDetail
+                            label="Rooms"
+                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                            iconAfter={<Image src={room} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Bedrooms"
+                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                            iconAfter={<Image src={bedroomBlack} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Bathrooms"
+                            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+                            iconAfter={<Image src={bathroomBlack} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Price Min / Max"
+                            value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
+                              formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
+                            }`}
+                            {...(getLookingAction() == 2 && {
+                              textAfter: 'monthly',
+                            })}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </header>
+                )}
+
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
@@ -344,7 +372,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchPropertyInterests(lookingForData[0], page - 1);
+                                  fetchProperties(lookingForData[0], page - 1);
                                   setPage(page - 1);
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
@@ -355,7 +383,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchPropertyInterests(lookingForData[0], page + 1);
+                                  fetchProperties(lookingForData[0], page + 1);
                                   setPage(page + 1);
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
