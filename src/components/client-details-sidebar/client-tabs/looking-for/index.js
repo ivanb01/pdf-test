@@ -29,6 +29,8 @@ import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
 import Link from '@mui/icons-material/Link';
 import LookingForPopup from '@components/overlays/looking-for-popup';
+import { PencilIcon } from '@heroicons/react/solid';
+import ArrowLeft from '/public/images/arrow-circle-left.svg';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -59,6 +61,7 @@ export default function LookingFor({ contactId, category }) {
   const [page, setPage] = useState(1);
   const [allPropertiesCount, setAllPropertiesCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [expandedHeader, setExpandedHeader] = useState(true);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [lookingForState, setLookingForState] = useState(0);
@@ -251,136 +254,68 @@ export default function LookingFor({ contactId, category }) {
         </div>
       ) : (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          {/* {lookingForState == 0 ? (
-            <div className="flex bg-white flex-row details-tabs-fixed-height items-center justify-center">
-              <div className="max-w-[600px]">
-                <div className="p-6">
-                  <form key={contactId} onSubmit={formik.handleSubmit}>
-                    <div className="mb-[60px] text-center">
-                      <div className="text-black font-medium text-lg mb-3">No Property Suggested</div>
-                      <div className="text-black text-sm">
-                        Please fill the Property Interests so we can suggest properties for this contact
-                      </div>
-                    </div>
-                    <div className="mx-auto relative">
-                      <SearchSelectInput
-                        label="Neighborhood"
-                        options={NYCneighborhoods}
-                        value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
-                        onChange={(choice) => {
-                          let choices = choice.map((el) => el.value);
-                          formik.setFieldValue('neighborhood_ids', choices);
-                        }}
-                        error={errors.neighborhood_ids && touched.neighborhood_ids}
-                        errorText={errors.neighborhood_ids}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      <Input
-                        id="bedrooms"
-                        type="number"
-                        label="Bedrooms"
-                        className="col-span-1"
-                        iconAfter={<Image src={bedroom} height={20} />}
-                        onChange={formik.handleChange}
-                        value={formik.values.bedrooms}
-                        error={errors.bedrooms && touched.bedrooms}
-                        errorText={errors.bedrooms}
-                      />
-                      <Input
-                        id="bathrooms"
-                        type="number"
-                        label="Bathrooms"
-                        iconAfter={<Image src={bathroom} height={20} />}
-                        className="col-span-1"
-                        onChange={formik.handleChange}
-                        value={formik.values.bathrooms}
-                        error={errors.bathrooms && touched.bathrooms}
-                        errorText={errors.bathrooms}
-                      />
-                      <Input
-                        id="budget_min"
-                        type="money"
-                        label="Budget Min"
-                        iconAfter={<Image src={usd} height={20} />}
-                        className="col-span-1"
-                        onChange={(val) => formik.setFieldValue('budget_min', val)}
-                        value={formik.values.budget_min}
-                        error={errors.budget_min && touched.budget_min}
-                        errorText={errors.budget_min}
-                      />
-                      <Input
-                        id="budget_max"
-                        type="money"
-                        label="Budget Max"
-                        iconAfter={<Image src={usd} height={20} />}
-                        className="col-span-1"
-                        onChange={(val) => formik.setFieldValue('budget_max', val)}
-                        value={formik.values.budget_max}
-                        error={errors.budget_max && touched.budget_max}
-                        errorText={errors.budget_max}
-                      />
-                    </div>
-                    <div className="text-right">
-                      <Button
-                        label="Save Property Interests"
-                        rightIcon={<ArrowForward className="h-4" />}
-                        type="submit"
-                        primary
-                        className="mt-6"
-                        loading={loadingButton}
-                        disabled={disabledButton}
-                      />
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          ) : ( */}
           <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
             {loadingPropertyInterests ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                <header className="bg-gray-50 p-6">
-                  <div className="flex items-center justify-between mb-4 text-sm">
+                <header className={`transition-all bg-gray-50 p-6`}>
+                  <div className="flex items-center justify-between text-sm">
                     <div className="text-gray-900 font-medium flex items-center">
                       Property Interests
                       <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
                         {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
                       </div>
                     </div>
-                    <div className="cursor-pointer" onClick={() => setShowEditPopup(true)}>
-                      Edit
+                    <div className="flex items-center">
+                      <Button
+                        className="min-w-fit mr-4"
+                        onClick={() => setShowEditPopup(true)}
+                        white
+                        leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
+                        Edit
+                      </Button>
+                      <div onClick={() => setExpandedHeader(!expandedHeader)} className="cursor-pointer z-10">
+                        <div className="">
+                          <img
+                            className={`transition-all h-7 ${expandedHeader ? 'rotate-90' : '-rotate-90'}`}
+                            src={ArrowLeft.src}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <PropertyDetail className="mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
-                  <div className="grid grid-cols-4">
-                    <PropertyDetail
-                      label="Rooms"
-                      value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                      iconAfter={<Image src={room} height={20} />}
-                    />
-                    <PropertyDetail
-                      label="Bedrooms"
-                      value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                      iconAfter={<Image src={bedroomBlack} height={20} />}
-                    />
-                    <PropertyDetail
-                      label="Bathrooms"
-                      value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
-                      iconAfter={<Image src={bathroomBlack} height={20} />}
-                    />
-                    <PropertyDetail
-                      label="Price Min / Max"
-                      value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
-                        formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
-                      }`}
-                      {...(getLookingAction() == 2 && {
-                        textAfter: 'monthly',
-                      })}
-                    />
-                  </div>
+                  {expandedHeader && (
+                    <>
+                      <PropertyDetail className="mt-4 mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
+                      <div className="grid grid-cols-4">
+                        <PropertyDetail
+                          label="Rooms"
+                          value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                          iconAfter={<Image src={room} height={20} />}
+                        />
+                        <PropertyDetail
+                          label="Bedrooms"
+                          value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                          iconAfter={<Image src={bedroomBlack} height={20} />}
+                        />
+                        <PropertyDetail
+                          label="Bathrooms"
+                          value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+                          iconAfter={<Image src={bathroomBlack} height={20} />}
+                        />
+                        <PropertyDetail
+                          label="Price Min / Max"
+                          value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
+                            formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
+                          }`}
+                          {...(getLookingAction() == 2 && {
+                            textAfter: 'monthly',
+                          })}
+                        />
+                      </div>
+                    </>
+                  )}
                 </header>
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
