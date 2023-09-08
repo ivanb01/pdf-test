@@ -138,16 +138,21 @@ export default function Details() {
   }, [refetchData]);
 
   useEffect(() => {
+    console.log(contact);
+  }, [contact]);
+  useEffect(() => {
     if (contacts) {
       id && fetchContact();
     }
   }, [contacts, fetchContactRequired, id]);
-
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+    contact?.category_1 === 'Uncategorized' && contact?.category_2 === 'Unknown'
+      ? 'Other'
+      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
       ? contact?.category_1
       : `${contact?.category_1}s`;
+
   useEffect(() => {
     if (contact?.category_1) {
       setBackUrl(`/contacts/${tempUrl.toLowerCase()}`);
