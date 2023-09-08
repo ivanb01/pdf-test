@@ -355,24 +355,24 @@ export default function LookingFor({ contactId, category }) {
                     <div className="grid grid-cols-4">
                       <PropertyDetail
                         label="Rooms"
-                        value={formik.values.bedrooms}
+                        value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
                         iconAfter={<Image src={room} height={20} />}
                       />
                       <PropertyDetail
                         label="Bedrooms"
-                        value={formik.values.bedrooms}
+                        value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
                         iconAfter={<Image src={bedroomBlack} height={20} />}
                       />
                       <PropertyDetail
                         label="Bathrooms"
-                        value={formik.values.bathrooms}
+                        value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
                         iconAfter={<Image src={bathroomBlack} height={20} />}
                       />
                       <PropertyDetail
                         label="Price Min / Max"
-                        value={`${
-                          formatPrice(formik.values.budget_min) ? formatPrice(formik.values.budget_min) : 'Any'
-                        } - ${formatPrice(formik.values.budget_max) ? formatPrice(formik.values.budget_max) : 'Any'}`}
+                        value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
+                          formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
+                        }`}
                         {...(getLookingAction() == 2 && {
                           textAfter: 'monthly',
                         })}
