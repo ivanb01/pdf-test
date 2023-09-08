@@ -86,7 +86,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   const expandedMenu = () => {
     return (
-      <SimpleBar autoHide style={{ maxHeight: '60vh' }}>
+      <SimpleBar autoHide={false} style={{ maxHeight: '60vh' }}>
         {tabs.map((tab) => {
           return <TabBar tab={tab} />;
         })}
@@ -264,7 +264,7 @@ const TabBar = ({ tab }) => {
           openedTab === tab.id && ' text-lightBlue3'
         } ${openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''}`}
         onClick={handleTabClick}>
-        <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'} `}>
+        <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}
           <Text h4 className={`px-3 py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
             {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
