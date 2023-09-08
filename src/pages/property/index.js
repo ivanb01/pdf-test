@@ -602,39 +602,42 @@ const index = () => {
             </div>
             <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
           </div>
-          <div className="mt-10">
-            <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
-            <div className={'w-[700px]'}>
-              <div className="grid grid-cols-3 gap-6 items-center  mb-4">
-                {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
-                  differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
-                    const matchedAmenity = propertyAmenities.find(
-                      (item) => item.name.toLowerCase() === amenity.toLowerCase(),
-                    );
-                    return (
-                      <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
-                        {matchedAmenity && <Image src={matchedAmenity.icon} />}
-                        {matchedAmenity && <span className="ml-2">{matchedAmenity.name}</span>}
-                      </div>
-                    );
-                  })}
+          {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 ||
+            (differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 && (
+              <div className="mt-10">
+                <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
+                <div className={'w-[700px]'}>
+                  <div className="grid grid-cols-3 gap-6 items-center  mb-4">
+                    {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
+                      differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
+                        const matchedAmenity = propertyAmenities.find(
+                          (item) => item.name.toLowerCase() === amenity.toLowerCase(),
+                        );
+                        return (
+                          <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
+                            {matchedAmenity && <Image src={matchedAmenity.icon} />}
+                            {matchedAmenity && <span className="ml-2">{matchedAmenity.name}</span>}
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <div className={'flex flex-wrap'} style={{ gap: '5px' }}>
+                    {differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 &&
+                      differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.map(
+                        (remaining, index) =>
+                          remaining.length > 0 && (
+                            <div
+                              key={index}
+                              style={{ borderRadius: '20px' }}
+                              className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
+                              <p className={'text-sm leading-4 font-medium py-2 px-1.5 text-gray-6'}> {remaining}</p>
+                            </div>
+                          ),
+                      )}
+                  </div>
+                </div>
               </div>
-              <div className={'flex flex-wrap'} style={{ gap: '5px' }}>
-                {differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 &&
-                  differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.map(
-                    (remaining, index) =>
-                      remaining.length > 0 && (
-                        <div
-                          key={index}
-                          style={{ borderRadius: '20px' }}
-                          className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
-                          <p className={'text-sm leading-4 font-medium py-2 px-1.5 text-gray-6'}> {remaining}</p>
-                        </div>
-                      ),
-                  )}
-              </div>
-            </div>
-          </div>
+            ))}
           <div className="mt-10">
             <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
             <div className="flex flex-wrap">
