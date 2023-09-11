@@ -81,10 +81,8 @@ const MainMenu = ({
 
       if (refetchData === true) dispatch(setRefetchData(false));
     };
-    if (!allContacts?.length || refetchData) {
-      fetchContacts();
-    }
-  }, [allContacts, refetchData]);
+    fetchContacts();
+  }, [refetchData]);
 
   useEffect(() => {
     const fetchCount = async () => {
