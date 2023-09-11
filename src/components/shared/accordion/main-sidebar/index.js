@@ -86,7 +86,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   const expandedMenu = () => {
     return (
-      <SimpleBar autoHide={false} style={{ maxHeight: '60vh' }}>
+      <SimpleBar autoHide={true} style={{ maxHeight: '60vh' }}>
         {tabs.map((tab) => {
           return <TabBar tab={tab} />;
         })}
