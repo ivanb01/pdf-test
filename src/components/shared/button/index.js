@@ -3,6 +3,7 @@ import { ChevronRightIcon } from '@heroicons/react/solid';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import googleLogo from '/public/images/googleicon.svg';
+import check from '/public/images/check.svg';
 
 const Button = ({
   title,
@@ -95,6 +96,7 @@ const Button = ({
                 googleActivated && 'text-green-600'
               } font-medium text-sm`}>
               {label ? label : children}
+              {googleActivated && <img className="ml-2 h-[18px] w-[18px]" src={check.src} />}
             </div>
           </>
         )}
