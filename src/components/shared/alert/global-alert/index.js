@@ -31,7 +31,7 @@ const GlobalAlert = ({ overlay, type, message, rounded, onButtonClick, noBorder,
       : 'text-green-800';
   return (
     <div
-      className={`${!noBorder && 'border border-textColor border-l-0 border-t-0'} z-40 ${
+      className={`${!noBorder && 'border border-textColor border-l-0 border-t-0'}  ${
         overlay && 'absolute top-[90px] left-1/2 -translate-x-1/2 min-w-[400px] max-w-[800px]'
       } ${rounded && 'rounded-md'} ${bgColor} p-4 `}>
       <div className="flex justify-between items-center">
