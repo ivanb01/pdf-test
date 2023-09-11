@@ -97,7 +97,7 @@ const index = () => {
             </div>
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-                <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                <SimpleBar autoHide style={{ maxHeight: '100%', height: '100%' }}>
                   <Table tableFor="other" data={actualContact} />
                 </SimpleBar>
               </div>
