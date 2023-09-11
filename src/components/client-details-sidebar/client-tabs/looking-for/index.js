@@ -263,7 +263,7 @@ export default function LookingFor({ contactId, category }) {
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                {!lookingForData ? (
+                {!lookingForData.length ? (
                   <Alert type="orange">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
