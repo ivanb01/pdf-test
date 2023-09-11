@@ -77,7 +77,7 @@ const Button = ({
     return (
       <a
         className={`${disabled && 'pointer-events-none opacity-50'} ${googleActivated && 'pointer-events-none'} ${
-          googleActivated && 'border-green-500'
+          googleActivated && 'border-green-500 bg-green-50'
         } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
         title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
         onClick={onClick}>
