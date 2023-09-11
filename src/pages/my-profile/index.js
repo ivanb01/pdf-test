@@ -236,9 +236,10 @@ const index = () => {
               <Button
                 googleButton
                 loading={loadingActivate}
-                disabled={consentGiven()}
+                googleActivated={consentGiven()}
+                // disabled={consentGiven()}
                 onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
-                {consentGiven() ? 'Disconnect' : 'Connect'}
+                {consentGiven() ? 'Connected' : 'Connect'}
               </Button>
             </div>
           </div>

@@ -6,8 +6,11 @@ import MainMenu from 'components/shared/menu';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback } from 'api/google';
+import { setAllContacts } from '@store/contacts/slice';
+import { useDispatch } from 'react-redux';
 
 const NoContactPage = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
@@ -148,7 +151,7 @@ const NoContactPage = () => {
         </div>
       ) : (
         <>
-          <div className="layout-fixed-height w-full flex items-center justify-center pt-[68px] overflow-y-scroll">
+          <div className="layout-fixed-height w-full flex items-center justify-center overflow-y-scroll">
             <SetupGmail
               error={errorImporting}
               setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}

@@ -27,6 +27,7 @@ const Button = ({
   closeButton,
   bigButton,
   googleButton,
+  googleActivated,
   secondaryDanger,
   rounded,
   special,
@@ -74,8 +75,8 @@ const Button = ({
   const googleBtn = () => {
     return (
       <a
-        className={`${
-          disabled && 'pointer-events-none opacity-50'
+        className={`${disabled && 'pointer-events-none opacity-50'} ${googleActivated && 'pointer-events-none'} ${
+          googleActivated && 'border-green-500'
         } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
         title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
         onClick={onClick}>
@@ -85,10 +86,14 @@ const Button = ({
           </div>
         ) : (
           <>
-            <div className="flex justify-center items-center p-[10px] border-r">
+            <div
+              className={`flex justify-center items-center p-[10px] border-r ${googleActivated && 'border-green-500'}`}>
               <img src={googleLogo.src} alt="" className="object-cover" />
             </div>
-            <div className="min-w-[90px] flex justify-center items-center p-[10px] px-4 text-gray-700 font-medium text-sm">
+            <div
+              className={`min-w-[90px] flex justify-center items-center p-[10px] px-4 ${
+                googleActivated && 'text-green-600'
+              } font-medium text-sm`}>
               {label ? label : children}
             </div>
           </>
