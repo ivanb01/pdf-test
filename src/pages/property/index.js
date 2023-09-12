@@ -484,11 +484,12 @@ const index = () => {
     const allAmenities = amenities.split(',').map((item) => item.trim().toLowerCase());
 
     const mainAmenitiesPerProperty = mainAmenities.filter((mainAmenity) =>
-      allAmenities.some((amenity) => amenity.toLowerCase() === mainAmenity.toLowerCase()),
+      allAmenities.some((amenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
     );
 
     const remainingAmenities = allAmenities.filter(
-      (amenity) => !mainAmenitiesPerProperty.some((mainAmenity) => amenity.toLowerCase() === mainAmenity.toLowerCase()),
+      (amenity) =>
+        !mainAmenitiesPerProperty.some((mainAmenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
     );
 
     const capitalizeFirstLetterOfEachWord = (str) =>
