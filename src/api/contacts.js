@@ -61,7 +61,7 @@ export const getContactNote = (id, note_id) => {
 };
 
 export const addContactNote = (id, note) => {
-  return axiosInstance.post(`contact/${id}/note`, note);
+  return axiosInstance.post(`contact/${id}/note`, { ...note, title: ' ' });
 };
 
 export const updateContactNote = (id, note_id, note) => {

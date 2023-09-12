@@ -45,14 +45,13 @@ export default function Notes({ contactId }) {
   };
 
   const AddNoteSchema = Yup.object().shape({
-    title: Yup.string().required('Title required'),
     description: Yup.string().required('Description required'),
   });
 
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
-      title: '',
+      // title: '',
       description: '',
     },
     validationSchema: AddNoteSchema,
@@ -67,7 +66,6 @@ export default function Notes({ contactId }) {
     try {
       const newNote = {
         id: Date.now().toString(),
-        title: values.title,
         description: values.description,
         created_at: new Date().toISOString(),
       };
@@ -103,7 +101,6 @@ export default function Notes({ contactId }) {
 
   const handleEditNote = (note) => {
     formik.setValues({
-      title: note.title,
       description: note.description,
     });
     setNoteId(note.id);
@@ -157,9 +154,9 @@ export default function Notes({ contactId }) {
   const onSearch = (term) => {
     const trimmedTerm = term.replace(/\s+/g, '').toLowerCase();
     const filteredArray = notesOriginal.filter((note) => {
-      const title = note?.title.toLowerCase();
+      // const title = note?.title.toLowerCase();
       const description = note?.description.toLowerCase();
-      return title.includes(trimmedTerm) || description.includes(trimmedTerm);
+      return description.includes(trimmedTerm);
     });
     setNotes(filteredArray);
   };
@@ -194,7 +191,7 @@ export default function Notes({ contactId }) {
             </div>
           ) : (
             <>
-              <div className="p-6 pb-0 flex items-center justify-between">
+              <div className="p-6  pb-0 flex items-center justify-between">
                 {/* <div className="flex items-center justify-between w-full"> */}
                 <div className="w-[50%] flex items-center">
                   <Search
@@ -225,10 +222,9 @@ export default function Notes({ contactId }) {
                         <div className="bg-white m-[12px] p-6 rounded-lg shadow">
                           <div className="flex justify-between">
                             <div className="pr-12 w-full">
-                              <Text p className="mb-1">
-                                {note?.title}
-                              </Text>
-
+                              {/*<Text p className="mb-1">*/}
+                              {/*  {note?.title}*/}
+                              {/*</Text>*/}
                               <div className={`w-full h-[84px] relative `}>
                                 <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                                   <div className="text-sm font-normal text-gray4 flex items-start">
@@ -262,18 +258,18 @@ export default function Notes({ contactId }) {
 
       {noteModal && (
         <Overlay className="w-[632px]" handleCloseOverlay={handleCloseModal} title={`${formType} Note`}>
-          <div className="p-6 bg-white">
+          <div className="p-6 pt-0 bg-white">
             <form onSubmit={formik.handleSubmit}>
-              <Input
-                type="text-area"
-                id="title"
-                label="Title"
-                className="mb-6"
-                onChange={formik.handleChange}
-                value={formik.values.title}
-                error={errors.title && touched.title}
-                errorText={errors.title}
-              />
+              {/*<Input*/}
+              {/*  type="text-area"*/}
+              {/*  id="title"*/}
+              {/*  label="Title"*/}
+              {/*  className="mb-6"*/}
+              {/*  onChange={formik.handleChange}*/}
+              {/*  value={formik.values.title}*/}
+              {/*  error={errors.title && touched.title}*/}
+              {/*  errorText={errors.title}*/}
+              {/*/>*/}
               <TextArea
                 className="min-h-[120px]"
                 // height="min-h-[120px]"
