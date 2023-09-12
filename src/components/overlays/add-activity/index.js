@@ -11,6 +11,7 @@ import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import toast from 'react-hot-toast';
 import { addContactActivity } from 'api/contacts';
 import { setActivityLogData } from '@store/clientDetails/slice';
+import { updateContactLocally } from '@store/contacts/slice';
 
 const AddActivity = ({ setActivities, className, handleClose, title, clientId, setAddActivityPopup }) => {
   const dispatch = useDispatch();
@@ -37,6 +38,8 @@ const AddActivity = ({ setActivities, className, handleClose, title, clientId, s
   const handleAddActivitySubmit = async (values) => {
     setLoadingButton(true);
     try {
+      let todayDate = Date.now();
+      dispatch(updateContactLocally({ id: clientId, last_communication_date: todayDate }));
       dispatch(setActivityLogData((prevStoreData) => [...(prevStoreData || []), values]));
       toast.success(`Activity added successfully!`);
       setLoadingButton(false);
