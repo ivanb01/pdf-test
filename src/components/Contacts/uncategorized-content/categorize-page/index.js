@@ -16,6 +16,7 @@ import { bulkUpdateContacts } from 'api/contacts';
 import Chip from 'components/shared/chip';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
+import { updateContactLocally, updateContacts } from '@store/contacts/slice';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -37,27 +38,26 @@ const CategorizePage = ({
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
 
   const undoAllCategorizations = () => {
-    bulkUpdateContacts(uncategorizedInitialState).then(() => {
-      setUncategorizedContacts(uncategorizedCopy);
-      setCategorizedInThisSession([]);
-      selectFirstToCategorize();
-      dispatch(setRefetchData(true));
-    });
+    dispatch(updateContacts(uncategorizedInitialState.contacts));
+    setUncategorizedContacts(uncategorizedCopy);
+    setCategorizedInThisSession([]);
+    selectFirstToCategorize();
+    dispatch(setRefetchData(true));
+    bulkUpdateContacts(uncategorizedInitialState);
   };
 
   const undoCategorization = (contactToUndo) => {
     let contact = uncategorizedInitialState.contacts.find((element) => element.id === contactToUndo);
     setCategorizedInThisSession(categorizedInThisSession.filter((el) => el.id != contactToUndo));
-    bulkUpdateContacts({ contacts: [contact] }).then(() => {
-      let contactInitial = uncategorizedCopy.find((element) => element.id === contactToUndo);
-      setUncategorizedContacts((prevState) => [contactInitial, ...prevState]);
-      selectFirstToCategorize();
-      dispatch(setRefetchData(true));
-    });
+    dispatch(updateContactLocally(contact));
+    let contactInitial = uncategorizedCopy.find((element) => element.id === contactToUndo);
+    setUncategorizedContacts((prevState) => [contactInitial, ...prevState]);
+    selectFirstToCategorize();
+    dispatch(setRefetchData(true));
+    bulkUpdateContacts({ contacts: [contact] });
   };
 
   const handleSelectUncategorizedType = (type) => {
-    console.log('type', type);
     setSelectedUncategorizedContactType(type);
     if (
       selectedUncategorizedContactStatus ||
@@ -70,7 +70,6 @@ const CategorizePage = ({
     setSelectedUncategorizedContactStatus(status);
     updateTypeStatus(status, selectedUncategorizedContactType);
   };
-
   const updateTypeStatus = async (status, type) => {
     setCategorizationInProcess(true);
     let ids = selectedUncategorized.map((contact) => contact.id);
@@ -84,38 +83,32 @@ const CategorizePage = ({
       contactsArray.push(contact);
     });
     contacts.contacts = contactsArray;
-    bulkUpdateContacts(contacts).then((data) => {
-      const updatedContacts = uncategorizedContacts
-        .map((contact) => {
-          if (ids.includes(contact.id)) {
-            return {
-              ...contact,
-              category_id: type,
-              status_id: status,
-            };
-          }
-        })
-        .filter((contact) => contact !== undefined);
-      // setUncategorizedContacts(updatedContacts);
-      console.log('updated contacts', updatedContacts);
-      console.log('categorizedinthissession', categorizedInThisSession);
-      setCategorizedInThisSession((prevState) => [...updatedContacts, ...prevState]);
-      afterCategorizationProcess(ids);
-      dispatch(setRefetchData(true));
-    });
+    const updatedContacts = uncategorizedContacts
+      .map((contact) => {
+        if (ids.includes(contact.id)) {
+          return {
+            ...contact,
+            category_id: type,
+            status_id: status,
+          };
+        }
+      })
+      .filter((contact) => contact !== undefined);
+    setCategorizedInThisSession((prevState) => [...updatedContacts, ...prevState]);
+    afterCategorizationProcess(ids);
+    dispatch(setRefetchData(true));
+    dispatch(updateContacts(contactsArray));
+    bulkUpdateContacts(contacts);
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
   };
   const afterCategorizationProcess = (ids) => {
-    console.log('categorized in this session: ', categorizedInThisSession);
+    let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
+    setUncategorizedContacts(uncategorized);
     selectFirstToCategorize();
     setSelectedUncategorizedContactStatus(null);
     setSelectedUncategorizedContactType(null);
     setSelectedUncategorized([]);
-    let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
-    setUncategorizedContacts(uncategorized);
-    setTimeout(() => {
-      setCategorizationInProcess(false);
-    }, 1000);
+    setCategorizationInProcess(false);
   };
 
   const showCategorizedSection = () => {
@@ -147,7 +140,7 @@ const CategorizePage = ({
           <SimpleBar autoHide style={{ maxHeight: '100%' }}>
             <Table
               tableFor="in-categorization"
-              data={uncategorizedContacts.filter((contact) => contact.category_id == openedSubtab + 1)}
+              data={uncategorizedContacts}
               handleClickRow={handleSelectUncategorized}
               handleSelectAll={toggleAllUncategorized}
             />
@@ -157,8 +150,7 @@ const CategorizePage = ({
       <div
         className={`bg-white pb-[72px] border-t border-gray-200 relative ${
           uncategorizedContacts.length ? 'w-[50%]' : 'w-[75%]'
-        } `}
-      >
+        } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
             autoHide
@@ -170,8 +162,7 @@ const CategorizePage = ({
               right: '0',
               bottom: '72px',
               maxHeight: '100%',
-            }}
-          >
+            }}>
             <div className="p-6">
               <div className="flex items-center mb-4">
                 <CircleStepNumber number={1} className="mr-2" />
@@ -234,8 +225,7 @@ const CategorizePage = ({
               src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
               style={{ width: '420px', height: '300px' }}
               loop
-              autoplay
-            ></lottie-player>
+              autoplay></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               Yay, well done! No uncategorized contact.
             </Text>
@@ -287,8 +277,7 @@ const CategorizePage = ({
       )}
       <div
         style={{ zIndex: '99999 !important' }}
-        className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end"
-      >
+        className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
         <Button primary label="Save & Exit" className="mr-4" onClick={() => handleStartCategorizing(false)} />
       </div>
     </>

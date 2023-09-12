@@ -511,7 +511,6 @@ const Table = ({
     );
   };
   const showStatus = (dataItem) => {
-    console.log('dataitem', dataItem);
     return dataItem.status_id != null && dataItem.status_id !== 1;
   };
   const categorizedTable = () => {
@@ -577,7 +576,6 @@ const Table = ({
                   />
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
-                      {console.log(dataItem)}
                       {dataItem.category_id != null && (
                         <Chip typeStyle>{getContactTypeByTypeId(dataItem.category_id)}</Chip>
                       )}
