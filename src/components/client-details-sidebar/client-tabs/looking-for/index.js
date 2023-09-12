@@ -74,12 +74,18 @@ export default function LookingFor({ contactId, category }) {
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
-    return category.toLowerCase() == 'buyer'
-      ? 1
-      : category.toLowerCase() === 'landlord' || category.toLowerCase() === 'seller'
-      ? 19
-      : 2;
+    const lowerCaseCategory = category.toLowerCase();
+    if (lowerCaseCategory === 'buyer') {
+      return 1;
+    } else if (lowerCaseCategory === 'landlord') {
+      return '21,19';
+    } else if (lowerCaseCategory === 'seller') {
+      return 19;
+    } else {
+      return 2;
+    }
   };
+
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
@@ -175,6 +181,7 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -293,9 +300,12 @@ export default function LookingFor({ contactId, category }) {
                     <div className="flex items-center justify-between text-sm">
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
-                        <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
-                        </div>
+                        {getLookingAction() === 1 ||
+                          (getLookingAction() === 2 && (
+                            <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                              {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                            </div>
+                          ))}
                       </div>
                       <div className="flex items-center">
                         <Button

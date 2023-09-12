@@ -7,7 +7,11 @@ import placeholder from '/public/images/img-placeholder.png';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import link from '/public/images/link-2.svg';
+import { useEffect } from 'react';
 const PropertyCard = ({ property }) => {
+  useEffect(() => {
+    console.log(property);
+  }, [property]);
   const router = useRouter();
   return (
     <div className="border border-gray-200 rounded-[4px]">
@@ -17,7 +21,12 @@ const PropertyCard = ({ property }) => {
             className="object-cover h-full w-full"
             src={property?.PHOTOS[0] ? property?.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
         </a>
-        <div className="absolute bottom-2 left-2 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
+        <div
+          className={`absolute bottom-2 left-2 flex items-center justify-center border ${
+            property.STATUS.toLowerCase() === 'sold'
+              ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
+              : 'border-cyan-800 bg-cyan-50'
+          } rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium`}>
           {property.STATUS}
         </div>
         <a
