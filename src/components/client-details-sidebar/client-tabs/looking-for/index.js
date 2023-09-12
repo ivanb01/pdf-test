@@ -267,7 +267,7 @@ export default function LookingFor({ contactId, category }) {
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                {!lookingForData[0] ? (
+                {!lookingForData?.length ? (
                   <Alert type="orange">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
@@ -353,7 +353,7 @@ export default function LookingFor({ contactId, category }) {
                   {propertyInterests && propertyInterests.length ? (
                     <>
                       <div className="mb-4 text-gray-900 text-sm font-medium">
-                        {allPropertiesCount} suggested properties
+                        {allPropertiesCount} properties recommended {getLookingAction() == 1 ? 'for sale' : 'for rent'}
                       </div>
                       <div className="grid grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (

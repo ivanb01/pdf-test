@@ -97,6 +97,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
+      console.log(data);
       const res = await contactServices.addContactLookingProperty(data.contact_id, values);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
