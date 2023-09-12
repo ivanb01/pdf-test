@@ -78,7 +78,7 @@ export default function LookingFor({ contactId, category }) {
     if (lowerCaseCategory === 'buyer') {
       return 1;
     } else if (lowerCaseCategory === 'landlord') {
-      return '21,19';
+      return '19,22';
     } else if (lowerCaseCategory === 'seller') {
       return 19;
     } else {
@@ -185,11 +185,14 @@ export default function LookingFor({ contactId, category }) {
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
+        setPropertyInterests(data.LISTINGS);
         setAllPropertiesCount(data.TOTAL_COUNT);
         return data;
+      })
+      .catch((error) => {
+        console.log(error, 'error');
       });
 
-    setPropertyInterests(data.LISTINGS);
     setLoadingPropertyInterests(false);
   };
 
@@ -282,12 +285,15 @@ export default function LookingFor({ contactId, category }) {
                       </div>
                       <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
                         <p className={`text-sm text-orange-800`}>
-                          To receive more precise property recommendations tailored to your client's preferences, kindly
-                          specify the property interests.
+                          {category === 'Landlord' || category === 'Seller'
+                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
+                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
                         </p>
                         <Button
                           className="p-0"
-                          label="Add Interests"
+                          label={
+                            category === 'Landlord' || category === 'Seller' ? 'Add Property Details' : 'Add Interests'
+                          }
                           leftIcon={<PlusIcon />}
                           primary
                           onClick={() => setShowAddPopup(true)}
