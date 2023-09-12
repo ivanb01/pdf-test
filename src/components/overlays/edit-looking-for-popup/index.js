@@ -16,14 +16,34 @@ import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
 
-const EditLookingFor = ({ title, handleClose, className, data }) => {
+const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const LookingPropertySchema = Yup.object().shape({
-    neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    bathrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    budget_min: Yup.number().min(0, 'Budget Min should be greater than 0').typeError('Budget Min should be an integer'),
+    neighborhood_ids: Yup.array()
+      .required('Neighborhood IDs are required')
+      .min(1, 'Please select at least one neighborhood'),
+    bedrooms: Yup.number()
+      .integer('Must be integer')
+      .min(0, 'Minimum value is 0')
+      .transform((value, originalValue) =>
+        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
+      )
+      .notRequired(),
+    bathrooms: Yup.number()
+      .integer('Must be integer')
+      .min(0, 'Minimum value is 0')
+      .transform((value, originalValue) =>
+        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
+      )
+      .notRequired(),
+    budget_min: Yup.number()
+      .min(0, 'Budget Min should be greater than 0')
+      .typeError('Budget Min should be an integer')
+      .transform((value, originalValue) =>
+        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
+      )
+      .notRequired(),
     budget_max: Yup.number()
       .typeError('Budget Max should be an integer')
       .when('budget_min', (budget_min, schema) => {
@@ -31,38 +51,42 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
           return;
         } else {
           return schema
-            .required('Field can not be left blank.')
             .typeError('Budget Max should be an integer')
-            .moreThan(budget_min, 'Budget Max be greater than Budget Min');
+            .moreThan(budget_min, 'Budget Max should be greater than Budget Min');
         }
-      }),
+      })
+      .transform((value, originalValue) =>
+        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
+      )
+      .notRequired(),
   });
 
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
-      neighborhood_ids: data.neighborhood_ids,
-      looking_action: 'sell',
-      bedrooms: data.bedrooms_max ? data.bedrooms_max : null,
-      bathrooms: data.bathrooms_max ? data.bathrooms_max : null,
-      budget_min: data.budget_min ? data.budget_min : null,
-      budget_max: data.budget_max ? data.budget_max : null,
+      neighborhood_ids: data?.neighborhood_ids ? data.neighborhood_ids : '',
+      looking_action: action,
+      bedrooms: data?.bedrooms_max ? data.bedrooms_max : '',
+      bathrooms: data?.bathrooms_max ? data.bathrooms_max : '',
+      budget_min: data?.budget_min ? data.budget_min : '',
+      budget_max: data?.budget_max ? data.budget_max : '',
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
-      setFieldValue('budget_min', parseFloat(values.budget_min));
-      setFieldValue('budget_max', parseFloat(values.budget_max));
+      console.log(values.budget_min ? parseFloat(values.budget_min) : null);
+      setFieldValue('budget_min', values.budget_min ? parseFloat(values.budget_min) : null);
+      setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
       if (formik.isValid) {
         handleAddSubmit({
-          neighborhood_ids: values.neighborhood_ids,
-          looking_action: values.looking_action,
-          bedrooms_min: values.bedrooms,
-          bedrooms_max: values.bedrooms,
-          bathrooms_min: values.bathrooms,
-          bathrooms_max: values.bathrooms,
-          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
-          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
+          neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
+          looking_action: values.looking_action ? values.looking_action : null,
+          bedrooms_min: values.bedrooms ? values.bedrooms : null,
+          bedrooms_max: values.bedrooms ? values.bedrooms : null,
+          bathrooms_min: values.bathrooms ? values.bathrooms : null,
+          bathrooms_max: values.bathrooms ? values.bathrooms : null,
+          budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
         });
       }
     },
@@ -170,4 +194,4 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
   );
 };
 
-export default EditLookingFor;
+export default EditLookingForPopup;
