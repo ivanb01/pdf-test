@@ -48,7 +48,6 @@ export default function Notes({ contactId }) {
     description: Yup.string().required('Description required'),
   });
 
-  //* FORMIK *//
   const formik = useFormik({
     initialValues: {
       // title: '',
