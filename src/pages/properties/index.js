@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import Button from '@components/shared/button';
+import { valueOptions } from '@global/functions';
 
 const index = () => {
   const [properties, setProperties] = useState([]);
@@ -213,6 +214,7 @@ const index = () => {
               let choices = choice.map((el) => el.value);
               setNeighborhoods(choices);
             }}
+            value={valueOptions(neighborhoods, NYCneighborhoods)}
           />
           <Dropdown
             options={forOptions}
@@ -221,14 +223,14 @@ const index = () => {
             handleSelect={(choice) => {
               setStatus(choice);
             }}
-            value={status}
+            initialSelect={status?.label}
           />
           {/* <Dropdown
             options={NYCneighborhoods}
             className="mr-4"
             placeHolder="type: Choose"
             handleSelect={(choice) => {
-              let choices = choice.map((el) => el.value);
+              let choices = choice.map((el) => el.initialSelect);
               setNeighborhoods(choices);
             }}
           /> */}
@@ -239,7 +241,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
-            value={bedrooms}
+            initialSelect={bedrooms?.label}
           />
           <Dropdown
             options={bathroomOptions}
@@ -248,7 +250,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
-            value={bathrooms}
+            initialSelect={bathrooms?.label}
           />
           <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
             Clear Filters
