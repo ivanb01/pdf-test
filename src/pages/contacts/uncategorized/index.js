@@ -11,11 +11,14 @@ import { getStatuses } from 'api/categorize';
 import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
+import { useRef } from 'react';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 
 const index = () => {
+  const hasRun = useRef(false);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -28,9 +31,9 @@ const index = () => {
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
   const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
   const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
-    console.log(contact, event.target.checked);
     let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
     if (event.target.checked) {
       row.classList.add('bg-lightBlue1');
@@ -58,7 +61,6 @@ const index = () => {
   };
 
   const handleFetchUncategorized = () => {
-    console.log(allContacts);
     let uncategorized = {
       ...allContacts,
       data: allContacts?.data?.filter((contact) => contact.category_id == 1),
@@ -73,7 +75,7 @@ const index = () => {
     let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
     setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(2));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
@@ -83,11 +85,15 @@ const index = () => {
       setCategorizing(true);
     }
   }, [router.query.categorize]);
+
   useEffect(() => {
-    if (allContacts.data) {
+    if (!hasRun.current && allContacts.data) {
+      console.log('test');
       handleFetchUncategorized();
+      hasRun.current = true;
     }
-  }, [allContacts]);
+  }, [allContacts.data]);
+
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
   //     (element) => element.category_id == openedSubtab + 1
@@ -108,6 +114,9 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+            }
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}

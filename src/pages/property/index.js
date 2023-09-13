@@ -11,23 +11,40 @@ import rooms from '/public/images/property/rooms.svg';
 import beds from '/public/images/property/beds.svg';
 import bathrooms from '/public/images/property/bathrooms.svg';
 import balcony from '/public/images/property/balcony.svg';
-import ac from '/public/images/property/ac.svg';
-import backyard from '/public/images/property/backyard.svg';
-import tv from '/public/images/property/tv.svg';
-import smoke from '/public/images/property/smoke.svg';
-import pets from '/public/images/property/pets.svg';
-import fridge from '/public/images/property/fridge.svg';
-import propertyLocation from '/public/images/property/location.png';
+import fireplace from '/public/images/property/fireplace.svg';
+import childrenPlayroom from '/public/images/property/childrenPlayroom.svg';
+import furnished from '/public/images/property/funished.svg';
+import healthClub from '/public/images/property/healthClub.svg';
+import wifi from '/public/images/property/wifi.svg';
+import nursey from '/public/images/property/nursey.svg';
+import concierge from '/public/images/property/concierge.svg';
+import garage from '/public/images/property/garage.svg';
+import laundry from '/public/images/property/laundry.svg';
+import pool from '/public/images/property/pool.svg';
+import lounge from '/public/images/property/lounge.svg';
+import bicycleRoom from '/public/images/property/bicycleroom.svg';
+import doorman from '/public/images/property/doorman.svg';
+import garden from '/public/images/property/garden.svg';
+import microwave from '/public/images/property/microwave.svg';
+import storage from '/public/images/property/storage.svg';
+import elevator from '/public/images/property/elevator.svg';
 import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useRef, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { formatPrice } from '@global/functions';
+import fetchJsonp from 'fetch-jsonp';
+import Loader from '@components/shared/loader';
 
 const index = () => {
+  const router = useRouter();
+  const id = router.query.id;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
+  const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
@@ -257,7 +274,7 @@ const index = () => {
 
   const [hideLeftArrow, setHideLeftArrow] = useState(false);
 
-  const [propertyDetails, setPropertyDetails] = useState([
+  const propertyDetails = [
     {
       id: 0,
       name: 'Rooms',
@@ -276,52 +293,74 @@ const index = () => {
       value: data.BATHROOMS,
       icon: bathrooms,
     },
-    // {
-    //   id: 3,
-    //   name: 'Balcony',
-    //   value: data.,
-    //   icon: balcony,
-    // },
-  ]);
-  const [propertyAmenities, setPropertyAmenities] = useState([
+  ];
+
+  const propertyAmenities = [
     {
-      id: 0,
-      name: 'TV',
-      value: true,
-      icon: tv,
+      name: 'Firebase',
+      icon: fireplace,
     },
     {
-      id: 1,
-      name: 'Air Conditioning',
-      value: true,
-      icon: ac,
+      name: 'Children Playroom',
+      icon: childrenPlayroom,
     },
     {
-      id: 2,
-      name: 'Pets',
-      value: true,
-      icon: pets,
+      name: 'Furnished',
+      icon: furnished,
     },
     {
-      id: 3,
-      name: 'Refrigerator',
-      value: true,
-      icon: fridge,
+      name: 'Health Club',
+      icon: healthClub,
     },
     {
-      id: 4,
-      name: 'Back Yard',
-      value: true,
-      icon: backyard,
+      name: 'Nursery',
+      icon: nursey,
     },
     {
-      id: 5,
-      name: 'Smoke Alarm',
-      value: true,
-      icon: smoke,
+      name: 'WiFi',
+      icon: wifi,
     },
-  ]);
-  const [otherDetails, setOtherDetails] = useState([
+    {
+      name: 'Balcony',
+      icon: balcony,
+    },
+    {
+      name: 'Concierge',
+      icon: concierge,
+    },
+    { name: 'Garage', icon: garage },
+    {
+      name: 'Laundry',
+      icon: laundry,
+    },
+    {
+      name: 'Pool',
+      icon: pool,
+    },
+    {
+      name: 'Lounge',
+      icon: lounge,
+    },
+    {
+      name: 'Bicycle Room',
+      icon: bicycleRoom,
+    },
+    {
+      name: 'Doorman',
+      icon: doorman,
+    },
+    {
+      name: 'Garden',
+      icon: garden,
+    },
+    {
+      name: 'Microwave',
+      icon: microwave,
+    },
+    { name: 'Storage', icon: storage },
+    { name: 'Elevator', icon: elevator },
+  ];
+  const otherDetails = [
     {
       id: 0,
       name: 'Available Date',
@@ -372,7 +411,7 @@ const index = () => {
       name: 'Year Built',
       value: '1920',
     },
-  ]);
+  ];
 
   const scrollRight = () => {
     document.querySelector('.simplebar-content-wrapper').scrollLeft +=
@@ -386,20 +425,86 @@ const index = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
-  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), []);
+  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), [data.LATITUDE, data.LONGITUDE]);
 
   const scrollToMap = () => {
     var element = document.querySelector('#map-section');
     element.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const formatPrice = (price) => {
-    return price.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
+  useEffect(() => {
+    const fetchProperty = async () => {
+      let params = {
+        apikey: '4d7139716e6b4a72',
+        callback: 'callback',
+        id: id,
+      };
+      const urlParams = new URLSearchParams({
+        ...params,
+      });
+      const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+
+      await fetchJsonp(url)
+        .then((res) => res.json())
+        .then((data) => {
+          setData(data.LISTINGS[0]);
+          setLoading(false);
+        });
+    };
+    if (id) {
+      fetchProperty();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log(data, 'Datatttt');
+  }, [data]);
+  const differentiateAmenities = (amenities) => {
+    const mainAmenities = [
+      'Fireplace',
+      'Children Playroom',
+      'Furnished',
+      'Health Club',
+      'Nursery',
+      'WiFi',
+      'Balcony',
+      'Concierge',
+      'Garage',
+      'Laundry',
+      'Pool',
+      'Lounge',
+      'Bicycle Room',
+      'Doorman',
+      'Garden',
+      'Microwave',
+      'Storage',
+      'Elevator',
+    ];
+
+    const allAmenities = amenities.split(',').map((item) => item.trim().toLowerCase());
+
+    const mainAmenitiesPerProperty = mainAmenities.filter((mainAmenity) =>
+      allAmenities.some((amenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
+    );
+
+    const remainingAmenities = allAmenities.filter(
+      (amenity) =>
+        !mainAmenitiesPerProperty.some((mainAmenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
+    );
+
+    const capitalizeFirstLetterOfEachWord = (str) =>
+      str.toLowerCase().replace(/(^|\s)\S/g, (match) => match.toUpperCase());
+
+    const capitalizedRemainingAmenities = remainingAmenities.map(capitalizeFirstLetterOfEachWord);
+
+    return { mainAmenitiesPerProperty, capitalizedRemainingAmenities };
   };
-  return (
+
+  return loading ? (
+    <div className="h-full w-full relative">
+      <Loader />
+    </div>
+  ) : (
     <>
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
@@ -407,41 +512,27 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         <div
           onClick={scrollRight}
-          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
-        >
+          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
           <ArrowForward className="text-white md:text-2xl text-sm" />
         </div>
         {!hideLeftArrow && (
           <div
             onClick={scrollLeft}
-            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full"
-          >
+            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
             <ArrowBack className="text-white md:text-2xl text-sm" />
           </div>
         )}
         {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full pr-3">
-            <img
-              src={data.PHOTOS[0].PHOTO_URL}
-              // style={{ backgroundImage: `url("${pictures[0]}")` }}
-              className="object-cover w-full h-full object-center"
-            />
+            <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
           </div>
         ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
-              <img
-                src={data.PHOTOS[0].PHOTO_URL}
-                // style={{ backgroundImage: `url("${pictures[0]}")` }}
-                className="object-cover w-full h-full object-center"
-              />
+              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
             </div>
             <div className="md:w-1/2 w-full h-full">
-              <img
-                src={data.PHOTOS[1].PHOTO_URL}
-                // style={{ backgroundImage: `url("${pictures[0]}")` }}
-                className="object-cover w-full h-full object-center"
-              />
+              <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full h-full object-center" />
             </div>
           </>
         ) : (
@@ -461,23 +552,6 @@ const index = () => {
             </SimpleBar>
           </>
         )}
-        {/* <div className="w-1/2 h-full pr-3 left-image">
-          <Image
-            src={pictures[0]}
-            // style={{ backgroundImage: `url("${pictures[0]}")` }}
-            className="next-image h-full w-full bg-cover bg-no-repeat"
-          />
-        </div>
-        <div className="w-1/2 grid grid-cols-2 grid-rows-2 gap-3">
-          {pictures.slice(1).map((picture, index) => (
-            <Image
-              key={index}
-              src={picture}
-              // style={{ backgroundImage: `url("${picture}")` }}
-              className="h-full bg-cover bg-no-repeat"
-            />
-          ))}
-        </div> */}
       </div>
       <div className="properties-container">
         <div className="flex md:flex-row flex-col justify-between border-gray2 border-b md:pb-0 pb-[20px]">
@@ -494,14 +568,13 @@ const index = () => {
               <Image src={location} alt="" />
               <div
                 className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
-                onClick={() => scrollToMap()}
-              >
+                onClick={() => scrollToMap()}>
                 {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
               </div>
             </div>
           </div>
           <div>
-            <div className="md:flex hidden mt-0 clip-path min-w-[205px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+            <div className="md:flex hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
               {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>
@@ -528,22 +601,44 @@ const index = () => {
                   ),
               )}
             </div>
-            <div className="mt-6">{data.DESCRIPTION}</div>
+            <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
           </div>
-          <div className="mt-10">
-            <div className="text-gray7 text-xl mb-6 font-medium">Property Amenities</div>
-            <div className="flex flex-wrap">
-              {propertyAmenities.map(
-                (amenity, index) =>
-                  amenity.value && (
-                    <div className="flex w-1/2 md:w-1/3 mb-4 px-2" key={index}>
-                      <Image src={amenity.icon} />
-                      <span className="ml-2">{amenity.name}</span>
-                    </div>
-                  ),
-              )}
-            </div>
-          </div>
+          {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 ||
+            (differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 && (
+              <div className="mt-10">
+                <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
+                <div className={'w-[700px]'}>
+                  <div className="grid grid-cols-3 gap-6 items-center  mb-4">
+                    {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
+                      differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
+                        const matchedAmenity = propertyAmenities.find(
+                          (item) => item.name.toLowerCase() === amenity.toLowerCase(),
+                        );
+                        return (
+                          <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
+                            {matchedAmenity && <Image src={matchedAmenity.icon} />}
+                            {matchedAmenity && <span className="ml-2">{matchedAmenity.name}</span>}
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <div className={'flex flex-wrap'} style={{ gap: '5px' }}>
+                    {differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 &&
+                      differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.map(
+                        (remaining, index) =>
+                          remaining.length > 0 && (
+                            <div
+                              key={index}
+                              style={{ borderRadius: '20px' }}
+                              className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
+                              <p className={'text-sm leading-4 font-medium py-2 px-1.5 text-gray-6'}> {remaining}</p>
+                            </div>
+                          ),
+                      )}
+                  </div>
+                </div>
+              </div>
+            ))}
           <div className="mt-10">
             <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
             <div className="flex flex-wrap">
@@ -580,5 +675,4 @@ const index = () => {
     </>
   );
 };
-
 export default index;

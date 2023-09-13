@@ -137,6 +137,13 @@ export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };
 
+export const formatPrice = (price) => {
+  return price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+};
+
 export const isValidDate = (date) => {
   return moment(date).isValid();
 };
@@ -294,4 +301,18 @@ export const getEmailParts = (email) => {
 
 export const findProfessionalSubtype = (id) => {
   return professionalsStatuses[0].statuses.find((status) => status.id == id).name;
+};
+
+export const valueOptions = (selectedOptions, multiselectOptions) => {
+  if (!selectedOptions) {
+    return null;
+  }
+  const options = selectedOptions.map((el) => {
+    return multiselectOptions.find((option) => option.value === el);
+  });
+  return options;
+};
+
+export const getBaseUrl = () => {
+  return window.location.origin;
 };

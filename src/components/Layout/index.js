@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setInitializeTabs } from 'store/global/slice';
 import Group from '@mui/icons-material/Group';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import Error from '@mui/icons-material/Error';
@@ -50,6 +50,8 @@ const Layout = ({ children }) => {
       label: 'Clients in the Funnel',
       href: 'clients',
       icon: <Group className="h-5 w-5" />,
+      count: 0,
+      count_key: 'clients_total',
       subtab: [
         {
           id: 0,
@@ -87,25 +89,24 @@ const Layout = ({ children }) => {
       label: 'Professionals',
       href: 'professionals',
       icon: <PermContactCalendar className="h-5 w-5" />,
+      count: 0,
+      count_key: 'professionals_total',
       subtab: [
         {
           id: 0,
           name: 'Vendor',
-          dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
           count_key: 'professionals_vendor',
         },
         {
           id: 1,
           name: 'Agent',
-          dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
           count_key: 'professional_agent',
         },
         {
           id: 2,
           name: 'Unspecified',
-          dot: <span className="h-2 w-2 rounded-full bg-gray3" />,
           count: 0,
           count_key: 'professional_unspecified',
         },
@@ -116,19 +117,19 @@ const Layout = ({ children }) => {
       name: 'Other',
       label: 'Other Contacts',
       href: 'other',
+      count: 0,
+      count_key: 'other_total',
       icon: <ContactPage className="h-5 w-5" />,
       subtab: [
         {
           id: 0,
           name: 'Family & Friends',
-          icon: <Diversity3 className="h-4 w-4" />,
           count: 0,
           count_key: 'other_family_friends',
         },
         {
           id: 1,
           name: 'Unknown',
-          icon: <Help className="h-4 w-4" />,
           count: 0,
           count_key: 'uncategorized_unknown',
         },
@@ -151,12 +152,13 @@ const Layout = ({ children }) => {
       name: 'Uncategorized',
       label: 'Uncategorized Contacts',
       href: 'uncategorized',
+      count: 0,
+      count_key: 'uncategorized_new_records',
       icon: <Error className="h-5 w-5" />,
       subtab: [
         {
           id: 0,
           name: 'New Records',
-          icon: <Group className="h-4 w-4" />,
           count: 0,
           count_key: 'uncategorized_new_records',
         },
@@ -179,21 +181,27 @@ const Layout = ({ children }) => {
       name: 'Trash',
       label: 'Trash',
       href: 'trash',
-      icon: <DeleteIcon className={'w-4 h-4'} />,
+      count: 0,
+      count_key: 'trash',
+      icon: <DeleteIcon className={'w-5 h-5'} />,
     },
   ]);
+  const { tabs: storeTabs } = useSelector((state) => state.global);
+  useLayoutEffect(() => {
+    if (storeTabs.length === 0) {
+      dispatch(setInitializeTabs(tabs.length));
+    }
+  }, [storeTabs]);
 
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
 
-  const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
-  const [showImportingOverlay, setShowImportingOverlay] = useState(false);
-
   const handleOpenedTab = (tab) => {
     dispatch(setOpenedTab(tab));
-    dispatch(setOpenedSubtab(0));
+    // dispatch(setOpenedSubtab(0));
   };
   const handleOpenedSubtab = (subtab) => {
     dispatch(setOpenedSubtab(subtab));
@@ -248,7 +256,6 @@ const Layout = ({ children }) => {
             <div className="h-auto border-r border-gray2 main-menu-wrapper bg-white">
               <MainSidebar
                 collapsable
-                // importContacts={importContacts}
                 className=""
                 tabs={tabs}
                 openedTab={openedTab}
@@ -257,7 +264,7 @@ const Layout = ({ children }) => {
                 setOpenedSubtab={(tab) => handleOpenedSubtab(tab)}
               />
             </div>
-            <div className="border-t border-gray2 flex h-auto min-h-full w-full">
+            <div className=" flex h-auto min-h-full w-full">
               <div className="w-full relative">{children}</div>
             </div>
           </div>

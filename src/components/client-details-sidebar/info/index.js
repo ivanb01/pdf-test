@@ -136,7 +136,7 @@ export default function Info({ client }) {
               noOptionChange={isContactInCampaign}
             />
           )}
-          <InfoCard label="Import Source" content={client.import_source} />
+          <InfoCard label="Import Source" content={client.import_source} client={client} />
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
@@ -166,16 +166,16 @@ export default function Info({ client }) {
             addChip={addTag}
           /> */}
           <TagsInput
-            label="Tags"
+            label="Priority"
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
             value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));
             }}
           />
-
           <Dropdown
             label="Lead Source"
+            openClassName={'pb-64'}
             activeIcon={false}
             options={leadSourceOptions}
             className="my-3"

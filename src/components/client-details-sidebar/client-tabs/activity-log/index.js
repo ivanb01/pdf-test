@@ -8,7 +8,7 @@ import Button from 'components/shared/button';
 import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
-import noActivitLog from '/public/images/no_activitylog.svg';
+import noActivityLog from '/public/images/no_activitylog.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
@@ -32,6 +32,7 @@ export default function ActivityLog({ contactId, source }) {
   const refetchData = useSelector((state) => state.global.refetchData);
 
   const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
+  const [activityLogLocal, setActivityLogLocal] = useState(activityLogData);
 
   const fetchAiPreview = async (id) => {
     try {
@@ -44,7 +45,7 @@ export default function ActivityLog({ contactId, source }) {
     }
   };
   useEffect(() => {
-    fetchAiPreview(contactId);
+    if (source == 'GmailAI') fetchAiPreview(contactId);
   }, []);
 
   useEffect(() => {
@@ -54,6 +55,10 @@ export default function ActivityLog({ contactId, source }) {
       document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
     }
   }, [toggleAddActivity]);
+
+  useEffect(() => {
+    setActivityLogLocal(activityLogData);
+  }, [activityLogData]);
 
   return (
     <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
@@ -74,6 +79,7 @@ export default function ActivityLog({ contactId, source }) {
           {toggleAddActivity && (
             <AddActivity
               clientId={contactId}
+              setActivities={setActivityLogLocal}
               className="min-w-[550px]"
               title={`Add Activity`}
               setAddActivityPopup={setToggleAddActivity}
@@ -83,11 +89,11 @@ export default function ActivityLog({ contactId, source }) {
           <div className="mx-6">
             <hr />
           </div>
-          {activityLogData &&
-            (activityLogData?.length == 0 ? (
+          {activityLogLocal &&
+            (activityLogLocal.length == 0 ? (
               <div className="flow-root bg-white h-auto py-8">
                 <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
-                  <Image height={40} src={noActivitLog}></Image>
+                  <Image height={40} src={noActivityLog}></Image>
                   <Text h3 className="text-gray7 mb-2 mt-4 text-center text-sm">
                     There is no activity logged for this contact
                   </Text>
@@ -97,11 +103,7 @@ export default function ActivityLog({ contactId, source }) {
                 </div>
               </div>
             ) : (
-              <Feeds
-                contactId={contactId}
-                // activities={activities}
-                // setActivities={setActivities}
-              />
+              <Feeds contactId={contactId} activities={activityLogLocal} setActivities={setActivityLogLocal} />
             ))}
         </div>
 

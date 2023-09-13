@@ -22,7 +22,7 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateContacts } from 'store/contacts/slice';
+import { setClients } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 
@@ -48,8 +48,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
+  const clients = useSelector((state) => state.contacts.clients);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleViewChange = (viewId) => {
     setCurrentButton(viewId);
@@ -83,7 +83,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
       value: 'is_in_campaign',
     },
     {
-      title: 'TAGS',
+      title: 'PRIORITY',
       content: multiselectOptionsClients.map((option) => option.label),
       value: 'tags',
     },
@@ -93,31 +93,20 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     'Not In Campaign': null,
   };
 
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     onSearch(searchTerm);
-  //     // Send Axios request here
-  //   }, 2000);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchTerm]);
-
   useEffect(() => {
-    if (contacts.length === contactsOriginalLength) {
-      setContactsOriginal([...contacts]);
+    if (contacts.length) {
+      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(updateContacts(contactsOriginal));
+      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
       setFiltersCleared(false);
       return;
     }
-
-    let contactsState = contactsOriginal;
+    let contactsState = contacts.filter((contact) => contact.category_1 == 'Client');
     Object.keys(filters).map((key) => {
-      console.log('key', key, filters);
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
@@ -142,7 +131,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
       }
     });
 
-    dispatch(updateContacts(contactsState));
+    dispatch(setClients(contactsState));
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -188,9 +177,20 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     }
   };
 
+  const getFilterCount = () => {
+    return clients.filter(
+      (contact) =>
+        contact.category_1 == 'Client' &&
+        contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
+    ).length;
+  };
+
   useEffect(() => {
     filterContacts();
   }, [filters]);
+  useEffect(() => {
+    setSearchTerm('');
+  }, [openedSubtab]);
 
   return (
     <>
@@ -208,7 +208,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               {/* {openedTab} - {openedSubtab} */}
             </Text>
             <div className="flex items-center justify-self-end">
-              <Search placeholder="Search" className="mr-4 text-sm" onInput={(event) => onSearch(event.target.value)} />
+              <Search
+                placeholder="Search"
+                className="mr-4 text-sm"
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+              />
               <Button
                 secondary
                 leftIcon={<FilterList className="w-5 h-5" />}
@@ -239,13 +244,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {
-                    contacts.filter(
-                      (contact) =>
-                        contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
-                    ).length
-                  }
-                  {contacts.length == 1 ? ' result' : ' results'} for:
+                  {getFilterCount()}
+                  {getFilterCount() ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
@@ -254,7 +254,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      label={filter}
                       className="mr-1"
                     />
                   )),
@@ -265,8 +265,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -282,11 +281,16 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               maxWidth: '100%',
               height: '100%',
               background: '#f9fafb',
-            }}
-          >
+            }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <Column key={index} status={status} categoryType="clients" handleCardEdit={handleCardEdit} />
+                <Column
+                  key={index}
+                  status={status}
+                  categoryType="clients"
+                  handleCardEdit={handleCardEdit}
+                  searchTerm={searchTerm}
+                />
               ))}
             </div>
           </SimpleBar>
@@ -294,7 +298,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 170px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table tableFor="contactsList" categoryType="clients" handleCardEdit={handleCardEdit} />
+                <Table
+                  tableFor="contactsList"
+                  categoryType="clients"
+                  handleCardEdit={handleCardEdit}
+                  searchTerm={searchTerm}
+                />
               </SimpleBar>
             </div>
           </div>
@@ -326,8 +335,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               }
             /> */}
           </>
-        }
-      >
+        }>
         <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
       </SlideOver>
     </>

@@ -6,8 +6,11 @@ import MainMenu from 'components/shared/menu';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback } from 'api/google';
+import { setAllContacts } from '@store/contacts/slice';
+import { useDispatch } from 'react-redux';
 
 const NoContactPage = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
@@ -63,7 +66,7 @@ const NoContactPage = () => {
 
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      const { data } = await getGoogleAuthCallback(queryParams);
+      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/no-contact');
       console.log('google auth callback', data);
       if (!data.error) {
         setEmptyModal(false);
@@ -134,11 +137,7 @@ const NoContactPage = () => {
   return (
     <>
       <MainMenu />
-      {googleContactResponse?.db_insertion === 'Successful' ||
-      (googleContactResponse?.db_insertion === 'Not needed' &&
-        (googleContactResponse?.importable_new_contacts_count > 0 ||
-          googleContactResponse?.invalid_contacts_count > 0 ||
-          googleContactResponse?.existing_contacts.length > 0)) ? (
+      {googleContactResponse?.importable_new_contacts_count > 0 || googleContactResponse?.invalid_contacts_count > 0 ? (
         <div className="w-full flex items-center justify-center">
           <div className="border-t border-gray2 flex  w-full">
             <div className="w-full relative">
@@ -148,7 +147,7 @@ const NoContactPage = () => {
         </div>
       ) : (
         <>
-          <div className="layout-fixed-height w-full flex items-center justify-center pt-[68px] overflow-y-scroll">
+          <div className="layout-fixed-height w-full flex items-center justify-center overflow-y-scroll">
             <SetupGmail
               error={errorImporting}
               setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}

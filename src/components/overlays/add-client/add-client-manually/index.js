@@ -82,6 +82,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       email: '',
       phone_number: '',
       lead_source: '',
+      import_source: 'Manually Added',
       tags: [],
     },
     validationSchema: AddContactSchema,
@@ -199,8 +200,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       title={title}
       submit={submitForm2}
       isSubmittingNextButton={isSubmitting1}
-      isSubmittingButton={isSubmitting2}
-    >
+      isSubmittingButton={isSubmitting2}>
       <div className="step">
         {currentStep == 1 ? (
           <div>
@@ -270,7 +270,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   />
                   <TagsInput
                     typeOfContact={openedTab}
-                    label="Tags"
+                    label="Priority"
                     onChange={(choice) => {
                       formik.setFieldValue(
                         'tags',

@@ -2,6 +2,7 @@
 
 export default function Alert({ type, className, children, ...props }) {
   let localClassName = '';
+  if (type === 'orange') localClassName = 'bg-orange-50 border-l-4 border-orange-600';
   if (type === 'warning') localClassName = 'bg-yellow1 border-l-4 border-yellow2';
   if (type === 'success') localClassName = 'bg-green1 border-l-4 border-green5';
   if (type === 'error') localClassName = 'bg-red1 border-l-4 border-red4';

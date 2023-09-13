@@ -10,6 +10,8 @@ import DeleteClientOverlay from 'components/overlays/delete-client';
 import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
 import { useRouter } from 'next/router';
+import ReviewContact from '@components/overlays/review-contact';
+import TooltipComponent from '@components/shared/tooltip';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -67,14 +69,15 @@ export default function ClientCard({ client }) {
                   : 'No phone number'}
               </div>
               {phoneNumberFormat(client?.phone_number) === 'N/A' && (
-                <div className="group relative cursor-pointer">
-                  <ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />
-
-                  <div className="group-hover:opacity-100 opacity-0 w-[270px] pointer-events-none left-6 -top-5 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                <TooltipComponent
+                  side={'right'}
+                  align={'center'}
+                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}>
+                  <div style={{ width: '238px' }} className=" pointer-events-none  text-xs font-medium text-white ">
                     <p className="mb-2 font-semibold">Please add a phone number!</p>
                     <p>Without a phone number the SMS events in campaign cannot run.</p>
                   </div>
-                </div>
+                </TooltipComponent>
               )}
             </div>
           </span>
@@ -89,12 +92,7 @@ export default function ClientCard({ client }) {
 
       {deletingContact && <DeleteClientOverlay handleCloseOverlay={() => setDeletingContact(false)} contact={client} />}
       {editingContact && (
-        <EditClientOverlay
-          handleClose={() => setEditingContact(false)}
-          title="Edit Contact"
-          className="w-[635px]"
-          client={client}
-        />
+        <ReviewContact handleClose={() => setEditingContact(false)} client={client} title="Edit Contact" />
       )}
     </>
   );

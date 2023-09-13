@@ -9,20 +9,16 @@ import {
   getInitials,
   getDateFormat,
 } from 'global/functions';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
 import { useState } from 'react';
 import EventStatus from 'components/event-status';
-import { InformationCircleIcon } from '@heroicons/react/solid';
 import Text from '../text';
-import Button from '../button';
 import Error from '@mui/icons-material/Error';
-import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import ContactInfo from './contact-info';
 import { useSelector } from 'react-redux';
 import Launch from '@mui/icons-material/Launch';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { Menu, Transition } from '@headlessui/react';
 import {
   clientStatuses,
   allStatusesQuickEdit,
@@ -66,6 +62,9 @@ import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
+import { setRefetchCount } from '@store/global/slice';
+import TooltipComponent from '../tooltip';
+import { healthLastCommunicationDate } from 'global/variables';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -142,7 +141,7 @@ const Table = ({
               scope="col"
               className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
               {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
-              Clients
+              Contacts
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Campaign
@@ -397,7 +396,7 @@ const Table = ({
                       {dataItem.import_source == 'GmailAI' && (
                         <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
                       )}{' '}
-                      {dataItem.import_source ? dataItem.import_source : '-'}
+                      {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
                     </div>
                   </td>
                 </tr>
@@ -492,7 +491,7 @@ const Table = ({
                           {dataItem.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
                           )}{' '}
-                          {dataItem.import_source ? dataItem.import_source : '-'}
+                          {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
                         </div>
                       </td>
                     )}
@@ -512,7 +511,6 @@ const Table = ({
     );
   };
   const showStatus = (dataItem) => {
-    console.log('dataitem', dataItem);
     return dataItem.status_id != null && dataItem.status_id !== 1;
   };
   const categorizedTable = () => {
@@ -578,7 +576,6 @@ const Table = ({
                   />
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
-                      {console.log(dataItem)}
                       {dataItem.category_id != null && (
                         <Chip typeStyle>{getContactTypeByTypeId(dataItem.category_id)}</Chip>
                       )}
@@ -649,19 +646,19 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 NEW RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 UPDATED RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               <div className="flex items-center justify-center">
                 ERROR RECORDS
-                <InformationCircleIcon height={15} className="ml-3" />
+                <InfoSharpIcon height={15} className="ml-3" />
               </div>
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -706,7 +703,7 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.allContacts.data);
+    const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
@@ -731,6 +728,7 @@ const Table = ({
           await changeStatus(status, contact);
           console.log('change status');
         }
+        dispatch(setRefetchData(true));
       } catch (error) {
         console.log(error);
       }
@@ -799,7 +797,7 @@ const Table = ({
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Source
+              Added From
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
@@ -816,6 +814,13 @@ const Table = ({
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
             contacts.filter(
               (contact) =>
+                searchTerm.split(' ').every((word) => {
+                  const lowercaseWord = word.toLowerCase();
+                  return (
+                    contact.first_name.toLowerCase().includes(lowercaseWord) ||
+                    contact.last_name.toLowerCase().includes(lowercaseWord)
+                  );
+                }) &&
                 contact.status_id == category.id &&
                 contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
             ).length ? (
@@ -823,15 +828,49 @@ const Table = ({
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
-                      <Text chipText className="text-gray4">
+                      <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
+                      <TooltipComponent
+                        side={'bottom'}
+                        align={'start'}
+                        triggerElement={
+                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                        }>
+                        <div
+                          // style={{ width: '300px' }}
+                          className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                          <p className="mb-2">{`You must interact with these clients every ${
+                            healthLastCommunicationDate[categoryType][category?.name] === 1
+                              ? 'day'
+                              : `${healthLastCommunicationDate[categoryType][category?.name]} days`
+                          } in order to maintain healthy communication.`}</p>
+                          <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center mr-2">
+                              <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
+                              <span>Healthy Communication</span>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
+                              <span>Unhealthy Communication</span>
+                            </div>
+                          </div>
+                        </div>
+                      </TooltipComponent>
                     </div>
                   </td>
                 </tr>
                 {contacts
                   .filter(
                     (contact) =>
+                      searchTerm.split(' ').every((word) => {
+                        const lowercaseWord = word.toLowerCase();
+                        return (
+                          contact.first_name.toLowerCase().includes(lowercaseWord) ||
+                          contact.last_name.toLowerCase().includes(lowercaseWord)
+                        );
+                      }) &&
                       contact.status_id == category.id &&
                       contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
                   )
@@ -865,7 +904,7 @@ const Table = ({
                           {contact.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={contact.approved_ai} />
                           )}{' '}
-                          {contact.import_source ? contact.import_source : '-'}
+                          {contact.import_source ? contact.import_source : 'Manually Added'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
@@ -978,7 +1017,6 @@ const Table = ({
                             // onClick={(event) => handleDropdown(event, !dropdownOpened)}
                             onClick={(e) => e.stopPropagation()}>
                             {/* <Category className="text-gray3 w-4 h-4" /> */}
-
                             <SimpleBarDropdown
                               options={allStatusesQuickEdit[categoryType]}
                               activeIcon={false}
@@ -1031,7 +1069,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.allContacts.data);
+    const contactsOriginal = useSelector((state) => state.contacts.professionals);
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
@@ -1105,7 +1143,16 @@ const Table = ({
                   </td>
                 </tr>
                 {contacts
-                  .filter((contact) => contact.category_id == type.id)
+                  .filter(
+                    (contact) =>
+                      searchTerm.split(' ').every((word) => {
+                        const lowercaseWord = word.toLowerCase();
+                        return (
+                          contact.first_name.toLowerCase().includes(lowercaseWord) ||
+                          contact.last_name.toLowerCase().includes(lowercaseWord)
+                        );
+                      }) && contact.category_id == type.id,
+                  )
                   .map((contact) => (
                     <tr
                       key={contact.id}
@@ -1135,7 +1182,7 @@ const Table = ({
                           {contact.import_source == 'GmailAI' && (
                             <AIChip className="mr-2" reviewed={contact.approved_ai} />
                           )}{' '}
-                          {contact.import_source ? contact.import_source : '-'}
+                          {contact.import_source ? contact.import_source : 'Manually Added'}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
@@ -1333,9 +1380,7 @@ const Table = ({
                     {tableFor == 'import-google-contacts-failed' && (
                       <div className="flex items-center justify-center">
                         <Error className="h-5 w-5 text-red4 mr-2" />
-                        <div className="text-gray7 font-medium">
-                          {dataItem.reason || 'Contact exists in the system'}
-                        </div>
+                        <div className="text-gray7 font-medium">{dataItem.reason ?? ''}</div>
                       </div>
                     )}
                   </div>
@@ -1580,7 +1625,7 @@ const Table = ({
                     <Delete
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction('delete', dataItem.id);
+                        handleAction('delete', dataItem);
                       }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
@@ -1605,7 +1650,7 @@ const Table = ({
                     <CheckCircle
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction('approve', dataItem.id);
+                        handleAction('approve', dataItem);
                       }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
@@ -1724,14 +1769,12 @@ const Table = ({
                   }
                   className={
                     'h-7 w-7 cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center'
-                  }>
-                  <RedoIcon
-                    className={'text-gray-500 h-4 w-4 ml-0'}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCardEdit(person);
-                    }}
-                  />
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCardEdit(person);
+                  }}>
+                  <RedoIcon className={'text-gray-500 h-4 w-4 ml-0'} />
                   <div
                     style={{ width: '126px' }}
                     id={'tooltip-restore-contact-' + person.id}
@@ -1760,7 +1803,7 @@ const Table = ({
         </svg>
         <h5 className={'text-sm leading-5 font-medium text-gray-900'}>Trash is Empty</h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
-          Contacts that you don’t need to be in communication with are going to be listed here.
+          Contacts that you moved to trash will be listed here
         </p>
       </div>
     );
@@ -1805,12 +1848,3 @@ const Table = ({
 };
 
 export default Table;
-
-//if any table was broken after classname 'h-full' was adden we need to set 'h-full' just for 'contactList' table
-{
-  /* <div className={`${tableFor == 'contactsList' ? 'h-full' : ''}`}>
-<div className={`${tableFor == 'contactsList' ? 'h-full' : ''} flex flex-col`} >
-  <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} overflow-x-auto`} >
-    <div className={`${tableFor == 'contactsList' ? 'h-full' : ''} inline-block min-w-full align-middle`}>
-      <div className={`${tableFor == 'contactsList' ? 'h-full' : 'overflow-hidden'} ring-black ring-opacity-5`}> */
-}

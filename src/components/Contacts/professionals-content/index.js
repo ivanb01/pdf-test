@@ -18,12 +18,14 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateContacts } from 'store/contacts/slice';
+import { setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
+import { clientStatuses } from 'global/variables';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const tabs = [
   {
@@ -51,8 +53,7 @@ const tabs = [
     title: 'CAMPAIGN',
     content: ['In Campaign', 'Not In Campaign'],
     value: 'is_in_campaign',
-  },
-  // {
+  }, // {
   //   title: 'TAGS',
   //   content: multiselectOptionsProfessionals.map((option) => option.label),
   //   value: 'tags',
@@ -75,7 +76,7 @@ const buttons = [
   },
 ];
 
-const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) => {
+const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({});
@@ -85,32 +86,24 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const [contactsOriginal, setContactsOriginal] = useState([...contacts]);
+  const professionals = useSelector((state) => state.contacts.professionals);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
-
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     onSearch(searchTerm);
-  //     // Send Axios request here
-  //   }, 2000);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [searchTerm]);
+  const [searchTerm, setSearchTerm] = useState(' ');
 
   useEffect(() => {
-    if (contacts.length === contactsOriginalLength) {
-      setContactsOriginal([...contacts]);
+    if (contacts.length) {
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
     }
   }, [contacts]);
 
   const filterContacts = () => {
     if (filtersCleared) {
-      dispatch(updateContacts(contactsOriginal));
+      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
       setFiltersCleared(false);
       return;
     }
 
-    let contactsState = contactsOriginal;
+    let contactsState = contacts.filter((contact) => contact.category_1 == 'Professional');
     Object.keys(filters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -136,7 +129,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
       }
     });
 
-    dispatch(updateContacts(contactsState));
+    dispatch(setProfessionals(contactsState));
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -183,20 +176,47 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
     }
   };
 
+  const getFilterCount = () => {
+    if (openedSubtab == 1) {
+      return professionals.filter((contact) => contact.category_id == 12 && contact.category_1 == 'Professional')
+        .length;
+    } else if (openedSubtab == 2) {
+      return professionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional').length;
+    } else {
+      return professionals.filter(
+        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
+      ).length;
+    }
+  };
+
   useEffect(() => {
     filterContacts();
   }, [filters]);
+  useEffect(() => {
+    setSearchTerm('');
+  }, [openedSubtab]);
 
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+        {unapprovedContacts > 0 && (
+          <GlobalAlert
+            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            type="smart-sync"
+          />
+        )}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
               {professionalsStatuses[openedSubtab].statusMainTitle}
             </Text>
             <div className="flex items-center justify-self-end">
-              <Search placeholder="Search" className="mr-4 text-sm" onInput={(event) => onSearch(event.target.value)} />
+              <Search
+                placeholder="Search"
+                className="mr-4 text-sm"
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+              />
               <Button
                 secondary
                 leftIcon={<FilterList className="w-5 h-5" />}
@@ -227,8 +247,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {contacts.length}
-                  {contacts.length == 1 ? ' result' : ' results'} for:
+                  {getFilterCount()}
+                  {getFilterCount() == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(filters).map((key, index) =>
                   filters[key].map((filter, i) => (
@@ -237,7 +257,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
                       key={`${index}${i}`}
                       active
-                      label={filter == 'GmailAI' ? 'AI Smart Synced Contact' : filter}
+                      label={filter}
                       className="mr-1"
                     />
                   )),
@@ -248,8 +268,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
                 onClick={() => {
                   setFiltersCleared(true);
                   setFilters({});
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -282,7 +301,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
         <div className="w-auto relative flex" style={{ height: 'calc(100vh - 159px)' }}>
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-              <Table tableFor="professionals" categoryType="professionals" handleCardEdit={handleCardEdit} />
+              <Table
+                tableFor="professionals"
+                categoryType="professionals"
+                handleCardEdit={handleCardEdit}
+                searchTerm={searchTerm}
+              />
             </SimpleBar>
           </div>
         </div>
@@ -313,8 +337,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit }) =
                 }
               /> */}
           </>
-        }
-      >
+        }>
         <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
       </SlideOver>
     </>

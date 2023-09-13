@@ -23,7 +23,7 @@ export default function Events({ className, events = [], currentEvent, setCurren
       <nav aria-label="Progress">
         <ol role="list" className="overflow-hidden">
           {events.map((event, eventIdx) => (
-            <li key={event.name} className={classNames(eventIdx !== events.length - 1 ? 'pb-10' : '', 'relative')}>
+            <li key={eventIdx} className={classNames(eventIdx !== events.length - 1 ? 'pb-10' : '', 'relative')}>
               <>
                 {eventIdx !== events.length - 1 ? (
                   <div
@@ -38,17 +38,14 @@ export default function Events({ className, events = [], currentEvent, setCurren
                     setCurrentEvent(event.id);
                     eventPreview(event);
                   }}
-                  className="relative flex items-center group"
-                >
+                  className="relative flex items-center group">
                   <div className="h-9 flex items-center">
                     <span
                       className={`relative z-0 w-8 h-8 flex items-center justify-center lightBlue3 rounded-full bg-white border-2
-                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : 'border-gray-300'}`}
-                    >
+                      ${event?.status ? eventStatusesCirclesBorders[event?.status] : 'border-gray-300'}`}>
                       <span
                         className={`h-[18px] w-[18px] flex items-center justify-center text-xs font-medium text-white rounded-full 
-                      ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}
-                      >
+                      ${event?.status ? eventStatusesBgColors[event?.status] : 'bg-gray-300'}`}>
                         {eventIdx + 1}
                       </span>
                     </span>
@@ -56,8 +53,7 @@ export default function Events({ className, events = [], currentEvent, setCurren
                   <div
                     className={`ml-4 flex items-center justify-between w-full py-3 px-3 hover:bg-lightBlue1 cursor-pointer ${
                       currentEvent == event.id && 'bg-lightBlue1'
-                    }`}
-                  >
+                    }`}>
                     <div className="flex flex-col">
                       <span className=" text-xs font-semibold tracking-wide uppercase">
                         {event.event_type}
@@ -83,8 +79,7 @@ export default function Events({ className, events = [], currentEvent, setCurren
                     <ArrowForward
                       className={`w-5 text-lightBlue3 opacity-0 group-hover:opacity-100 ${
                         currentEvent == event.id && 'opacity-100'
-                      }`}
-                    ></ArrowForward>
+                      }`}></ArrowForward>
                   </div>
                 </div>
               </>

@@ -109,10 +109,14 @@ const MyApp = ({ Component, pageProps }) => {
     }
   };
 
+  useEffect(() => {
+    router.pathname == '/property' && document.querySelector('.main-page').classList.add('overflow-y-auto');
+  }, [router]);
+
   return (
     <>
       <div className={`main-app-wrapper`}>
-        <div className={`main-page overflow-y-auto`}>
+        <div className={`main-page`}>
           <Provider store={store}>
             <Component {...pageProps} />
             {domLoaded && (

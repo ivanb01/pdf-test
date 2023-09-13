@@ -16,6 +16,15 @@ const contactsSlice = createSlice({
     setAllContacts(state, action) {
       state.allContacts = action.payload;
     },
+    setClients(state, action) {
+      state.clients = action.payload;
+    },
+    setProfessionals(state, action) {
+      state.professionals = action.payload;
+    },
+    setUncategorized(state, action) {
+      state.uncategorized = action.payload;
+    },
     updateContacts(state, action) {
       state.data.data = action.payload;
     },
@@ -33,5 +42,13 @@ const contactsSlice = createSlice({
   },
 });
 
-export const { setContacts, setAllContacts, updateContacts, updateContactLocally } = contactsSlice.actions;
+export const {
+  setContacts,
+  setAllContacts,
+  setClients,
+  setProfessionals,
+  setUncategorized,
+  updateContacts,
+  updateContactLocally,
+} = contactsSlice.actions;
 export default contactsSlice.reducer;

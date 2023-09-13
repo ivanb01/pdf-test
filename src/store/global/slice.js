@@ -5,8 +5,10 @@ const global = createSlice({
   initialState: {
     openedTab: 0,
     openedSubtab: 0,
+    tabs: [],
     expandedMenu: true,
     count: null,
+    refetchCount: false,
     refetchData: false,
     refetchPart: null,
     userGaveConsent: null,
@@ -21,6 +23,9 @@ const global = createSlice({
   reducers: {
     setCount(state, action) {
       state.count = action.payload;
+    },
+    setRefetchCount(state, action) {
+      state.refetchCount = action.payload;
     },
     setRefetchData(state, action) {
       state.refetchData = action.payload;
@@ -49,11 +54,26 @@ const global = createSlice({
     setUserGaveConsent(state, action) {
       state.userGaveConsent = action.payload;
     },
+    setExpandedTab(state, action) {
+      if (state.tabs.length == 0) {
+        return;
+      }
+      const getObjectById = (id) => {
+        return state.tabs.length > 0 && state.tabs.find((item) => item.id === id);
+      };
+      const tabToChange = getObjectById(action.payload.id);
+      tabToChange.opened = action.payload.opened;
+    },
+    setInitializeTabs(state, action) {
+      const createArrayOfObjects = (length) => Array.from({ length }, (_, id) => ({ id, opened: false }));
+      state.tabs = createArrayOfObjects(action.payload);
+    },
   },
 });
 
 export const {
   setCount,
+  setRefetchCount,
   setRefetchData,
   setRefetchPart,
   setOpenedTab,
@@ -63,5 +83,7 @@ export const {
   setSkippedEmptyState,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setExpandedTab,
+  setInitializeTabs,
 } = global.actions;
 export default global.reducer;

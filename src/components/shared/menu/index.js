@@ -15,9 +15,10 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setRefetchData } from '@store/global/slice';
+import { setCount, setOpenedTab, setRefetchCount, setRefetchData, setUserGaveConsent } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
+import { getUserConsentStatus } from '@api/google';
 
 const MainMenu = ({
   menuItems = [
@@ -29,18 +30,25 @@ const MainMenu = ({
     {
       id: 1,
       name: 'Campaigns',
-      url: '/campaigns',
+      url: '/campaigns/client-campaigns',
     },
     {
       id: 2,
       name: 'Reports',
       url: '/reports',
     },
+    {
+      id: 3,
+      name: 'Marketing',
+      url: '/marketing',
+    },
   ],
   className,
   fixed,
 }) => {
   const router = useRouter();
+  const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
+  const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
   const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
@@ -56,23 +64,36 @@ const MainMenu = ({
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
-  useEffect(() => {
-    console.log(router.pathname, 'pathname');
-  }, []);
 
   useEffect(() => {
-    if (!allContacts || refetchData) {
-      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27').then((data) => {
+    const fetchContacts = async () => {
+      try {
+        const data = await getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27');
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
           router.push({
             pathname: '/contacts/no-contact',
           });
         }
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (refetchData === true) dispatch(setRefetchData(false));
+    };
+    fetchContacts();
+  }, [refetchData]);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      getCount().then((data) => {
+        dispatch(setCount(data.data));
       });
-      if (refetchData == true) dispatch(setRefetchData(false));
+    };
+    if (refetchData) {
+      fetchCount();
     }
-  }, [count, allContacts, refetchData]);
+  }, [refetchData]);
 
   const showUncategorizedButton = () => {
     return allContacts && allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length > 0;
@@ -82,6 +103,14 @@ const MainMenu = ({
     return classes.filter(Boolean).join(' ');
   };
 
+  useEffect(() => {
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus().then((results) => {
+        dispatch(setUserGaveConsent(results.data.scopes));
+      });
+    }
+  }, []);
+
   return (
     <div
       className={`${
@@ -89,7 +118,15 @@ const MainMenu = ({
       } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
-          <Image src={oneLineLogo} alt="" onClick={() => Router.push('/contacts/clients')} className="cursor-pointer" />
+          <Image
+            src={oneLineLogo}
+            alt=""
+            onClick={() => {
+              dispatch(setOpenedTab(0));
+              router.push('/contacts/clients');
+            }}
+            className="cursor-pointer"
+          />
         </div>
         <div className="menu-links">
           <ul className="flex items-center">
@@ -98,7 +135,10 @@ const MainMenu = ({
                 <MenuLink
                   key={item.id}
                   className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-                  onClick={() => router.push(item.url)}>
+                  onClick={() => {
+                    dispatch(setOpenedTab(0));
+                    router.push(item.url);
+                  }}>
                   {item.name}
                 </MenuLink>
               );
@@ -191,7 +231,7 @@ const MainMenu = ({
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => Router.push('/my-profile')}>
+                      onClick={() => router.push('/my-profile')}>
                       <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>

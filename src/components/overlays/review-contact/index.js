@@ -1,21 +1,14 @@
 import { useFormik } from 'formik';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Overlay from 'components/shared/overlay';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Dropdown from 'components/shared/dropdown';
-import {
-  clientOptions,
-  leadSourceOptions,
-  othersOptions,
-  phoneNumberRules,
-  professionalsOptions,
-} from 'global/variables';
+import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
-import { updateContact, findContactByEmail } from 'api/contacts';
-import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
-import * as Yup from 'yup';
-import { setRefetchData } from 'store/global/slice';
+import { updateContact } from 'api/contacts';
+import { findTagsOption } from 'global/functions';
+import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
@@ -33,7 +26,6 @@ import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
 import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
-import Alert from '@components/shared/alert';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
@@ -53,7 +45,6 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
 }) => {
-  const isUnapprovedAI = client.import_source == 'GmailAI' && client.approved_ai != true;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -62,8 +53,13 @@ const ReviewContact = ({
   const [loadingEmail, setLoadingEmail] = useState(true);
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
-
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const initialClientCategoryId = useRef(client.category_1);
+
+  const isUnapprovedAI =
+    client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
 
   const options = [
     {
@@ -131,11 +127,45 @@ const ReviewContact = ({
       // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
 
-      // show toaster message
-      toast.success(`${newData.first_name + ' ' + newData.last_name} moved to Trash`);
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                {newData.first_name} {newData.last_name} moved to Trash
+              </h1>
+            </div>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+              <button
+                onClick={() => {
+                  updateContact(client.id, {
+                    ...newData,
+                    approved_ai: false,
+                  }).then(() => dispatch(setRefetchData(true)));
+                  afterSubmit(client?.id, { ...newData, approved_ai: false });
+                  toast.dismiss(t.id);
+                }}
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                Undo
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 0 },
+      );
     } catch (error) {
       toast.error(error);
     }
+  };
+  const restoreContact = (newData) => {
+    dispatch(updateContactLocally(newData));
+    updateContact(newData.id, newData).catch(() => {
+      toast.error('An error occurred, please refresh page');
+    });
   };
 
   const handleSubmit = async (values) => {
@@ -187,42 +217,32 @@ const ReviewContact = ({
       let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
       if (router.pathname.includes('trash')) {
         if (newData.category_id !== 3) {
-          await updateContact(client?.id, newData)
-            .then(() => dispatch(setRefetchData(true)))
-            .finally(() => {
-              shouldExecuteRemainingCode = false;
-              setUpdating(false);
-              handleClose();
-              updating === false &&
-                toast.custom((t) => (
-                  <div
-                    className={`${
-                      t.visible ? 'animate-enter' : 'animate-leave'
-                    } bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-                    style={{ width: '316px' }}>
-                    <div className="flex gap-2 p-4 ">
-                      <CheckCircleIcon className={'text-green-500'} />
-                      <h1 className={'text-sm leading-5 font-medium'}>
-                        {newData.first_name} {newData.last_name}
-                        {' restored successfully!'}
-                      </h1>
-                    </div>
-                    <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
-                      <button
-                        onClick={() => {
-                          updateContact(client?.id, { ...newData, category_id: 3 }).then(() =>
-                            dispatch(setRefetchData(true)),
-                          );
-                          toast.dismiss(t.id);
-                        }}
-                        className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
-                        Undo
-                      </button>
-                    </div>
-                  </div>
-                ));
-              return;
-            });
+          shouldExecuteRemainingCode = false;
+          toast.custom((t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+              style={{ width: '316px' }}>
+              <div className="flex gap-2 p-4 ">
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>
+                  {newData.first_name} {newData.last_name}
+                  {' restored in Contacts successfully!'}
+                </h1>
+              </div>
+              <div className="flex rounded-tr-lg rounded-br-lg  p-4   bg-gray-600 text-gray-100">
+                <button
+                  onClick={() => {
+                    restoreContact({ ...newData, category_id: 3 });
+                    toast.dismiss(t.id);
+                  }}
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  Undo
+                </button>
+              </div>
+            </div>
+          ));
         }
       }
       if (client.category_id != category_id || client.status_id != status_id) {
@@ -231,6 +251,14 @@ const ReviewContact = ({
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
+      if (newData.category_id === 3 && router.pathname.includes('details')) {
+        const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
+        const targetCategory = ['trash', 'uncategorized', 'other'].includes(lowercaseCategory)
+          ? lowercaseCategory
+          : `${lowercaseCategory}s`;
+
+        router.push(targetCategory);
+      }
 
       // make changes to global state
       dispatch(updateContactLocally(newData));
@@ -238,17 +266,49 @@ const ReviewContact = ({
       handleClose();
 
       // function that runs conditionally on submit if prop is given
-      if (afterSubmit) {
-        afterSubmit(client?.id, newData);
-      }
 
       // api call to update user
       updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
+      if (afterSubmit) {
+        afterSubmit(client.id, newData);
+      }
 
       // toaster message
+      if (router.pathname.toLowerCase().includes('details')) {
+        dispatch(setOpenedSubtab(0));
+      }
 
       if (shouldExecuteRemainingCode) {
-        toast.success(`${newData.first_name + ' ' + newData.last_name} ${action}`);
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+              <div className="flex gap-2 p-4 word-break items-center">
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>
+                  {newData.first_name} {newData.last_name} "Marked as Correct"!
+                </h1>
+              </div>
+              <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+                <button
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    updateContact(client.id, {
+                      ...newData,
+                      approved_ai: false,
+                    }).then(() => dispatch(setRefetchData(true)));
+                    afterSubmit(client.id, { ...newData, approved_ai: false });
+                  }}
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  Undo
+                </button>
+              </div>
+            </div>
+          ),
+          { duration: 0 },
+        );
       }
     } catch (error) {
       toast.error(error);
@@ -258,6 +318,35 @@ const ReviewContact = ({
   const handleChooseActivityType = (id) => {
     formik.setFieldValue('type_of_activity_id', id);
   };
+  useEffect(() => {
+    if (formik.dirty || isUnapprovedAI) {
+      const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
+      if (selectedContactCategory == 0 && selectedContactType && selectedStatus) {
+        //if client
+        setSubmitDisabled(false);
+      } else if (selectedContactCategory == 1 && selectedContactType) {
+        //if professional
+        if (selectedContactType == 8) {
+          if (selectedContactSubtype) {
+            setSubmitDisabled(false);
+          } else {
+            setSubmitDisabled(true);
+          }
+        } else {
+          setSubmitDisabled(false);
+        }
+      } else if (selectedContactCategory == 2 && selectedContactType) {
+        // if other
+        setSubmitDisabled(false);
+      } else if (selectedContactCategory == 3 || selectedContactCategory == 4) {
+        setSubmitDisabled(false);
+      } else {
+        setSubmitDisabled(true);
+      }
+    } else {
+      setSubmitDisabled(true);
+    }
+  }, [formik.values, formik.dirty]);
 
   const reviewAIContactButtons = () => {
     return (
@@ -283,6 +372,7 @@ const ReviewContact = ({
             } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
             leftIcon={<CheckCircle />}
             coloredButton
+            disabled={submitDisabled}
             onClick={() => submitForm()}
             loading={updating}>
             Mark as Correct
@@ -300,8 +390,8 @@ const ReviewContact = ({
           <Button className={` mr-4`} white onClick={() => handleClose()}>
             Cancel
           </Button>
-          <Button primary onClick={() => submitForm()} loading={updating}>
-            {router.pathname.includes('/trash') ? 'Restore Client' : 'Save Contact'}
+          <Button disabled={submitDisabled} primary onClick={() => submitForm()} loading={updating}>
+            {router.pathname.includes('/trash') ? 'Restore Contact' : 'Save Changes'}
           </Button>
         </div>
       </>
@@ -412,7 +502,7 @@ const ReviewContact = ({
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                   <TagsInput
-                    label="Tags"
+                    label="Priority"
                     typeOfContact={openedTab}
                     value={findTagsOption(formik.values.tags, openedTab)}
                     onChange={(choice) => {

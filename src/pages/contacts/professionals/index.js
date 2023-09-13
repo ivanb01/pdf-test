@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
-import { setContacts, updateContacts } from 'store/contacts/slice';
+import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import { professionalsStatuses, professionalsOptions } from 'global/variables';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
@@ -23,10 +23,10 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const refetchData = useSelector((state) => state.global.refetchData);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
-    dispatch(updateContacts(filteredArray.data));
+    dispatch(setProfessionals(filteredArray.data));
   };
 
   useEffect(() => {
@@ -48,7 +48,8 @@ const index = () => {
     setProfessionalsCopy(professionals);
     setLoading(false);
     dispatch(setOpenedTab(1));
-    dispatch(setOpenedSubtab(0));
+    console.log(professionals, 'professionals');
+    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
@@ -74,6 +75,9 @@ const index = () => {
           <Professionals
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchProfessionals}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter((contact) => contact.category_1 !== 'Uncategorized').length
+            }
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);

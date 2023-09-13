@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MainMenu from 'components/shared/menu';
 import ClientDetailsSidebar from 'components/client-details-sidebar';
 import Tabs from 'components/shared/tabs';
@@ -7,11 +7,16 @@ import { useRouter } from 'next/router';
 import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { setRefetchData } from 'store/global/slice';
-import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
+import { setRefetchData, setRefetchPart } from 'store/global/slice';
+import { getContactNotes, getContact, getContactActivities, getContactLookingProperties } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
-import { setActivityLogData, setNotesData, setCampaignsData } from 'store/clientDetails/slice';
+import {
+  setActivityLogData,
+  setNotesData,
+  setCampaignsData,
+  setLookingFor,
+  setLookingForData,
+} from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
@@ -22,6 +27,7 @@ export default function Details() {
   const dispatch = useDispatch();
   const { id } = router.query;
 
+  const refetchPart = useSelector((state) => state.global.refetchPart);
   const refetchData = useSelector((state) => state.global.refetchData);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   // const contact = contacts.find((contact) => contact.id == id);
@@ -31,48 +37,99 @@ export default function Details() {
   const [contact, setContact] = useState(null);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
   const [current, setCurrent] = useState(0);
-
   const localTabs = tabs(id, contact);
 
-  const fetchContact = async () => {
-    try {
-      let contact = contacts.find((contact) => contact.id == id);
-      setContact(contact);
-
-      // Fetch activityLog
-      const activityLogResponse = await getContactActivities(id);
-      const activityLogData = activityLogResponse.data.data;
-      dispatch(setActivityLogData(activityLogData));
-      setLoadingTabs(false);
-
-      if (contact.approved_ai !== true && contact.import_source === 'GmailAI') {
-        getAIData(contact.id).then((result) => {
-          setAIData(result.data);
-          setShowReviewOverlay(true);
-        });
-      }
-
-      getContactCampaign(id)
-        .then((campaignsResponse) => {
-          const campaignsData = campaignsResponse.data;
-          dispatch(setCampaignsData(campaignsData));
-        })
-        .catch((error) => {
-          toast.error('Error fetching campaigns:', error);
-        });
-
-      getContactNotes(id)
-        .then((notesResponse) => {
-          const notesData = notesResponse.data;
-          dispatch(setNotesData(notesData));
-        })
-        .catch((error) => {
-          toast.error('Error fetching notes:', error);
-        });
-    } catch (error) {
-      toast.error('Error fetchign activity log', error);
-    }
+  const getActivityLog = async () => {
+    const activityLogResponse = await getContactActivities(id).catch((error) => {
+      console.log(error);
+      toast.error('Error fetching activity log');
+    });
+    const activityLogData = activityLogResponse.data;
+    dispatch(setActivityLogData(activityLogData.data));
   };
+  const getContactData = () => {
+    getContact(id).then((result) => setContact(result.data));
+  };
+  const getLookingFor = () => {
+    getContactLookingProperties(id)
+      .then((propertiesResponse) => {
+        const propertiesData = propertiesResponse.data;
+        dispatch(setLookingForData(propertiesData.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching looking for');
+      });
+  };
+  const getNotes = () => {
+    getContactNotes(id)
+      .then((notesResponse) => {
+        const notesData = notesResponse.data;
+        dispatch(setNotesData(notesData.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching notes');
+      });
+  };
+  const getCampaigns = () => {
+    getContactCampaign(id)
+      .then((campaignsResponse) => {
+        const campaignsData = campaignsResponse.data;
+        dispatch(setCampaignsData(campaignsData));
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching campaigns');
+      });
+  };
+  const getAISummary = () => {
+    getAIData(id)
+      .then((result) => {
+        setAIData(result.data);
+        setShowReviewOverlay(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching ai summary');
+      });
+  };
+  const resetData = () => {
+    dispatch(setLookingForData(null));
+    dispatch(setNotesData(null));
+    dispatch(setCampaignsData(null));
+    dispatch(setActivityLogData(null));
+  };
+  const fetchContact = async () => {
+    resetData();
+    let contactData = contacts.find((contact) => contact.id == id);
+    setContact(contactData);
+    if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
+      getAISummary();
+    }
+    await getActivityLog();
+    setLoadingTabs(false);
+    getCampaigns();
+    getLookingFor();
+    getNotes();
+  };
+
+  useEffect(() => {
+    if (refetchPart == 'notes') {
+      getNotes();
+      dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'activity-log') {
+      getActivityLog();
+      dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'campaigns') {
+      getCampaigns();
+      getContactData();
+      dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'looking-for') {
+      getLookingFor();
+      dispatch(setRefetchPart(null));
+    }
+  }, [refetchPart]);
 
   useEffect(() => {
     if (refetchData) {
@@ -81,10 +138,26 @@ export default function Details() {
   }, [refetchData]);
 
   useEffect(() => {
+    console.log(contact);
+  }, [contact]);
+  useEffect(() => {
     if (contacts) {
       id && fetchContact();
     }
   }, [contacts, fetchContactRequired, id]);
+  const [backUrl, setBackUrl] = useState(null);
+  const tempUrl =
+    contact?.category_1 === 'Uncategorized' && contact?.category_2 === 'Unknown'
+      ? 'Other'
+      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+      ? contact?.category_1
+      : `${contact?.category_1}s`;
+
+  useEffect(() => {
+    if (contact?.category_1) {
+      setBackUrl(`/contacts/${tempUrl.toLowerCase()}`);
+    }
+  }, [contact]);
 
   return (
     <>
@@ -107,9 +180,14 @@ export default function Details() {
         ) : (
           <>
             <div className="p-6 inline-block">
-              <a href="#" onClick={() => router.back()} className="items-center flex">
+              <a
+                href="#"
+                onClick={() => {
+                  backUrl !== null ? router.push(backUrl) : router.back();
+                }}
+                className="items-center flex">
                 <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">Back to {contact?.category_1}s</div>
+                <div className="ml-2 font-medium">Back to {tempUrl}</div>
               </a>
             </div>
             {id && (

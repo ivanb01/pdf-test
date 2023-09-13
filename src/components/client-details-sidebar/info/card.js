@@ -2,7 +2,10 @@ import AIChip from '@components/shared/chip/ai-chip';
 import Chip from 'components/shared/chip';
 import Text from 'components/shared/text';
 
-export default function InfoCard({ label, showDot, content, iconContent }) {
+export default function InfoCard({ label, showDot, content, iconContent, client }) {
+  if (label == 'Import Source' && !content) {
+    content = 'Manually Added';
+  }
   return (
     <div className="flex flex-col my-3">
       <Text className="text-gray6 mb-1" h4>
@@ -10,7 +13,7 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
       </Text>
       <div className="flex flex-row">
         {typeof content === 'object' ? (
-          content.map((chip) => <Chip notClickable secondary key={chip} label={chip} />)
+          content?.map((chip) => <Chip notClickable secondary key={chip} label={chip} />)
         ) : iconContent ? (
           <div className="flex flex-row items-center">
             <Text className="text-gray7" p>
@@ -26,7 +29,7 @@ export default function InfoCard({ label, showDot, content, iconContent }) {
             <Text className={`text-gray7`} p>
               {label == 'Import Source' ? (
                 <div className="flex items-center">
-                  {content == 'GmailAI' && <AIChip reviewed={true} className="mr-1" />}
+                  {content == 'GmailAI' && <AIChip reviewed={client.approved_ai ? true : false} className="mr-1" />}
                   {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
                 </div>
               ) : (

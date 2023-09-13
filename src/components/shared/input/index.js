@@ -6,12 +6,8 @@ import { useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
-import {
-  phoneNumberInputFormat,
-  revertPhoneNumberInputFormat,
-  moneyNumberInputFormat,
-  revertMoneyNumberInputFormat,
-} from 'global/functions';
+import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const Input = ({
   className,
@@ -143,8 +139,7 @@ const Input = ({
         )}
         <div
           onClick={() => setShowPassword(!showPassword)}
-          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}
-        >
+          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}>
           {showPassword ? (
             <VisibilityIcon className="text-gray-400" />
           ) : (
@@ -197,49 +192,41 @@ const Input = ({
     );
   };
 
-  const moneyNumberInputFormat = (number) => {
-    if (!number) return null;
-    return number
-      .toString()
-      .replace(/,/g, '')
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
-  const revertMoneyNumberInputFormat = (value) => {
-    return value.replace(/,/g, '');
-  };
-
-  const [moneyValue, setMoneyValue] = useState(null);
-
-  const handleMoneyInputChange = (val) => {
-    // setMoneyValue(moneyNumberInputFormat(val));
-    if (val) {
-      onChange(revertMoneyNumberInputFormat(val));
-    } else {
-      onChange('');
-      setMoneyValue(null);
-    }
-  };
-
-  useEffect(() => {
-    if (type == 'money') {
-      setMoneyValue(moneyNumberInputFormat(value));
-    }
-  }, [value]);
-
   const moneyInput = () => {
+    const formatNumber = (num) => {
+      if (num === undefined || num === null) return '';
+      const parts = num.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return parts.join('.');
+    };
+
+    const unformatNumber = (str) => {
+      return str.replace(/,/g, '');
+    };
+    const [inputValue, setInputValue] = useState(formatNumber(value) || '');
+
+    useEffect(() => {
+      setInputValue(formatNumber(value));
+    }, [value]);
+
+    const handleChange = (event) => {
+      const newValue = unformatNumber(event.target.value);
+      if (/^\d*\.?\d*$/.test(newValue)) {
+        setInputValue(formatNumber(newValue));
+        if (onChange) {
+          onChange(newValue);
+        }
+      }
+    };
     return iconBefore ? (
       <>
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">{iconBefore}</div>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
+          name={name ? name : id}
           className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
@@ -254,13 +241,10 @@ const Input = ({
       <>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
+          name={name ? name : id}
           className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
@@ -277,14 +261,10 @@ const Input = ({
       <>
         <input
           type="text"
-          name={name ? name : id}
-          id={id}
+          value={inputValue}
+          onChange={handleChange}
           placeholder={placeholder}
-          onInput={onInput}
-          onChange={(e) => handleMoneyInputChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          value={moneyValue}
-          readOnly={saved || readonly}
+          name={name ? name : id}
           className={
             saved
               ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'
@@ -313,8 +293,7 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
-          >
+            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
             <option>US</option>
             <option>CA</option>
             <option>EU</option>
@@ -364,11 +343,32 @@ const Input = ({
     );
   };
 
+  const dateInput = () => {
+    return (
+      <>
+        <input
+          type={'date'}
+          placeholder={'dd/mm/yyyy'}
+          className={
+            'relative w-full py-[9px] px-[13px] border border-gray-300 rounded-md h-10 text-sm leading-5 font-normal text-gray-500 placeholder:text-gray-500'
+          }
+        />
+        <div className={'absolute text-gray-300 mr-[13px]'} style={{ marginTop: '-34px', right: 0 }}>
+          <CalendarTodayIcon className={'h-5 w-5'} />
+        </div>
+        {error && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+          </div>
+        )}
+      </>
+    );
+  };
   return (
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
-          {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
+          {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
         </Text>
       )}
       {secondaryLabel && (
@@ -387,6 +387,8 @@ const Input = ({
           ? passwordInput()
           : type == 'money'
           ? moneyInput()
+          : type === 'date'
+          ? dateInput()
           : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}

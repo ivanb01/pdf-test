@@ -78,8 +78,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
     getCampaign(campaignId).then((data) => {
       setCurrentCampaign(data.data);
-      tabs[0].count = data.data.contacts_assigned_count;
-      tabs[1].count = data.data.contacts_never_assigned_count;
+      tabs[0].count = data.data.contacts_never_assigned_count;
+      tabs[1].count = data.data.contacts_assigned_count;
       tabs[2].count = data.data.contacts_unassigned_count;
       setLoading(false);
       localStorage.setItem('openCampaign', campaignId);
@@ -105,12 +105,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [tabs, setTabs] = useState([
     {
       id: 0,
-      name: 'In Campaign',
+      name: 'Not in Campaign',
       count: 0,
     },
     {
       id: 1,
-      name: 'Not in Campaign',
+      name: 'In Campaign',
       count: 0,
     },
     {
@@ -173,9 +173,9 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     console.log('testing');
     const contactsInCurrentCampaign =
       currentButton == 0
-        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
-        : currentButton == 1
         ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'never_assigned')
+        : currentButton == 1
+        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
         : currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'unassigned');
 
     const filteredArr = handleSearch(searchTerm, contactsInCurrentCampaign);
@@ -186,10 +186,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   return (
     <>
       <MainMenu />
-      <TopBar
-        text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'}
-        onBackClick={() => router.push('/campaigns')}
-      />
+      <TopBar text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'} />
       <div className="border-t border-gray2 flex contact-campaigns-fixed-height">
         <div className="h-auto border-r border-gray2">
           <ContactCampaignsSidebar
@@ -222,8 +219,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}
-                    onClick={setCurrentButton}
-                  ></ButtonsSlider>
+                    onClick={setCurrentButton}></ButtonsSlider>
                 </div>
               </div>
               <div className={`w-auto h-auto`}>
