@@ -15,7 +15,7 @@ const PropertyCard = ({ property }) => {
         <a href={`${getBaseUrl()}/property?id=${property.ID}`} target="_blank">
           <img
             className="object-cover h-full w-full"
-            src={property?.PHOTOS[0] ? property?.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
+            src={property?.PHOTOS[0] ? property?.PHOTOS[0]?.PHOTO_URL : placeholder.src}></img>
         </a>
         <div className="absolute bottom-2 left-2 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium">
           {property.STATUS}

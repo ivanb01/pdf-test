@@ -433,8 +433,8 @@ export default function LookingFor({ contactId, category }) {
                         <img src={lookingForEmpty.src} alt="" />
                         <div className="mt-6 text-sm">
                           <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
-                          <div className="text-gray-500 mt-[6px]">
-                            Whenever we have property that matched these interest, will list here.
+                          <div className="text-gray-500 mt-[6px] font-light">
+                            Whenever we have properties that match these interests, we will list them here.
                           </div>
                         </div>
                       </div>

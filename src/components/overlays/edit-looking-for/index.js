@@ -74,7 +74,7 @@ const EditLookingFor = ({ title, handleClose, className, data }) => {
     setLoadingButton(true);
     try {
       const res = await contactServices.addContactLookingProperty(data.contact_id, values);
-      toast.success('Changes were successfully saved');
+      toast.success('Changes have been saved successfully!');
       dispatch(setRefetchPart('looking-for'));
       setTimeout(() => {
         setLoadingButton(false);
