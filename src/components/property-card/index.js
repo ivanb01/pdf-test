@@ -9,14 +9,11 @@ import { useRouter } from 'next/router';
 import link from '/public/images/link-2.svg';
 import { useEffect } from 'react';
 const PropertyCard = ({ property }) => {
-  useEffect(() => {
-    console.log(property);
-  }, [property]);
   const router = useRouter();
   return (
     <div className="border border-gray-200 rounded-[4px]">
       <div className="h-[160px] relative">
-        <a href={`${getBaseUrl()}/property?id=${property.ID}`} target="_blank">
+        <a href={`${getBaseUrl()}/property?id=${property.ID}`} target="_blank" rel="noreferrer">
           <img
             className="object-cover h-full w-full"
             src={property?.PHOTOS[0] ? property?.PHOTOS[0].PHOTO_URL : placeholder.src}></img>
