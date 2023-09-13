@@ -1494,7 +1494,7 @@ const Table = ({
                     <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
                   </>
                 ) : (
-                  <div className="text-red-500">No communication</div>
+                  <div className="text-red-500">No Interaction</div>
                 )}
               </td>
             </tr>
