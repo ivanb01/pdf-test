@@ -199,7 +199,7 @@ const index = () => {
       <div className="p-6 border border-b">
         <div className="flex">
           <Search
-            className="h-[38px] min-w-[450px] mr-4"
+            className="h-[38px] min-w-[250px] mr-4"
             placeholder="Search for properties"
             onInput={(event) => {
               setSearchKey(event.target.value);
@@ -208,7 +208,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
-            className="mr-4"
+            className="mr-4 min-w-[480px]"
             placeholder="in: Choose Neighborhood"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
