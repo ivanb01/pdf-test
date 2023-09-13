@@ -2,12 +2,10 @@ import { formatPrice, getBaseUrl } from '@global/functions';
 import room from '/public/images/room.svg';
 import bathroom from '/public/images/bathroom.svg';
 import sqft from '/public/images/sqft.svg';
-import share from '/public/images/share.svg';
 import placeholder from '/public/images/img-placeholder.png';
 import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/router';
 import link from '/public/images/link-2.svg';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
@@ -54,8 +52,6 @@ const ImageGallery = ({ images, id }) => {
 };
 
 const PropertyCard = ({ property }) => {
-  const router = useRouter();
-
   return (
     <div className="border border-gray-200 rounded-[4px]">
       <div className="h-[160px] relative">
