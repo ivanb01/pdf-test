@@ -41,9 +41,6 @@ const index = () => {
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
-  useEffect(() => {
-    console.log(data, 'data');
-  }, [data]);
 
   const fetchContacts = async () => {
     try {
