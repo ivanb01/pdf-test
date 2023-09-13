@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import Dropdown from 'components/shared/dropdown';
 import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
-import { updateContact } from 'api/contacts';
+import { findContactByEmail, updateContact } from 'api/contacts';
 import { findTagsOption } from 'global/functions';
 import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
@@ -51,7 +51,7 @@ const ReviewContact = ({
   const [updating, setUpdating] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(true);
-  const [existingContactEmailError, setExistingContactEmailError] = useState('');
+  const [existingContactEmailError, setExistingContactEmailError] = useState(undefined);
   const [existingContactEmail, setExistingContactEmail] = useState('');
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -102,8 +102,35 @@ const ReviewContact = ({
       selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
     },
-    onSubmit: (values) => {
-      handleSubmit(values);
+    onSubmit: async (values) => {
+      if (isUnapprovedAI) {
+        if (values.email.length > 0) {
+          setUpdating(true);
+          await userAlreadyExists(values.email)
+            .then((response) => {
+              if (response === undefined) {
+                setExistingContactEmailError('');
+                setExistingContactEmail('');
+                handleSubmit(values).then();
+              } else {
+                setExistingContactEmailError('This email already exists!');
+                setExistingContactEmail(values.email);
+              }
+            })
+            .catch(() => {
+              setExistingContactEmailError('');
+              setExistingContactEmail('');
+            })
+            .finally(() => {
+              setUpdating(false);
+            });
+        } else {
+          handleSubmit(values).then();
+        }
+      }
+      if (!isUnapprovedAI) {
+        await handleSubmit(values).then();
+      }
     },
   });
 
@@ -167,8 +194,20 @@ const ReviewContact = ({
       toast.error('An error occurred, please refresh page');
     });
   };
+  useEffect(() => {
+    // This code will run whenever existingContactEmailError changes
+    console.log(existingContactEmailError?.length, 'existingContactEmailError');
+    if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
+      return;
+    }
+    // Rest of your handleSubmit logic goes here
+  }, [existingContactEmailError]);
 
   const handleSubmit = async (values) => {
+    console.log(existingContactEmailError, 'existingContactEmailError');
+    if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
+      return;
+    }
     setUpdating(true);
 
     let category_id;
@@ -415,14 +454,23 @@ const ReviewContact = ({
   };
 
   useEffect(() => {
+    console.log(isUnapprovedAI, 'isUnapprovedAI');
+  }, [isUnapprovedAI]);
+  useEffect(() => {
     if ('ai_email_summary' in client) {
       setLoadingEmail(false);
     } else {
-      if (isUnapprovedAI) {
+      if (!isUnapprovedAI) {
         fetchAISummary();
       }
     }
   }, []);
+  const userAlreadyExists = async (email) => {
+    try {
+      const { data } = await findContactByEmail({ email: email });
+      return data;
+    } catch (error) {}
+  };
 
   return (
     <Overlay
@@ -468,7 +516,7 @@ const ReviewContact = ({
                   label="Email"
                   id="email"
                   className=""
-                  readonly
+                  readonly={!isUnapprovedAI}
                   // onChange={formik.handleChange}
                   onChange={(e) => {
                     if (existingContactEmail !== e.target.value) {

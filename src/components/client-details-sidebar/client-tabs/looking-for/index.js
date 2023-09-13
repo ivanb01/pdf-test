@@ -74,8 +74,18 @@ export default function LookingFor({ contactId, category }) {
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
-    return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
+    const lowerCaseCategory = category.toLowerCase();
+    if (lowerCaseCategory === 'buyer') {
+      return 1;
+    } else if (lowerCaseCategory === 'landlord') {
+      return '19,22';
+    } else if (lowerCaseCategory === 'seller') {
+      return 19;
+    } else {
+      return 2;
+    }
   };
+
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
@@ -171,14 +181,18 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
+        setPropertyInterests(data.LISTINGS);
         setAllPropertiesCount(data.TOTAL_COUNT);
         return data;
+      })
+      .catch((error) => {
+        console.log(error, 'error');
       });
 
-    setPropertyInterests(data.LISTINGS);
     setLoadingPropertyInterests(false);
   };
 
@@ -271,12 +285,15 @@ export default function LookingFor({ contactId, category }) {
                       </div>
                       <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
                         <p className={`text-sm text-orange-800`}>
-                          To receive more precise property recommendations tailored to your client's preferences, kindly
-                          specify the property interests.
+                          {category === 'Landlord' || category === 'Seller'
+                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
+                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
                         </p>
                         <Button
                           className="p-0"
-                          label="Add Interests"
+                          label={
+                            category === 'Landlord' || category === 'Seller' ? 'Add Property Details' : 'Add Interests'
+                          }
                           leftIcon={<PlusIcon />}
                           primary
                           onClick={() => setShowAddPopup(true)}
@@ -289,9 +306,12 @@ export default function LookingFor({ contactId, category }) {
                     <div className="flex items-center justify-between text-sm">
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
-                        <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
-                        </div>
+                        {getLookingAction() === 1 ||
+                          (getLookingAction() === 2 && (
+                            <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                              {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                            </div>
+                          ))}
                       </div>
                       <div className="flex items-center">
                         <Button
