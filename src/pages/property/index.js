@@ -45,7 +45,6 @@ const index = () => {
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
   const [loading, setLoading] = useState(true);
-
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
     CLOSING_DATE: '',
@@ -414,12 +413,31 @@ const index = () => {
   ];
 
   const scrollRight = () => {
-    document.querySelector('.simplebar-content-wrapper').scrollLeft +=
-      document.querySelector('.object-cover').width + 12;
+    const contentWrapper = document.querySelector('.simplebar-content-wrapper');
+    const images = document.querySelectorAll('.object-cover');
+    const imageWidth = images[0].width + 12;
+
+    const maxScroll = (images.length - 1) * imageWidth;
+
+    if (contentWrapper.scrollLeft + contentWrapper.clientWidth >= maxScroll) {
+      contentWrapper.scrollLeft = 0;
+    } else {
+      contentWrapper.scrollLeft += imageWidth;
+    }
   };
+
   const scrollLeft = () => {
-    document.querySelector('.simplebar-content-wrapper').scrollLeft -=
-      document.querySelector('.object-cover').width + 12;
+    const contentWrapper = document.querySelector('.simplebar-content-wrapper');
+    const images = document.querySelectorAll('.object-cover');
+    const imageWidth = images[0].width + 12;
+
+    const maxScroll = (images.length - 1) * imageWidth;
+
+    if (contentWrapper.scrollLeft === 0) {
+      contentWrapper.scrollLeft = maxScroll;
+    } else {
+      contentWrapper.scrollLeft -= imageWidth;
+    }
   };
 
   const { isLoaded } = useLoadScript({
@@ -431,34 +449,33 @@ const index = () => {
     var element = document.querySelector('#map-section');
     element.scrollIntoView({ behavior: 'smooth' });
   };
+  const fetchProperty = async () => {
+    let params = {
+      apikey: '4d7139716e6b4a72',
+      callback: 'callback',
+      id: id,
+    };
+    const urlParams = new URLSearchParams({
+      ...params,
+    });
+    const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+
+    await fetchJsonp(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.LISTINGS[0]) {
+          setData(data.LISTINGS[0]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    const fetchProperty = async () => {
-      let params = {
-        apikey: '4d7139716e6b4a72',
-        callback: 'callback',
-        id: id,
-      };
-      const urlParams = new URLSearchParams({
-        ...params,
-      });
-      const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-
-      await fetchJsonp(url)
-        .then((res) => res.json())
-        .then((data) => {
-          setData(data.LISTINGS[0]);
-          setLoading(false);
-        });
-    };
     if (id) {
       fetchProperty();
     }
   }, [id]);
 
-  useEffect(() => {
-    console.log(data, 'Datatttt');
-  }, [data]);
   const differentiateAmenities = (amenities) => {
     const mainAmenities = [
       'Fireplace',
