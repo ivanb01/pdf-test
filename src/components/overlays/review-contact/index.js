@@ -104,7 +104,7 @@ const ReviewContact = ({
     },
     onSubmit: async (values) => {
       if (isUnapprovedAI) {
-        if (values.email.length > 0) {
+        if (formik.values.email !== formik.initialValues.email) {
           setUpdating(true);
           await userAlreadyExists(values.email)
             .then((response) => {
@@ -133,7 +133,9 @@ const ReviewContact = ({
       }
     },
   });
-
+  useEffect(() => {
+    console.log(formik.values.email, formik.initialValues.email);
+  }, [formik.values, formik.initialValues]);
   const { errors, touched, submitForm, isSubmitting } = formik;
 
   const removeFromCRM = async () => {
