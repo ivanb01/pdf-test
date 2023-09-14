@@ -503,7 +503,7 @@ const index = () => {
       </div>
       <div className="flex md:h-[500px] h-[300px] relative">
         {data.PHOTOS.length == 1 ? (
-          <div className="w-full h-full pr-3">
+          <div className="w-full h-full">
             <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
           </div>
         ) : data.PHOTOS.length == 2 ? (
