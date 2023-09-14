@@ -526,7 +526,7 @@ const index = () => {
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
-      <div className="flex md:h-[500px] h-[300px] relative" style={{ boder: '1px solid red', backgroundColor: 'red' }}>
+      <div className="flex md:h-[500px] h-[300px] relative">
         <div
           onClick={scrollRight}
           className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
