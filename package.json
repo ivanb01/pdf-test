@@ -38,6 +38,7 @@
     "react-shepherd": "^4.1.0",
     "react-transition-group": "^4.4.5",
     "simplebar-react": "^2.3.6",
+    "swiper": "^10.2.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
