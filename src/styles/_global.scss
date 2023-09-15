@@ -516,3 +516,40 @@ tbody > div {
 .main-menu-important {
   background: #0fa2ea !important;
 }
+
+.swiper-button-prev, {
+  background-color: #00000099 !important;
+  height: 56px !important;
+  width: 56px !important;
+  border-radius: 50% !important;
+  left: 20px !important;
+  color: white !important;
+}
+
+.swiper-button-next, {
+  background-color: #00000099 !important;
+  height: 56px !important;
+  width: 56px !important;
+  border-radius: 50% !important;
+  right: 20px !important;
+  color: white !important;
+}
+
+
+.swiper-button-prev::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium text-white md:text-2xl text-sm css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowBackIcon"><path fill="white" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>') !important;
+  display: block;
+  height: 24px;
+  width: 24px;
+  margin-top: -30px;
+  color: white !important;
+}
+
+.swiper-button-next::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium text-white md:text-2xl text-sm css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowForwardIcon"><path fill="white" d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>') !important;
+  display: block !important;
+  height: 24px;
+  width: 24px;
+  margin-top: -30px;
+  color: white !important;
+}

@@ -4,6 +4,11 @@ import two from '/public/images/property/2.png';
 import three from '/public/images/property/3.png';
 import four from '/public/images/property/4.png';
 import five from '/public/images/property/5.png';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 import Image from 'next/image';
 import location from '/public/images/location.png';
 import { useState } from 'react';
@@ -45,7 +50,6 @@ const index = () => {
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
   const [loading, setLoading] = useState(true);
-
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
     CLOSING_DATE: '',
@@ -272,8 +276,6 @@ const index = () => {
     lng: data.extras_longitude,
   });
 
-  const [hideLeftArrow, setHideLeftArrow] = useState(false);
-
   const propertyDetails = [
     {
       id: 0,
@@ -413,15 +415,6 @@ const index = () => {
     },
   ];
 
-  const scrollRight = () => {
-    document.querySelector('.simplebar-content-wrapper').scrollLeft +=
-      document.querySelector('.object-cover').width + 12;
-  };
-  const scrollLeft = () => {
-    document.querySelector('.simplebar-content-wrapper').scrollLeft -=
-      document.querySelector('.object-cover').width + 12;
-  };
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
@@ -431,34 +424,33 @@ const index = () => {
     var element = document.querySelector('#map-section');
     element.scrollIntoView({ behavior: 'smooth' });
   };
+  const fetchProperty = async () => {
+    let params = {
+      apikey: '4d7139716e6b4a72',
+      callback: 'callback',
+      id: id,
+    };
+    const urlParams = new URLSearchParams({
+      ...params,
+    });
+    const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+
+    await fetchJsonp(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.LISTINGS[0]) {
+          setData(data.LISTINGS[0]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    const fetchProperty = async () => {
-      let params = {
-        apikey: '4d7139716e6b4a72',
-        callback: 'callback',
-        id: id,
-      };
-      const urlParams = new URLSearchParams({
-        ...params,
-      });
-      const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-
-      await fetchJsonp(url)
-        .then((res) => res.json())
-        .then((data) => {
-          setData(data.LISTINGS[0]);
-          setLoading(false);
-        });
-    };
     if (id) {
       fetchProperty();
     }
   }, [id]);
 
-  useEffect(() => {
-    console.log(data, 'Datatttt');
-  }, [data]);
   const differentiateAmenities = (amenities) => {
     const mainAmenities = [
       'Fireplace',
@@ -510,20 +502,8 @@ const index = () => {
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
       <div className="flex md:h-[500px] h-[300px] relative">
-        <div
-          onClick={scrollRight}
-          className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 right-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
-          <ArrowForward className="text-white md:text-2xl text-sm" />
-        </div>
-        {!hideLeftArrow && (
-          <div
-            onClick={scrollLeft}
-            className="cursor-pointer animate-bounce z-10 absolute top-1/2 -translate-y-1/2 left-5 bg-[#00000099] flex items-center justify-center md:p-4 p-2 rounded-full">
-            <ArrowBack className="text-white md:text-2xl text-sm" />
-          </div>
-        )}
         {data.PHOTOS.length == 1 ? (
-          <div className="w-full h-full pr-3">
+          <div className="w-full h-full">
             <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
           </div>
         ) : data.PHOTOS.length == 2 ? (
@@ -537,19 +517,17 @@ const index = () => {
           </>
         ) : (
           <>
-            <SimpleBar className="w-full d-webkit overflow-y-hidden">
-              <div className="w-full d-webkit h-full">
-                {data.PHOTOS.map((picture, index) => (
-                  <div key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
-                    <img
-                      src={picture.PHOTO_URL}
-                      alt={`Image ${index + 1}`}
-                      className="object-cover w-full h-full object-center"
-                    />
-                  </div>
-                ))}
-              </div>
-            </SimpleBar>
+            <Swiper slidesPerView={3} loop spaceBetween={12} navigation modules={[Pagination, Navigation]}>
+              {data.PHOTOS.map((picture, index) => (
+                <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
+                  <img
+                    src={picture.PHOTO_URL}
+                    alt={`Image ${index + 1}`}
+                    className="object-cover w-full h-full object-center"
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </>
         )}
       </div>
