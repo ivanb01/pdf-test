@@ -20,14 +20,15 @@ import fridge from '/public/images/property/fridge.svg';
 import propertyLocation from '/public/images/property/location.png';
 import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useRef, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
-import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { formatPrice } from '@global/functions';
 import fetchJsonp from 'fetch-jsonp';
 import Loader from '@components/shared/loader';
+
 const index = () => {
   const router = useRouter();
   const id = router.query.id;

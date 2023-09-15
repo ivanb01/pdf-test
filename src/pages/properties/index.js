@@ -6,13 +6,18 @@ import Search from '@components/shared/input/search';
 import { NYCneighborhoods } from '@global/variables';
 import SearchSelectInput from '@components/shared/search-select-input';
 import fetchJsonp from 'fetch-jsonp';
-import { useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import Button from '@components/shared/button';
 import { valueOptions } from '@global/functions';
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 
 const index = () => {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
+  });
+  const center = useMemo(() => ({ lat: 40.8585107, lng: -73.9327812 }), [40.8585107, -73.9327812]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -196,8 +201,8 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <div className="p-6 border border-b">
-        <div className="flex">
+      <div className="border border-b">
+        <div className="flex p-6">
           <Search
             className="h-[38px] min-w-[250px] mr-4"
             placeholder="Search for properties"
@@ -268,53 +273,70 @@ const index = () => {
           <Loader></Loader>
         </div>
       ) : properties.LISTINGS && properties.LISTINGS.length ? (
-        <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
-          <div className="p-6">
-            <div className="mb-4 text-gray-900 text-sm font-medium">
-              {properties.TOTAL_COUNT.toLocaleString()} total properties
-            </div>
-            <div className="grid grid-cols-4 gap-6">
-              {properties.LISTINGS.map((property, index) => (
-                <PropertyCard key={index} property={property}></PropertyCard>
-              ))}
-            </div>
-            {properties.TOTAL_COUNT > 21 && (
-              <nav className="flex items-center justify-between bg-white py-3 pb-0 mt-5" aria-label="Pagination">
-                <div className="hidden sm:block">
-                  <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                    <span className="font-medium">{getToNumber()}</span> of{' '}
-                    <span className="font-medium">{properties.TOTAL_COUNT.toLocaleString()}</span> results
-                  </p>
+        <div className="flex items-center justify-between">
+          <div className="w-1/2">
+            <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
+              <div className="p-6">
+                <div className="mb-4 text-gray-900 text-sm font-medium">
+                  {properties.TOTAL_COUNT.toLocaleString()} total properties
                 </div>
-                <div className="flex flex-1 justify-between sm:justify-end">
-                  {getFromNumber() != 1 && (
-                    <a
-                      href="#"
-                      onClick={() => {
-                        fetchProperties(page - 1);
-                        setPage(page - 1);
-                      }}
-                      className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                      Previous
-                    </a>
-                  )}
-                  {getToNumber() != properties.TOTAL_COUNT && (
-                    <a
-                      href="#"
-                      onClick={() => {
-                        fetchProperties(page + 1);
-                        setPage(page + 1);
-                      }}
-                      className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
-                      Next
-                    </a>
-                  )}
+                <div className="grid grid-cols-2 gap-6">
+                  {properties.LISTINGS.map((property, index) => (
+                    <PropertyCard key={index} property={property}></PropertyCard>
+                  ))}
                 </div>
-              </nav>
+                {properties.TOTAL_COUNT > 21 && (
+                  <nav className="flex items-center justify-between bg-white py-3 pb-0 mt-5" aria-label="Pagination">
+                    <div className="hidden sm:block">
+                      <p className="text-sm text-gray-700">
+                        Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
+                        <span className="font-medium">{getToNumber()}</span> of{' '}
+                        <span className="font-medium">{properties.TOTAL_COUNT.toLocaleString()}</span> results
+                      </p>
+                    </div>
+                    <div className="flex flex-1 justify-between sm:justify-end">
+                      {getFromNumber() != 1 && (
+                        <a
+                          href="#"
+                          onClick={() => {
+                            fetchProperties(page - 1);
+                            setPage(page - 1);
+                          }}
+                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          Previous
+                        </a>
+                      )}
+                      {getToNumber() != properties.TOTAL_COUNT && (
+                        <a
+                          href="#"
+                          onClick={() => {
+                            fetchProperties(page + 1);
+                            setPage(page + 1);
+                          }}
+                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          Next
+                        </a>
+                      )}
+                    </div>
+                  </nav>
+                )}
+              </div>
+            </SimpleBar>
+          </div>
+          <div className="w-1/2">
+            {isLoaded && (
+              <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
+                <MarkerF
+                  key="marker_1"
+                  position={{
+                    lat: 40.8585107,
+                    lng: -73.9327812,
+                  }}
+                />
+              </GoogleMap>
             )}
           </div>
-        </SimpleBar>
+        </div>
       ) : (
         <div className="p-6">
           <div className="flex items-center justify-center flex-col text-center mt-6">
