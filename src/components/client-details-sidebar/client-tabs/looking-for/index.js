@@ -34,6 +34,7 @@ import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import Alert from '@components/shared/alert';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
+import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -233,7 +234,13 @@ export default function LookingFor({ contactId, category }) {
       setDisabledButton(true);
     }
   }, [formik]);
+  const onFiltersChange = (filteredProperties) => {
+    setPropertyInterests(filteredProperties);
+  };
 
+  useEffect(() => {
+    console.log(propertyInterests);
+  }, [propertyInterests]);
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
       <div className={`${className} text-sm`}>
@@ -368,8 +375,23 @@ export default function LookingFor({ contactId, category }) {
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-sm font-medium">
-                        {allPropertiesCount} properties recommended {getLookingAction() == 1 ? 'for sale' : 'for rent'}
+                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
+                        {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
+                          <>
+                            {allPropertiesCount} properties recommended
+                            {getLookingAction() === 1 ? 'for sale' : 'for rent'}
+                          </>
+                        )}
+                        {category.toLowerCase() === 'landlord' && (
+                          <> {allPropertiesCount} Recommendations on Sold and Rented Properties</>
+                        )}
+                        {category.toLowerCase() === 'seller' && (
+                          <> {allPropertiesCount} Recommendations on Sold Properties</>
+                        )}
+                        <FilterPropertiesDropdown
+                          propertyInterests={propertyInterests}
+                          onFiltersChange={onFiltersChange}
+                        />
                       </div>
                       <div className="grid grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (

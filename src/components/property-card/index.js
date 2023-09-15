@@ -24,7 +24,7 @@ const ImageGallery = ({ images, id }) => {
 
   return (
     <>
-      <a href={`${getBaseUrl()}/property?id=${id}`} target="_blank">
+      <a href={`${getBaseUrl()}/property?id=${id}`} target="_blank" rel="noreferrer">
         <img
           className="object-cover h-full w-full"
           src={images.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
