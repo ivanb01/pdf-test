@@ -3,7 +3,7 @@ import MainMenu from '@components/shared/menu';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
-import { NYCneighborhoods } from '@global/variables';
+import { NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
 import SearchSelectInput from '@components/shared/search-select-input';
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
@@ -12,6 +12,7 @@ import Button from '@components/shared/button';
 import { valueOptions } from '@global/functions';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 
 const index = () => {
   const { isLoaded } = useLoadScript({
@@ -27,6 +28,8 @@ const index = () => {
   const [status, setStatus] = useState();
   const [bedrooms, setBedrooms] = useState();
   const [bathrooms, setBathrooms] = useState();
+  const [minPrice, setMinPrice] = useState(500);
+  const [maxPrice, setMaxPrice] = useState(999);
 
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
@@ -169,6 +172,12 @@ const index = () => {
     if (bathrooms) {
       params['bathMin'] = bathrooms.label == '10+' ? 10 : bathrooms.label;
     }
+    if (minPrice) {
+      params['priceMin'] = minPrice;
+    }
+    if (maxPrice && maxPrice != 999) {
+      params['priceMax'] = maxPrice;
+    }
     const urlParams = new URLSearchParams({
       ...params,
     });
@@ -184,6 +193,9 @@ const index = () => {
   };
 
   const resetFilters = () => {
+    setMinPrice(500);
+    setMaxPrice(999);
+    setNeighborhoods();
     setNeighborhoods();
     setStatus();
     setBedrooms();
@@ -197,15 +209,24 @@ const index = () => {
 
   useEffect(() => {
     fetchProperties();
-  }, [bedrooms, bathrooms, neighborhoods, status, searchKey]);
+  }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice]);
 
+  let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
+
+  useEffect(() => {
+    console.log(status);
+    if (typeof status?.id !== 'undefined') {
+      setOptions(status.id == 1 ? rentalPriceOptions : salePriceOptions);
+      setMinPrice(status.id == 1 ? rentalPriceOptions[0].value : salePriceOptions[0].value);
+    }
+  }, [status]);
   return (
     <>
       <MainMenu />
       <div className="border border-b">
         <div className="flex p-6">
           <Search
-            className="h-[38px] min-w-[250px] mr-4"
+            className="h-[38px] w-[250px] mr-4 text-sm"
             placeholder="Search for properties"
             onInput={(event) => {
               setSearchKey(event.target.value);
@@ -214,7 +235,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
-            className="mr-4 min-w-[480px]"
+            className="mr-4 w-[450px]"
             placeholder="Neighborhood"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
@@ -224,7 +245,7 @@ const index = () => {
           />
           <Dropdown
             options={forOptions}
-            className="mr-4"
+            className="mr-4 w-[180px]"
             placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
@@ -242,7 +263,7 @@ const index = () => {
           /> */}
           <Dropdown
             options={bedroomsOptions}
-            className="mr-4"
+            className="mr-4 w-[180px]"
             placeHolder="Bedrooms"
             handleSelect={(choice) => {
               setBedrooms(choice);
@@ -251,12 +272,22 @@ const index = () => {
           />
           <Dropdown
             options={bathroomOptions}
-            className="mr-4"
+            className="mr-4 w-[180px]"
             placeHolder="Bathrooms"
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
             initialSelect={bathrooms?.label}
+          />
+          <MinMaxPrice
+            // options={bathroomOptions}
+            label="Min/Max Price"
+            className="mr-4 w-[220px]"
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            setMinPrice={setMinPrice}
+            setMaxPrice={setMaxPrice}
+            options={options}
           />
           <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
             Clear Filters

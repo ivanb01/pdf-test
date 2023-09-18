@@ -30,7 +30,9 @@ const Dropdown = ({
   openClassName,
   ...props
 }) => {
-  const firstSelect = initialSelect ? options?.find((item) => item.label === initialSelect) : null;
+  const firstSelect = initialSelect
+    ? options?.find((item) => item.label === initialSelect || item.value == initialSelect)
+    : null;
   const [selected, setSelected] = useState(firstSelect);
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
@@ -73,7 +75,10 @@ const Dropdown = ({
                     {selected && selected.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <ChevronDownIcon className="h-5 w-5 text-gray3" aria-hidden="true" />
+                    <ChevronDownIcon
+                      className={`transition-all h-5 w-5 text-gray3 ${open && 'rotate-180'}`}
+                      aria-hidden="true"
+                    />
                   </span>
                 </Listbox.Button>
 
