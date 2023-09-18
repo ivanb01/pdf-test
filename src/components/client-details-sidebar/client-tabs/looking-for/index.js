@@ -388,10 +388,13 @@ export default function LookingFor({ contactId, category }) {
                         {category.toLowerCase() === 'seller' && (
                           <> {allPropertiesCount} Recommendations on Sold Properties</>
                         )}
-                        <FilterPropertiesDropdown
-                          propertyInterests={propertyInterests}
-                          onFiltersChange={onFiltersChange}
-                        />
+                        <div className={'flex items-center gap-2'}>
+                          <p className="text-gray-700 font-inter text-base font-normal leading-5">Sort by</p>
+                          <FilterPropertiesDropdown
+                            propertyInterests={propertyInterests}
+                            onFiltersChange={onFiltersChange}
+                          />
+                        </div>
                       </div>
                       <div className="grid grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
