@@ -222,16 +222,18 @@ const index = () => {
             }}
             value={searchKey}
           />
-          <SearchSelectInput
-            options={NYCneighborhoods}
-            className="mr-4 !w-[350px]"
-            placeholder="Neighborhood"
-            onChange={(choice) => {
-              let choices = choice.map((el) => el.value);
-              setNeighborhoods(choices);
-            }}
-            value={valueOptions(neighborhoods, NYCneighborhoods)}
-          />
+          <div className="w-[350px] mr-4">
+            <SearchSelectInput
+              options={NYCneighborhoods}
+              className="mr-4"
+              placeholder="Neighborhood"
+              onChange={(choice) => {
+                let choices = choice.map((el) => el.value);
+                setNeighborhoods(choices);
+              }}
+              value={valueOptions(neighborhoods, NYCneighborhoods)}
+            />
+          </div>
           <Dropdown
             options={forOptions}
             className="mr-4 w-[180px]"
