@@ -224,7 +224,7 @@ const index = () => {
           />
           <SearchSelectInput
             options={NYCneighborhoods}
-            className="mr-4 w-[450px]"
+            className="mr-4 w-[350px]"
             placeholder="Neighborhood"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
