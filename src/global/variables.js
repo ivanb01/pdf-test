@@ -250,74 +250,74 @@ export const allStatusesQuickEdit = {
   clients: [
     {
       id: 2,
-      name: 'New Lead',
+      label: 'New Lead',
       color: 'bg-lightBlue1',
     },
     {
       id: 3,
-      name: 'Attempted Contact',
+      label: 'Attempted Contact',
       color: 'bg-lightBlue2',
     },
     {
       id: 5,
-      name: 'In Communication',
+      label: 'In Communication',
       color: 'bg-purple1',
     },
     {
       id: 4,
-      name: 'Appointment Set',
+      label: 'Appointment Set',
       color: 'bg-purple2',
     },
     {
       id: 7,
-      name: 'Actively Working',
+      label: 'Actively Working',
       color: 'bg-purple3',
     },
     {
       id: 16,
-      name: 'Offer Submitted',
+      label: 'Offer Submitted',
       color: 'bg-purple4',
     },
     {
       id: 9,
-      name: 'Contract Signed',
+      label: 'Contract Signed',
       color: 'bg-green8',
     },
     {
       id: 10,
-      name: 'Closed Client',
+      label: 'Closed Client',
       color: 'bg-green2',
     },
     {
       id: 8,
-      name: 'On Hold',
+      label: 'On Hold',
       color: 'bg-orange2',
     },
     {
       id: 11,
-      name: 'Dropped',
+      label: 'Dropped',
       color: 'bg-red2',
     },
   ],
   professionals: [
     {
       id: 13,
-      name: 'No Relationship',
+      label: 'No Relationship',
       color: 'bg-lightBlue1',
     },
     {
       id: 14,
-      name: 'Loose Relationship',
+      label: 'Loose Relationship',
       color: 'bg-lightBlue2',
     },
     {
       id: 15,
-      name: 'Strong Relationship',
+      label: 'Strong Relationship',
       color: 'bg-purple1',
     },
     {
       id: 11,
-      name: 'Dropped',
+      label: 'Dropped',
       color: 'bg-red2',
     },
   ],
@@ -584,19 +584,19 @@ export const uncategorizedStatuses = [
 export const relationshipsTypes = [
   {
     id: 0,
-    name: 'Friend',
+    label: 'Friend',
   },
   {
     id: 1,
-    name: 'Spouse',
+    label: 'Spouse',
   },
   {
     id: 2,
-    name: 'Roommate',
+    label: 'Roommate',
   },
   {
     id: 3,
-    name: 'Co-worker',
+    label: 'Co-worker',
   },
 ];
 
@@ -715,55 +715,55 @@ export const leadSourceOptions = [
   // },
   {
     id: 3,
-    name: 'Cold Call',
+    label: 'Cold Call',
   },
   {
     id: 4,
-    name: 'Company Website',
+    label: 'Company Website',
   },
   {
     id: 5,
-    name: 'Craigslist',
+    label: 'Craigslist',
   },
   {
     id: 6,
-    name: 'Facebook',
+    label: 'Facebook',
   },
   {
     id: 7,
-    name: 'Instagram',
+    label: 'Instagram',
   },
   {
     id: 8,
-    name: 'OpCity',
+    label: 'OpCity',
   },
   {
     id: 9,
-    name: 'Referral',
+    label: 'Referral',
   },
   {
     id: 10,
-    name: 'Renthop',
+    label: 'Renthop',
   },
   {
     id: 11,
-    name: 'Streeteasy',
+    label: 'Streeteasy',
   },
   {
     id: 12,
-    name: 'Trulia',
+    label: 'Trulia',
   },
   {
     id: 13,
-    name: 'Zillow',
+    label: 'Zillow',
   },
   {
     id: 14,
-    name: 'Zumper',
+    label: 'Zumper',
   },
   {
     id: 15,
-    name: 'Other',
+    label: 'Other',
   },
 ];
 
@@ -1915,26 +1915,26 @@ export const NYCneighborhoods = [
 export const activityTypes = [
   {
     id: 1,
-    name: 'Email',
+    label: 'Email',
   },
   {
     id: 2,
-    name: 'SMS',
+    label: 'SMS',
   },
   {
     id: 3,
-    name: 'Phone Call',
+    label: 'Phone Call',
   },
   {
     id: 4,
-    name: 'Social Media',
+    label: 'Social Media',
   },
   {
     id: 5,
-    name: 'In Person',
+    label: 'In Person',
   },
   {
     id: 6,
-    name: 'Other',
+    label: 'Other',
   },
 ];
