@@ -144,17 +144,6 @@ const index = () => {
     },
   ];
 
-  const typeOptions = [
-    {
-      id: 0,
-      label: 'For Sale',
-    },
-    {
-      id: 1,
-      label: 'For Rent',
-    },
-  ];
-
   const fetchProperties = async (page = 1) => {
     setLoading(true);
     let params = {
