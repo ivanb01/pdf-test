@@ -40,7 +40,7 @@ const index = () => {
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
-    openedSubtab === 0 ? setActualContact(contactsFamilyFriends) : setActualContact(contactsUnknown);
+    setActualContact(contactsFamilyFriends);
     setLoading(false);
   };
 
@@ -49,7 +49,7 @@ const index = () => {
     if (allContacts.data) {
       fetchOther();
     }
-    dispatch(setOpenedTab(3));
+    dispatch(setOpenedTab(5));
     // dispatch(setOpenedSubtab(0));
   }, [allContacts]);
 
@@ -57,10 +57,10 @@ const index = () => {
     if (allContacts.data) {
       fetchOther();
     }
-  }, [openedSubtab]);
+  }, []);
 
   const onSearch = (term) => {
-    const contactsCopy = openedSubtab === 0 ? familyAndFriends : unknown;
+    const contactsCopy = familyAndFriends;
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
   };
@@ -72,7 +72,7 @@ const index = () => {
     <Layout>
       {loading ? (
         <Loader />
-      ) : (openedSubtab == 0 && familyAndFriends?.length) || (openedSubtab == 1 && unknown?.length) ? (
+      ) : familyAndFriends?.length ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             {unapprovedContactsLength > 0 && (
@@ -84,7 +84,7 @@ const index = () => {
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center justify-between w-full">
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'Family & Friends' : 'Unknown'}
+                  Family & Friends
                 </Text>
                 <div className="flex items-center justify-self-end">
                   <Search
@@ -112,9 +112,7 @@ const index = () => {
             autoplay
             style={{ width: '420px', height: '300px' }}></lottie-player>
           <Text h3 className="text-gray7 mt-4 mb-2 text-center">
-            {openedSubtab == 0
-              ? 'You have no contacts categorized as family and friends.'
-              : 'You have no contacts categorized as unknown.'}
+            You have no contacts categorized as family and friends.
           </Text>
         </div>
       )}

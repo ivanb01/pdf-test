@@ -377,7 +377,7 @@ const ReviewContact = ({
           setSubmitDisabled(false);
         }
       } else if (selectedContactCategory == 2 && selectedContactType) {
-        // if other
+        // if family
         setSubmitDisabled(false);
       } else if (selectedContactCategory == 3 || selectedContactCategory == 4) {
         setSubmitDisabled(false);

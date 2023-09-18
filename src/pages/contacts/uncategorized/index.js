@@ -5,9 +5,7 @@ import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { getContacts } from 'api/contacts';
 import Loader from 'components/shared/loader';
-import { getStatuses } from 'api/categorize';
 import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
@@ -74,7 +72,7 @@ const index = () => {
 
     let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
     setUncategorizedContacts(contacts);
-    dispatch(setOpenedTab(2));
+    dispatch(setOpenedTab(4));
     // dispatch(setOpenedSubtab(0));
   };
 

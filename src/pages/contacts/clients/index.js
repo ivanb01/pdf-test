@@ -1,7 +1,14 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent } from 'store/global/slice';
+import {
+  setExpandedTab,
+  setOpenedSubtab,
+  setOpenedTab,
+  setRefetchData,
+  setUnapprovedContacts,
+  setUserGaveConsent,
+} from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -64,7 +71,6 @@ const index = () => {
     setContactsCopy(clients);
     setLoading(false);
     dispatch(setOpenedTab(0));
-    // dispatch(setOpenedSubtab(0));
   };
   useEffect(() => {
     setLoading(true);

@@ -1879,11 +1879,6 @@ const Table = ({
                 <p className={'text-sm leading-5 font-medium text-gray8 mt-3'}> {person.status_2}</p>
               </td>
               <td>
-                <div>
-                  <p className={'text-gray-900 font-inter text-base font-normal leading-5 mb-2'}>
-                    {person.campaign_name ?? '-'} <VisibilityIcon className={'text-gray3 h-4 w-4 ml-1.5'} />
-                  </p>
-                </div>
                 <div className={'flex gap-1.5 items-center'}>
                   <div
                     className={`h-2 w-2 rounded-full ${

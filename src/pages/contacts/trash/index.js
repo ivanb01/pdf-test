@@ -20,7 +20,7 @@ const index = () => {
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   useEffect(() => {
-    dispatch(setOpenedTab(4));
+    dispatch(setOpenedTab(6));
   }, []);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import Layout from 'components/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Loader from '@components/shared/loader';
-import { getContacts } from '@api/contacts';
+import { bulkUpdateContacts, getContacts } from '@api/contacts';
 import { setAllContacts } from '@store/contacts/slice';
 import Search from '@components/shared/input/search';
 import SimpleBar from 'simplebar-react';
@@ -13,7 +13,6 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import { healthLastCommunicationDate } from '@global/variables';
 import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
-
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -24,7 +23,7 @@ const index = () => {
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   useEffect(() => {
-    dispatch(setOpenedTab(5));
+    dispatch(setOpenedTab(2));
   }, []);
 
   const getNeedToCommunicateContacts = () => {
@@ -33,12 +32,7 @@ const index = () => {
       if (categoryType !== 'clients' && categoryType !== 'professionals') {
         return false;
       }
-
-      const healthyCommunicationDays = healthLastCommunicationDate[categoryType]
-        ? healthLastCommunicationDate[categoryType][contact.status_2]
-        : null;
-      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date, healthyCommunicationDays);
-
+      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
       return (
         (contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           contact.last_name.toLowerCase().includes(searchTerm.toLowerCase())) &&
