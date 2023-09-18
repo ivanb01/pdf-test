@@ -152,11 +152,12 @@ const index = () => {
     },
   ];
 
-  const fetchProperties = async (page) => {
+  const fetchProperties = async (page = 1) => {
     setLoading(true);
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
+      page: page,
     };
 
     if (searchKey) params['address'] = searchKey;
@@ -214,7 +215,7 @@ const index = () => {
           <SearchSelectInput
             options={NYCneighborhoods}
             className="mr-4 min-w-[480px]"
-            placeholder="in: Choose Neighborhood"
+            placeholder="Neighborhood"
             onChange={(choice) => {
               let choices = choice.map((el) => el.value);
               setNeighborhoods(choices);
@@ -224,7 +225,7 @@ const index = () => {
           <Dropdown
             options={forOptions}
             className="mr-4"
-            placeHolder="for: Choose"
+            placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
             }}
@@ -242,7 +243,7 @@ const index = () => {
           <Dropdown
             options={bedroomsOptions}
             className="mr-4"
-            placeHolder="Bedrooms: -"
+            placeHolder="Bedrooms"
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
@@ -251,7 +252,7 @@ const index = () => {
           <Dropdown
             options={bathroomOptions}
             className="mr-4"
-            placeHolder="Bathrooms: -"
+            placeHolder="Bathrooms"
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
@@ -274,13 +275,13 @@ const index = () => {
         </div>
       ) : properties.LISTINGS && properties.LISTINGS.length ? (
         <div className="flex items-center justify-between">
-          <div className="w-1/2">
+          <div className="w-full">
             <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
               <div className="p-6">
                 <div className="mb-4 text-gray-900 text-sm font-medium">
                   {properties.TOTAL_COUNT.toLocaleString()} total properties
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
                     <PropertyCard key={index} property={property}></PropertyCard>
                   ))}
@@ -323,7 +324,7 @@ const index = () => {
               </div>
             </SimpleBar>
           </div>
-          <div className="w-1/2">
+          {/* <div className="w-1/2">
             {isLoaded && (
               <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
                 <MarkerF
@@ -335,7 +336,7 @@ const index = () => {
                 />
               </GoogleMap>
             )}
-          </div>
+          </div> */}
         </div>
       ) : (
         <div className="p-6">
