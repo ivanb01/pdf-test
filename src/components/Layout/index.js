@@ -22,7 +22,7 @@ import { Auth } from 'aws-amplify';
 import { getCount } from 'api/contacts';
 import { setCount, setRefetchData } from 'store/global/slice';
 import { setUser } from 'store/global/slice';
-
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 const Layout = ({ children }) => {
   const router = useRouter();
 
@@ -184,6 +184,15 @@ const Layout = ({ children }) => {
       count: 0,
       count_key: 'trash',
       icon: <DeleteIcon className={'w-5 h-5'} />,
+    },
+    {
+      id: 5,
+      name: 'Need to Contact',
+      label: 'Need to Contact',
+      href: 'needcontact',
+      count: 0,
+      count_key: 'trash',
+      icon: <LocalPhoneIcon className={'w-5 h-5'} />,
     },
   ]);
   const { tabs: storeTabs } = useSelector((state) => state.global);

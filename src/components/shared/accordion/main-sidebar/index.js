@@ -245,7 +245,7 @@ const TabBar = ({ tab }) => {
   };
 
   const handleTabClick = () => {
-    if (tab.id === 4) {
+    if (tab.id === 4 || tab.id === 5) {
       router.push(tab.href);
     }
     dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
