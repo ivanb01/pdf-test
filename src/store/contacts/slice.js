@@ -39,6 +39,10 @@ const contactsSlice = createSlice({
         );
       }
     },
+    addContactLocally(state, action) {
+      const newContact = action.payload;
+      state.data.data = [...state.data.data, newContact];
+    },
   },
 });
 
@@ -50,5 +54,6 @@ export const {
   setUncategorized,
   updateContacts,
   updateContactLocally,
+  addContactLocally,
 } = contactsSlice.actions;
 export default contactsSlice.reducer;
