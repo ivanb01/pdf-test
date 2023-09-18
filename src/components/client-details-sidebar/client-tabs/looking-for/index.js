@@ -389,7 +389,11 @@ export default function LookingFor({ contactId, category }) {
                           <> {allPropertiesCount} Recommendations on Sold Properties</>
                         )}
                         <div className={'flex items-center gap-2'}>
-                          <p className="text-gray-700 font-inter text-base font-normal leading-5">Sort by</p>
+                          <p
+                            className="text-gray6 font-inter font-normal leading-5 text-sm"
+                            style={{ marginTop: '3px' }}>
+                            Sort by
+                          </p>
                           <FilterPropertiesDropdown
                             propertyInterests={propertyInterests}
                             onFiltersChange={onFiltersChange}
