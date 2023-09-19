@@ -413,11 +413,11 @@ const index = () => {
       name: 'Unit Number',
       value: data.UNIT_NUMBER,
     },
-    {
-      id: 10,
-      name: 'Tour',
-      value: data.VTOUR ?? data.VTOUR2,
-    },
+    // {
+    //   id: 10,
+    //   name: 'Tour',
+    //   value: data.VTOUR ?? data.VTOUR2,
+    // },
   ];
 
   const getOtherDetails = () => {
