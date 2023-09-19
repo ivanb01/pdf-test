@@ -583,8 +583,8 @@ const index = () => {
             </div>
           </div>
         </div>
-        <div className="md:mt-10 mt-5 pb-10 flex">
-          <div className="mr-20">
+        <div className="md:mt-10 mt-5 pb-10 flex justify-between">
+          <div className="w-[700px] mr-20">
             <div className="property-details">
               <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
               <div className="flex">
@@ -672,7 +672,7 @@ const index = () => {
             </div>
           </div>
           {isAuthenticated && (
-            <div className="">
+            <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
               <div className="text-gray7 text-xl mb-6 font-medium">Listing Agent</div>
               {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
               <div className="flex items-center">
@@ -683,9 +683,9 @@ const index = () => {
                     alt=""
                   />
                 </div>
-                <div className="max-w-[200px] break-words">
-                  <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
-                  <div className="text-gray-500">
+                <div className=" break-words">
+                  <div className="text-gray-500 text-sm">
+                    <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
                     <a className="block">{data.COMPANY_NAME}</a>
                     <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
                       {data.AGENT_EMAIL}
