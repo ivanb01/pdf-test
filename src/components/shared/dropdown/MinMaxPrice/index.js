@@ -25,17 +25,25 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
     }
   };
 
+  const formatNumberToMillions = (n) => {
+    if (n >= 1e6) {
+      return `$${(n / 1e6).toFixed(0)}m`;
+    }
+    return `$${n.toLocaleString('en-US')}`;
+  };
+
   useEffect(() => {
     let minPriceLabel = '';
     let maxPriceLabel = '';
 
     if (minPrice) {
-      minPriceLabel = '$' + minPrice.toLocaleString('en-US');
+      minPriceLabel = formatNumberToMillions(minPrice);
+      // minPriceLabel = '$' + minPrice.toLocaleString('en-US');
     } else if (!minPrice) {
       minPriceLabel = 'Any';
     }
     if (maxPrice) {
-      maxPriceLabel = '$' + maxPrice.toLocaleString('en-US');
+      maxPriceLabel = formatNumberToMillions(maxPrice);
     } else if (!maxPrice) {
       maxPriceLabel = 'Any';
     }

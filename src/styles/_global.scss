@@ -558,3 +558,49 @@ tbody > div {
   height: 38px !important;
   width: 300px !important;
 }
+.dropdown-heading-value {
+  font-size: 14px;
+  span {
+    color: #808080 !important;
+  }
+}
+.select-item {
+  font-size: 14px !important;
+}
+.item-renderer input {
+  border-color: #808080 !important;
+  border-radius: 4px !important;
+  color: #0ea5e9;
+}
+.item-renderer input:checked {
+  border: none !important;
+}
+.rmsc .item-renderer {
+  align-items: center !important;
+}
+.rmsc .search {
+  font-size: 14px !important;
+}
+.rmsc .search input:focus {
+  background: none !important;
+}
+.rmsc .select-item.selected {
+  background: #f1f1f1 !important;
+}
+.no-options {
+  font-size: 14px !important;
+}
+.dropdown-container {
+  width: 400px !important;
+}
+.rmsc {
+  --rmsc-main: #4285f4;
+  --rmsc-hover: #f1f3f5;
+  --rmsc-selected: #e2e6ea;
+  --rmsc-border: red;
+  --rmsc-gray: #aaa;
+  --rmsc-bg: #fff;
+  --rmsc-p: 10px; /* Spacing */
+  --rmsc-radius: 4px; /* Radius */
+  --rmsc-h: 38px; /* Height */
+}

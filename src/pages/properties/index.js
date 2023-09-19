@@ -245,15 +245,13 @@ const index = () => {
             value={neighborhoods}
             onChange={(neighborhood) => {
               setNeighborhoods(neighborhood);
-              // console.log(selected);
-              // setNeighborhoods(choice);
             }}
-            labelledBy="Select"
+            labelledBy="Select Neighborhoods"
             className="mr-4"
           />
           <Dropdown
             options={forOptions}
-            className="mr-4 w-[180px]"
+            className="mr-4 w-[130px]"
             placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
@@ -271,7 +269,7 @@ const index = () => {
           /> */}
           <Dropdown
             options={bedroomsOptions}
-            className="mr-4 w-[180px]"
+            className="mr-4 w-[140px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
             handleSelect={(choice) => {
@@ -281,7 +279,7 @@ const index = () => {
           />
           <Dropdown
             options={bathroomOptions}
-            className="mr-4 w-[180px]"
+            className="mr-4 w-[140px]"
             placeHolder="Bathrooms"
             afterLabel="Baths"
             handleSelect={(choice) => {
