@@ -216,7 +216,6 @@ const index = () => {
         <TopBar text="Account Management" />
         <div className="p-6">
           <div className="font-medium">Smart Sync Contacts and Google Contacts from Gmail</div>
-          <div className="text-sm text-gray-700 mt-6 mb-3">Smart Sync Contacts and Google Contacts from Gmail</div>
           <div className=" w-fit rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
