@@ -683,7 +683,7 @@ const index = () => {
                     alt=""
                   />
                 </div>
-                <div>
+                <div className="max-w-[200px] break-words">
                   <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
                   <div className="text-gray-500">
                     <a className="block">{data.COMPANY_NAME}</a>
