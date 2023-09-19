@@ -320,36 +320,40 @@ const ReviewContact = ({
       }
 
       if (shouldExecuteRemainingCode) {
-        toast.custom(
-          (t) => (
-            <div
-              className={`${
-                t.visible ? 'animate-enter' : 'animate-leave'
-              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
-              <div className="flex gap-2 p-4 word-break items-center">
-                <CheckCircleIcon className={'text-green-500'} />
-                <h1 className={'text-sm leading-5 font-medium'}>
-                  {newData.first_name} {newData.last_name} "Marked as Correct"!
-                </h1>
+        if (router.pathname.includes('clients')) {
+          toast.success('Changes have been saved successfully!');
+        } else {
+          toast.custom(
+            (t) => (
+              <div
+                className={`${
+                  t.visible ? 'animate-enter' : 'animate-leave'
+                } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+                <div className="flex gap-2 p-4 word-break items-center">
+                  <CheckCircleIcon className={'text-green-500'} />
+                  <h1 className={'text-sm leading-5 font-medium'}>
+                    {newData.first_name} {newData.last_name} "Marked as Correct"!
+                  </h1>
+                </div>
+                <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+                  <button
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      updateContact(client.id, {
+                        ...newData,
+                        approved_ai: false,
+                      }).then(() => dispatch(setRefetchData(true)));
+                      afterSubmit(client.id, { ...newData, approved_ai: false });
+                    }}
+                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                    Undo
+                  </button>
+                </div>
               </div>
-              <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
-                <button
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    updateContact(client.id, {
-                      ...newData,
-                      approved_ai: false,
-                    }).then(() => dispatch(setRefetchData(true)));
-                    afterSubmit(client.id, { ...newData, approved_ai: false });
-                  }}
-                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
-                  Undo
-                </button>
-              </div>
-            </div>
-          ),
-          { duration: 0 },
-        );
+            ),
+            { duration: 0 },
+          );
+        }
       }
     } catch (error) {
       toast.error(error);
