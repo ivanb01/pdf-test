@@ -5,10 +5,11 @@ import three from '/public/images/property/3.png';
 import four from '/public/images/property/4.png';
 import five from '/public/images/property/5.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
 import Image from 'next/image';
 import location from '/public/images/location.png';
 import { useState } from 'react';
@@ -531,7 +532,13 @@ const index = () => {
           </>
         ) : (
           <>
-            <Swiper slidesPerView={3} loop spaceBetween={12} navigation modules={[Pagination, Navigation]}>
+            <Swiper
+              scrollbar={{ draggable: true }}
+              slidesPerView={3}
+              loop
+              spaceBetween={12}
+              navigation
+              modules={[Pagination, Navigation, Scrollbar]}>
               {data.PHOTOS.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
                   <img
@@ -577,7 +584,7 @@ const index = () => {
           </div>
         </div>
         <div className="md:mt-10 mt-5 pb-10 flex">
-          <div className="w-2/3 mr-20">
+          <div className="mr-20">
             <div className="property-details">
               <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
               <div className="flex">
@@ -665,13 +672,14 @@ const index = () => {
             </div>
           </div>
           {isAuthenticated && (
-            <div className="w-1/3">
-              <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div>
+            <div className="">
+              <div className="text-gray7 text-xl mb-6 font-medium">Listing Agent</div>
+              {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
               <div className="flex items-center">
-                <div className="mr-4">
+                <div className="mr-4 w-24 h-24 rounded-lg">
                   <img
                     src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
-                    className="object-cover w-24 h-24 rounded-lg"
+                    className="object-cover rounded-lg"
                     alt=""
                   />
                 </div>
