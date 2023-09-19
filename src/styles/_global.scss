@@ -564,6 +564,9 @@ tbody > div {
     color: #808080 !important;
   }
 }
+.dropdown-heading-value span:not(.gray) {
+  color: #1f2937 !important;
+}
 .select-item {
   font-size: 14px !important;
 }

@@ -257,6 +257,9 @@ const index = () => {
               setNeighborhoods(neighborhood);
             }}
             labelledBy="Select Neighborhoods"
+            overrideStrings={{
+              selectSomeItems: 'Select Neighborhoods',
+            }}
             className="mr-4"
           />
           <Dropdown
