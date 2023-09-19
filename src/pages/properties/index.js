@@ -234,7 +234,7 @@ const index = () => {
         <div className="flex p-6">
           <Search
             className="w-[250px] mr-4 text-sm"
-            placeholder="Search for properties"
+            placeholder="Search by address"
             onInput={(event) => {
               setSearchKey(event.target.value);
             }}
