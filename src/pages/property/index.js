@@ -666,6 +666,7 @@ const index = () => {
           </div>
           {isAuthenticated && (
             <div className="w-1/3">
+              <div className="text-gray7 text-xl mb-6 font-medium">Listing Agent</div>
               <div className="flex items-center">
                 <div className="mr-4">
                   <img
