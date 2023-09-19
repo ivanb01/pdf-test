@@ -217,6 +217,16 @@ const index = () => {
       setMaxPrice();
     }
   }, [status]);
+
+  const sortOptionsByChecked = (options, selectedValues) => {
+    const selectedOptions = options.filter((option) => selectedValues.some((value) => value.value === option.value));
+    const unselectedOptions = options.filter((option) => !selectedValues.some((value) => value.value === option.value));
+
+    return [...selectedOptions, ...unselectedOptions];
+  };
+
+  const sortedNeighborhoods = sortOptionsByChecked(NYCneighborhoods, neighborhoods);
+
   return (
     <>
       <MainMenu />
@@ -241,7 +251,7 @@ const index = () => {
               value={valueOptions(neighborhoods, NYCneighborhoods)}
             /> */}
           <MultiSelect
-            options={NYCneighborhoods}
+            options={sortedNeighborhoods}
             value={neighborhoods}
             onChange={(neighborhood) => {
               setNeighborhoods(neighborhood);

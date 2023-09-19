@@ -575,6 +575,10 @@ tbody > div {
 .item-renderer input:checked {
   border: none !important;
 }
+.item-renderer input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 .rmsc .item-renderer {
   align-items: center !important;
 }
