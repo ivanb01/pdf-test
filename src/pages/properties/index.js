@@ -233,7 +233,7 @@ const index = () => {
       <div className="border border-b">
         <div className="flex p-6">
           <Search
-            className="w-[250px] mr-4 text-sm"
+            className="w-[445px] mr-4 text-sm"
             placeholder="Search by address"
             onInput={(event) => {
               setSearchKey(event.target.value);
@@ -264,7 +264,7 @@ const index = () => {
           />
           <Dropdown
             options={forOptions}
-            className="mr-4 w-[130px]"
+            className="mr-4 w-[250px]"
             placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
@@ -282,8 +282,8 @@ const index = () => {
           /> */}
           <Dropdown
             options={bedroomsOptions}
-            className="mr-4 w-[140px]"
-            placeHolder="Bedrooms"
+            className="mr-4 w-[120px]"
+            placeHolder="Beds"
             afterLabel="Beds"
             handleSelect={(choice) => {
               setBedrooms(choice);
@@ -292,8 +292,8 @@ const index = () => {
           />
           <Dropdown
             options={bathroomOptions}
-            className="mr-4 w-[140px]"
-            placeHolder="Bathrooms"
+            className="mr-4 w-[120px]"
+            placeHolder="Baths"
             afterLabel="Baths"
             handleSelect={(choice) => {
               setBathrooms(choice);
@@ -303,7 +303,7 @@ const index = () => {
           <MinMaxPrice
             // options={bathroomOptions}
             label="Min/Max Price"
-            className="mr-4 w-[220px]"
+            className="mr-4 w-[450px]"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
