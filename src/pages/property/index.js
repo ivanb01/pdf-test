@@ -43,13 +43,16 @@ import { useRouter } from 'next/router';
 import { formatPrice } from '@global/functions';
 import fetchJsonp from 'fetch-jsonp';
 import Loader from '@components/shared/loader';
-import placeholder from '/public/images/img-placeholder.png';
+import placeholder from '/public/images/placeholder.png';
+import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
+import { Auth } from 'aws-amplify';
 
 const index = () => {
   const router = useRouter();
   const id = router.query.id;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
@@ -493,6 +496,16 @@ const index = () => {
     return { mainAmenitiesPerProperty, capitalizedRemainingAmenities };
   };
 
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((res) => {
+      if (res) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+  }, []);
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -651,22 +664,42 @@ const index = () => {
               </div>
             </div>
           </div>
-          <div className="w-1/4">
-            <div className="flex">
-              <div className="mr-4">
-                <img
-                  src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
-                  className="object-cover w-20 h-20 rounded-lg"
-                  alt=""
-                />
-              </div>
-              <div>
-                <div>{data.AGENT_NAME}</div>
-                <div>{data.AGENT_EMAIL}</div>
-                <div>{data.AGENT_PHONE}</div>
+          {isAuthenticated && (
+            <div className="w-1/3">
+              <div className="flex items-center">
+                <div className="mr-4">
+                  <img
+                    src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
+                    className="object-cover w-20 h-20 rounded-lg"
+                    alt=""
+                  />
+                </div>
+                <div>
+                  <div>{data.AGENT_NAME}</div>
+                  <div className="text-gray-500">
+                    <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
+                      {data.AGENT_EMAIL}
+                    </a>
+                    <a className="block hover:underline" href={`tel:${data.AGENT_PHONE}`}>
+                      {data.AGENT_PHONE}
+                    </a>
+                  </div>
+                  {/* <div className="flex mt-2">
+                  <a
+                    className="flex mr-2 items-center justify-center h-[35px] w-[35px] bg-purple-500 rounded-full "
+                    href={`email:${data.AGENT_EMAIL}`}>
+                    <EmailRounded className="text-white" />
+                  </a>
+                  <a
+                    className="flex items-center justify-center h-[35px] w-[35px] bg-teal-400 rounded-full "
+                    href={`tel:${data.AGENT_PHONE}`}>
+                    <Phone className="text-white" />
+                  </a>
+                </div> */}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>
