@@ -666,18 +666,19 @@ const index = () => {
           </div>
           {isAuthenticated && (
             <div className="w-1/3">
-              <div className="text-gray7 text-xl mb-6 font-medium">Listing Agent</div>
+              <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div>
               <div className="flex items-center">
                 <div className="mr-4">
                   <img
                     src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
-                    className="object-cover w-20 h-20 rounded-lg"
+                    className="object-cover w-24 h-24 rounded-lg"
                     alt=""
                   />
                 </div>
                 <div>
-                  <div>{data.AGENT_NAME}</div>
+                  <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
                   <div className="text-gray-500">
+                    <a className="block">{data.COMPANY_NAME}</a>
                     <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
                       {data.AGENT_EMAIL}
                     </a>
