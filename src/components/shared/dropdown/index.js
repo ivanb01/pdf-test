@@ -28,6 +28,7 @@ const Dropdown = ({
   error,
   errorText,
   openClassName,
+  afterLabel,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -72,7 +73,7 @@ const Dropdown = ({
                       selected && selected.label && 'text-gray8'
                     } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}
-                    {selected && selected.label}
+                    {selected && afterLabel ? selected.label + ` ${afterLabel}` : selected?.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <ChevronDownIcon

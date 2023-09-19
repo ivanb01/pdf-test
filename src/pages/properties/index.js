@@ -29,7 +29,7 @@ const index = () => {
   const [bedrooms, setBedrooms] = useState();
   const [bathrooms, setBathrooms] = useState();
   const [minPrice, setMinPrice] = useState();
-  const [maxPrice, setMaxPrice] = useState(999);
+  const [maxPrice, setMaxPrice] = useState();
 
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
@@ -164,7 +164,7 @@ const index = () => {
     if (minPrice) {
       params['priceMin'] = minPrice;
     }
-    if (maxPrice && maxPrice != 999) {
+    if (maxPrice) {
       params['priceMax'] = maxPrice;
     }
     const urlParams = new URLSearchParams({
@@ -172,6 +172,7 @@ const index = () => {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
 
     await fetchJsonp(url)
       .then((res) => res.json())
@@ -183,7 +184,7 @@ const index = () => {
 
   const resetFilters = () => {
     setMinPrice();
-    setMaxPrice(999);
+    setMaxPrice();
     setNeighborhoods();
     setNeighborhoods();
     setStatus();
@@ -256,6 +257,7 @@ const index = () => {
             options={bedroomsOptions}
             className="mr-4 w-[180px]"
             placeHolder="Bedrooms"
+            afterLabel="Bedrooms"
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
@@ -265,6 +267,7 @@ const index = () => {
             options={bathroomOptions}
             className="mr-4 w-[180px]"
             placeHolder="Bathrooms"
+            afterLabel="Bathrooms"
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
