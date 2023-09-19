@@ -13,6 +13,13 @@ import { valueOptions } from '@global/functions';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
+import { MultiSelect } from 'react-multi-select-component';
+
+const options = [
+  { label: 'Grapes 🍇', value: 'grapes' },
+  { label: 'Mango 🥭', value: 'mango' },
+  { label: 'Strawberry 🍓', value: 'strawberry', disabled: true },
+];
 
 const index = () => {
   const { isLoaded } = useLoadScript({
@@ -24,7 +31,7 @@ const index = () => {
   const [page, setPage] = useState(1);
 
   const [searchKey, setSearchKey] = useState();
-  const [neighborhoods, setNeighborhoods] = useState();
+  const [neighborhoods, setNeighborhoods] = useState([]);
   const [status, setStatus] = useState();
   const [bedrooms, setBedrooms] = useState();
   const [bathrooms, setBathrooms] = useState();
@@ -154,7 +161,8 @@ const index = () => {
 
     if (searchKey) params['address'] = searchKey;
     if (status) params['status'] = status.id == 0 ? 1 : 2;
-    if (neighborhoods) params['neighborhood_id'] = neighborhoods.join(',');
+    if (neighborhoods.length)
+      params['neighborhood_id'] = neighborhoods.map((neighborhood) => neighborhood.value).join(',');
     if (bedrooms) {
       params['bedsMin'] = bedrooms.label == '10+' ? 10 : bedrooms.label;
     }
@@ -185,8 +193,7 @@ const index = () => {
   const resetFilters = () => {
     setMinPrice();
     setMaxPrice();
-    setNeighborhoods();
-    setNeighborhoods();
+    setNeighborhoods([]);
     setStatus();
     setBedrooms();
     setBathrooms();
@@ -223,8 +230,7 @@ const index = () => {
             }}
             value={searchKey}
           />
-          <div className="w-[350px] mr-4">
-            <SearchSelectInput
+          {/* <SearchSelectInput
               options={NYCneighborhoods}
               className="mr-4"
               placeholder="Neighborhood"
@@ -233,8 +239,18 @@ const index = () => {
                 setNeighborhoods(choices);
               }}
               value={valueOptions(neighborhoods, NYCneighborhoods)}
-            />
-          </div>
+            /> */}
+          <MultiSelect
+            options={NYCneighborhoods}
+            value={neighborhoods}
+            onChange={(neighborhood) => {
+              setNeighborhoods(neighborhood);
+              // console.log(selected);
+              // setNeighborhoods(choice);
+            }}
+            labelledBy="Select"
+            className="mr-4"
+          />
           <Dropdown
             options={forOptions}
             className="mr-4 w-[180px]"
@@ -257,7 +273,7 @@ const index = () => {
             options={bedroomsOptions}
             className="mr-4 w-[180px]"
             placeHolder="Bedrooms"
-            afterLabel="Bedrooms"
+            afterLabel="Beds"
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
@@ -267,7 +283,7 @@ const index = () => {
             options={bathroomOptions}
             className="mr-4 w-[180px]"
             placeHolder="Bathrooms"
-            afterLabel="Bathrooms"
+            afterLabel="Baths"
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
