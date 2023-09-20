@@ -187,7 +187,7 @@ const index = () => {
     return orderA - orderB;
   }
 
-  const sortedData = [...data].sort(customSort);
+  const sortedData = (Array.isArray(data) ? [...data] : []).sort(customSort);
 
   return (
     <div className="">
