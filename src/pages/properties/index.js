@@ -14,6 +14,7 @@ import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
+import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -29,7 +30,7 @@ const index = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-
+  const [filterValue, setFilterValue] = useState('newest');
   const [searchKey, setSearchKey] = useState();
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [status, setStatus] = useState();
@@ -43,6 +44,9 @@ const index = () => {
   };
   const getToNumber = () => {
     return Math.min(page * 21, properties.TOTAL_COUNT);
+  };
+  const onFiltersChange = (filter) => {
+    setFilterValue(filter);
   };
 
   const bathroomOptions = [
@@ -151,14 +155,25 @@ const index = () => {
     },
   ];
 
-  const fetchProperties = async (page = 1) => {
+  const fetchProperties = async (filterValue, page = 1) => {
     setLoading(true);
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       page: page,
     };
-
+    if (filterValue === 'newest') {
+      params['sort'] = 'date';
+      params['order'] = 'desc';
+    }
+    if (filterValue === 'oldest') {
+      params['sort'] = 'date';
+      params['order'] = 'asc';
+    }
+    if (filterValue === 'minPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'asc';
+    }
     if (searchKey) params['address'] = searchKey;
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (neighborhoods.length)
@@ -201,12 +216,12 @@ const index = () => {
   };
 
   useEffect(() => {
-    fetchProperties();
+    fetchProperties(filterValue);
   }, []);
 
   useEffect(() => {
-    fetchProperties();
-  }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice]);
+    fetchProperties(filterValue);
+  }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice, filterValue]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
@@ -330,8 +345,14 @@ const index = () => {
           <div className="w-full">
             <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
               <div className="p-6">
-                <div className="mb-4 text-gray-900 text-sm font-medium">
-                  {properties.TOTAL_COUNT.toLocaleString()} total properties
+                <div className={'flex items-center justify-between mb-6'}>
+                  <div className="text-gray-900 text-sm font-medium">
+                    {properties.TOTAL_COUNT.toLocaleString()} total properties
+                  </div>
+                  <div className={'flex items-center gap-2'}>
+                    <p className="text-gray6 font-inter font-normal leading-5 text-sm mt-1">Sort by</p>
+                    <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
+                  </div>
                 </div>
                 <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
@@ -352,7 +373,7 @@ const index = () => {
                         <a
                           href="#"
                           onClick={() => {
-                            fetchProperties(page - 1);
+                            fetchProperties(filterValue, page - 1);
                             setPage(page - 1);
                           }}
                           className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
@@ -363,7 +384,7 @@ const index = () => {
                         <a
                           href="#"
                           onClick={() => {
-                            fetchProperties(page + 1);
+                            fetchProperties(filterValue, page + 1);
                             setPage(page + 1);
                           }}
                           className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">

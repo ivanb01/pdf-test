@@ -60,7 +60,7 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
               }>
               {selected.name}
             </span>
-            <ArrowDropUpIcon className={`h-5 w-5 text-gray-400 ${!isOpen ? 'rotate-180' : ''}`} />
+            <ArrowDropUpIcon className={` transition-all h-5 w-5 text-gray-400 ${!isOpen ? 'rotate-180' : ''}`} />
           </Listbox.Button>
           <Transition
             as={Fragment}
