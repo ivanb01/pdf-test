@@ -40,8 +40,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const pinned = useSelector((state) => state.global.expandedMenu);
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [startedOnboarding, setStartedOnboarding] = useState(false);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
@@ -52,6 +53,12 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       console.log('error occurredw with google import');
     }
   };
+
+  useEffect(() => {
+    if (allContacts && !allContacts.length) {
+      setShowOnboarding(true);
+    }
+  }, [allContacts]);
 
   const narrowMenu = () => {
     return (
@@ -130,7 +137,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         {showOnboarding && (
           <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
         )}
-        {console.log('started onboarding', startedOnboarding)}
         {startedOnboarding && <Tour for={'clients'} />}
 
         <div>
