@@ -135,7 +135,10 @@ html {
 }
 
 .shepherd-header {
-  background: white !important;
+  position: absolute;
+  border-radius: 5px !important;
+  right: 0;
+  background: #374151 !important;
 }
 
 .shepherd-cancel-icon {
@@ -151,7 +154,6 @@ html {
 }
 
 .onboarding-custom {
-  padding: 12px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -169,7 +171,7 @@ html {
     margin-bottom: 16px;
     font-weight: 600;
     font-size: 16px;
-    color: #111827 !important;
+    color: white !important;
 
     &.mb-0 {
       margin-bottom: 0 !important;
@@ -177,22 +179,22 @@ html {
 
     &.blue {
       margin-bottom: 0;
-      color: #0ea5e9;
+      color: #0ea5e9 !important;
     }
 
     &.green {
       margin-bottom: 0;
-      color: #10b981;
+      color: #10b981 !important;
     }
 
     &.orange {
       margin-bottom: 0;
-      color: #fb923c;
+      color: #fb923c !important;
     }
 
     &.red {
       margin-bottom: 0;
-      color: #ef4444;
+      color: #ef4444 !important;
     }
   }
 
@@ -200,7 +202,7 @@ html {
     margin-bottom: 16px;
     align-self: flex-start;
     font-weight: 500;
-    color: #6b7280 !important;
+    color: #e5e7eb !important;
   }
 }
 
@@ -211,8 +213,27 @@ html {
 
 .shepherd-has-title .shepherd-content .shepherd-header {
   padding: 0.75em !important;
+  background: #374151 !important;
 }
 
+.shepherd-content {
+  padding-top: 10px !important;
+  background: #374151 !important;
+}
+
+.shepherd-arrow:before {
+  background: #374151 !important;
+}
+
+.shepherd-text,
+.shepherd-footer {
+  background: #374151 !important;
+}
+.shepherd-text {
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 8px !important;
+}
 .shepherd-button-primary {
   position: relative;
   background: transparent !important;
@@ -263,7 +284,7 @@ html {
   bottom: 0;
   left: 0;
   padding: 20px;
-  padding-left: 25px;
+  padding-left: 15px;
   color: #9ca3af;
   font-size: 14px;
 }
