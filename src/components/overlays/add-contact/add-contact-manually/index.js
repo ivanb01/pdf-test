@@ -16,7 +16,7 @@ import TagsInput from 'components/tagsInput';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
-import { setContacts } from 'store/contacts/slice';
+import { addContactLocally, setContacts, updateContactLocally } from 'store/contacts/slice';
 import {
   leadSourceOptions,
   phoneNumberRules,
@@ -165,10 +165,10 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
         status_id: formik2.values.selectedStatus,
       };
 
-      console.log('contact to add: ', contactToAdd);
+      dispatch(addContactLocally(contactToAdd));
 
-      const res = await addContact(contactToAdd);
-      const { data } = await getContacts(categoryIds[selectedContact]);
+      const res = addContact(contactToAdd);
+      const { data } = getContacts(categoryIds[selectedContact]);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
