@@ -42,7 +42,11 @@ export default function DateChip({
           <p className={'text-xs leading-4 font-normal'}>
             {isHealthyCommunication
               ? 'You are doing a great job! '
-              : 'It is recommended to communicate in this status every 2 Days.'}
+              : `It is recommended to communicate in this status every ${
+                  healthLastCommunicationDate[contactCategory.toLowerCase()][contactStatus] == 1
+                    ? 'day'
+                    : healthLastCommunicationDate[contactCategory.toLowerCase()][contactStatus] + ' days'
+                }.`}
           </p>
         </div>
       </TooltipComponent>
