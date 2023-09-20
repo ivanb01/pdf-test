@@ -19,7 +19,11 @@ import ArrowRight from '/public/images/arrow-circle-right.svg';
 import { CSSTransition } from 'react-transition-group';
 import { setUserGaveConsent } from 'store/global/slice';
 import CheckCircle from '@mui/icons-material/CheckCircle';
-import { getUserConsentForGoogleEmail, getUserConsentStatus } from '@api/google';
+import {
+  getUserConsentForGoogleContactsAndEmail,
+  getUserConsentForGoogleEmail,
+  getUserConsentStatus,
+} from '@api/google';
 import googleContactsIcon from '/public/images/google-contacts.png';
 import checkmark from '/public/images/checkmark.svg';
 import Info from '@mui/icons-material/Info';
@@ -47,7 +51,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
     try {
-      const { data } = await getUserConsentForGoogleEmail();
+      const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');
