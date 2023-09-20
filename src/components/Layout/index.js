@@ -129,8 +129,8 @@ const Layout = ({ children }) => {
     },
     {
       id: 3,
-      name: 'Still unknown',
-      label: 'Still unknown',
+      name: 'Still Unknown',
+      label: 'Still Unknown',
       groupName: 'Needs Attention',
       href: 'unknown',
       icon: (
