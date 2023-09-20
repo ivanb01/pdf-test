@@ -26,7 +26,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
           <div className="flex justify-center">
             <img className="mb-2" src={img.src}></img>
           </div>
-          <div className="text-lg font-semibold text-gray-900 mb-3">Welcome John!</div>
+          <div className="text-lg font-semibold text-gray-900 mb-3">Welcome!</div>
           <div className="text-xs text-gray-900">
             We're excited to have you join our community of empowered users. With our CRM, you'll gain the tools and
             insights to supercharge your relationship management. Get ready to explore the possibilities and achieve
@@ -113,15 +113,6 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
               label="Back"
             />
           </div>
-          <div className="w-1/3 text-center">
-            <a
-              className="text-lightBlue3 text-sm hover:underline cursor-pointer"
-              loading={loading}
-              onClick={handleCloseOverlay}>
-              Skip for now
-            </a>
-          </div>
-
           <div className="w-1/3 text-right">
             <Button
               loading={loading}

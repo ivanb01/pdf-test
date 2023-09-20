@@ -26,13 +26,13 @@ const clientSteps = [
       <div class="description">Contacts who help you close deals.</div>
       <hr class="w-full mb-4" ></hr>
       <div class="title blue">In The Funnel</div>
-      <div class="description">Clients with whom your actively working with, trying to close a deal.</div>
+      <div class="description">Clients you're actively working with. These require lots of attention.</div>
       <div class="title green">Closed Clients</div>
-      <div class="description">Clients who are about to close or closed, that require less attention.</div>
+      <div class="description">Clients who are about to close or closed. These require less attention.</div>
       <div class="title orange">On Hold</div>
       <div class="description">Clients that are not in the funnel, but you want to stay in touch with in the future.</div>
       <div class="title red">Dropped</div>
-      <div class="description">Clients who you were working with, but decided to give up.</div>
+      <div class="description">Clients who you were working with, but decided to give up on.</div>
       <div class="onboarding-progress">1 of 7</div>
     </div>`,
   },
@@ -53,7 +53,7 @@ const clientSteps = [
     ],
     text: `
     <div class="onboarding-custom">
-      <div class="title">"Status Blocks".</div>
+      <div class="title">Status Blocks</div>
       <div class="description">Your clients will be placed here depending on their stage in the sales process. </div>
       <div class="onboarding-progress">2 of 7</div>
     </div>`,
@@ -76,7 +76,7 @@ const clientSteps = [
     text: `
     <div class="onboarding-custom">
       <div class="title">Communication Guideline</div>
-      <div class="description">Every status block includes a communication guideline that specifies the recommended duration for maintaining a healthy client communication.</div>
+      <div class="description">Every status block includes tells you how often you need to contact the client to maintain a healthy relationship.</div>
         <div class="w-full flex">
           <div class="flex items-center mr-2 text-white">
             <div class="h-[13px] w-[13px] rounded bg-green5 mr-1" ></div>
@@ -108,12 +108,12 @@ const clientSteps = [
     text: `
     <div class="onboarding-custom">
       <div class="title mb-4">Professionals</div>
-      <div class="description">Contacts that you close deals with and make money.</div>
+      <div class="description">Contacts that help you close deals, but don't buy, sell or rent real estate.</div>
       <hr class="w-full mb-4" ></hr>
       <div class="title">Vendors</div>
-      <div class="description">Clients with whom your actively working with, trying to close a deal.</div>
+      <div class="description">Contacts that help you close deals, but don't buy, sell or rent real estate.</div>
       <div class="title">Agents</div>
-      <div class="description">Clients who are about to close or closed, that require less attention.</div>
+      <div class="description">Other real estate agents you work with to close deals.</div>
       <div class="onboarding-progress">4 of 7</div>
     </div>`,
   },
@@ -140,7 +140,7 @@ const clientSteps = [
       <div class="title">Family and Friends</div>
       <div class="description">Contacts that you import in CRM and are family and friends. </div>
       <div class="title">Unknown</div>
-      <div class="description">Contacts who you don’t know exactly who they are, but you want to keep in CRM.</div>
+      <div class="description">Contacts who you don’t know, but you want to keep in CRM until you remember who they are.</div>
       <div class="onboarding-progress">5 of 7</div>
     </div>`,
   },
@@ -163,7 +163,7 @@ const clientSteps = [
     <div class="onboarding-custom">
       <div class="title mb-4">Uncategorized</div>
       <div class="description">Contacts who are imported in CRM.
-Don’t know yet the type and status of the communication</div>
+THe system doesn't yet know the type and status.</div>
       <div class="onboarding-progress">6 of 7</div>
     </div>`,
   },
@@ -185,7 +185,7 @@ Don’t know yet the type and status of the communication</div>
     text: `
     <div class="onboarding-custom">
       <div class="title mb-4">Trash</div>
-      <div class="description">Contacts that you moved to trash will appear here.</div>
+      <div class="description">Contacts that you move to trash will appear here.</div>
       <div class="onboarding-progress">7 of 7</div>
     </div>`,
   },
@@ -207,9 +207,9 @@ const uncategorizedSteps = [
       <div class="title mb-0">New Records</div>
       <div class="description">New contacts that do not have type and status.</div>
       <div class="title mb-0">Unknown</div>
-      <div class="description">Usually contacts that are imported in, but you don’t want to loose them.</div>
+      <div class="description">Contacts that are imported, but you don’t know where to place them.</div>
       <div class="title mb-0">Trash</div>
-      <div class="description">Contacts that you don’t need to communicate.</div>
+      <div class="description">Contacts that you don’t need to communicate or put in trash will appear here.</div>
     </div>`,
   },
 ];

@@ -137,7 +137,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         {showOnboarding && (
           <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
         )}
-        {startedOnboarding && <Tour for={'clients'} />}
+        {startedOnboarding && !userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
+          <Tour for={'clients'} />
+        )}
 
         <div>
           {pinned ? expandedMenu() : narrowMenu()}
