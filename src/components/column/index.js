@@ -22,6 +22,7 @@ import * as contactServices from 'api/contacts';
 import { setRefetchCount, setRefetchData } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { createPortal } from 'react-dom';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -173,15 +174,17 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   return (
     <div className="flex flex-col border-r border-gray2">
-      {addActivityPopup && (
-        <AddActivity
-          clientId={clientToModify.id}
-          className="min-w-[550px]"
-          title={`Add Activity`}
-          setAddActivityPopup={setAddActivityPopup}
-          handleClose={() => setAddActivityPopup(false)}
-        />
-      )}
+      {addActivityPopup &&
+        createPortal(
+          <AddActivity
+            clientId={clientToModify.id}
+            className="min-w-[550px]"
+            title={`Add Activity`}
+            setAddActivityPopup={setAddActivityPopup}
+            handleClose={() => setAddActivityPopup(false)}
+          />,
+          document.getElementById('modal-portal'),
+        )}
       {changeStatusModal && (
         <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
