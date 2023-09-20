@@ -3,7 +3,7 @@ import Text from 'components/shared/text';
 import Overlay from 'components/shared/overlay';
 import img from '/public/images/onboarding.png';
 import img2 from '/public/images/oneline.png';
-import img3 from '/public/images/thirdStep.png';
+import img3 from '/public/images/third-step.png';
 import img4 from '/public/images/fourth.png';
 import { useState } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
