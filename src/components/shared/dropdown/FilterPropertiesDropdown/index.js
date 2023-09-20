@@ -4,26 +4,18 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveFilterOfProperties } from '@store/global/slice';
 
-const FilterPropertiesDropdown = ({ propertyInterests, onFiltersChange }) => {
+const FilterPropertiesDropdown = ({ onFiltersChange }) => {
   const filterNewest = () => {
-    const sorted = [...propertyInterests].sort((a, b) => new Date(b.DATE_LISTED) - new Date(a.DATE_LISTED));
-    onFiltersChange(sorted);
-    return sorted;
+    onFiltersChange('newest');
   };
   const sortOldest = () => {
-    const sorted = [...propertyInterests].sort((a, b) => new Date(a.DATE_LISTED) - new Date(b.DATE_LISTED));
-    onFiltersChange(sorted);
-    return sorted;
+    onFiltersChange('oldest');
   };
   const sortCheapest = () => {
-    const sorted = [...propertyInterests].sort((a, b) => a.PRICE - b.PRICE);
-    onFiltersChange(sorted);
-    return sorted;
+    onFiltersChange('minPrice');
   };
   const sortMostExpensive = () => {
-    const sorted = [...propertyInterests].sort((a, b) => b.PRICE - a.PRICE);
-    onFiltersChange(sorted);
-    return sorted;
+    onFiltersChange('maxPrice');
   };
   const dispatch = useDispatch();
   const activeFilterOfProperties = useSelector((state) => state.global.activeFilterOfProperties);
@@ -36,10 +28,7 @@ const FilterPropertiesDropdown = ({ propertyInterests, onFiltersChange }) => {
   ];
   const [selected, setSelected] = useState(activeFilterOfProperties);
   useEffect(() => {
-    if (activeFilterOfProperties !== null) {
-      setSelected(options.find((option) => option.id === activeFilterOfProperties));
-      onFiltersChange(options.find((option) => option.id === activeFilterOfProperties).callback());
-    }
+    setSelected(options.find((option) => option.id === activeFilterOfProperties));
   }, [activeFilterOfProperties]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +43,7 @@ const FilterPropertiesDropdown = ({ propertyInterests, onFiltersChange }) => {
     <div>
       <Listbox
         value={selected}
+        defaultValue={'Newest first'}
         onChange={(item) => {
           setSelected(item);
           dispatch(setActiveFilterOfProperties(item.id));
@@ -68,7 +58,7 @@ const FilterPropertiesDropdown = ({ propertyInterests, onFiltersChange }) => {
                   ? 'text-gray4 italic text-sm font-normal leading-5'
                   : 'text-sm leading-5 font-normal text-gray7'
               }>
-              {selected === null ? 'Choose' : selected.name}
+              {selected.name}
             </span>
             <ArrowDropUpIcon className={`h-5 w-5 text-gray-400 ${!isOpen ? 'rotate-180' : ''}`} />
           </Listbox.Button>

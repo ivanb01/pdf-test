@@ -72,6 +72,7 @@ export default function LookingFor({ contactId, category }) {
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [propertyInterests, setPropertyInterests] = useState();
+  const [filterValue, setFilterValue] = useState('newest');
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
@@ -141,7 +142,7 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
-        fetchProperties(lookingProperties[0], 1);
+        fetchProperties(lookingProperties[0], 1, filterValue);
       }
     } catch (error) {
       console.log(error);
@@ -150,7 +151,12 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  const fetchProperties = async (values, page) => {
+  useEffect(() => {
+    console.log(filterValue, 'useEffectFilterValue');
+  }, [filterValue]);
+
+  const fetchProperties = async (values, page, filterValue) => {
+    console.log(filterValue, 'filterValue');
     setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
@@ -159,6 +165,24 @@ export default function LookingFor({ contactId, category }) {
       limit: 21,
       page: page,
     };
+    if (filterValue === 'newest') {
+      params['sort'] = 'date';
+      params['order'] = 'desc';
+    }
+    if (filterValue === 'oldest') {
+      params['sort'] = 'date';
+      params['order'] = 'asc';
+    }
+    if (filterValue === 'minPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'asc';
+      console.log(params['sort'], params['order']);
+    }
+    if (filterValue === 'maxPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'desc';
+      console.log(params['sort'], params['order']);
+    }
     params['status'] = getLookingAction();
     if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
@@ -223,9 +247,9 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
-      fetchProperties(formik.values, 1);
+      fetchProperties(formik.values, 1, filterValue);
     }
-  }, [contactId, lookingForData, refetchData]);
+  }, [contactId, lookingForData, refetchData, filterValue]);
 
   useLayoutEffect(() => {
     if (formik.isValid) {
@@ -234,8 +258,8 @@ export default function LookingFor({ contactId, category }) {
       setDisabledButton(true);
     }
   }, [formik]);
-  const onFiltersChange = (filteredProperties) => {
-    setPropertyInterests(filteredProperties);
+  const onFiltersChange = (filter) => {
+    setFilterValue(filter);
   };
 
   useEffect(() => {
@@ -394,10 +418,7 @@ export default function LookingFor({ contactId, category }) {
                             style={{ marginTop: '3px' }}>
                             Sort by
                           </p>
-                          <FilterPropertiesDropdown
-                            propertyInterests={propertyInterests}
-                            onFiltersChange={onFiltersChange}
-                          />
+                          <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-6">
@@ -421,7 +442,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page - 1);
+                                  fetchProperties(lookingForData[0], page - 1, filterValue);
                                   setPage(page - 1);
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
@@ -432,7 +453,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page + 1);
+                                  fetchProperties(lookingForData[0], page + 1, filterValue);
                                   setPage(page + 1);
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
