@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 // import * as contactServices from 'api/contacts';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
-import { setContacts } from 'store/contacts/slice';
+import { addContactLocally, setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { leadSourceOptions, phoneNumberRules } from 'global/variables';
@@ -93,7 +93,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           setExistingContactEmailError('This email already exists!');
           setExistingContactEmail(values.email);
         }
-        dispatch(setRefetchData(true));
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
@@ -116,7 +115,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     },
     validationSchema: AddContactSchema2,
     onSubmit: async (values, { setSubmitting }) => {
-      await addClient();
+      addClient();
       setSubmitting(false);
     },
   });
@@ -168,8 +167,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
 
       console.log('contact to add: ', contactToAdd);
 
-      const res = await addContact(contactToAdd);
-      const { data } = await getContacts(categoryIds[title]);
+      addContact(contactToAdd);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -178,8 +176,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           subtabValue = index;
         }
       });
-
-      dispatch(setContacts(data));
+      // dispatch(addContactLocally(contactToAdd));
+      dispatch(setRefetchData(true));
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
       handleClose();

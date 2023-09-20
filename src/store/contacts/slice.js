@@ -41,7 +41,8 @@ const contactsSlice = createSlice({
     },
     addContactLocally(state, action) {
       const newContact = action.payload;
-      state.data.data = [...state.data.data, newContact];
+      console.log(state.allContacts, newContact);
+      state.allContacts.data = [...state.allContacts.data, newContact];
     },
   },
 });
