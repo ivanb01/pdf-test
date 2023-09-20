@@ -1,9 +1,6 @@
 import Mail from '@mui/icons-material/Mail';
 import { healthLastCommunicationDate } from 'global/variables';
 import { isHealthyCommuncationDate, formatDateAgo, isValidDate, isToday } from 'global/functions';
-import moment from 'moment';
-import AIReviewed from '../../../../../public/images/ai-reviewed.svg';
-import AI from '../../../../../public/images/ai.svg';
 import TooltipComponent from '@components/shared/tooltip';
 import React from 'react';
 
