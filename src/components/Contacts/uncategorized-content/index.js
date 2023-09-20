@@ -69,7 +69,7 @@ const Uncategorized = ({
         {uncategorizedCopy?.length ? (
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
-              <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
                   tableFor="uncategorized"
                   data={uncategorizedContacts}
@@ -120,10 +120,13 @@ const Uncategorized = ({
     );
   };
 
+  useEffect(() => {
+    console.log(categorizing);
+  }, [categorizing]);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && (
+        {unapprovedContacts > 0 && !categorizing && (
           <GlobalAlert
             message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
             type="smart-sync"

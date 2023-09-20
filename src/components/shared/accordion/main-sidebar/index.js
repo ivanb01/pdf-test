@@ -127,7 +127,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
               {userGaveConsent && (
                 <>
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
+                    <div
+                      className={`absolute bottom-6 transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <img src={checkmark.src} className="h-[17px] w-[17px]" />
@@ -200,8 +201,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         {collapsable && (
           <div
             onClick={() => dispatch(setExpandedMenu(!pinned))}
-            className="absolute cursor-pointer z-10"
-            style={{ right: '-13px', bottom: pinned ? '10px' : '20px' }}>
+            className="absolute cursor-pointer"
+            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 1 }}>
             <div className="">
               <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
