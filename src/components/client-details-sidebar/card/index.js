@@ -58,12 +58,8 @@ export default function ClientCard({ client }) {
           </Text>
           <span className="flex flex-col">
             <div className="flex items-center mt-2">
-              <div>
-                <MailIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />
-              </div>
-              <div className="text-sm" style={{ wordBreak: 'break-all', whiteSpace: 'normal' }}>
-                {client?.email}
-              </div>
+              <MailIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />
+              <div className="text-sm">{client?.email}</div>
             </div>
             <div className="flex items-center mt-2">
               <PhoneIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />

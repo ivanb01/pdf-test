@@ -34,7 +34,6 @@ import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import Alert from '@components/shared/alert';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
-import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -72,22 +71,11 @@ export default function LookingFor({ contactId, category }) {
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [propertyInterests, setPropertyInterests] = useState();
-  const [filterValue, setFilterValue] = useState('newest');
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
-    const lowerCaseCategory = category.toLowerCase();
-    if (lowerCaseCategory === 'buyer') {
-      return 1;
-    } else if (lowerCaseCategory === 'landlord') {
-      return '19,22';
-    } else if (lowerCaseCategory === 'seller') {
-      return 19;
-    } else {
-      return 2;
-    }
+    return category.toLowerCase() == 'buyer' || category.toLowerCase() == 'seller' ? 1 : 2;
   };
-
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
@@ -142,7 +130,7 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
-        fetchProperties(lookingProperties[0], 1, filterValue);
+        fetchProperties(lookingProperties[0], 1);
       }
     } catch (error) {
       console.log(error);
@@ -151,12 +139,7 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  useEffect(() => {
-    console.log(filterValue, 'useEffectFilterValue');
-  }, [filterValue]);
-
-  const fetchProperties = async (values, page, filterValue) => {
-    console.log(filterValue, 'filterValue');
+  const fetchProperties = async (values, page) => {
     setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
@@ -165,24 +148,6 @@ export default function LookingFor({ contactId, category }) {
       limit: 21,
       page: page,
     };
-    if (filterValue === 'newest') {
-      params['sort'] = 'date';
-      params['order'] = 'desc';
-    }
-    if (filterValue === 'oldest') {
-      params['sort'] = 'date';
-      params['order'] = 'asc';
-    }
-    if (filterValue === 'minPrice') {
-      params['sort'] = 'price';
-      params['order'] = 'asc';
-      console.log(params['sort'], params['order']);
-    }
-    if (filterValue === 'maxPrice') {
-      params['sort'] = 'price';
-      params['order'] = 'desc';
-      console.log(params['sort'], params['order']);
-    }
     params['status'] = getLookingAction();
     if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
@@ -206,18 +171,14 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
-        setPropertyInterests(data.LISTINGS);
         setAllPropertiesCount(data.TOTAL_COUNT);
         return data;
-      })
-      .catch((error) => {
-        console.log(error, 'error');
       });
 
+    setPropertyInterests(data.LISTINGS);
     setLoadingPropertyInterests(false);
   };
 
@@ -247,9 +208,9 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
-      fetchProperties(formik.values, 1, filterValue);
+      fetchProperties(formik.values, 1);
     }
-  }, [contactId, lookingForData, refetchData, filterValue]);
+  }, [contactId, lookingForData, refetchData]);
 
   useLayoutEffect(() => {
     if (formik.isValid) {
@@ -258,13 +219,7 @@ export default function LookingFor({ contactId, category }) {
       setDisabledButton(true);
     }
   }, [formik]);
-  const onFiltersChange = (filter) => {
-    setFilterValue(filter);
-  };
 
-  useEffect(() => {
-    console.log(propertyInterests);
-  }, [propertyInterests]);
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
       <div className={`${className} text-sm`}>
@@ -316,15 +271,12 @@ export default function LookingFor({ contactId, category }) {
                       </div>
                       <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
                         <p className={`text-sm text-orange-800`}>
-                          {category === 'Landlord' || category === 'Seller'
-                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
-                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
+                          To receive more precise property recommendations tailored to your client's preferences, kindly
+                          specify the property interests.
                         </p>
                         <Button
                           className="p-0"
-                          label={
-                            category === 'Landlord' || category === 'Seller' ? 'Add Property Details' : 'Add Interests'
-                          }
+                          label="Add Interests"
                           leftIcon={<PlusIcon />}
                           primary
                           onClick={() => setShowAddPopup(true)}
@@ -337,12 +289,9 @@ export default function LookingFor({ contactId, category }) {
                     <div className="flex items-center justify-between text-sm">
                       <div className="text-gray-900 font-medium flex items-center">
                         Property Interests
-                        {getLookingAction() === 1 ||
-                          (getLookingAction() === 2 && (
-                            <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                              {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
-                            </div>
-                          ))}
+                        <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                          {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                        </div>
                       </div>
                       <div className="flex items-center">
                         <Button
@@ -399,27 +348,8 @@ export default function LookingFor({ contactId, category }) {
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
-                        {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
-                          <>
-                            {allPropertiesCount} properties recommended
-                            {getLookingAction() === 1 ? 'for sale' : 'for rent'}
-                          </>
-                        )}
-                        {category.toLowerCase() === 'landlord' && (
-                          <> {allPropertiesCount} Recommendations on Sold and Rented Properties</>
-                        )}
-                        {category.toLowerCase() === 'seller' && (
-                          <> {allPropertiesCount} Recommendations on Sold Properties</>
-                        )}
-                        <div className={'flex items-center gap-2'}>
-                          <p
-                            className="text-gray6 font-inter font-normal leading-5 text-sm"
-                            style={{ marginTop: '3px' }}>
-                            Sort by
-                          </p>
-                          <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
-                        </div>
+                      <div className="mb-4 text-gray-900 text-sm font-medium">
+                        {allPropertiesCount} properties recommended {getLookingAction() == 1 ? 'for sale' : 'for rent'}
                       </div>
                       <div className="grid grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
@@ -442,7 +372,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page - 1, filterValue);
+                                  fetchProperties(lookingForData[0], page - 1);
                                   setPage(page - 1);
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
@@ -453,7 +383,7 @@ export default function LookingFor({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page + 1, filterValue);
+                                  fetchProperties(lookingForData[0], page + 1);
                                   setPage(page + 1);
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">

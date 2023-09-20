@@ -34,9 +34,6 @@ export default function ActivityLog({ contactId, source }) {
   const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
   const [activityLogLocal, setActivityLogLocal] = useState(activityLogData);
 
-  useEffect(() => {
-    console.log(activityLogData, 'activityLogData');
-  }, [activityLogData]);
   const fetchAiPreview = async (id) => {
     try {
       const { data } = await getAIData(id);

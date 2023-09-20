@@ -525,7 +525,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+              className="py-3 pl-4 pr-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
               {/* <Button white onClick={() => undoAllCategorizations()}> */}
               {/* Undo All */}
               {/* </Button> */}
@@ -1494,7 +1494,7 @@ const Table = ({
                     <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
                   </>
                 ) : (
-                  <div className="text-red-500">No Interaction</div>
+                  <div className="text-red-500">No communication</div>
                 )}
               </td>
             </tr>
@@ -1811,7 +1811,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : ' overflow-x-auto'}`}>
+        <div className={'h-full overflow-x-auto'}>
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">
