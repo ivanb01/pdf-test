@@ -617,7 +617,7 @@ const index = () => {
                         return (
                           <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
                             {matchedAmenity && <Image src={matchedAmenity.icon} />}
-                            {matchedAmenity && <span className="ml-2">{matchedAmenity.name}</span>}
+                            {matchedAmenity && <span>{matchedAmenity.name}</span>}
                           </div>
                         );
                       })}
