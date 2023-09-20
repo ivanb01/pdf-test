@@ -13,7 +13,6 @@ const global = createSlice({
     refetchPart: null,
     userGaveConsent: null,
     unapprovedContacts: null,
-    activeFilterOfProperties: 1,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     skippedEmptyState:
@@ -55,9 +54,6 @@ const global = createSlice({
     setUserGaveConsent(state, action) {
       state.userGaveConsent = action.payload;
     },
-    setActiveFilterOfProperties(state, action) {
-      state.activeFilterOfProperties = action.payload;
-    },
     setExpandedTab(state, action) {
       if (state.tabs.length == 0) {
         return;
@@ -89,6 +85,5 @@ export const {
   setUserGaveConsent,
   setExpandedTab,
   setInitializeTabs,
-  setActiveFilterOfProperties,
 } = global.actions;
 export default global.reducer;

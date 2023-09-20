@@ -314,5 +314,5 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
 };
 
 export const getBaseUrl = () => {
-  if (typeof window !== 'undefined') return window.location.origin;
+  return window.location.origin;
 };

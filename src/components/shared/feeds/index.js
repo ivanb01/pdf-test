@@ -115,9 +115,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
   };
   const handleDeleteActivity = async (activity) => {
     try {
-      console.log(activities, 'activities', activity.id, 'activity.id');
       const filteredActivities = activities.filter((item) => item.id !== activity.id);
-      console.log(filteredActivities, 'filteredActivities');
       dispatch(setActivityLogData(filteredActivities));
       toast.success('Activity log was deleted successfully!');
       contactServices
