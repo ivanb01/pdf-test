@@ -1508,15 +1508,29 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
-    const getSubtype = (item) => {
+    const getChip = (item) => {
+      if (dataItem.category_id == 3) {
+        return 'Trash';
+      }
       if (item.category_1 == 'Professional') {
-        return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
-          ? ' - ' + findProfessionalSubtype(item.category_id)
-          : ' - ' + item.category_2;
+        if ([9, 12].includes(item.category_id)) {
+          return item.category_2;
+        } else if ([15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)) {
+          return findProfessionalSubtype(item.category_id);
+        }
       } else {
-        return;
+        return item.category_1;
       }
     };
+    // const getSubtype = (item) => {
+    //   if (item.category_1 == 'Professional') {
+    //     return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
+    //       ? ' - ' + findProfessionalSubtype(item.category_id)
+    //       : ' - ' + item.category_2;
+    //   } else {
+    //     return;
+    //   }
+    // };
     return (
       <>
         <thead className="bg-gray-50">
@@ -1590,8 +1604,8 @@ const Table = ({
 
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>
-                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
-                  {getSubtype(dataItem)}
+                  {/* {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1} */}
+                  {getChip(dataItem)}
                 </Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
