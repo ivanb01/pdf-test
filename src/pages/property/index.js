@@ -370,55 +370,78 @@ const index = () => {
   const otherDetails = [
     {
       id: 0,
-      name: 'Available Date',
-      value: '01/01/2023',
+      name: 'Common Charges',
+      value: data.COMMON_CHARGES,
     },
     {
       id: 1,
-      name: 'RE Taxes',
-      value: '$85,156',
+      name: 'Maintenance',
+      value: data.MAINTENANCE,
     },
     {
       id: 2,
-      name: 'Floors/Apts',
-      value: '5/8',
+      name: 'Taxes',
+      value: data.TAXES,
     },
     {
       id: 3,
-      name: 'Ownership Type',
-      value: 'Income Property',
+      name: 'Deductible',
+      value: data.DEDUCTIBLE,
     },
     {
       id: 4,
-      name: 'Building Type',
-      value: 'Pre-War Low-Rise',
+      name: 'Down Payment',
+      value: data.DOWN_PAYMENT,
     },
     {
       id: 5,
-      name: 'Service Level',
-      value: 'Video Intercom',
+      name: 'Available date',
+      value: data.DATE_AVAILABLE,
     },
     {
       id: 6,
-      name: 'Black/Lot',
-      value: '1037/1',
+      name: 'Property type',
+      value: data.PROPERTY_TYPE,
     },
     {
       id: 7,
       name: 'Approx SF',
-      value: '3,450',
+      value: data.SQUARE_FOOTAGE,
     },
     {
       id: 8,
-      name: 'Lot Size (W x D)',
-      value: '60’x100’',
+      name: 'Stories',
+      value: data.STORIES,
     },
     {
       id: 9,
-      name: 'Year Built',
-      value: '1920',
+      name: 'Unit Number',
+      value: data.UNIT_NUMBER,
     },
+    // {
+    //   id: 10,
+    //   name: 'Tour',
+    //   value: data.VTOUR ?? data.VTOUR2,
+    // },
   ];
+
+  const getOtherDetails = () => {
+    if (data.STATUS.toLowerCase().includes('sale')) {
+      otherDetails.push(
+        {
+          id: 11,
+          name: 'Closing Date',
+          value: data.CLOSING_DATE,
+        },
+        {
+          id: 12,
+          name: 'Closing price',
+          value: data.CLOSING_PRICE,
+        },
+      );
+    }
+    return otherDetails;
+  };
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
@@ -639,18 +662,20 @@ const index = () => {
                 </div>
               </div>
             )}
-            <div className="mt-10">
+            <div className="mt-[50px] mb-[50px]">
               <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
               <div className="flex flex-wrap">
-                {otherDetails.map(
-                  (detail, index) =>
-                    detail.value && (
+                {getOtherDetails().map((detail, index) => {
+                  if (detail.value !== undefined && detail.value !== '') {
+                    return (
                       <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
                         <div className="text-gray4 text-sm">{detail.name}</div>
                         <div className="text-sm text-gray7 mt-1">{detail.value}</div>
                       </div>
-                    ),
-                )}
+                    );
+                  }
+                  return null;
+                })}
               </div>
             </div>
             <div className="mt-10 mb-[100px]">
