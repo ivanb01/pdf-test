@@ -174,6 +174,10 @@ const index = () => {
       params['sort'] = 'price';
       params['order'] = 'asc';
     }
+    if (filterValue === 'maxPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'desc';
+    }
     if (searchKey) params['address'] = searchKey;
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (neighborhoods.length)
