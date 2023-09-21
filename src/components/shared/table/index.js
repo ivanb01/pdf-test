@@ -64,6 +64,8 @@ import RedoIcon from '@mui/icons-material/Redo';
 import { setRefetchCount } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
+import ListIcon from '@mui/icons-material/List';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createPortal } from 'react-dom';
 
 const categoryIds = {
@@ -1821,6 +1823,115 @@ const Table = ({
       </div>
     );
   };
+
+  const needToContactTable = () => {
+    return (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4" style={{ height: '60px' }}>
+            <th
+              style={{ width: '300px' }}
+              scope="col"
+              className="pl-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
+              CONTACT
+            </th>
+            <th scope="col" className="flex-grow py-3  text-left  text-xs leading-4 font-medium tracking-wider">
+              TYPE
+            </th>
+            <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN
+            </th>
+            <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
+              LAST COMMUNICATION
+            </th>
+            <th scope="col" className="flex-grow py-3 pr-6  text-left   text-xs leading-4 font-medium tracking-wider">
+              ACTIONS
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.id },
+                })
+              }
+              key={person.id}
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
+              style={{ height: '84px' }}>
+              <td className="pl-6 py-3" style={{ width: '300px' }}>
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.first_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                      {person.first_name} {person.last_name}
+                    </h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <Chip label={person.category_2} typeStyle />
+                <p className={'text-sm leading-5 font-medium text-gray8 mt-3'}> {person.status_2}</p>
+              </td>
+              <td>
+                <div className={'flex gap-1.5 items-center'}>
+                  <div
+                    className={`h-2 w-2 rounded-full ${
+                      person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
+                    }`}></div>
+                  <p className={'text-sm leading-5 font-normal'}>
+                    {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
+                  </p>
+                </div>
+              </td>
+              <td>
+                <DateChip
+                  lastCommunication={person.last_communication_date}
+                  contactStatus={person.status_2}
+                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                />
+              </td>
+              <td>
+                <TooltipComponent
+                  side={'bottom'}
+                  align={'center'}
+                  triggerElement={
+                    <div
+                      className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCardEdit(person);
+                      }}>
+                      <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                    </div>
+                  }>
+                  <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
+                </TooltipComponent>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -1832,6 +1943,8 @@ const Table = ({
                   ? uncategorizedTable()
                   : tableFor == 'contact-campaigns'
                   ? contactCampaignsTable()
+                  : tableFor === 'needToContact'
+                  ? needToContactTable()
                   : tableFor == 'professionals'
                   ? professionalsTable()
                   : tableFor == 'reports'

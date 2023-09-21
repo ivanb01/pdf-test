@@ -38,7 +38,7 @@ const Contacts = ({ data }) => {
     useModalOverlay: true,
   };
 
-  //* SAVED STATE (inputs, checkboxes, other values ETC...) *//
+  //* SAVED STATE (inputs, checkboxes, family values ETC...) *//
   const [selectedContactType, setSelectedContactType] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState(0);
   const [selectedCard, setSelectedCard] = useState(0);

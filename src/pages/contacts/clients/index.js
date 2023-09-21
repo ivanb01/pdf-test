@@ -2,6 +2,8 @@ import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
 import {
+  setExpandedTab,
+  setOpenedSubtab,
   setOpenedTab,
   setRefetchData,
   setUnapprovedContacts,
@@ -71,7 +73,6 @@ const index = () => {
     setContactsCopy(clients);
     setLoading(false);
     dispatch(setOpenedTab(0));
-    // dispatch(setOpenedSubtab(0));
   };
   useEffect(() => {
     setLoading(true);

@@ -35,6 +35,8 @@ import dynamic from 'next/dynamic';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -63,6 +65,15 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       setShowOnboarding(true);
     }
   }, [allContacts]);
+
+  const groupedTabs = {};
+
+  tabs.forEach((tab) => {
+    if (!groupedTabs[tab.groupName]) {
+      groupedTabs[tab.groupName] = [];
+    }
+    groupedTabs[tab.groupName].push(tab);
+  });
 
   const narrowMenu = () => {
     return (
@@ -105,9 +116,16 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const expandedMenu = () => {
     return (
       <SimpleBar autoHide={true} style={{ maxHeight: '60vh' }}>
-        {tabs.map((tab) => {
-          return <TabBar tab={tab} />;
-        })}
+        <div className={'mx-3'}>
+          {Object.keys(groupedTabs).map((groupName, index) => (
+            <div key={groupName} className={index === 0 ? '' : 'border-t pt-2.5'}>
+              <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2 pb-2.5">{groupName}</h2>
+              {groupedTabs[groupName].map((tab) => (
+                <TabBar key={tab.id} tab={tab} />
+              ))}
+            </div>
+          ))}
+        </div>
         {importContacts && (
           <>
             <hr className="my-4 mx-4" />
@@ -249,10 +267,10 @@ const TabBar = ({ tab }) => {
     setOpenedSubtab(0);
     dispatch(setExpandedTab({ id: 0, opened: true }));
   }, []);
+
   const isSubtabActive = (currentSubtab, tabId) => {
     return openedSubtab == currentSubtab && openedTab == tabId;
   };
-
   const router = useRouter();
   const count = useSelector((state) => state.global.count);
 
@@ -267,8 +285,15 @@ const TabBar = ({ tab }) => {
     return tabs.length > 0 && tabs.find((tab) => tab.id === tabId);
   };
 
+  useEffect(() => {
+    if (openedTab !== 0 && openedTab !== 1) {
+      dispatch(setExpandedTab({ id: 0, opened: false }));
+      dispatch(setExpandedTab({ id: 1, opened: false }));
+    }
+  }, [openedTab]);
+
   const handleTabClick = () => {
-    if (tab.id === 4) {
+    if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6) {
       router.push(tab.href);
     }
     dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
@@ -284,19 +309,27 @@ const TabBar = ({ tab }) => {
     <div className={`accordion w-inherit`} key={tab.id}>
       <Link
         href="#"
-        className={`${tab.name.toLowerCase()} flex items-center h-10 justify-between pl-2  pr-3 py-3 mx-3 ${
-          tab.id === 4 && 'border-t'
-        } ${openedTab === tab.id && ' text-lightBlue3'} ${openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''}`}
+        className={`flex items-center h-10 justify-between pl-2  pr-3 py-3 mx-3' ${
+          openedTab === tab.id && ' text-lightBlue3'
+        } ${
+          (openedTab === 4 && tab.id === 4) ||
+          (openedTab === 2 && tab.id === 2) ||
+          (openedTab === 3 && tab.id === 3) ||
+          (openedTab === 5 && tab.id === 5) ||
+          (openedTab === 6 && tab.id === 6)
+            ? 'bg-lightBlue1'
+            : ''
+        }`}
         onClick={handleTabClick}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}
           <Text h4 className={`px-3 py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-            {tab.name} ({getCountForTabOrSubtab(tab.count_key)})
+            {tab.name}
           </Text>
         </div>
 
         {tab.subtab && (
-          <ChevronDownIcon
+          <ArrowDropDownIcon
             className={`text-gray3 h-5 w-5 transition-all duration-300 ${
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}
@@ -310,7 +343,7 @@ const TabBar = ({ tab }) => {
               <a
                 key={`${subtab.id}`}
                 href="#"
-                className={`px-[52px] transition-all duration-200 flex items-center ${
+                className={`px-10 transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
@@ -320,7 +353,7 @@ const TabBar = ({ tab }) => {
                   className={` ${subtab.icon || (subtab.dot && 'pl-[10px]')} py-[10px] ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
-                  {subtab.name} ({getCountForTabOrSubtab(subtab.count_key)})
+                  {subtab.name}
                 </Text>
               </a>
             );

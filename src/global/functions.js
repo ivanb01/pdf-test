@@ -1,16 +1,13 @@
 import {
-  types,
-  statuses,
   clientStatuses,
-  contactStatuses,
-  professionalsStatuses,
   filtersForLastCommunicationDate,
   healthLastCommunicationDate,
   multiselectOptionsClients,
   multiselectOptionsProfessionals,
+  professionalsStatuses,
+  types,
 } from './variables';
 import moment from 'moment';
-import { multiselectOptions } from './variables';
 
 export const getInitials = (name) => {
   // let fullName = name.split(' ');
@@ -229,12 +226,12 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
   if (filterForDate === 'healthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
     const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
-    return isHealthyCommuncationDate(date, healthyCommunicationDays);
+    return isHealthyCommuncationDate(date);
   }
   if (filterForDate === 'unhealthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
     const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
-    return !isHealthyCommuncationDate(date, healthyCommunicationDays);
+    return !isHealthyCommuncationDate(date);
   }
   if (filterForDate === 'today') {
     return isToday(date);
@@ -244,11 +241,18 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
   return moment(date).isSameOrBefore(filterDate);
 };
 
-export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-  const healthyCommunicationDate = moment().startOf('date').subtract(healthyCommunicationDays, 'days');
-  const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+// export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
+//   const healthyCommunicationDate = moment().startOf('date').subtract(healthyCommunicationDays, 'days');
+//   const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+//
+//   return isHealthyCommunication;
+// };
 
-  return isHealthyCommunication;
+export const isHealthyCommuncationDate = (inputDate) => {
+  const inputDateTime = moment(inputDate);
+  const twoDaysAgo = moment().subtract(2, 'days');
+
+  return inputDateTime.isSameOrBefore(moment(), 'day') && inputDateTime.isSameOrAfter(twoDaysAgo, 'day');
 };
 
 export const findTagsOption = (selectedOptions, typeOfContact) => {
@@ -271,7 +275,7 @@ export const findTagsOption = (selectedOptions, typeOfContact) => {
 export const getEmailParts = (email) => {
   const atIndex = email.indexOf('@');
   const dotIndex = email.indexOf('.');
-  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or other domain extensions
+  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or family domain extensions
 
   let firstName = email.slice(0, atIndex);
   let lastName = email.slice(atIndex + 1, dotIndex);
