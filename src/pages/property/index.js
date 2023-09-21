@@ -761,7 +761,12 @@ const index = () => {
             </div>
           )}
         </div>
-        <FsLightbox toggler={toggler} zoomIncrement={0.5} sources={filteredArray.map((item) => item.ORIGINAL_URL)} />
+        <FsLightbox
+          types={[...new Array(filteredArray.length).fill('image')]}
+          toggler={toggler}
+          zoomIncrement={0.5}
+          sources={filteredArray.map((item) => item.ORIGINAL_URL)}
+        />
       </div>
     </>
   );
