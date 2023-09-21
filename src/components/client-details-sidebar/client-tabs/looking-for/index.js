@@ -176,7 +176,6 @@ export default function LookingFor({ contactId, category }) {
     if (filterValue === 'minPrice') {
       params['sort'] = 'price';
       params['order'] = 'asc';
-      console.log(params['sort'], params['order']);
     }
     if (filterValue === 'maxPrice') {
       params['sort'] = 'price';
@@ -262,9 +261,6 @@ export default function LookingFor({ contactId, category }) {
     setFilterValue(filter);
   };
 
-  useEffect(() => {
-    console.log(propertyInterests);
-  }, [propertyInterests]);
   const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
     return (
       <div className={`${className} text-sm`}>
