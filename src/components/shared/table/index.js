@@ -1509,7 +1509,7 @@ const Table = ({
 
   const aiSummaryTable = () => {
     const getChip = (item) => {
-      if (dataItem.category_id == 3) {
+      if (item.category_id == 3) {
         return 'Trash';
       }
       if (item.category_1 == 'Professional') {
