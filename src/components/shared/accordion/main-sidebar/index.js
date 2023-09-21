@@ -59,7 +59,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   };
 
   useEffect(() => {
-    if (allContacts && !allContacts.length) {
+    if (allContacts && allContacts.data && !allContacts.length) {
       setShowOnboarding(true);
     }
   }, [allContacts]);
@@ -142,7 +142,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
         )}
         {startedOnboarding && <Tour for={'clients'} />}
-
         <div>
           {pinned ? expandedMenu() : narrowMenu()}
           {pinned && (
