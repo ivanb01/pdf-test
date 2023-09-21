@@ -330,7 +330,7 @@ const Table = ({
                         handleAction={(id, action) => handleAction(id, action)}
                       />
                     </td>
-                    {dataItem.length > 0 &&
+                    {dataItem &&
                       dataItem?.events.map((event, index) => (
                         <td
                           key={`event-${index}`}
