@@ -21,6 +21,7 @@ import { getAIData } from '@api/aiSmartSync';
 import AIChip from '@components/shared/chip/ai-chip';
 import linkIcon from '/public/images/link.svg';
 import AddActivity from '@components/overlays/add-activity';
+import { createPortal } from 'react-dom';
 
 export default function ActivityLog({ contactId, source }) {
   const dispatch = useDispatch();
@@ -79,16 +80,18 @@ export default function ActivityLog({ contactId, source }) {
               )}
             </div>
           </div>
-          {toggleAddActivity && (
-            <AddActivity
-              clientId={contactId}
-              setActivities={setActivityLogLocal}
-              className="min-w-[550px]"
-              title={`Add Activity`}
-              setAddActivityPopup={setToggleAddActivity}
-              handleClose={() => setToggleAddActivity(false)}
-            />
-          )}
+          {toggleAddActivity &&
+            createPortal(
+              <AddActivity
+                clientId={contactId}
+                setActivities={setActivityLogLocal}
+                className="min-w-[550px]"
+                title={`Add Activity`}
+                setAddActivityPopup={setToggleAddActivity}
+                handleClose={() => setToggleAddActivity(false)}
+              />,
+              document.getElementById('modal-portal'),
+            )}
           <div className="mx-6">
             <hr />
           </div>
