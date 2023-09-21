@@ -23,7 +23,6 @@ import {
   clientStatuses,
   allStatusesQuickEdit,
   professionalsStatuses,
-  vendorTypes,
   agentTypes,
   unspecifiedTypes,
   contactTypes,
@@ -96,6 +95,8 @@ const Table = ({
   selectedPeople,
   setSelectedPeople,
 }) => {
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const types = [
     {
       name: (
@@ -1095,7 +1096,7 @@ const Table = ({
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
 
-    let professionalTypes = openedSubtab == 0 ? vendorTypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
+    let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
 
     return (
       <>

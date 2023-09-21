@@ -14,6 +14,7 @@ const global = createSlice({
     userGaveConsent: null,
     unapprovedContacts: null,
     activeFilterOfProperties: 1,
+    vendorSubtypes: null,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     skippedEmptyState:
@@ -22,6 +23,9 @@ const global = createSlice({
         : false,
   },
   reducers: {
+    setVendorSubtypes(state, action) {
+      state.vendorSubtypes = action.payload;
+    },
     setCount(state, action) {
       state.count = action.payload;
     },
@@ -90,5 +94,6 @@ export const {
   setExpandedTab,
   setInitializeTabs,
   setActiveFilterOfProperties,
+  setVendorSubtypes,
 } = global.actions;
 export default global.reducer;
