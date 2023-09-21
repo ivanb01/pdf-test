@@ -51,7 +51,7 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
         <div className="relative mt-1 w-[220px]">
           <Listbox.Button
             onClick={handleToggle}
-            className=" flex justify-between w-[220px] border rounded-md border-gray-300 px-3 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-0 focus:ring-lightBlue3 focus:border-lightBlue3 sm:text-sm">
+            className=" flex justify-between w-[220px] border rounded-md border-borderColor px-3 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-0 focus:ring-lightBlue3 focus:border-lightBlue3 sm:text-sm">
             <span
               className={
                 selected === null
