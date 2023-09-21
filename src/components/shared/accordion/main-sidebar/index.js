@@ -194,7 +194,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         </div>
                         <div></div>
                       </div>
-                      Click this button whenever you want to re-import your Google Contacts
                       <a
                         onClick={() =>
                           router.push({
@@ -203,7 +202,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           })
                         }
                         className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600">
-                        Re-import Google Contacts
+                        Click to re-import Google Contacts
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
                     </div>
