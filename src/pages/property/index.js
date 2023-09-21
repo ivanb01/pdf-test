@@ -5,10 +5,11 @@ import three from '/public/images/property/3.png';
 import four from '/public/images/property/4.png';
 import five from '/public/images/property/5.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
 import Image from 'next/image';
 import location from '/public/images/location.png';
 import { useState } from 'react';
@@ -35,20 +36,24 @@ import storage from '/public/images/property/storage.svg';
 import elevator from '/public/images/property/elevator.svg';
 import SimpleBar from 'simplebar-react';
 import ArrowForward from '@mui/icons-material/ArrowForward';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useRef, useMemo } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
-import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { formatPrice } from '@global/functions';
 import fetchJsonp from 'fetch-jsonp';
 import Loader from '@components/shared/loader';
+import placeholder from '/public/images/placeholder.png';
+import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
+import { Auth } from 'aws-amplify';
 
 const index = () => {
   const router = useRouter();
   const id = router.query.id;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
@@ -365,55 +370,78 @@ const index = () => {
   const otherDetails = [
     {
       id: 0,
-      name: 'Available Date',
-      value: '01/01/2023',
+      name: 'Common Charges',
+      value: data.COMMON_CHARGES,
     },
     {
       id: 1,
-      name: 'RE Taxes',
-      value: '$85,156',
+      name: 'Maintenance',
+      value: data.MAINTENANCE,
     },
     {
       id: 2,
-      name: 'Floors/Apts',
-      value: '5/8',
+      name: 'Taxes',
+      value: data.TAXES,
     },
     {
       id: 3,
-      name: 'Ownership Type',
-      value: 'Income Property',
+      name: 'Deductible',
+      value: data.DEDUCTIBLE,
     },
     {
       id: 4,
-      name: 'Building Type',
-      value: 'Pre-War Low-Rise',
+      name: 'Down Payment',
+      value: data.DOWN_PAYMENT,
     },
     {
       id: 5,
-      name: 'Service Level',
-      value: 'Video Intercom',
+      name: 'Available date',
+      value: data.DATE_AVAILABLE,
     },
     {
       id: 6,
-      name: 'Black/Lot',
-      value: '1037/1',
+      name: 'Property type',
+      value: data.PROPERTY_TYPE,
     },
     {
       id: 7,
       name: 'Approx SF',
-      value: '3,450',
+      value: data.SQUARE_FOOTAGE,
     },
     {
       id: 8,
-      name: 'Lot Size (W x D)',
-      value: '60’x100’',
+      name: 'Stories',
+      value: data.STORIES,
     },
     {
       id: 9,
-      name: 'Year Built',
-      value: '1920',
+      name: 'Unit Number',
+      value: data.UNIT_NUMBER,
     },
+    // {
+    //   id: 10,
+    //   name: 'Tour',
+    //   value: data.VTOUR ?? data.VTOUR2,
+    // },
   ];
+
+  const getOtherDetails = () => {
+    if (data.STATUS.toLowerCase().includes('sale')) {
+      otherDetails.push(
+        {
+          id: 11,
+          name: 'Closing Date',
+          value: data.CLOSING_DATE,
+        },
+        {
+          id: 12,
+          name: 'Closing price',
+          value: data.CLOSING_PRICE,
+        },
+      );
+    }
+    return otherDetails;
+  };
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
@@ -492,6 +520,16 @@ const index = () => {
     return { mainAmenitiesPerProperty, capitalizedRemainingAmenities };
   };
 
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((res) => {
+      if (res) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+  }, []);
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -517,7 +555,13 @@ const index = () => {
           </>
         ) : (
           <>
-            <Swiper slidesPerView={3} loop spaceBetween={12} navigation modules={[Pagination, Navigation]}>
+            <Swiper
+              scrollbar={{ draggable: true }}
+              slidesPerView={3}
+              loop
+              spaceBetween={12}
+              navigation
+              modules={[Pagination, Navigation, Scrollbar]}>
               {data.PHOTOS.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
                   <img
@@ -562,27 +606,28 @@ const index = () => {
             </div>
           </div>
         </div>
-        <div className="max-w-[700px] md:mt-10 mt-5 pb-10">
-          <div className="property-details">
-            <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
-            <div className="flex">
-              {propertyDetails.map(
-                (propertyDetail, index) =>
-                  propertyDetail.value != 0 && (
-                    <div className="flex mr-6 items-center" key={index}>
-                      <div className="md:block hidden">
-                        <Image src={propertyDetail.icon} />
+        <div className="md:mt-10 mt-5 pb-10 flex justify-between">
+          <div className="w-[700px] mr-20">
+            <div className="property-details">
+              <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
+              <div className="flex">
+                {propertyDetails.map(
+                  (propertyDetail, index) =>
+                    propertyDetail.value != 0 && (
+                      <div className="flex mr-6 items-center" key={index}>
+                        <div className="md:block hidden">
+                          <Image src={propertyDetail.icon} />
+                        </div>
+                        <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
+                        {propertyDetail.name}
                       </div>
-                      <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
-                      {propertyDetail.name}
-                    </div>
-                  ),
-              )}
+                    ),
+                )}
+              </div>
+              <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
             </div>
-            <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
-          </div>
-          {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 ||
-            (differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 && (
+            {(differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 ||
+              differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0) && (
               <div className="mt-10">
                 <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
                 <div className={'w-[700px]'}>
@@ -595,7 +640,7 @@ const index = () => {
                         return (
                           <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
                             {matchedAmenity && <Image src={matchedAmenity.icon} />}
-                            {matchedAmenity && <span className="ml-2">{matchedAmenity.name}</span>}
+                            {matchedAmenity && <span>{matchedAmenity.name}</span>}
                           </div>
                         );
                       })}
@@ -616,38 +661,80 @@ const index = () => {
                   </div>
                 </div>
               </div>
-            ))}
-          <div className="mt-10">
-            <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
-            <div className="flex flex-wrap">
-              {otherDetails.map(
-                (detail, index) =>
-                  detail.value && (
-                    <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
-                      <div className="text-gray4 text-sm">{detail.name}</div>
-                      <div className="text-sm text-gray7 mt-1">{detail.value}</div>
-                    </div>
-                  ),
-              )}
+            )}
+            <div className="mt-[50px] mb-[50px]">
+              <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
+              <div className="flex flex-wrap">
+                {getOtherDetails().map((detail, index) => {
+                  if (detail.value !== undefined && detail.value !== '') {
+                    return (
+                      <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
+                        <div className="text-gray4 text-sm">{detail.name}</div>
+                        <div className="text-sm text-gray7 mt-1">{detail.value}</div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+            <div className="mt-10 mb-[100px]">
+              <div className="text-gray7 text-xl font-medium">Property Location</div>
+              <div className="text-gray5 my-2">{data.ADDRESS}</div>
+              <div className="" id="map-section">
+                {isLoaded && (
+                  <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
+                    <MarkerF
+                      key="marker_1"
+                      position={{
+                        lat: data.LATITUDE,
+                        lng: data.LONGITUDE,
+                      }}
+                    />
+                  </GoogleMap>
+                )}
+              </div>
             </div>
           </div>
-          <div className="mt-10 mb-[100px]">
-            <div className="text-gray7 text-xl font-medium">Property Location</div>
-            <div className="text-gray5 my-2">{data.ADDRESS}</div>
-            <div className="" id="map-section">
-              {isLoaded && (
-                <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
-                  <MarkerF
-                    key="marker_1"
-                    position={{
-                      lat: data.LATITUDE,
-                      lng: data.LONGITUDE,
-                    }}
+          {isAuthenticated && (
+            <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
+              <div className="text-gray7 text-xl mb-6 font-medium">Listing Agent</div>
+              {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
+              <div className="flex items-center">
+                <div className="mr-4 w-24 h-24 rounded-lg">
+                  <img
+                    src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
+                    className="object-cover rounded-lg"
+                    alt=""
                   />
-                </GoogleMap>
-              )}
+                </div>
+                <div className=" break-words">
+                  <div className="text-gray-500 text-sm">
+                    <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
+                    <a className="block">{data.COMPANY_NAME}</a>
+                    <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
+                      {data.AGENT_EMAIL}
+                    </a>
+                    <a className="block hover:underline" href={`tel:${data.AGENT_PHONE}`}>
+                      {data.AGENT_PHONE}
+                    </a>
+                  </div>
+                  {/* <div className="flex mt-2">
+                  <a
+                    className="flex mr-2 items-center justify-center h-[35px] w-[35px] bg-purple-500 rounded-full "
+                    href={`email:${data.AGENT_EMAIL}`}>
+                    <EmailRounded className="text-white" />
+                  </a>
+                  <a
+                    className="flex items-center justify-center h-[35px] w-[35px] bg-teal-400 rounded-full "
+                    href={`tel:${data.AGENT_PHONE}`}>
+                    <Phone className="text-white" />
+                  </a>
+                </div> */}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

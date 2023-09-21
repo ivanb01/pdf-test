@@ -154,7 +154,7 @@ export const dateBeforeDate = (date1, date2) => {
 };
 
 export const dateAfterDate = (date1, date2) => {
-  return moment(date1).isAfter(date2);
+  return moment(date1).isSameOrAfter(date2);
 };
 
 export const sortDateAsc = (array, arrayFieldName) => {
@@ -318,5 +318,5 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
 };
 
 export const getBaseUrl = () => {
-  return window.location.origin;
+  if (typeof window !== 'undefined') return window.location.origin;
 };

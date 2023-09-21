@@ -5,9 +5,10 @@ import ImportGoogleContacts from 'components/overlays/importing-from-gmail';
 import MainMenu from 'components/shared/menu';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback } from 'api/google';
+import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback, getUserConsentStatus } from 'api/google';
 import { setAllContacts } from '@store/contacts/slice';
 import { useDispatch } from 'react-redux';
+import { setUserGaveConsent } from '@store/global/slice';
 
 const NoContactPage = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,10 @@ const NoContactPage = () => {
         setModalList(list3);
         setMotionImage(true);
         setTimeout(() => handleImportGoogleContact(false), 4000);
+        getUserConsentStatus().then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        });
+
         // handleImportGoogleContact();
       } else {
         setShowImportGoogleContactsModal(false);
@@ -178,7 +183,7 @@ const NoContactPage = () => {
 
 export default NoContactPage;
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   return {
     props: {
       requiresAuth: true,

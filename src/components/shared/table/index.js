@@ -298,58 +298,56 @@ const Table = ({
             </th> */}
           </tr>
         </thead>
-        <tbody className=" bg-white">
+        <tbody className="bg-white">
           {!data?.length && searchTerm
             ? noResults()
             : !data?.length && !searchTerm
             ? noData()
-            : data.map((dataItem) => (
-                <tr
-                  key={dataItem.contact_id}
-                  className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
-                  // onClick={(event) => handleClickRow(contact, event)}
-                >
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
-                    <ContactInfo
-                      data={{
-                        name: `${dataItem.contact_name}`,
-                        id: dataItem.contact_id,
-                        email: dataItem.contact_email,
-                        image: dataItem.profile_image_path,
-                        assigned:
-                          dataItem.contact_campaign_status == 'unassigned'
-                            ? 2
-                            : dataItem.contact_campaign_status == 'assigned'
-                            ? 1
-                            : 0,
-                      }}
-                      // handleSelect={(e, dataItem) =>
-                      //   handleSelectContact(e, dataItem)
-                      // }
-                      handleAction={(id, action) => handleAction(id, action)}
-                    />
-                  </td>
-                  {dataItem?.events.map((event, index) =>
-                    event.event_id ? (
-                      <td
-                        key={`event-${index}`}
-                        className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                        <EventStatus status={event.event_status} />
-                        <div className="text-gray7">{formatDateMDY(event?.event_updated_at)}</div>
-                      </td>
-                    ) : (
-                      <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                        <div className="text-gray7">-</div>
-                      </td>
-                    ),
-                  )}
-                  {/* <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray7">
-                  {formatDateMDY(event?.event_updated_at)}
-                </div>
-              </td> */}
-                </tr>
-              ))}
+            : data.map((dataItem) => {
+                return (
+                  <tr
+                    key={dataItem.contact_id}
+                    className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+                    // onClick={(event) => handleClickRow(contact, event)}
+                  >
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
+                      <ContactInfo
+                        data={{
+                          name: `${dataItem.contact_name}`,
+                          id: dataItem.contact_id,
+                          email: dataItem.contact_email,
+                          image: dataItem.profile_image_path,
+                          assigned:
+                            dataItem.contact_campaign_status === 'unassigned'
+                              ? 2
+                              : dataItem.contact_campaign_status === 'assigned'
+                              ? 1
+                              : 0,
+                        }}
+                        // handleSelect={(e, dataItem) =>
+                        //   handleSelectContact(e, dataItem)
+                        // }
+                        handleAction={(id, action) => handleAction(id, action)}
+                      />
+                    </td>
+                    {dataItem.length > 0 &&
+                      dataItem?.events.map((event, index) => (
+                        <td
+                          key={`event-${index}`}
+                          className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                          <EventStatus status={event.event_status} />
+                          <div className="text-gray7">{formatDateMDY(event?.event_updated_at)}</div>
+                        </td>
+                      ))}
+                    {dataItem.events.length === 0 &&
+                      [1, 2, 3, 4, 5].map((event, index) => (
+                        <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                          <div className="text-gray7">-</div>
+                        </td>
+                      ))}
+                  </tr>
+                );
+              })}
         </tbody>
       </>
     );
@@ -527,7 +525,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+              className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
               {/* <Button white onClick={() => undoAllCategorizations()}> */}
               {/* Undo All */}
               {/* </Button> */}
@@ -1922,7 +1920,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        <div className={'h-full overflow-x-auto'}>
+        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : ' overflow-x-auto'}`}>
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">

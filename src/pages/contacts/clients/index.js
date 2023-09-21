@@ -171,7 +171,7 @@ const index = () => {
 
 export default index;
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   return {
     props: {
       requiresAuth: true,

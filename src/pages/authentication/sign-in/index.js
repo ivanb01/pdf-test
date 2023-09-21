@@ -107,15 +107,15 @@ const SignIn = () => {
   const brokerageNameOptions = [
     {
       id: 1,
-      name: 'Oxford Property Group',
+      label: 'Oxford Property Group',
     },
     {
       id: 2,
-      name: 'Level Group',
+      label: 'Level Group',
     },
     {
       id: 3,
-      name: 'Spire Group',
+      label: 'Spire Group',
     },
   ];
 
@@ -176,7 +176,7 @@ const SignIn = () => {
 
 export default SignIn;
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   return {
     props: {
       requiresAuth: false,

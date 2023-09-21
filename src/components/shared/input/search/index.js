@@ -37,7 +37,7 @@ const Search = ({
             onClick={() => setExpanded(true)}
             className={`${
               expanded ? 'pl-10' : 'cursor-pointer'
-            } border border-borderColor rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${className}`}
+            } border border-borderColor rounded-lg bg-white px-[13px] h-[38px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${className}`}
           />
         </div>
       ) : (
@@ -53,7 +53,7 @@ const Search = ({
             onChange={onChange}
             onKeyDown={onKeyDown}
             value={value}
-            className={`pl-10 border border-borderColor rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1`}
+            className={`pl-10 border border-borderColor rounded-lg bg-white px-[13px] h-[38px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1`}
           />
         </div>
       )}

@@ -11,7 +11,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const ImageGallery = ({ images, id }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const showButtons = images.length > 1;
+  const showButtons = images?.length > 1;
   const showPrevButton = showButtons && currentIndex > 0;
   const showNextButton = showButtons && currentIndex < images.length - 1;
   const showNextImage = () => {
@@ -27,7 +27,7 @@ const ImageGallery = ({ images, id }) => {
       <a href={`${getBaseUrl()}/property?id=${id}`} target="_blank" rel="noreferrer">
         <img
           className="object-cover h-full w-full"
-          src={images.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
+          src={images?.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
           alt="Gallery Image"
         />
       </a>
