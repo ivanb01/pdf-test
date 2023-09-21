@@ -161,7 +161,7 @@ const ResetPassword = () => {
 
 export default ResetPassword;
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   return {
     props: {
       requiresAuth: false,

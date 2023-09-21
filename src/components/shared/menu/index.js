@@ -15,7 +15,14 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setCount, setOpenedTab, setRefetchCount, setRefetchData, setUserGaveConsent } from '@store/global/slice';
+import {
+  setCount,
+  setOpenedTab,
+  setRefetchCount,
+  setRefetchData,
+  setSkippedEmptyState,
+  setUserGaveConsent,
+} from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
@@ -76,8 +83,10 @@ const MainMenu = ({
         const data = await getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27');
         dispatch(setAllContacts(data.data));
         if (data.data.count === 0 && !skippedEmptyState) {
+          localStorage.setItem('skippedEmptyState', true);
+          dispatch(setSkippedEmptyState(true));
           router.push({
-            pathname: '/contacts/no-contact',
+            pathname: '/contacts/clients',
           });
         }
       } catch (error) {

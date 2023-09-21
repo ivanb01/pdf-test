@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 
 const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, maxPrice, options }) => {
   const [opened, setOpened] = useState(false);
+  const [intialLabel, setInitialLabel] = useState(label);
+  const [touched, setTouched] = useState(false);
 
   const divRef = useRef(null);
 
@@ -23,6 +25,44 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
     }
   };
 
+  const formatNumberToMillions = (n) => {
+    if (n >= 1e6) {
+      return `$${(n / 1e6).toFixed(0)}m`;
+    }
+    return `$${n.toLocaleString('en-US')}`;
+  };
+
+  useEffect(() => {
+    let minPriceLabel = '';
+    let maxPriceLabel = '';
+
+    if (minPrice) {
+      minPriceLabel = formatNumberToMillions(minPrice);
+      // minPriceLabel = '$' + minPrice.toLocaleString('en-US');
+    } else if (!minPrice) {
+      minPriceLabel = 'Any';
+    }
+    if (maxPrice) {
+      maxPriceLabel = formatNumberToMillions(maxPrice);
+    } else if (!maxPrice) {
+      maxPriceLabel = 'Any';
+    }
+
+    if (!minPrice && !maxPrice) {
+      setInitialLabel(label);
+      setTouched(false);
+    } else {
+      setInitialLabel(`${minPriceLabel} - ${maxPriceLabel}`);
+      setTouched(true);
+    }
+
+    // if (minPrice && maxPrice)
+    //   setInitialLabel(`$${minPrice.toLocaleString('en-US')} - $${maxPrice.toLocaleString('en-US')}`);
+    // else {
+    //   setInitialLabel(label);
+    // }
+  }, [minPrice, maxPrice]);
+
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
 
@@ -35,8 +75,10 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
     <div
       ref={divRef}
       onClick={handleDivClick}
-      className={`${className}  cursor-pointer flex justify-between h-[38px] px-3 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
-      {label}
+      className={`${className} ${
+        touched && 'text-gray8 font-normal'
+      } cursor-pointer flex justify-between h-[38px] px-3 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
+      {intialLabel}
       <ChevronDownIcon className={`transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`} aria-hidden="true" />
       <div
         className={` ${

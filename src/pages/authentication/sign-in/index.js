@@ -176,7 +176,7 @@ const SignIn = () => {
 
 export default SignIn;
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   return {
     props: {
       requiresAuth: false,

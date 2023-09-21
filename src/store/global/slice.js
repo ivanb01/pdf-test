@@ -13,7 +13,7 @@ const global = createSlice({
     refetchPart: null,
     userGaveConsent: null,
     unapprovedContacts: null,
-    activeFilterOfProperties: null,
+    activeFilterOfProperties: 1,
     user:
       typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     skippedEmptyState:

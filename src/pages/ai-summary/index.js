@@ -171,6 +171,24 @@ const index = () => {
     fetchContacts();
   }, []);
 
+  function customSort(a, b) {
+    const order = ['Client', 'Professional', 'Others'];
+
+    if (a.category_1 === 'Trash') return 1;
+    if (b.category_1 === 'Trash') return -1;
+
+    const orderA = order.indexOf(a.category_1);
+    const orderB = order.indexOf(b.category_1);
+
+    if (orderA === -1 && orderB === -1) return 0;
+    if (orderA === -1) return 1;
+    if (orderB === -1) return -1;
+
+    return orderA - orderB;
+  }
+
+  const sortedData = (Array.isArray(data) ? [...data] : []).sort(customSort);
+
   return (
     <div className="">
       <MainMenu />
@@ -194,7 +212,7 @@ const index = () => {
             </div>
             <Table
               className="pb-5"
-              data={data.filter((data) => data.approved_ai != true)}
+              data={sortedData.filter((data) => data.approved_ai != true)}
               tableFor="ai-summary"
               checkbox={checkbox}
               handleAction={handleAction}

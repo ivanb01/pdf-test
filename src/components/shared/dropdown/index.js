@@ -28,6 +28,7 @@ const Dropdown = ({
   error,
   errorText,
   openClassName,
+  afterLabel,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -60,7 +61,7 @@ const Dropdown = ({
                 <Listbox.Button
                   className={`${selectClasses ? selectClasses : 'bg-white border rounded-md'} ${inputWidth} relative ${
                     !inputWidth && 'w-full'
-                  } border-gray-300 h-[38px] pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}>
+                  } border-[#D1D5DB] h-[38px] pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}>
                   <span
                     className={`${
                       selectedOption === 'statusColor' && `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
@@ -72,7 +73,7 @@ const Dropdown = ({
                       selected && selected.label && 'text-gray8'
                     } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}
-                    {selected && selected.label}
+                    {selected && afterLabel ? selected.label + ` ${afterLabel}` : selected?.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <ChevronDownIcon
