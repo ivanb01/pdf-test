@@ -4,6 +4,7 @@ import two from '/public/images/property/2.png';
 import three from '/public/images/property/3.png';
 import four from '/public/images/property/4.png';
 import five from '/public/images/property/5.png';
+import FsLightbox from 'fslightbox-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
@@ -507,6 +508,10 @@ const index = () => {
     });
   }, []);
 
+  const [toggler, setToggler] = useState(false);
+  const filteredArray =
+    data.PHOTOS.length > 0 && data.PHOTOS.filter((item) => item.ORIGINAL_URL.toLowerCase().includes('floor'));
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -573,9 +578,15 @@ const index = () => {
             </div>
           </div>
           <div>
-            <div className="md:flex hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
-              {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+            <div className="md:flex flex-col hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+              <div>
+                {formatPrice(data.PRICE)}
+                {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+              </div>
+              {console.log(data.PHOTOS)}
+              <>
+                <button onClick={() => setToggler(!toggler)}>Toggle Lightbox</button>
+              </>
             </div>
             <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
               {formatPrice(data.PRICE)}
@@ -711,6 +722,7 @@ const index = () => {
             </div>
           )}
         </div>
+        <FsLightbox toggler={toggler} zoomIncrement={0.5} sources={filteredArray.map((item) => item.ORIGINAL_URL)} />
       </div>
     </>
   );
