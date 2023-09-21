@@ -59,7 +59,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   };
 
   useEffect(() => {
-    if (allContacts && allContacts.data && !allContacts.length) {
+    if (allContacts && !allContacts?.data.length) {
       setShowOnboarding(true);
     }
   }, [allContacts]);
