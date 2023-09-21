@@ -4,6 +4,7 @@ import two from '/public/images/property/2.png';
 import three from '/public/images/property/3.png';
 import four from '/public/images/property/4.png';
 import five from '/public/images/property/5.png';
+import FsLightbox from 'fslightbox-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
@@ -47,6 +48,7 @@ import Loader from '@components/shared/loader';
 import placeholder from '/public/images/placeholder.png';
 import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
+import Button from '@components/shared/button';
 
 const index = () => {
   const router = useRouter();
@@ -530,6 +532,10 @@ const index = () => {
     });
   }, []);
 
+  const [toggler, setToggler] = useState(false);
+  const filteredArray =
+    data.PHOTOS.length > 0 && data.PHOTOS.filter((item) => item.ORIGINAL_URL.toLowerCase().includes('floor'));
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -610,19 +616,38 @@ const index = () => {
           <div className="w-[700px] mr-20">
             <div className="property-details">
               <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
-              <div className="flex">
-                {propertyDetails.map(
-                  (propertyDetail, index) =>
-                    propertyDetail.value != 0 && (
-                      <div className="flex mr-6 items-center" key={index}>
-                        <div className="md:block hidden">
-                          <Image src={propertyDetail.icon} />
-                        </div>
-                        <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
-                        {propertyDetail.name}
+              <div className="flex justify-between items-center">
+                <div className="flex mr-6 items-center" key={index}>
+                  <div className={'flex'}>
+                    {propertyDetails.map(
+                      (propertyDetail, index) =>
+                        propertyDetail.value != 0 && (
+                          <div className="flex mr-6 items-center" key={index}>
+                            <div className="md:block hidden">
+                              <Image src={propertyDetail.icon} />
+                            </div>
+                            <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
+                            {propertyDetail.name}
+                          </div>
+                        ),
+                    )}
+                  </div>
+                </div>
+                <div>
+                  {filteredArray.length > 0 && (
+                    <Button secondary onClick={() => setToggler(!toggler)}>
+                      <div className={'mr-1.5'}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M7.1999 3.99974V2.39966H4.7999C3.47486 2.39966 2.3999 3.47462 2.3999 4.79966V19.2001C2.3999 20.5252 3.47486 21.6001 4.7999 21.6001H21.5999V3.99974H7.1999ZM3.99998 4.79966C3.99998 4.35878 4.35926 3.99974 4.7999 3.99974H5.59982V16.8001H4.7999C4.5179 16.8001 4.2515 16.858 3.99998 16.947V4.79966ZM19.9998 20.0001H4.7999C4.35926 20.0001 3.99998 19.6408 3.99998 19.2001C3.99998 18.7578 4.35926 18.4002 4.7999 18.4002H7.1999V13.5997H10.3998V18.4002H13.6V16.8001H11.9999V13.5997H13.6V11.9997H7.1999V8.79974H10.3998V10.3998H11.9999V8.79974H16.7999V11.9997H15.1998V13.5997H16.7999V16.8001H15.1998V18.4002H18.4V7.19966H7.1999V5.59982H19.9998V20.0001Z"
+                            fill="#0EA5E9"
+                          />
+                        </svg>
                       </div>
-                    ),
-                )}
+                      See Floor-plan
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
             </div>
@@ -736,6 +761,7 @@ const index = () => {
             </div>
           )}
         </div>
+        <FsLightbox toggler={toggler} zoomIncrement={0.5} sources={filteredArray.map((item) => item.ORIGINAL_URL)} />
       </div>
     </>
   );
