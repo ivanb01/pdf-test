@@ -76,7 +76,7 @@ const clientSteps = [
     text: `
     <div class="onboarding-custom">
       <div class="title">Communication Guideline</div>
-      <div class="description">Every status block includes tells you how often you need to contact the client to maintain a healthy relationship.</div>
+      <div class="description">Every status block tells you how often you need to contact the client to maintain a healthy relationship.</div>
         <div class="w-full flex">
           <div class="flex items-center mr-2 text-white">
             <div class="h-[13px] w-[13px] rounded bg-green5 mr-1" ></div>
