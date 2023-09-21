@@ -65,6 +65,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import { setRefetchCount } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
+import { createPortal } from 'react-dom';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -1045,15 +1046,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
         {changeStatusModal && (
           <ChangeStatus
             handleCloseOverlay={() => setChangeStatusModal(false)}
@@ -1325,15 +1328,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
       </>
     );
   };
