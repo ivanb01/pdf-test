@@ -8,6 +8,7 @@ import {
   setRefetchData,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setVendorSubtypes,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
@@ -20,6 +21,7 @@ import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
+import { getContactCategories } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,

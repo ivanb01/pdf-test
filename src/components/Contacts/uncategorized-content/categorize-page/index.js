@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Button from 'components/shared/button';
 import CircleStepNumber from 'components/shared/circle-step-number';
 import Text from 'components/shared/text';
-import { types, vendorTypes } from 'global/variables';
+import { types } from 'global/variables';
 import { professionalsStatuses, clientStatuses } from 'global/variables';
 import noContactsSelected from '/public/images/categorize-no-contacts-selected.svg';
 import noContactsSelectedArrow from '/public/images/categorize-no-contacts-selected-arrow.svg';
@@ -14,7 +14,7 @@ import noCategorized from '/public/images/no-categorized.svg';
 import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
 import Chip from 'components/shared/chip';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
 import { updateContactLocally, updateContacts } from '@store/contacts/slice';
 
@@ -34,6 +34,8 @@ const CategorizePage = ({
   handleStartCategorizing,
 }) => {
   const dispatch = useDispatch();
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
 
@@ -204,7 +206,7 @@ const CategorizePage = ({
                       />
                     ) : (
                       <div className="flex flex-wrap">
-                        {vendorTypes.map((type) => (
+                        {vendorSubtypes.map((type) => (
                           <Chip
                             selectedStatus={type.id == selectedUncategorizedContactType}
                             key={type.id}

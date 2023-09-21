@@ -20,6 +20,7 @@ import {
   productionRedirectSignOut,
   devRedirectSignOut,
 } from 'global/variables';
+import GetSubtype from '@components/GetSubtype';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -118,6 +119,7 @@ const MyApp = ({ Component, pageProps }) => {
       <div className={`main-app-wrapper`}>
         <div className={`main-page`}>
           <Provider store={store}>
+            <GetSubtype />
             <Component {...pageProps} />
             {domLoaded && (
               <Toaster

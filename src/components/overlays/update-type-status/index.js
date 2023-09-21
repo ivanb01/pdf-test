@@ -9,7 +9,6 @@ import { professionalsStatuses, clientStatuses } from 'global/variables';
 import { updateContact } from 'api/contacts';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { unassignContactFromCampaign } from 'api/campaign';
-import { vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
 import { setRefetchData } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +25,8 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -144,7 +145,7 @@ const UpdateTypeStatus = ({ contact, handleClose }) => {
               </div>
               {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(selectedType) ? (
                 <div className="flex flex-wrap">
-                  {vendorTypes.map((type) => (
+                  {vendorSubtypes.map((type) => (
                     <Chip
                       selectedStatus={type.id == selectedType}
                       key={type.id}

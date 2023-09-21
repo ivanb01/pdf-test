@@ -17,7 +17,6 @@ import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
 import TagsInput from 'components/tagsInput';
 import { useSelector } from 'react-redux';
-import { vendorTypes } from 'global/variables';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { types } from 'global/variables';
@@ -34,6 +33,8 @@ const globalTabs = {
 };
 
 const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => {
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const steps = [
     {
       id: 1,
@@ -304,7 +305,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
               <>
                 <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                 <div className="flex flex-wrap">
-                  {vendorTypes.map((type) => (
+                  {vendorSubtypes.map((type) => (
                     <Chip
                       selectedStatus={type.id == formikStep2.values.selectedContactSubtype}
                       key={type.id}

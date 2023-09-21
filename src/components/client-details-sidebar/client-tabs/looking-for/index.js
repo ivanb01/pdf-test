@@ -180,7 +180,6 @@ export default function LookingFor({ contactId, category }) {
     if (filterValue === 'maxPrice') {
       params['sort'] = 'price';
       params['order'] = 'desc';
-      console.log(params['sort'], params['order']);
     }
     params['status'] = getLookingAction();
     if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');

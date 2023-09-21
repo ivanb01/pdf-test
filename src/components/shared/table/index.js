@@ -23,7 +23,6 @@ import {
   clientStatuses,
   allStatusesQuickEdit,
   professionalsStatuses,
-  vendorTypes,
   agentTypes,
   unspecifiedTypes,
   contactTypes,
@@ -67,6 +66,7 @@ import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { createPortal } from 'react-dom';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -97,6 +97,8 @@ const Table = ({
   selectedPeople,
   setSelectedPeople,
 }) => {
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const types = [
     {
       name: (
@@ -330,7 +332,7 @@ const Table = ({
                         handleAction={(id, action) => handleAction(id, action)}
                       />
                     </td>
-                    {dataItem.length > 0 &&
+                    {dataItem &&
                       dataItem?.events.map((event, index) => (
                         <td
                           key={`event-${index}`}
@@ -1047,15 +1049,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
         {changeStatusModal && (
           <ChangeStatus
             handleCloseOverlay={() => setChangeStatusModal(false)}
@@ -1094,7 +1098,7 @@ const Table = ({
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
 
-    let professionalTypes = openedSubtab == 0 ? vendorTypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
+    let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
 
     return (
       <>
@@ -1327,15 +1331,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
       </>
     );
   };
@@ -1505,15 +1511,27 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
-    const getSubtype = (item) => {
+    const getChip = (item) => {
+      if (item.category_id == 3) {
+        return 'Trash';
+      }
       if (item.category_1 == 'Professional') {
-        return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
-          ? ' - ' + findProfessionalSubtype(item.category_id)
-          : ' - ' + item.category_2;
+        if (vendorSubtypes.map((type) => type.id)) {
+          return item.category_2;
+        }
       } else {
-        return;
+        return item.category_1;
       }
     };
+    // const getSubtype = (item) => {
+    //   if (item.category_1 == 'Professional') {
+    //     return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
+    //       ? ' - ' + findProfessionalSubtype(item.category_id)
+    //       : ' - ' + item.category_2;
+    //   } else {
+    //     return;
+    //   }
+    // };
     return (
       <>
         <thead className="bg-gray-50">
@@ -1539,7 +1557,7 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Email Summary
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Delete/correct
             </th>
             <th
@@ -1586,10 +1604,7 @@ const Table = ({
               </td>
 
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>
-                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
-                  {getSubtype(dataItem)}
-                </Chip>
+                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
