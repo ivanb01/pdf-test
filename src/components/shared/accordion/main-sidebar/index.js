@@ -322,9 +322,6 @@ const TabBar = ({ tab }) => {
             ? 'bg-lightBlue1'
             : ''
         }`}
-        className={`${tab.name.toLowerCase()} flex items-center h-10 justify-between pl-2  pr-3 py-3 mx-3 ${
-          tab.id === 4 && 'border-t'
-        } ${openedTab === tab.id && ' text-lightBlue3'} ${openedTab === 4 && tab.id === 4 ? 'bg-lightBlue1' : ''}`}
         onClick={handleTabClick}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}

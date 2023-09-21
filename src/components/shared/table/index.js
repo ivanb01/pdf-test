@@ -1891,7 +1891,7 @@ const Table = ({
                 <DateChip
                   lastCommunication={person.last_communication_date}
                   contactStatus={person.status_2}
-                  contactCategory={categoryType}
+                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
                 />
               </td>
               <td>
