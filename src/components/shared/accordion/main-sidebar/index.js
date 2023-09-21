@@ -171,12 +171,12 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       <hr className="my-3" />
                       <div className="flex items-center mb-4">
                         <div className="flex items-center">
-                          <img src={googleContactsIcon.src} className="h-[17px] w-[17px]" />
+                          <img src={checkmark.src} className="h-[17px] w-[17px]" />
                           <div className="ml-[6px] font-medium">Google Contacts: Active</div>
                         </div>
                         <div></div>
                       </div>
-                      Click this button whenever you want to import your Google Contacts
+                      Click this button whenever you want to re-import your Google Contacts
                       <a
                         onClick={() =>
                           router.push({
@@ -185,7 +185,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           })
                         }
                         className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600">
-                        Import Google Contacts
+                        Re-import Google Contacts
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
                     </div>
