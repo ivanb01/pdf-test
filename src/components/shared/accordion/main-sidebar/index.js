@@ -191,9 +191,10 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     </div>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3`}>
+                    <div className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3 setup-smart-sync`}>
                       Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
-                      <span className="font-bold">“Import Google Contacts”</span> in order to import contact from Gmail.
+                      <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
+                      Gmail.
                       <a
                         className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
                         onClick={() => setShowSSOverlay(true)}>
