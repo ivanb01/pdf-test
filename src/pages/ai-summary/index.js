@@ -123,6 +123,7 @@ const index = () => {
       first_name: item.first_name,
       last_name: item.last_name,
     }));
+
     let restoredData = selectedPeople.map((item) => ({
       id: item.id,
       approved_ai: false,

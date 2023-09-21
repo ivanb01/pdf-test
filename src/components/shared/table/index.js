@@ -1602,10 +1602,7 @@ const Table = ({
               </td>
 
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>
-                  {/* {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1} */}
-                  {getChip(dataItem)}
-                </Chip>
+                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>

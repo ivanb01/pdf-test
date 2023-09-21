@@ -598,7 +598,7 @@ const ReviewContact = ({
                   label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
-                    [8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType)
+                    vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType)
                       ? 8
                       : formik.values.selectedContactType
                   }
@@ -609,7 +609,7 @@ const ReviewContact = ({
                   errorText={errors.selectedContactType}
                 />
               )}
-              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType) ? (
+              {vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType) ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                   <div className="flex flex-wrap">

@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 
 const GetSubtype = () => {
   const dispatch = useDispatch();
-  console.log('test');
   useEffect(() => {
     getContactCategories().then((result) =>
       dispatch(
