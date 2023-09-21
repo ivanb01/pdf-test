@@ -1514,10 +1514,8 @@ const Table = ({
         return 'Trash';
       }
       if (item.category_1 == 'Professional') {
-        if ([9, 12].includes(item.category_id)) {
+        if (vendorSubtypes.map((type) => type.id)) {
           return item.category_2;
-        } else if (vendorSubtypes.filter((type) => ![8, 9, 12].includes(type.id)).map((type) => type.id)) {
-          return findProfessionalSubtype(item.category_id);
         }
       } else {
         return item.category_1;
