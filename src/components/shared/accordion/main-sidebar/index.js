@@ -201,8 +201,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                             query: { start_importing: true },
                           })
                         }
-                        className="group cursor-pointer py-3 pt-6 flex items-center justify-start font-semibold text-blue-600">
-                        Click to re-import Google Contacts
+                        className="group cursor-pointer pb-3 pt-0 flex items-center justify-start font-semibold text-blue-600">
+                        Re-import Google Contacts
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
                     </div>
