@@ -1516,7 +1516,7 @@ const Table = ({
       if (item.category_1 == 'Professional') {
         if ([9, 12].includes(item.category_id)) {
           return item.category_2;
-        } else if ([15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)) {
+        } else if (vendorSubtypes.filter((type) => ![8, 9, 12].includes(type.id)).map((type) => type.id)) {
           return findProfessionalSubtype(item.category_id);
         }
       } else {
