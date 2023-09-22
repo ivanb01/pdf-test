@@ -522,7 +522,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+              className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
               {data.length} Categorized Contacts
             </th>
             <th
@@ -568,7 +568,7 @@ const Table = ({
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                <td className="whitespace-nowrap py-4 pl-6  text-sm sm:pl-6">
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
@@ -591,7 +591,7 @@ const Table = ({
                     </div>
                   )}
                 </td>
-                <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
+                <td className="relative whitespace-nowrap h-[72.5px] py-4 pr-6 sm:pr-6 flex justify-end items-center">
                   <div className="relative">
                     <a
                       className="cursor-pointer text-xs"
