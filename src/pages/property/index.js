@@ -656,7 +656,7 @@ const index = () => {
               <div className="mt-10">
                 <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
                 <div className={'w-[700px]'}>
-                  <div className="grid grid-cols-3 gap-6 items-center  mb-4">
+                  <div className="grid grid-cols-3 gap-6 items-center mb-6">
                     {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
                       differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
                         const matchedAmenity = propertyAmenities.find(
@@ -679,7 +679,10 @@ const index = () => {
                               key={index}
                               style={{ borderRadius: '20px' }}
                               className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
-                              <p className={'text-sm leading-4 font-medium py-2 px-1.5 text-gray-6'}> {remaining}</p>
+                              <p className={'text-sm leading-4 font-medium px-[10px] py-1.5 text-gray-6'}>
+                                {' '}
+                                {remaining}
+                              </p>
                             </div>
                           ),
                       )}
