@@ -168,7 +168,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <>
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
                     <div
-                      className={`absolute bottom-6 transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
+                      className={`absolute  absoluteWidth bottom-6 transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <img src={checkmark.src} className="h-[17px] w-[17px]" />
