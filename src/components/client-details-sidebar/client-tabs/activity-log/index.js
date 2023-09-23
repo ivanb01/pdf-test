@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { PlusCircleIcon } from '@heroicons/react/solid';
+import React, { useEffect, useRef, useState } from 'react';
+import { PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
@@ -10,6 +10,7 @@ import Button from 'components/shared/button';
 import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
 import Dropdown from 'components/shared/dropdown';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import noActivityLog from '/public/images/no_activitylog.svg';
 import Image from 'next/image';
 import * as Yup from 'yup';
@@ -23,6 +24,14 @@ import { getAIData } from '@api/aiSmartSync';
 import AIChip from '@components/shared/chip/ai-chip';
 import linkIcon from '/public/images/link.svg';
 import AddActivity from '@components/overlays/add-activity';
+import AddSummary from '@components/overlays/add-summary';
+import { DotsVerticalIcon } from '@heroicons/react/outline';
+import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
+import clients from '../../../../pages/contacts/clients';
+import { updateContact } from 'api/contacts';
+import toast from 'react-hot-toast';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { updateContactLocally } from '@store/contacts/slice';
 
 export default function ActivityLog({ contactId, source, contact }) {
   const dispatch = useDispatch();
@@ -30,28 +39,84 @@ export default function ActivityLog({ contactId, source, contact }) {
   const [aiPreviewLoading, setAiPreviewLoading] = useState(true);
   const [toggleAddActivity, setToggleAddActivity] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [openSummaryModal, setOpenSummaryModal] = useState(false);
+  const summaryBackup = useRef('');
 
   const refetchData = useSelector((state) => state.global.refetchData);
 
+  useEffect(() => {
+    if (contact.summary !== null) {
+      summaryBackup.current = contact.summary;
+    }
+  }, [contact.summary]);
   const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
   const [activityLogLocal, setActivityLogLocal] = useState(activityLogData);
-
-  useEffect(() => {
-    console.log(activityLogData, 'activityLogData');
-  }, [activityLogData]);
+  const deleteSummary = () => {
+    dispatch(updateContactLocally({ ...contact, summary: null }));
+    updateContact(contact.id, { ...contact, summary: null }).then(() => {
+      toast.custom(
+        (t) => (
+          <div
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                Summary has been deleted <br />
+                successfully!
+              </h1>
+            </div>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+              <button
+                onClick={() => {
+                  dispatch(updateContactLocally({ ...contact, summary: summaryBackup.current }));
+                  updateContact(contact.id, { ...contact, summary: summaryBackup.current });
+                  toast.dismiss(t.id);
+                }}
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                Undo
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 0 },
+      );
+    });
+  };
+  const types = [
+    {
+      name: (
+        <span className="flex flex-row">
+          <PencilIcon height={20} className="text-gray6 mr-3" />
+          <Text p className="text-gray6">
+            {contact.summary !== null ? 'Edit Summary' : 'Add Summary'}
+          </Text>
+        </span>
+      ),
+      handleClick: () => setOpenSummaryModal(true),
+    },
+    {
+      name: (
+        <span className="flex flex-row">
+          <TrashIcon height={20} className="text-red5 mr-3" />
+          <Text p className="text-red5">
+            Delete Summary
+          </Text>
+        </span>
+      ),
+      handleClick: () => deleteSummary(),
+    },
+  ];
   const fetchAiPreview = async (id) => {
     try {
       const { data } = await getAIData(id);
       setAiPreview(data);
     } catch (error) {
-      console.log(error);
     } finally {
       setAiPreviewLoading(false);
     }
   };
-  useEffect(() => {
-    console.log(source);
-  }, [source]);
   useEffect(() => {
     if (source == 'GmailAI') fetchAiPreview(contactId);
   }, []);
@@ -76,7 +141,7 @@ export default function ActivityLog({ contactId, source, contact }) {
     } else {
       return {
         name: 'Google Contact',
-        icon: GoogleContact,
+        icon: <Image src={GoogleContact} height={20} width={20} />,
       };
     }
   };
@@ -94,20 +159,16 @@ export default function ActivityLog({ contactId, source, contact }) {
   }, [activityLogData]);
 
   return (
-    <div className="flex bg-gray10 flex-row gap-6" style={{ height: '72vh' }}>
-      <div className="w-1/2 bg-gray10 m-6 mr-0">
-        <div className="bg-white flex flex-row justify-between p-6">
-          <Text className="text-gray7" p>
-            Activities
-          </Text>
-          <div onClick={() => setToggleAddActivity(!toggleAddActivity)} className=" cursor-pointer">
-            {!toggleAddActivity ? (
-              <PlusCircleIcon className="text-gray3 px-4" height={20} />
-            ) : (
-              <MinusCircleIcon className="text-red4 px-4" height={20} />
-            )}
-          </div>
-        </div>
+    <div className="flex bg-gray10 flex-row gap-6 flex-1">
+      <div className="flex-1 m-6 p-6 mr-0 flex flex-col bg-white">
+        <Text className="text-gray7 text-sm leading-5 font-medium pb-6 border-b border-gray2 mb-3">Activities</Text>
+        {/*<div onClick={() => setToggleAddActivity(!toggleAddActivity)} className=" cursor-pointer">*/}
+        {/*  {!toggleAddActivity ? (*/}
+        {/*    <PlusCircleIcon className="text-gray3 px-4" height={20} />*/}
+        {/*  ) : (*/}
+        {/*    <MinusCircleIcon className="text-red4 px-4" height={20} />*/}
+        {/*  )}*/}
+        {/*</div>*/}
         {toggleAddActivity && (
           <AddActivity
             clientId={contactId}
@@ -118,50 +179,77 @@ export default function ActivityLog({ contactId, source, contact }) {
             handleClose={() => setToggleAddActivity(false)}
           />
         )}
-        <div className="mx-6">
-          <hr />
-        </div>
+
         {activityLogLocal &&
           (activityLogLocal.length == 0 ? (
-            <div className="flow-root bg-white py-8 ">
-              <div className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
+            <div className=" flex flex-col flex-1 bg-white ">
+              <div className="flex flex-1 flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0">
                 <Image height={40} src={noActivityLog}></Image>
-                <Text h3 className="text-gray7 mb-2 mt-4 text-center text-sm">
+                <Text h3 className="text-gray7 mb-6 mt-6 text-center text-sm">
                   There is no activity logged for this contact
                 </Text>
                 <Text p className="text-gray4 relative text-center text-xs">
                   All activities related with this contact will be shown here.
                 </Text>
+                <div
+                  className={'flex gap-3 text-lightBlue3 mt-6 cursor-pointer'}
+                  role={'button'}
+                  onClick={() => setToggleAddActivity(true)}>
+                  <AddCircleIcon className={'h-5 w-5'} />
+                  <p className={' text-center text-sm font-medium '}>Add Activity</p>
+                </div>
               </div>
             </div>
           ) : (
             <Feeds contactId={contactId} activities={activityLogLocal} setActivities={setActivityLogLocal} />
           ))}
       </div>
-      <div className="w-1/2 h-full m-6 ml-0">
-        <div className=" bg-white p-6 relative">
-          <>
-            <div className={'flex justify-between items-center mb-4'}>
-              <h5 className={'text-sm leading-5 font-medium text-gray7'}>Contact summary</h5>
-              <MoreVertIcon className={'h-5 w-5 text-gray3'} />
+      <div className=" bg-white p-6 relative flex-1 flex flex-col m-6 ml-0">
+        <>
+          <div className={'flex justify-between items-center mb-4'}>
+            <h5 className={'text-sm leading-5 font-medium text-gray7'}>Contact summary</h5>
+            <FilterDropdown
+              buttonClassName={'px-0'}
+              types={contact.summary !== null ? types : []}
+              icon={<MoreVertIcon className={'h-5 w-5 text-gray3'} />}
+              positionClass={'transformDropdown w-[175px]'}
+            />
+          </div>
+          <div className={'flex justify-between items-center pb-3 border-b border-gray2'}>
+            <h6 className={'text-sm leading-5 font-medium text-gray4'}>Imported from</h6>
+            <div className={'flex gap-1 items-center justify-center'}>
+              {getSource(source).icon}
+              <p className={'text-sm leading-5 font-medium text-gray7 '}>{getSource(source).name}</p>
             </div>
-            <div className={'flex justify-between items-center pb-3 border-b border-gray2'}>
-              <h6 className={'text-sm leading-5 font-medium text-gray4'}>Imported from</h6>
-              <div className={'flex gap-1 items-center justify-center'}>
-                <div>{getSource(source).icon}</div>
-                <p className={'text-sm leading-5 font-medium text-gray7 '}>{getSource(source).name}</p>
+          </div>
+          {contact.summary === null ? (
+            <div className={'mt-10 flex flex-col flex-1 items-center justify-center'}>
+              <p className={'text-gray7 text-center text-sm font-medium mb-1.5'}>No Summary for this Contact yet</p>
+              <p className={'text-center font-inter text-gray-500 text-sm font-normal leading-5'}>
+                Write a short summary so you can easily
+                <br /> identify this client.
+              </p>
+              <div
+                className={'flex gap-3 text-lightBlue3 mt-6 cursor-pointer'}
+                role={'button'}
+                onClick={() => setOpenSummaryModal(true)}>
+                <AddCircleIcon className={'h-5 w-5'} />
+                <p className={' text-center text-sm font-medium '}>Add Summary</p>
               </div>
             </div>
-            {contact.summary === null ? (
-              <div className={'mt-10 flex items-center justify-center'}>
-                <p className={'text-gray7 text-center text-base font-medium'}>No Summary for this Contact yet</p>
-              </div>
-            ) : (
-              <div>erza</div>
-            )}
-          </>
-        </div>
+          ) : (
+            <p className={'text-sm leading-5 font-normal text-gray7 mt-3 break-all'}>{contact.summary}</p>
+          )}
+        </>
       </div>
+      {openSummaryModal && (
+        <AddSummary
+          title={contact.summary === null ? 'Add summary' : 'Edit summary'}
+          handleClose={() => setOpenSummaryModal(false)}
+          client={contact}
+          className={'w-[632px]'}
+        />
+      )}
     </div>
   );
 }

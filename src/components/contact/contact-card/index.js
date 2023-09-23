@@ -11,6 +11,10 @@ import List from '@mui/icons-material/List';
 import DropdownNoInput from 'components/shared/dropdown/dropdownNoInput';
 import Workspaces from '@mui/icons-material/Workspaces';
 import AIChip from 'components/shared/chip/ai-chip';
+import Info from '@mui/icons-material/Info';
+import TooltipComponent from '@components/shared/tooltip';
+import GoogleContact from '../../../../public/images/googleContact.png';
+import Image from 'next/image';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -25,6 +29,31 @@ export default function ContactCard({
   handleAddActivity,
   handleChangeStatus,
 }) {
+  const getSource = (source) => {
+    if (source === 'GmailAI') {
+      return {
+        name: 'AI Smart Synced Contact.',
+        icon: <AIChip reviewed={!!contact.approved_ai} />,
+      };
+    } else if (source === 'Manually Added') {
+      return {
+        name: 'Contact Added Manually',
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M4.83301 11.1666H9.16631V10.1667H4.83301V11.1666ZM4.83301 8.49998H11.1663V7.50001H4.83301V8.49998ZM4.83301 5.83331H11.1663V4.83334H4.83301V5.83331ZM3.53814 13.6666C3.20139 13.6666 2.91634 13.55 2.68301 13.3166C2.44967 13.0833 2.33301 12.7983 2.33301 12.4615V3.53848C2.33301 3.20172 2.44967 2.91668 2.68301 2.68334C2.91634 2.45001 3.20139 2.33334 3.53814 2.33334H12.4612C12.7979 2.33334 13.083 2.45001 13.3163 2.68334C13.5496 2.91668 13.6663 3.20172 13.6663 3.53848V12.4615C13.6663 12.7983 13.5496 13.0833 13.3163 13.3166C13.083 13.55 12.7979 13.6666 12.4612 13.6666H3.53814Z"
+              fill="#9CA3AF"
+            />
+          </svg>
+        ),
+      };
+    } else {
+      return {
+        name: 'Google Contact',
+        icon: <Image src={GoogleContact} height={16} width={16} />,
+      };
+    }
+  };
   const router = useRouter();
   const dispatch = useDispatch();
   const status = contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
@@ -83,7 +112,22 @@ export default function ContactCard({
               contactStatus={contact.status_2}
               contactCategory={categoryType}
             />
-            {contact.import_source === 'GmailAI' && <AIChip reviewed={contact.approved_ai} />}
+            {contact.summary !== null ? (
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={<div>{getSource(contact.import_source).icon}</div>}>
+                <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                  <div className={'flex gap-1.5 mb-1.5'}>
+                    {getSource(contact.import_source).icon}
+                    <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source).name}</p>
+                  </div>
+                  <p className="text-xs leading-4 font-normal">{contact.summary}</p>
+                </div>
+              </TooltipComponent>
+            ) : (
+              <div>{getSource(contact.import_source).icon}</div>
+            )}
           </div>
         </div>
         <div

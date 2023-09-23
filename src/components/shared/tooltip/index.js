@@ -9,7 +9,8 @@ const TooltipComponent = ({ triggerElement, children, side, align, open }) => {
         <Tooltip.Portal>
           <Tooltip.Content
             arrowPadding={8}
-            className="TooltipContent text-white px-4 py-2 z-10"
+            style={{ zIndex: 999999 }}
+            className="TooltipContent text-white px-4 py-2"
             sideOffset={5}
             side={side}
             align={align}>

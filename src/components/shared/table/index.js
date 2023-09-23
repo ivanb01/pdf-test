@@ -65,6 +65,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import { setRefetchCount } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
+import GoogleContact from '../../../../public/images/GoogleContact.png';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -120,6 +121,31 @@ const Table = ({
     },
   ];
   const router = useRouter();
+  const getSource = (source, approvedAI = false) => {
+    if (source === 'GmailAI') {
+      return {
+        name: 'AI Smart Synced Contact.',
+        icon: <AIChip reviewed={approvedAI} />,
+      };
+    } else if (source === 'Manually Added') {
+      return {
+        name: 'Contact Added Manually',
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M6.04175 13.9584H11.4584V12.7084H6.04175V13.9584ZM6.04175 10.625H13.9584V9.37508H6.04175V10.625ZM6.04175 7.29171H13.9584V6.04175H6.04175V7.29171ZM4.42316 17.0834C4.00222 17.0834 3.64591 16.9375 3.35425 16.6459C3.06258 16.3542 2.91675 15.9979 2.91675 15.577V4.42317C2.91675 4.00222 3.06258 3.64591 3.35425 3.35425C3.64591 3.06258 4.00222 2.91675 4.42316 2.91675H15.577C15.9979 2.91675 16.3542 3.06258 16.6459 3.35425C16.9375 3.64591 17.0834 4.00222 17.0834 4.42317V15.577C17.0834 15.9979 16.9375 16.3542 16.6459 16.6459C16.3542 16.9375 15.9979 17.0834 15.577 17.0834H4.42316Z"
+              fill="#9CA3AF"
+            />
+          </svg>
+        ),
+      };
+    } else {
+      return {
+        name: 'Google Contact',
+        icon: <Image src={GoogleContact} height={16} width={16} />,
+      };
+    }
+  };
 
   const getContactInfo = async () => {
     try {
@@ -364,8 +390,8 @@ const Table = ({
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-                  added from
+                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                  Contact summary
                 </th>
               </tr>
             </thead>
@@ -389,13 +415,30 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                    <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
-                      {dataItem.import_source == 'GmailAI' && (
-                        <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
-                      )}{' '}
-                      {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
+                    <div className={'flex gap-1.5 items-center'}>
+                      {getSource(dataItem.import_source).icon}
+                      <p className={'text-xs leading-4 font-medium text-gray8'}>
+                        {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                      </p>
                     </div>
+                    {dataItem.summary !== null && (
+                      <TooltipComponent
+                        side={'bottom'}
+                        align={'center'}
+                        triggerElement={
+                          <div
+                            className={
+                              'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                            }>
+                            {dataItem.summary}
+                          </div>
+                        }>
+                        <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                          <p className="text-xs leading-4 font-normal">{dataItem.summary}</p>
+                        </div>
+                      </TooltipComponent>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -429,8 +472,8 @@ const Table = ({
                 {tableFor != 'in-categorization' && (
                   <th
                     scope="col"
-                    className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-                    Added From
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Contact summary
                   </th>
                 )}
               </tr>
@@ -485,12 +528,29 @@ const Table = ({
                     </td>
                     {tableFor != 'in-categorization' && (
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
-                          {dataItem.import_source == 'GmailAI' && (
-                            <AIChip className="mr-2" reviewed={dataItem.approved_ai} />
-                          )}{' '}
-                          {dataItem.import_source ? dataItem.import_source : 'Manually Added'}
+                        <div className={'flex gap-1.5 items-center'}>
+                          {getSource(dataItem.import_source).icon}
+                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                            {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                          </p>
                         </div>
+                        {dataItem.summary !== null && (
+                          <TooltipComponent
+                            side={'bottom'}
+                            align={'center'}
+                            triggerElement={
+                              <div
+                                className={
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis  overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                }>
+                                {dataItem.summary}
+                              </div>
+                            }>
+                            <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                              <p className="text-xs leading-4 font-normal">{dataItem.summary}</p>
+                            </div>
+                          </TooltipComponent>
+                        )}
                       </td>
                     )}
                   </tr>
@@ -795,7 +855,7 @@ const Table = ({
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Added From
+              Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
@@ -898,12 +958,29 @@ const Table = ({
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
-                          {contact.import_source == 'GmailAI' && (
-                            <AIChip className="mr-2" reviewed={contact.approved_ai} />
-                          )}{' '}
-                          {contact.import_source ? contact.import_source : 'Manually Added'}
+                        <div className={'flex gap-1.5 items-center'}>
+                          {getSource(contact.import_source).icon}
+                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                            {getSource(contact.import_source, contact.approved_ai).name}
+                          </p>
                         </div>
+                        {contact.summary !== null && (
+                          <TooltipComponent
+                            side={'bottom'}
+                            align={'center'}
+                            triggerElement={
+                              <div
+                                className={
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                }>
+                                {contact.summary}
+                              </div>
+                            }>
+                            <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                              <p className="text-xs leading-4 font-normal">{contact.summary}</p>
+                            </div>
+                          </TooltipComponent>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium min-w-[200px]">
@@ -1114,7 +1191,7 @@ const Table = ({
               Type
             </th> */}
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              added from
+              Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
@@ -1176,12 +1253,29 @@ const Table = ({
                         </div>
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px] flex items-center justify-center">
-                          {contact.import_source == 'GmailAI' && (
-                            <AIChip className="mr-2" reviewed={contact.approved_ai} />
-                          )}{' '}
-                          {contact.import_source ? contact.import_source : 'Manually Added'}
+                        <div className={'flex gap-1.5 items-center'}>
+                          {getSource(contact.import_source).icon}
+                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                            {getSource(contact.import_source, contact.approved_ai).name}
+                          </p>
                         </div>
+                        {contact.summary !== null && (
+                          <TooltipComponent
+                            side={'bottom'}
+                            align={'center'}
+                            triggerElement={
+                              <div
+                                className={
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                }>
+                                {contact.summary}
+                              </div>
+                            }>
+                            <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                              <p className="text-xs leading-4 font-normal">{contact.summary}</p>
+                            </div>
+                          </TooltipComponent>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className="text-gray7 font-medium min-w-[200px]">
