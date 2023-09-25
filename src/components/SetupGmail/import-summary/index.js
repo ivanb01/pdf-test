@@ -6,9 +6,12 @@ import Text from 'components/shared/text';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from 'components/shared/button';
+import { setRefetchData } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const GoogleContactsImportSummary = ({ data }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [allContacts, setAllContacts] = useState([]);
   const [searchTermImported, setSearchTermImported] = useState('');
@@ -47,6 +50,7 @@ const GoogleContactsImportSummary = ({ data }) => {
     setAllContacts(data);
     setImportedContacts(data?.importable_new_contacts);
     setNotImportedContacts([...data?.invalid_contacts]);
+    dispatch(setRefetchData(true));
   }, [data]);
 
   return (
