@@ -65,7 +65,7 @@ const GoogleContactsImportSummary = ({ data }) => {
         </div>
 
         {/* <div className="flex w-full border-y border-gray2" style={{ height: 'calc(100vh - 146px)' }}> */}
-        <div className="flex w-full border-y border-gray2 relative pb-[72px]">
+        <div className="flex w-full border-y border-gray2 relative pb-[58px]">
           <div
             className={`p-6 border-r border-gray2 ${
               (allContacts?.invalid_contacts && allContacts?.invalid_contacts_count >= 1) ||
