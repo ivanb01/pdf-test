@@ -2,11 +2,24 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { classNames } from 'global/functions';
 
-const FilterDropdown = ({ label, types, handleClick, icon, className, isFilter, data, positionClass }) => {
+const FilterDropdown = ({
+  label,
+  types,
+  handleClick,
+  icon,
+  className,
+  isFilter,
+  data,
+  positionClass,
+  buttonClassName,
+}) => {
   return (
     <Menu as="div" className={'relative inline-block text-left ' + className}>
       <div>
-        <Menu.Button className="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-[#696F8C] hover:text-primaryOxford hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-primaryOxford z-0">
+        <Menu.Button
+          className={`inline-flex ${
+            buttonClassName ? buttonClassName : 'px-4'
+          } justify-center w-full rounded-md py-2 bg-white text-sm font-medium text-[#696F8C] hover:text-primaryOxford hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-primaryOxford z-0 `}>
           <div>{icon}</div>
           {label}
         </Menu.Button>
@@ -23,7 +36,7 @@ const FilterDropdown = ({ label, types, handleClick, icon, className, isFilter, 
         <Menu.Items
           className={`origin-top-right absolute ${
             positionClass ? positionClass : 'left-0'
-          } mt-2 w-56 z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none `}>
+          } mt-2 w-56 z-50 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}>
           <div className="py-1">
             {isFilter && (
               <Menu.Item>

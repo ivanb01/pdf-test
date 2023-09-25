@@ -31,6 +31,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import { unassignContactFromCampaign } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TextArea from '@components/shared/textarea';
 
 const ReviewContact = ({
   className,
@@ -88,6 +89,7 @@ const ReviewContact = ({
       last_name: client?.last_name,
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
+      summary: client?.summary ? client?.summary : null,
       lead_source: client?.lead_source,
       tags: client?.tags,
       selectedContactCategory:
@@ -105,6 +107,7 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
+      console.log(values.summary);
       if (isUnapprovedAI) {
         if (formik.values.email !== formik.initialValues.email) {
           setUpdating(true);
@@ -241,6 +244,7 @@ const ReviewContact = ({
       category_id: category_id,
       status_id: status_id,
       category_2: category,
+      summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
 
@@ -546,6 +550,14 @@ const ReviewContact = ({
                   errorText={errors.phone_number}
                 />
               </div>
+              <TextArea
+                className="min-h-[100px] mb-6 z-10"
+                id="summary"
+                label="Summary"
+                name={'summary'}
+                handleChange={formik.handleChange}
+                value={formik.values.summary}
+              />
               {!isUnapprovedAI && (
                 <>
                   <Dropdown

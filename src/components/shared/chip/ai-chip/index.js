@@ -6,28 +6,32 @@ import TooltipComponent from '@components/shared/tooltip';
 const AIChip = ({ reviewed, className }) => {
   return (
     <>
-      <TooltipComponent
-        side={'right'}
-        align="center"
-        triggerElement={<img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />}>
-        <div style={{ width: '230px' }} className={'flex flex-col gap-4'}>
-          {!reviewed ? (
-            <ChipText
-              title={'New Contact'}
-              reviewed
-              description={
-                'This contact is new, and you haven’t reviewed it yet. After you review it, the chip will turn green.'
-              }
-            />
-          ) : (
-            <ChipText
-              title={'Reviewed Contact'}
-              reviewed={false}
-              description={'This AI contact has been reviewed and approved.'}
-            />
-          )}
-        </div>
-      </TooltipComponent>
+      <span className={`${reviewed ? `text-blue2` : 'text-green5'}`}>
+        <AIComponent />
+      </span>
+      {/*  <TooltipComponent*/}
+      {/*    side={'right'}*/}
+      {/*    align="center"*/}
+      {/*    triggerElement={<img className={className} src={reviewed ? AIReviewed.src : AI.src} alt="" />}>*/}
+      {/*    <div style={{ width: '230px' }} className={'flex flex-col gap-4'}>*/}
+      {/*      {!reviewed ? (*/}
+      {/*        <ChipText*/}
+      {/*          title={'New Contact'}*/}
+      {/*          reviewed*/}
+      {/*          description={*/}
+      {/*            'This contact is new, and you haven’t reviewed it yet. After you review it, the chip will turn green.'*/}
+      {/*          }*/}
+      {/*        />*/}
+      {/*      ) : (*/}
+      {/*        <ChipText*/}
+      {/*          title={'Reviewed Contact'}*/}
+      {/*          reviewed={false}*/}
+      {/*          description={'This AI contact has been reviewed and approved.'}*/}
+      {/*        />*/}
+      {/*      )}*/}
+      {/*    </div>*/}
+      {/*  </TooltipComponent>*/}
+      {/*</>*/}
     </>
   );
 };
