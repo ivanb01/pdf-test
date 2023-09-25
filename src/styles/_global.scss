@@ -274,7 +274,9 @@ html {
     }
   }
 }
-
+.transformDropdown{
+  transform: translateX(-158px) !important;
+}
 .shepherd-cancel-icon {
   line-height: 0.6 !important;
 }

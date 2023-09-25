@@ -23,16 +23,13 @@ const AddSummary = ({ title, handleClose, className, client }) => {
     onSubmit: (values) => {
       const { summary } = values;
       dispatch(updateContactLocally({ ...client, summary: summary }));
-      updateContact(client.id, { ...client, summary: summary })
-        .then(() => {
-          if (title.toLowerCase().includes('add')) {
-            toast.success('Summary was added successfully!');
-          } else if (title.toLowerCase().includes('edit')) {
-            toast.success('Changes has been saved successfully!');
-          }
-          dispatch(setRefetchData(true));
-        })
-        .catch(() => toast.error('Something went wrong'));
+      if (title.toLowerCase().includes('add')) {
+        toast.success('Summary was added successfully!');
+      } else if (title.toLowerCase().includes('edit')) {
+        toast.success('Changes has been saved successfully!');
+      }
+      dispatch(setRefetchData(true));
+      updateContact(client.id, { ...client, summary: summary }).catch(() => toast.error('Something went wrong'));
     },
   });
 

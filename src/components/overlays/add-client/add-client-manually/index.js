@@ -21,6 +21,8 @@ import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { types } from 'global/variables';
 import { setRefetchData } from 'store/global/slice';
+import TextArea from '@components/shared/textarea';
+import SimpleBar from 'simplebar-react';
 
 const categoryIds = {
   'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
@@ -82,6 +84,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       last_name: '',
       email: '',
       phone_number: '',
+      summary: null,
       lead_source: '',
       import_source: 'Manually Added',
       tags: [],
@@ -202,82 +205,90 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       isSubmittingButton={isSubmitting2}>
       <div className="step">
         {currentStep == 1 ? (
-          <div>
-            {/* <div className="flex items-center mb-6">
+          <SimpleBar style={{ maxHeight: '350px', height: '100%', padding: '3px' }} autoHide={true}>
+            <div>
+              {/* <div className="flex items-center mb-6">
               <Avatar size="large" className="mr-4" />
               <Button white label="Upload Photo" />
             </div> */}
-            <div>
-              <form onSubmit={formik.handleSubmit}>
-                <div className="grid grid-cols-2 gap-4 mb-12">
-                  <Input
-                    type="text"
-                    label="First Name"
-                    id="first_name"
-                    onChange={formik.handleChange}
-                    value={formik.values.first_name}
-                    error={errors.first_name && touched.first_name}
-                    errorText={errors.first_name}
-                  />
-                  <Input
-                    type="text"
-                    label="Last Name"
-                    id="last_name"
-                    onChange={formik.handleChange}
-                    value={formik.values.last_name}
-                    error={errors.last_name && touched.last_name}
-                    errorText={errors.last_name}
-                  />
-                  <Input
-                    type="email"
-                    label="Email"
-                    id="email"
-                    // onChange={formik.handleChange}
-                    onChange={(e) => {
-                      if (existingContactEmail !== e.target.value) {
-                        setExistingContactEmailError('');
+              <div>
+                <form onSubmit={formik.handleSubmit}>
+                  <div className="grid grid-cols-2 gap-4 mb-12">
+                    <Input
+                      type="text"
+                      label="First Name"
+                      id="first_name"
+                      onChange={formik.handleChange}
+                      value={formik.values.first_name}
+                      error={errors.first_name && touched.first_name}
+                      errorText={errors.first_name}
+                    />
+                    <Input
+                      type="text"
+                      label="Last Name"
+                      id="last_name"
+                      onChange={formik.handleChange}
+                      value={formik.values.last_name}
+                      error={errors.last_name && touched.last_name}
+                      errorText={errors.last_name}
+                    />
+                    <Input
+                      type="email"
+                      label="Email"
+                      id="email"
+                      // onChange={formik.handleChange}
+                      onChange={(e) => {
+                        if (existingContactEmail !== e.target.value) {
+                          setExistingContactEmailError('');
+                        }
+                        formik.setFieldValue('email', e.target.value);
+                      }}
+                      value={formik.values.email}
+                      error={(errors.email && touched.email) || existingContactEmailError}
+                      errorText={
+                        errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null
                       }
-                      formik.setFieldValue('email', e.target.value);
-                    }}
-                    value={formik.values.email}
-                    error={(errors.email && touched.email) || existingContactEmailError}
-                    errorText={
-                      errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null
-                    }
-                  />
+                    />
 
-                  <Input
-                    type="phone_number"
-                    label="Phone"
-                    id="phone_number"
-                    onChange={(val) => formik.setFieldValue('phone_number', val)}
-                    value={formik.values.phone_number}
-                    placeholder="ex: (555) 555-5555"
-                    error={errors.phone_number && touched.phone_number}
-                    errorText={errors.phone_number}
-                  />
-
-                  <Dropdown
-                    className="col-span-2"
-                    white
-                    label="Lead Source"
-                    activeIcon={false}
-                    options={leadSourceOptions}
-                    handleSelect={(source) => (formik.values.lead_source = source.name)}
-                    initialSelect={formik.values.lead_source}
-                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                  />
-                  <TagsInput
-                    typeOfContact={openedTab}
-                    label="Priority"
-                    onChange={(choice) => {
-                      formik.setFieldValue(
-                        'tags',
-                        choice.map((el) => el.label),
-                      );
-                    }}
-                  />
-                  {/* <ChipInput
+                    <Input
+                      type="phone_number"
+                      label="Phone"
+                      id="phone_number"
+                      onChange={(val) => formik.setFieldValue('phone_number', val)}
+                      value={formik.values.phone_number}
+                      placeholder="ex: (555) 555-5555"
+                      error={errors.phone_number && touched.phone_number}
+                      errorText={errors.phone_number}
+                    />
+                    <TextArea
+                      className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+                      id="summary"
+                      label="Summary"
+                      name={'summary'}
+                      handleChange={formik.handleChange}
+                      value={formik.values.summary}
+                    />
+                    <Dropdown
+                      className="col-span-2"
+                      white
+                      label="Lead Source"
+                      activeIcon={false}
+                      options={leadSourceOptions}
+                      handleSelect={(source) => (formik.values.lead_source = source.name)}
+                      initialSelect={formik.values.lead_source}
+                      placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                    />
+                    <TagsInput
+                      typeOfContact={openedTab}
+                      label="Priority"
+                      onChange={(choice) => {
+                        formik.setFieldValue(
+                          'tags',
+                          choice.map((el) => el.label),
+                        );
+                      }}
+                    />
+                    {/* <ChipInput
                     label="Tags"
                     optional
                     className="col-span-2"
@@ -286,10 +297,11 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                     removeChip={removeChip}
                     addChip={addChip}
                   /> */}
-                </div>
-              </form>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
+          </SimpleBar>
         ) : (
           <div>
             <Radio
@@ -297,7 +309,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
               label="What kind of contact is this for you?"
               selectedOption={formikStep2.values.selectedContactType}
               setSelectedOption={(e) => setFieldValue2('selectedContactType', e)}
-              className="mb-6"
               error={errors2.selectedContactType && touched2.selectedContactType}
               errorText={errors2.selectedContactType}
             />
