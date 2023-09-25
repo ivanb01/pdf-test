@@ -306,7 +306,7 @@ const index = () => {
 
   const propertyAmenities = [
     {
-      name: 'Firebase',
+      name: 'Fireplace',
       icon: fireplace,
     },
     {
@@ -446,7 +446,13 @@ const index = () => {
   };
 
   const checkAllItems = (details) => {
-    return details.every((detail) => detail.value === undefined || detail.value === 0 || detail.value.length === 0);
+    return details.every(
+      (detail) =>
+        detail.value === undefined ||
+        detail.value === 0 ||
+        detail.value.length === 0 ||
+        (typeof detail.value === 'string' && detail?.value.slice(-1) === '%' && detail.value.slice(0, -1) === '0'),
+    );
   };
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
@@ -682,20 +688,22 @@ const index = () => {
               <div className="mt-10">
                 <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
                 <div className={'w-[700px]'}>
-                  <div className="grid grid-cols-3 gap-6 items-center mb-6">
-                    {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
-                      differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
-                        const matchedAmenity = propertyAmenities.find(
-                          (item) => item.name.toLowerCase() === amenity.toLowerCase(),
-                        );
-                        return (
-                          <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
-                            {matchedAmenity && <Image src={matchedAmenity.icon} />}
-                            {matchedAmenity && <span>{matchedAmenity.name}</span>}
-                          </div>
-                        );
-                      })}
-                  </div>
+                  {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 && (
+                    <div className="grid grid-cols-3 gap-6 items-center mb-6">
+                      {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
+                        differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
+                          const matchedAmenity = propertyAmenities.find(
+                            (item) => item.name.toLowerCase() === amenity.toLowerCase(),
+                          );
+                          return (
+                            <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
+                              {matchedAmenity && <Image src={matchedAmenity.icon} />}
+                              {matchedAmenity && <span>{matchedAmenity.name}</span>}
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
                   <div className={'flex flex-wrap'} style={{ gap: '5px' }}>
                     {differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 &&
                       differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.map(
@@ -721,7 +729,16 @@ const index = () => {
                 <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
                 <div className="flex flex-wrap">
                   {getOtherDetails().map((detail, index) => {
-                    if (detail.value !== undefined && detail.value !== '' && detail.value !== 0) {
+                    if (
+                      detail.value !== undefined &&
+                      detail.value !== '' &&
+                      detail.value != 0 &&
+                      !(
+                        typeof detail.value === 'string' &&
+                        detail?.value.slice(-1) === '%' &&
+                        detail.value.slice(0, -1) === '0'
+                      )
+                    ) {
                       return (
                         <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
                           <div className="text-gray4 text-sm">{detail.name}</div>
