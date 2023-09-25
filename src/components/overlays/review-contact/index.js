@@ -24,7 +24,6 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
-import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
@@ -61,9 +60,10 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
 
-  const isUnapprovedAI =
-    client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
-
+  const isUnapprovedAI = client.import_source === 'GmailAI' && client.approved_ai === true;
+  useEffect(() => {
+    console.log(client.import_source, 'client.import_source', 'client.approved_ai', client.approved_ai);
+  }, [client.import_source, client.approved_ai]);
   const options = [
     {
       id: 6,
@@ -107,7 +107,6 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      console.log(values.summary);
       if (isUnapprovedAI) {
         if (formik.values.email !== formik.initialValues.email) {
           setUpdating(true);
@@ -449,32 +448,9 @@ const ReviewContact = ({
     );
   };
 
-  const fetchAISummary = async () => {
-    try {
-      const { data } = await getAIData(client.id);
-      setClient({
-        ...client,
-        ai_email_summary: data.ai_email_summary,
-        email_link: data.email_link,
-        email_subject: data.email_subject,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoadingEmail(false);
-    }
-  };
-
-  useEffect(() => {
-    console.log(isUnapprovedAI, 'isUnapprovedAI');
-  }, [isUnapprovedAI]);
   useEffect(() => {
     if ('ai_email_summary' in client) {
       setLoadingEmail(false);
-    } else {
-      if (!isUnapprovedAI) {
-        fetchAISummary();
-      }
     }
   }, []);
   const userAlreadyExists = async (email) => {
@@ -666,20 +642,20 @@ const ReviewContact = ({
                     <img src={AI.src} alt="" />
                     <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="cursor-pointer flex items-center text-sm text-gray-900 underline"
-                      rel="noreferrer">
-                      View the email source
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
-                  </div>
                 </div>
                 <hr className="my-4" />
-                <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
+                <div className="text-gray-900 text-sm">{client.summary}</div>
+                <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
+                <div>
+                  <a
+                    target="_blank"
+                    // href={client.email_link}
+                    className="cursor-pointer flex items-center text-sm text-gray-900 underline mt-3"
+                    rel="noreferrer">
+                    View the email source
+                    <img src={newTab.src} alt="" className="ml-1" />
+                  </a>
+                </div>
               </div>
             </SimpleBar>
           </div>

@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
-import { getAIData } from '@api/aiSmartSync';
+// import { getAIData } from '@api/aiSmartSync';
 import AIChip from '@components/shared/chip/ai-chip';
 import linkIcon from '/public/images/link.svg';
 import AddActivity from '@components/overlays/add-activity';
@@ -101,18 +101,18 @@ export default function ActivityLog({ contactId, source, contact }) {
       handleClick: () => deleteSummary(),
     },
   ];
-  const fetchAiPreview = async (id) => {
-    try {
-      const { data } = await getAIData(id);
-      setAiPreview(data);
-    } catch (error) {
-    } finally {
-      setAiPreviewLoading(false);
-    }
-  };
-  useEffect(() => {
-    if (source == 'GmailAI') fetchAiPreview(contactId);
-  }, []);
+  // const fetchAiPreview = async (id) => {
+  //   try {
+  //     const { data } = await getAIData(id);
+  //     setAiPreview(data);
+  //   } catch (error) {
+  //   } finally {
+  //     setAiPreviewLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (source == 'GmailAI') fetchAiPreview(contactId);
+  // }, []);
   const getSource = (source) => {
     if (source === 'GmailAI') {
       return {
