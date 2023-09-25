@@ -3,7 +3,7 @@ import { PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
 import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import GoogleContact from '../../../../../public/images/googleContact.png';
+import GoogleContact from '../../../../../public/images/GoogleContact.png';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import noActivityLog from '/public/images/no_activitylog.svg';
 import Image from 'next/image';
