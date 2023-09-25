@@ -656,8 +656,8 @@ const index = () => {
                       Floor-plan
                     </Button>
                   )}
-                  {data.VTOUR && data.VTOUR.length > 0 && (
-                    <a href={data.VTOUR} target="_blank" rel="noopener noreferrer">
+                  {(data.VTOUR || data.VTOUR2) && (data.VTOUR.length > 0 || data.VTOUR2.length > 0) && (
+                    <a href={data.VTOUR ?? data.VTOUR2} target="_blank" rel="noopener noreferrer">
                       <Button secondary className={'py-[9px] px-[13px] text-lightBlue5'}>
                         <div className={'mr-1.5'}>
                           <svg
