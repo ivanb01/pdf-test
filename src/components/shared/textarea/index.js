@@ -8,7 +8,7 @@ const TextArea = ({ rows, name, id, value, handleChange, label, optional, classN
       {label && (
         <label htmlFor={name} className="block text-sm font-medium text-gray6 mb-1 flex items-center">
           {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}{' '}
-          {name.toLowerCase() === 'summary' && (
+          {name?.toLowerCase() === 'summary' && (
             <TooltipComponent
               side={'bottom'}
               align={'left'}
