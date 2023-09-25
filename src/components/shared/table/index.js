@@ -2048,6 +2048,8 @@ const Table = ({
                   ? reportsTable()
                   : tableFor == 'imports-summary'
                   ? importsSummaryTable()
+                  : tableFor === 'needToContact'
+                  ? needToContactTable()
                   : tableFor === 'trash'
                   ? trashTable()
                   : tableFor == 'contactsList'

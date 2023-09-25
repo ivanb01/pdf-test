@@ -220,11 +220,11 @@ const index = () => {
   };
 
   useEffect(() => {
-    fetchProperties(filterValue);
+    fetchProperties(filterValue, page);
   }, []);
 
   useEffect(() => {
-    fetchProperties(filterValue);
+    fetchProperties(filterValue, page);
   }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice, filterValue]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));

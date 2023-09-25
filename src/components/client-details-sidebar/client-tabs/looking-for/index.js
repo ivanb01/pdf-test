@@ -142,7 +142,7 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
-        fetchProperties(lookingProperties[0], 1, filterValue);
+        fetchProperties(lookingProperties[0], page, filterValue);
       }
     } catch (error) {
       console.log(error);
@@ -245,7 +245,7 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
-      fetchProperties(formik.values, 1, filterValue);
+      fetchProperties(formik.values, page, filterValue);
     }
   }, [contactId, lookingForData, refetchData, filterValue]);
 

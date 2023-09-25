@@ -11,7 +11,7 @@ import moment from 'moment';
 
 export const getInitials = (name) => {
   // let fullName = name.split(' ');
-  let fullName = name.split(/\s+/);
+  let fullName = name?.split(/\s+/);
   return (fullName[0][0] + fullName[1][0]).toUpperCase();
 };
 
