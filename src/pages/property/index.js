@@ -535,9 +535,6 @@ const index = () => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(data.VTOUR, data.VTOUR2);
-  }, [data.VTOUR, data.VTOUR2]);
   const [toggler, setToggler] = useState(false);
   const filteredArray =
     data.PHOTOS.length > 0 && data.PHOTOS.filter((item) => item.ORIGINAL_URL.toLowerCase().includes('floor'));
