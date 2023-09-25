@@ -37,7 +37,7 @@ const AddSummary = ({ title, handleClose, className, client }) => {
     <Overlay handleCloseOverlay={handleClose} title={title} className={className}>
       <form onSubmit={formik.handleSubmit} className={'p-6'}>
         <TextArea
-          className="min-h-[100px]"
+          className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
           id="Summary"
           label="Summary"
           name={'summary'}
