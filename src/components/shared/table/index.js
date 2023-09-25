@@ -1203,9 +1203,6 @@ const Table = ({
               PHONE
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              LAST COMMUNICATION
-            </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
           </tr>
@@ -1287,22 +1284,6 @@ const Table = ({
                         <div className="text-gray7 font-medium min-w-[200px]">
                           {phoneNumberFormat(contact.phone_number)}
                         </div>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          <DateChip
-                            lastCommunication={contact.last_communication_date}
-                            contactStatus={contact.status_2}
-                            contactCategory={categoryType}
-                          />
-
-                          {/* <Chip
-                            lastCommunication={formatDateAgo(
-                              contact?.last_communication_date
-                            )}
-                          /> */}
-                        </div>
-                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                       </td>
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
@@ -1946,13 +1927,13 @@ const Table = ({
         <tbody>
           {data.map((person) => (
             <tr
+              key={person.id}
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
                   query: { id: person?.id },
                 })
               }
-              key={person.id}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
               style={{ height: '84px' }}>
               <td className="pl-6 py-3" style={{ width: '300px' }}>
@@ -1983,7 +1964,12 @@ const Table = ({
 
               <td>
                 <Chip label={person.category_2} typeStyle />
-                <p className={'text-sm leading-5 font-medium text-gray8 mt-3'}> {person.status_2}</p>
+                <Chip
+                  label={person.status_2}
+                  statusStyle
+                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
+                  {getContactStatusByStatusId(person.category_id, person.status_id)}
+                </Chip>
               </td>
               <td>
                 <div className={'flex gap-1.5 items-center'}>
@@ -2055,6 +2041,8 @@ const Table = ({
                   ? otherTable()
                   : tableFor == 'ai-summary'
                   ? aiSummaryTable()
+                  : tableFor == 'needToContact'
+                  ? needToContactTable()
                   : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'
                   ? importGoogleContactsDetails()
                   : campaignsTable()}
