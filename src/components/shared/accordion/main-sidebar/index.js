@@ -116,11 +116,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   const expandedMenu = () => {
     return (
-      <SimpleBar autoHide={true} style={{ maxHeight: '60vh' }}>
+      <SimpleBar autoHide={true} style={{ maxHeight: '63vh' }}>
         <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
-            <div key={groupName} className={index === 0 ? '' : 'border-t pt-2.5'}>
-              <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2 pb-2.5">{groupName}</h2>
+            <div key={groupName} className={index === 0 ? '' : ' pt-4'}>
+              <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />
               ))}
@@ -310,9 +310,7 @@ const TabBar = ({ tab }) => {
     <div className={`accordion w-inherit`} key={tab.id}>
       <Link
         href="#"
-        className={`flex items-center h-10 justify-between pl-2  pr-3 py-3 mx-3' ${
-          openedTab === tab.id && ' text-lightBlue3'
-        } ${
+        className={`flex items-center h-8 justify-between pl-2  pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||
@@ -324,7 +322,7 @@ const TabBar = ({ tab }) => {
         onClick={handleTabClick}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}
-          <Text h4 className={`px-3 py-[10px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+          <Text h4 className={`px-3 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
             {tab.name}
           </Text>
         </div>
@@ -344,7 +342,7 @@ const TabBar = ({ tab }) => {
               <a
                 key={`${subtab.id}`}
                 href="#"
-                className={`px-10 transition-all duration-200 flex items-center ${
+                className={`h-8 px-10 transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
