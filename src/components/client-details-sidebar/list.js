@@ -22,7 +22,7 @@ export const tabs = (contactId, contact) => {
       name: 'Activity Log',
       href: '#',
       icon: <List />,
-      content: <ActivityLogContent contactId={contactId} source={contact?.import_source} />,
+      content: <ActivityLogContent contactId={contactId} source={contact?.import_source} contact={contact} />,
     },
     {
       id: 2,
@@ -45,7 +45,7 @@ export const tabs = (contactId, contact) => {
       name: 'Activity Log',
       href: '#',
       icon: <List />,
-      content: <ActivityLogContent contactId={contactId} source={contact?.import_source} />,
+      content: <ActivityLogContent contactId={contactId} source={contact?.import_source} contact={contact} />,
     },
     {
       id: 1,

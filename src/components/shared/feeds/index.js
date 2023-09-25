@@ -163,7 +163,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <div className="flow-root bg-white p-6 h-auto ">
+      <div className="flow-root bg-white pt-6 pb-6 h-auto ">
         <ul role="list" className="-mb-8">
           {activities
             ?.slice()

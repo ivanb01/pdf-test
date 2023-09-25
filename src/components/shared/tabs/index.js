@@ -18,7 +18,7 @@ export default function Tabs({
     setCurrent(id);
   };
   return (
-    <div className={`w-full h-auto bg-gray10 ${wrapperClassName}`}>
+    <div className={`w-full h-auto bg-gray10 flex flex-col ${wrapperClassName}`}>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
