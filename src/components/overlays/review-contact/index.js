@@ -13,7 +13,7 @@ import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
 import StatusSelect from 'components/status-select';
-import { statuses, vendorTypes } from 'global/variables';
+import { statuses } from 'global/variables';
 import Chip from 'components/shared/chip';
 import SimpleBar from 'simplebar-react';
 import AI from '/public/images/ai.svg';
@@ -46,6 +46,8 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
 }) => {
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -385,7 +387,7 @@ const ReviewContact = ({
           setSubmitDisabled(false);
         }
       } else if (selectedContactCategory == 2 && selectedContactType) {
-        // if other
+        // if family
         setSubmitDisabled(false);
       } else if (selectedContactCategory == 3 || selectedContactCategory == 4) {
         setSubmitDisabled(false);
@@ -608,7 +610,7 @@ const ReviewContact = ({
                   label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
-                    [8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType)
+                    vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType)
                       ? 8
                       : formik.values.selectedContactType
                   }
@@ -619,11 +621,11 @@ const ReviewContact = ({
                   errorText={errors.selectedContactType}
                 />
               )}
-              {[8, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(formik.values.selectedContactType) ? (
+              {vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType) ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                   <div className="flex flex-wrap">
-                    {vendorTypes.map((type) => (
+                    {vendorSubtypes.map((type) => (
                       <Chip
                         selectedStatus={type.id == formik.values.selectedContactSubtype}
                         key={type.id}

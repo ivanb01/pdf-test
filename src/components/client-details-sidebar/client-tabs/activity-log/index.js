@@ -1,20 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
-import { MinusCircleIcon } from '@heroicons/react/solid';
 import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import GoogleContact from '../../../../../public/images/googleContact.png';
-import { useFormik } from 'formik';
-import Button from 'components/shared/button';
-import TextArea from 'components/shared/textarea';
-import * as contactServices from 'api/contacts';
-import Dropdown from 'components/shared/dropdown';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import noActivityLog from '/public/images/no_activitylog.svg';
 import Image from 'next/image';
-import * as Yup from 'yup';
-import { activityTypes } from 'global/variables';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
@@ -32,6 +24,7 @@ import { updateContact } from 'api/contacts';
 import toast from 'react-hot-toast';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { updateContactLocally } from '@store/contacts/slice';
+import { createPortal } from 'react-dom';
 
 export default function ActivityLog({ contactId, source, contact }) {
   const dispatch = useDispatch();

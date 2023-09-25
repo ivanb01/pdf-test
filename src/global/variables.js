@@ -421,23 +421,6 @@ export const clientStatuses = [
   },
 ];
 
-export const vendorTypes = [
-  { id: 8, name: 'Vendor' },
-  { id: 15, name: 'Lawyer' },
-  { id: 16, name: 'Contractor' },
-  { id: 17, name: 'Mortgage Broker' },
-  { id: 18, name: 'Mover' },
-  { id: 19, name: 'Photographer' },
-  { id: 20, name: 'Staging' },
-  { id: 21, name: 'Home Inspector' },
-  { id: 22, name: 'Finance' },
-  { id: 23, name: 'Insurance' },
-  { id: 24, name: 'Appraiser' },
-  { id: 25, name: 'Handyman' },
-  { id: 26, name: 'Architect' },
-  { id: 27, name: 'Software' },
-];
-
 export const agentTypes = [{ id: 12, name: 'Agent' }];
 export const unspecifiedTypes = [{ id: 9, name: 'Unspecified' }];
 

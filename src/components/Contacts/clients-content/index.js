@@ -74,7 +74,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     },
     {
       title: 'CLIENT STATUS',
-      content: allStatusesQuickEdit['clients'].map((item) => item.name),
+      content: allStatusesQuickEdit['clients'].map((item) => item.label),
       value: 'status_2',
     },
     {

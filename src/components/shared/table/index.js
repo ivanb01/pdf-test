@@ -23,7 +23,6 @@ import {
   clientStatuses,
   allStatusesQuickEdit,
   professionalsStatuses,
-  vendorTypes,
   agentTypes,
   unspecifiedTypes,
   contactTypes,
@@ -65,6 +64,9 @@ import RedoIcon from '@mui/icons-material/Redo';
 import { setRefetchCount } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
+import ListIcon from '@mui/icons-material/List';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { createPortal } from 'react-dom';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
 
 const categoryIds = {
@@ -96,6 +98,8 @@ const Table = ({
   selectedPeople,
   setSelectedPeople,
 }) => {
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+
   const types = [
     {
       name: (
@@ -354,7 +358,7 @@ const Table = ({
                         handleAction={(id, action) => handleAction(id, action)}
                       />
                     </td>
-                    {dataItem.length > 0 &&
+                    {dataItem &&
                       dataItem?.events.map((event, index) => (
                         <td
                           key={`event-${index}`}
@@ -578,7 +582,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+              className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
               {data.length} Categorized Contacts
             </th>
             <th
@@ -624,7 +628,7 @@ const Table = ({
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
-                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                <td className="whitespace-nowrap py-4 pl-6  text-sm sm:pl-6">
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
@@ -647,7 +651,7 @@ const Table = ({
                     </div>
                   )}
                 </td>
-                <td className="relative whitespace-nowrap h-[72.5px] px-3 py-4 sm:pr-6 flex justify-end items-center">
+                <td className="relative whitespace-nowrap h-[72.5px] py-4 pr-6 sm:pr-6 flex justify-end items-center">
                   <div className="relative">
                     <a
                       className="cursor-pointer text-xs"
@@ -1122,15 +1126,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
         {changeStatusModal && (
           <ChangeStatus
             handleCloseOverlay={() => setChangeStatusModal(false)}
@@ -1169,7 +1175,7 @@ const Table = ({
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
 
-    let professionalTypes = openedSubtab == 0 ? vendorTypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
+    let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
 
     return (
       <>
@@ -1419,15 +1425,17 @@ const Table = ({
             ),
           )}
         </tbody>
-        {addActivityPopup && (
-          <AddActivity
-            clientId={contactToModify.id}
-            className="min-w-[550px]"
-            title={`Add Activity`}
-            setAddActivityPopup={setAddActivityPopup}
-            handleClose={() => setAddActivityPopup(false)}
-          />
-        )}
+        {addActivityPopup &&
+          createPortal(
+            <AddActivity
+              clientId={contactToModify.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
+            />,
+            document.getElementById('modal-portal'),
+          )}
       </>
     );
   };
@@ -1597,15 +1605,27 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
-    const getSubtype = (item) => {
+    const getChip = (item) => {
+      if (item.category_id == 3) {
+        return 'Trash';
+      }
       if (item.category_1 == 'Professional') {
-        return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
-          ? ' - ' + findProfessionalSubtype(item.category_id)
-          : ' - ' + item.category_2;
+        if (vendorSubtypes.map((type) => type.id)) {
+          return item.category_2;
+        }
       } else {
-        return;
+        return item.category_1;
       }
     };
+    // const getSubtype = (item) => {
+    //   if (item.category_1 == 'Professional') {
+    //     return [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(item.category_id)
+    //       ? ' - ' + findProfessionalSubtype(item.category_id)
+    //       : ' - ' + item.category_2;
+    //   } else {
+    //     return;
+    //   }
+    // };
     return (
       <>
         <thead className="bg-gray-50">
@@ -1631,7 +1651,7 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Email Summary
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Delete/correct
             </th>
             <th
@@ -1678,10 +1698,7 @@ const Table = ({
               </td>
 
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>
-                  {dataItem.category_id == 3 ? 'Trash' : dataItem.category_1}
-                  {getSubtype(dataItem)}
-                </Chip>
+                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
@@ -1898,6 +1915,115 @@ const Table = ({
           Contacts that you moved to trash will be listed here
         </p>
       </div>
+    );
+  };
+
+  const needToContactTable = () => {
+    return (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4" style={{ height: '60px' }}>
+            <th
+              style={{ width: '300px' }}
+              scope="col"
+              className="pl-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
+              CONTACT
+            </th>
+            <th scope="col" className="flex-grow py-3  text-left  text-xs leading-4 font-medium tracking-wider">
+              TYPE
+            </th>
+            <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN
+            </th>
+            <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
+              LAST COMMUNICATION
+            </th>
+            <th scope="col" className="flex-grow py-3 pr-6  text-left   text-xs leading-4 font-medium tracking-wider">
+              ACTIONS
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.id },
+                })
+              }
+              key={person.id}
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
+              style={{ height: '84px' }}>
+              <td className="pl-6 py-3" style={{ width: '300px' }}>
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.first_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                      {person.first_name} {person.last_name}
+                    </h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <Chip label={person.category_2} typeStyle />
+                <p className={'text-sm leading-5 font-medium text-gray8 mt-3'}> {person.status_2}</p>
+              </td>
+              <td>
+                <div className={'flex gap-1.5 items-center'}>
+                  <div
+                    className={`h-2 w-2 rounded-full ${
+                      person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
+                    }`}></div>
+                  <p className={'text-sm leading-5 font-normal'}>
+                    {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
+                  </p>
+                </div>
+              </td>
+              <td>
+                <DateChip
+                  lastCommunication={person.last_communication_date}
+                  contactStatus={person.status_2}
+                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                />
+              </td>
+              <td>
+                <TooltipComponent
+                  side={'bottom'}
+                  align={'center'}
+                  triggerElement={
+                    <div
+                      className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCardEdit(person);
+                      }}>
+                      <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                    </div>
+                  }>
+                  <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
+                </TooltipComponent>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
     );
   };
   return (

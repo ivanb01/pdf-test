@@ -1,6 +1,10 @@
 import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
+export const getContactCategories = () => {
+  return axiosInstance.get('contact/categories');
+};
+
 export const getCount = () => {
   return axiosInstance.get('contact/count/by_category');
 };

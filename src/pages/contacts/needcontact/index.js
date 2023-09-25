@@ -2,26 +2,44 @@ import Layout from 'components/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Loader from '@components/shared/loader';
-import { getContacts } from '@api/contacts';
+import { bulkUpdateContacts, getContacts } from '@api/contacts';
 import { setAllContacts } from '@store/contacts/slice';
 import Search from '@components/shared/input/search';
 import SimpleBar from 'simplebar-react';
 import Table from '@components/shared/table';
-import ReviewContact from '@components/overlays/review-contact';
+
 import { setOpenedTab } from 'store/global/slice';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import { healthLastCommunicationDate } from '@global/variables';
+import { isHealthyCommuncationDate } from '@global/functions';
+import AddActivity from '@components/overlays/add-activity';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
-  const [contactToEdit, setContactToEdit] = useState(null);
+  const [addActivityPopup, setAddActivityPopup] = useState(false);
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   useEffect(() => {
-    dispatch(setOpenedTab(6));
+    dispatch(setOpenedTab(2));
   }, []);
+
+  const getNeedToCommunicateContacts = () => {
+    return allContacts.data.filter((contact) => {
+      const categoryType = contact?.category_1?.toLowerCase() + 's';
+      if (categoryType !== 'clients' && categoryType !== 'professionals') {
+        return false;
+      }
+      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+      return (
+        (contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          contact.last_name.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        !isHealthyCommunication
+      );
+    });
+  };
 
   useEffect(() => {
     if (allContacts.data === undefined) {
@@ -36,27 +54,20 @@ const index = () => {
 
     if (allContacts.data !== undefined) {
       setLoading(false);
-      onSearch(searchTerm);
     }
   }, []);
+
+  useEffect(() => {
+    if (allContacts.data !== undefined) {
+      console.log(getNeedToCommunicateContacts());
+      console.log(allContacts.data.length);
+    }
+  }, [allContacts]);
+
   const unapprovedContactsLength = unapprovedContacts?.data.filter(
     (contact) => contact.category_1 != 'Uncategorized',
   ).length;
 
-  const onSearch = (searchTerm) => {
-    const filteredItems =
-      allContacts &&
-      allContacts.data.filter(
-        (d) =>
-          searchTerm.split(' ').every((word) => {
-            const lowercaseWord = word.toLowerCase();
-            return (
-              d.first_name.toLowerCase().includes(lowercaseWord) || d.last_name.toLowerCase().includes(lowercaseWord)
-            );
-          }) && d.category_id === 3,
-      );
-    return filteredItems;
-  };
   return (
     <Layout>
       {loading ? (
@@ -70,13 +81,12 @@ const index = () => {
             />
           )}
           <div className={'flex justify-between items-center p-6'}>
-            <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
+            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate</h3>
             <Search
-              placeholder="Search"
+              placeholder="Search here..."
               className="mr-4 text-sm"
               onInput={(event) => {
                 setSearchTerm(event.target.value);
-                onSearch(event.target.value);
               }}
             />
           </div>
@@ -84,23 +94,23 @@ const index = () => {
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
-                  tableFor={'trash'}
-                  data={onSearch(searchTerm)}
+                  tableFor={'needToContact'}
+                  data={getNeedToCommunicateContacts()}
                   handleCardEdit={(contact) => {
-                    setShowEditContact(true);
-                    setContactToEdit(contact);
+                    setShowEditContact(contact);
+                    setAddActivityPopup(true);
                   }}
                 />
               </SimpleBar>
             </div>
           </div>
-          {showEditContact && (
-            <ReviewContact
-              showToast
-              client={contactToEdit}
-              setClient={setContactToEdit}
-              handleClose={() => setShowEditContact(false)}
-              title="Edit Professional"
+          {addActivityPopup && (
+            <AddActivity
+              clientId={showEditContact.id}
+              className="min-w-[550px]"
+              title={`Add Activity`}
+              setAddActivityPopup={setAddActivityPopup}
+              handleClose={() => setAddActivityPopup(false)}
             />
           )}
         </>
