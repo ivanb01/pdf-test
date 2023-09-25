@@ -13,7 +13,7 @@ import Workspaces from '@mui/icons-material/Workspaces';
 import AIChip from 'components/shared/chip/ai-chip';
 import Info from '@mui/icons-material/Info';
 import TooltipComponent from '@components/shared/tooltip';
-import GoogleContact from '../../../../public/images/googleContact.png';
+import GoogleContact from '../../../../public/images/GoogleContact.png';
 import Image from 'next/image';
 
 const categoryIds = {
