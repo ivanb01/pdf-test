@@ -6,9 +6,12 @@ import Text from 'components/shared/text';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from 'components/shared/button';
+import { setRefetchData } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const GoogleContactsImportSummary = ({ data }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [allContacts, setAllContacts] = useState([]);
   const [searchTermImported, setSearchTermImported] = useState('');
@@ -47,6 +50,7 @@ const GoogleContactsImportSummary = ({ data }) => {
     setAllContacts(data);
     setImportedContacts(data?.importable_new_contacts);
     setNotImportedContacts([...data?.invalid_contacts]);
+    dispatch(setRefetchData(true));
   }, [data]);
 
   return (
@@ -61,7 +65,7 @@ const GoogleContactsImportSummary = ({ data }) => {
         </div>
 
         {/* <div className="flex w-full border-y border-gray2" style={{ height: 'calc(100vh - 146px)' }}> */}
-        <div className="flex w-full border-y border-gray2 relative pb-[72px]">
+        <div className="flex w-full border-y border-gray2 relative pb-[58px]">
           <div
             className={`p-6 border-r border-gray2 ${
               (allContacts?.invalid_contacts && allContacts?.invalid_contacts_count >= 1) ||
