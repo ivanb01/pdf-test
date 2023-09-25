@@ -659,33 +659,29 @@ const ReviewContact = ({
         </div>
         {isUnapprovedAI && (
           <div className="w-1/2 relative">
-            {loadingEmail ? (
-              <Loader />
-            ) : (
-              <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-                <div className="p-6">
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <img src={AI.src} alt="" />
-                      <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
-                      <a
-                        target="_blank"
-                        href={client.email_link}
-                        className="cursor-pointer flex items-center text-sm text-gray-900 underline"
-                        rel="noreferrer">
-                        View the email source
-                        <img src={newTab.src} alt="" className="ml-1" />
-                      </a>
-                    </div>
+            <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
+              <div className="p-6">
+                <div>
+                  <div className="flex items-center mb-2">
+                    <img src={AI.src} alt="" />
+                    <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                   </div>
-                  <hr className="my-4" />
-                  <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
+                    <a
+                      target="_blank"
+                      href={client.email_link}
+                      className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                      rel="noreferrer">
+                      View the email source
+                      <img src={newTab.src} alt="" className="ml-1" />
+                    </a>
+                  </div>
                 </div>
-              </SimpleBar>
-            )}
+                <hr className="my-4" />
+                <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
+              </div>
+            </SimpleBar>
           </div>
         )}
       </div>
