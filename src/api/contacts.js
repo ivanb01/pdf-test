@@ -1,6 +1,9 @@
 import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
+export const clearData = () => {
+  return axiosInstance.post('/profile/delete/my/data');
+};
 export const getContactCategories = () => {
   return axiosInstance.get('contact/categories');
 };

@@ -17,6 +17,8 @@ import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
 import { getUserConsentForGoogleEmail } from '@api/google';
+import { clearData } from '@api/contacts';
+import toast from 'react-hot-toast';
 
 const index = () => {
   const [currentTab, setCurrentTab] = useState(1);
@@ -43,125 +45,14 @@ const index = () => {
     console.log('deactivate');
   };
 
-  // const importsSummary = [
-  //   {
-  //     id: 0,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 1,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 2,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 3,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 4,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 5,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 6,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 7,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 3,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 4,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 5,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 6,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 7,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  // ];
+  const deleteData = () => {
+    clearData().then((response) => {
+      toast.success('All data has been cleared, refreshing so that changes take effect!');
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    });
+  };
 
   const importsSummary = [];
 
@@ -242,13 +133,14 @@ const index = () => {
               </Button>
             </div>
           </div>
-          {/* <hr className="my-6" />
+          <hr className="my-6" />
           <div className="font-medium">Delete Your Account</div>
           <div className="text-sm text-gray-700 mt-1 mb-6">
             By deleting your account, you will no longer be able to access any information within the platform or login
             to Oneline.
           </div>
-          <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
+          <Button white label="Delete Account" onClick={() => deleteData()} />
+          {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">
             Password
           </Text>
