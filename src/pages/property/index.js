@@ -641,7 +641,10 @@ const index = () => {
                 </div>
                 <div className={'flex gap-3'}>
                   {filteredArray.length > 0 && (
-                    <Button secondary onClick={() => setToggler(!toggler)} className={'py-[9px] px-[13px]'}>
+                    <Button
+                      secondary
+                      onClick={() => setToggler(!toggler)}
+                      className={'py-[9px] px-[13px] text-lightBlue5'}>
                       <div className={'mr-1.5'}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                           <path
@@ -655,7 +658,7 @@ const index = () => {
                   )}
                   {data.VTOUR && data.VTOUR.length > 0 && (
                     <a href={data.VTOUR} target="_blank" rel="noopener noreferrer">
-                      <Button secondary>
+                      <Button secondary className={'py-[9px] px-[13px] text-lightBlue5'}>
                         <div className={'mr-1.5'}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
