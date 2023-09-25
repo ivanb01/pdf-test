@@ -1203,9 +1203,6 @@ const Table = ({
               PHONE
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              LAST COMMUNICATION
-            </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
           </tr>
@@ -1287,22 +1284,6 @@ const Table = ({
                         <div className="text-gray7 font-medium min-w-[200px]">
                           {phoneNumberFormat(contact.phone_number)}
                         </div>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          <DateChip
-                            lastCommunication={contact.last_communication_date}
-                            contactStatus={contact.status_2}
-                            contactCategory={categoryType}
-                          />
-
-                          {/* <Chip
-                            lastCommunication={formatDateAgo(
-                              contact?.last_communication_date
-                            )}
-                          /> */}
-                        </div>
-                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                       </td>
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
