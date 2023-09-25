@@ -621,11 +621,11 @@ const index = () => {
               <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center" key={index}>
-                  <div className={'flex'}>
+                  <div className={'flex gap-6 items-center'}>
                     {propertyDetails.map(
                       (propertyDetail, index) =>
                         propertyDetail.value != 0 && (
-                          <div className="flex mr-6 items-center" key={index}>
+                          <div className="flex items-center" key={index}>
                             <div className="md:block hidden">
                               <Image src={propertyDetail.icon} />
                             </div>
@@ -650,7 +650,7 @@ const index = () => {
                           />
                         </svg>
                       </div>
-                      Floor-plan
+                      Floorplan
                     </Button>
                   )}
                   {(data.VTOUR || data.VTOUR2) && (data.VTOUR.length > 0 || data.VTOUR2.length > 0) && (
