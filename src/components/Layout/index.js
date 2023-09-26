@@ -125,7 +125,7 @@ const Layout = ({ children }) => {
       href: 'needcontact',
       count: 0,
       count_key: '',
-      icon: <LocalPhoneIcon className={'w-5 h-5'} />,
+      icon: <LocalPhoneIcon className={'h-5 w-5'} />,
     },
     {
       id: 3,
@@ -156,7 +156,7 @@ const Layout = ({ children }) => {
       name: 'Family & Friends',
       label: 'Family & Friends',
       href: 'family',
-      icon: <Diversity3Icon className={'w-5 h-5'} />,
+      icon: <Diversity3Icon className={'h-5 w-5'} />,
       groupName: 'Other',
     },
     {
@@ -167,7 +167,7 @@ const Layout = ({ children }) => {
       groupName: 'Other',
       count: 0,
       count_key: 'trash',
-      icon: <DeleteIcon className={'w-5 h-5'} />,
+      icon: <DeleteIcon className={'h-5 w-5'} />,
     },
   ]);
   const { tabs: storeTabs } = useSelector((state) => state.global);

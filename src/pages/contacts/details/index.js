@@ -148,8 +148,12 @@ export default function Details() {
   }, [contacts, fetchContactRequired, id]);
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_1 === 'Uncategorized' && contact?.category_2 === 'Unknown'
-      ? 'Other'
+    contact?.category_2 == 'Family'
+      ? 'family'
+      : contact?.category_2 === 'Uncategorized'
+      ? 'uncategorized'
+      : contact?.category_2 === 'Unknown'
+      ? 'unknown'
       : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
       ? contact?.category_1
       : `${contact?.category_1}s`;
@@ -188,7 +192,12 @@ export default function Details() {
                 }}
                 className="items-center flex">
                 <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">Back to {tempUrl}</div>
+                <div className="ml-2 font-medium">
+                  Back to{' '}
+                  {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
+                    ? 'Family & Friends'
+                    : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
+                </div>
               </a>
             </div>
             {id && (
