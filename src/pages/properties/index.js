@@ -367,9 +367,23 @@ const index = () => {
                   <nav className="flex items-center justify-between bg-white py-3 pb-0 mt-5" aria-label="Pagination">
                     <div className="hidden sm:block">
                       <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                        <span className="font-medium">{getToNumber()}</span> of{' '}
-                        <span className="font-medium">{properties.TOTAL_COUNT.toLocaleString()}</span> results
+                        Showing{' '}
+                        <span className="font-medium">
+                          {getFromNumber()
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                        </span>
+                        to{' '}
+                        <span className="font-medium">
+                          {getToNumber()
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        </span>{' '}
+                        of{' '}
+                        <span className="font-medium">
+                          {properties.TOTAL_COUNT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        </span>{' '}
+                        results
                       </p>
                     </div>
                     <div className="flex flex-1 justify-between sm:justify-end">

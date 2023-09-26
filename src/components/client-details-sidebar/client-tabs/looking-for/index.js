@@ -433,9 +433,23 @@ export default function LookingFor({ contactId, category }) {
                           aria-label="Pagination">
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
-                              Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                              <span className="font-medium">{getToNumber()}</span> of{' '}
-                              <span className="font-medium">{allPropertiesCount}</span> results
+                              Showing{' '}
+                              <span className="font-medium">
+                                {getFromNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              to{' '}
+                              <span className="font-medium">
+                                {getToNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              of{' '}
+                              <span className="font-medium">
+                                {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              </span>{' '}
+                              results
                             </p>
                           </div>
                           <div className="flex flex-1 justify-between sm:justify-end">
