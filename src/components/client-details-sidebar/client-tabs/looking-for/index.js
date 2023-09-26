@@ -397,15 +397,21 @@ export default function LookingFor({ contactId, category }) {
                       <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
                         {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                           <>
-                            {allPropertiesCount} properties recommended
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties recommended
                             {getLookingAction() === 1 ? 'for sale' : 'for rent'}
                           </>
                         )}
                         {category.toLowerCase() === 'landlord' && (
-                          <> {allPropertiesCount} Recommendations on Sold and Rented Properties</>
+                          <>
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                            Sold and Rented Properties
+                          </>
                         )}
                         {category.toLowerCase() === 'seller' && (
-                          <> {allPropertiesCount} Recommendations on Sold Properties</>
+                          <>
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                            Sold Properties
+                          </>
                         )}
                         <div className={'flex items-center gap-2'}>
                           <p
