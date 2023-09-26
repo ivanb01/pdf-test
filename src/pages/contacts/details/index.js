@@ -51,9 +51,6 @@ export default function Details() {
     getContact(id).then((result) => setContact(result.data));
   };
 
-  useEffect(() => {
-    console.log(contact, 'contact');
-  }, [contact]);
   const getLookingFor = () => {
     getContactLookingProperties(id)
       .then((propertiesResponse) => {

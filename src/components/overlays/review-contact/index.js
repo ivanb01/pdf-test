@@ -464,15 +464,11 @@ const ReviewContact = ({
       setLoadingEmail(false);
     }
   };
-
-  useEffect(() => {
-    console.log(isUnapprovedAI, 'isUnapprovedAI');
-  }, [isUnapprovedAI]);
   useEffect(() => {
     if ('ai_email_summary' in client) {
       setLoadingEmail(false);
     } else {
-      if (!isUnapprovedAI) {
+      if (isUnapprovedAI) {
         fetchAISummary();
       }
     }

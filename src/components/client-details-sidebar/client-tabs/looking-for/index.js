@@ -151,12 +151,7 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  useEffect(() => {
-    console.log(filterValue, 'useEffectFilterValue');
-  }, [filterValue]);
-
   const fetchProperties = async (values, page, filterValue) => {
-    console.log(filterValue, 'filterValue');
     setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
@@ -204,7 +199,6 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -215,8 +209,6 @@ export default function LookingFor({ contactId, category }) {
       .catch((error) => {
         console.log(error, 'error');
       });
-
-    setLoadingPropertyInterests(false);
   };
 
   const getNeighborhoodValue = () => {
@@ -245,8 +237,10 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
+      console.log('fetch properties', lookingForData, refetchData, filterValue);
       fetchProperties(formik.values, page, filterValue);
     }
+    setLoadingPropertyInterests(false);
   }, [contactId, lookingForData, refetchData, filterValue]);
 
   useLayoutEffect(() => {
@@ -398,7 +392,7 @@ export default function LookingFor({ contactId, category }) {
                         {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                           <>
                             {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties recommended
-                            {getLookingAction() === 1 ? 'for sale' : 'for rent'}
+                            {getLookingAction() === 1 ? ' for sale' : ' for rent'}
                           </>
                         )}
                         {category.toLowerCase() === 'landlord' && (
