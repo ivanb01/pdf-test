@@ -4,10 +4,7 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { useState } from 'react';
-import { getBaseUrl } from '@global/functions';
-import placeholder from '../../../../public/images/img-placeholder.png';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
