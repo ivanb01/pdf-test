@@ -117,7 +117,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
-        <div className={`main-page`}>
+        <div className={`main-page`} style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
             <GetSubtype />
             <Component {...pageProps} />

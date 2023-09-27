@@ -430,13 +430,13 @@ const index = () => {
           </div> */}
         </div>
       ) : (
-        <div className="p-6">
-          <div className="flex items-center justify-center flex-col text-center mt-6">
+        <div className=" h-full flex items-center justify-center">
+          <div className="flex items-center justify-center flex-col text-center">
             <img src={lookingForEmpty.src} alt="" />
-            <div className="mt-6 text-sm">
-              <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
-              <div className="text-gray-500 mt-[6px] font-light">
-                Whenever we have properties that match these interests, we will list them here.
+            <div className="mt-6">
+              <div className="text-sm text-black font-medium">No Property Found</div>
+              <div className="text-xs leading-5 font-normal text-black mt-[6px] ">
+                No property with these details found, please try again!
               </div>
             </div>
           </div>
