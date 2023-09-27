@@ -2,21 +2,21 @@ import Overlay from '@components/shared/overlay';
 import SimpleBar from 'simplebar-react';
 import Button from '@components/shared/button';
 import EastIcon from '@mui/icons-material/East';
-import OrderTemplate from '@components/overlays/order-template';
+import OrderTemplate, { ImageGallery } from '@components/overlays/order-template';
 import { useState } from 'react';
-const PreviewTemplate = ({ name, handleCloseOverlay }) => {
+const PreviewTemplate = ({ template, name, handleCloseOverlay }) => {
   const [openOrderTemplate, setOpenOrderTemplate] = useState(false);
 
   return (
     <>
       <Overlay title={`Preview ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[800px]">
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 308px)', marginTop: '24px' }} className={'px-6'}>
-          <img className="w-full object-cover rounded-lg" src="https://i.imgur.com/u3yJjo7.png" />
+          <ImageGallery images={template} className={'h-auto'} preview={false} />
         </SimpleBar>
-        <div className="flex justify-between py-4 px-6" style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
-          <Button secondary className={'text-lightBlue5 text-xs leading-4 font-medium'}>
-            Download PDF
-          </Button>
+        <div className="flex justify-end py-4 px-6" style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
+          {/*<Button secondary className={'text-lightBlue5 text-xs leading-4 font-medium'}>*/}
+          {/*  Download PDF*/}
+          {/*</Button>*/}
           <div>
             <Button className={`mr-4`} white onClick={handleCloseOverlay}>
               Cancel
@@ -34,6 +34,7 @@ const PreviewTemplate = ({ name, handleCloseOverlay }) => {
       </Overlay>
       {openOrderTemplate && (
         <OrderTemplate
+          template={template}
           name={name}
           handleCloseOverlay={() => {
             setOpenOrderTemplate(false);
