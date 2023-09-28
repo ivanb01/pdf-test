@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
+import { MinusCircleIcon, PencilIcon, PlusCircleIcon, TrashIcon } from '@heroicons/react/solid';
 import Feeds from 'components/shared/feeds';
 import Text from 'components/shared/text';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -150,18 +150,21 @@ export default function ActivityLog({ contactId, source, contact }) {
   useEffect(() => {
     setActivityLogLocal(activityLogData);
   }, [activityLogData]);
+  useEffect(() => {
+    console.log(activityLogData);
+  }, [activityLogData]);
 
   return (
     <div className="flex bg-gray10 flex-row gap-6 flex-1">
       <div className="flex-1 m-6 p-6 mr-0 flex flex-col bg-white">
-        <Text className="text-gray7 text-sm leading-5 font-medium pb-6 border-b border-gray2 mb-3">Activities</Text>
-        {/*<div onClick={() => setToggleAddActivity(!toggleAddActivity)} className=" cursor-pointer">*/}
-        {/*  {!toggleAddActivity ? (*/}
-        {/*    <PlusCircleIcon className="text-gray3 px-4" height={20} />*/}
-        {/*  ) : (*/}
-        {/*    <MinusCircleIcon className="text-red4 px-4" height={20} />*/}
-        {/*  )}*/}
-        {/*</div>*/}
+        <div className={'flex items-center justify-between  border-b border-gray2 mb-3  pb-6'}>
+          <Text className="text-gray7 text-sm leading-5 font-medium ">Activities</Text>
+          {activityLogLocal && activityLogLocal.length > 0 && (
+            <div onClick={() => setToggleAddActivity(true)} className="mr-3 text-gray3 cursor-pointer">
+              <AddCircleIcon className="h-5 w-5" onClick={() => setToggleAddActivity(true)} />
+            </div>
+          )}
+        </div>
         {toggleAddActivity && (
           <AddActivity
             clientId={contactId}
