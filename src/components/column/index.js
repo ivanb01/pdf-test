@@ -23,12 +23,16 @@ import { setRefetchCount, setRefetchData } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
+
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
 
 const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
+  {
+    console.log(status.name, 'status');
+  }
   const router = useRouter();
   const dispatch = useDispatch();
 
