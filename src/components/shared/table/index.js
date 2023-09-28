@@ -818,7 +818,6 @@ const Table = ({
           (status) => status.statuses.findIndex((s) => s.id === statusId) !== -1,
         );
         const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-        console.log('tesr', foundStatus);
         let statusName = foundStatus.statuses.find((foundstatus) => foundstatus.id == status).name;
 
         dispatch(
@@ -842,6 +841,23 @@ const Table = ({
         console.log(error);
       }
     };
+
+    function filterContacts(category, contactTypes) {
+      const filteredContacts = contacts.filter(
+        (contact) =>
+          searchTerm.split(' ').every((word) => {
+            const lowercaseWord = word.toLowerCase();
+            return (
+              contact.first_name.toLowerCase().includes(lowercaseWord) ||
+              contact.last_name.toLowerCase().includes(lowercaseWord)
+            );
+          }) &&
+          contact.status_id == category.id &&
+          contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
+      );
+
+      return filteredContacts;
+    }
 
     return (
       <>
@@ -887,11 +903,9 @@ const Table = ({
                     contact.first_name.toLowerCase().includes(lowercaseWord) ||
                     contact.last_name.toLowerCase().includes(lowercaseWord)
                   );
-                }) &&
-                contact.status_id == category.id &&
-                contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
-            ).length ? (
-              <>
+                }) && contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
+            ).length > 0 ? (
+              <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
@@ -928,20 +942,8 @@ const Table = ({
                     </div>
                   </td>
                 </tr>
-                {contacts
-                  .filter(
-                    (contact) =>
-                      searchTerm.split(' ').every((word) => {
-                        const lowercaseWord = word.toLowerCase();
-                        return (
-                          contact.first_name.toLowerCase().includes(lowercaseWord) ||
-                          contact.last_name.toLowerCase().includes(lowercaseWord)
-                        );
-                      }) &&
-                      contact.status_id == category.id &&
-                      contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
-                  )
-                  .map((contact) => (
+                {filterContacts(category, contactTypes).length > 0 ? (
+                  filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
                       className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
@@ -1125,8 +1127,15 @@ const Table = ({
                         </div>
                       </td>
                     </tr>
-                  ))}
-              </>
+                  ))
+                ) : (
+                  <tr className={' text-xs leading-4 font-medium text-gray4 h-[60px] '}>
+                    <td colSpan={6} className={'text-center pt-[20px]'}>
+                      No Contacts
+                    </td>
+                  </tr>
+                )}
+              </div>
             ) : (
               <></>
             ),

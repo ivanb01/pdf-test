@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +28,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/NoPropertiesFound",
+    "git-widget-placeholder": "f/erza/ShowNoContact",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"

@@ -284,13 +284,15 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <Column
-                  key={index}
-                  status={status}
-                  categoryType="clients"
-                  handleCardEdit={handleCardEdit}
-                  searchTerm={searchTerm}
-                />
+                <>
+                  <Column
+                    key={index}
+                    status={status}
+                    categoryType="clients"
+                    handleCardEdit={handleCardEdit}
+                    searchTerm={searchTerm}
+                  />
+                </>
               ))}
             </div>
           </SimpleBar>
