@@ -62,7 +62,7 @@ const ReviewContact = ({
   const initialClientCategoryId = useRef(client.category_1);
 
   const isUnapprovedAI =
-    client.import_source == 'GmailAI' && client.approved_ai != true && !router.pathname.includes('trash');
+    client.import_source_text == 'Smart Sync A.I.' && client.approved_ai != true && !router.pathname.includes('trash');
 
   const options = [
     {

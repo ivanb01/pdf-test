@@ -126,9 +126,9 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'GmailAI') {
+    if (source === 'Smart Sync A.I.') {
       return {
-        name: 'AI Smart Synced Contact.',
+        name: source,
         icon: <AIChip reviewed={approvedAI} />,
       };
     } else if (source === 'Manually Added') {
@@ -421,9 +421,9 @@ const Table = ({
                   </td>
                   <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
                     <div className={'flex gap-1.5 items-center'}>
-                      {getSource(dataItem.import_source).icon}
+                      {getSource(dataItem.import_source_text).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
-                        {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                        {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                       </p>
                     </div>
                     {dataItem.summary !== null && (
@@ -533,9 +533,9 @@ const Table = ({
                     {tableFor != 'in-categorization' && (
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(dataItem.import_source).icon}
+                          {getSource(dataItem.import_source_text).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                            {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                           </p>
                         </div>
                         {dataItem.summary !== null && (
@@ -963,9 +963,9 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source).icon}
+                          {getSource(contact.import_source_text).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(contact.import_source, contact.approved_ai).name}
+                            {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
                         {contact.summary !== null && (
@@ -1257,9 +1257,9 @@ const Table = ({
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source).icon}
+                          {getSource(contact.import_source_text).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(contact.import_source, contact.approved_ai).name}
+                            {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
                         {contact.summary !== null && (

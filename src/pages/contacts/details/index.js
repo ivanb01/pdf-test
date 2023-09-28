@@ -105,7 +105,7 @@ export default function Details() {
     resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
-    if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
+    if (!contactData.approved_ai && contactData.import_source_text === 'Smart Sync A.I.') {
       getAISummary();
     }
     await getActivityLog();

@@ -16,7 +16,7 @@ export default function InfoCard({ label, showDot, content, iconContent, client 
           content?.map((chip) => <Chip notClickable secondary key={chip} label={chip} />)
         ) : iconContent ? (
           <div className="flex flex-row items-center">
-            <Text className="text-gray7" p>
+            <Text className="text-gray7 mr-1" p>
               {content}
             </Text>
             {iconContent}
@@ -29,8 +29,10 @@ export default function InfoCard({ label, showDot, content, iconContent, client 
             <Text className={`text-gray7`} p>
               {label == 'Import Source' ? (
                 <div className="flex items-center">
-                  {content == 'GmailAI' && <AIChip reviewed={client.approved_ai ? true : false} className="mr-1" />}
-                  {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
+                  {content == 'Smart Sync A.I.' && (
+                    <AIChip reviewed={client.approved_ai ? true : false} className="mr-1" />
+                  )}
+                  {content}
                 </div>
               ) : (
                 content

@@ -6,7 +6,7 @@ import TooltipComponent from '@components/shared/tooltip';
 const AIChip = ({ reviewed, className }) => {
   return (
     <>
-      <span className={`${reviewed ? `text-blue2` : 'text-green5'}`}>
+      <span className={`${reviewed ? `text-blue2` : 'text-green5'} ${className}`}>
         <AIComponent />
       </span>
       {/*  <TooltipComponent*/}
