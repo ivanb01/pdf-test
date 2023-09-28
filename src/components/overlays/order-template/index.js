@@ -105,7 +105,7 @@ export const ImageGallery = ({ images, className, preview }) => {
   return (
     <>
       <img
-        className={` ${className} w-full object-cover rounded-lg`}
+        className={`${className} w-full object-cover rounded-lg`}
         src={images[currentIndex].src}
         style={{ height: '500px' }}
       />
@@ -113,14 +113,14 @@ export const ImageGallery = ({ images, className, preview }) => {
         (preview ? (
           <div
             className={
-              'absolute top-[50%] left-3 h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
+              'absolute top-[50%] left-[20px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
             }>
             <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
           </div>
         ) : (
           <div
             className={
-              'absolute top-[100%] left-3 h-[30px] w-[30px] rounded-full bg-lightBlue4 flex items-center justify-center text-white cursor-pointer'
+              'absolute top-[100%] left-[50px] h-[30px] w-[30px] rounded-full bg-lightBlue4 flex items-center justify-center text-white cursor-pointer'
             }>
             <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
           </div>
@@ -130,14 +130,14 @@ export const ImageGallery = ({ images, className, preview }) => {
         (preview ? (
           <div
             className={
-              'absolute right-3 top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
+              'absolute right-[20px] top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
             }>
             <KeyboardArrowRightIcon onClick={() => showNextImage()} />
           </div>
         ) : (
           <div
             className={
-              'absolute right-3 top-[100%] h-[30px] w-[30px] rounded-full text-white flex items-center justify-center bg-lightBlue4 cursor-pointer'
+              'absolute  right-[50px] top-[100%] h-[30px] w-[30px] rounded-full text-white flex items-center justify-center bg-lightBlue4 cursor-pointer'
             }>
             <KeyboardArrowRightIcon onClick={() => showPrevImage()} />
           </div>
