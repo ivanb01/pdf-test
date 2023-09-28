@@ -145,7 +145,7 @@ export default function Details() {
   }, [contacts, fetchContactRequired, id]);
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_2 == 'Family'
+    contact?.category_2 == 'Family' || contact?.category_2 == 'Friend'
       ? 'family'
       : contact?.category_2 === 'Uncategorized'
       ? 'uncategorized'
