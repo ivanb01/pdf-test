@@ -8,6 +8,8 @@ import link from '/public/images/link-2.svg';
 import { useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { ExclamationCircleIcon } from '@heroicons/react/solid';
+import TooltipComponent from '@components/shared/tooltip';
 
 const ImageGallery = ({ images, id }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,14 +66,21 @@ const PropertyCard = ({ property }) => {
           } rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium`}>
           {property.STATUS}
         </div>
-        <a
-          className="cursor-pointer absolute bottom-2 right-2"
-          onClick={() => {
-            navigator.clipboard.writeText(`${getBaseUrl()}/property?id=${property.ID}`);
-            toast.success('Link copied to clipboard');
-          }}>
-          <img className="h-7 w-7" src={link.src} alt="" />
-        </a>
+        <TooltipComponent
+          side={'bottom'}
+          align={'end'}
+          triggerElement={
+            <a
+              className="cursor-pointer absolute bottom-2 right-2"
+              onClick={() => {
+                navigator.clipboard.writeText(`${getBaseUrl()}/property?id=${property.ID}`);
+                toast.success('Link copied to clipboard');
+              }}>
+              <img className="h-7 w-7" src={link.src} alt="" />
+            </a>
+          }>
+          <p className={'text-[10px] font-normal text-white font-medium'}>Copy Link</p>
+        </TooltipComponent>
       </div>
       <div className="p-3 text-sm">
         <div className="mb-4">
