@@ -296,7 +296,7 @@ export default function LookingFor({ contactId, category }) {
         </div>
       ) : (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
+          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
             {loadingPropertyInterests ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
@@ -457,6 +457,9 @@ export default function LookingFor({ contactId, category }) {
                                 onClick={() => {
                                   fetchProperties(lookingForData[0], page - 1, filterValue);
                                   setPage(page - 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Previous
@@ -468,6 +471,9 @@ export default function LookingFor({ contactId, category }) {
                                 onClick={() => {
                                   fetchProperties(lookingForData[0], page + 1, filterValue);
                                   setPage(page + 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Next
