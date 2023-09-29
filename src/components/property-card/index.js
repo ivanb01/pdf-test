@@ -68,7 +68,7 @@ const PropertyCard = ({ property }) => {
         </div>
         <TooltipComponent
           side={'bottom'}
-          align={'end'}
+          align={'center'}
           triggerElement={
             <a
               className="cursor-pointer absolute bottom-2 right-2"
