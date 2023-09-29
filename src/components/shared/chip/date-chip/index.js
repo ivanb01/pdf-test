@@ -12,10 +12,6 @@ export default function DateChip({
   contactStatus,
   ...props
 }) {
-  console.log(
-    healthLastCommunicationDate[contactCategory][contactStatus],
-    'healthLastCommunicationDate[contactCategory][contactStatus]',
-  );
   let lastCommunicationLabel = '';
   let styling = '';
   const healthyCommunicationDays = healthLastCommunicationDate[contactCategory]
