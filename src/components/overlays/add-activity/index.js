@@ -1,7 +1,7 @@
 import Dropdown from 'components/shared/dropdown';
 import Button from 'components/shared/button';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Overlay from 'components/shared/overlay';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';

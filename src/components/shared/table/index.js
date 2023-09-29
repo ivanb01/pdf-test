@@ -768,6 +768,7 @@ const Table = ({
     const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
+    useEffect(() => console.log(contacts.status_1), [contacts]);
     const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
@@ -864,9 +865,13 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              LAST COMMUNICATION
-            </th>
+            {openedTab !== 1 && openedSubtab !== 3 ? (
+              <th
+                scope="col"
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                LAST COMMUNICATION
+              </th>
+            ) : null}
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
@@ -957,7 +962,7 @@ const Table = ({
                         />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
+                        <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
@@ -993,22 +998,23 @@ const Table = ({
                             : '-'}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          <DateChip
-                            lastCommunication={contact.last_communication_date}
-                            contactStatus={contact.status_2}
-                            contactCategory={categoryType}
-                          />
-
-                          {/* <Chip
+                      {contact.status_2 !== 'Dropped' && (
+                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                          <div className="text-gray7 font-medium">
+                            <DateChip
+                              lastCommunication={contact.last_communication_date}
+                              contactStatus={contact.status_2}
+                              contactCategory={categoryType}
+                            />
+                            {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
                           /> */}
-                        </div>
-                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
-                      </td>
+                          </div>
+                          {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                        </td>
+                      )}
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div

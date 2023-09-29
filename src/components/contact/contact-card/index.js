@@ -106,12 +106,17 @@ export default function ContactCard({
           </div>
           {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
 
-          <div className="flex w-full items-center justify-between mt-4">
-            <DateChip
-              lastCommunication={contact.last_communication_date}
-              contactStatus={contact.status_2}
-              contactCategory={categoryType}
-            />
+          <div
+            className={`flex w-full items-center ${
+              contact.status_2 !== 'Dropped' ? 'justify-between' : 'justify-end'
+            } mt-4`}>
+            {contact.status_2 !== 'Dropped' && (
+              <DateChip
+                lastCommunication={contact.last_communication_date}
+                contactStatus={contact.status_2}
+                contactCategory={categoryType}
+              />
+            )}
             {contact.summary !== null ? (
               <TooltipComponent
                 side={'bottom'}
