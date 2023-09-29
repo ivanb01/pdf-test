@@ -33,7 +33,7 @@ export default function ContactCard({
     if (source === 'Smart Sync A.I.') {
       return {
         name: source,
-        icon: <AIChip reviewed={!!contact.approved_ai} />,
+        icon: <AIChip reviewed={contact.approved_ai} />,
       };
     } else if (source === 'Manually Added') {
       return {
@@ -116,17 +116,19 @@ export default function ContactCard({
               <TooltipComponent
                 side={'bottom'}
                 align={'center'}
-                triggerElement={<div>{getSource(contact.import_source_text).icon}</div>}>
+                triggerElement={<div>{getSource(contact.import_source_text, contact.approved_ai).icon}</div>}>
                 <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                   <div className={'flex gap-1.5 mb-1.5'}>
-                    {getSource(contact.import_source_text).icon}
-                    <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
+                    {getSource(contact.import_source_text, contact.approved_ai).icon}
+                    <p className={'text-xs leading-4 font-medium'}>
+                      {getSource(contact.import_source_text, contact.approved_ai).name}
+                    </p>
                   </div>
                   <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                 </div>
               </TooltipComponent>
             ) : (
-              <div>{getSource(contact.import_source_text).icon}</div>
+              <div>{getSource(contact.import_source_text, contact.approved_ai).icon}</div>
             )}
           </div>
         </div>

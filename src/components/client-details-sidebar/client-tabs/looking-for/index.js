@@ -152,7 +152,6 @@ export default function LookingFor({ contactId, category }) {
   };
 
   const fetchProperties = async (values, page, filterValue) => {
-    setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
       apikey: '4d7139716e6b4a72',
@@ -199,11 +198,16 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
         setPropertyInterests(data.LISTINGS);
         setAllPropertiesCount(data.TOTAL_COUNT);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
         return data;
       })
       .catch((error) => {

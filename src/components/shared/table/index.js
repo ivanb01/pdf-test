@@ -963,7 +963,7 @@ const Table = ({
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source_text).icon}
+                          {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
@@ -1257,7 +1257,7 @@ const Table = ({
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source_text).icon}
+                          {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>

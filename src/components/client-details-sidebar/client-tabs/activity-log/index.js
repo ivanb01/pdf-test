@@ -117,7 +117,7 @@ export default function ActivityLog({ contactId, source, contact }) {
     if (source === 'Smart Sync A.I.') {
       return {
         name: source,
-        icon: <AIChip reviewed={!!contact.approved_ai} />,
+        icon: <AIChip reviewed={contact.approved_ai} />,
       };
     } else if (source === 'Manually Added') {
       return {

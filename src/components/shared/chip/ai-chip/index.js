@@ -6,7 +6,7 @@ import TooltipComponent from '@components/shared/tooltip';
 const AIChip = ({ reviewed, className }) => {
   return (
     <>
-      <span className={`${reviewed ? `text-blue2` : 'text-green5'} ${className}`}>
+      <span className={`${!reviewed ? `text-blue2` : 'text-green5'} ${className}`}>
         <AIComponent />
       </span>
       {/*  <TooltipComponent*/}
@@ -39,7 +39,7 @@ const ChipText = ({ title, description, reviewed }) => {
   return (
     <div>
       <div className={'flex gap-1.5 text-white items-center'}>
-        <span className={`${reviewed ? `text-blue2` : 'text-green5'}`}>
+        <span className={`${!reviewed ? `text-blue2` : 'text-green5'}`}>
           <AIComponent />
         </span>
         <h6 className={'text-xs leading-4 font-semibold m-0'}>{title}</h6>
