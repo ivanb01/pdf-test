@@ -1129,8 +1129,8 @@ const Table = ({
                     </tr>
                   ))
                 ) : (
-                  <tr className={' text-xs leading-4 font-medium text-gray4 h-[60px] '}>
-                    <td colSpan={6} className={'text-center pt-[20px]'}>
+                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                    <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>
                   </tr>
