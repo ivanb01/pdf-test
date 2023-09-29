@@ -79,7 +79,7 @@ const PropertyCard = ({ property }) => {
               <img className="h-7 w-7" src={link.src} alt="" />
             </a>
           }>
-          <p className={'text-[10px] font-normal text-white font-medium'}>Copy Link</p>
+          <p className={'text-[10px]  text-white font-medium'}>Copy Link</p>
         </TooltipComponent>
       </div>
       <div className="p-3 text-sm">
