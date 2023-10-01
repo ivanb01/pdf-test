@@ -126,9 +126,9 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'GmailAI') {
+    if (source === 'Smart Sync A.I.') {
       return {
-        name: 'AI Smart Synced Contact.',
+        name: source,
         icon: <AIChip reviewed={approvedAI} />,
       };
     } else if (source === 'Manually Added') {
@@ -421,9 +421,9 @@ const Table = ({
                   </td>
                   <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
                     <div className={'flex gap-1.5 items-center'}>
-                      {getSource(dataItem.import_source).icon}
+                      {getSource(dataItem.import_source_text).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
-                        {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                        {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                       </p>
                     </div>
                     {dataItem.summary !== null && (
@@ -533,9 +533,9 @@ const Table = ({
                     {tableFor != 'in-categorization' && (
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(dataItem.import_source).icon}
+                          {getSource(dataItem.import_source_text).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(dataItem.import_source, dataItem.approved_ai).name}
+                            {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                           </p>
                         </div>
                         {dataItem.summary !== null && (
@@ -768,6 +768,7 @@ const Table = ({
     const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
+    useEffect(() => console.log(contacts.status_1), [contacts]);
     const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
@@ -864,9 +865,13 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               PHONE
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              LAST COMMUNICATION
-            </th>
+            {openedTab !== 1 && openedSubtab !== 3 ? (
+              <th
+                scope="col"
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                LAST COMMUNICATION
+              </th>
+            ) : null}
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
@@ -957,15 +962,15 @@ const Table = ({
                         />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
+                        <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source).icon}
+                          {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(contact.import_source, contact.approved_ai).name}
+                            {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
                         {contact.summary !== null && (
@@ -993,22 +998,23 @@ const Table = ({
                             : '-'}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          <DateChip
-                            lastCommunication={contact.last_communication_date}
-                            contactStatus={contact.status_2}
-                            contactCategory={categoryType}
-                          />
-
-                          {/* <Chip
+                      {contact.status_2 !== 'Dropped' && (
+                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                          <div className="text-gray7 font-medium">
+                            <DateChip
+                              lastCommunication={contact.last_communication_date}
+                              contactStatus={contact.status_2}
+                              contactCategory={categoryType}
+                            />
+                            {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
                           /> */}
-                        </div>
-                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
-                      </td>
+                          </div>
+                          {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                        </td>
+                      )}
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div
@@ -1203,9 +1209,6 @@ const Table = ({
               PHONE
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              LAST COMMUNICATION
-            </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
           </tr>
@@ -1260,9 +1263,9 @@ const Table = ({
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center'}>
-                          {getSource(contact.import_source).icon}
+                          {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(contact.import_source, contact.approved_ai).name}
+                            {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
                         {contact.summary !== null && (
@@ -1287,22 +1290,6 @@ const Table = ({
                         <div className="text-gray7 font-medium min-w-[200px]">
                           {phoneNumberFormat(contact.phone_number)}
                         </div>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium">
-                          <DateChip
-                            lastCommunication={contact.last_communication_date}
-                            contactStatus={contact.status_2}
-                            contactCategory={categoryType}
-                          />
-
-                          {/* <Chip
-                            lastCommunication={formatDateAgo(
-                              contact?.last_communication_date
-                            )}
-                          /> */}
-                        </div>
-                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                       </td>
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
@@ -1652,7 +1639,7 @@ const Table = ({
               Email Summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              Delete/correct
+              Actions
             </th>
             <th
               scope="col"
@@ -1724,31 +1711,6 @@ const Table = ({
                   <div
                     onMouseEnter={() => {
                       document
-                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-delete-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                    }
-                    className="transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-red-500 w-7 h-7 flex items-center justify-center mr-6 relative">
-                    <Delete
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAction('delete', dataItem);
-                      }}
-                      id={'edit-contact-icon-' + dataItem.id}
-                      className="group-hover/delete:text-white text-[16px]"
-                    />
-                    <div
-                      id={`tooltip-delete-${dataItem.id}-1`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Move to Trash
-                    </div>
-                  </div>
-                  <div
-                    onMouseEnter={() => {
-                      document
                         .querySelector(`#tooltip-delete-${dataItem.id}-2`)
                         .classList.remove('invisible', 'opacity-0');
                     }}
@@ -1771,31 +1733,57 @@ const Table = ({
                       Mark as Correct
                     </div>
                   </div>
-                </div>
-              </td>
-              <td className="pr-8">
-                <div
-                  onMouseEnter={() => {
-                    document.querySelector(`#tooltip-edit-${dataItem.id}-1`).classList.remove('invisible', 'opacity-0');
-                  }}
-                  onMouseLeave={() =>
-                    document.querySelector(`#tooltip-edit-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                  }
-                  className="px-2 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    handleCardEdit(dataItem);
-                  }}>
                   <div
-                    id={`tooltip-edit-${dataItem.id}-1`}
-                    role="tooltip"
-                    className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                    Edit Contact
+                    onMouseEnter={() => {
+                      document
+                        .querySelector(`#tooltip-edit-${dataItem.id}-1`)
+                        .classList.remove('invisible', 'opacity-0');
+                    }}
+                    onMouseLeave={() =>
+                      document.querySelector(`#tooltip-edit-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
+                    }
+                    className="mx-6 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
+                    onClick={(e) => {
+                      e.stopPropagation();
+
+                      handleCardEdit(dataItem);
+                    }}>
+                    <div
+                      id={`tooltip-edit-${dataItem.id}-1`}
+                      role="tooltip"
+                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                      Edit Contact
+                    </div>
+                    <Edit id={'edit-contact-icon-' + dataItem.id} className="text-gray3 w-4 h-4" />
                   </div>
-                  <Edit id={'edit-contact-icon-' + dataItem.id} className="text-gray3 w-4 h-4" />
+                  <div
+                    onMouseEnter={() => {
+                      document
+                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
+                        .classList.remove('invisible', 'opacity-0');
+                    }}
+                    onMouseLeave={() =>
+                      document.querySelector(`#tooltip-delete-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
+                    }
+                    className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
+                    <Delete
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction('delete', dataItem);
+                      }}
+                      id={'edit-contact-icon-' + dataItem.id}
+                      className="group-hover/delete:text-white text-[16px]"
+                    />
+                    <div
+                      id={`tooltip-delete-${dataItem.id}-1`}
+                      role="tooltip"
+                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
+                      Move to Trash
+                    </div>
+                  </div>
                 </div>
               </td>
+              <td className="pr-8"></td>
             </tr>
           ))}
         </tbody>
@@ -1803,6 +1791,9 @@ const Table = ({
     );
   };
   const trashTable = () => {
+    {
+      console.log(data, 'Data');
+    }
     return data.length > 0 ? (
       <>
         <thead>
@@ -1862,7 +1853,7 @@ const Table = ({
               </td>
 
               <td className=" px-3 py-2 text-gray-800 text-center text-sm leading-5 font-medium">
-                {getDateFormat(person.updated_at)}
+                {getDateFormat(person.updated_at || person.created_at)}
               </td>
               <td className="pl-3 pr-6 py-3 text-gray-500 text-center w-20">
                 <div
@@ -1946,13 +1937,13 @@ const Table = ({
         <tbody>
           {data.map((person) => (
             <tr
+              key={person.id}
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
                   query: { id: person?.id },
                 })
               }
-              key={person.id}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
               style={{ height: '84px' }}>
               <td className="pl-6 py-3" style={{ width: '300px' }}>
@@ -1983,7 +1974,12 @@ const Table = ({
 
               <td>
                 <Chip label={person.category_2} typeStyle />
-                <p className={'text-sm leading-5 font-medium text-gray8 mt-3'}> {person.status_2}</p>
+                <Chip
+                  label={person.status_2}
+                  statusStyle
+                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
+                  {getContactStatusByStatusId(person.category_id, person.status_id)}
+                </Chip>
               </td>
               <td>
                 <div className={'flex gap-1.5 items-center'}>
@@ -2055,6 +2051,8 @@ const Table = ({
                   ? otherTable()
                   : tableFor == 'ai-summary'
                   ? aiSummaryTable()
+                  : tableFor == 'needToContact'
+                  ? needToContactTable()
                   : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'
                   ? importGoogleContactsDetails()
                   : campaignsTable()}

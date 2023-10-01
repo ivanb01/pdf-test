@@ -30,7 +30,9 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip }) => {
         ) : (
           // <Image className="h-10 w-10 rounded-full" src={src} alt="" />
           <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-            <span className="text-sm font-medium leading-none text-white">{getInitials(data.name).toUpperCase()}</span>
+            <span className="text-sm font-medium leading-none sss text-white">
+              {getInitials(data.name).toUpperCase()}
+            </span>
           </span>
         )}
       </div>

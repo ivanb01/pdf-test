@@ -106,27 +106,34 @@ export default function ContactCard({
           </div>
           {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
 
-          <div className="flex w-full items-center justify-between mt-4">
-            <DateChip
-              lastCommunication={contact.last_communication_date}
-              contactStatus={contact.status_2}
-              contactCategory={categoryType}
-            />
+          <div
+            className={`flex w-full items-center ${
+              contact.status_2 !== 'Dropped' ? 'justify-between' : 'justify-end'
+            } mt-4`}>
+            {contact.status_2 !== 'Dropped' && (
+              <DateChip
+                lastCommunication={contact.last_communication_date}
+                contactStatus={contact.status_2}
+                contactCategory={categoryType}
+              />
+            )}
             {contact.summary !== null ? (
               <TooltipComponent
                 side={'bottom'}
                 align={'center'}
-                triggerElement={<div>{getSource(contact.import_source).icon}</div>}>
+                triggerElement={<div>{getSource(contact.import_source_text, contact.approved_ai).icon}</div>}>
                 <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                   <div className={'flex gap-1.5 mb-1.5'}>
-                    {getSource(contact.import_source).icon}
-                    <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source).name}</p>
+                    {getSource(contact.import_source_text, contact.approved_ai).icon}
+                    <p className={'text-xs leading-4 font-medium'}>
+                      {getSource(contact.import_source_text, contact.approved_ai).name}
+                    </p>
                   </div>
                   <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                 </div>
               </TooltipComponent>
             ) : (
-              <div>{getSource(contact.import_source).icon}</div>
+              <div>{getSource(contact.import_source_text, contact.approved_ai).icon}</div>
             )}
           </div>
         </div>

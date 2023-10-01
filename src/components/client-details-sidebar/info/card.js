@@ -29,8 +29,8 @@ export default function InfoCard({ label, showDot, content, iconContent, client 
             <Text className={`text-gray7`} p>
               {label == 'Import Source' ? (
                 <div className="flex items-center">
-                  {content == 'GmailAI' && <AIChip reviewed={client.approved_ai ? true : false} className="mr-1" />}
-                  {content == 'GmailAI' ? 'AI Smart Synced Contact' : content}
+                  {content == 'Smart Sync A.I.' && <AIChip reviewed={client.approved_ai} className="mr-1" />}
+                  {content}
                 </div>
               ) : (
                 content

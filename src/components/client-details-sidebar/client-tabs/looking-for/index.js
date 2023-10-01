@@ -151,13 +151,7 @@ export default function LookingFor({ contactId, category }) {
     }
   };
 
-  useEffect(() => {
-    console.log(filterValue, 'useEffectFilterValue');
-  }, [filterValue]);
-
   const fetchProperties = async (values, page, filterValue) => {
-    console.log(filterValue, 'filterValue');
-    setLoadingPropertyInterests(true);
     let filters = values;
     let params = {
       apikey: '4d7139716e6b4a72',
@@ -210,13 +204,15 @@ export default function LookingFor({ contactId, category }) {
       .then((data) => {
         setPropertyInterests(data.LISTINGS);
         setAllPropertiesCount(data.TOTAL_COUNT);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
         return data;
       })
       .catch((error) => {
         console.log(error, 'error');
       });
-
-    setLoadingPropertyInterests(false);
   };
 
   const getNeighborhoodValue = () => {
@@ -245,8 +241,10 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
+      console.log('fetch properties', lookingForData, refetchData, filterValue);
       fetchProperties(formik.values, page, filterValue);
     }
+    setLoadingPropertyInterests(false);
   }, [contactId, lookingForData, refetchData, filterValue]);
 
   useLayoutEffect(() => {
@@ -298,7 +296,7 @@ export default function LookingFor({ contactId, category }) {
         </div>
       ) : (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          <div className="bg-white relative" style={{ minHeight: 'calc(100vh - 222px)' }}>
+          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
             {loadingPropertyInterests ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
@@ -397,15 +395,21 @@ export default function LookingFor({ contactId, category }) {
                       <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
                         {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                           <>
-                            {allPropertiesCount} properties recommended
-                            {getLookingAction() === 1 ? 'for sale' : 'for rent'}
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties recommended
+                            {getLookingAction() === 1 ? ' for sale' : ' for rent'}
                           </>
                         )}
                         {category.toLowerCase() === 'landlord' && (
-                          <> {allPropertiesCount} Recommendations on Sold and Rented Properties</>
+                          <>
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                            Sold and Rented Properties
+                          </>
                         )}
                         {category.toLowerCase() === 'seller' && (
-                          <> {allPropertiesCount} Recommendations on Sold Properties</>
+                          <>
+                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                            Sold Properties
+                          </>
                         )}
                         <div className={'flex items-center gap-2'}>
                           <p
@@ -427,9 +431,23 @@ export default function LookingFor({ contactId, category }) {
                           aria-label="Pagination">
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
-                              Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                              <span className="font-medium">{getToNumber()}</span> of{' '}
-                              <span className="font-medium">{allPropertiesCount}</span> results
+                              Showing{' '}
+                              <span className="font-medium">
+                                {getFromNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              to{' '}
+                              <span className="font-medium">
+                                {getToNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              of{' '}
+                              <span className="font-medium">
+                                {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              </span>{' '}
+                              results
                             </p>
                           </div>
                           <div className="flex flex-1 justify-between sm:justify-end">
@@ -439,6 +457,9 @@ export default function LookingFor({ contactId, category }) {
                                 onClick={() => {
                                   fetchProperties(lookingForData[0], page - 1, filterValue);
                                   setPage(page - 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Previous
@@ -450,6 +471,9 @@ export default function LookingFor({ contactId, category }) {
                                 onClick={() => {
                                   fetchProperties(lookingForData[0], page + 1, filterValue);
                                   setPage(page + 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Next

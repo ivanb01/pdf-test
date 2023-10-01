@@ -41,8 +41,8 @@ const tabs = [
   },
   {
     title: 'ADDED SOURCE',
-    content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
-    value: 'import_source',
+    content: ['Google Contacts', 'Smart Sync A.I.', 'Gmail', 'Manually Added'],
+    value: 'import_source_text',
   },
   {
     title: 'PROFESSIONAL STATUSES',
@@ -112,12 +112,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       } else if (key == 'is_in_campaign') {
         let booleanFilter = filters[key].map((filter) => campaignFilterMeaning[filter]);
         contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
-      } else if (key == 'import_source' && filters['import_source'] == 'Manually Added') {
+      } else if (key == 'import_source_text' && filters['import_source_text'] == 'Manually Added') {
         contactsState = contactsState.filter(
           (contact) =>
-            contact.import_source != 'Google Contacts' &&
-            contact.import_source != 'GmailAI' &&
-            contact.import_source != 'Gmail',
+            contact.import_source_text != 'Google Contacts' &&
+            contact.import_source_text != 'Smart Sync A.I.' &&
+            contact.import_source_text != 'Gmail',
         );
       } else {
         contactsState = contactsState.filter((contact) => {

@@ -528,7 +528,7 @@ const ReviewContact = ({
                 />
               </div>
               <TextArea
-                className="min-h-[100px] mb-6 z-10"
+                className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
                 id="summary"
                 label="Summary"
                 name={'summary'}

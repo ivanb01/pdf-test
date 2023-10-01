@@ -29,7 +29,7 @@ const index = () => {
   const getNeedToCommunicateContacts = () => {
     return allContacts.data.filter((contact) => {
       const categoryType = contact?.category_1?.toLowerCase() + 's';
-      if (categoryType !== 'clients' && categoryType !== 'professionals') {
+      if (categoryType !== 'clients') {
         return false;
       }
       let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);

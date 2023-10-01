@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
-      <change afterPath="$PROJECT_DIR$/src/components/marketing/ImagesGrid/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/marketing/MarketingCard/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/marketing/MarketingFooter/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/overlays/order-template/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/overlays/preview-template/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/overlays/request-custom-design/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/button/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/button/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/input/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/input/search/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/search/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/input/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/input/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/marketing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marketing/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +17,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/CategoryCount" />
+        <entry key="$PROJECT_DIR$" value="f/erza/AiEmailInEditPopup" />
       </map>
     </option>
   </component>
@@ -37,7 +26,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/MarketingPage",
+    "git-widget-placeholder": "f/erza/NoPropertiesFound",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -45,6 +34,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images/marketing" />
       <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
@@ -62,6 +52,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -94,8 +87,83 @@
       <option name="project" value="LOCAL" />
       <updated>1693218293738</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix button issues">
+      <option name="closed" value="true" />
+      <created>1695666365885</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666365885</updated>
+    </task>
+    <task id="LOCAL-00005" summary="change popup when ai contact">
+      <option name="closed" value="true" />
+      <created>1695666505165</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666505165</updated>
+    </task>
+    <task id="LOCAL-00006" summary="change on focus summary textarea">
+      <option name="closed" value="true" />
+      <created>1695666602788</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666602788</updated>
+    </task>
+    <task id="LOCAL-00007" summary="remove unused code">
+      <option name="closed" value="true" />
+      <created>1695669034927</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1695669034927</updated>
+    </task>
+    <task id="LOCAL-00008" summary="remove 0 values">
+      <option name="closed" value="true" />
+      <created>1695670024707</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1695670024707</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add coma to result">
+      <option name="closed" value="true" />
+      <created>1695714763780</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1695714763780</updated>
+    </task>
+    <task id="LOCAL-00010" summary="change icons of floorplan and vtour">
+      <option name="closed" value="true" />
+      <created>1695719252123</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1695719252123</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add coma in pagination">
+      <option name="closed" value="true" />
+      <created>1695721422095</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1695721422095</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="check formatter issues" />
@@ -103,6 +171,14 @@
     <MESSAGE value="add gradient" />
     <MESSAGE value="improve others sum and uncategorized sum" />
     <MESSAGE value="implement marketing page UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement marketing page UI" />
+    <MESSAGE value="fix button issues" />
+    <MESSAGE value="change popup when ai contact" />
+    <MESSAGE value="change on focus summary textarea" />
+    <MESSAGE value="remove unused code" />
+    <MESSAGE value="remove 0 values" />
+    <MESSAGE value="add coma to result" />
+    <MESSAGE value="change icons of floorplan and vtour" />
+    <MESSAGE value="add coma in pagination" />
+    <option name="LAST_COMMIT_MESSAGE" value="add coma in pagination" />
   </component>
 </project>

@@ -367,9 +367,23 @@ const index = () => {
                   <nav className="flex items-center justify-between bg-white py-3 pb-0 mt-5" aria-label="Pagination">
                     <div className="hidden sm:block">
                       <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{getFromNumber()}</span> to{' '}
-                        <span className="font-medium">{getToNumber()}</span> of{' '}
-                        <span className="font-medium">{properties.TOTAL_COUNT.toLocaleString()}</span> results
+                        Showing{' '}
+                        <span className="font-medium">
+                          {getFromNumber()
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                        </span>
+                        to{' '}
+                        <span className="font-medium">
+                          {getToNumber()
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        </span>{' '}
+                        of{' '}
+                        <span className="font-medium">
+                          {properties.TOTAL_COUNT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        </span>{' '}
+                        results
                       </p>
                     </div>
                     <div className="flex flex-1 justify-between sm:justify-end">
@@ -416,13 +430,13 @@ const index = () => {
           </div> */}
         </div>
       ) : (
-        <div className="p-6">
-          <div className="flex items-center justify-center flex-col text-center mt-6">
+        <div className=" h-full flex items-center justify-center">
+          <div className="flex items-center justify-center flex-col text-center">
             <img src={lookingForEmpty.src} alt="" />
-            <div className="mt-6 text-sm">
-              <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
-              <div className="text-gray-500 mt-[6px] font-light">
-                Whenever we have properties that match these interests, we will list them here.
+            <div className="mt-6">
+              <div className="text-sm text-black font-medium">No Property Found</div>
+              <div className="text-xs leading-5 font-normal text-black mt-[6px] ">
+                No property with these details found, please try again!
               </div>
             </div>
           </div>
