@@ -177,6 +177,16 @@ export default function Details() {
           client={contact}
         />
       )}
+      {contact?.import_source === 'GmailAI' && contact.approved_ai !== true && (
+        <ReviewContact
+          showToast
+          hideCloseButton
+          redirectAfterMoveToTrash
+          handleClose={() => setShowReviewOverlay(false)}
+          title="Review AI Imported Contact"
+          client={contact}
+        />
+      )}
       <div className="client-details-page-wrapper">
         {!contact ? (
           <div className="relative h-full" style={{ height: 'calc(100vh - 68px) !important' }}>

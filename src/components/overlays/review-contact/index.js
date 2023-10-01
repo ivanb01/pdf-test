@@ -60,10 +60,8 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
 
-  const isUnapprovedAI = client.import_source === 'GmailAI' && client.approved_ai === true;
-  useEffect(() => {
-    console.log(client.import_source, 'client.import_source', 'client.approved_ai', client.approved_ai);
-  }, [client.import_source, client.approved_ai]);
+  const isUnapprovedAI = client.import_source === 'GmailAI' && client.approved_ai !== true;
+
   const options = [
     {
       id: 6,
@@ -447,6 +445,9 @@ const ReviewContact = ({
       </>
     );
   };
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
 
   useEffect(() => {
     if ('ai_email_summary' in client) {
@@ -642,20 +643,20 @@ const ReviewContact = ({
                     <img src={AI.src} alt="" />
                     <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                   </div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
+                    <a
+                      target="_blank"
+                      href={client.email_link}
+                      className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                      rel="noreferrer">
+                      View the email source
+                      <img src={newTab.src} alt="" className="ml-1" />
+                    </a>
+                  </div>
                 </div>
                 <hr className="my-4" />
-                <div className="text-gray-900 text-sm">{client.summary}</div>
-                <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
-                <div>
-                  <a
-                    target="_blank"
-                    // href={client.email_link}
-                    className="cursor-pointer flex items-center text-sm text-gray-900 underline mt-3"
-                    rel="noreferrer">
-                    View the email source
-                    <img src={newTab.src} alt="" className="ml-1" />
-                  </a>
-                </div>
+                <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
               </div>
             </SimpleBar>
           </div>
