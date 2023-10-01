@@ -119,7 +119,7 @@ export default function ContactCard({
             )}
             {contact.summary !== null ? (
               <TooltipComponent
-                side={'bottom'}
+                side={'right'}
                 align={'center'}
                 triggerElement={<div>{getSource(contact.import_source_text, contact.approved_ai).icon}</div>}>
                 <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
