@@ -1791,6 +1791,9 @@ const Table = ({
     );
   };
   const trashTable = () => {
+    {
+      console.log(data, 'Data');
+    }
     return data.length > 0 ? (
       <>
         <thead>
@@ -1850,7 +1853,7 @@ const Table = ({
               </td>
 
               <td className=" px-3 py-2 text-gray-800 text-center text-sm leading-5 font-medium">
-                {getDateFormat(person.updated_at)}
+                {getDateFormat(person.updated_at || person.created_at)}
               </td>
               <td className="pl-3 pr-6 py-3 text-gray-500 text-center w-20">
                 <div
