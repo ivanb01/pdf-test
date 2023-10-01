@@ -30,9 +30,6 @@ const categoryIds = {
 };
 
 const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
-  {
-    console.log(status.name, 'status');
-  }
   const router = useRouter();
   const dispatch = useDispatch();
 

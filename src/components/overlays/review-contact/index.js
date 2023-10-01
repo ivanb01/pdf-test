@@ -60,7 +60,9 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
 
-  const isUnapprovedAI = client.import_source === 'GmailAI' && client.approved_ai !== true;
+  const isUnapprovedAI =
+    (client.import_source === 'GmailAI' && client.approved_ai !== true && client.category_id !== 3) ||
+    !router.pathname.includes('trash');
 
   const options = [
     {

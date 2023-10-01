@@ -95,7 +95,7 @@ export default function Details() {
   //     });
   // };
   useEffect(() => {
-    if (contact?.import_source === 'GmailAI' && contact?.approved_ai === true) {
+    if (contact?.import_source === 'GmailAI' && contact?.approved_ai !== true) {
       setShowReviewOverlay(true);
     }
   }, [contact?.import_source, contact?.approved_ai]);
