@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuAlt2Icon } from '@heroicons/react/outline';
 import { InformationCircleIcon } from '@heroicons/react/solid';
 import Checkbox from 'components/shared/checkbox';
@@ -246,28 +246,34 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
           )}
         </a>
       </div>
-      <SimpleBar
-        style={{
-          overflowX: 'hidden',
-          maxHeight: '100%',
-          height: 'calc(100vh - 224px) !important',
-        }}>
-        <div className="p-[16px] contact-column-custom-height">
-          {filteredContacts.map((contact, index) => (
-            <ContactCard
-              handleCardEdit={handleCardEdit}
-              handleCardClick={handleCardClick}
-              contact={contact}
-              key={index}
-              categoryType={categoryType}
-              addActivityPopup={addActivityPopup}
-              setAddActivityPopup={setAddActivityPopup}
-              handleAddActivity={handleAddActivity}
-              handleChangeStatus={handleChangeStatus}
-            />
-          ))}
+      {filteredContacts.length > 0 ? (
+        <SimpleBar
+          style={{
+            overflowX: 'hidden',
+            maxHeight: '100%',
+            height: 'calc(100vh - 224px) !important',
+          }}>
+          <div className="p-[16px] contact-column-custom-height">
+            {filteredContacts.map((contact, index) => (
+              <ContactCard
+                handleCardEdit={handleCardEdit}
+                handleCardClick={handleCardClick}
+                contact={contact}
+                key={index}
+                categoryType={categoryType}
+                addActivityPopup={addActivityPopup}
+                setAddActivityPopup={setAddActivityPopup}
+                handleAddActivity={handleAddActivity}
+                handleChangeStatus={handleChangeStatus}
+              />
+            ))}
+          </div>
+        </SimpleBar>
+      ) : (
+        <div className={'flex align-center justify-center text-center flex-col flex-1'}>
+          <p className={' text-xs leading-4 font-normal text-gray4'}>No Contacts</p>
         </div>
-      </SimpleBar>
+      )}
       {/* <div
         id="dropdown"
         className={`hidden z-50 w-48 bg-white rounded divide-y divide-gray-100 shadow fixed`}
