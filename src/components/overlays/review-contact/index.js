@@ -7,7 +7,7 @@ import Dropdown from 'components/shared/dropdown';
 import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
 import { findContactByEmail, updateContact } from 'api/contacts';
-import { findTagsOption } from 'global/functions';
+import { findTagsOption, formatDateLL } from 'global/functions';
 import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
@@ -656,6 +656,7 @@ const ReviewContact = ({
                       <img src={newTab.src} alt="" className="ml-1" />
                     </a>
                   </div>
+                  <div className="text-xs mt-2">Date Imported: {formatDateLL(client.created_at)}</div>
                 </div>
                 <hr className="my-4" />
                 <div className="text-gray-900 text-sm">{client.summary ?? client.ai_email_summary}</div>
