@@ -155,9 +155,7 @@ const ReviewContact = ({
       // make api call in the background to update contact
       updateContact(client.id, newData).then(() => dispatch(setRefetchData(true)));
       // if aftersubmit prop is given, call the function
-      if (afterSubmit) {
-        afterSubmit(client?.id, newData);
-      }
+      if (afterSubmit) afterSubmit(client?.id, newData);
 
       // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
@@ -217,10 +215,9 @@ const ReviewContact = ({
       return;
     }
     setUpdating(true);
-    console.log(values.selectedContactType, 'values.selectedContactType');
-    console.log(values.selectedContactCategory, 'values.selectedContactCategory');
+
     let category_id;
-    if (values.selectedContactCategory === 3 || values.selectedContactCategory === 2) {
+    if (values.selectedContactCategory === 3) {
       category_id = 1;
     } else if (values.selectedContactCategory === 4) {
       category_id = 3;
@@ -229,7 +226,7 @@ const ReviewContact = ({
     } else {
       category_id = values.selectedContactType;
     }
-    console.log(category_id, 'category_id', values.selectedContactCategory, '(values.selectedContactCategory');
+
     const status_id = values.selectedContactCategory === 0 ? values.selectedStatus : 1;
 
     const category =
@@ -309,7 +306,6 @@ const ReviewContact = ({
         router.push(targetCategory);
       }
 
-      console.log(newData, 'new data', client, 'client');
       // make changes to global state
       dispatch(updateContactLocally(newData));
       setUpdating(false);
@@ -329,11 +325,7 @@ const ReviewContact = ({
       }
 
       if (shouldExecuteRemainingCode) {
-        if (
-          router.pathname.includes('clients') ||
-          router.pathname.includes('family') ||
-          router.pathname.includes('unknown')
-        ) {
+        if (router.pathname.includes('clients')) {
           toast.success('Changes have been saved successfully!');
         } else {
           toast.custom(
@@ -356,9 +348,7 @@ const ReviewContact = ({
                         ...newData,
                         approved_ai: false,
                       }).then(() => dispatch(setRefetchData(true)));
-                      if (afterSubmit) {
-                        afterSubmit(client.id, { ...newData, approved_ai: false });
-                      }
+                      afterSubmit(client.id, { ...newData, approved_ai: false });
                     }}
                     className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
                     Undo
@@ -381,7 +371,6 @@ const ReviewContact = ({
   useEffect(() => {
     if (formik.dirty || isUnapprovedAI) {
       const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
-      console.log(selectedContactCategory, 'selectedContactCategory');
       if (selectedContactCategory == 0 && selectedContactType && selectedStatus) {
         //if client
         setSubmitDisabled(false);
