@@ -110,7 +110,15 @@ const MainMenu = ({
   }, [refetchData]);
 
   const showUncategorizedButton = () => {
-    return allContacts && allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length > 0;
+    return allContacts && allContacts.length;
+  };
+
+  const showSuccessButton = () => {
+    return (
+      allContacts &&
+      allContacts.length &&
+      allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length == 0
+    );
   };
 
   const classNames = (...classes) => {
@@ -172,8 +180,9 @@ const MainMenu = ({
         {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
         {showUncategorizedButton() && (
           <Button
-            label="Categorize Contacts"
+            label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
             narrow
+            success={showSuccessButton()}
             className="mr-4 ml-4"
             onClick={() =>
               router.push({

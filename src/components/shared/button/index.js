@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import googleLogo from '/public/images/googleicon.svg';
 import check from '/public/images/check.svg';
+import checkMenu from '/public/images/check-menu.svg';
 
 const Button = ({
   title,
@@ -37,6 +38,7 @@ const Button = ({
   narrow,
   color,
   transparent,
+  success,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
@@ -106,11 +108,14 @@ const Button = ({
   const narrowButton = () => {
     return (
       <button
-        onClick={onClick}
+        onClick={!success ? onClick : console.log('all categorized')}
         type="button"
-        className={`${className} flex group items-center justify-between cursor-pointer rouded-xl bg-white text-lightBlue3 rounded-full text-sm px-3 py-1`}>
+        className={`${className} font-medium flex group items-center justify-between cursor-pointer rouded-xl ${
+          success ? 'bg-green-50 text-green-600' : 'bg-white text-lightBlue3'
+        }  rounded-full text-sm px-3 py-1`}>
+        {success && <img className="h-[17px] w-[17px] mr-1" src={checkMenu.src} />}
         {children ? children : label}
-        <ArrowForward className=" h-4 group-hover:translate-x-1 transition-all" />
+        {!success && <ArrowForward className=" h-4 group-hover:translate-x-1 transition-all" />}
       </button>
     );
   };

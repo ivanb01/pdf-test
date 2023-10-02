@@ -61,7 +61,7 @@ const index = () => {
   const handleFetchUncategorized = () => {
     let uncategorized = {
       ...allContacts,
-      data: allContacts?.data?.filter((contact) => contact.category_id == 1),
+      data: allContacts?.data?.filter((contact) => contact.category_1 === 'Uncategorized'),
     };
     setUncategorizedContactsOriginal(uncategorized);
     dispatch(setContacts(uncategorized));
@@ -70,7 +70,7 @@ const index = () => {
     //   console.log(data.data, uncategorized);
     // });
 
-    let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
+    let contacts = uncategorized.data;
     setUncategorizedContacts(contacts);
     dispatch(setOpenedTab(4));
     // dispatch(setOpenedSubtab(0));
