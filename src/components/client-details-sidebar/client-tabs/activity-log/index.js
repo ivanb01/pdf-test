@@ -114,7 +114,7 @@ export default function ActivityLog({ contactId, source, contact }) {
   //   if (source == 'GmailAI') fetchAiPreview(contactId);
   // }, []);
   const getSource = (source) => {
-    if (source === 'GmailAI') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
       return {
         name: 'AI Smart Synced Contact.',
         icon: <AIChip reviewed={clients.approved_ai === false} />,

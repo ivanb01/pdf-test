@@ -89,7 +89,7 @@ const ReviewContact = ({
       last_name: client?.last_name,
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
-      summary: client?.summary ? client?.summary : null,
+      summary: client?.summary ? client?.summary : client.ai_email_summary ? client.ai_email_summary : null,
       lead_source: client?.lead_source,
       tags: client?.tags,
       selectedContactCategory:
@@ -658,7 +658,7 @@ const ReviewContact = ({
                   </div>
                 </div>
                 <hr className="my-4" />
-                <div className="text-gray-900 text-sm">{client.summary}</div>
+                <div className="text-gray-900 text-sm">{client.summary ?? client.ai_email_summary}</div>
               </div>
             </SimpleBar>
           </div>

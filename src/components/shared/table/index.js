@@ -126,7 +126,7 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.') {
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
