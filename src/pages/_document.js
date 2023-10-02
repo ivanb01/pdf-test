@@ -15,13 +15,13 @@ const Document = () => {
           dangerouslySetInnerHTML={{
             __html: `
               window.fwSettings={
-                'widget_id':150000003307
+              'widget_id':150000003307
               };
               !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}() 
             `,
           }}
         />
-        <script src="https://widget.freshworks.com/widgets/150000003307.js" async defer />
+        <script type="text/javascript" src="https://widget.freshworks.com/widgets/150000003307.js" async defer></script>
       </Head>
       <body>
         <Main />

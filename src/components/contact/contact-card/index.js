@@ -15,6 +15,8 @@ import Info from '@mui/icons-material/Info';
 import TooltipComponent from '@components/shared/tooltip';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
 import Image from 'next/image';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -29,6 +31,29 @@ export default function ContactCard({
   handleAddActivity,
   handleChangeStatus,
 }) {
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    let targetElement = event.target;
+    while (targetElement != null) {
+      if (targetElement.classList.contains('change-status-dropdown')) {
+        return;
+      }
+      targetElement = targetElement.parentElement;
+    }
+
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpened(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
       return {
@@ -69,7 +94,7 @@ export default function ContactCard({
         key={contact.id}
         className={`${
           dropdownOpened && 'border-t-4'
-        } relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
+        } change-status-dropdown relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
         {dropdownOpened && (
           <DropdownNoInput
             selectedOption={contact?.status_2}
@@ -216,6 +241,7 @@ export default function ContactCard({
             </div>
             <div
               className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
+              ref={dropdownRef}
               onMouseEnter={() => {
                 document
                   .querySelector('#tooltip-change-status-' + contact.id)
