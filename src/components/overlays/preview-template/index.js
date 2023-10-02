@@ -30,7 +30,7 @@ const PreviewTemplate = ({ template, name, handleCloseOverlay }) => {
               ternary
               size={'small'}
               className={'cursor-pointer'}
-              onClick={() => showPrevImage()}
+              onClick={() => showNextImage()}
               rightIcon={<KeyboardArrowRightIcon className={'h-5 w-5 pb-1'} />}>
               Next
             </Button>
@@ -48,7 +48,7 @@ const PreviewTemplate = ({ template, name, handleCloseOverlay }) => {
         </div>
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 308px)', marginTop: '16px' }} className={'px-6'}>
           <img
-            className={`w-full object-cover rounded-lg`}
+            className={`w-full object-cover rounded-lg h-auto`}
             src={template[currentIndex].src}
             style={{ height: '500px' }}
           />
