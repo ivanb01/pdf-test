@@ -658,7 +658,7 @@ const ReviewContact = ({
                   </div>
                 </div>
                 <hr className="my-4" />
-                <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
+                <div className="text-gray-900 text-sm">{client.summary}</div>
               </div>
             </SimpleBar>
           </div>
