@@ -68,8 +68,6 @@ import ListIcon from '@mui/icons-material/List';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createPortal } from 'react-dom';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
-import DeleteClientOverlay from '@components/overlays/delete-client';
-import ReviewContact from '@components/overlays/review-contact';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -383,10 +381,6 @@ const Table = ({
     );
   };
   const otherTable = () => {
-    const [deletingContact, setDeletingContact] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState();
-    const [showReviewOverlay, setShowReviewOverlay] = useState(false);
-
     return (
       <>
         {data?.length ? (
@@ -402,11 +396,6 @@ const Table = ({
                   scope="col"
                   className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
                   Contact summary
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
-                  Actions
                 </th>
               </tr>
             </thead>
@@ -455,63 +444,9 @@ const Table = ({
                       </TooltipComponent>
                     )}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center flex items-center">
-                    <div className={'flex items-center'}>
-                      <TooltipComponent
-                        side={'bottom'}
-                        align={'center'}
-                        triggerElement={
-                          <div
-                            className={
-                              'h-7 w-7 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2 mr-2'
-                            }
-                            onClick={(e) => {
-                              setItemToDelete(dataItem);
-                              e.stopPropagation();
-                              setShowReviewOverlay(true);
-                            }}>
-                            <Edit className="h-4 w-4 text-gray3 hover:text-gray-4" />
-                          </div>
-                        }>
-                        <p className={'text-xs leading-4 font-medium'}>Edit contact</p>
-                      </TooltipComponent>
-                      <TooltipComponent
-                        side={'bottom'}
-                        align={'center'}
-                        triggerElement={
-                          <div
-                            className={'h-7 w-7 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
-                            onClick={(e) => {
-                              setItemToDelete(dataItem);
-                              e.stopPropagation();
-                            }}>
-                            <TrashIcon
-                              className="h-4 w-4 text-gray3 hover:text-gray-4"
-                              onClick={() => setDeletingContact(true)}
-                            />
-                          </div>
-                        }>
-                        <p className={'text-xs leading-4 font-medium'}>Delete contact</p>
-                      </TooltipComponent>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>
-            {deletingContact &&
-              createPortal(
-                <DeleteClientOverlay handleCloseOverlay={() => setDeletingContact(false)} contact={itemToDelete} />,
-                document.getElementById('modal-portal'),
-              )}
-            {showReviewOverlay &&
-              createPortal(
-                <ReviewContact
-                  handleClose={() => setShowReviewOverlay(false)}
-                  title="Review Contact"
-                  client={itemToDelete}
-                />,
-                document.getElementById('modal-portal'),
-              )}
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-[490px] max-w-[390px] mx-auto my-0">

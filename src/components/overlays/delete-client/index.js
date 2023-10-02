@@ -8,7 +8,6 @@ import * as contactServices from 'api/contacts';
 import { dropped_status_id, trash_category_id } from 'global/variables';
 import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
-import { updateContactLocally, updateContacts } from '@store/contacts/slice';
 
 const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
   const dispatch = useDispatch();
@@ -26,15 +25,13 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
       contact?.category_1 == 'Professional' && router.push('/contacts/professionals');
       setLoadingButton(false);
       dispatch(setRefetchData(true));
-      handleCloseOverlay();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
-      handleCloseOverlay();
     }
   };
   return (
-    <Overlay handleCloseOverlay={handleCloseOverlay} className="max-w-[512px] z-50">
+    <Overlay handleCloseOverlay={handleCloseOverlay} className="max-w-[512px]">
       <div className="p-[24px] pt-0">
         <div className="flex flex-row">
           <div className="rounded-3xl	bg-red2 h-[40px] w-[40px] flex items-center justify-center">
@@ -49,14 +46,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
         </div>
         <div className="flex flex-row justify-end mt-4">
           <Button onClick={handleCloseOverlay} label="Cancel" white className="mr-2" />
-          <Button
-            loading={loadingButton}
-            onClick={() => {
-              handleSubmit();
-            }}
-            label="Move to Trash"
-            danger
-          />
+          <Button loading={loadingButton} onClick={handleSubmit} label="Move to Trash" danger />
         </div>
       </div>
     </Overlay>
