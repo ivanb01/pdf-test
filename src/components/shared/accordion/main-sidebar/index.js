@@ -157,7 +157,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             handleCloseOverlay={() => setShowSSOverlay(false)}
           />
         )}
-        {console.log(showOnboarding, !userGaveConsent?.includes('gmail'), !userGaveConsent?.includes('contacts'))}
         {showOnboarding && !userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
           <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
         )}

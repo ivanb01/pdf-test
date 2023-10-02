@@ -293,9 +293,9 @@ const Table = ({
             </th>
             {!campaignEvents ? (
               <>
-                {skeletonData.map((data) => (
+                {skeletonData.map((data, index) => (
                   <th
-                    key={data.id}
+                    key={index}
                     scope="col"
                     className="px-3 py-3 text-center text-xs font-medium tracking-wide animate-pulse">
                     <div className="">
@@ -331,10 +331,10 @@ const Table = ({
             ? noResults()
             : !data?.length && !searchTerm
             ? noData()
-            : data.map((dataItem) => {
+            : data.map((dataItem, index) => {
                 return (
                   <tr
-                    key={dataItem.contact_id}
+                    key={index}
                     className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
                     // onClick={(event) => handleClickRow(contact, event)}
                   >
