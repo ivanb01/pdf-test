@@ -60,10 +60,21 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
 
-  const isUnapprovedAI =
-    (client.import_source === 'GmailAI' && client.approved_ai !== true && client.category_id !== 3) ||
-    !router.pathname.includes('trash');
+  const isUnapprovedAI = !(
+    client.import_source === 'GmailAI' &&
+    client.approved_ai === false &&
+    !router.pathname.toLowerCase().includes('trash')
+  );
 
+  useEffect(() => {
+    console.log(
+      client.import_source,
+      'client.import_source',
+      client.approved_ai,
+      'client.approved_ai',
+      'isUnapprovedAI',
+    );
+  }, [isUnapprovedAI]);
   const options = [
     {
       id: 6,
@@ -107,7 +118,7 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      if (isUnapprovedAI) {
+      if (!isUnapprovedAI) {
         if (formik.values.email !== formik.initialValues.email) {
           setUpdating(true);
           await userAlreadyExists(values.email)
@@ -132,7 +143,7 @@ const ReviewContact = ({
           handleSubmit(values).then();
         }
       }
-      if (!isUnapprovedAI) {
+      if (isUnapprovedAI) {
         await handleSubmit(values).then();
       }
     },
@@ -247,7 +258,7 @@ const ReviewContact = ({
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
 
-    const newData = isUnapprovedAI
+    const newData = !isUnapprovedAI
       ? {
           ...baseData,
           approved_ai: true,
@@ -369,7 +380,7 @@ const ReviewContact = ({
     formik.setFieldValue('type_of_activity_id', id);
   };
   useEffect(() => {
-    if (formik.dirty || isUnapprovedAI) {
+    if (formik.dirty || !isUnapprovedAI) {
       const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
       if (selectedContactCategory == 0 && selectedContactType && selectedStatus) {
         //if client
@@ -467,9 +478,9 @@ const ReviewContact = ({
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
-      className={`${className} ${!isUnapprovedAI && 'w-[635px]'}`}>
+      className={`${className} ${isUnapprovedAI && 'w-[635px]'}`}>
       <div className="flex min-h-[420px]">
-        <div className={`${isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'}`}>
+        <div className={`${!isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'}`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
@@ -507,7 +518,7 @@ const ReviewContact = ({
                   label="Email"
                   id="email"
                   className=""
-                  readonly={!isUnapprovedAI}
+                  readonly={isUnapprovedAI}
                   // onChange={formik.handleChange}
                   onChange={(e) => {
                     if (existingContactEmail !== e.target.value) {
@@ -537,7 +548,7 @@ const ReviewContact = ({
                 handleChange={formik.handleChange}
                 value={formik.values.summary}
               />
-              {!isUnapprovedAI && (
+              {isUnapprovedAI && (
                 <>
                   <Dropdown
                     label="Lead Source"
@@ -636,7 +647,7 @@ const ReviewContact = ({
             </form>
           </SimpleBar>
         </div>
-        {isUnapprovedAI && (
+        {!isUnapprovedAI && (
           <div className="w-1/2 relative">
             <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
               <div className="p-6">
@@ -666,7 +677,7 @@ const ReviewContact = ({
         )}
       </div>
       <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
-        {isUnapprovedAI ? reviewAIContactButtons() : reviewContactButtons()}
+        {!isUnapprovedAI ? reviewAIContactButtons() : reviewContactButtons()}
       </div>
     </Overlay>
   );
