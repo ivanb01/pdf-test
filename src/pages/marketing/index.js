@@ -144,7 +144,7 @@ const index = () => {
     },
     {
       type: 'business_card',
-      src: [BusinessCards, BusinessCard1],
+      src: [BusinessCard1, BusinessCards],
       title: 'Business Cards',
       listingUrl: false,
     },
@@ -171,7 +171,7 @@ const index = () => {
     },
     {
       id: 1,
-      name: 'Sheet',
+      name: 'Show Sheet',
       href: '#',
       content: (
         <>

@@ -137,7 +137,7 @@ export const ImageGallery = ({ images, className, preview }) => {
         ) : (
           <div
             className={
-              'absolute  right-[50px] top-[100%] h-[30px] w-[30px] rounded-full text-white flex items-center justify-center bg-lightBlue4 cursor-pointer'
+              'absolute  right-[50px] top-[-10px] h-[30px] w-[30px] rounded-full text-white flex items-center justify-center bg-lightBlue4 cursor-pointer'
             }>
             <KeyboardArrowRightIcon onClick={() => showPrevImage()} />
           </div>
