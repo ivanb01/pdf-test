@@ -408,7 +408,7 @@ const index = () => {
     {
       id: 7,
       name: 'Approx SF',
-      value: data.SQUARE_FOOTAGE,
+      value: data.SQUARE_FOOTAGE.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
     },
     {
       id: 8,
