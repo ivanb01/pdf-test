@@ -1196,9 +1196,6 @@ const Table = ({
               Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              PHONE
-            </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
           </tr>
@@ -1252,7 +1249,7 @@ const Table = ({
                         </div>
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center'}>
+                        <div className={'flex gap-1.5 items-center justify-center'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1265,7 +1262,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -1275,11 +1272,6 @@ const Table = ({
                             </div>
                           </TooltipComponent>
                         )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px]">
-                          {phoneNumberFormat(contact.phone_number)}
-                        </div>
                       </td>
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
