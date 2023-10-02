@@ -126,7 +126,7 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.') {
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
@@ -293,9 +293,9 @@ const Table = ({
             </th>
             {!campaignEvents ? (
               <>
-                {skeletonData.map((data) => (
+                {skeletonData.map((data, index) => (
                   <th
-                    key={data.id}
+                    key={index}
                     scope="col"
                     className="px-3 py-3 text-center text-xs font-medium tracking-wide animate-pulse">
                     <div className="">
@@ -331,10 +331,10 @@ const Table = ({
             ? noResults()
             : !data?.length && !searchTerm
             ? noData()
-            : data.map((dataItem) => {
+            : data.map((dataItem, index) => {
                 return (
                   <tr
-                    key={dataItem.contact_id}
+                    key={index}
                     className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
                     // onClick={(event) => handleClickRow(contact, event)}
                   >
@@ -862,9 +862,6 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              PHONE
-            </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
               <th
                 scope="col"
@@ -967,7 +964,7 @@ const Table = ({
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center'}>
+                        <div className={'flex gap-1.5 items-center justify-center'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -980,7 +977,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -991,20 +988,13 @@ const Table = ({
                           </TooltipComponent>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px]">
-                          {phoneNumberFormat(contact.phone_number) !== 'N/A'
-                            ? phoneNumberFormat(contact.phone_number)
-                            : '-'}
-                        </div>
-                      </td>
-                      {contact.status_2 !== 'Dropped' && (
+                      {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
                         <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
-                              contactCategory={categoryType}
+                              contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                             />
                             {/* <Chip
                             lastCommunication={formatDateAgo(
@@ -1206,9 +1196,6 @@ const Table = ({
               Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              PHONE
-            </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               ACTIONS
             </th>
           </tr>
@@ -1262,7 +1249,7 @@ const Table = ({
                         </div>
                       </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center'}>
+                        <div className={'flex gap-1.5 items-center justify-center'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1275,7 +1262,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -1285,11 +1272,6 @@ const Table = ({
                             </div>
                           </TooltipComponent>
                         )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 font-medium min-w-[200px]">
-                          {phoneNumberFormat(contact.phone_number)}
-                        </div>
                       </td>
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">

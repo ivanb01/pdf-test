@@ -7,7 +7,7 @@ import Dropdown from 'components/shared/dropdown';
 import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
 import { findContactByEmail, updateContact } from 'api/contacts';
-import { findTagsOption } from 'global/functions';
+import { findTagsOption, formatDateLL } from 'global/functions';
 import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
@@ -24,7 +24,6 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import TagsInput from '@components/tagsInput';
-import { getAIData } from '@api/aiSmartSync';
 import Loader from '@components/shared/loader';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
@@ -62,10 +61,8 @@ const ReviewContact = ({
   const initialClientCategoryId = useRef(client.category_1);
 
   const isUnapprovedAI =
-    client.import_source == 'GmailAI' ||
-    (client.import_source_text == 'Smart Sync A.I.' &&
-      client.approved_ai != true &&
-      !router.pathname.includes('trash'));
+    (client.import_source === 'GmailAI' && client.approved_ai !== true && client.category_id !== 3) ||
+    !router.pathname.includes('trash');
 
   const options = [
     {
@@ -92,7 +89,7 @@ const ReviewContact = ({
       last_name: client?.last_name,
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
-      summary: client?.summary ? client?.summary : null,
+      summary: client?.summary ? client?.summary : client.ai_email_summary ? client.ai_email_summary : null,
       lead_source: client?.lead_source,
       tags: client?.tags,
       selectedContactCategory:
@@ -110,7 +107,6 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      console.log(values.summary);
       if (isUnapprovedAI) {
         if (formik.values.email !== formik.initialValues.email) {
           setUpdating(true);
@@ -451,29 +447,13 @@ const ReviewContact = ({
       </>
     );
   };
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
 
-  const fetchAISummary = async () => {
-    try {
-      const { data } = await getAIData(client.id);
-      setClient({
-        ...client,
-        ai_email_summary: data.ai_email_summary,
-        email_link: data.email_link,
-        email_subject: data.email_subject,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoadingEmail(false);
-    }
-  };
   useEffect(() => {
     if ('ai_email_summary' in client) {
       setLoadingEmail(false);
-    } else {
-      if (isUnapprovedAI) {
-        fetchAISummary();
-      }
     }
   }, []);
   const userAlreadyExists = async (email) => {
@@ -658,33 +638,30 @@ const ReviewContact = ({
         </div>
         {isUnapprovedAI && (
           <div className="w-1/2 relative">
-            {loadingEmail ? (
-              <Loader />
-            ) : (
-              <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-                <div className="p-6">
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <img src={AI.src} alt="" />
-                      <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
-                      <a
-                        target="_blank"
-                        href={client.email_link}
-                        className="cursor-pointer flex items-center text-sm text-gray-900 underline"
-                        rel="noreferrer">
-                        View the email source
-                        <img src={newTab.src} alt="" className="ml-1" />
-                      </a>
-                    </div>
+            <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
+              <div className="p-6">
+                <div>
+                  <div className="flex items-center mb-2">
+                    <img src={AI.src} alt="" />
+                    <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
                   </div>
-                  <hr className="my-4" />
-                  <div className="text-gray-900 text-sm">{client.ai_email_summary}</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
+                    <a
+                      target="_blank"
+                      href={client.email_link}
+                      className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                      rel="noreferrer">
+                      View the email source
+                      <img src={newTab.src} alt="" className="ml-1" />
+                    </a>
+                  </div>
+                  <div className="text-xs mt-2">Date Imported: {formatDateLL(client.created_at)}</div>
                 </div>
-              </SimpleBar>
-            )}
+                <hr className="my-4" />
+                <div className="text-gray-900 text-sm">{client.summary ?? client.ai_email_summary}</div>
+              </div>
+            </SimpleBar>
           </div>
         )}
       </div>

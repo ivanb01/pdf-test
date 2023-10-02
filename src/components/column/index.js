@@ -30,9 +30,6 @@ const categoryIds = {
 };
 
 const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
-  {
-    console.log(status.name, 'status');
-  }
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -138,7 +135,6 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
     try {
       await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
       await changeStatus(statusIdToUpdate, contactToModify);
-      console.log('unassin then change status');
 
       setChangeStatusModal(false);
     } catch (error) {
@@ -153,7 +149,6 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
       const foundStatus = categoryStatuses.find((status) => status.statuses.findIndex((s) => s.id === statusId) !== -1);
       const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-      console.log('tesr', foundStatus);
       let statusName = foundStatus.statuses.find((foundstatus) => foundstatus.id == status).name;
 
       dispatch(
