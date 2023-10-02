@@ -148,7 +148,7 @@ export default function Info({ client }) {
               client?.last_communication_date ? formatDateMDY(client?.last_communication_date) : 'No Communication'
             }
             iconContent={
-              client?.last_communication_date ? (
+              client?.last_communication_date && client?.category_1 !== 'Trash' ? (
                 <DateChip
                   lastCommunication={client.last_communication_date}
                   contactStatus={client.status_2}

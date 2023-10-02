@@ -126,7 +126,7 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.') {
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
@@ -998,13 +998,13 @@ const Table = ({
                             : '-'}
                         </div>
                       </td>
-                      {contact.status_2 !== 'Dropped' && (
+                      {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
                         <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
-                              contactCategory={categoryType}
+                              contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
                             />
                             {/* <Chip
                             lastCommunication={formatDateAgo(

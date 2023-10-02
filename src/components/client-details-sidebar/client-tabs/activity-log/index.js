@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setRefetchData } from 'store/global/slice';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
-import { getAIData } from '@api/aiSmartSync';
+// import { getAIData } from '@api/aiSmartSync';
 import AIChip from '@components/shared/chip/ai-chip';
 import linkIcon from '/public/images/link.svg';
 import AddActivity from '@components/overlays/add-activity';
@@ -101,23 +101,23 @@ export default function ActivityLog({ contactId, source, contact }) {
       handleClick: () => deleteSummary(),
     },
   ];
-  const fetchAiPreview = async (id) => {
-    try {
-      const { data } = await getAIData(id);
-      setAiPreview(data);
-    } catch (error) {
-    } finally {
-      setAiPreviewLoading(false);
-    }
-  };
-  useEffect(() => {
-    if (source == 'Smart Sync A.I.') fetchAiPreview(contactId);
-  }, []);
+  // const fetchAiPreview = async (id) => {
+  //   try {
+  //     const { data } = await getAIData(id);
+  //     setAiPreview(data);
+  //   } catch (error) {
+  //   } finally {
+  //     setAiPreviewLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (source == 'GmailAI') fetchAiPreview(contactId);
+  // }, []);
   const getSource = (source) => {
-    if (source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
       return {
-        name: source,
-        icon: <AIChip reviewed={contact.approved_ai} />,
+        name: 'AI Smart Synced Contact.',
+        icon: <AIChip reviewed={clients.approved_ai === false} />,
       };
     } else if (source === 'Manually Added') {
       return {
@@ -149,9 +149,6 @@ export default function ActivityLog({ contactId, source, contact }) {
 
   useEffect(() => {
     setActivityLogLocal(activityLogData);
-  }, [activityLogData]);
-  useEffect(() => {
-    console.log(activityLogData);
   }, [activityLogData]);
 
   return (

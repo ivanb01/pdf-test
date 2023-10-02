@@ -33,7 +33,6 @@ export default function Details() {
   // const contact = contacts.find((contact) => contact.id == id);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [loadingTabs, setLoadingTabs] = useState(true);
-  const [aiData, setAIData] = useState(null);
   const [contact, setContact] = useState(null);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -84,17 +83,22 @@ export default function Details() {
         toast.error('Error fetching campaigns');
       });
   };
-  const getAISummary = () => {
-    getAIData(id)
-      .then((result) => {
-        setAIData(result.data);
-        setShowReviewOverlay(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error('Error fetching ai summary');
-      });
-  };
+  // const getAISummary = () => {
+  //   getAIData(id)
+  //     .then((result) => {
+  //       setAIData(result.data);
+  //       setShowReviewOverlay(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast.error('Error fetching ai summary');
+  //     });
+  // };
+  useEffect(() => {
+    if (contact?.import_source === 'GmailAI' && contact?.approved_ai !== true) {
+      setShowReviewOverlay(true);
+    }
+  }, [contact?.import_source, contact?.approved_ai]);
   const resetData = () => {
     dispatch(setLookingForData(null));
     dispatch(setNotesData(null));
@@ -105,9 +109,9 @@ export default function Details() {
     resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
-    if (!contactData.approved_ai && contactData.import_source_text === 'Smart Sync A.I.') {
-      getAISummary();
-    }
+    // if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
+    //   // getAISummary();
+    // }
     await getActivityLog();
     setLoadingTabs(false);
     getCampaigns();
@@ -171,7 +175,17 @@ export default function Details() {
           redirectAfterMoveToTrash
           handleClose={() => setShowReviewOverlay(false)}
           title="Review AI Imported Contact"
-          client={aiData}
+          client={contact}
+        />
+      )}
+      {contact?.import_source === 'GmailAI' && contact.approved_ai !== true && (
+        <ReviewContact
+          showToast
+          hideCloseButton
+          redirectAfterMoveToTrash
+          handleClose={() => setShowReviewOverlay(false)}
+          title="Review AI Imported Contact"
+          client={contact}
         />
       )}
       <div className="client-details-page-wrapper">
