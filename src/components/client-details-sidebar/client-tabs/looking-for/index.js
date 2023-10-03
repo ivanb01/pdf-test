@@ -208,6 +208,7 @@ export default function LookingFor({ contactId, category }) {
           top: 0,
           behavior: 'smooth',
         });
+        setLoadingPropertyInterests(false);
         return data;
       })
       .catch((error) => {
@@ -460,6 +461,7 @@ export default function LookingFor({ contactId, category }) {
                                   document.querySelector('.scrollable-area').scrollIntoView({
                                     behavior: 'smooth',
                                   });
+                                  setLoadingPropertyInterests(true);
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Previous
@@ -474,6 +476,7 @@ export default function LookingFor({ contactId, category }) {
                                   document.querySelector('.scrollable-area').scrollIntoView({
                                     behavior: 'smooth',
                                   });
+                                  setLoadingPropertyInterests(true);
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Next
