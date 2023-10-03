@@ -178,7 +178,7 @@ export default function Details() {
           client={contact}
         />
       )}
-      {contact?.import_source === 'GmailAI' && contact.approved_ai !== true && (
+      {['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(contact?.import_source) && contact.approved_ai !== true && (
         <ReviewContact
           showToast
           hideCloseButton

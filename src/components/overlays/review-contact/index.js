@@ -61,20 +61,11 @@ const ReviewContact = ({
   const initialClientCategoryId = useRef(client.category_1);
 
   const isUnapprovedAI = !(
-    client.import_source === 'GmailAI' &&
-    client.approved_ai === false &&
+    ['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(client.import_source) &&
+    client.approved_ai !== true &&
     !router.pathname.toLowerCase().includes('trash')
   );
 
-  useEffect(() => {
-    console.log(
-      client.import_source,
-      'client.import_source',
-      client.approved_ai,
-      'client.approved_ai',
-      'isUnapprovedAI',
-    );
-  }, [isUnapprovedAI]);
   const options = [
     {
       id: 6,
