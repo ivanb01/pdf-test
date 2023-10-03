@@ -111,7 +111,7 @@ const Button = ({
         onClick={!success ? onClick : console.log('all categorized')}
         type="button"
         className={`${className} font-medium flex group items-center justify-between cursor-pointer rouded-xl ${
-          success ? 'bg-green-50 text-green-600' : 'bg-white text-lightBlue3'
+          success ? 'bg-green-50 text-[#059669]' : 'bg-white text-lightBlue3'
         }  rounded-full text-sm px-3 py-1`}>
         {success && <img className="h-[17px] w-[17px] mr-1" src={checkMenu.src} />}
         {children ? children : label}
