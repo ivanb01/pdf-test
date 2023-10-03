@@ -167,7 +167,7 @@ const NoContactPage = () => {
           )}
         </>
       )}
-      {showImportGoogleContactsModal && (
+      {showImportGoogleContactsModal && stateAfterImport != 'Not needed' && (
         <ImportGoogleContacts
           handleCloseOverlay={handleCloseImportGoogleContactsModal}
           title="Importing Google Contacts"
