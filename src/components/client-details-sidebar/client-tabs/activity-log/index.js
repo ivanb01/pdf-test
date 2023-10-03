@@ -117,7 +117,7 @@ export default function ActivityLog({ contactId, source, contact }) {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
       return {
         name: 'AI Smart Synced Contact.',
-        icon: <AIChip reviewed={contact.approved_ai} />,
+        icon: <AIChip reviewed={clients.approved_ai === false} />,
       };
     } else if (source === 'Manually Added') {
       return {
