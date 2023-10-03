@@ -917,7 +917,7 @@ const Table = ({
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
                     <div className="flex justify-between px-6 py-2 items-center">
-                      <div className="flex items-center px-6 py-2">
+                      <div className="flex items-center px-6 py-2 pl-0">
                         <Text chipText className="text-gray4 mr-1">
                           {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                         </Text>
@@ -950,6 +950,7 @@ const Table = ({
                         </TooltipComponent>
                       </div>
                       <div
+                        className={'pr-3'}
                         role={'button'}
                         onClick={() => {
                           handleToggleSorting(category.name);
