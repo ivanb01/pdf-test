@@ -38,9 +38,9 @@ export default function DateChip({
             Communication Health is {isHealthyCommunication ? 'good' : 'low'}!
           </h6>
           <p className={'text-xs leading-4 font-normal'}>
-            {healthLastCommunicationDate[contactCategory][contactStatus]
+            {healthLastCommunicationDate[contactCategory] && healthLastCommunicationDate[contactCategory][contactStatus]
               ? isHealthyCommunication
-                ? 'You are doing a great job! '
+                ? 'You are doing a great job!'
                 : `It is recommended to communicate in this status every ${
                     healthLastCommunicationDate[contactCategory.toLowerCase()][contactStatus] == 1
                       ? 'day'

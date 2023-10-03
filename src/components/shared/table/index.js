@@ -420,7 +420,7 @@ const Table = ({
                     />
                   </td>
                   <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
-                    <div className={'flex gap-1.5 items-center'}>
+                    <div className={'flex gap-1.5 items-center justify-center'}>
                       {getSource(dataItem.import_source_text).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
                         {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
@@ -532,7 +532,7 @@ const Table = ({
                     </td>
                     {tableFor != 'in-categorization' && (
                       <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center'}>
+                        <div className={'flex gap-1.5 items-center justify-center'}>
                           {getSource(dataItem.import_source_text).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
