@@ -373,17 +373,21 @@ const index = () => {
     {
       id: 0,
       name: 'Common Charges',
-      value: data.COMMON_CHARGES,
+      value: data.COMMON_CHARGES
+        ? `$${data.COMMON_CHARGES.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+        : data.COMMON_CHARGES,
     },
     {
       id: 1,
       name: 'Maintenance',
-      value: data.MAINTENANCE,
+      value: data.MAINTENANCE
+        ? `$${data.MAINTENANCE.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+        : data.MAINTENANCE,
     },
     {
       id: 2,
       name: 'Taxes',
-      value: data.TAXES,
+      value: data.TAXES ? `$${data.TAXES.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : data.TAXES,
     },
     {
       id: 3,
@@ -393,7 +397,7 @@ const index = () => {
     {
       id: 4,
       name: 'Down Payment',
-      value: data.DOWN_PAYMENT,
+      value: data.DOWN_PAYMENT === '0%' ? undefined : data.DOWN_PAYMENT,
     },
     {
       id: 5,
