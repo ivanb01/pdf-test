@@ -397,9 +397,7 @@ const index = () => {
     {
       id: 4,
       name: 'Down Payment',
-      value: data.DOWN_PAYMENT
-        ? `$${data.DOWN_PAYMENT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-        : data.DOWN_PAYMENT,
+      value: data.DOWN_PAYMENT === '0%' ? undefined : data.DOWN_PAYMENT,
     },
     {
       id: 5,
