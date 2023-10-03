@@ -1512,7 +1512,7 @@ const Table = ({
               Time spent in the crm
             </th> */}
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
-              last interaction
+              last communication
             </th>
           </tr>
         </thead>
