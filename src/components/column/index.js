@@ -19,7 +19,7 @@ import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
-import { setRefetchCount, setRefetchData } from '@store/global/slice';
+import { setRefetchCount, setRefetchData, setSorted } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
@@ -29,7 +29,7 @@ const categoryIds = {
   Professional: '8,9,12',
 };
 
-const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit, handleFilteredContacts }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -43,32 +43,27 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   const category = 'client';
 
-  const [filteredContacts, setFilteredContacts] = useState(
-    contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+  // const [filteredContacts, setFilteredContacts] = useState(
+  //   contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+  // );
+
+  // useEffect(() => {
+  //   setFilteredContacts(
+  //     contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+  //   );
+  // }, [openedSubtab, contacts]);
+  const filteredContacts = contacts?.filter(
+    (contact) =>
+      contact.status_id === status.id &&
+      contact.category_1.toLowerCase() === category &&
+      searchTerm.split(' ').every((word) => {
+        const lowercaseWord = word.toLowerCase();
+        return (
+          contact.first_name.toLowerCase().includes(lowercaseWord) ||
+          contact.last_name.toLowerCase().includes(lowercaseWord)
+        );
+      }),
   );
-
-  useEffect(() => {
-    setFilteredContacts(
-      contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
-    );
-  }, [openedSubtab, contacts]);
-
-  useEffect(() => {
-    setFilteredContacts(
-      contacts?.filter(
-        (contact) =>
-          contact.status_id === status.id &&
-          contact.category_1.toLowerCase() === category &&
-          searchTerm.split(' ').every((word) => {
-            const lowercaseWord = word.toLowerCase();
-            return (
-              contact.first_name.toLowerCase().includes(lowercaseWord) ||
-              contact.last_name.toLowerCase().includes(lowercaseWord)
-            );
-          }),
-      ),
-    );
-  }, [searchTerm, contacts]);
 
   const handleCardClick = (contact) => {
     router.push({
@@ -77,35 +72,39 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
     });
   };
 
-  const handleSortAsc = () => {
-    setFilteredContacts(
-      filteredContacts.sort(function (a, b) {
-        if (a.first_name < b.first_name) {
-          return -1;
-        }
-        if (a.first_name > b.first_name) {
-          return 1;
-        }
-        return 0;
-      }),
-    );
-    setSortAsc(!sortAsc);
-  };
+  // const handleSortAsc = () => {
+  //   console.log(status.name);
+  //   setFilteredContacts(
+  //     filteredContacts.sort(function (a, b) {
+  //       if (a.first_name < b.first_name) {
+  //         return -1;
+  //       }
+  //       if (a.first_name > b.first_name) {
+  //         return 1;
+  //       }
+  //       return 0;
+  //     }),
+  //   );
+  //   handleFilteredContacts(status.name, 'asc');
+  //   setSortAsc(!sortAsc);
+  // };
 
-  const handleSortDesc = () => {
-    setFilteredContacts(
-      filteredContacts.sort(function (a, b) {
-        if (a.first_name < b.first_name) {
-          return 1;
-        }
-        if (a.first_name > b.first_name) {
-          return -1;
-        }
-        return 0;
-      }),
-    );
-    setSortAsc(!sortAsc);
-  };
+  // const handleSortDesc = () => {
+  //   console.log(status.name);
+  //   setFilteredContacts(
+  //     filteredContacts.sort(function (a, b) {
+  //       if (a.first_name < b.first_name) {
+  //         return 1;
+  //       }
+  //       if (a.first_name > b.first_name) {
+  //         return -1;
+  //       }
+  //       return 0;
+  //     }),
+  //   );
+  //   handleFilteredContacts(status.name, 'desc');
+  //   setSortAsc(!sortAsc);
+  // };
 
   const handleAddActivity = (client) => {
     setClientToModify(client);
@@ -170,7 +169,16 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
       console.log(error);
     }
   };
+  const sorted = useSelector((state) => state.global.sorted);
 
+  const handleToggleSorting = (name) => {
+    const currentItem = sorted.find((item) => item.name === name);
+    if (currentItem) {
+      const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+      handleFilteredContacts(name, newOrder);
+      dispatch(setSorted({ name, order: newOrder }));
+    }
+  };
   return (
     <div className="flex flex-col border-r border-gray2">
       {addActivityPopup &&
@@ -220,8 +228,12 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         </div>
 
         {/* <Checkbox label={status.name} /> */}
-        <a href="#" onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
-          {sortAsc ? (
+        <div
+          role={'button'}
+          onClick={() => {
+            handleToggleSorting(status.name);
+          }}>
+          {sorted.find((s) => s.name === status.name)?.sorted === 'asc' ? (
             <svg
               className="sort-asc sort fill-gray5"
               xmlns="http://www.w3.org/2000/svg"
@@ -244,9 +256,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
               <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
-        </a>
+        </div>
       </div>
-      {filteredContacts.length > 0 ? (
+      {!filteredContacts.includes(undefined) ? (
         <SimpleBar
           style={{
             overflowX: 'hidden',

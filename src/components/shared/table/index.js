@@ -39,7 +39,7 @@ import DateChip from '../chip/date-chip';
 import { formatDateAgo, formatDateLThour, formatDateCalendar } from 'global/functions';
 import undoIcon from '/public/images/undo.svg';
 import { useDispatch } from 'react-redux';
-import { setContacts, updateContactLocally } from 'store/contacts/slice';
+import { setClients, setContacts, updateContactLocally } from 'store/contacts/slice';
 import toast from 'react-hot-toast';
 import * as contactServices from 'api/contacts';
 import noClientCampaigns from '/public/images/no-client-campaigns.svg';
@@ -61,7 +61,7 @@ import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount } from '@store/global/slice';
+import { setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -77,6 +77,7 @@ const categoryIds = {
 const Table = ({
   undoAllCategorizations,
   undoCategorization,
+  handleFilteredContacts,
   data,
   handleSelectAll,
   handleSelectContact,
@@ -767,6 +768,7 @@ const Table = ({
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
     const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const [sortAsc, setSortAsc] = useState(true);
 
     useEffect(() => console.log(contacts.status_1), [contacts]);
     const dispatch = useDispatch();
@@ -855,10 +857,19 @@ const Table = ({
           contact.status_id == category.id &&
           contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
       );
-
       return filteredContacts;
     }
 
+    const sorted = useSelector((state) => state.global.sorted);
+
+    const handleToggleSorting = (name) => {
+      const currentItem = sorted.find((item) => item.name === name);
+      if (currentItem) {
+        const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+        handleFilteredContacts(name, newOrder);
+        dispatch(setSorted({ name, order: newOrder }));
+      }
+    };
     return (
       <>
         <thead className="bg-gray-50">
@@ -905,37 +916,69 @@ const Table = ({
               <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
-                    <div className="flex items-center px-6 py-2">
-                      <Text chipText className="text-gray4 mr-1">
-                        {category.name == 'Vendor' ? 'Other Vendors' : category.name}
-                      </Text>
-                      <TooltipComponent
-                        side={'bottom'}
-                        align={'start'}
-                        triggerElement={
-                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
-                        }>
-                        <div
-                          // style={{ width: '300px' }}
-                          className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                          <p className="mb-2">{`You must interact with these clients every ${
-                            healthLastCommunicationDate[categoryType][category?.name] === 1
-                              ? 'day'
-                              : `${healthLastCommunicationDate[categoryType][category?.name]} days`
-                          } in order to maintain healthy communication.`}</p>
-                          <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center mr-2">
-                              <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
-                              <span>Healthy Communication</span>
-                            </div>
-                            <div className="flex items-center">
-                              <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
-                              <span>Unhealthy Communication</span>
+                    <div className="flex justify-between px-6 py-2 items-center">
+                      <div className="flex items-center px-6 py-2 pl-0">
+                        <Text chipText className="text-gray4 mr-1">
+                          {category.name == 'Vendor' ? 'Other Vendors' : category.name}
+                        </Text>
+                        <TooltipComponent
+                          side={'bottom'}
+                          align={'start'}
+                          triggerElement={
+                            <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          }>
+                          <div
+                            // style={{ width: '300px' }}
+                            className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                            <p className="mb-2">{`You must interact with these clients every ${
+                              healthLastCommunicationDate[categoryType][category?.name] === 1
+                                ? 'day'
+                                : `${healthLastCommunicationDate[categoryType][category?.name]} days`
+                            } in order to maintain healthy communication.`}</p>
+                            <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center mr-2">
+                                <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
+                                <span>Healthy Communication</span>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
+                                <span>Unhealthy Communication</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </TooltipComponent>
+                        </TooltipComponent>
+                      </div>
+                      <div
+                        className={'pr-3'}
+                        role={'button'}
+                        onClick={() => {
+                          handleToggleSorting(category.name);
+                        }}>
+                        {sorted.find((s) => s.name === category.name)?.sorted === 'asc' ? (
+                          <svg
+                            className="sort-asc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-ascending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="sort-desc sort fill-gray7"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-descending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>

@@ -22,7 +22,7 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClients } from 'store/contacts/slice';
+import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 
@@ -192,6 +192,35 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     setSearchTerm('');
   }, [openedSubtab]);
 
+  // const handleFilteredContacts = (filteredContacts) => {
+  //   dispatch(
+  //     setClients((prevState) => {
+  //       // Merge the new filteredContacts with the existing ones
+  //       const mergedContacts = [...prevState, ...filteredContacts];
+  //
+  //       // Sort the merged array
+  //       mergedContacts.sort((a, b) => a.name.localeCompare(b.name));
+  //
+  //       return mergedContacts;
+  //     }),
+  //   );
+  // };
+
+  const handleFilteredContacts = (status, sortOrder) => {
+    let filteredClients = clients.filter((client) => client.status_2 === status);
+
+    filteredClients.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (sortOrder === 'desc') {
+        return b.first_name.localeCompare(a.first_name);
+      }
+    });
+
+    dispatch(setClients([...new Set([...filteredClients, ...clients])]));
+    return filteredClients;
+  };
+
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -286,6 +315,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
                 <>
                   <Column
+                    handleFilteredContacts={handleFilteredContacts}
                     key={index}
                     status={status}
                     categoryType="clients"
@@ -301,6 +331,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
+                  handleFilteredContacts={handleFilteredContacts}
                   tableFor="contactsList"
                   categoryType="clients"
                   handleCardEdit={handleCardEdit}
