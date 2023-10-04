@@ -8,7 +8,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
 import { ShieldCheckIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
 import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
@@ -26,6 +26,14 @@ const index = () => {
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
+  const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
+
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    if (hostname.includes('dev') || hostname === 'localhost') {
+      setShowDeleteFunctionality(true);
+    }
+  }, []);
 
   const consentGiven = () => {
     return userGaveConsent && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts');
@@ -133,13 +141,17 @@ const index = () => {
               </Button>
             </div>
           </div>
-          <hr className="my-6" />
-          <div className="font-medium">Delete Your Account</div>
-          <div className="text-sm text-gray-700 mt-1 mb-6">
-            By deleting your account, you will no longer be able to access any information within the platform or login
-            to Oneline.
-          </div>
-          <Button white label="Delete Account" onClick={() => deleteData()} />
+          {showDeleteFunctionality && (
+            <>
+              <hr className="my-6" />
+              <div className="font-medium">Delete Your Account</div>
+              <div className="text-sm text-gray-700 mt-1 mb-6">
+                By deleting your account, you will no longer be able to access any information within the platform or
+                login to Oneline.
+              </div>
+              <Button white label="Delete Account" onClick={() => deleteData()} />
+            </>
+          )}
           {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">
             Password
