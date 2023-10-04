@@ -3,7 +3,7 @@ name: Automatic sync dev with main
 on:
   push:
     branches:
-      - dev
+      - development
 
 jobs:
   push-to-main:
