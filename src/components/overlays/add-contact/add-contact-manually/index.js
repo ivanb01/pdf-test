@@ -98,7 +98,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       last_name: '',
       email: '',
       phone_number: '',
-      import_source_text: 'Manually Added',
+      import_source: 'Manually Added',
       lead_source: '',
       tags: [],
     },
