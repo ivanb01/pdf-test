@@ -119,7 +119,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       <SimpleBar autoHide={true} style={{ maxHeight: '63vh' }}>
         <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
-            <div key={groupName} className={index === 0 ? '' : ' pt-4'}>
+            <div
+              key={groupName}
+              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}>
               <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />
@@ -306,10 +308,10 @@ const TabBar = ({ tab }) => {
   };
 
   return (
-    <div className={`accordion w-inherit`} key={tab.id}>
+    <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
         href="#"
-        className={`flex items-center h-8 justify-between pl-2  pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
+        className={`flex items-center h-8 justify-between pl-2 pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||

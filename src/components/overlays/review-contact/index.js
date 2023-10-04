@@ -139,9 +139,7 @@ const ReviewContact = ({
       }
     },
   });
-  useEffect(() => {
-    console.log(formik.values.email, formik.initialValues.email);
-  }, [formik.values, formik.initialValues]);
+
   const { errors, touched, submitForm, isSubmitting } = formik;
 
   const removeFromCRM = async () => {
@@ -204,7 +202,6 @@ const ReviewContact = ({
   };
   useEffect(() => {
     // This code will run whenever existingContactEmailError changes
-    console.log(existingContactEmailError?.length, 'existingContactEmailError');
     if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
       return;
     }
@@ -449,9 +446,6 @@ const ReviewContact = ({
       </>
     );
   };
-  useEffect(() => {
-    console.log(client);
-  }, [client]);
 
   useEffect(() => {
     if ('ai_email_summary' in client) {
