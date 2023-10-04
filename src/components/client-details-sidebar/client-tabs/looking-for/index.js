@@ -143,6 +143,8 @@ export default function LookingFor({ contactId, category }) {
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
         fetchProperties(lookingProperties[0], page, filterValue);
+      } else {
+        fetchProperties(formik.values, page, filterValue);
       }
     } catch (error) {
       console.log(error);
@@ -198,7 +200,6 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -242,7 +243,6 @@ export default function LookingFor({ contactId, category }) {
   useEffect(() => {
     if (lookingForData != null) initializePropertyInterests();
     else {
-      console.log('fetch properties', lookingForData, refetchData, filterValue);
       fetchProperties(formik.values, page, filterValue);
     }
     setLoadingPropertyInterests(false);
