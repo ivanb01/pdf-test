@@ -59,9 +59,6 @@ const global = createSlice({
     setUserGaveConsent(state, action) {
       state.userGaveConsent = action.payload;
     },
-    setActiveFilterOfProperties(state, action) {
-      state.activeFilterOfProperties = action.payload;
-    },
     setExpandedTab(state, action) {
       if (state.tabs.length == 0) {
         return;

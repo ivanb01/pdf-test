@@ -107,15 +107,15 @@ const SignIn = () => {
   const brokerageNameOptions = [
     {
       id: 1,
-      label: 'Oxford Property Group',
+      name: 'Oxford Property Group',
     },
     {
       id: 2,
-      label: 'Level Group',
+      name: 'Level Group',
     },
     {
       id: 3,
-      label: 'Spire Group',
+      name: 'Spire Group',
     },
   ];
 

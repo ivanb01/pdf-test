@@ -12,7 +12,7 @@ export const tabs = (contactId, contact) => {
   const clientTabs = [
     {
       id: 0,
-      name: contact?.category_2 === 'Landlord' || contact?.category_2 === 'Seller' ? 'Comps' : 'Looking for',
+      name: 'Looking for',
       href: '#',
       icon: <Home />,
       content: <LookingForContent category={contact?.category_2} contactId={contactId} />,

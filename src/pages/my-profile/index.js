@@ -114,7 +114,7 @@ const index = () => {
       <>
         <TopBar text="Account Management" />
         <div className="p-6">
-          <div className="font-medium mb-6">Smart Sync Contacts and Google Contacts from Gmail</div>
+          <div className="font-medium mb-6 text-gray-900">Smart Sync Contacts and Google Contacts from Gmail</div>
           <div className=" w-fit rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
@@ -144,7 +144,7 @@ const index = () => {
           {showDeleteFunctionality && (
             <>
               <hr className="my-6" />
-              <div className="font-medium">Delete Your Account</div>
+              <div className="font-medium text-gray-900">Delete Your Account</div>
               <div className="text-sm text-gray-700 mt-1 mb-6">
                 By deleting your account, you will no longer be able to access any information within the platform or
                 login to Oneline.
