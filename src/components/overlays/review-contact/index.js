@@ -591,18 +591,22 @@ const ReviewContact = ({
                   label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
-                    vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType)
+                    vendorSubtypes?.map((item) => item.id).includes(formik.values.selectedContactType)
                       ? 8
                       : formik.values.selectedContactType
                   }
-                  setSelectedOption={(e) => formik.setFieldValue('selectedContactType', e)}
+                  setSelectedOption={(e) => {
+                    formik.setFieldValue('selectedContactType', e);
+                    console.log(formik.values.selectedContactType);
+                  }}
                   className="mb-6"
                   name="type-of-contact"
                   error={errors.selectedContactType && touched.selectedContactType}
                   errorText={errors.selectedContactType}
                 />
               )}
-              {vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType) ? (
+              {vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType) ||
+              formik.values.selectedContactType == 8 ? (
                 <>
                   <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
                   <div className="flex flex-wrap">
