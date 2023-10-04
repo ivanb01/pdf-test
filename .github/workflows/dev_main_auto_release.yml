@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: development
 
       - name: Push changes to main
         run: |
