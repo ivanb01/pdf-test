@@ -10,10 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: List all branches
+        run: git branch -a
+        
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           ref: development
+          fetch-depth: 0
 
       - name: Push changes to main
         run: |
