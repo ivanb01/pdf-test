@@ -86,7 +86,7 @@ const index = () => {
     const filteredCampaigns = campaignCards.filter(
       (campaign) =>
         (campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.category_1.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          campaign.status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
         campaign.category_1 === category,
     );
 
