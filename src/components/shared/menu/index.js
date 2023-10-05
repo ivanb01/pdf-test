@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import oneLineLogo from '/public/images/oneline_logo_white.svg';
 import MenuLink from 'components/Link/MenuLink';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
 import Button from '../button';
 import { useSelector } from 'react-redux';
@@ -15,14 +15,7 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import {
-  setCount,
-  setOpenedTab,
-  setRefetchCount,
-  setRefetchData,
-  setSkippedEmptyState,
-  setUserGaveConsent,
-} from '@store/global/slice';
+import { setCount, setOpenedTab, setRefetchData, setSkippedEmptyState, setUserGaveConsent } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
@@ -34,10 +27,15 @@ const MainMenu = ({
       name: 'Contacts',
       url: '/contacts/clients',
     },
+    // {
+    //   id: 1,
+    //   name: 'Campaigns',
+    //   url: '/campaigns/client-campaigns',
+    // },
     {
       id: 1,
       name: 'Campaigns',
-      url: '/campaigns/client-campaigns',
+      url: '/campaign',
     },
     {
       id: 2,
@@ -132,12 +130,15 @@ const MainMenu = ({
       });
     }
   }, []);
+  useEffect(() => {
+    console.log(router.pathname);
+  }, [router.pathname]);
 
   return (
     <div
-      className={`${
-        fixed && 'fixed top-0 left-0 right-0'
-      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
+      className={`${fixed && 'fixed top-0 left-0 right-0'} main-menu px-6 py-4 ${
+        !router.pathname.includes('/campaign') ? 'bg-oxford-gradient' : 'bg-campaignHeader'
+      } z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
           <Image
@@ -156,7 +157,13 @@ const MainMenu = ({
               return (
                 <MenuLink
                   key={item.id}
-                  className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
+                  className={`mr-5 ${
+                    item.url.split('/')[1] === 'campaign' && router.pathname.split('/')[1] === 'campaign'
+                      ? 'active-campaign'
+                      : router.pathname.split('/')[1] == item.url.split('/')[1] && item.url.split('/')[1] !== 'campaign'
+                      ? 'active'
+                      : ''
+                  }`}
                   onClick={() => {
                     dispatch(setOpenedTab(0));
                     router.push(item.url);
@@ -169,33 +176,41 @@ const MainMenu = ({
         </div>
       </div>
       <div className="flex items-center">
-        {allContacts && allContacts.length > 0 && (
-          <SearchIcon
-            className="h-[18px] w-[18px] text-white box-content p-2 rounded-full hover:bg-menuHover cursor-pointer"
-            onClick={() => {
-              setOpenGlobalSearch(true);
-            }}
-          />
-        )}
-        {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
-        {showUncategorizedButton() && (
-          <Button
-            label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
-            narrow
-            success={showSuccessButton()}
-            className="mr-4 ml-4"
-            onClick={() =>
-              router.push({
-                pathname: '/contacts/uncategorized',
-                query: { categorize: true },
-              })
-            }
-          />
+        {!router.pathname.includes('campaign') && (
+          <>
+            {allContacts && allContacts.length > 0 && (
+              <SearchIcon
+                className={`h-[18px] w-[18px] text-white box-content p-2 rounded-full  ${
+                  !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+                } cursor-pointer`}
+                onClick={() => {
+                  setOpenGlobalSearch(true);
+                }}
+              />
+            )}
+            {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
+            {showUncategorizedButton() && (
+              <Button
+                label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
+                narrow
+                success={showSuccessButton()}
+                className="mr-4 ml-4"
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/uncategorized',
+                    query: { categorize: true },
+                  })
+                }
+              />
+            )}
+          </>
         )}
         <div className="">
           <button
             label="Need Help?"
-            className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
+            className={`text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4  ${
+              !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+            } text-white`}
             onClick={() => {
               FreshworksWidget('open');
             }}>
@@ -264,7 +279,7 @@ const MainMenu = ({
                   {({ active }) => (
                     <a
                       href="#"
-                      className={'text-gray6 flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'}
+                      className={'text-gray6 flex items-center px-4 py-2 text-sm bg-red hover:bg-lightBlue2'}
                       onClick={handleSignOut}>
                       <Logout className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Logout
