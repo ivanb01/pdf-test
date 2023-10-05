@@ -143,9 +143,6 @@ export default function Details() {
   }, [refetchData]);
 
   useEffect(() => {
-    console.log(contact);
-  }, [contact]);
-  useEffect(() => {
     if (contacts) {
       id && fetchContact();
     }
