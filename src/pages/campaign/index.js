@@ -8,6 +8,7 @@ import CustomCampaign from '@components/campaign/CustomCampaign';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const campaignCards = [
     {
       title: 'Campaign Title',
@@ -82,7 +83,12 @@ const index = () => {
   ];
   const uniqueCategories = ['Renter', 'Buyers', 'Sellers', 'Landlords'];
   const renderCampaignWrapper = (category) => {
-    const filteredCampaigns = campaignCards.filter((campaign) => campaign.category_1 === category);
+    const filteredCampaigns = campaignCards.filter(
+      (campaign) =>
+        (campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          campaign.category_1.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        campaign.category_1 === category,
+    );
 
     return (
       <CampaignWrapper
@@ -140,7 +146,7 @@ const index = () => {
         <Search
           placeholder="Search for campaign title or client status..."
           className="text-sm w-[550px]"
-          // onChange={(event) => setSearchTerm(event.target.value)}
+          onChange={(event) => setSearchTerm(event.target.value)}
         />
       </div>
       <div className={'w-100 flex items-center'}>
