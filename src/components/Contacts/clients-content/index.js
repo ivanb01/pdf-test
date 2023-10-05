@@ -69,7 +69,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     },
     {
       title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'Smart Sync A.I.', 'Gmail', 'Manually Added'],
+      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
       value: 'import_source_text',
     },
     {
