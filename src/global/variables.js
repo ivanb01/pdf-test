@@ -250,74 +250,74 @@ export const allStatusesQuickEdit = {
   clients: [
     {
       id: 2,
-      name: 'New Lead',
+      label: 'New Lead',
       color: 'bg-lightBlue1',
     },
     {
       id: 3,
-      name: 'Attempted Contact',
+      label: 'Attempted Contact',
       color: 'bg-lightBlue2',
     },
     {
       id: 5,
-      name: 'In Communication',
+      label: 'In Communication',
       color: 'bg-purple1',
     },
     {
       id: 4,
-      name: 'Appointment Set',
+      label: 'Appointment Set',
       color: 'bg-purple2',
     },
     {
       id: 7,
-      name: 'Actively Working',
+      label: 'Actively Working',
       color: 'bg-purple3',
     },
     {
       id: 16,
-      name: 'Offer Submitted',
+      label: 'Offer Submitted',
       color: 'bg-purple4',
     },
     {
       id: 9,
-      name: 'Contract Signed',
+      label: 'Contract Signed',
       color: 'bg-green8',
     },
     {
       id: 10,
-      name: 'Closed Client',
+      label: 'Closed Client',
       color: 'bg-green2',
     },
     {
       id: 8,
-      name: 'On Hold',
+      label: 'On Hold',
       color: 'bg-orange2',
     },
     {
       id: 11,
-      name: 'Dropped',
+      label: 'Dropped',
       color: 'bg-red2',
     },
   ],
   professionals: [
     {
       id: 13,
-      name: 'No Relationship',
+      label: 'No Relationship',
       color: 'bg-lightBlue1',
     },
     {
       id: 14,
-      name: 'Loose Relationship',
+      label: 'Loose Relationship',
       color: 'bg-lightBlue2',
     },
     {
       id: 15,
-      name: 'Strong Relationship',
+      label: 'Strong Relationship',
       color: 'bg-purple1',
     },
     {
       id: 11,
-      name: 'Dropped',
+      label: 'Dropped',
       color: 'bg-red2',
     },
   ],
@@ -567,19 +567,19 @@ export const uncategorizedStatuses = [
 export const relationshipsTypes = [
   {
     id: 0,
-    name: 'Friend',
+    label: 'Friend',
   },
   {
     id: 1,
-    name: 'Spouse',
+    label: 'Spouse',
   },
   {
     id: 2,
-    name: 'Roommate',
+    label: 'Roommate',
   },
   {
     id: 3,
-    name: 'Co-worker',
+    label: 'Co-worker',
   },
 ];
 
@@ -698,55 +698,55 @@ export const leadSourceOptions = [
   // },
   {
     id: 3,
-    name: 'Cold Call',
+    label: 'Cold Call',
   },
   {
     id: 4,
-    name: 'Company Website',
+    label: 'Company Website',
   },
   {
     id: 5,
-    name: 'Craigslist',
+    label: 'Craigslist',
   },
   {
     id: 6,
-    name: 'Facebook',
+    label: 'Facebook',
   },
   {
     id: 7,
-    name: 'Instagram',
+    label: 'Instagram',
   },
   {
     id: 8,
-    name: 'OpCity',
+    label: 'OpCity',
   },
   {
     id: 9,
-    name: 'Referral',
+    label: 'Referral',
   },
   {
     id: 10,
-    name: 'Renthop',
+    label: 'Renthop',
   },
   {
     id: 11,
-    name: 'Streeteasy',
+    label: 'Streeteasy',
   },
   {
     id: 12,
-    name: 'Trulia',
+    label: 'Trulia',
   },
   {
     id: 13,
-    name: 'Zillow',
+    label: 'Zillow',
   },
   {
     id: 14,
-    name: 'Zumper',
+    label: 'Zumper',
   },
   {
     id: 15,
-    name: 'Other',
+    label: 'Other',
   },
 ];
 
@@ -1898,26 +1898,87 @@ export const NYCneighborhoods = [
 export const activityTypes = [
   {
     id: 1,
-    name: 'Email',
+    label: 'Email',
   },
   {
     id: 2,
-    name: 'SMS',
+    label: 'SMS',
   },
   {
     id: 3,
-    name: 'Phone Call',
+    label: 'Phone Call',
   },
   {
     id: 4,
-    name: 'Social Media',
+    label: 'Social Media',
   },
   {
     id: 5,
-    name: 'In Person',
+    label: 'In Person',
   },
   {
     id: 6,
-    name: 'Other',
+    label: 'Other',
   },
+];
+
+export const rentalPriceOptions = [
+  { id: 1, value: 500, label: '$500' },
+  { id: 2, value: 750, label: '$750' },
+  { id: 3, value: 1000, label: '$1,000' },
+  { id: 4, value: 1250, label: '$1,250' },
+  { id: 5, value: 1500, label: '$1,500' },
+  { id: 6, value: 1750, label: '$1,750' },
+  { id: 7, value: 2000, label: '$2,000' },
+  { id: 8, value: 2500, label: '$2,500' },
+  { id: 9, value: 3000, label: '$3,000' },
+  { id: 10, value: 3500, label: '$3,500' },
+  { id: 11, value: 4000, label: '$4,000' },
+  { id: 12, value: 4500, label: '$4,500' },
+  { id: 13, value: 5000, label: '$5,000' },
+  { id: 14, value: 6000, label: '$6,000' },
+  { id: 15, value: 7000, label: '$7,000' },
+  { id: 16, value: 8000, label: '$8,000' },
+  { id: 17, value: 9000, label: '$9,000' },
+  { id: 18, value: 10000, label: '$10,000' },
+  { id: 19, value: 12500, label: '$12,500' },
+  { id: 20, value: 15000, label: '$15,000' },
+];
+
+export const salePriceOptions = [
+  { id: 21, value: 100000, label: '$100,000' },
+  { id: 22, value: 150000, label: '$150,000' },
+  { id: 23, value: 200000, label: '$200,000' },
+  { id: 24, value: 250000, label: '$250,000' },
+  { id: 25, value: 300000, label: '$300,000' },
+  { id: 26, value: 400000, label: '$400,000' },
+  { id: 27, value: 500000, label: '$500,000' },
+  { id: 28, value: 600000, label: '$600,000' },
+  { id: 29, value: 700000, label: '$700,000' },
+  { id: 30, value: 800000, label: '$800,000' },
+  { id: 31, value: 900000, label: '$900,000' },
+  { id: 32, value: 1000000, label: '$1,000,000' },
+  { id: 33, value: 1250000, label: '$1,250,000' },
+  { id: 34, value: 1500000, label: '$1,500,000' },
+  { id: 35, value: 1750000, label: '$1,750,000' },
+  { id: 36, value: 2000000, label: '$2,000,000' },
+  { id: 37, value: 2250000, label: '$2,250,000' },
+  { id: 38, value: 2500000, label: '$2,500,000' },
+  { id: 39, value: 2750000, label: '$2,750,000' },
+  { id: 40, value: 3000000, label: '$3,000,000' },
+  { id: 41, value: 3500000, label: '$3,500,000' },
+  { id: 42, value: 4000000, label: '$4,000,000' },
+  { id: 43, value: 4500000, label: '$4,500,000' },
+  { id: 44, value: 5000000, label: '$5,000,000' },
+  { id: 45, value: 6000000, label: '$6,000,000' },
+  { id: 46, value: 7000000, label: '$7,000,000' },
+  { id: 47, value: 8000000, label: '$8,000,000' },
+  { id: 48, value: 9000000, label: '$9,000,000' },
+  { id: 49, value: 10000000, label: '$10,000,000' },
+  { id: 50, value: 12000000, label: '$12,000,000' },
+  { id: 51, value: 14000000, label: '$14,000,000' },
+  { id: 52, value: 16000000, label: '$16,000,000' },
+  { id: 53, value: 20000000, label: '$20,000,000' },
+  { id: 54, value: 25000000, label: '$25,000,000' },
+  { id: 55, value: 30000000, label: '$30,000,000' },
 ];
