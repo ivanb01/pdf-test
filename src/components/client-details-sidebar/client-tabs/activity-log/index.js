@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { updateContactLocally } from '@store/contacts/slice';
 import { createPortal } from 'react-dom';
+import { formatDateLL } from '@global/functions';
 
 export default function ActivityLog({ contactId, source, contact }) {
   const dispatch = useDispatch();
@@ -114,7 +115,7 @@ export default function ActivityLog({ contactId, source, contact }) {
   //   if (source == 'GmailAI') fetchAiPreview(contactId);
   // }, []);
   const getSource = (source) => {
-    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'AI Smart Synced Contact.') {
       return {
         name: 'AI Smart Synced Contact.',
         icon: <AIChip reviewed={clients.approved_ai === false} />,
@@ -208,6 +209,9 @@ export default function ActivityLog({ contactId, source, contact }) {
               positionClass={'transformDropdown w-[175px]'}
             />
           </div>
+          {(getSource(source).name === 'AI Smart Synced Contact.' || getSource(source).name === 'GmailAI') && (
+            <div className="text-xs mb-2 text-gray4 font-medium">Date Imported: {formatDateLL(contact.created_at)}</div>
+          )}
           <div className={'flex justify-between items-center pb-3 border-b border-gray2'}>
             <h6 className={'text-sm leading-5 font-medium text-gray4'}>Imported from</h6>
             <div className={'flex gap-1 items-center justify-center'}>
