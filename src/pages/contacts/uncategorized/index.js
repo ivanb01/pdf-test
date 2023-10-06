@@ -113,7 +113,7 @@ const index = () => {
             setCategorizing={setCategorizing}
             types={types}
             unapprovedContacts={
-              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+              unapprovedContacts?.data.filter((contact) => contact.category_id == 1 || contact.category_id == 2).length
             }
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
