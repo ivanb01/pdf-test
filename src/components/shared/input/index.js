@@ -23,6 +23,7 @@ const Input = ({
   placeholder = '',
   onKeyDown,
   onInput,
+  onBlur,
   onChange,
   iconBefore,
   iconAfter,
@@ -49,6 +50,7 @@ const Input = ({
           id={id}
           placeholder={placeholder}
           onInput={onInput}
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
@@ -70,6 +72,7 @@ const Input = ({
           id={id}
           placeholder={placeholder}
           onInput={onInput}
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
@@ -94,6 +97,7 @@ const Input = ({
           placeholder={placeholder}
           onInput={onInput}
           onChange={onChange}
+          onBlur={onBlur}
           onKeyDown={onKeyDown}
           value={value}
           readOnly={saved || readonly}

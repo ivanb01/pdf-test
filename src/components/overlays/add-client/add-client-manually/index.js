@@ -50,6 +50,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
+  const [emailValidated, setEmailValidated] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -77,6 +78,23 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }),
   });
 
+  const validateEmail = async () => {
+    try {
+      const { data } = await findContactByEmail({ email: formik.values.email });
+      if (data) {
+        setExistingContactEmailError('This email already exists!');
+        setExistingContactEmail(formik.values.email);
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        setExistingContactEmailError('');
+        setExistingContactEmail('');
+      }
+    } finally {
+      setEmailValidated(true);
+    }
+  };
+
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -91,20 +109,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     },
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      try {
-        const { data } = await findContactByEmail({ email: values.email });
-        if (data) {
-          setExistingContactEmailError('This email already exists!');
-          setExistingContactEmail(values.email);
-        }
-      } catch (error) {
-        console.log(error);
-        if (error.response.status === 404) {
-          setExistingContactEmailError('');
-          setExistingContactEmail('');
-          setCurrentStep(currentStep + 1);
-        }
-      }
       setSubmitting(false);
     },
   });
@@ -132,7 +136,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   } = formikStep2;
 
   const nextStep = () => {
-    submitForm1();
+    if (!existingContactEmailError && emailValidated) setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
@@ -243,7 +247,11 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                         if (existingContactEmail !== e.target.value) {
                           setExistingContactEmailError('');
                         }
+                        setEmailValidated(false);
                         formik.setFieldValue('email', e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        validateEmail();
                       }}
                       value={formik.values.email}
                       error={(errors.email && touched.email) || existingContactEmailError}
