@@ -7,7 +7,8 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 const validationSchemaWithListingUrl = Yup.object({
   listingUrl: Yup.string().url('Invalid URL format').required('Listing URL is required'),
   note: Yup.string().optional(),
@@ -33,7 +34,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
       <form onSubmit={formik.handleSubmit}>
         <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
           <div className={'flex-1 relative'}>
-            <ImageGallery images={template} preview={true} />
+            <ImageGallery images={template} className={'object-cover'} includeZoom={false} />
           </div>
           <div className={'flex-1 '}>
             <div className={'flex flex-col gap-6 '}>
@@ -89,7 +90,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
 };
 
 export default OrderTemplate;
-export const ImageGallery = ({ images, className, preview }) => {
+export const ImageGallery = ({ images, className, includeZoom }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
   const showPrevButton = showButtons && currentIndex > 0;
@@ -104,44 +105,34 @@ export const ImageGallery = ({ images, className, preview }) => {
 
   return (
     <>
-      <img
-        className={`${className} w-full object-cover rounded-lg`}
-        src={images[currentIndex].src}
-        style={{ height: '500px' }}
-      />
-      {showPrevButton &&
-        (preview ? (
-          <div
-            className={
-              'absolute top-[50%] left-[20px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-            }>
-            <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
-          </div>
-        ) : (
-          <div
-            className={
-              'absolute top-[100%] left-[50px] h-[30px] w-[30px] rounded-full bg-lightBlue4 flex items-center justify-center text-white cursor-pointer'
-            }>
-            <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
-          </div>
-        ))}
+      {includeZoom ? (
+        <Zoom zoomMargin={45}>
+          <img
+            className={`${className} w-full rounded-lg`}
+            src={images[currentIndex].src}
+            style={{ height: '500px' }}
+          />
+        </Zoom>
+      ) : (
+        <img className={`${className} w-full rounded-lg`} src={images[currentIndex].src} style={{ height: '500px' }} />
+      )}
 
-      {showNextButton &&
-        (preview ? (
-          <div
-            className={
-              'absolute right-[20px] top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-            }>
-            <KeyboardArrowRightIcon onClick={() => showNextImage()} />
-          </div>
-        ) : (
-          <div
-            className={
-              'absolute  right-[50px] top-[-10px] h-[30px] w-[30px] rounded-full text-white flex items-center justify-center bg-lightBlue4 cursor-pointer'
-            }>
-            <KeyboardArrowRightIcon onClick={() => showPrevImage()} />
-          </div>
-        ))}
+      {showPrevButton && (
+        <div
+          className={
+            'absolute top-[50%] left-[20px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
+          }>
+          <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
+        </div>
+      )}
+      {showNextButton && (
+        <div
+          className={
+            'absolute right-[20px] top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
+          }>
+          <KeyboardArrowRightIcon onClick={() => showNextImage()} />
+        </div>
+      )}
     </>
   );
 };
