@@ -184,7 +184,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       dispatch(setRefetchData(true));
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     } catch (error) {
       console.log(error);
       handleClose();
