@@ -66,7 +66,7 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedCopy?.length < 0 ? (
+        {uncategorizedCopy?.length > 0 ? (
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
