@@ -41,7 +41,7 @@ export default function Details() {
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
       console.log(error);
-      toast.error('Error fetching activity log');
+      toast.error('Error fetching activity');
     });
     const activityLogData = activityLogResponse.data;
     dispatch(setActivityLogData(activityLogData.data));

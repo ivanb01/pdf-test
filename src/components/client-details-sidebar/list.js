@@ -19,7 +19,7 @@ export const tabs = (contactId, contact) => {
     },
     {
       id: 1,
-      name: 'Activity Log',
+      name: 'Activity',
       href: '#',
       icon: <List />,
       content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
@@ -42,7 +42,7 @@ export const tabs = (contactId, contact) => {
   const othersTabs = [
     {
       id: 0,
-      name: 'Activity Log',
+      name: 'Activity',
       href: '#',
       icon: <List />,
       content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
