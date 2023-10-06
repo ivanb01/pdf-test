@@ -263,7 +263,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       errorText={errors.phone_number}
                     />
                     <TextArea
-                      className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+                      className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
                       id="summary"
                       label="Summary"
                       name={'summary'}

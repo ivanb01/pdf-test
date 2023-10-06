@@ -8,7 +8,6 @@ const GetSubtype = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getContactCategories().then((result) => {
-      console.log(result.data.data.filter((item) => item.category == 'Professional' && ![8, 12, 9].includes(item.id)));
       dispatch(
         setVendorSubtypes(
           result.data.data
