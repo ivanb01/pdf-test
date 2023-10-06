@@ -221,18 +221,7 @@ const index = () => {
 
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, []);
-
-  const handleKeyPress = (event) => {
-    console.log(event);
-    if (event.key === 'Enter') {
-      fetchProperties(filterValue, page);
-    }
-  };
-
-  useEffect(() => {
-    fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, status, minPrice, maxPrice, filterValue]);
+  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
@@ -264,7 +253,6 @@ const index = () => {
             onInput={(event) => {
               setSearchKey(event.target.value);
             }}
-            onKeyDown={handleKeyPress}
             value={searchKey}
           />
           {/* <SearchSelectInput
