@@ -32,7 +32,11 @@ export default function DateChip({
       {/*the icon below depends from lastcommuncation category type */}
       <Mail className="w-4 mr-1" />
       {/*{healthLastCommunicationDate[contactCategory][contactStatus] !== 0 ? (*/}
-      <TooltipComponent side={'bottom'} align="center" triggerElement={<span>{lastCommunicationLabel} </span>}>
+      <TooltipComponent
+        side={'bottom'}
+        align="center"
+        style={{ marginLeft: '55px' }}
+        triggerElement={<span>{lastCommunicationLabel} </span>}>
         <div style={{ width: '202px' }} className={`flex flex-col  gap-1.5`}>
           <h6 className={' text-xs leading-4 font-medium'}>
             Communication Health is {isHealthyCommunication ? 'good' : 'low'}!

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
-const TooltipComponent = ({ triggerElement, children, side, align, open, arrowPadding }) => {
+const TooltipComponent = ({ triggerElement, children, side, align, open, arrowPadding, style }) => {
   return (
     <Tooltip.Provider>
       <Tooltip.Root open={open} delayDuration={0}>
@@ -9,7 +9,7 @@ const TooltipComponent = ({ triggerElement, children, side, align, open, arrowPa
         <Tooltip.Portal>
           <Tooltip.Content
             arrowPadding={arrowPadding ?? 8}
-            style={{ zIndex: 999999 }}
+            style={{ zIndex: 999999, marginLeft: '50px', ...style }}
             className="TooltipContent text-white px-4 py-2"
             sideOffset={5}
             side={side}
