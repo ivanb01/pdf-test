@@ -298,9 +298,7 @@ const ReviewContact = ({
       }
       if (newData.category_id === 3 && router.pathname.includes('details')) {
         const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
-        const targetCategory = ['trash', 'uncategorized', 'other'].includes(lowercaseCategory)
-          ? lowercaseCategory
-          : `${lowercaseCategory}s`;
+        const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
 
         router.push(targetCategory);
       }
