@@ -47,6 +47,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
   const secondStep = () => {
     return (
       <>
+        <div></div>
         <div className="mb-6 text-center">
           <div className="flex justify-center">
             <img className="mb-2" src={img2.src}></img>
@@ -131,7 +132,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
 
   return (
     <Overlay className="w-[600px]" handleCloseOverlay={handleCloseOverlay}>
-      <div className="p-6">
+      <div className={`p-6 min-h-[450px] ${secondStep() && 'flex flex-col justify-between'}`}>
         {step == 0 ? firstStep() : step == 1 ? secondStep() : step == 2 ? thirdStep() : fourthStep()}
       </div>
     </Overlay>
