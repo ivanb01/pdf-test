@@ -150,7 +150,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     <>
       <div
         className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
-          pinned ? 'w-[315px]' : 'w-[62px]'
+          pinned ? 'w-[265px]' : 'w-[62px]'
         }`}>
         {showSSOverlay && (
           <SmartSyncOverlay
@@ -205,7 +205,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           })
                         }
                         className="group cursor-pointer pb-3 pt-0 flex items-center justify-start font-semibold text-blue-600">
-                        Re-import Google Contacts
+                        Re-import
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
                     </div>

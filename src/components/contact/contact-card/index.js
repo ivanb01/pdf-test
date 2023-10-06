@@ -2,7 +2,7 @@ import Badge from 'components/shared/badge';
 import DateChip from 'components/shared/chip/date-chip';
 // import { SpeakerphoneIcon } from '@heroicons/react/outline';
 import Edit from '@mui/icons-material/Edit';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { allStatusesQuickEdit } from 'global/variables';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,7 @@ import GoogleContact from '../../../../public/images/GoogleContact.png';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -142,22 +143,33 @@ export default function ContactCard({
                 contactCategory={categoryType}
               />
             )}
-            {contact.summary !== null ? (
-              <TooltipComponent
-                side={'right'}
-                align={'center'}
-                triggerElement={<div>{getSource(contact.import_source_text).icon}</div>}>
-                <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                  <div className={'flex gap-1.5 mb-1.5'}>
-                    {getSource(contact.import_source_text).icon}
-                    <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
+            <div className={'flex items-center gap-1.5'}>
+              <div>
+                <div className={'h-5'}>{getSource(contact.import_source_text).icon}</div>
+              </div>
+              {contact.summary !== null ? (
+                <TooltipComponent
+                  side={'right'}
+                  align={'center'}
+                  triggerElement={
+                    <InfoSharpIcon
+                      className={`text-gray3 hover:text-gray4 mb-1.5`}
+                      style={{ height: '18px', width: '18px' }}
+                      aria-hidden="true"
+                    />
+                  }>
+                  <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                    <div className={`flex gap-1.5`}>
+                      {getSource(contact.import_source_text).icon}
+                      <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
+                    </div>
+                    <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                   </div>
-                  <p className="text-xs leading-4 font-normal">{contact.summary}</p>
-                </div>
-              </TooltipComponent>
-            ) : (
-              <div>{getSource(contact.import_source_text).icon}</div>
-            )}
+                </TooltipComponent>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
         <div
