@@ -27,8 +27,8 @@ import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
 
-const MainMenu = ({
-  menuItems = [
+const MainMenu = ({ className, fixed }) => {
+  const [originalMenuItems, setOriginalMenuItems] = useState([
     {
       id: 0,
       name: 'Contacts',
@@ -54,10 +54,35 @@ const MainMenu = ({
       name: 'Properties',
       url: '/properties',
     },
-  ],
-  className,
-  fixed,
-}) => {
+  ]);
+
+  const [menuItems, setMenuItems] = useState([
+    {
+      id: 0,
+      name: 'Contacts',
+      url: '/contacts/clients',
+    },
+    {
+      id: 1,
+      name: 'Campaigns',
+      url: '/campaigns/client-campaigns',
+    },
+    {
+      id: 2,
+      name: 'Reports',
+      url: '/reports',
+    },
+    {
+      id: 3,
+      name: 'Marketing',
+      url: '/marketing',
+    },
+    {
+      id: 4,
+      name: 'Properties',
+      url: '/properties',
+    },
+  ]);
   const router = useRouter();
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
@@ -132,6 +157,14 @@ const MainMenu = ({
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (allContacts && !allContacts.length) {
+      setMenuItems(originalMenuItems.filter((item) => item.id != 1));
+    } else {
+      setMenuItems(originalMenuItems);
+    }
+  }, [allContacts]);
 
   return (
     <div
