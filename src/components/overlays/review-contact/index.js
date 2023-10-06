@@ -564,7 +564,7 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactCategory', e);
                   formik.setFieldValue('selectedContactType', '');
                   formik.setFieldValue('selectedContactSubtype', '');
-                  formik.setFieldValue('selectedContactStatus', '');
+                  formik.setFieldValue('selectedStatus', '');
                 }}
                 className="mb-6 mt-6"
                 name="category-of-contact"
