@@ -62,8 +62,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   useEffect(() => {
     if (allContacts && !allContacts?.length) {
-      console.log(allContacts);
-      setShowOnboarding(true);
+      if (window.location.pathname.includes('/contacts/clients')) setShowOnboarding(true);
     }
   }, [allContacts]);
 
