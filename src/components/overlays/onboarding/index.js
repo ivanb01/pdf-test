@@ -130,7 +130,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
   };
 
   return (
-    <Overlay className="w-[600px]">
+    <Overlay className="w-[600px]" handleCloseOverlay={handleCloseOverlay}>
       <div className="p-6">
         {step == 0 ? firstStep() : step == 1 ? secondStep() : step == 2 ? thirdStep() : fourthStep()}
       </div>

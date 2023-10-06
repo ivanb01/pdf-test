@@ -110,7 +110,7 @@ const MainMenu = ({
   }, [refetchData]);
 
   const showUncategorizedButton = () => {
-    return allContacts && allContacts.length;
+    return allContacts && allContacts.length > 0;
   };
 
   const showSuccessButton = () => {
