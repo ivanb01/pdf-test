@@ -394,7 +394,7 @@ const Table = ({
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                  className="px-3 py-3 text-xs font-medium uppercase  text-center tracking-wide text-gray-500">
                   Contact summary
                 </th>
               </tr>

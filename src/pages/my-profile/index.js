@@ -153,7 +153,9 @@ const index = () => {
               <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
             </>
           )}
-          <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
+          {showClearConfirmation && (
+            <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
+          )}
           {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">
             Password
