@@ -1682,12 +1682,14 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Email Summary
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
               Actions
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
+              className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1701,7 +1703,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
+              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center w-[200px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1728,29 +1730,29 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status w-[100px]">
                 <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 w-[100px]">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status w-[750px]">
                 <div className=" flex items-center">
+                  {dataItem.ai_email_summary && (
+                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
+                      <Launch className="h-5 w-5 text-blue-500 mr-2" />
+                    </a>
+                  )}
                   {dataItem.ai_email_summary ? (
                     <div className="email-summary-styling">{dataItem.ai_email_summary}</div>
                   ) : (
                     '-'
                   )}
-                  {dataItem.ai_email_summary && (
-                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
-                      <Launch className="h-5 w-5 text-blue-500 ml-2" />
-                    </a>
-                  )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 w-[100px]">
                 <div className="flex items-center justify-center">
                   <div
                     onMouseEnter={() => {
@@ -1827,7 +1829,7 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td className="pr-8"></td>
+              <td className="pr-1"></td>
             </tr>
           ))}
         </tbody>
