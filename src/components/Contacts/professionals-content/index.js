@@ -44,20 +44,6 @@ const tabs = [
     content: ['Google Contacts', 'Smart Sync A.I.', 'Gmail', 'Manually Added'],
     value: 'import_source_text',
   },
-  {
-    title: 'PROFESSIONAL STATUSES',
-    content: allStatusesQuickEdit['professionals'].map((item) => item.name),
-    value: 'status_2',
-  },
-  {
-    title: 'CAMPAIGN',
-    content: ['In Campaign', 'Not In Campaign'],
-    value: 'is_in_campaign',
-  }, // {
-  //   title: 'TAGS',
-  //   content: multiselectOptionsProfessionals.map((option) => option.label),
-  //   value: 'tags',
-  // },
 ];
 
 const campaignFilterMeaning = {

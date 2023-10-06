@@ -394,7 +394,7 @@ const Table = ({
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3 text-xs font-medium uppercase  text-center tracking-wide text-gray-500">
+                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
                   Contact summary
                 </th>
               </tr>
@@ -419,8 +419,8 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
-                    <div className={'flex gap-1.5 items-center justify-center'}>
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
+                    <div className={'flex gap-1.5 items-center'}>
                       {getSource(dataItem.import_source_text).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
                         {getSource(dataItem.import_source_text, dataItem.approved_ai).name}

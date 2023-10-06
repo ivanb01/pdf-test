@@ -44,7 +44,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       href: '#',
       status: 'current',
     },
-    { id: 2, name: 'Type and Status', href: '#' },
+    { id: 2, name: 'Type', href: '#' },
   ];
 
   const [existingContactEmailError, setExistingContactEmailError] = useState('');

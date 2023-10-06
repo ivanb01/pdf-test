@@ -162,7 +162,7 @@ const index = () => {
               </div>
             </div>
           ),
-          { duration: 900000 },
+          { duration: 5000 },
         );
     }
     setSelectedPeople([]);
