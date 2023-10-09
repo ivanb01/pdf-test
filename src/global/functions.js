@@ -68,9 +68,8 @@ export const getContactTypeByTypeId = (subtypes, typeId) => {
   }
   return foundType ? foundType : 'Unknown';
 };
-export const getContactStatusByStatusId = (subtypes, category, statusId) => {
-  console.log(clientStatuses, subtypes);
-  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : subtypes;
+export const getContactStatusByStatusId = (category, statusId) => {
+  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;
   let foundStatus = null;
   statuses.forEach((allStatuses) => {
     allStatuses.statuses.filter((type) => {
