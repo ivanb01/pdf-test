@@ -1,13 +1,15 @@
 import Select from 'react-select';
 import { multiselectOptionsClients, multiselectOptionsProfessionals, tagsForProfessionals } from 'global/variables';
 
-const TagsInput = ({ onChange, label, value, typeOfContact }) => {
+const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuClose }) => {
   return (
     <div className="w-full custom-chipinput-styles col-span-2">
       {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
       <Select
         isMulti
         value={value}
+        onMenuOpen={onMenuOpen}
+        onMenuClose={onMenuClose}
         options={multiselectOptionsClients}
         onChange={onChange}
         styles={{
@@ -50,6 +52,7 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
           menu: (base) => ({
             ...base,
             fontSize: '14px',
+            marginBottom: '100px',
           }),
           menuList: (base) => ({
             ...base,
@@ -65,8 +68,7 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
               color: 'white !important',
             },
           }),
-        }}
-      ></Select>
+        }}></Select>
     </div>
   );
 };

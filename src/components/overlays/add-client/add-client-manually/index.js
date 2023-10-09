@@ -54,7 +54,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   const [currentStep, setCurrentStep] = useState(1);
 
   const openedTab = useSelector((state) => state.global.openedTab);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
   const AddContactSchema = Yup.object().shape({
@@ -197,9 +197,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }
   };
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <MultiStepOverlay
       className="max-w-[730px] min-w-[730px]"
@@ -215,7 +212,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       isSubmittingButton={isSubmitting2}>
       <div className="step">
         {currentStep == 1 ? (
-          <SimpleBar style={{ maxHeight: '350px', height: '100%', padding: '3px' }} autoHide={true}>
+          <SimpleBar
+            style={{ maxHeight: '360px', height: '100%', padding: '24px', paddingTop: 0, paddingBottom: 0 }}
+            autoHide={true}>
             <div>
               {/* <div className="flex items-center mb-6">
               <Avatar size="large" className="mr-4" />
@@ -223,7 +222,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             </div> */}
               <div>
                 <form onSubmit={formik.handleSubmit}>
-                  <div className="grid grid-cols-2 gap-4 mb-12">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
                     <Input
                       type="text"
                       label="First Name"
@@ -282,26 +281,37 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       handleChange={formik.handleChange}
                       value={formik.values.summary}
                     />
-                    <Dropdown
-                      className="col-span-2"
-                      white
-                      label="Lead Source"
-                      activeIcon={false}
-                      options={leadSourceOptions}
-                      handleSelect={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
-                      initialSelect={formik.values.lead_source}
-                      placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                    />
-                    <TagsInput
-                      typeOfContact={openedTab}
-                      label="Priority"
-                      onChange={(choice) => {
-                        formik.setFieldValue(
-                          'tags',
-                          choice.map((el) => el.label),
-                        );
-                      }}
-                    />
+                    <div className={'grid grid-cols-2 gap-4 col-span-full'}>
+                      <div>
+                        <Dropdown
+                          openClassName={'mb-2 h-[245px]'}
+                          className="col-span-2 mb-5"
+                          white
+                          label="Lead Source"
+                          activeIcon={false}
+                          options={leadSourceOptions}
+                          handleSelect={(source) =>
+                            formik.setValues({ ...formik.values, ['lead_source']: source.label })
+                          }
+                          initialSelect={formik.values.lead_source}
+                          placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                        />
+                      </div>
+                      <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                        <TagsInput
+                          onMenuOpen={() => setIsMenuOpen(true)}
+                          onMenuClose={() => setIsMenuOpen(false)}
+                          typeOfContact={openedTab}
+                          label="Priority"
+                          onChange={(choice) => {
+                            formik.setFieldValue(
+                              'tags',
+                              choice.map((el) => el.label),
+                            );
+                          }}
+                        />
+                      </div>
+                    </div>
                     {/* <ChipInput
                     label="Tags"
                     optional
@@ -317,7 +327,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             </div>
           </SimpleBar>
         ) : (
-          <div>
+          <div className={'p-6 pt-0'}>
             <Radio
               options={options}
               label="What kind of contact is this for you?"
@@ -351,14 +361,16 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             ) : (
               ![8, 12, 15].includes(formikStep2.values.selectedContactType) &&
               formikStep2.values.selectedContactType && (
-                <StatusSelect
-                  selectedStatus={formikStep2.values.selectedStatus}
-                  setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-                  label="In what stage of communication?"
-                  statuses={statuses}
-                  error={errors2.selectedStatus && touched2.selectedStatus}
-                  errorText={errors2.selectedStatus}
-                />
+                <div className={'mt-2'}>
+                  <StatusSelect
+                    selectedStatus={formikStep2.values.selectedStatus}
+                    setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+                    label="In what stage of communication?"
+                    statuses={statuses}
+                    error={errors2.selectedStatus && touched2.selectedStatus}
+                    errorText={errors2.selectedStatus}
+                  />
+                </div>
               )
             )}
           </div>
