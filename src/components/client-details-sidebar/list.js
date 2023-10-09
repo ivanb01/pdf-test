@@ -19,7 +19,7 @@ export const tabs = (contactId, contact) => {
     },
     {
       id: 1,
-      name: 'Activity Log',
+      name: 'Activity',
       href: '#',
       icon: <List />,
       content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
@@ -42,7 +42,7 @@ export const tabs = (contactId, contact) => {
   const othersTabs = [
     {
       id: 0,
-      name: 'Activity Log',
+      name: 'Activity',
       href: '#',
       icon: <List />,
       content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
@@ -62,7 +62,27 @@ export const tabs = (contactId, contact) => {
       content: <NotesContent contactId={contactId} />,
     },
   ];
-  return contact?.category_1 != 'Client' ? othersTabs : clientTabs;
+  const professionalsTabs = [
+    {
+      id: 0,
+      name: 'Activity',
+      href: '#',
+      icon: <List />,
+      content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
+    },
+    {
+      id: 2,
+      name: 'Notes',
+      href: '#',
+      icon: <Note />,
+      content: <NotesContent contactId={contactId} />,
+    },
+  ];
+  return contact?.category_1 == 'Professional'
+    ? professionalsTabs
+    : contact?.category_1 != 'Client'
+    ? othersTabs
+    : clientTabs;
 };
 
 export const inputs = [

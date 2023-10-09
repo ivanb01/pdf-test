@@ -31,7 +31,7 @@ const index = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [filterValue, setFilterValue] = useState('newest');
-  const [searchKey, setSearchKey] = useState();
+  const [searchKey, setSearchKey] = useState('');
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [status, setStatus] = useState();
   const [bedrooms, setBedrooms] = useState();
@@ -216,16 +216,12 @@ const index = () => {
     setStatus();
     setBedrooms();
     setBathrooms();
-    setSearchKey();
+    setSearchKey('');
   };
 
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, []);
-
-  useEffect(() => {
-    fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice, filterValue]);
+  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 

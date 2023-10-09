@@ -419,9 +419,9 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
-                    <div className={'flex gap-1.5 items-center justify-center'}>
-                      {getSource(dataItem.import_source_text).icon}
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
+                    <div className={'flex gap-1.5 items-center justify-start'}>
+                      {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
                         {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                       </p>
@@ -531,9 +531,9 @@ const Table = ({
                   )} */}
                     </td>
                     {tableFor != 'in-categorization' && (
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
-                          {getSource(dataItem.import_source_text).icon}
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                        <div className={'flex gap-1.5 items-center justify-start'}>
+                          {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                           </p>
@@ -639,7 +639,7 @@ const Table = ({
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
                       {dataItem.category_id != null && (
-                        <Chip typeStyle>{getContactTypeByTypeId(dataItem.category_id)}</Chip>
+                        <Chip typeStyle>{getContactTypeByTypeId(vendorSubtypes, dataItem.category_id)}</Chip>
                       )}
                       {showStatus(dataItem) && (
                         <Chip
@@ -768,7 +768,6 @@ const Table = ({
     const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
-    useEffect(() => console.log(contacts.status_1), [contacts]);
     const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
@@ -875,7 +874,7 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
@@ -939,7 +938,7 @@ const Table = ({
                     </div>
                   </td>
                 </tr>
-                {filterContacts(category, contactTypes).length > 0 ? (
+                {filterContacts(category, contactTypes).length ? (
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
@@ -965,8 +964,8 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                        <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1127,7 +1126,52 @@ const Table = ({
                 )}
               </div>
             ) : (
-              <></>
+              <>
+                <div key={category.id}>
+                  <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
+                    <td colSpan="10">
+                      <div className="flex items-center px-6 py-2">
+                        <Text chipText className="text-gray4 mr-1">
+                          {category.name == 'Vendor' ? 'Other Vendors' : category.name}
+                        </Text>
+                        <TooltipComponent
+                          side={'bottom'}
+                          align={'start'}
+                          triggerElement={
+                            <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          }>
+                          <div
+                            // style={{ width: '300px' }}
+                            className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                            <p className="mb-2">{`You must interact with these clients every ${
+                              healthLastCommunicationDate[categoryType][category?.name] === 1
+                                ? 'day'
+                                : `${healthLastCommunicationDate[categoryType][category?.name]} days`
+                            } in order to maintain healthy communication.`}</p>
+                            <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center mr-2">
+                                <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
+                                <span>Healthy Communication</span>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
+                                <span>Unhealthy Communication</span>
+                              </div>
+                            </div>
+                          </div>
+                        </TooltipComponent>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                    <td colSpan={6} className={'text-center pt-[30px]'}>
+                      No Contacts
+                    </td>
+                  </tr>
+                </div>
+              </>
             ),
           )}
         </tbody>
@@ -1201,7 +1245,7 @@ const Table = ({
             >
               Type
             </th> */}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -1258,8 +1302,8 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                          <div className={'flex gap-1.5 items-center justify-center'}>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <div className={'flex gap-1.5 items-center justify-start'}>
                             {getSource(contact.import_source_text, contact.approved_ai).icon}
                             <p className={'text-xs leading-4 font-medium text-gray8'}>
                               {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1528,7 +1572,7 @@ const Table = ({
         <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
-              key={dataItem.index}
+              key={index}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >
@@ -1619,7 +1663,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center ">
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px] ">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1629,7 +1673,9 @@ const Table = ({
               />
               Contact
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -1638,12 +1684,14 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Email Summary
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
               Actions
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
+              className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1657,7 +1705,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:min-w-[340px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1684,29 +1732,29 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[100px]">
                 <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[750px]">
                 <div className=" flex items-center">
+                  {dataItem.ai_email_summary && (
+                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
+                      <Launch className="h-5 w-5 text-blue-500 mr-2" />
+                    </a>
+                  )}
                   {dataItem.ai_email_summary ? (
                     <div className="email-summary-styling">{dataItem.ai_email_summary}</div>
                   ) : (
                     '-'
                   )}
-                  {dataItem.ai_email_summary && (
-                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
-                      <Launch className="h-5 w-5 text-blue-500 ml-2" />
-                    </a>
-                  )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
                 <div className="flex items-center justify-center">
                   <div
                     onMouseEnter={() => {
@@ -1783,7 +1831,7 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              <td className="pr-8"></td>
+              <td className="pr-1"></td>
             </tr>
           ))}
         </tbody>

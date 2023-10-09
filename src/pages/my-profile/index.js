@@ -19,8 +19,10 @@ import { useSelector } from 'react-redux';
 import { getUserConsentForGoogleEmail } from '@api/google';
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
+import ClearContacts from '@components/overlays/clear-all-contacts';
 
 const index = () => {
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
@@ -144,13 +146,15 @@ const index = () => {
           {showDeleteFunctionality && (
             <>
               <hr className="my-6" />
-              <div className="font-medium">Delete Your Account</div>
+              <div className="font-medium">Clear Your Contacts</div>
               <div className="text-sm text-gray-700 mt-1 mb-6">
-                By deleting your account, you will no longer be able to access any information within the platform or
-                login to Oneline.
+                By clicking the button below, all contacts will be cleared from your account
               </div>
-              <Button white label="Delete Account" onClick={() => deleteData()} />
+              <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
             </>
+          )}
+          {showClearConfirmation && (
+            <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
           )}
           {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">

@@ -66,7 +66,7 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedCopy?.length ? (
+        {uncategorizedCopy?.length > 0 ? (
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
@@ -157,7 +157,7 @@ const Uncategorized = ({
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'New Records' : 'Unknown'}
+                  New Records
                 </Text>
                 {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">

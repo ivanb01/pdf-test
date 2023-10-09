@@ -53,7 +53,7 @@ export const removeClientFromArray = (clientList, clientEmail) => {
   });
 };
 
-export const getContactTypeByTypeId = (typeId) => {
+export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
     allTypes.types.filter((type) => {
@@ -62,6 +62,10 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
+
+  if (!foundType) {
+    foundType = subtypes.find((subtype) => subtype.id == typeId).name;
+  }
   return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {

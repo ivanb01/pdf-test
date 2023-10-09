@@ -298,9 +298,7 @@ const ReviewContact = ({
       }
       if (newData.category_id === 3 && router.pathname.includes('details')) {
         const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
-        const targetCategory = ['trash', 'uncategorized', 'other'].includes(lowercaseCategory)
-          ? lowercaseCategory
-          : `${lowercaseCategory}s`;
+        const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
 
         router.push(targetCategory);
       }
@@ -566,7 +564,7 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactCategory', e);
                   formik.setFieldValue('selectedContactType', '');
                   formik.setFieldValue('selectedContactSubtype', '');
-                  formik.setFieldValue('selectedContactStatus', '');
+                  formik.setFieldValue('selectedStatus', '');
                 }}
                 className="mb-6 mt-6"
                 name="category-of-contact"
@@ -591,7 +589,7 @@ const ReviewContact = ({
                   }
                   setSelectedOption={(e) => {
                     formik.setFieldValue('selectedContactType', e);
-                    console.log(formik.values.selectedContactType);
+                    formik.setFieldValue('selectedContactSubtype', '');
                   }}
                   className="mb-6"
                   name="type-of-contact"

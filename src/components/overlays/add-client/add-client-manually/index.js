@@ -1,7 +1,7 @@
 import Button from 'components/shared/button';
 import Avatar from 'components/shared/avatar';
 import Radio from 'components/shared/radio';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
@@ -44,16 +44,17 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       href: '#',
       status: 'current',
     },
-    { id: 2, name: 'Type and Status', href: '#' },
+    { id: 2, name: title == 'Add Client' ? 'Type and Status' : 'Type and Subtype', href: '#' },
   ];
 
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
+  const [emailValidated, setEmailValidated] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
   const openedTab = useSelector((state) => state.global.openedTab);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
   const AddContactSchema = Yup.object().shape({
@@ -77,6 +78,23 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }),
   });
 
+  const validateEmail = async () => {
+    try {
+      const { data } = await findContactByEmail({ email: formik.values.email });
+      if (data) {
+        setExistingContactEmailError('This email already exists!');
+        setExistingContactEmail(formik.values.email);
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        setExistingContactEmailError('');
+        setExistingContactEmail('');
+      }
+    } finally {
+      setEmailValidated(true);
+    }
+  };
+
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -91,20 +109,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     },
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      try {
-        const { data } = await findContactByEmail({ email: values.email });
-        if (data) {
-          setExistingContactEmailError('This email already exists!');
-          setExistingContactEmail(values.email);
-        }
-      } catch (error) {
-        console.log(error);
-        if (error.response.status === 404) {
-          setExistingContactEmailError('');
-          setExistingContactEmail('');
-          setCurrentStep(currentStep + 1);
-        }
-      }
       setSubmitting(false);
     },
   });
@@ -132,7 +136,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   } = formikStep2;
 
   const nextStep = () => {
-    submitForm1();
+    if (!existingContactEmailError && emailValidated) setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
@@ -184,12 +188,15 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       dispatch(setRefetchData(true));
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     } catch (error) {
       console.log(error);
       handleClose();
     }
   };
+
   return (
     <MultiStepOverlay
       className="max-w-[730px] min-w-[730px]"
@@ -205,7 +212,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       isSubmittingButton={isSubmitting2}>
       <div className="step">
         {currentStep == 1 ? (
-          <SimpleBar style={{ maxHeight: '350px', height: '100%', padding: '3px' }} autoHide={true}>
+          <SimpleBar
+            style={{ maxHeight: '360px', height: '100%', padding: '24px', paddingTop: 0, paddingBottom: 0 }}
+            autoHide={true}>
             <div>
               {/* <div className="flex items-center mb-6">
               <Avatar size="large" className="mr-4" />
@@ -213,7 +222,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             </div> */}
               <div>
                 <form onSubmit={formik.handleSubmit}>
-                  <div className="grid grid-cols-2 gap-4 mb-12">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
                     <Input
                       type="text"
                       label="First Name"
@@ -241,7 +250,11 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                         if (existingContactEmail !== e.target.value) {
                           setExistingContactEmailError('');
                         }
+                        setEmailValidated(false);
                         formik.setFieldValue('email', e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        validateEmail();
                       }}
                       value={formik.values.email}
                       error={(errors.email && touched.email) || existingContactEmailError}
@@ -261,33 +274,46 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       errorText={errors.phone_number}
                     />
                     <TextArea
-                      className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+                      className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
                       id="summary"
                       label="Summary"
                       name={'summary'}
                       handleChange={formik.handleChange}
                       value={formik.values.summary}
                     />
-                    <Dropdown
-                      className="col-span-2"
-                      white
-                      label="Lead Source"
-                      activeIcon={false}
-                      options={leadSourceOptions}
-                      handleSelect={(source) => (formik.values.lead_source = source.name)}
-                      initialSelect={formik.values.lead_source}
-                      placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                    />
-                    <TagsInput
-                      typeOfContact={openedTab}
-                      label="Priority"
-                      onChange={(choice) => {
-                        formik.setFieldValue(
-                          'tags',
-                          choice.map((el) => el.label),
-                        );
-                      }}
-                    />
+                    <div className={'grid grid-cols-2 gap-4 col-span-full'}>
+                      <div>
+                        <Dropdown
+                          openClassName={'mb-2 h-[245px]'}
+                          className="col-span-2 mb-5"
+                          white
+                          label="Lead Source"
+                          activeIcon={false}
+                          options={leadSourceOptions}
+                          handleSelect={(source) =>
+                            formik.setValues({ ...formik.values, ['lead_source']: source.label })
+                          }
+                          initialSelect={formik.values.lead_source}
+                          placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                        />
+                      </div>
+                      <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                        <TagsInput
+                          onMenuOpen={() => setIsMenuOpen(true)}
+                          onMenuClose={() => setIsMenuOpen(false)}
+                          typeOfContact={openedTab}
+                          label="Priority"
+                          value={findTagsOption(formik.values.tags, openedTab)}
+                          onChange={(choice) => {
+                            formik.setValues({ ...formik.values, ['tags']: choice.map((el) => el.value) });
+                            // formik.setFieldValue(
+                            //   'tags',
+                            //   choice.map((el) => el.label),
+                            // );
+                          }}
+                        />
+                      </div>
+                    </div>
                     {/* <ChipInput
                     label="Tags"
                     optional
@@ -303,7 +329,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             </div>
           </SimpleBar>
         ) : (
-          <div>
+          <div className={'p-6 pt-0'}>
             <Radio
               options={options}
               label="What kind of contact is this for you?"
@@ -337,14 +363,16 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             ) : (
               ![8, 12, 15].includes(formikStep2.values.selectedContactType) &&
               formikStep2.values.selectedContactType && (
-                <StatusSelect
-                  selectedStatus={formikStep2.values.selectedStatus}
-                  setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
-                  label="In what stage of communication?"
-                  statuses={statuses}
-                  error={errors2.selectedStatus && touched2.selectedStatus}
-                  errorText={errors2.selectedStatus}
-                />
+                <div className={'mt-2'}>
+                  <StatusSelect
+                    selectedStatus={formikStep2.values.selectedStatus}
+                    setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+                    label="In what stage of communication?"
+                    statuses={statuses}
+                    error={errors2.selectedStatus && touched2.selectedStatus}
+                    errorText={errors2.selectedStatus}
+                  />
+                </div>
               )
             )}
           </div>
