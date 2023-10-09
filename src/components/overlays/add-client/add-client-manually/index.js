@@ -303,11 +303,13 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                           onMenuClose={() => setIsMenuOpen(false)}
                           typeOfContact={openedTab}
                           label="Priority"
+                          value={findTagsOption(formik.values.tags, openedTab)}
                           onChange={(choice) => {
-                            formik.setFieldValue(
-                              'tags',
-                              choice.map((el) => el.label),
-                            );
+                            formik.setValues({ ...formik.values, ['tags']: choice.map((el) => el.value) });
+                            // formik.setFieldValue(
+                            //   'tags',
+                            //   choice.map((el) => el.label),
+                            // );
                           }}
                         />
                       </div>
