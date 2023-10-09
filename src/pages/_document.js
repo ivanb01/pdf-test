@@ -8,6 +8,7 @@ const Document = () => {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <script src="https://unpkg.com/flowbite@1.3.4/dist/datepicker.js"></script>
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <meta name="viewport" content="width=device-width"></meta>
         <script
           dangerouslySetInnerHTML={{
             __html: `
