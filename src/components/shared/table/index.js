@@ -1705,7 +1705,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center w-[300px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center w-[340px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
