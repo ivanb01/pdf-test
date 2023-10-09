@@ -267,11 +267,7 @@ const MainMenu = ({ className, fixed }) => {
             <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
-                  <img
-                    className="inline-block h-10 w-10 rounded-full"
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                    alt=""
-                  />
+                  <Image width={40} height={40} className="inline-block rounded-full" src={placeholder} alt="" />
                 </div>
                 <div className="max-w-[165px] w-full">
                   {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}

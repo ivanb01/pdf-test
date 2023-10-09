@@ -1572,7 +1572,7 @@ const Table = ({
         <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
-              key={dataItem.index}
+              key={index}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >

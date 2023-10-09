@@ -248,7 +248,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             className="absolute cursor-pointer"
             style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 1 }}>
             <div className="">
-              <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
+              <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
           </div>
         )}
