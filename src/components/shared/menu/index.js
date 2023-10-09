@@ -26,6 +26,7 @@ import {
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
+import Link from 'next/link';
 
 const MainMenu = ({ className, fixed }) => {
   const [originalMenuItems, setOriginalMenuItems] = useState([
@@ -187,15 +188,15 @@ const MainMenu = ({ className, fixed }) => {
           <ul className="flex items-center">
             {menuItems.map((item, index) => {
               return (
-                <MenuLink
-                  key={item.id}
-                  className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-                  onClick={() => {
-                    dispatch(setOpenedTab(0));
-                    router.push(item.url);
-                  }}>
-                  {item.name}
-                </MenuLink>
+                <Link href={item.url} key={item.id}>
+                  <MenuLink
+                    className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
+                    onClick={() => {
+                      dispatch(setOpenedTab(0));
+                    }}>
+                    {item.name}
+                  </MenuLink>
+                </Link>
               );
             })}
           </ul>
