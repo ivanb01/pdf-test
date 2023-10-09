@@ -53,7 +53,7 @@ export const removeClientFromArray = (clientList, clientEmail) => {
   });
 };
 
-export const getContactTypeByTypeId = (typeId) => {
+export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
     allTypes.types.filter((type) => {
@@ -62,10 +62,15 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
+
+  if (!foundType) {
+    foundType = subtypes.find((subtype) => subtype.id == typeId).name;
+  }
   return foundType ? foundType : 'Unknown';
 };
-export const getContactStatusByStatusId = (category, statusId) => {
-  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;
+export const getContactStatusByStatusId = (subtypes, category, statusId) => {
+  console.log(clientStatuses, subtypes);
+  let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : subtypes;
   let foundStatus = null;
   statuses.forEach((allStatuses) => {
     allStatuses.statuses.filter((type) => {

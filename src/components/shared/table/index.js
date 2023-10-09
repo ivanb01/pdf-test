@@ -639,7 +639,7 @@ const Table = ({
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
                       {dataItem.category_id != null && (
-                        <Chip typeStyle>{getContactTypeByTypeId(dataItem.category_id)}</Chip>
+                        <Chip typeStyle>{getContactTypeByTypeId(vendorSubtypes, dataItem.category_id)}</Chip>
                       )}
                       {showStatus(dataItem) && (
                         <Chip
