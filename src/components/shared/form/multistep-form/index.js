@@ -35,9 +35,9 @@ const MultiStepOverlay = ({
             </Text>
             <Button closeButton onClick={handleClose}></Button>
           </div>
-          <div className="p-6">
+          <div>
             {!hideHeader && (
-              <nav aria-label="Progress" className="mb-10">
+              <nav aria-label="Progress" className="mb-10 p-6 pb-0">
                 <ol role="list" className="space-y-4 md:flex md:space-y-0 md:space-x-8">
                   {steps.map(
                     (step) =>
