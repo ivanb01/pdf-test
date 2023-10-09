@@ -52,21 +52,25 @@ const MyApp = ({ Component, pageProps }) => {
       .then((item) => {
         localStorage.setItem('currentSession', JSON.stringify(item));
         setIsUserAuthenticated(true);
+        setHelpEffect(true);
       })
       .catch((e) => {
         setIsUserAuthenticated(false);
+        setHelpEffect(true);
         console.log('error', e);
       });
   }, []);
 
   useEffect(() => {
-    if (pageProps.requiresAuth && !isUserAuthenticated) {
-      router.push('/authentication/sign-in');
+    if (helpEffect) {
+      if (pageProps.requiresAuth && !isUserAuthenticated) {
+        router.push('/authentication/sign-in');
+      }
+      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+        router.push('/contacts/clients');
+      }
     }
-    if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-      router.push('/contacts/clients');
-    }
-  }, [isUserAuthenticated]);
+  }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
