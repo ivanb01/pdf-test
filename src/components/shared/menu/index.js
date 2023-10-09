@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import oneLineLogo from '/public/images/oneline_logo_white.svg';
+import placeholder from '/public/images/Portrait_Placeholder.png';
 import MenuLink from 'components/Link/MenuLink';
 import Router, { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
@@ -251,11 +252,7 @@ const MainMenu = ({ className, fixed }) => {
           <div>
             <Menu.Button className="">
               <a href="#">
-                <img
-                  className="inline-block h-8 w-8 rounded-full"
-                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                  alt=""
-                />
+                <Image width={32} height={32} className="inline-block rounded-full" src={placeholder} alt="" />
               </a>
             </Menu.Button>
           </div>
