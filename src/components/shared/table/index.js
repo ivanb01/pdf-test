@@ -1705,7 +1705,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center w-[340px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:min-w-[340px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1732,15 +1732,15 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[100px]">
                 <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status min-w-[750px]">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[750px]">
                 <div className=" flex items-center">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
@@ -1754,7 +1754,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
                 <div className="flex items-center justify-center">
                   <div
                     onMouseEnter={() => {

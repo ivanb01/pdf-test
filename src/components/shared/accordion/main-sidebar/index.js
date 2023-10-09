@@ -32,6 +32,7 @@ import { setOpenedTab, setOpenedSubtab, setExpandedTab } from 'store/global/slic
 import SimpleBar from 'simplebar-react';
 import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
