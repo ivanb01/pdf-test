@@ -178,7 +178,7 @@ export default function Info({ client }) {
             openClassName={'pb-64'}
             activeIcon={false}
             options={leadSourceOptions}
-            className="my-3"
+            className="mt-3 mb-8"
             handleSelect={(source) => handleChangeSource(source.name)}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}

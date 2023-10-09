@@ -1,7 +1,7 @@
 import Button from 'components/shared/button';
 import Avatar from 'components/shared/avatar';
 import Radio from 'components/shared/radio';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
@@ -196,6 +196,10 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       handleClose();
     }
   };
+
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <MultiStepOverlay
       className="max-w-[730px] min-w-[730px]"
@@ -284,7 +288,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       label="Lead Source"
                       activeIcon={false}
                       options={leadSourceOptions}
-                      handleSelect={(source) => (formik.values.lead_source = source.name)}
+                      handleSelect={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
                       initialSelect={formik.values.lead_source}
                       placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                     />
