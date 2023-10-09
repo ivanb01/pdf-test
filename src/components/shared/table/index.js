@@ -420,7 +420,7 @@ const Table = ({
                     />
                   </td>
                   <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
-                    <div className={'flex gap-1.5 items-center'}>
+                    <div className={'flex gap-1.5 items-center justify-start'}>
                       {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
                         {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
@@ -531,8 +531,8 @@ const Table = ({
                   )} */}
                     </td>
                     {tableFor != 'in-categorization' && (
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                        <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
@@ -874,7 +874,7 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
@@ -964,8 +964,8 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                        <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1245,7 +1245,7 @@ const Table = ({
             >
               Type
             </th> */}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -1302,8 +1302,8 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                          <div className={'flex gap-1.5 items-center justify-center'}>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <div className={'flex gap-1.5 items-center justify-start'}>
                             {getSource(contact.import_source_text, contact.approved_ai).icon}
                             <p className={'text-xs leading-4 font-medium text-gray8'}>
                               {getSource(contact.import_source_text, contact.approved_ai).name}

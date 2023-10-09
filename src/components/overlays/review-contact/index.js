@@ -589,7 +589,7 @@ const ReviewContact = ({
                   }
                   setSelectedOption={(e) => {
                     formik.setFieldValue('selectedContactType', e);
-                    console.log(formik.values.selectedContactType);
+                    formik.setFieldValue('selectedContactSubtype', '');
                   }}
                   className="mb-6"
                   name="type-of-contact"
