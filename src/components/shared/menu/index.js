@@ -232,7 +232,7 @@ const MainMenu = ({ className, fixed }) => {
             label="Need Help?"
             className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
-              FreshworksWidget('open');
+              // FreshworksWidget('open');
             }}>
             <ContactSupport className="h-[20px]" />
             {/* Need help? */}
