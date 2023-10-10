@@ -61,7 +61,7 @@ const index = () => {
   const handleFetchUncategorized = () => {
     let uncategorized = {
       ...allContacts,
-      data: allContacts?.data?.filter((contact) => contact.category_1 === 'Uncategorized'),
+      data: allContacts?.data?.filter((contact) => contact.category_id == 1),
     };
     setUncategorizedContactsOriginal(uncategorized);
     dispatch(setContacts(uncategorized));
@@ -112,9 +112,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
-            unapprovedContacts={
-              unapprovedContacts?.data.filter((contact) => contact.category_id == 1 || contact.category_id == 2).length
-            }
+            unapprovedContacts={unapprovedContacts?.data.filter((contact) => contact.category_id == 1).length}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}

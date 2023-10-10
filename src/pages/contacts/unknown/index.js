@@ -45,6 +45,9 @@ const index = () => {
   };
 
   useEffect(() => {
+    console.log(actualContact, 'actualContact');
+  }, [actualContact]);
+  useEffect(() => {
     // setLoading(true);
     if (allContacts.data) {
       fetchOther();
