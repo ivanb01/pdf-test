@@ -201,7 +201,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
               {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}

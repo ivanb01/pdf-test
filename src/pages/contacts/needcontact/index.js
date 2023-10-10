@@ -80,8 +80,8 @@ const index = () => {
               type="smart-sync"
             />
           )}
-          <div className={'flex justify-between items-center p-6'}>
-            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate</h3>
+          <div className={'flex justify-between items-center p-6 py-4'}>
+            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate with</h3>
             <Search
               placeholder="Search here..."
               className="mr-4 text-sm"
