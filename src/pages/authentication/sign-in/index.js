@@ -140,14 +140,14 @@ const SignIn = () => {
             className="mb-6 w-full text-sm"
             label="Brokerage Name"
             options={brokerageNameOptions}
-            initialSelect={brokerageNameOptions[0].name}
+            initialSelect={brokerageNameOptions[0].label}
             handleSelect={(item) => {
               // if (item.name == 'Other') {
               //   setShowOther(true);
               // } else {
               //   setShowOther(false);
               // }
-              formik.values.tenantName = item.name;
+              formik.values.tenantName = item.label;
             }}
           />
           {/* {showOther && (
