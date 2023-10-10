@@ -967,7 +967,7 @@ const Table = ({
                       <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
                         <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
-                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                          <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
@@ -978,7 +978,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -1316,7 +1316,7 @@ const Table = ({
                               triggerElement={
                                 <div
                                   className={
-                                    'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                    'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                   }>
                                   {contact.summary}
                                 </div>

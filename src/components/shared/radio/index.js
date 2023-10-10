@@ -24,15 +24,15 @@ export default function Radio({
       <div className="flex">
         {options?.map((option) =>
           secondary ? (
-            <div key={option.id} className="flex items-center mr-5" onClick={() => setSelectedOption(option.id)}>
-              <input
-                id={option.id}
-                name={name ? name : 'radio-group'}
-                type="radio"
-                defaultChecked={option.id === selectedOption}
-                className="h-4 w-4 border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-              />
-              <label htmlFor={option.id} className="ml-1 block text-sm font-medium leading-6 text-gray-900">
+            <div key={option.id} className="mr-5" onClick={() => setSelectedOption(option.id)}>
+              <label htmlFor={option.id} className="flex items-center text-sm font-medium leading-6 text-gray-900">
+                <input
+                  id={option.id}
+                  name={name ? name : 'radio-group'}
+                  type="radio"
+                  defaultChecked={option.id === selectedOption}
+                  className="mr-1 h-4 w-4 border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                />
                 {option.name}
               </label>
             </div>
