@@ -232,7 +232,7 @@ const index = () => {
         <div className="flex items-center justify-center relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
             <lottie-player
-              src="https://lottie.host/0e91f34e-3785-4a43-9e41-edffb9f7a164/wqi0RYRuUw.json"
+              src="/animations/aisummary1.json"
               background="transparent"
               speed="1"
               style={{ height: '300px' }}
@@ -249,7 +249,7 @@ const index = () => {
             </div>
           </div>
           <lottie-player
-            src="https://lottie.host/44832648-5dda-448a-8762-d7636963a564/8IkBu8xsfM.json"
+            src="/animations/aisummary2.json"
             background="transparent"
             speed="1"
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}

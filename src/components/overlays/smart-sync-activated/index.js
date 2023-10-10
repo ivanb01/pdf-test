@@ -12,7 +12,7 @@ const SmartSyncActivatedOverlay = ({ activatingSmartSync, handleCloseOverlay, lo
           <>
             <div className="flex flex-col justify-center items-center">
               <lottie-player
-                src="https://lottie.host/d8ad3803-e2ec-46b7-a93c-16c02c26b828/qicrmjXuYZ.json"
+                src="/animations/smartsync.json"
                 speed="1"
                 style={{ width: '200px', height: '150px' }}
                 loop

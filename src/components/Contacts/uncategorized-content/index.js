@@ -102,8 +102,8 @@ const Uncategorized = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
             <lottie-player
-              src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
-              loop
+              src="/animations/uncategorized.json"
+              loop="true"
               autoplay
               style={{ width: '420px', height: '300px' }}></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
