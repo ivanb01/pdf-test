@@ -45,6 +45,9 @@ const index = () => {
   };
 
   useEffect(() => {
+    console.log(actualContact, 'actualContact');
+  }, [actualContact]);
+  useEffect(() => {
     // setLoading(true);
     if (allContacts.data) {
       fetchOther();
@@ -107,7 +110,7 @@ const index = () => {
       ) : (
         <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
           <lottie-player
-            src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+            src="/animations/unknown.json"
             loop
             autoplay
             style={{ width: '420px', height: '300px' }}></lottie-player>

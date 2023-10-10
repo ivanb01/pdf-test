@@ -34,7 +34,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
               {!emptyModal ? (
                 motionImage ? (
                   <lottie-player
-                    src="https://assets8.lottiefiles.com/packages/lf20_o9df1rnx.json"
+                    src="/animations/importing.json"
                     background="transparent"
                     speed="1"
                     style={{ width: '160px', height: '128px' }}

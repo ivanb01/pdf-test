@@ -227,17 +227,16 @@ const MainMenu = ({ className, fixed }) => {
             }
           />
         )}
-        <div className="">
+        {/* <div className="">
           <button
             label="Need Help?"
             className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
-              FreshworksWidget('open');
+              // FreshworksWidget('open');
             }}>
             <ContactSupport className="h-[20px]" />
-            {/* Need help? */}
           </button>
-        </div>
+        </div> */}
         {/* <Button
           label="Import Google Contacts"
           className="mr-4 "
