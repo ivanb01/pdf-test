@@ -188,8 +188,8 @@ const EventPreview = ({
                         <Loader />
                       </div>
                     ) : (
-                      <div className="flex h-full">
-                        <div className="bg-white border-gray2 border-r p-6 min-w-fit  ">
+                      <div className="flex">
+                        <div className="bg-white border-gray2 border-r p-6  h-full">
                           <nav aria-label="Progress">
                             <ol role="list" className="overflow-hidden">
                               {campaignEvents?.events.map((event, eventIdx) => (
@@ -202,7 +202,7 @@ const EventPreview = ({
                                   <>
                                     {eventIdx !== campaignEvents.events.length - 1 ? (
                                       <div
-                                        className="absolute -ml-px top-1.5 h-[200px] w-0.5 bg-gray3"
+                                        className="absolute -ml-px top-1.5 h-[210px] w-0.5 bg-gray3"
                                         style={{ left: '18px' }}
                                         aria-hidden="true"
                                       />
