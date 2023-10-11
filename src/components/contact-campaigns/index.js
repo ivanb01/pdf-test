@@ -75,7 +75,6 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const handleOpenCampaign = async (campaignId) => {
     setOpenedCampaign(campaignId);
     setLoading(true);
-
     getCampaign(campaignId).then((data) => {
       setCurrentCampaign(data.data);
       tabs[0].count = data.data.contacts_never_assigned_count;
