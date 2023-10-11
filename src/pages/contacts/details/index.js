@@ -233,13 +233,13 @@ export default function Details() {
   );
 }
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }
 
 // export const getStaticPaths = async () => {
 //   return {

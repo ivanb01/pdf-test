@@ -61,16 +61,16 @@ const MyApp = ({ Component, pageProps }) => {
       });
   }, []);
 
-  useEffect(() => {
-    if (helpEffect) {
-      if (pageProps.requiresAuth && !isUserAuthenticated) {
-        router.push('/authentication/sign-in');
-      }
-      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-        router.push('/contacts/clients');
-      }
-    }
-  }, [helpEffect, isUserAuthenticated]);
+  // useEffect(() => {
+  //   if (helpEffect) {
+  //     if (pageProps.requiresAuth && !isUserAuthenticated) {
+  //       router.push('/authentication/sign-in');
+  //     }
+  //     if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+  //       router.push('/contacts/clients');
+  //     }
+  //   }
+  // }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
