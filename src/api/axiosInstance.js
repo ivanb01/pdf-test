@@ -3,26 +3,32 @@ import { Auth } from 'aws-amplify';
 
 const axiosInstance = axios.create();
 
-const getTokenFromLocalStorage = () => {
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.includes('idToken')) {
-      return localStorage.getItem(key);
-    }
-  }
-  return null;
+const getLocalStorageValue = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.includes('idToken')) {
+          resolve(localStorage.getItem(key));
+          return;
+        }
+      }
+      resolve(null);
+    }, 1000);
+  });
 };
 
 axiosInstance.interceptors.request.use(
   async (config) => {
     const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
-    let token = getTokenFromLocalStorage();
-
-    if (!token) {
-      const tokenSession = await Auth.currentSession();
+    let token = null;
+    const localStorageValue = await getLocalStorageValue();
+    if (localStorageValue) {
+      token = localStorageValue;
+    } else {
+      let tokenSession = await Auth.currentSession();
       token = tokenSession.idToken.jwtToken;
     }
-    console.log(token); // Consider removing this in production for security reasons.
 
     config.baseURL = apiGatewayUrl;
     config.headers.common['Accept'] = 'application/json';
@@ -36,6 +42,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
+    // console.log('response from interceptor');
     return response;
   },
   (error) => {
