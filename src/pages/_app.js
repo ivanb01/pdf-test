@@ -45,21 +45,21 @@ const MyApp = ({ Component, pageProps }) => {
     setDomLoaded(true);
   }, []);
 
-  // useEffect(() => {
-  //   configureAmplifyAuth();
+  useEffect(() => {
+    configureAmplifyAuth();
 
-  //   Auth.currentSession()
-  //     .then((item) => {
-  //       localStorage.setItem('currentSession', JSON.stringify(item));
-  //       setIsUserAuthenticated(true);
-  //       setHelpEffect(true);
-  //     })
-  //     .catch((e) => {
-  //       setIsUserAuthenticated(false);
-  //       setHelpEffect(true);
-  //       console.log('error', e);
-  //     });
-  // }, []);
+    Auth.currentSession()
+      .then((item) => {
+        localStorage.setItem('currentSession', JSON.stringify(item));
+        setIsUserAuthenticated(true);
+        setHelpEffect(true);
+      })
+      .catch((e) => {
+        setIsUserAuthenticated(false);
+        setHelpEffect(true);
+        console.log('error', e);
+      });
+  }, []);
 
   // useEffect(() => {
   //   if (helpEffect) {
