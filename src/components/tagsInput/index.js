@@ -3,7 +3,7 @@ import { multiselectOptionsClients, multiselectOptionsProfessionals, tagsForProf
 
 const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuClose }) => {
   return (
-    <div className="w-full custom-chipinput-styles col-span-2">
+    <div className=" custom-chipinput-styles col-span-2">
       {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
       <Select
         isMulti

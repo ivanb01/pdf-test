@@ -41,7 +41,7 @@ const StatusSelect = ({ label, selectedStatus, setSelectedStatus, className, sta
                       <Chip
                         label={status.name}
                         key={status.id}
-                        className="mb-4"
+                        className="mb-3"
                         selectedStatus={selectedStatus == status.id ? true : false}
                         onClick={() => {
                           setSelectedStatus(status.id);

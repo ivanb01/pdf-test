@@ -31,6 +31,7 @@ import { unassignContactFromCampaign } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
+import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
 
 const ReviewContact = ({
   className,
@@ -50,6 +51,7 @@ const ReviewContact = ({
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(true);
@@ -461,10 +463,10 @@ const ReviewContact = ({
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
-      className={`${className} ${isUnapprovedAI && 'w-[635px]'}`}>
-      <div className="flex min-h-[420px]">
-        <div className={`${!isUnapprovedAI ? 'w-1/2 border-r border-borderColor' : 'w-full'}`}>
-          <SimpleBar autoHide={true} style={{ maxHeight: '420px' }}>
+      className={`${className} w-[1150px]`}>
+      <div className="flex min-h-[500px]">
+        <div className={`w-1/2 border-r border-borderColor`}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '559px' }}>
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
                 <GlobalAlert
@@ -475,7 +477,7 @@ const ReviewContact = ({
                   message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
                 />
               )}
-              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6 mt-6">
+              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
                 <Input
                   type="text"
                   label="First Name"
@@ -524,38 +526,61 @@ const ReviewContact = ({
                 />
               </div>
               <TextArea
-                className="min-h-[100px] mb-6 z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+                className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
                 id="summary"
                 label="Summary"
                 name={'summary'}
                 handleChange={formik.handleChange}
                 value={formik.values.summary}
               />
-              {isUnapprovedAI && (
+              <div className="text-xs mb-6 text-gray6">
+              {client && 
+              
                 <>
-                  <Dropdown
-                    label="Lead Source"
-                    activeIcon={false}
-                    options={leadSourceOptions}
-                    className="mb-6"
-                    handleSelect={(source) => (formik.values.lead_source = source.name)}
-                    initialSelect={formik.values.lead_source}
-                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                  />
-                  <TagsInput
-                    label="Priority"
-                    typeOfContact={openedTab}
-                    value={findTagsOption(formik.values.tags, openedTab)}
-                    onChange={(choice) => {
-                      formik.setFieldValue(
-                        'tags',
-                        choice.map((el) => el.label),
-                      );
-                    }}
-                  />
+                  <div className="mt-2"><span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}</div>
                 </>
-              )}
-              <Radio
+                
+              }
+                <div className="mt-0.5"><span className="font-medium">Subject:</span> This is the email subject, testing out a longer one just in case we do receive it<span/></div>
+              </div>
+                    <div className={'grid grid-cols-2 gap-4 col-span-full'}>
+                      <div>
+                        <Dropdown
+                          openClassName={'mb-2 h-[245px]'}
+                          className="col-span-2 mb-5"
+                          white
+                          label="Lead Source"
+                          activeIcon={false}
+                          options={leadSourceOptions}
+                          handleSelect={(source) =>
+                            formik.setValues({ ...formik.values, ['lead_source']: source.label })
+                          }
+                          initialSelect={formik.values.lead_source}
+                          placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                        />
+                      </div>
+                      <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                        <TagsInput
+                          onMenuOpen={() => setIsMenuOpen(true)}
+                          onMenuClose={() => setIsMenuOpen(false)}
+                          typeOfContact={openedTab}
+                          label="Priority"
+                          onChange={(choice) => {
+                            formik.setFieldValue(
+                              'tags',
+                              choice.map((el) => el.label),
+                            );
+                          }}
+                        />
+                      </div>
+                    </div>
+              </form>
+          </SimpleBar>
+        </div>
+        <div className="w-1/2 relative">
+          <SimpleBar autoHide={true} style={{ maxHeight: '559px' }}>
+            <div className="p-6 pt-0">
+            <Radio
                 secondary
                 options={contactTypes}
                 label="What kind of contact is this for you?"
@@ -566,7 +591,7 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedStatus', '');
                 }}
-                className="mb-6 mt-6"
+                className="mb-6"
                 name="category-of-contact"
                 error={errors.selectedContactCategory && touched.selectedContactCategory}
                 errorText={errors.selectedContactCategory}
@@ -597,21 +622,23 @@ const ReviewContact = ({
                   errorText={errors.selectedContactType}
                 />
               )}
-              {vendorSubtypes.map((item) => item.id).includes(formik.values.selectedContactType) ||
+              {vendorSubtypes?.map((item) => item.id).includes(formik.values.selectedContactType) ||
               formik.values.selectedContactType == 8 ? (
                 <>
-                  <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
-                  <div className="flex flex-wrap">
-                    {vendorSubtypes.map((type) => (
-                      <Chip
-                        selectedStatus={type.id == formik.values.selectedContactSubtype}
-                        key={type.id}
-                        label={type.name}
-                        className="mr-3 mb-3"
-                        onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
-                      />
-                    ))}
-                  </div>
+                  {/* <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div> */}
+                  <Dropdown
+                          openClassName={'mb-2 h-[245px]'}
+                          className="col-span-2 mb-5"
+                          white
+                          label="What kind of vendor?"
+                          activeIcon={false}
+                          options={leadSourceOptions}
+                          handleSelect={(source) =>
+                            formik.setValues({ ...formik.values, ['lead_source']: source.label })
+                          }
+                          initialSelect={formik.values.lead_source}
+                          placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                        />
                   {errors.selectedContactSubtype && touched.selectedContactSubtype && errors.selectedContactSubtype && (
                     <NotificationAlert className="mt-2 p-2" type={'error'}>
                       {errors.selectedContactSubtype}
@@ -631,37 +658,30 @@ const ReviewContact = ({
                   />
                 )
               )}
-            </form>
+            
+              {/* <div>
+                <div className="flex items-center mb-2">
+                  <img src={AI.src} alt="" />
+                  <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
+                  <a
+                    target="_blank"
+                    href={client.email_link}
+                    className="cursor-pointer flex items-center text-sm text-gray-900 underline"
+                    rel="noreferrer">
+                    View the email source
+                    <img src={newTab.src} alt="" className="ml-1" />
+                  </a>
+                </div>
+                <div className="text-xs mt-2">Date Imported: {formatDateLL(client.created_at)}</div>
+              </div>
+              <hr className="my-4" />
+              <div className="text-gray-900 text-sm">{client.summary ?? client.ai_email_summary}</div> */}
+            </div>
           </SimpleBar>
         </div>
-        {!isUnapprovedAI && (
-          <div className="w-1/2 relative">
-            <SimpleBar autoHide={true} style={{ maxHeight: '400px' }}>
-              <div className="p-6">
-                <div>
-                  <div className="flex items-center mb-2">
-                    <img src={AI.src} alt="" />
-                    <span className="ml-1 text-gray-900 text-sm">AI Smart Synced Contact</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-gray-900 font-medium text-lg max-w-[60%]">{client.email_subject}</div>
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="cursor-pointer flex items-center text-sm text-gray-900 underline"
-                      rel="noreferrer">
-                      View the email source
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
-                  </div>
-                  <div className="text-xs mt-2">Date Imported: {formatDateLL(client.created_at)}</div>
-                </div>
-                <hr className="my-4" />
-                <div className="text-gray-900 text-sm">{client.summary ?? client.ai_email_summary}</div>
-              </div>
-            </SimpleBar>
-          </div>
-        )}
       </div>
       <div className="flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
         {!isUnapprovedAI ? reviewAIContactButtons() : reviewContactButtons()}
