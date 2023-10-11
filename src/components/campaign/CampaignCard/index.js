@@ -5,12 +5,22 @@ import GroupIcon from '@mui/icons-material/Group';
 import InCampaing from '../../../../public/images/campaign/inCampaign.svg';
 import NotInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useRouter } from 'next/router';
 const CampaignCard = ({ title, email, sms, status_2 }) => {
+  const router = useRouter();
   return (
     <div className={'flex flex-col rounded-lg campaigns-box-shadow'}>
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
-          <div className={'flex justify-between items-center cursor-pointer'}>
+          <div
+            className={'flex justify-between items-center cursor-pointer'}
+            role={'button'}
+            onClick={() => {
+              router.push({
+                pathname: '/campaign/details',
+                query: { id: status_2 },
+              });
+            }}>
             <h6 className={'text-sm leading-5 font-semibold'}>{title}</h6>
             <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
           </div>

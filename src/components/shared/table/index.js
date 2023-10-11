@@ -2022,6 +2022,44 @@ const Table = ({
       </>
     );
   };
+  const allCampaignContacts = () => {
+    return (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4">
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
+              RENTER-NEW LEAD
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
+              contact summary
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
+              last communication
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              sent emails & SMS
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              campaign
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN history
+            </th>
+          </tr>
+        </thead>
+      </>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -2051,6 +2089,8 @@ const Table = ({
                   ? otherTable()
                   : tableFor == 'ai-summary'
                   ? aiSummaryTable()
+                  : tableFor == 'allCampaignContacts'
+                  ? allCampaignContacts()
                   : tableFor == 'needToContact'
                   ? needToContactTable()
                   : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'
