@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 // import * as contactServices from 'api/contacts';
 import { updateContact, findContactByEmail } from 'api/contacts';
 import Overlay from 'components/shared/overlay';
-import TagsInput from 'components/tagsInput';
+import TagsInput from '@components/dropdownWithSearch';
 import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';

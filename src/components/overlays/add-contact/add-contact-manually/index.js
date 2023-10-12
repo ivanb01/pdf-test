@@ -11,7 +11,7 @@ import { IdentificationIcon } from '@heroicons/react/solid';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import Dropdown from 'components/shared/dropdown';
-import TagsInput from 'components/tagsInput';
+import TagsInput from '@components/dropdownWithSearch';
 // import * as contactServices from 'api/contacts';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { useSelector, useDispatch } from 'react-redux';

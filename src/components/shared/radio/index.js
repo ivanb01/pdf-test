@@ -4,6 +4,7 @@ import Button from '../button';
 import NotificationAlert from '../alert/notification-alert';
 
 export default function Radio({
+  ternary,
   label,
   options,
   setSelectedOption,
@@ -37,12 +38,19 @@ export default function Radio({
               </label>
             </div>
           ) : (
+            ternary ? 
+            <div 
+            onClick={() => {
+              setSelectedOption(option.id);
+            }}
+            key={option.id} className={`${selectedOption == option.id && 'border-lightBlue3'} cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>{option.name}</div>
+            :
             <Button
               ternary
               active={selectedOption == option.id}
               label={option.name}
               key={option.name}
-              className="mr-4 min-w-[115px]"
+              className={`mr-4 min-w-[115px]`}
               onClick={() => {
                 setSelectedOption(option.id);
               }}

@@ -15,7 +15,7 @@ import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { leadSourceOptions, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
-import TagsInput from 'components/tagsInput';
+import TagsInput from '@components/dropdownWithSearch';
 import { useSelector } from 'react-redux';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
