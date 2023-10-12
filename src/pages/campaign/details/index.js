@@ -11,10 +11,19 @@ import campaignsMatchedTo from '../../../../public/images/campaign/campaignsMatc
 import inCampaign from '../../../../public/images/campaign/inCampaign.svg';
 import notInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
 import Table from '@components/shared/table';
-import noUsersFound from '../../../../public/images/campaign/noUsersFound.svg';
+import ButtonsSlider from '@components/shared/button/buttonsSlider';
+import { useEffect, useState } from 'react';
+import Search from '@components/shared/input/search';
+import { useSelector } from 'react-redux';
+import Loader from 'components/shared/loader';
+import CampaignPreview from '@components/campaign/CampaignPreview';
+
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [currentButton, setCurrentButton] = useState(0);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
   const eventTypes = [
     {
       name: 'ALL EVENTS',
@@ -47,7 +56,68 @@ const index = () => {
       amount: 0,
     },
   ];
+  const buttons = [
+    {
+      id: 0,
+      name: 'All',
+      count: 10,
+    },
+    {
+      id: 1,
+      name: 'In Campaign',
+      count: 1,
+    },
+    {
+      id: 2,
+      name: 'Not In Campaign',
+      count: 1,
+    },
+  ];
+  const [searchTerm, setSearchTerm] = useState('');
+  const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
+  useEffect(() => {
+    setSearchTerm('');
+  }, [currentButton]);
+  const renderTable = (currentButton) => {
+    switch (currentButton) {
+      case 0:
+        return (
+          <Table
+            tableFor={'allCampaignContacts'}
+            data={allContacts?.filter(
+              (contact) =>
+                contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) && contact.category_2 === 'Renter',
+            )}
+          />
+        );
+      case 1:
+        return (
+          <Table
+            tableFor={'inCampaignContacts'}
+            data={allContacts?.filter(
+              (contact) =>
+                contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                contact.category_2 === 'Renter' &&
+                contact.campaign_name === id,
+            )}
+            setCurrentButton={setCurrentButton}
+          />
+        );
+      case 2:
+        return (
+          <Table
+            tableFor={'notInCampaignContacts'}
+            data={allContacts?.filter(
+              (contact) =>
+                contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                contact.category_2 === 'Renter' &&
+                contact.campaign_name === null,
+            )}
+          />
+        );
+    }
+  };
   return (
     <SimpleBar style={{ maxHeight: '100%' }}>
       <MainMenu />
@@ -61,7 +131,10 @@ const index = () => {
             </div>
           </div>
         </div>
-        <Button primary leftIcon={<VisibilityIcon className={'h-4 w-4'} />}>
+        <Button
+          primary
+          leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
+          onClick={() => setOpenCampaignPreview(true)}>
           Campaign Preview
         </Button>
       </div>
@@ -80,17 +153,23 @@ const index = () => {
           </div>
         ))}
       </div>
-      <div className={'bg-gray1 h-[96px]'}></div>
-      <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
-        <img src={noUsersFound.src} />
-        <div>
-          <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact matching to this campaign</h4>
-          <span className={'text-xs leading-4 font-normal text-gray4'}>
-            Here, you'll find a list of all contacts that have been matched to this campaign.
-          </span>
-        </div>
+      <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
+        <ButtonsSlider noCount buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
+        <Search
+          placeholder="Search"
+          className="mr-4 text-sm"
+          value={searchTerm}
+          onInput={(event) => setSearchTerm(event.target.value)}
+        />
       </div>
-      {/*<Table tableFor={'allCampaignContacts'} />*/}
+      {allContacts === undefined ? <></> : renderTable(currentButton)}
+      <CampaignPreview
+        open={openCampaignPreview}
+        setOpen={setOpenCampaignPreview}
+        title={'Campaign Name'}
+        sms={2}
+        email={3}
+      />
     </SimpleBar>
   );
 };

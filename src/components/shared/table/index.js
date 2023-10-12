@@ -57,7 +57,7 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
-import { Delete } from '@mui/icons-material';
+import { Delete, Email } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -68,7 +68,12 @@ import ListIcon from '@mui/icons-material/List';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createPortal } from 'react-dom';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
-
+import noUsersFound from '../../../../public/images/campaign/noUsersFound.svg';
+import EmailIcon from '@mui/icons-material/Email';
+import ChatIcon from '@mui/icons-material/Chat';
+import Button from '@components/shared/button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -76,6 +81,7 @@ const categoryIds = {
 
 const Table = ({
   undoAllCategorizations,
+  setCurrentButton,
   undoCategorization,
   data,
   handleSelectAll,
@@ -2023,7 +2029,7 @@ const Table = ({
     );
   };
   const allCampaignContacts = () => {
-    return (
+    return data && data?.length > 0 ? (
       <>
         <thead>
           <tr className="bg-gray-50 text-gray4">
@@ -2057,7 +2063,427 @@ const Table = ({
             </th>
           </tr>
         </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              key={person.id}
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.id },
+                })
+              }
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              <td className="pl-6 py-4 pr-4">
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.first_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                      {person.first_name} {person.last_name}
+                    </h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4">
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.summary !== null && person.summary.length > 0 && (
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <div
+                        className={
+                          'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                        }>
+                        {person.summary}
+                      </div>
+                    }>
+                    <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                      <p className="text-xs leading-4 font-normal">{person.summary}</p>
+                    </div>
+                  </TooltipComponent>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                <DateChip
+                  lastCommunication={person.last_communication_date}
+                  contactStatus={person.status_2}
+                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                />
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-4'}>
+                  <div className={'flex gap-[5px] items-center justify-center'}>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>0</span>
+                    <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+                  </div>
+                  <div className={'flex gap-[5px] items-center justify-center'}>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>0</span>
+                    <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />
+                  </div>
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <div>|</div>
+                  <div>
+                    <span className={'text-xs leading-5 font-medium text-gray7'}>
+                      {person.campaign_name === null ? 'Inactive' : 'Active'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex flex-col gap-1'}>
+                  <div className={'flex gap-1 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-xl ${
+                        person.campaign_name === null ? 'bg-red-500' : 'bg-green-500'
+                      }`}></div>
+                    <p className={'text-sm leading-5 font-medium text-gray7'}>
+                      {person.campaign_name === null ? 'Never in Campaign' : 'Campaign is Running'}
+                    </p>
+                  </div>
+                  {person.campaign_name !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>from July 20, 2023</div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>
+              There is no contact matching to this campaign
+            </h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              Here, you'll find a list of all contacts that have been matched to this campaign.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const notInCampaignContacts = () => {
+    return data && data?.length > 0 ? (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4">
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
+              RENTER-NEW LEAD
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
+              contact summary
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
+              last communication
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN history
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              campaign
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              key={person.id}
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.id },
+                })
+              }
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              <td className="pl-6 py-4 pr-4">
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.first_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                      {person.first_name} {person.last_name}
+                    </h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  </div>
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <DateChip
+                  lastCommunication={person.last_communication_date}
+                  contactStatus={person.status_2}
+                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                />
+              </td>
+              <td className="px-6 py-4">
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.summary !== null && person.summary.length > 0 && (
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <div
+                        className={
+                          'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                        }>
+                        {person.summary}
+                      </div>
+                    }>
+                    <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                      <p className="text-xs leading-4 font-normal">{person.summary}</p>
+                    </div>
+                  </TooltipComponent>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex flex-col gap-1'}>
+                  <div className={'flex gap-1 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-xl ${
+                        person.campaign_name === null ? 'bg-red-500' : 'bg-green-500'
+                      }`}></div>
+                    <p className={'text-sm leading-5 font-medium text-gray7'}>
+                      {person.campaign_name === null ? 'Never in Campaign' : 'Campaign is Running'}
+                    </p>
+                  </div>
+                  {person.campaign_name !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>from July 20, 2023</div>
+                  )}
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <div>|</div>
+                  <div>
+                    <span className={'text-xs leading-5 font-medium text-gray7'}>
+                      {person.campaign_name === null ? 'Inactive' : 'Active'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[8%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact “Not in Campaign”</h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              Contacts that have been matched in this campaign but are still “inactive” <br /> in the campaign, will be
+              displayed here.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const inCampaignContacts = () => {
+    const events = [
+      {
+        eventName: 'Event 1',
+        campaignStatus: 'sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 2',
+        campaignStatus: 'sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 3',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+    ];
+    return data && data?.length > 0 ? (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4">
+            <th
+              scope="col"
+              className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2">
+              RENTER-NEW LEAD
+            </th>
+            {events.map((e, index) => (
+              <th
+                scope="col"
+                className={`${
+                  index === 3 ? 'border-r border-gray2' : ''
+                }flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+                {e.eventName}
+              </th>
+            ))}
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              campaign
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              key={person.id}
+              onClick={() =>
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.id },
+                })
+              }
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              <td className="pl-6 py-4 pr-4 border-r border-gray2">
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.first_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                      {person.first_name} {person.last_name}
+                    </h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  </div>
+                </div>
+              </td>
+              {events.map((e, index) => (
+                <td className={`px-6 py-4 ${index === 3 ? 'border-r border-gray2' : ''}`}>
+                  <div className={'flex flex-col gap-1'}>
+                    <div className={'flex gap-1.5 items-center'}>
+                      <div
+                        className={`h-2 w-2 rounded-xl ${
+                          e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
+                        }`}></div>
+                      <p
+                        className={`text-sm leading-5 font-medium ${
+                          e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
+                        }`}>
+                        {e.eventName}
+                      </p>
+                    </div>
+                    {e.date !== null && (
+                      <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>
+                    )}
+                  </div>
+                </td>
+              ))}
+              <td className={'px-6 py-4'} style={{ width: 120 }}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <div>|</div>
+                  <div>
+                    <span className={'text-xs leading-5 font-medium text-gray7'}>
+                      {person.campaign_name === null ? 'Inactive' : 'Active'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>There are no clients ”In Campaign”</h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              To start assigning clients please go to “All” or “Not in Campaign” list.
+            </span>
+            <div className={'mt-6 flex items-center justify-center'}>
+              <div
+                role={'button'}
+                className={'flex gap-3 items-center justify-center'}
+                onClick={() => setCurrentButton(0)}>
+                <ArrowBackIcon className={'text-lightBlue3 h-5 w-5'} />
+                <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">
+                  Back to all
+                </div>
+              </div>
+              <div className={'h-4 border-r border-[#D9D9D9] mx-6'} style={{ width: '2px' }} />
+              <div
+                role={'button'}
+                className={'flex gap-3 items-center justify-center'}
+                onClick={() => setCurrentButton(2)}>
+                <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">
+                  Not in campaign
+                </div>
+                <ArrowForwardIcon className={'text-lightBlue3 h-5 w-5'} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   };
   return (
@@ -2091,6 +2517,10 @@ const Table = ({
                   ? aiSummaryTable()
                   : tableFor == 'allCampaignContacts'
                   ? allCampaignContacts()
+                  : tableFor === 'notInCampaignContacts'
+                  ? notInCampaignContacts()
+                  : tableFor === 'inCampaignContacts'
+                  ? inCampaignContacts()
                   : tableFor == 'needToContact'
                   ? needToContactTable()
                   : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'
