@@ -507,10 +507,13 @@ const Table = ({
                           onChange={(event) => handleClickRow(dataItem, event)}></Input>
                       )}
                       <ContactInfo
+                        inCategorization={tableFor === 'in-categorization'}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
                           image: dataItem.profile_image_path,
+                          import_source_text: dataItem.import_source_text,
+                          summary: dataItem.summary,
                         }}
                       />
                       {/* {(contact.type != null || contact.status != null) && (
