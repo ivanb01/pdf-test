@@ -963,12 +963,12 @@ const Table = ({
                           }}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle">
                         <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle" >
                         <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
