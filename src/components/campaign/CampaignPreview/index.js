@@ -6,6 +6,38 @@ import EmailIcon from '@mui/icons-material/Email';
 import ChatIcon from '@mui/icons-material/Chat';
 import InfoIcon from '@mui/icons-material/Info';
 const CampaignPreview = ({ open, setOpen, title, sms, email }) => {
+  const events = [
+    {
+      id: 0,
+      waitDays: 1,
+      name: 'Welcome to Oxford',
+      sentDate: 'send at 10:00 AM',
+    },
+    {
+      id: 1,
+      waitDays: 3,
+      name: 'Welcome to Oxford',
+      sentDate: 'send at 10:00 AM',
+    },
+    {
+      id: 2,
+      waitDays: 3,
+      name: 'Welcome to Oxford',
+      sentDate: 'send at 10:00 AM',
+    },
+    {
+      id: 3,
+      waitDays: 3,
+      name: 'Welcome to Oxford',
+      sentDate: 'send at 10:00 AM',
+    },
+    {
+      id: 4,
+      waitDays: 3,
+      name: 'Welcome to Oxford',
+      sentDate: 'send at 10:00 AM',
+    },
+  ];
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
