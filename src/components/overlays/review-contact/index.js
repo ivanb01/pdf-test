@@ -185,7 +185,7 @@ const ReviewContact = ({
                   afterSubmit(client?.id, { ...newData, approved_ai: false });
                   toast.dismiss(t.id);
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                 Undo
               </button>
             </div>
@@ -285,7 +285,7 @@ const ReviewContact = ({
                     restoreContact({ ...newData, category_id: 3 });
                     toast.dismiss(t.id);
                   }}
-                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                   Undo
                 </button>
               </div>
@@ -350,7 +350,7 @@ const ReviewContact = ({
                       }).then(() => dispatch(setRefetchData(true)));
                       afterSubmit(client.id, { ...newData, approved_ai: false });
                     }}
-                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                     Undo
                   </button>
                 </div>
@@ -475,6 +475,7 @@ const ReviewContact = ({
                   noBorder
                   rounded
                   type="warning"
+                  className="mb-4"
                   message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
                 />
               )}
@@ -535,14 +536,10 @@ const ReviewContact = ({
                 value={formik.values.summary}
               />
               <div className="text-xs mb-6 text-gray6">
-              {client && 
-              
-                <>
-                  <div className="mt-2"><span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}</div>
-                </>
-                
-              }
-                <div className="mt-0.5"><span className="font-medium">Subject:</span> This is the email subject, testing out a longer one just in case we do receive it<span/></div>
+                <div className="mt-2"><span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}</div>
+                {client && client.summary &&
+                  <div className="mt-0.5"><span className="font-medium">Subject:</span>{client.summary}<span/></div>
+                }
               </div>
                     <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                       <div>
