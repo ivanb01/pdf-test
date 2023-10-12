@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add campaign details page">
-      <change afterPath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/campaign/deactivateCampaign.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlays/DeactivateCampaign/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/shared/Toggle/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/accordion/contact-campaigns-sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/accordion/contact-campaigns-sidebar/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/overlay/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/overlay/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/campaign/details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/campaign/details/index.js" afterDir="false" />
     </list>
@@ -27,28 +30,28 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": -1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: -1
+}</component>
   <component name="ProjectId" id="2WORFZOcr7kJdOEW152ClS5APUh" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "f/erza/CampaignsMainPage",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;f/erza/CampaignsMainPage&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/images/campaign" />

@@ -60,17 +60,17 @@ const index = () => {
     {
       id: 0,
       name: 'All',
-      count: 10,
+      count: allContacts?.filter((contact) => contact.category_2 === 'Renter').length,
     },
     {
       id: 1,
       name: 'In Campaign',
-      count: 1,
+      count: allContacts?.filter((contact) => contact.category_2 === 'Renter' && contact.campaign_name === id).length,
     },
     {
       id: 2,
       name: 'Not In Campaign',
-      count: 1,
+      count: allContacts?.filter((contact) => contact.category_2 === 'Renter' && contact.campaign_name === null).length,
     },
   ];
   const [searchTerm, setSearchTerm] = useState('');
@@ -154,7 +154,7 @@ const index = () => {
         ))}
       </div>
       <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
-        <ButtonsSlider noCount buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
+        <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
         <Search
           placeholder="Search"
           className="mr-4 text-sm"

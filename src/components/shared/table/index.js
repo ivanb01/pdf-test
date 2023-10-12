@@ -74,6 +74,9 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Button from '@components/shared/button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Toggle from '@components/shared/Toggle';
+import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
+
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -2145,7 +2148,7 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <div>|</div>
+                  <Toggle active={person.campaign_name !== null} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}
@@ -2305,7 +2308,7 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <div>|</div>
+                  <Toggle active={person.campaign_name !== null} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}
@@ -2439,7 +2442,7 @@ const Table = ({
               ))}
               <td className={'px-6 py-4'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <div>|</div>
+                  <Toggle active={person.campaign_name !== null} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}
