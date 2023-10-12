@@ -143,12 +143,12 @@ const Table = ({
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={16} width={16} />,
       };
-    }
+    } else return <></>;
   };
 
   const getContactInfo = async () => {

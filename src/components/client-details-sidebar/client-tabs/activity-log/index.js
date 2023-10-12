@@ -131,11 +131,13 @@ export default function ActivityLog({ contactId, source, contact }) {
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={20} width={20} />,
       };
+    } else {
+      return <></>;
     }
   };
 
