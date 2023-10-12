@@ -136,8 +136,8 @@ const CategorizePage = ({
   return (
     <>
       {uncategorizedContacts.length > 0 && (
-        <div className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}>
-          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+        <div className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full w-[27%] pb-[72px]`}>
+          <SimpleBar autoHide style={{ maxHeight: '100%', overflowX: 'hidden' }}>
             <Table
               tableFor="in-categorization"
               data={uncategorizedContacts}
