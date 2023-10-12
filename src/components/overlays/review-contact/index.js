@@ -538,7 +538,18 @@ const ReviewContact = ({
               <div className="text-xs mb-6 text-gray6">
                 <div className="mt-2"><span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}</div>
                 {client && client.summary &&
-                  <div className="mt-0.5"><span className="font-medium">Subject:</span>{client.summary}<span/></div>
+                (
+                  <div className="flex items-center">
+                  <div className="mt-0.5"><span className="font-medium">Subject: </span>{client.email_subject}<span/></div>
+                  <a
+                      target="_blank"
+                      href={client.email_link}
+                      className="ml-1 cursor-pointer flex items-center text-xs text-gray-900 underline"
+                      rel="noreferrer">
+                      <img src={newTab.src} alt="" className="ml-1" />
+                    </a>
+                  </div>
+                  )
                 }
               </div>
                     <div className={'grid grid-cols-2 gap-4 col-span-full'}>
