@@ -188,7 +188,7 @@ const EventPreview = ({
                         <Loader />
                       </div>
                     ) : (
-                      <div className="flex">
+                      <div className="flex flex-1">
                         <div className="bg-white border-gray2 border-r p-6  h-full">
                           <nav aria-label="Progress">
                             <ol role="list" className="overflow-hidden">
