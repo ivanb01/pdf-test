@@ -23,7 +23,7 @@ import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import TagsInput from '@components/dropdownWithSearch';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 import Loader from '@components/shared/loader';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
@@ -32,7 +32,6 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
-import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const ReviewContact = ({
   className,

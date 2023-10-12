@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 // import * as contactServices from 'api/contacts';
 import { updateContact, findContactByEmail } from 'api/contacts';
 import Overlay from 'components/shared/overlay';
-import TagsInput from '@components/dropdownWithSearch';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 import { findTagsOption, phoneNumberInputFormat } from 'global/functions';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -175,7 +175,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               initialSelect={formik.values.lead_source}
               placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
-            <TagsInput
+            <DropdownWithSearch
               label="Priority"
               typeOfContact={openedTab}
               value={findTagsOption(formik.values.tags, openedTab)}
