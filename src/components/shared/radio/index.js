@@ -43,7 +43,7 @@ export default function Radio({
             onClick={() => {
               setSelectedOption(option.id);
             }}
-            key={option.id} className={`${selectedOption == option.id && 'border-lightBlue3'} cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>{option.name}</div>
+            key={option.id} className={`${selectedOption == option.id && 'border-lightBlue3 text-lightBlue3'} cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>{option.name}</div>
             :
             <Button
               ternary

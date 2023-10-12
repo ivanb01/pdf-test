@@ -571,7 +571,7 @@ const ReviewContact = ({
                               choice.map((el) => el.label),
                             );
                           }}
-                          maxMenuHeight={70}
+                          maxMenuHeight={80}
                         />
                       </div>
                     </div>
