@@ -15,7 +15,6 @@ import ButtonsSlider from '@components/shared/button/buttonsSlider';
 import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useSelector } from 'react-redux';
-import Loader from 'components/shared/loader';
 import CampaignPreview from '@components/campaign/CampaignPreview';
 
 const index = () => {
