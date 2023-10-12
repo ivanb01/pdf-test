@@ -31,7 +31,7 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
     if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
       return {
         name: 'AI Smart Synced Contact.',
-        icon: <AIChip reviewed={clients.approved_ai === false} />,
+        icon: <AIChip reviewed={data.approved_ai === false} />,
       };
     } else if (source === 'Manually Added') {
       return {
