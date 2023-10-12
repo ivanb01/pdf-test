@@ -514,7 +514,7 @@ const Table = ({
                           image: dataItem.profile_image_path,
                           import_source_text: dataItem.import_source_text,
                           summary: dataItem.summary,
-                          approved_ai: dataItem.approved_ai,
+                          approved_ai: !dataItem.approved_ai,
                         }}
                       />
                       {/* {(contact.type != null || contact.status != null) && (
