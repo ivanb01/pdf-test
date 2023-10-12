@@ -6,7 +6,7 @@ import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
-import TagsInput from 'components/tagsInput';
+import TagsInput from '@components/dropdownWithSearch';
 import DateChip from 'components/shared/chip/date-chip';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { useDispatch } from 'react-redux';

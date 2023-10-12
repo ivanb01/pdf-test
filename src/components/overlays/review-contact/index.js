@@ -4,7 +4,7 @@ import Overlay from 'components/shared/overlay';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Dropdown from 'components/shared/dropdown';
-import { clientOptions, leadSourceOptions, othersOptions, professionalsOptions } from 'global/variables';
+import { clientOptions, leadSourceOptions, multiselectOptionsClients, othersOptions, professionalsOptions } from 'global/variables';
 import Input from 'components/shared/input';
 import { findContactByEmail, updateContact } from 'api/contacts';
 import { findTagsOption, formatDateLL } from 'global/functions';
@@ -23,7 +23,7 @@ import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import TagsInput from '@components/tagsInput';
+import TagsInput from '@components/dropdownWithSearch';
 import Loader from '@components/shared/loader';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import GlobalAlert from '@components/shared/alert/global-alert';
@@ -32,6 +32,7 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const ReviewContact = ({
   className,
@@ -466,7 +467,7 @@ const ReviewContact = ({
       className={`${className} w-[1150px]`}>
       <div className="flex min-h-[500px]">
         <div className={`w-1/2 border-r border-borderColor`}>
-          <SimpleBar autoHide={true} style={{ maxHeight: '559px' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
                 <GlobalAlert
@@ -560,7 +561,9 @@ const ReviewContact = ({
                         />
                       </div>
                       <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
-                        <TagsInput
+                        <DropdownWithSearch
+                        isMulti
+                        options={multiselectOptionsClients}
                           onMenuOpen={() => setIsMenuOpen(true)}
                           onMenuClose={() => setIsMenuOpen(false)}
                           typeOfContact={openedTab}
@@ -571,6 +574,7 @@ const ReviewContact = ({
                               choice.map((el) => el.label),
                             );
                           }}
+                          maxMenuHeight={70}
                         />
                       </div>
                     </div>
@@ -578,10 +582,9 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         <div className="w-1/2 relative">
-          <SimpleBar autoHide={true} style={{ maxHeight: '559px' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '500px', height:'100%'}}>
             <div className="p-6 pt-0">
             <Radio
-                secondary
                 options={contactTypes}
                 label="What kind of contact is this for you?"
                 selectedOption={formik.values.selectedContactCategory}
@@ -591,6 +594,7 @@ const ReviewContact = ({
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedStatus', '');
                 }}
+                ternary
                 className="mb-6"
                 name="category-of-contact"
                 error={errors.selectedContactCategory && touched.selectedContactCategory}
@@ -626,19 +630,27 @@ const ReviewContact = ({
               formik.values.selectedContactType == 8 ? (
                 <>
                   {/* <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div> */}
-                  <Dropdown
-                          openClassName={'mb-2 h-[245px]'}
-                          className="col-span-2 mb-5"
-                          white
-                          label="What kind of vendor?"
-                          activeIcon={false}
-                          options={leadSourceOptions}
-                          handleSelect={(source) =>
-                            formik.setValues({ ...formik.values, ['lead_source']: source.label })
-                          }
-                          initialSelect={formik.values.lead_source}
-                          placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                        />
+
+                  {/* <Chip
+                        selectedStatus={type.id == formik.values.selectedContactSubtype}
+                        key={type.id}
+                        label={type.name}
+                        className="mr-3 mb-3"
+                        onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
+                      /> */}
+                      {console.log(multiselectOptionsClients, vendorSubtypes)}
+                  <DropdownWithSearch
+                      options={vendorSubtypes.map(item => ({
+                        value: item.id,
+                        label: item.name
+                      }))}
+                      typeOfContact={openedTab}
+                      label="What kind of vendor is this for you"
+                      onChange={(type) => {
+                        formik.setFieldValue('selectedContactSubtype', type.value)
+                      }}
+                      maxMenuHeight={230}
+                    />
                   {errors.selectedContactSubtype && touched.selectedContactSubtype && errors.selectedContactSubtype && (
                     <NotificationAlert className="mt-2 p-2" type={'error'}>
                       {errors.selectedContactSubtype}

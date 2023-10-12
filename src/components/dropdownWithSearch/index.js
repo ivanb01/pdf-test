@@ -1,21 +1,22 @@
 import Select from 'react-select';
-import { multiselectOptionsClients, multiselectOptionsProfessionals, tagsForProfessionals } from 'global/variables';
 
-const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuClose }) => {
+const DropdownWithSearch = ({ options,onChange, label, value, typeOfContact, isMulti, onMenuOpen, onMenuClose, ...props}) => {
   return (
     <div className=" custom-chipinput-styles col-span-2">
       {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
       <Select
-        isMulti
+        {...props}
+        isMulti={isMulti}
         value={value}
         onMenuOpen={onMenuOpen}
         onMenuClose={onMenuClose}
-        options={multiselectOptionsClients}
+        options={options}
         onChange={onChange}
         styles={{
           input: (base) => ({
             ...base,
             input: {
+              fontSize: '14px !important',
               borderColor: 'transparent !important',
               '&:focus': {
                 borderColor: 'transparent !important',
@@ -33,6 +34,10 @@ const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuCl
             borderRadius: '8px',
             borderColor: '#D1D5DB',
           }),
+          singleValue: (base) => ({
+            ...base,
+            fontSize: '14px',
+        }),
           multiValue: (base) => ({
             ...base,
             borderRadius: '70px',
@@ -60,9 +65,11 @@ const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuCl
               backgroundColor: 'white',
             },
           }),
-          option: (base) => ({
+          option: (base,state) => ({
             ...base,
             backgroundColor: 'white',
+            color: 'black',
+            fontWeight: state.isSelected ? '600' : '400',
             '&:hover': {
               background: '#3B82F6 !important',
               color: 'white !important',
@@ -73,4 +80,4 @@ const TagsInput = ({ onChange, label, value, typeOfContact, onMenuOpen, onMenuCl
   );
 };
 
-export default TagsInput;
+export default DropdownWithSearch;
