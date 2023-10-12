@@ -7,7 +7,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-const CampaignPreview = ({ open, setOpen, title, sms, email }) => {
+const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
   const [activeEvent, setActiveEvent] = useState({
     id: 0,
     waitDays: 1,
@@ -88,8 +88,7 @@ const CampaignPreview = ({ open, setOpen, title, sms, email }) => {
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
         <div className="fixed inset-0" />
-
-        <div className="fixed inset-0 overflow-hidden bg-transparentBlack">
+        <div className={`fixed inset-0 overflow-hidden bg-transparentBlack ${className}`}>
           <div className="absolute inset-0 overflow-hidden">
             <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[900px]`}>
               <Transition.Child
@@ -100,7 +99,7 @@ const CampaignPreview = ({ open, setOpen, title, sms, email }) => {
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
-                <Dialog.Panel className="pointer-events-auto w-screen">
+                <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     <div className="flex flex-shrink-0 justify-between items-center p-6 border border-gray2">
                       <div className={'flex flex-col gap-1'}>

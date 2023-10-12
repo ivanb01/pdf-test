@@ -166,6 +166,7 @@ const index = () => {
         open={openCampaignPreview}
         setOpen={setOpenCampaignPreview}
         title={'Campaign Name'}
+        className={'mt-[68px]'}
         sms={2}
         email={3}
       />

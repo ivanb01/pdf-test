@@ -6,8 +6,12 @@ import InCampaing from '../../../../public/images/campaign/inCampaign.svg';
 import NotInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from 'next/router';
+import CampaignPreview from '@components/campaign/CampaignPreview';
+import { useState } from 'react';
 const CampaignCard = ({ title, email, sms, status_2 }) => {
   const router = useRouter();
+  const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
+
   return (
     <div className={'flex flex-col rounded-lg campaigns-box-shadow'}>
       <div className={'px-4 py-[15px]'}>
@@ -61,8 +65,24 @@ const CampaignCard = ({ title, email, sms, status_2 }) => {
         style={{ height: '42px' }}
         className={'flex items-center justify-center gap-2 text-gray5 bg-lightBlue1 cursor-pointer'}>
         <VisibilityIcon className={'h-4 w-4'} />
-        <p className={'text-xs leading-4 font-medium'}>Template Preview</p>
+        <p
+          className={'text-xs leading-4 font-medium'}
+          onClick={() => {
+            setOpenCampaignPreview(true);
+          }}>
+          Template Preview
+        </p>
       </div>
+      {
+        <CampaignPreview
+          open={openCampaignPreview}
+          setOpen={setOpenCampaignPreview}
+          className={'mt-[68px]'}
+          title={'Campaign Name'}
+          sms={2}
+          email={3}
+        />
+      }
     </div>
   );
 };
