@@ -147,7 +147,7 @@ const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
                               </span>
                             </div>
                             {events.map((e) => (
-                              <div className={'flex flex-col mt-2'} onClick={() => setActiveEvent({ ...e })}>
+                              <div className={'flex flex-col mt-2'}>
                                 <div
                                   style={{ width: 'max-content' }}
                                   className={'font-semibold text-gray4 text-xs  leading-5 bg-gray1 px-1.5'}>
@@ -157,6 +157,8 @@ const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
                                   className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
                                   style={{ width: 2 }}></div>
                                 <div
+                                  role={'button'}
+                                  onClick={() => setActiveEvent({ ...e })}
                                   className={`p-3 flex ${
                                     activeEvent.id === e.id
                                       ? 'bg-lightBlue1 border border-lightBlue1 rounded-none'
