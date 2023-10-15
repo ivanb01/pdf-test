@@ -4,11 +4,13 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
+import { sendMarketingEmail } from '@api/marketing';
+
 const validationSchemaWithListingUrl = Yup.object({
   listingUrl: Yup.string().url('Invalid URL format').required('Listing URL is required'),
   note: Yup.string().optional(),
@@ -17,18 +19,90 @@ const validationSchemaWithoutListingUrl = Yup.object({
   note: Yup.string().optional(),
 });
 const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
+  useEffect(() => {
+    console.log(listingUrl, 'listingUrl');
+  }, [listingUrl]);
+  const [base64Images, setBase64Images] = useState([]);
+
+  const _sendMarketingEmail = async (body) => {
+    try {
+      return await sendMarketingEmail(body);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getBase64FromImageUrl = (url) => {
+    return fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      });
+  };
+  useEffect(() => {
+    const convertImagesToBase64 = async () => {
+      const base64Promises = template.map((imageUrl) => getBase64FromImageUrl(imageUrl.src));
+      try {
+        const base64Images = await Promise.all(base64Promises);
+        setBase64Images(base64Images);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    convertImagesToBase64();
+  }, []);
+
   const formik = useFormik({
-    initialValues: {
-      listingUrl: '',
-      note: '',
-    },
-    validationSchema: listingUrl ? validationSchemaWithListingUrl : validationSchemaWithoutListingUrl,
+    initialValues: listingUrl === true ? { listingUrl: '', note: '' } : { note: '' },
+    validationSchema: listingUrl === true ? validationSchemaWithListingUrl : validationSchemaWithoutListingUrl,
     onSubmit: (values) => {
-      handleCloseOverlay();
+      console.log(values.note);
+      // ${base64Images
+      //  .map(
+      //    (image, index) => `
+      //  <img src='${image}' alt='image ${index}' />
+      //   `,
+      //   )
+      //   .join('')}
+      const listingUrlContent = values.listingUrl
+        ? `
+    <div>
+      <p>Here you can find  <a href='${values.listingUrl}'>Listing url</a></p>
+    </div>
+  `
+        : '';
+
+      const noteContent = values.note ? `<p>${values.note}</p>` : '';
+
+      _sendMarketingEmail({
+        to: 'erzabegu3@gmail.com',
+        subject: `Order ${name && name}`,
+        body: `<html>
+<body>
+<div>
+   ${noteContent}
+   ${listingUrlContent}
+   </div>
+   </body>
+    </html>
+  `,
+      }).then((res) => {
+        console.log(res);
+      });
+      // handleCloseOverlay();
       console.log(values, 'values');
     },
   });
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   return (
     <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
       <form onSubmit={formik.handleSubmit}>
@@ -38,14 +112,6 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           </div>
           <div className={'flex-1 '}>
             <div className={'flex flex-col gap-6 '}>
-              {/*<div className={'grid grid-cols-2 gap-6'}>*/}
-              {/*  <Input type="text" label="Name" id="name" />*/}
-              {/*  <Input type="text" label="Lastname" id="lastname" />*/}
-              {/*</div>*/}
-              {/*<div className={'grid grid-cols-2 gap-6'}>*/}
-              {/*  <Input type="email" label="Email address" id="email" />*/}
-              {/*  <Input type="text" label="Phone Number" id="phoneNumber" optional />*/}
-              {/*</div>*/}
               {listingUrl && (
                 <Input
                   type="text"
@@ -59,18 +125,12 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
               <TextArea
                 className="min-h-[120px]"
                 id="note"
+                name="note"
                 label="Note"
+                value={formik.values.note}
                 optional
-                onChange={formik.handleChange}></TextArea>
-              {/*<div className={'grid grid-cols-2 gap-6'}>*/}
-              {/*  <Input*/}
-              {/*    type="date"*/}
-              {/*    label="I need this to be ready until"*/}
-              {/*    id="date"*/}
-              {/*    className={'col-span-1'}*/}
-              {/*    placeholder={'mm/dd/yyyy'}*/}
-              {/*  />*/}
-              {/*</div>*/}
+                handleChange={formik.handleChange}
+              />
             </div>
           </div>
         </div>
@@ -80,7 +140,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           <Button className={`mr-4`} white onClick={handleCloseOverlay}>
             Cancel
           </Button>
-          <Button primary type={'submit'}>
+          <Button primary type={'submit'} disabled={!formik.errors}>
             Send
           </Button>
         </div>
