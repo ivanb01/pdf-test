@@ -56,7 +56,7 @@ export default function ContactCard({
   }, []);
 
   const getSource = (source) => {
-    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
         name: 'AI Smart Synced Contact.',
         icon: <AIChip reviewed={contact.approved_ai} />,
@@ -120,7 +120,7 @@ export default function ContactCard({
             )}
             <div className="flex-1 ml-2 pr-2">
               <div className="flex items-center space-x-3">
-                <h3 className="text-sm font-medium text-gray-900 max-w-[110px]">
+                <h3 className="text-sm font-medium text-gray-900 max-w-[110px] break-all">
                   {contact.first_name + ' ' + contact.last_name}
                 </h3>
               </div>

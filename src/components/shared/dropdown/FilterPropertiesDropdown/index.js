@@ -23,8 +23,8 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
   const options = [
     { id: 1, name: 'Newest first', callback: filterNewest },
     { id: 2, name: 'Oldest first', callback: sortOldest },
-    { id: 3, name: 'Price Min first', callback: sortCheapest },
-    { id: 4, name: 'Price Max first', callback: sortMostExpensive },
+    { id: 3, name: 'Price (low to high)', callback: sortCheapest },
+    { id: 4, name: 'Price (high to low)', callback: sortMostExpensive },
   ];
   const [selected, setSelected] = useState(activeFilterOfProperties);
   useEffect(() => {

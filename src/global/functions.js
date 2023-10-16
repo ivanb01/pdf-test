@@ -266,7 +266,7 @@ export const findTagsOption = (selectedOptions, typeOfContact) => {
   const options = selectedOptions.map((label) => {
     const value = label;
     let multiselectOptions = typeOfContact === 0 ? multiselectOptionsClients : multiselectOptionsProfessionals;
-    const option = multiselectOptions.find((option) => option.value === value);
+    const option = multiselectOptions.find((option) => option.value === label);
     return {
       value: value,
       label: option ? option.label : label,

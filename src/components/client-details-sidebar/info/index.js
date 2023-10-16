@@ -1,7 +1,7 @@
 import InfoCard from './card';
 import Dropdown from 'components/shared/dropdown';
 import * as contactServices from 'api/contacts';
-import { allStatusesQuickEdit, leadSourceOptions } from 'global/variables';
+import { allStatusesQuickEdit, leadSourceOptions, multiselectOptionsClients } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
@@ -81,7 +81,7 @@ export default function Info({ client }) {
 
   const handleChangeSource = async (source) => {
     try {
-      console.log(source)
+      console.log(source);
       await contactServices.updateContact(client.id, {
         lead_source: source,
       });
@@ -167,7 +167,9 @@ export default function Info({ client }) {
             addChip={addTag}
           /> */}
           <DropdownWithSearch
+            isMulti
             label="Priority"
+            options={multiselectOptionsClients}
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
             value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
             onChange={(choice) => {
@@ -180,7 +182,9 @@ export default function Info({ client }) {
             activeIcon={false}
             options={leadSourceOptions}
             className="mt-3 mb-8"
-            handleSelect={(source) => {console.log(source); handleChangeSource(source.name)}}
+            handleSelect={(source) => {
+              handleChangeSource(source.name);
+            }}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
           />
