@@ -6,7 +6,7 @@ import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
-import TagsInput from 'components/tagsInput';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 import DateChip from 'components/shared/chip/date-chip';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { useDispatch } from 'react-redux';
@@ -81,6 +81,7 @@ export default function Info({ client }) {
 
   const handleChangeSource = async (source) => {
     try {
+      console.log(source)
       await contactServices.updateContact(client.id, {
         lead_source: source,
       });
@@ -165,7 +166,7 @@ export default function Info({ client }) {
             removeChip={removeTag}
             addChip={addTag}
           /> */}
-          <TagsInput
+          <DropdownWithSearch
             label="Priority"
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
             value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
@@ -179,7 +180,7 @@ export default function Info({ client }) {
             activeIcon={false}
             options={leadSourceOptions}
             className="mt-3 mb-8"
-            handleSelect={(source) => handleChangeSource(source.name)}
+            handleSelect={(source) => {console.log(source); handleChangeSource(source.name)}}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
           />

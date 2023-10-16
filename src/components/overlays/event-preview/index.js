@@ -188,7 +188,7 @@ const EventPreview = ({
                         <Loader />
                       </div>
                     ) : (
-                      <div className="flex">
+                      <div className="flex flex-1">
                         <div className="bg-white border-gray2 border-r p-6  h-full">
                           <nav aria-label="Progress">
                             <ol role="list" className="overflow-hidden">
@@ -236,11 +236,11 @@ const EventPreview = ({
                                           <br />
                                           <span className={' text-gray-500 text-sm'}>
                                             {' '}
-                                            {event.execute_on.includes('After')
+                                            {event?.execute_on?.includes('After')
                                               ? event.execute_on
                                                   .substring(event.execute_on.indexOf('After') + 5)
                                                   .trim() + ' after added in Campaign'
-                                              : event.execute_on}
+                                              : event?.execute_on}
                                           </span>
                                         </div>
                                         <div>
@@ -263,13 +263,13 @@ const EventPreview = ({
                                   <div className={'flex gap-1 mt-1'}>
                                     <CalendarIcon className="text-gray4" height={20} />
                                     <span className={'text-sm'}>
-                                      {campaignEvents?.events[currentEvent - 1].execute_on.includes('After')
-                                        ? campaignEvents?.events[currentEvent - 1].execute_on
+                                      {campaignEvents?.events[currentEvent - 1]?.execute_on?.includes('After')
+                                        ? campaignEvents?.events[currentEvent - 1]?.execute_on
                                             .substring(
                                               campaignEvents.events[currentEvent - 1].execute_on.indexOf('After') + 5,
                                             )
                                             .trim() + ' after added in Campaign'
-                                        : campaignEvents?.events[currentEvent - 1].execute_on}
+                                        : campaignEvents?.events[currentEvent - 1]?.execute_on}
                                     </span>
                                   </div>
                                   {/* <div className="flex flex-row mt-5">
