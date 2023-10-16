@@ -4,12 +4,13 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { sendMarketingEmail } from '@api/marketing';
+import toast from 'react-hot-toast';
 
 const validationSchemaWithListingUrl = Yup.object({
   listingUrl: Yup.string().url('Invalid URL format').required('Listing URL is required'),
@@ -19,57 +20,20 @@ const validationSchemaWithoutListingUrl = Yup.object({
   note: Yup.string().optional(),
 });
 const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
-  useEffect(() => {
-    console.log(listingUrl, 'listingUrl');
-  }, [listingUrl]);
-  const [base64Images, setBase64Images] = useState([]);
-
   const _sendMarketingEmail = async (body) => {
     try {
       return await sendMarketingEmail(body);
     } catch (e) {
-      console.log(e);
+      toast.error('Something went wrong');
     }
   };
-
-  const getBase64FromImageUrl = (url) => {
-    return fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      });
-  };
-  useEffect(() => {
-    const convertImagesToBase64 = async () => {
-      const base64Promises = template.map((imageUrl) => getBase64FromImageUrl(imageUrl.src));
-      try {
-        const base64Images = await Promise.all(base64Promises);
-        setBase64Images(base64Images);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    convertImagesToBase64();
-  }, []);
 
   const formik = useFormik({
     initialValues: listingUrl === true ? { listingUrl: '', note: '' } : { note: '' },
     validationSchema: listingUrl === true ? validationSchemaWithListingUrl : validationSchemaWithoutListingUrl,
     onSubmit: (values) => {
-      console.log(values.note);
-      // ${base64Images
-      //  .map(
-      //    (image, index) => `
-      //  <img src='${image}' alt='image ${index}' />
-      //   `,
-      //   )
-      //   .join('')}
+      handleCloseOverlay();
+      toast.success('Email was sent successfully!');
       const listingUrlContent = values.listingUrl
         ? `
     <div>
@@ -81,7 +45,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
       const noteContent = values.note ? `<p>${values.note}</p>` : '';
 
       _sendMarketingEmail({
-        to: 'erzabegu3@gmail.com',
+        to: 'jasuncion@opgny.com',
         subject: `Order ${name && name}`,
         body: `<html>
 <body>
@@ -89,26 +53,31 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
    ${noteContent}
    ${listingUrlContent}
    </div>
+    ${template
+      .map(
+        (image, index) => `
+        <img src='${image}' alt='image ${index}' height='300' width='300' style='object-fit: contain;' />
+          `,
+      )
+      .join('')}
    </body>
     </html>
   `,
-      }).then((res) => {
-        console.log(res);
-      });
-      // handleCloseOverlay();
-      console.log(values, 'values');
+      })
+        .then(() => {})
+        .catch(() => {
+          toast.error('Something went wrong');
+        })
+        .finally(() => {});
     },
   });
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
       <form onSubmit={formik.handleSubmit}>
         <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
           <div className={'flex-1 relative'}>
-            <ImageGallery images={template} className={'object-cover'} includeZoom={false} />
+            <ImageGallery images={template} className={'object-contain'} includeZoom={false} />
           </div>
           <div className={'flex-1 '}>
             <div className={'flex flex-col gap-6 '}>
@@ -167,14 +136,10 @@ export const ImageGallery = ({ images, className, includeZoom }) => {
     <>
       {includeZoom ? (
         <Zoom zoomMargin={45}>
-          <img
-            className={`${className} w-full rounded-lg`}
-            src={images[currentIndex].src}
-            style={{ height: '500px' }}
-          />
+          <img className={`${className} w-full rounded-lg`} src={images[currentIndex]} style={{ height: '500px' }} />
         </Zoom>
       ) : (
-        <img className={`${className} w-full rounded-lg`} src={images[currentIndex].src} style={{ height: '500px' }} />
+        <img className={`${className} w-full rounded-lg`} src={images[currentIndex]} style={{ height: '500px' }} />
       )}
 
       {showPrevButton && (
