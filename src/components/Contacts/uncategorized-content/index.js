@@ -157,7 +157,7 @@ const Uncategorized = ({
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  New Records
+                  Contacts you need to categorize
                 </Text>
                 {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">
