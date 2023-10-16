@@ -62,7 +62,12 @@ const CategorizePage = ({
   const handleSelectUncategorizedType = (type) => {
     let vendorSubtypesArray = vendorSubtypes?.map((subtype) => subtype.id);
     setSelectedUncategorizedContactType(type);
-    if (selectedUncategorizedContactStatus || vendorSubtypesArray?.includes(type)) {
+    console.log(vendorSubtypesArray, type);
+    if (
+      selectedUncategorizedContactStatus ||
+      vendorSubtypesArray?.includes(type) ||
+      [2, 3, 9, 12, 13, 14].includes(type)
+    ) {
       updateTypeStatus(1, type);
     }
   };

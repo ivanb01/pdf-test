@@ -8,7 +8,6 @@ const Document = () => {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <script defer src="/js/datepicker-min.js"></script>
         <script defer src="/js/lottie.js"></script>
-        <meta name="viewport" content="width=device-width"></meta>
       </Head>
       <body>
         <Main />
