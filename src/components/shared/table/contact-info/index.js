@@ -28,7 +28,7 @@ const statusColors = {
 
 const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategorization }) => {
   const getSource = (source) => {
-    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
         name: 'AI Smart Synced Contact.',
         icon: <AIChip reviewed={data.approved_ai === false} />,
