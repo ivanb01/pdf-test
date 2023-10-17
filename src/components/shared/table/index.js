@@ -49,6 +49,8 @@ import List from '@mui/icons-material/List';
 import AddActivity from 'components/overlays/add-activity';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
+import ArrowDropDownTwoToneIcon from '@mui/icons-material/ArrowDropDownTwoTone';
+import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { getContact } from 'api/contacts';
 import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -862,6 +864,20 @@ const Table = ({
       return filteredContacts;
     }
 
+    const [isExpanded, setIsExpanded] = useState(
+      contactsStatuses[openedSubtab].statuses.map((category, index) => ({ categoryId: category.id, expanded: true })),
+    );
+    const toggleExpanded = (categoryId) => {
+      setIsExpanded((prevState) => {
+        return prevState.map((item) => {
+          if (item.categoryId === categoryId) {
+            return { ...item, expanded: !item.expanded };
+          }
+          return item;
+        });
+      });
+    };
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -909,6 +925,22 @@ const Table = ({
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
                     <div className="flex items-center px-6 py-2">
+                      {filterContacts(category, contactTypes).length > 0 &&
+                        isExpanded
+                          .filter((item) => item.categoryId === category.id)
+                          .map((item) =>
+                            item.expanded ? (
+                              <ArrowDropUpTwoToneIcon
+                                className={'h-5 w-5 text-gray4 mr-1'}
+                                onClick={() => toggleExpanded(category.id)}
+                              />
+                            ) : (
+                              <ArrowDropDownTwoToneIcon
+                                className={'h-5 w-5 text-gray4 mr-1'}
+                                onClick={() => toggleExpanded(category.id)}
+                              />
+                            ),
+                          )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -942,9 +974,11 @@ const Table = ({
                     </div>
                   </td>
                 </tr>
+
                 {filterContacts(category, contactTypes).length ? (
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
+                      col
                       key={contact.id}
                       className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
                       onClick={() =>
@@ -953,7 +987,12 @@ const Table = ({
                           query: { id: contact.id },
                         })
                       }>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <td
+                        className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 ${
+                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
+                            ? 'hidden'
+                            : ''
+                        }`}>
                         <ContactInfo
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
@@ -963,12 +1002,22 @@ const Table = ({
                           }}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle">
+                      <td
+                        className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle ${
+                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
+                            ? 'hidden'
+                            : ''
+                        }`}>
                         <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle">
+                      <td
+                        className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle  ${
+                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
+                            ? 'hidden'
+                            : ''
+                        }`}>
                         <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
@@ -994,7 +1043,12 @@ const Table = ({
                         )}
                       </td>
                       {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <td
+                          className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 ${
+                            isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
+                              ? 'hidden'
+                              : ''
+                          }`}>
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
@@ -1010,7 +1064,12 @@ const Table = ({
                           {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                         </td>
                       )}
-                      <td>
+                      <td
+                        className={`${
+                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
+                            ? 'hidden'
+                            : ''
+                        }`}>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div
                             className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
