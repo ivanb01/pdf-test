@@ -62,6 +62,9 @@ const CategorizePage = ({
   const handleSelectUncategorizedType = (type) => {
     let vendorSubtypesArray = vendorSubtypes?.map((subtype) => subtype.id);
     setSelectedUncategorizedContactType(type);
+    if ([2, 3, 9, 12, 13, 14].includes(type)) {
+      updateTypeStatus(1, type);
+    }
     if (selectedUncategorizedContactStatus || vendorSubtypesArray?.includes(type)) {
       updateTypeStatus(1, type);
     }
@@ -96,8 +99,8 @@ const CategorizePage = ({
       .filter((contact) => contact !== undefined);
     setCategorizedInThisSession((prevState) => [...updatedContacts, ...prevState]);
     afterCategorizationProcess(ids);
-    dispatch(setRefetchData(true));
     dispatch(updateContacts(contactsArray));
+    dispatch(setRefetchData(true));
     bulkUpdateContacts(contacts);
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
   };
@@ -193,15 +196,17 @@ const CategorizePage = ({
                           : 'In what stage of communication?'}
                       </Text>
                     </div>
-                    {selectedUncategorizedContactType != 8 ? (
-                      <StatusSelect
-                        className="pl-9"
-                        selectedStatus={selectedUncategorizedContactStatus}
-                        setSelectedStatus={handleSelectUncategorizedStatus}
-                        statuses={
-                          [9, 12].includes(selectedUncategorizedContactType) ? professionalsStatuses : clientStatuses
-                        }
-                      />
+                    {selectedUncategorizedContactType !== 8 ? (
+                      <>
+                        <StatusSelect
+                          className="pl-9"
+                          selectedStatus={selectedUncategorizedContactStatus}
+                          setSelectedStatus={handleSelectUncategorizedStatus}
+                          statuses={
+                            [9, 12].includes(selectedUncategorizedContactType) ? professionalsStatuses : clientStatuses
+                          }
+                        />
+                      </>
                     ) : (
                       <div className="flex flex-wrap">
                         {vendorSubtypes.map((type) => (
