@@ -86,6 +86,7 @@ const index = () => {
                 <Table
                   tableFor={'trash'}
                   data={onSearch(searchTerm)}
+                  searchTerm={searchTerm}
                   handleCardEdit={(contact) => {
                     setShowEditContact(true);
                     setContactToEdit(contact);
