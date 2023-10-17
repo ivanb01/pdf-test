@@ -1,6 +1,10 @@
 import Button from 'components/shared/button';
+import { useEffect } from 'react';
 
 const ContactTypeSelect = ({ type, setSelectedType, selectedType }) => {
+  useEffect(() => {
+    console.log(selectedType, 'selectedType');
+  }, [selectedType]);
   return (
     <>
       <div className="flex items-center mb-2">

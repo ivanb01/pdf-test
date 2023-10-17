@@ -86,11 +86,10 @@ const index = () => {
 
   useEffect(() => {
     if (!hasRun.current && allContacts.data) {
-      console.log('test');
       handleFetchUncategorized();
       hasRun.current = true;
     }
-  }, [allContacts.data]);
+  }, [allContacts.data, uncategorizedContactsOriginal]);
 
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
