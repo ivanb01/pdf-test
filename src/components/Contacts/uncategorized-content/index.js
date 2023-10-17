@@ -138,7 +138,7 @@ const Uncategorized = ({
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
-                    Uncategorized Contacts
+                    Contacts you need to categorize
                   </Text>
                   <Search
                     placeholder="Search"
