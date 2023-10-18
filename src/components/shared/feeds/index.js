@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateAgo } from 'global/functions';
+import { formatDateAgo, formatDateCalendar, formatDateLL, formatDateLThour } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -203,7 +203,13 @@ export default function Feeds({ contactId, activities, setActivities }) {
                         <div className="min-w-0 flex-1">
                           <p className="mt-0.5 text-sm text-gray-500">
                             {/* Commented 6d ago */}
-                            {formatDateAgo(activityItem.updated_at ? activityItem.updated_at : activityItem.created_at)}
+                            {formatDateCalendar(
+                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
+                            )}{' '}
+                            -{' '}
+                            {formatDateLThour(
+                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
+                            )}
                           </p>
 
                           <div className="mt-2 text-sm text-gray6">
