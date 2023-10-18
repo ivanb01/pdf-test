@@ -941,21 +941,18 @@ const Table = ({
               <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
-                    <div className="flex items-center px-6 py-2">
+                    <div
+                      className="flex items-center px-6 py-2"
+                      role={'button'}
+                      onClick={() => toggleExpanded(category.id)}>
                       {filterContacts(category, contactTypes).length > 0 &&
                         isExpanded
                           .filter((item) => item.categoryId === category.id)
                           .map((item) =>
                             item.expanded ? (
-                              <ArrowDropUpTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'}
-                                onClick={() => toggleExpanded(category.id)}
-                              />
+                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
                             ) : (
-                              <ArrowDropDownTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'}
-                                onClick={() => toggleExpanded(category.id)}
-                              />
+                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
                             ),
                           )}
                       <Text chipText className="text-gray4 mr-1">
@@ -965,7 +962,11 @@ const Table = ({
                         side={'bottom'}
                         align={'start'}
                         triggerElement={
-                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          <InfoSharpIcon
+                            className="h-4 w-4 text-gray3 hover:text-gray4"
+                            aria-hidden="true"
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         }>
                         <div
                           // style={{ width: '300px' }}
