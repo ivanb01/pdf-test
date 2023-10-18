@@ -884,27 +884,33 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center  min-w-[480px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
               ></Input> */}
               {openedTab == 0 ? 'Client' : 'Professional'}
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[110px]">
               Type
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[190px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
               <th
                 scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[220px]">
                 LAST COMMUNICATION
               </th>
             ) : null}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[173px]">
               ACTIONS
             </th>
           </tr>
@@ -978,21 +984,19 @@ const Table = ({
                 {filterContacts(category, contactTypes).length ? (
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
-                      col
                       key={contact.id}
-                      className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                        isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                          ? 'hidden'
+                          : ''
+                      }`}
                       onClick={() =>
                         router.push({
                           pathname: '/contacts/details',
                           query: { id: contact.id },
                         })
                       }>
-                      <td
-                        className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 ${
-                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
-                            ? 'hidden'
-                            : ''
-                        }`}>
+                      <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
@@ -1002,22 +1006,12 @@ const Table = ({
                           }}
                         />
                       </td>
-                      <td
-                        className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle ${
-                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
-                            ? 'hidden'
-                            : ''
-                        }`}>
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
                         <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
-                      <td
-                        className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle  ${
-                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
-                            ? 'hidden'
-                            : ''
-                        }`}>
+                      <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
                         <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
@@ -1043,12 +1037,7 @@ const Table = ({
                         )}
                       </td>
                       {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td
-                          className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 ${
-                            isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
-                              ? 'hidden'
-                              : ''
-                          }`}>
+                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
@@ -1064,12 +1053,7 @@ const Table = ({
                           {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
                         </td>
                       )}
-                      <td
-                        className={`${
-                          isExpanded.find((expanded) => expanded.categoryId === category.id).expanded !== true
-                            ? 'hidden'
-                            : ''
-                        }`}>
+                      <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div
                             className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
