@@ -80,6 +80,7 @@ export default function Info({ client }) {
   }, [client]);
 
   const handleChangeSource = async (source) => {
+    console.log(source);
     try {
       console.log(source);
       await contactServices.updateContact(client.id, {
@@ -183,7 +184,8 @@ export default function Info({ client }) {
             options={leadSourceOptions}
             className="mt-3 mb-8"
             handleSelect={(source) => {
-              handleChangeSource(source.name);
+              console.log(source);
+              handleChangeSource(source.label);
             }}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
