@@ -482,10 +482,6 @@ const ReviewContact = ({
     } catch (error) {}
   };
 
-  useEffect(() => {
-    console.log(formik.values.selectedContactCategory);
-  }, [formik.values]);
-
   return (
     <Overlay handleCloseOverlay={!hideCloseButton && handleClose} title={title} className={`${className} w-[1150px]`}>
       <div className="flex min-h-[500px]">
