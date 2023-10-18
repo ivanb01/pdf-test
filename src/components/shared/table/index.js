@@ -2005,7 +2005,7 @@ const Table = ({
           />
         </svg>
         <h5 className={'text-sm leading-5 font-medium text-gray-900'}>
-          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found when search '}
+          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found'}
         </h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
           Contacts that you moved to trash will be listed here
