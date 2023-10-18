@@ -118,33 +118,29 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      if (!isUnapprovedAI) {
-        if (formik.values.email !== formik.initialValues.email) {
-          setUpdating(true);
-          await userAlreadyExists(values.email)
-            .then((response) => {
-              if (response === undefined) {
-                setExistingContactEmailError('');
-                setExistingContactEmail('');
-                handleSubmit(values).then();
-              } else {
-                setExistingContactEmailError('This email already exists!');
-                setExistingContactEmail(values.email);
-              }
-            })
-            .catch(() => {
+      if (formik.values.email !== formik.initialValues.email) {
+        console.log('ereza');
+        setUpdating(true);
+        await userAlreadyExists(values.email)
+          .then((response) => {
+            if (response === undefined) {
               setExistingContactEmailError('');
               setExistingContactEmail('');
-            })
-            .finally(() => {
-              setUpdating(false);
-            });
-        } else {
-          handleSubmit(values).then();
-        }
-      }
-      if (isUnapprovedAI) {
-        await handleSubmit(values).then();
+              handleSubmit(values).then();
+            } else {
+              setExistingContactEmailError('This email already exists!');
+              setExistingContactEmail(values.email);
+            }
+          })
+          .catch(() => {
+            setExistingContactEmailError('');
+            setExistingContactEmail('');
+          })
+          .finally(() => {
+            setUpdating(false);
+          });
+      } else {
+        handleSubmit(values).then();
       }
     },
   });
