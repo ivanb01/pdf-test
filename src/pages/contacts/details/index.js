@@ -43,7 +43,7 @@ export default function Details() {
       console.log(error);
       toast.error('Error fetching activity');
     });
-    const activityLogData = activityLogResponse.data;
+    const activityLogData = activityLogResponse?.data;
     dispatch(setActivityLogData(activityLogData.data));
   };
   const getContactData = () => {

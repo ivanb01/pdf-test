@@ -161,6 +161,19 @@ export default function Feeds({ contactId, activities, setActivities }) {
       handleClick: handleDeleteActivity,
     },
   ];
+  const noEditTypes = [
+    {
+      name: (
+        <span className="flex flex-row">
+          <Delete height={15} className="text-red5 mr-3 w-4" />
+          <Text smallText className="text-red5">
+            Delete Activity
+          </Text>
+        </span>
+      ),
+      handleClick: handleDeleteActivity,
+    },
+  ];
 
   return (
     <>
@@ -206,7 +219,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                     {activityItem.contact_id && (
                       <div className="flex mr-3">
                         <FilterDropdown
-                          types={types}
+                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : noEditTypes}
                           icon={<More className="w-5" />}
                           data={activityItem}
                           positionClass="right-0"
