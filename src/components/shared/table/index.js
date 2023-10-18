@@ -12,7 +12,7 @@ import {
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EventStatus from 'components/event-status';
 import Text from '../text';
 import Error from '@mui/icons-material/Error';
@@ -52,7 +52,6 @@ import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
 import ArrowDropDownTwoToneIcon from '@mui/icons-material/ArrowDropDownTwoTone';
 import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { getContact } from 'api/contacts';
-import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Fragment } from 'react';
 import ClientHealth from 'components/clientHealth';
@@ -865,8 +864,20 @@ const Table = ({
     }
 
     const [isExpanded, setIsExpanded] = useState(
-      contactsStatuses[openedSubtab].statuses.map((category, index) => ({ categoryId: category.id, expanded: true })),
+      contactsStatuses[openedSubtab].statuses.map((category) => ({
+        categoryId: category.id,
+        expanded: true,
+      })),
     );
+
+    React.useEffect(() => {
+      setIsExpanded(
+        contactsStatuses[openedSubtab].statuses.map((category) => ({
+          categoryId: category.id,
+          expanded: true,
+        })),
+      );
+    }, [openedSubtab, contactsStatuses]);
     const toggleExpanded = (categoryId) => {
       setIsExpanded((prevState) => {
         return prevState.map((item) => {
@@ -884,7 +895,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center  min-w-[480px]">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[460px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -898,7 +909,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[190px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[265px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
@@ -937,12 +948,12 @@ const Table = ({
                           .map((item) =>
                             item.expanded ? (
                               <ArrowDropUpTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1'}
+                                className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'}
                                 onClick={() => toggleExpanded(category.id)}
                               />
                             ) : (
                               <ArrowDropDownTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1'}
+                                className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'}
                                 onClick={() => toggleExpanded(category.id)}
                               />
                             ),
