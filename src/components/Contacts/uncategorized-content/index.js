@@ -132,13 +132,13 @@ const Uncategorized = ({
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             {categorizing ? (
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
-                    Uncategorized Contacts
+                    Contacts you need to categorize
                   </Text>
                   <Search
                     placeholder="Search"
@@ -157,7 +157,7 @@ const Uncategorized = ({
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  New Records
+                  Contacts you need to categorize
                 </Text>
                 {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">

@@ -12,7 +12,7 @@ import {
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EventStatus from 'components/event-status';
 import Text from '../text';
 import Error from '@mui/icons-material/Error';
@@ -49,8 +49,9 @@ import List from '@mui/icons-material/List';
 import AddActivity from 'components/overlays/add-activity';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
+import ArrowDropDownTwoToneIcon from '@mui/icons-material/ArrowDropDownTwoTone';
+import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { getContact } from 'api/contacts';
-import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Fragment } from 'react';
 import ClientHealth from 'components/clientHealth';
@@ -143,12 +144,12 @@ const Table = ({
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={16} width={16} />,
       };
-    }
+    } else return <></>;
   };
 
   const getContactInfo = async () => {
@@ -507,10 +508,14 @@ const Table = ({
                           onChange={(event) => handleClickRow(dataItem, event)}></Input>
                       )}
                       <ContactInfo
+                        inCategorization={tableFor === 'in-categorization'}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
                           image: dataItem.profile_image_path,
+                          import_source_text: dataItem.import_source_text,
+                          summary: dataItem.summary,
+                          approved_ai: !dataItem.approved_ai,
                         }}
                       />
                       {/* {(contact.type != null || contact.status != null) && (
@@ -858,33 +863,65 @@ const Table = ({
       return filteredContacts;
     }
 
+    const [isExpanded, setIsExpanded] = useState(
+      contactsStatuses[openedSubtab].statuses.map((category) => ({
+        categoryId: category.id,
+        expanded: true,
+      })),
+    );
+
+    React.useEffect(() => {
+      setIsExpanded(
+        contactsStatuses[openedSubtab].statuses.map((category) => ({
+          categoryId: category.id,
+          expanded: true,
+        })),
+      );
+    }, [openedSubtab, contactsStatuses]);
+    const toggleExpanded = (categoryId) => {
+      setIsExpanded((prevState) => {
+        return prevState.map((item) => {
+          if (item.categoryId === categoryId) {
+            return { ...item, expanded: !item.expanded };
+          }
+          return item;
+        });
+      });
+    };
+
     return (
       <>
         <thead className="bg-gray-50">
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[460px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
               ></Input> */}
               {openedTab == 0 ? 'Client' : 'Professional'}
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[110px]">
               Type
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[265px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
               <th
                 scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[220px]">
                 LAST COMMUNICATION
               </th>
             ) : null}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[173px]">
               ACTIONS
             </th>
           </tr>
@@ -904,7 +941,20 @@ const Table = ({
               <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
-                    <div className="flex items-center px-6 py-2">
+                    <div
+                      className="flex items-center px-6 py-2"
+                      role={'button'}
+                      onClick={() => toggleExpanded(category.id)}>
+                      {filterContacts(category, contactTypes).length > 0 &&
+                        isExpanded
+                          .filter((item) => item.categoryId === category.id)
+                          .map((item) =>
+                            item.expanded ? (
+                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ) : (
+                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ),
+                          )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -912,7 +962,11 @@ const Table = ({
                         side={'bottom'}
                         align={'start'}
                         triggerElement={
-                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          <InfoSharpIcon
+                            className="h-4 w-4 text-gray3 hover:text-gray4"
+                            aria-hidden="true"
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         }>
                         <div
                           // style={{ width: '300px' }}
@@ -938,18 +992,23 @@ const Table = ({
                     </div>
                   </td>
                 </tr>
+
                 {filterContacts(category, contactTypes).length ? (
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
-                      className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                        isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                          ? 'hidden'
+                          : ''
+                      }`}
                       onClick={() =>
                         router.push({
                           pathname: '/contacts/details',
                           query: { id: contact.id },
                         })
                       }>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
@@ -959,15 +1018,15 @@ const Table = ({
                           }}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
                         <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
                           {contact.category_2}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                      <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
                         <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
-                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                          <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
@@ -978,7 +1037,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -990,7 +1049,7 @@ const Table = ({
                         )}
                       </td>
                       {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
@@ -1316,7 +1375,7 @@ const Table = ({
                               triggerElement={
                                 <div
                                   className={
-                                    'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                    'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                   }>
                                   {contact.summary}
                                 </div>
@@ -1740,7 +1799,7 @@ const Table = ({
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[750px]">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status  lg:min-w-[500px] xl:min-w-[600px]">
                 <div className=" flex items-center">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
@@ -1839,9 +1898,6 @@ const Table = ({
     );
   };
   const trashTable = () => {
-    {
-      console.log(data, 'Data');
-    }
     return data.length > 0 ? (
       <>
         <thead>
@@ -1949,7 +2005,9 @@ const Table = ({
             fill="#D1D5DB"
           />
         </svg>
-        <h5 className={'text-sm leading-5 font-medium text-gray-900'}>Trash is Empty</h5>
+        <h5 className={'text-sm leading-5 font-medium text-gray-900'}>
+          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found'}
+        </h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
           Contacts that you moved to trash will be listed here
         </p>
@@ -2073,7 +2131,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : ' overflow-x-auto'}`}>
+        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : 'overflow-x-auto'}`}>
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">

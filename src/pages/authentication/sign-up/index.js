@@ -129,10 +129,10 @@ const SignUp = () => {
 
 export default SignUp;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

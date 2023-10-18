@@ -49,6 +49,7 @@ import placeholder from '/public/images/placeholder.png';
 import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const index = () => {
   const router = useRouter();
@@ -776,6 +777,14 @@ const index = () => {
           {isAuthenticated && (
             <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
               {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
+              <GlobalAlert
+                className="mb-4"
+                smallText
+                noBorder
+                rounded
+                type="warning"
+                message={`NOTE: The agent name is only visible to you. It will not show when you share the link with someone.`}
+              />
               <div className="flex items-center">
                 <div className="mr-4 w-24 h-24 rounded-lg">
                   <img

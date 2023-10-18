@@ -4,12 +4,8 @@ import Button from '@components/shared/button';
 import EastIcon from '@mui/icons-material/East';
 import OrderTemplate, { ImageGallery } from '@components/overlays/order-template';
 import { useState } from 'react';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
-const PreviewTemplate = ({ template, name, handleCloseOverlay }) => {
+const PreviewTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
   const [openOrderTemplate, setOpenOrderTemplate] = useState(false);
 
   return (
@@ -34,6 +30,7 @@ const PreviewTemplate = ({ template, name, handleCloseOverlay }) => {
       </Overlay>
       {openOrderTemplate && (
         <OrderTemplate
+          listingUrl={listingUrl}
           template={template}
           name={name}
           handleCloseOverlay={() => {

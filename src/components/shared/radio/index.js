@@ -4,6 +4,7 @@ import Button from '../button';
 import NotificationAlert from '../alert/notification-alert';
 
 export default function Radio({
+  ternary,
   label,
   options,
   setSelectedOption,
@@ -24,25 +25,32 @@ export default function Radio({
       <div className="flex">
         {options?.map((option) =>
           secondary ? (
-            <div key={option.id} className="flex items-center mr-5" onClick={() => setSelectedOption(option.id)}>
-              <input
-                id={option.id}
-                name={name ? name : 'radio-group'}
-                type="radio"
-                defaultChecked={option.id === selectedOption}
-                className="h-4 w-4 border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-              />
-              <label htmlFor={option.id} className="ml-1 block text-sm font-medium leading-6 text-gray-900">
+            <div key={option.id} className="mr-5" onClick={() => setSelectedOption(option.id)}>
+              <label htmlFor={option.id} className="flex items-center text-sm font-medium leading-6 text-gray-900">
+                <input
+                  id={option.id}
+                  name={name ? name : 'radio-group'}
+                  type="radio"
+                  defaultChecked={option.id === selectedOption}
+                  className="mr-1 h-4 w-4 border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                />
                 {option.name}
               </label>
             </div>
           ) : (
+            ternary ? 
+            <div 
+            onClick={() => {
+              setSelectedOption(option.id);
+            }}
+            key={option.id} className={`${selectedOption == option.id && 'border-lightBlue3 text-lightBlue3'} cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>{option.name}</div>
+            :
             <Button
               ternary
               active={selectedOption == option.id}
               label={option.name}
               key={option.name}
-              className="mr-4 min-w-[115px]"
+              className={`mr-4 min-w-[115px]`}
               onClick={() => {
                 setSelectedOption(option.id);
               }}

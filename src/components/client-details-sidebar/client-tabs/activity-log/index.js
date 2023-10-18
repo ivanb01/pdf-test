@@ -113,11 +113,12 @@ export default function ActivityLog({ contactId, source, contact }) {
   // useEffect(() => {
   //   if (source == 'GmailAI') fetchAiPreview(contactId);
   // }, []);
+
   const getSource = (source) => {
-    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
         name: 'AI Smart Synced Contact.',
-        icon: <AIChip reviewed={clients.approved_ai === false} />,
+        icon: <AIChip reviewed={contact.approved_ai} />,
       };
     } else if (source === 'Manually Added') {
       return {
@@ -131,11 +132,13 @@ export default function ActivityLog({ contactId, source, contact }) {
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={20} width={20} />,
       };
+    } else {
+      return <></>;
     }
   };
 
