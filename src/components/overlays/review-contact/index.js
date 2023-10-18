@@ -524,7 +524,7 @@ const ReviewContact = ({
                   label="Email"
                   id="email"
                   className=""
-                  readonly={isUnapprovedAI}
+                  // readonly={isUnapprovedAI}
                   // onChange={formik.handleChange}
                   onChange={(e) => {
                     if (existingContactEmail !== e.target.value) {
