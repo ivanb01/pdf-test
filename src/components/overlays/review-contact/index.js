@@ -109,11 +109,9 @@ const ReviewContact = ({
           ? 0
           : client?.category_1 == 'Professional'
           ? 1
-          : client?.category_1 == 'Other'
-          ? 2
           : client?.category_1 === 'Trash'
           ? 4
-          : 3,
+          : 2,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
@@ -474,6 +472,10 @@ const ReviewContact = ({
     } catch (error) {}
   };
 
+  useEffect(() => {
+    console.log(formik.values.selectedContactCategory);
+  }, [formik.values]);
+
   return (
     <Overlay handleCloseOverlay={!hideCloseButton && handleClose} title={title} className={`${className} w-[1150px]`}>
       <div className="flex min-h-[500px]">
@@ -661,7 +663,8 @@ const ReviewContact = ({
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       /> */}
                   <DropdownWithSearch
-                    options={vendorSubtypes.map((item) => ({
+                    value={vendorSubtypes?.find((subtype) => subtype.id == formik.values.selectedContactSubtype)}
+                    options={vendorSubtypes?.map((item) => ({
                       value: item.id,
                       label: item.name,
                     }))}
