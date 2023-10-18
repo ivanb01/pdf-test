@@ -67,6 +67,7 @@ const ReviewContact = ({
   const openedTab = useSelector((state) => state.global.openedTab);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
+  const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
 
   const isUnapprovedAI = !(
     ['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(client.import_source) &&
@@ -410,6 +411,15 @@ const ReviewContact = ({
     }
   }, [formik.values, formik.dirty]);
 
+  useEffect(() => {
+    setVendorSubtypesFormatted(
+      vendorSubtypes?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    );
+  }, [vendorSubtypes]);
+
   const reviewAIContactButtons = () => {
     return (
       <>
@@ -663,11 +673,10 @@ const ReviewContact = ({
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       /> */}
                   <DropdownWithSearch
-                    value={vendorSubtypes?.find((subtype) => subtype.id == formik.values.selectedContactSubtype)}
-                    options={vendorSubtypes?.map((item) => ({
-                      value: item.id,
-                      label: item.name,
-                    }))}
+                    value={vendorSubtypesFormatted?.find(
+                      (vendor) => vendor.value == formik.values.selectedContactSubtype,
+                    )}
+                    options={vendorSubtypesFormatted}
                     typeOfContact={openedTab}
                     label="What kind of vendor is this for you"
                     onChange={(type) => {
