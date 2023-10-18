@@ -90,7 +90,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
     setActivityId(activity.id);
     setActivityModal(true);
     const found = activityTypes.find((element) => element.id == activity.type_of_activity_id);
-    setActivityTypeToEdit(found.name);
+    setActivityTypeToEdit(found.label);
   };
 
   const handleUpdateActivity = async (values) => {
@@ -161,19 +161,6 @@ export default function Feeds({ contactId, activities, setActivities }) {
       handleClick: handleDeleteActivity,
     },
   ];
-  const noEditTypes = [
-    {
-      name: (
-        <span className="flex flex-row">
-          <Delete height={15} className="text-red5 mr-3 w-4" />
-          <Text smallText className="text-red5">
-            Delete Activity
-          </Text>
-        </span>
-      ),
-      handleClick: handleDeleteActivity,
-    },
-  ];
 
   return (
     <>
@@ -219,7 +206,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                     {activityItem.contact_id && (
                       <div className="flex mr-3">
                         <FilterDropdown
-                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : noEditTypes}
+                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : types[1]}
                           icon={<More className="w-5" />}
                           data={activityItem}
                           positionClass="right-0"
