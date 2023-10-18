@@ -212,7 +212,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                     {activityItem.contact_id && (
                       <div className="flex mr-3">
                         <FilterDropdown
-                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : types[1]}
+                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : [types[1]]}
                           icon={<More className="w-5" />}
                           data={activityItem}
                           positionClass="right-0"
