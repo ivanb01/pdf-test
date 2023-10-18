@@ -12,7 +12,7 @@ import {
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EventStatus from 'components/event-status';
 import Text from '../text';
 import Error from '@mui/icons-material/Error';
@@ -52,7 +52,6 @@ import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
 import ArrowDropDownTwoToneIcon from '@mui/icons-material/ArrowDropDownTwoTone';
 import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { getContact } from 'api/contacts';
-import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Fragment } from 'react';
 import ClientHealth from 'components/clientHealth';
@@ -865,8 +864,20 @@ const Table = ({
     }
 
     const [isExpanded, setIsExpanded] = useState(
-      contactsStatuses[openedSubtab].statuses.map((category, index) => ({ categoryId: category.id, expanded: true })),
+      contactsStatuses[openedSubtab].statuses.map((category) => ({
+        categoryId: category.id,
+        expanded: true,
+      })),
     );
+
+    React.useEffect(() => {
+      setIsExpanded(
+        contactsStatuses[openedSubtab].statuses.map((category) => ({
+          categoryId: category.id,
+          expanded: true,
+        })),
+      );
+    }, [openedSubtab, contactsStatuses]);
     const toggleExpanded = (categoryId) => {
       setIsExpanded((prevState) => {
         return prevState.map((item) => {
@@ -884,7 +895,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center  min-w-[480px]">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[460px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -898,7 +909,7 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[190px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[265px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
@@ -930,21 +941,18 @@ const Table = ({
               <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
-                    <div className="flex items-center px-6 py-2">
+                    <div
+                      className="flex items-center px-6 py-2"
+                      role={'button'}
+                      onClick={() => toggleExpanded(category.id)}>
                       {filterContacts(category, contactTypes).length > 0 &&
                         isExpanded
                           .filter((item) => item.categoryId === category.id)
                           .map((item) =>
                             item.expanded ? (
-                              <ArrowDropUpTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1'}
-                                onClick={() => toggleExpanded(category.id)}
-                              />
+                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
                             ) : (
-                              <ArrowDropDownTwoToneIcon
-                                className={'h-5 w-5 text-gray4 mr-1'}
-                                onClick={() => toggleExpanded(category.id)}
-                              />
+                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
                             ),
                           )}
                       <Text chipText className="text-gray4 mr-1">
@@ -954,7 +962,11 @@ const Table = ({
                         side={'bottom'}
                         align={'start'}
                         triggerElement={
-                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          <InfoSharpIcon
+                            className="h-4 w-4 text-gray3 hover:text-gray4"
+                            aria-hidden="true"
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         }>
                         <div
                           // style={{ width: '300px' }}
@@ -1994,7 +2006,7 @@ const Table = ({
           />
         </svg>
         <h5 className={'text-sm leading-5 font-medium text-gray-900'}>
-          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found when search '}
+          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found'}
         </h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
           Contacts that you moved to trash will be listed here
