@@ -172,7 +172,7 @@ export default function Info({ client }) {
             label="Priority"
             options={multiselectOptionsClients}
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
-            value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
+            value={findTagsOption(tags)}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));
             }}
