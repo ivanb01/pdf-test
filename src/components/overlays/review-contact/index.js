@@ -592,7 +592,7 @@ const ReviewContact = ({
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
-                    value={findTagsOption(formik.values.tags, client?.category_1 === 'Client' ? 0 : 1)}
+                    value={findTagsOption(formik.values.tags)}
                     label="Priority"
                     onChange={(choice) => {
                       formik.setFieldValue(

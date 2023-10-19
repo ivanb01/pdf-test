@@ -13,7 +13,7 @@ import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { addContactLocally, setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
-import { leadSourceOptions, phoneNumberRules } from 'global/variables';
+import { leadSourceOptions, multiselectOptionsClients, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
 import DropdownWithSearch from '@components/dropdownWithSearch';
 import { useSelector } from 'react-redux';
@@ -331,17 +331,17 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
                         <DropdownWithSearch
                           onMenuOpen={() => setIsMenuOpen(true)}
+                          isMulti
                           onMenuClose={() => setIsMenuOpen(false)}
-                          typeOfContact={openedTab}
-                          label="Priority"
-                          value={findTagsOption(formik.values.tags, openedTab)}
+                          options={multiselectOptionsClients}
+                          value={findTagsOption(formik.values.tags)}
                           onChange={(choice) => {
-                            formik.setValues({ ...formik.values, ['tags']: choice.map((el) => el.value) });
-                            // formik.setFieldValue(
-                            //   'tags',
-                            //   choice.map((el) => el.label),
-                            // );
+                            formik.setFieldValue(
+                              'tags',
+                              choice.map((el) => el.label),
+                            );
                           }}
+                          label="Priority"
                         />
                       </div>
                     </div>
