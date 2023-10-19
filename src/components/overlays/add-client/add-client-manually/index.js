@@ -47,10 +47,11 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     { id: 2, name: title == 'Add Client' ? 'Type and Status' : 'Type and Subtype', href: '#' },
   ];
 
+  const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
+  const [submitDisabled, setSubmitDisabled] = useState(true);
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
 
-  const [emailValidated, setEmailValidated] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
   const openedTab = useSelector((state) => state.global.openedTab);
@@ -78,23 +79,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }),
   });
 
-  const validateEmail = async () => {
-    try {
-      const { data } = await findContactByEmail({ email: formik.values.email });
-      if (data) {
-        setExistingContactEmailError('This email already exists!');
-        setExistingContactEmail(formik.values.email);
-      }
-    } catch (error) {
-      if (error.response.status === 404) {
-        setExistingContactEmailError('');
-        setExistingContactEmail('');
-      }
-    } finally {
-      setEmailValidated(true);
-    }
-  };
-
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -109,6 +93,20 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     },
     validationSchema: AddContactSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const { data } = await findContactByEmail({ email: values.email });
+        if (data) {
+          setExistingContactEmailError('This email already exists!');
+          setExistingContactEmail(values.email);
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 404) {
+          setExistingContactEmailError('');
+          setExistingContactEmail('');
+          setCurrentStep(currentStep + 1);
+        }
+      }
       setSubmitting(false);
     },
   });
@@ -136,7 +134,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   } = formikStep2;
 
   const nextStep = () => {
-    if (!existingContactEmailError && emailValidated) setCurrentStep(currentStep + 1);
+    submitForm1();
+    // if (!existingContactEmailError && emailValidated) setCurrentStep(currentStep + 1);
   };
 
   const prevStep = () => {
@@ -197,6 +196,41 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }
   };
 
+  useEffect(() => {
+    // if (formik.dirty || !isUnapprovedAI) {
+    let isClient = title == 'Add Client' ? true : false;
+    const { selectedContactType, selectedContactSubtype, selectedStatus } = formikStep2.values;
+    if (isClient && selectedContactType && selectedStatus) {
+      //if client
+      setSubmitDisabled(false);
+    } else if (!isClient && selectedContactType) {
+      //if professional
+      if (selectedContactType == 8) {
+        if (selectedContactSubtype) {
+          setSubmitDisabled(false);
+        } else {
+          setSubmitDisabled(true);
+        }
+      } else {
+        setSubmitDisabled(false);
+      }
+    } else {
+      setSubmitDisabled(true);
+    }
+    // } else {
+    //   setSubmitDisabled(true);
+    // }
+  }, [formikStep2.values]);
+
+  useEffect(() => {
+    setVendorSubtypesFormatted(
+      vendorSubtypes?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    );
+  }, [vendorSubtypes]);
+
   return (
     <MultiStepOverlay
       className="max-w-[730px] min-w-[730px]"
@@ -205,6 +239,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       currentStep={currentStep}
       nextStep={nextStep}
       prevStep={prevStep}
+      disabled={submitDisabled}
       // changeStep={(arg) => setCurrentStep(arg)}
       title={title}
       submit={submitForm2}
@@ -250,11 +285,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                         if (existingContactEmail !== e.target.value) {
                           setExistingContactEmailError('');
                         }
-                        setEmailValidated(false);
                         formik.setFieldValue('email', e.target.value);
-                      }}
-                      onBlur={(e) => {
-                        validateEmail();
                       }}
                       value={formik.values.email}
                       error={(errors.email && touched.email) || existingContactEmailError}
@@ -332,6 +363,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           <div className={'p-6 pt-0'}>
             <Radio
               options={options}
+              className="mb-4"
               label="What kind of contact is this for you?"
               selectedOption={formikStep2.values.selectedContactType}
               setSelectedOption={(e) => setFieldValue2('selectedContactType', e)}
@@ -340,18 +372,18 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             />
             {formikStep2.values.selectedContactType == 8 ? (
               <>
-                <div className="text-gray7 mb-3 text-sm font-medium">What kind of vendor?</div>
-                <div className="flex flex-wrap">
-                  {vendorSubtypes.map((type) => (
-                    <Chip
-                      selectedStatus={type.id == formikStep2.values.selectedContactSubtype}
-                      key={type.id}
-                      label={type.name}
-                      className="mr-3 mb-3"
-                      onClick={() => setFieldValue2('selectedContactSubtype', type.id)}
-                    />
-                  ))}
-                </div>
+                <DropdownWithSearch
+                  value={vendorSubtypesFormatted?.find(
+                    (vendor) => vendor.value == formikStep2.values.selectedContactSubtype,
+                  )}
+                  options={vendorSubtypesFormatted}
+                  typeOfContact={openedTab}
+                  label="What kind of vendor is this for you"
+                  onChange={(type) => {
+                    formikStep2.setFieldValue('selectedContactSubtype', type.value);
+                  }}
+                  maxMenuHeight={230}
+                />
                 {errors2.selectedContactSubtype &&
                   touched2.selectedContactSubtype &&
                   errors2.selectedContactSubtype && (
