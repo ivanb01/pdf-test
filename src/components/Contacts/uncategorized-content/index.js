@@ -179,7 +179,7 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 142px)' }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}
