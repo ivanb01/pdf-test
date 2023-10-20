@@ -260,6 +260,8 @@ const ReviewContact = ({
       ? {
           ...baseData,
           approved_ai: true,
+          lead_source: values.lead_source,
+          tags: values.tags,
         }
       : {
           ...baseData,
@@ -580,7 +582,7 @@ const ReviewContact = ({
                     label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
-                    handleSelect={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
+                    handleSelect={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
                     initialSelect={formik.values.lead_source}
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
