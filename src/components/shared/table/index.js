@@ -1826,12 +1826,12 @@ const Table = ({
                     onMouseLeave={() =>
                       document.querySelector(`#tooltip-delete-${dataItem.id}-2`).classList.add('invisible', 'opacity-0')
                     }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction('approve', dataItem);
+                    }}
                     className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
                     <CheckCircle
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAction('approve', dataItem);
-                      }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/check:text-white text-[16px]"
                     />
@@ -1854,7 +1854,6 @@ const Table = ({
                     className="mx-6 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
                     onClick={(e) => {
                       e.stopPropagation();
-
                       handleCardEdit(dataItem);
                     }}>
                     <div
@@ -1874,12 +1873,12 @@ const Table = ({
                     onMouseLeave={() =>
                       document.querySelector(`#tooltip-delete-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
                     }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction('delete', dataItem);
+                    }}
                     className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
                     <Delete
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAction('delete', dataItem);
-                      }}
                       id={'edit-contact-icon-' + dataItem.id}
                       className="group-hover/delete:text-white text-[16px]"
                     />
