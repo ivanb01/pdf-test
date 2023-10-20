@@ -393,7 +393,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   )}
               </>
             ) : (
-              ![8, 12, 15].includes(formikStep2.values.selectedContactType) &&
+              ![8, 9, 12, 15].includes(formikStep2.values.selectedContactType) &&
               formikStep2.values.selectedContactType && (
                 <div className={'mt-2'}>
                   <StatusSelect
