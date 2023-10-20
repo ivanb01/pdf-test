@@ -198,7 +198,7 @@ const Layout = ({ children }) => {
       const days = 7;
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + days);
-      document.cookie = `isAuthenticated=true; expires=${expiryDate.toUTCString()};`;
+      document.cookie = `isAuthenticated=true; path=/; expires=${expiryDate.toUTCString()};`;
       localStorage.setItem('user', JSON.stringify(user.username));
     } catch (error) {
       console.log(error);

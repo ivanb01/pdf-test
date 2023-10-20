@@ -32,7 +32,10 @@ const SignIn = () => {
     try {
       await Auth.federatedSignIn({ provider: 'Google' });
       let user = await Auth.currentAuthenticatedUser();
-      console.log('the user is here: ', user);
+      const days = 7;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + days);
+      document.cookie = `isAuthenticated=true; path=/; expires=${expiryDate.toUTCString()};`;
     } catch (error) {
       console.log('fail', error);
     }
@@ -150,10 +153,6 @@ const SignIn = () => {
       const user = await Auth.signIn(values.userName.toLowerCase(), values.password);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
-        const days = 7;
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + days);
-        document.cookie = `isAuthenticated=true; expires=${expiryDate.toUTCString()};`;
         setTimeout(() => {
           dispatch(setUser(user.attributes.email));
           localStorage.setItem('user', JSON.stringify(user.attributes.email));
