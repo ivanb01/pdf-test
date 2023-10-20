@@ -895,7 +895,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[460px]">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[200px] xl:w-[100px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -904,24 +904,24 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[110px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[500px]">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[265px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[265px] xl:w-[400px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
               <th
                 scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[220px]">
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
                 LAST COMMUNICATION
               </th>
             ) : null}
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[173px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
               ACTIONS
             </th>
           </tr>
@@ -1019,8 +1019,10 @@ const Table = ({
                         />
                       </td>
                       <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
-                        <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
-                          {contact.category_2}
+                        <div className={'flex justify-center items-center'}>
+                          <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center lg:w-[76px] xl:w-[86px]">
+                            {contact.category_2}
+                          </div>
                         </div>
                       </td>
                       <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
