@@ -162,7 +162,7 @@ const index = () => {
         <>
           {filteredCards.length > 0 && (
             <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
-              {filteredCards.length > 0 && filteredCards.map((card) => <MarketingCard key={card.id} {...card} />)}
+              {filteredCards.length > 0 && filteredCards.map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -180,7 +180,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'show_sheet')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -198,7 +198,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'instagram_post')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -216,7 +216,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'facebook_post')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -234,7 +234,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'postcard')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -252,7 +252,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'banners')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -270,7 +270,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'business_card')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
