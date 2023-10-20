@@ -195,6 +195,10 @@ const Layout = ({ children }) => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       dispatch(setUser(user.username));
+      const days = 7;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + days);
+      document.cookie = `isAuthenticated=true; expires=${expiryDate.toUTCString()};`;
       localStorage.setItem('user', JSON.stringify(user.username));
     } catch (error) {
       console.log(error);

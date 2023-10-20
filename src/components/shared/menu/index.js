@@ -96,6 +96,7 @@ const MainMenu = ({ className, fixed }) => {
   const count = useSelector((state) => state.global.count);
   const [openGlobalSearch, setOpenGlobalSearch] = useState(false);
   const handleSignOut = async () => {
+    document.cookie = 'isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
     localStorage.removeItem('currentSession');
