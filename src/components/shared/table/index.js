@@ -69,6 +69,7 @@ import ListIcon from '@mui/icons-material/List';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createPortal } from 'react-dom';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
+import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -1816,79 +1817,58 @@ const Table = ({
                 </div>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
-                <div className="flex items-center justify-center">
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-delete-${dataItem.id}-2`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-delete-${dataItem.id}-2`).classList.add('invisible', 'opacity-0')
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAction('approve', dataItem);
-                    }}
-                    className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
-                    <CheckCircle
-                      id={'edit-contact-icon-' + dataItem.id}
-                      className="group-hover/check:text-white text-[16px]"
-                    />
-                    <div
-                      id={`tooltip-delete-${dataItem.id}-2`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Mark as Correct
-                    </div>
-                  </div>
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-edit-${dataItem.id}-1`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-edit-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                    }
-                    className="mx-6 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCardEdit(dataItem);
-                    }}>
-                    <div
-                      id={`tooltip-edit-${dataItem.id}-1`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Edit Contact
-                    </div>
-                    <Edit id={'edit-contact-icon-' + dataItem.id} className="text-gray3 w-4 h-4" />
-                  </div>
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-delete-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAction('delete', dataItem);
-                    }}
-                    className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
-                    <Delete
-                      id={'edit-contact-icon-' + dataItem.id}
-                      className="group-hover/delete:text-white text-[16px]"
-                    />
-                    <div
-                      id={`tooltip-delete-${dataItem.id}-1`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Move to Trash
-                    </div>
-                  </div>
+                <div className="flex items-center justify-center gap-6">
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAction('approve', dataItem);
+                        }}
+                        className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
+                        <CheckCircle
+                          id={'edit-contact-icon-' + dataItem.id}
+                          className="group-hover/check:text-white text-[16px]"
+                        />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white">Mark as Correct</p>
+                  </TooltipComponent>
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCardEdit(dataItem);
+                        }}
+                        className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                        <Edit className="text-gray3 w-4 h-4" />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white"> Edit Contact</p>
+                  </TooltipComponent>
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAction('delete', dataItem);
+                        }}
+                        className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
+                        <Delete className="group-hover/delete:text-white text-[16px]" />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white"> Move to trash</p>
+                  </TooltipComponent>
                 </div>
               </td>
               <td className="pr-1"></td>
