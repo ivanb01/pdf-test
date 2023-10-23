@@ -12,6 +12,7 @@ import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { types } from 'global/variables';
 import ReviewContact from '@components/overlays/review-contact';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -106,7 +107,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

@@ -13,6 +13,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import { healthLastCommunicationDate } from '@global/variables';
 import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
+import withAuth from '@components/withAuth';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -121,4 +122,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

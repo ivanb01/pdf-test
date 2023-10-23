@@ -15,8 +15,7 @@ const global = createSlice({
     unapprovedContacts: null,
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
-    user:
-      typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+    user: typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
     skippedEmptyState:
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')

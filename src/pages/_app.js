@@ -47,11 +47,12 @@ const MyApp = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
+    console.log('ran');
     configureAmplifyAuth();
-
     Auth.currentSession()
       .then((item) => {
         localStorage.setItem('currentSession', JSON.stringify(item));
+        console.log('logged in');
         setIsUserAuthenticated(true);
         setHelpEffect(true);
       })
@@ -103,7 +104,7 @@ const MyApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(awsmobile);
-
+      console.log('configured amplify');
       return true;
     } catch (err) {
       console.error('Unable to initialize amplify auth.', err);

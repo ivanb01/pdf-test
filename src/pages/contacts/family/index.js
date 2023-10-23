@@ -13,6 +13,7 @@ import { setContacts } from 'store/contacts/slice';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -120,4 +121,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

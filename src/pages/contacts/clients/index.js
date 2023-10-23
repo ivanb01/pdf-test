@@ -22,6 +22,7 @@ import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
 import { getContactCategories } from '@api/contacts';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -171,7 +172,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {
