@@ -171,14 +171,14 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               activeIcon={false}
               options={leadSourceOptions}
               className="col-span-2"
-              handleSelect={(source) => (formik.values.lead_source = source.name)}
+              handleSelect={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
               initialSelect={formik.values.lead_source}
               placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
             <DropdownWithSearch
               label="Priority"
               typeOfContact={openedTab}
-              value={findTagsOption(formik.values.tags, openedTab)}
+              value={findTagsOption(formik.values.tags)}
               onChange={(choice) => {
                 formik.setFieldValue(
                   'tags',

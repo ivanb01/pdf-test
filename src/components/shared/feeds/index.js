@@ -164,7 +164,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <SimpleBar style={{ height: '80%', maxHeight: '100%', paddingRight: '-10px' }} autoHide>
+      <SimpleBar style={{ maxHeight: 'calc(100vh - 400px)', paddingRight: '-10px' }} autoHide>
         <div className="flow-root bg-white pt-6 pb-6 h-auto ">
           <ul role="list" className="-mb-8">
             {activities

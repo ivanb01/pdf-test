@@ -616,7 +616,7 @@ const index = () => {
             </div>
           </div>
           <div>
-            <div className="md:flex hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+            <div className="md:flex hidden mt-0 clipPath min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
               {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>

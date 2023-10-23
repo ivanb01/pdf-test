@@ -10,6 +10,7 @@ import Table from '@components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
 import { setOpenedTab } from 'store/global/slice';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -110,4 +111,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

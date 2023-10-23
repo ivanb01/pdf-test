@@ -18,6 +18,7 @@ const MultiStepOverlay = ({
   isSubmittingButton,
   className,
   hideHeader,
+  disabled,
 }) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -95,6 +96,7 @@ const MultiStepOverlay = ({
                 <Button
                   label="Save"
                   loading={loadingButton}
+                  disabled={disabled}
                   // rightIcon={<ArrowRightIcon height={15} />}
                   onClick={() => {
                     setLoadingButton(true);

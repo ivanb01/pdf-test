@@ -1,3 +1,4 @@
+import withAuth from '@components/withAuth';
 import ContactCampaigns from 'components/contact-campaigns';
 import { useState } from 'react';
 
@@ -32,7 +33,7 @@ const ClientCampaigns = () => {
   return <ContactCampaigns isClient campaigns={campaigns} />;
 };
 
-export default ClientCampaigns;
+export default withAuth(ClientCampaigns);
 
 // export async function getServerSideProps(context) {
 //   return {

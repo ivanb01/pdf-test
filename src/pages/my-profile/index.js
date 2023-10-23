@@ -16,7 +16,7 @@ import Router from 'next/router';
 import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
-import { getUserConsentForGoogleEmail } from '@api/google';
+import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
@@ -44,7 +44,7 @@ const index = () => {
   const activateGoogleConsent = async () => {
     setLoadingActivate(true);
     try {
-      const { data } = await getUserConsentForGoogleEmail();
+      const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');

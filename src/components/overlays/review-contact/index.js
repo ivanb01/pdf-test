@@ -118,33 +118,29 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      if (!isUnapprovedAI) {
-        if (formik.values.email !== formik.initialValues.email) {
-          setUpdating(true);
-          await userAlreadyExists(values.email)
-            .then((response) => {
-              if (response === undefined) {
-                setExistingContactEmailError('');
-                setExistingContactEmail('');
-                handleSubmit(values).then();
-              } else {
-                setExistingContactEmailError('This email already exists!');
-                setExistingContactEmail(values.email);
-              }
-            })
-            .catch(() => {
+      if (formik.values.email !== formik.initialValues.email) {
+        console.log('ereza');
+        setUpdating(true);
+        await userAlreadyExists(values.email)
+          .then((response) => {
+            if (response === undefined) {
               setExistingContactEmailError('');
               setExistingContactEmail('');
-            })
-            .finally(() => {
-              setUpdating(false);
-            });
-        } else {
-          handleSubmit(values).then();
-        }
-      }
-      if (isUnapprovedAI) {
-        await handleSubmit(values).then();
+              handleSubmit(values).then();
+            } else {
+              setExistingContactEmailError('This email already exists!');
+              setExistingContactEmail(values.email);
+            }
+          })
+          .catch(() => {
+            setExistingContactEmailError('');
+            setExistingContactEmail('');
+          })
+          .finally(() => {
+            setUpdating(false);
+          });
+      } else {
+        handleSubmit(values).then();
       }
     },
   });
@@ -264,6 +260,8 @@ const ReviewContact = ({
       ? {
           ...baseData,
           approved_ai: true,
+          lead_source: values.lead_source,
+          tags: values.tags,
         }
       : {
           ...baseData,
@@ -524,7 +522,7 @@ const ReviewContact = ({
                   label="Email"
                   id="email"
                   className=""
-                  readonly={isUnapprovedAI}
+                  // readonly={isUnapprovedAI}
                   // onChange={formik.handleChange}
                   onChange={(e) => {
                     if (existingContactEmail !== e.target.value) {
@@ -584,7 +582,7 @@ const ReviewContact = ({
                     label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
-                    handleSelect={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
+                    handleSelect={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
                     initialSelect={formik.values.lead_source}
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
@@ -596,7 +594,7 @@ const ReviewContact = ({
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
-                    value={findTagsOption(formik.values.tags, client?.category_1 === 'Client' ? 0 : 1)}
+                    value={findTagsOption(formik.values.tags)}
                     label="Priority"
                     onChange={(choice) => {
                       formik.setFieldValue(
