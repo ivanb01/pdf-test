@@ -30,6 +30,7 @@ import ListingShowSheet21 from '../../../public/images/marketing/ListingShowShee
 import JustListedPostcard1 from '../../../public/images/marketing/JustListedPostcard1.jpg';
 import NewDevelopmentPostcard1 from '../../../public/images/marketing/NewDevelopmentPostcard1.png';
 import BusinessCard1 from '../../../public/images/marketing/BusinessCard1.jpg';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -312,7 +313,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

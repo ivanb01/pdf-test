@@ -35,9 +35,10 @@ const SignIn = () => {
       const days = 7;
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + days);
-      document.cookie = `isAuthenticated=true; path=/; expires=${expiryDate.toUTCString()};`;
+      localStorage.setItem('isAuthenticated', true);
     } catch (error) {
       console.log('fail', error);
+      localStorage.setItem('isAuthenticated', false);
     }
   };
 
@@ -150,14 +151,16 @@ const SignIn = () => {
   const handleSubmit = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
+      console.log('what is this');
       const user = await Auth.signIn(values.userName.toLowerCase(), values.password);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
-        setTimeout(() => {
-          dispatch(setUser(user.attributes.email));
-          localStorage.setItem('user', JSON.stringify(user.attributes.email));
-          router.push('/contacts/clients');
-        }, 2000);
+        // setTimeout(() => {
+        dispatch(setUser(user.attributes.email));
+        localStorage.setItem('user', JSON.stringify(user.attributes.email));
+        console.log('set user');
+        router.push('/contacts/clients');
+        // }, 2000);
       } else {
         setCognitoUser(user);
         setNewPasswordRequired(true);

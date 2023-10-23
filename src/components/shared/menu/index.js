@@ -100,6 +100,7 @@ const MainMenu = ({ className, fixed }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
     localStorage.removeItem('currentSession');
+    localStorage.removeItem('isAuthenticated');
     console.log('sign out');
     await Auth.signOut();
     router.push('/authentication/sign-in');

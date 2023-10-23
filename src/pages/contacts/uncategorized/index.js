@@ -10,6 +10,7 @@ import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -129,7 +130,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

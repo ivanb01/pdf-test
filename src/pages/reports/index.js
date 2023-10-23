@@ -8,6 +8,7 @@ import { getReports } from 'api/team';
 import { useEffect } from 'react';
 import Loader from 'components/shared/loader';
 import { getEmailParts } from 'global/functions';
+import withAuth from '@components/withAuth';
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -183,7 +184,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

@@ -15,6 +15,7 @@ import React, { useState, useRef, useMemo, useEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
+import withAuth from '@components/withAuth';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -442,7 +443,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {
