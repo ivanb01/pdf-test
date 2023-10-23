@@ -149,13 +149,13 @@ export default function Details() {
   }, [contacts, fetchContactRequired, id]);
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_2 == 'Family' || contact?.category_2 == 'Friend'
+    contact?.category_id === 14 || contact?.category_id === 13
       ? 'family'
       : contact?.category_2 === 'Uncategorized'
       ? 'uncategorized'
-      : contact?.category_2 === 'Unknown'
+      : contact?.category_id === 2
       ? 'unknown'
-      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized'
       ? contact?.category_1
       : `${contact?.category_1}s`;
 
