@@ -114,6 +114,9 @@ const index = () => {
       );
       updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
       updateAiSummaryTable(data.id, newData);
+      if (checkbox.current) {
+        checkbox.current.indeterminate = false;
+      }
     } catch (error) {}
   };
 
@@ -168,6 +171,9 @@ const index = () => {
         );
     }
     setSelectedPeople([]);
+    if (checkbox.current) {
+      checkbox.current.indeterminate = false;
+    }
   };
 
   useEffect(() => {
