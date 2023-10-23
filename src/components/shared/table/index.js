@@ -1729,7 +1729,7 @@ const Table = ({
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-                ref={checkbox}
+                ref={checkbox && checkbox}
                 checked={checked}
                 onChange={toggleAll}
               />
