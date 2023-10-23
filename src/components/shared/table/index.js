@@ -1802,7 +1802,7 @@ const Table = ({
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status  lg:min-w-[500px] xl:min-w-[600px]">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[380px] xl:min-w-[600px]">
                 <div className=" flex items-center">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
