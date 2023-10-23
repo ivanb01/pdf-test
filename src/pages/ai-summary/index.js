@@ -32,9 +32,11 @@ const index = () => {
       const isIndeterminate = selectedPeople.length > 0 && selectedPeople.length < data.length;
       setChecked(selectedPeople.length === data.length);
       setIndeterminate(isIndeterminate);
-      checkbox.current.indeterminate = isIndeterminate;
+      if (checkbox.current) {
+        checkbox.current.indeterminate = isIndeterminate;
+      }
     }
-  }, [selectedPeople]);
+  }, [selectedPeople, checkbox]);
 
   const toggleAll = () => {
     setSelectedPeople(checked || indeterminate ? [] : data);
@@ -112,6 +114,9 @@ const index = () => {
       );
       updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
       updateAiSummaryTable(data.id, newData);
+      if (checkbox.current) {
+        checkbox.current.indeterminate = false;
+      }
     } catch (error) {}
   };
 
@@ -166,6 +171,9 @@ const index = () => {
         );
     }
     setSelectedPeople([]);
+    if (checkbox.current) {
+      checkbox.current.indeterminate = false;
+    }
   };
 
   useEffect(() => {
@@ -213,7 +221,7 @@ const index = () => {
             </div>
             <Table
               className="pb-5"
-              data={sortedData.filter((data) => data.approved_ai != true)}
+              data={sortedData.filter((data) => data.approved_ai === null || data.approved_ai === false)}
               tableFor="ai-summary"
               checkbox={checkbox}
               handleAction={handleAction}
