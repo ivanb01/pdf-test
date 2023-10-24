@@ -11,9 +11,10 @@ import { bulkUpdateContacts, updateContact } from '@api/contacts';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import backBtn from '/public/images/back.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import clients from '../contacts/clients';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -207,18 +208,18 @@ const index = () => {
         </div>
       ) : data && data.filter((data) => data.approved_ai != true).length ? (
         <>
+          <div className="p-6 text-gray-900 font-medium text-base">
+            <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
+              {data.filter((item) => item.approved_ai != true).length} contacts
+            </div>{' '}
+            from Smart Synced Contacts need to be reviewed
+          </div>
           <SimpleBar
             autoHide={true}
             style={{
               height: '100%',
-              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 136px)' : 'calc(100vh - 68px)',
+              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 140px)' : 'calc(100vh - 87px)',
             }}>
-            <div className="p-6 text-gray-900 font-medium text-base">
-              <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-                {data.filter((item) => item.approved_ai != true).length} contacts
-              </div>{' '}
-              from Smart Synced Contacts need to be reviewed
-            </div>
             <Table
               className="pb-5"
               data={sortedData.filter((data) => data.approved_ai === null || data.approved_ai === false)}

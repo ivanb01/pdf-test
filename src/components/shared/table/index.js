@@ -1743,7 +1743,9 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:max-w-[100px] md:max-w-[100px] lg:max-w-[300px] xl:max-w-[500px]">
               Email Summary
             </th>
             <th
@@ -1767,7 +1769,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:min-w-[340px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:max-w-[340px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1802,8 +1804,8 @@ const Table = ({
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[380px] xl:min-w-[600px]">
-                <div className=" flex items-center">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[230px] xl:min-w-[500px]">
+                <div className=" flex items-center break-all flex-wrap">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
