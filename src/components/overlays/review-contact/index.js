@@ -410,6 +410,18 @@ const ReviewContact = ({
   }, [formik.values, formik.dirty]);
 
   useEffect(() => {
+    if (formik.dirty) {
+      if (
+        formik.values.first_name.length === 0 ||
+        formik.values.last_name.length === 0 ||
+        formik.values.email.length === 0
+      ) {
+        setSubmitDisabled(true);
+      }
+    }
+  }, [formik.values, formik.dirty]);
+
+  useEffect(() => {
     setVendorSubtypesFormatted(
       vendorSubtypes?.map((item) => ({
         value: item.id,
