@@ -164,7 +164,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <SimpleBar style={{ maxHeight: 'calc(100vh - 400px)', paddingRight: '-10px' }} autoHide>
+      <SimpleBar style={{ height: 'calc(80% - 100px)', paddingRight: '-10px' }} autoHide>
         <div className="flow-root bg-white pt-6 pb-6 h-auto ">
           <ul role="list" className="-mb-8">
             {activities
@@ -191,11 +191,11 @@ export default function Feeds({ contactId, activities, setActivities }) {
                           <p className="mt-0.5 text-sm text-gray-500">
                             {/* Commented 6d ago */}
                             {formatDateCalendar(
-                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
+                              activityItem.created_at ? activityItem.created_at : activityItem.updated_at,
                             )}{' '}
                             -{' '}
                             {formatDateLThour(
-                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
+                              activityItem.created_at ? activityItem.created_at : activityItem.updated_at,
                             )}
                           </p>
 
