@@ -624,7 +624,7 @@ const Table = ({
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
-                <td className="relative whitespace-nowrap h-[72.5px] py-4 pr-6 sm:pr-6 flex justify-end items-center">
+                <td className="relative whitespace-nowrap h-[72.5px] py-4 px-6 flex ">
                   <TooltipComponent
                     side={'bottom'}
                     align={'center'}
