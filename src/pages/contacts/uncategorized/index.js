@@ -33,8 +33,8 @@ const index = () => {
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
-    let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
-    if (event.target.checked) {
+    let row = document.querySelector('#row_' + event?.target.id.split('_')[1]);
+    if (event?.target.checked) {
       row.classList.add('bg-lightBlue1');
       setSelectedUncategorized((prevState) => [...prevState, contact]);
     } else {

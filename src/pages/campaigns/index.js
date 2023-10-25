@@ -87,7 +87,7 @@ const Campaigns = () => {
     console.log('selected / deselected all');
   };
   const handleSelectContact = (event, contact) => {
-    if (event.target.checked) {
+    if (event?.target.checked) {
       // add to array
       setSelectedContacts((prevState) => [...prevState, contact.email]);
     } else {

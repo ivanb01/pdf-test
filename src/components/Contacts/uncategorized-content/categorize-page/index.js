@@ -43,7 +43,7 @@ const CategorizePage = ({
     dispatch(updateContacts(uncategorizedInitialState.contacts));
     setUncategorizedContacts(uncategorizedCopy);
     setCategorizedInThisSession([]);
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     dispatch(setRefetchData(true));
     bulkUpdateContacts(uncategorizedInitialState);
   };
@@ -54,7 +54,7 @@ const CategorizePage = ({
     dispatch(updateContactLocally(contact));
     let contactInitial = uncategorizedCopy.find((element) => element.id === contactToUndo);
     setUncategorizedContacts((prevState) => [contactInitial, ...prevState]);
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     dispatch(setRefetchData(true));
     bulkUpdateContacts({ contacts: [contact] });
   };
@@ -109,7 +109,7 @@ const CategorizePage = ({
   const afterCategorizationProcess = (ids) => {
     let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
     setUncategorizedContacts(uncategorized);
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     setSelectedUncategorizedContactStatus(null);
     setSelectedUncategorizedContactType(null);
     setSelectedUncategorized([]);
@@ -130,7 +130,7 @@ const CategorizePage = ({
 
   const toggleAllUncategorized = (event) => {
     console.log(event.target.checked);
-    if (event.target.checked) {
+    if (event?.target.checked) {
       document.querySelectorAll("[id^='row_'] input:not(:checked)").forEach((el) => el.click());
     } else {
       document.querySelectorAll("[id^='row_'] input:checked").forEach((el) => el.click());
