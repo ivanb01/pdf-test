@@ -383,7 +383,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   options={vendorSubtypesFormatted}
                   typeOfContact={openedTab}
                   required
-                  label="What kind of vendor is this for you"
+                  label="What kind of vendor is this for you?"
                   onChange={(type) => {
                     formikStep2.setFieldValue('selectedContactSubtype', type.value);
                   }}
