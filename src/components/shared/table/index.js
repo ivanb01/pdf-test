@@ -3,9 +3,7 @@ import {
   getContactStatusByStatusId,
   getContactTypeByTypeId,
   getContactStatusColorByStatusId,
-  phoneNumberFormat,
   formatDateLL,
-  findProfessionalSubtype,
   getInitials,
   getDateFormat,
 } from 'global/functions';
