@@ -45,7 +45,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
       const noteContent = values.note ? `<p>${values.note}</p>` : '';
 
       _sendMarketingEmail({
-        to: 'jasuncion@opgny.com',
+        to: 'marketing@opgny.com',
         subject: `Order ${name && name}`,
         body: `<html>
 <body>

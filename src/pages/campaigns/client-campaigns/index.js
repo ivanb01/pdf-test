@@ -22,12 +22,12 @@ const ClientCampaigns = () => {
       value: 'Seller',
       subtab: [],
     },
-    {
-      id: 3,
-      name: 'for Landlords',
-      value: 'Landlord',
-      subtab: [],
-    },
+    // {
+    //   id: 3,
+    //   name: 'for Landlords',
+    //   value: 'Landlord',
+    //   subtab: [],
+    // },
   ]);
 
   return <ContactCampaigns isClient campaigns={campaigns} />;
