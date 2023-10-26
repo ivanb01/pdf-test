@@ -1,9 +1,25 @@
 import Select from 'react-select';
 
-const DropdownWithSearch = ({ options,onChange, label, value, typeOfContact, isMulti, onMenuOpen, onMenuClose, ...props}) => {
+const DropdownWithSearch = ({
+  options,
+  onChange,
+  label,
+  value,
+  typeOfContact,
+  isMulti,
+  onMenuOpen,
+  onMenuClose,
+  required,
+  ...props
+}) => {
   return (
     <div className=" custom-chipinput-styles col-span-2">
-      {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+      {label && (
+        <div className="block text-sm font-medium text-gray6 mb-1">
+          {label}
+          {required && <span className="text-gray-500 ml-1">*</span>}
+        </div>
+      )}
       <Select
         {...props}
         isMulti={isMulti}
@@ -37,7 +53,7 @@ const DropdownWithSearch = ({ options,onChange, label, value, typeOfContact, isM
           singleValue: (base) => ({
             ...base,
             fontSize: '14px',
-        }),
+          }),
           multiValue: (base) => ({
             ...base,
             borderRadius: '70px',
@@ -65,7 +81,7 @@ const DropdownWithSearch = ({ options,onChange, label, value, typeOfContact, isM
               backgroundColor: 'white',
             },
           }),
-          option: (base,state) => ({
+          option: (base, state) => ({
             ...base,
             backgroundColor: 'white',
             color: 'black',

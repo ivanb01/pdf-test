@@ -234,6 +234,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
               <form onSubmit={formik.handleSubmit}>
                 <div className="grid grid-cols-2 gap-4 mb-12">
                   <Input
+                    optional
                     type="text"
                     label="First Name"
                     id="first_name"

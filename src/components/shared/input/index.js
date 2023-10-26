@@ -15,6 +15,7 @@ const Input = ({
   value,
   autocomplete,
   handleChange,
+  required,
   optional,
   flat,
   type = 'text',
@@ -373,6 +374,7 @@ const Input = ({
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
           {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
+          {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
       {secondaryLabel && (
