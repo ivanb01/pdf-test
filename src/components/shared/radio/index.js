@@ -5,6 +5,7 @@ import NotificationAlert from '../alert/notification-alert';
 
 export default function Radio({
   ternary,
+  required,
   label,
   options,
   setSelectedOption,
@@ -20,6 +21,7 @@ export default function Radio({
       {label && (
         <Text h4 className="text-gray7 text-left mb-3">
           {label}
+          {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
       <div className="flex">
@@ -37,14 +39,18 @@ export default function Radio({
                 {option.name}
               </label>
             </div>
+          ) : ternary ? (
+            <div
+              onClick={() => {
+                setSelectedOption(option.id);
+              }}
+              key={option.id}
+              className={`${
+                selectedOption == option.id && 'border-lightBlue3 text-lightBlue3'
+              } cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>
+              {option.name}
+            </div>
           ) : (
-            ternary ? 
-            <div 
-            onClick={() => {
-              setSelectedOption(option.id);
-            }}
-            key={option.id} className={`${selectedOption == option.id && 'border-lightBlue3 text-lightBlue3'} cursor-pointer h-[34px] hover:border-lightBlue3 flex items-center justify-center text-sm border border-gray2 px-4 py-1 mr-4 rounded-md`}>{option.name}</div>
-            :
             <Button
               ternary
               active={selectedOption == option.id}
@@ -55,22 +61,22 @@ export default function Radio({
                 setSelectedOption(option.id);
               }}
             />
-            // <div
-            //   key={option.name}
-            //   value={option}
-            //   onClick={() => {
-            //     setSelectedOption(option.id);
-            //   }}
-            //   className={classNames(
-            //     selectedOption == option.id
-            //       ? 'bg-lightBlue1 text-lightBlue5'
-            //       : 'bg-gray1',
-            //     'transition-all cursor-pointer py-2 px-[15px] uppercase inline-block text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1'
-            //   )}
-            // >
-            //   <span>{option.name}</span>
-            // </div>
           ),
+          // <div
+          //   key={option.name}
+          //   value={option}
+          //   onClick={() => {
+          //     setSelectedOption(option.id);
+          //   }}
+          //   className={classNames(
+          //     selectedOption == option.id
+          //       ? 'bg-lightBlue1 text-lightBlue5'
+          //       : 'bg-gray1',
+          //     'transition-all cursor-pointer py-2 px-[15px] uppercase inline-block text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1'
+          //   )}
+          // >
+          //   <span>{option.name}</span>
+          // </div>
         )}
       </div>
       {error && errorText && (

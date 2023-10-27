@@ -260,6 +260,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <Input
                       type="text"
+                      required
                       label="First Name"
                       id="first_name"
                       onChange={formik.handleChange}
@@ -268,6 +269,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                       errorText={errors.first_name}
                     />
                     <Input
+                      required
                       type="text"
                       label="Last Name"
                       id="last_name"
@@ -279,6 +281,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                     <Input
                       type="email"
                       label="Email"
+                      required
                       id="email"
                       // onChange={formik.handleChange}
                       onChange={(e) => {
@@ -362,6 +365,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         ) : (
           <div className={'p-6 pt-0'}>
             <Radio
+              required
               options={options}
               className="mb-4"
               label="What kind of contact is this for you?"
@@ -378,7 +382,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   )}
                   options={vendorSubtypesFormatted}
                   typeOfContact={openedTab}
-                  label="What kind of vendor is this for you"
+                  required
+                  label="What kind of vendor is this for you?"
                   onChange={(type) => {
                     formikStep2.setFieldValue('selectedContactSubtype', type.value);
                   }}
@@ -399,6 +404,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   <StatusSelect
                     selectedStatus={formikStep2.values.selectedStatus}
                     setSelectedStatus={(e) => setFieldValue2('selectedStatus', e)}
+                    required
                     label="In what stage of communication?"
                     statuses={statuses}
                     error={errors2.selectedStatus && touched2.selectedStatus}
