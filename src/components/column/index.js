@@ -36,7 +36,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.clients);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);

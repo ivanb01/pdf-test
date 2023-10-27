@@ -100,7 +100,6 @@ export default function Details() {
     }
   }, [contact?.import_source, contact?.approved_ai]);
   const resetData = () => {
-    dispatch(setLookingForData(null));
     dispatch(setNotesData(null));
     dispatch(setCampaignsData(null));
     dispatch(setActivityLogData(null));
@@ -109,9 +108,6 @@ export default function Details() {
     resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
-    // if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
-    //   // getAISummary();
-    // }
     await getActivityLog();
     setLoadingTabs(false);
     getCampaigns();

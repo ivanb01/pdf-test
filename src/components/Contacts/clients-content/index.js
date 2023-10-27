@@ -48,7 +48,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const clients = useSelector((state) => state.contacts.clients);
+  const clients = useSelector((state) => state.contacts.allContacts.data);
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleViewChange = (viewId) => {

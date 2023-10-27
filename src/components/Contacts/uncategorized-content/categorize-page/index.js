@@ -16,7 +16,7 @@ import { bulkUpdateContacts } from 'api/contacts';
 import Chip from 'components/shared/chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
-import { updateContactLocally, updateContacts } from '@store/contacts/slice';
+import { updateAllContacts, updateContactLocally, updateContacts } from '@store/contacts/slice';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -38,6 +38,7 @@ const CategorizePage = ({
 
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
@@ -101,15 +102,18 @@ const CategorizePage = ({
       .filter((contact) => contact !== undefined);
     setCategorizedInThisSession((prevState) => [...updatedContacts, ...prevState]);
     afterCategorizationProcess(ids);
-    dispatch(updateContacts(contactsArray));
-    dispatch(setRefetchData(true));
+    contactsArray.forEach((contact) => {
+      dispatch(updateContactLocally(contact));
+    });
+    // dispatch(updateContacts(contactsArray));
     bulkUpdateContacts(contacts);
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
   };
   const afterCategorizationProcess = (ids) => {
     let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
     setUncategorizedContacts(uncategorized);
-    // selectFirstToCategorize();
+    dispatch(updateAllContacts(allContacts.filter((contact) => !ids.includes(contact.id))));
+    selectFirstToCategorize();
     setSelectedUncategorizedContactStatus(null);
     setSelectedUncategorizedContactType(null);
     setSelectedUncategorized([]);

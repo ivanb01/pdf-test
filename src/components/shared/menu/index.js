@@ -125,7 +125,7 @@ const MainMenu = ({ className, fixed }) => {
       if (refetchData === true) dispatch(setRefetchData(false));
     };
     fetchContacts();
-  }, [refetchData]);
+  }, []);
 
   useEffect(() => {
     const fetchCount = async () => {
