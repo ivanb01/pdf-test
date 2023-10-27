@@ -106,24 +106,31 @@ const MainMenu = ({ className, fixed }) => {
     router.push('/authentication/sign-in');
   };
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const data = await getContacts();
-        dispatch(setAllContacts(data.data));
-        if (data.data.count === 0 && !skippedEmptyState) {
-          localStorage.setItem('skippedEmptyState', true);
-          dispatch(setSkippedEmptyState(true));
-          router.push({
-            pathname: '/contacts/clients',
-          });
-        }
-      } catch (error) {
-        console.error(error);
+  const fetchContacts = async () => {
+    try {
+      const data = await getContacts();
+      dispatch(setAllContacts(data.data));
+      if (data.data.count === 0 && !skippedEmptyState) {
+        localStorage.setItem('skippedEmptyState', true);
+        dispatch(setSkippedEmptyState(true));
+        router.push({
+          pathname: '/contacts/clients',
+        });
       }
+    } catch (error) {
+      console.error(error);
+    }
 
-      if (refetchData === true) dispatch(setRefetchData(false));
-    };
+    if (refetchData === true) dispatch(setRefetchData(false));
+  };
+
+  useEffect(() => {
+    if (refetchData) {
+      fetchContacts();
+    }
+  }, [refetchData]);
+
+  useEffect(() => {
     fetchContacts();
   }, []);
 

@@ -170,12 +170,11 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         ...formik.values,
         category_id: type,
         status_id: status,
-        category_1: 'Client',
       };
 
       console.log('contact to add: ', contactToAdd);
 
-      addContact(contactToAdd);
+      addContact(contactToAdd).then(() => dispatch(setRefetchData(true)));
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -184,8 +183,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           subtabValue = index;
         }
       });
-      dispatch(addContactLocally(contactToAdd));
-      // dispatch(setRefetchData(true));
+      // dispatch(addContactLocally(contactToAdd));
+      //
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
       setTimeout(() => {
