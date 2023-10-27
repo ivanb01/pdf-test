@@ -47,10 +47,10 @@ const GoogleContactsImportSummary = ({ data }) => {
   };
 
   useEffect(() => {
+    dispatch(setRefetchData(true));
     setAllContacts(data);
     setImportedContacts(data?.importable_new_contacts);
     setNotImportedContacts([...data?.invalid_contacts]);
-    dispatch(setRefetchData(true));
   }, [data]);
 
   return (

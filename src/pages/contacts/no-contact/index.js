@@ -101,7 +101,7 @@ const NoContactPage = () => {
         // } else {
       } else if (queryParams?.code) {
         setShowImportGoogleContactsModal(true);
-        setEmptyModal(true);
+        // setEmptyModal(true);
         handleGoogleAuthCallback(queryParams);
       }
     }
