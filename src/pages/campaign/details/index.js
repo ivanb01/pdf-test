@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
+import { getContactCampaignEventPreview } from '@api/campaign';
 
 const index = () => {
   const router = useRouter();
@@ -78,6 +79,10 @@ const index = () => {
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
+
+  useEffect(() => {
+    getContactCampaignEventPreview(id).then((res) => console.log(res, 'response'));
+  }, [id]);
   const renderTable = (currentButton) => {
     switch (currentButton) {
       case 0:

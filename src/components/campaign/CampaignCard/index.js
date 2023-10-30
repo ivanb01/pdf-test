@@ -8,7 +8,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from 'next/router';
 import CampaignPreview from '@components/campaign/CampaignPreview';
 import { useState } from 'react';
-const CampaignCard = ({ title, email, sms, status_2 }) => {
+
+const CampaignCard = ({
+  campaign_name,
+  email,
+  sms,
+  campaign_id,
+  contact_never_assigned_count,
+  contact_assigned_count,
+}) => {
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
@@ -22,10 +30,10 @@ const CampaignCard = ({ title, email, sms, status_2 }) => {
             onClick={() => {
               router.push({
                 pathname: '/campaign/details',
-                query: { id: status_2 },
+                query: { id: campaign_id },
               });
             }}>
-            <h6 className={'text-sm leading-5 font-semibold'}>{title}</h6>
+            <h6 className={'text-sm leading-5 font-semibold'}>{campaign_name}</h6>
             <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
           </div>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
@@ -43,19 +51,20 @@ const CampaignCard = ({ title, email, sms, status_2 }) => {
               className={
                 'bg-gray1 text-xs leading-5 font-medium text-gray6 px-1.5 py-0.5 flex gap-1 items-center-center'
               }>
-              <div className={'m-auto'}>{status_2}</div>
+              <div className={'m-auto'}>{campaign_name}:</div>
               <div>
-                40 <GroupIcon className={'h-4 w-4 text-[#909CBE]'} />
+                {contact_assigned_count + contact_never_assigned_count}
+                <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
               </div>
             </div>
             <div className={'flex gap-2 text-xs leading-5 font-medium text-gray6'}>
               <div className={'flex items-center gap-1'}>
                 <img src={InCampaing.src} className={'h-4 w-4'} />
-                <span>25</span>
+                <span>{contact_assigned_count}</span>
               </div>
               <div className={'flex items-center gap-1'}>
                 <img src={NotInCampaign.src} className={'h-4 w-4'} alt={''} />
-                <span>15</span>
+                <span>{contact_never_assigned_count}</span>
               </div>
             </div>
           </div>

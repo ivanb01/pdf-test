@@ -2,9 +2,11 @@ import MainMenu from '@components/shared/menu';
 import SimpleBar from 'simplebar-react';
 import Search from '@components/shared/input/search';
 import Tabs from '@components/shared/tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CampaignWrapper from '@components/campaign/CampaignWrapper';
 import CustomCampaign from '@components/campaign/CustomCampaign';
+import { getCampaignsByCategory } from '@api/campaign';
+import Loader from '@components/shared/loader';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -81,20 +83,24 @@ const index = () => {
       category_1: 'Landlords',
     },
   ];
-  const uniqueCategories = ['Renter', 'Buyers', 'Sellers', 'Landlords'];
+  const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
+  const [campaigns, setCampaigns] = useState([]);
   const renderCampaignWrapper = (category) => {
-    const filteredCampaigns = campaignCards.filter(
+    console.log(category, 'category');
+
+    const filteredCampaigns = campaigns?.campaigns?.filter(
       (campaign) =>
-        (campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        campaign.category_1 === category,
+        (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        campaign.contact_category_2 === category,
     );
 
     return (
       <CampaignWrapper
         key={category}
-        headerTitle={`${filteredCampaigns.length} Campaign for ${category}`}
-        campaignCards={filteredCampaigns}
+        category={category}
+        headerTitle={`${filteredCampaigns?.length} Campaign for ${category}s`}
+        campaignCards={filteredCampaigns && filteredCampaigns}
       />
     );
   };
@@ -121,21 +127,27 @@ const index = () => {
       id: 3,
       name: 'for Buyers',
       href: '#',
-      content: renderCampaignWrapper('Buyers'),
+      content: renderCampaignWrapper('Buyer'),
     },
     {
       id: 4,
       name: 'for Sellers',
       href: '#',
-      content: renderCampaignWrapper('Sellers'),
+      content: renderCampaignWrapper('Seller'),
     },
     {
       id: 5,
       name: 'for Landlords',
       href: '#',
-      content: renderCampaignWrapper('Landlords'),
+      content: renderCampaignWrapper('Landlord'),
     },
   ];
+  useEffect(() => {
+    getCampaignsByCategory('Client').then((res) => setCampaigns(res.data));
+  }, []);
+  useEffect(() => {
+    console.log(campaigns, 'campaigns');
+  }, [campaigns]);
   return (
     <SimpleBar style={{ maxHeight: '100%' }}>
       <MainMenu />
