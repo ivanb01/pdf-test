@@ -233,7 +233,7 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = values.selectedContactCategory === 0 ? values.selectedStatus : 1;
+    const status_id = values.selectedStatus;
 
     const category =
       values.selectedContactCategory === 0
