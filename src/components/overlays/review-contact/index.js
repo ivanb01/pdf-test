@@ -119,14 +119,13 @@ const ReviewContact = ({
     },
     onSubmit: async (values) => {
       if (formik.values.email !== formik.initialValues.email) {
-        console.log('ereza');
         setUpdating(true);
         await userAlreadyExists(values.email)
           .then((response) => {
             if (response === undefined) {
               setExistingContactEmailError('');
               setExistingContactEmail('');
-              handleSubmit(values).then();
+              handleSubmit(values);
             } else {
               setExistingContactEmailError('This email already exists!');
               setExistingContactEmail(values.email);
@@ -377,6 +376,7 @@ const ReviewContact = ({
   const handleChooseActivityType = (id) => {
     formik.setFieldValue('type_of_activity_id', id);
   };
+
   useEffect(() => {
     if (formik.dirty || !isUnapprovedAI) {
       const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
@@ -691,6 +691,7 @@ const ReviewContact = ({
                     label="What kind of vendor is this for you"
                     onChange={(type) => {
                       formik.setFieldValue('selectedContactSubtype', type.value);
+                      formik.setFieldValue('selectedContactType', type.value);
                     }}
                     maxMenuHeight={230}
                   />
