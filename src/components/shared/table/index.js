@@ -750,7 +750,7 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.allContacts.data);
+    const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
@@ -827,7 +827,7 @@ const Table = ({
     };
 
     function filterContacts(category, contactTypes) {
-      const filteredContacts = contacts.filter(
+      const filteredContacts = contacts?.filter(
         (contact) =>
           searchTerm.split(' ').every((word) => {
             const lowercaseWord = word.toLowerCase();
@@ -908,7 +908,7 @@ const Table = ({
         </thead>
         <tbody className="bg-white">
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
-            contacts.filter(
+            contacts?.filter(
               (contact) =>
                 searchTerm.split(' ').every((word) => {
                   const lowercaseWord = word.toLowerCase();
