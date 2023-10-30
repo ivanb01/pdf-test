@@ -101,7 +101,7 @@ const NoContactPage = () => {
         // } else {
       } else if (queryParams?.code) {
         setShowImportGoogleContactsModal(true);
-        setEmptyModal(true);
+        // setEmptyModal(true);
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -183,10 +183,10 @@ const NoContactPage = () => {
 
 export default NoContactPage;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

@@ -66,7 +66,7 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedCopy?.length ? (
+        {uncategorizedCopy?.length > 0 ? (
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
@@ -102,8 +102,8 @@ const Uncategorized = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
             <lottie-player
-              src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
-              loop
+              src="/animations/uncategorized.json"
+              loop="true"
               autoplay
               style={{ width: '420px', height: '300px' }}></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
@@ -120,9 +120,6 @@ const Uncategorized = ({
     );
   };
 
-  useEffect(() => {
-    console.log(categorizing);
-  }, [categorizing]);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -132,13 +129,13 @@ const Uncategorized = ({
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             {categorizing ? (
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
-                    Uncategorized Contacts
+                    Contacts you need to categorize
                   </Text>
                   <Search
                     placeholder="Search"
@@ -157,7 +154,7 @@ const Uncategorized = ({
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'New Records' : 'Unknown'}
+                  Contacts you need to categorize
                 </Text>
                 {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">
@@ -179,7 +176,7 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 142px)' }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}

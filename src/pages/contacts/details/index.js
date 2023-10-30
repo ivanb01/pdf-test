@@ -41,9 +41,9 @@ export default function Details() {
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
       console.log(error);
-      toast.error('Error fetching activity log');
+      toast.error('Error fetching activity');
     });
-    const activityLogData = activityLogResponse.data;
+    const activityLogData = activityLogResponse?.data;
     dispatch(setActivityLogData(activityLogData.data));
   };
   const getContactData = () => {
@@ -100,7 +100,6 @@ export default function Details() {
     }
   }, [contact?.import_source, contact?.approved_ai]);
   const resetData = () => {
-    dispatch(setLookingForData(null));
     dispatch(setNotesData(null));
     dispatch(setCampaignsData(null));
     dispatch(setActivityLogData(null));
@@ -109,9 +108,6 @@ export default function Details() {
     resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
-    // if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
-    //   // getAISummary();
-    // }
     await getActivityLog();
     setLoadingTabs(false);
     getCampaigns();
@@ -149,13 +145,13 @@ export default function Details() {
   }, [contacts, fetchContactRequired, id]);
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_2 == 'Family' || contact?.category_2 == 'Friend'
+    contact?.category_id === 14 || contact?.category_id === 13
       ? 'family'
       : contact?.category_2 === 'Uncategorized'
       ? 'uncategorized'
-      : contact?.category_2 === 'Unknown'
+      : contact?.category_id === 2
       ? 'unknown'
-      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized'
       ? contact?.category_1
       : `${contact?.category_1}s`;
 
@@ -233,13 +229,13 @@ export default function Details() {
   );
 }
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }
 
 // export const getStaticPaths = async () => {
 //   return {

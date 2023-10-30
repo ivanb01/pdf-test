@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import oneLineLogo from '/public/images/oneline_logo_white.svg';
+import placeholder from '/public/images/Portrait_Placeholder.png';
 import MenuLink from 'components/Link/MenuLink';
 import Router, { useRouter } from 'next/router';
 import { Auth } from 'aws-amplify';
@@ -26,9 +27,10 @@ import {
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
+import Link from 'next/link';
 
-const MainMenu = ({
-  menuItems = [
+const MainMenu = ({ className, fixed }) => {
+  const [originalMenuItems, setOriginalMenuItems] = useState([
     {
       id: 0,
       name: 'Contacts',
@@ -54,10 +56,35 @@ const MainMenu = ({
       name: 'Properties',
       url: '/properties',
     },
-  ],
-  className,
-  fixed,
-}) => {
+  ]);
+
+  const [menuItems, setMenuItems] = useState([
+    {
+      id: 0,
+      name: 'Contacts',
+      url: '/contacts/clients',
+    },
+    {
+      id: 1,
+      name: 'Campaigns',
+      url: '/campaigns/client-campaigns',
+    },
+    {
+      id: 2,
+      name: 'Reports',
+      url: '/reports',
+    },
+    {
+      id: 3,
+      name: 'Marketing',
+      url: '/marketing',
+    },
+    {
+      id: 4,
+      name: 'Properties',
+      url: '/properties',
+    },
+  ]);
   const router = useRouter();
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
@@ -69,34 +96,43 @@ const MainMenu = ({
   const count = useSelector((state) => state.global.count);
   const [openGlobalSearch, setOpenGlobalSearch] = useState(false);
   const handleSignOut = async () => {
+    document.cookie = 'isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     localStorage.removeItem('user');
     localStorage.removeItem('skippedEmptyState');
     localStorage.removeItem('currentSession');
+    localStorage.removeItem('isAuthenticated');
     console.log('sign out');
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const data = await getContacts();
-        dispatch(setAllContacts(data.data));
-        if (data.data.count === 0 && !skippedEmptyState) {
-          localStorage.setItem('skippedEmptyState', true);
-          dispatch(setSkippedEmptyState(true));
-          router.push({
-            pathname: '/contacts/clients',
-          });
-        }
-      } catch (error) {
-        console.error(error);
+  const fetchContacts = async () => {
+    try {
+      const data = await getContacts();
+      dispatch(setAllContacts(data.data));
+      if (data.data.count === 0 && !skippedEmptyState) {
+        localStorage.setItem('skippedEmptyState', true);
+        dispatch(setSkippedEmptyState(true));
+        router.push({
+          pathname: '/contacts/clients',
+        });
       }
+    } catch (error) {
+      console.error(error);
+    }
 
-      if (refetchData === true) dispatch(setRefetchData(false));
-    };
-    fetchContacts();
+    if (refetchData === true) dispatch(setRefetchData(false));
+  };
+
+  useEffect(() => {
+    if (refetchData) {
+      fetchContacts();
+    }
   }, [refetchData]);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -110,7 +146,7 @@ const MainMenu = ({
   }, [refetchData]);
 
   const showUncategorizedButton = () => {
-    return allContacts && allContacts.length;
+    return allContacts && allContacts.length > 0;
   };
 
   const showSuccessButton = () => {
@@ -133,6 +169,14 @@ const MainMenu = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (allContacts && !allContacts.length) {
+      setMenuItems(originalMenuItems.filter((item) => item.id != 1));
+    } else {
+      setMenuItems(originalMenuItems);
+    }
+  }, [allContacts]);
+
   return (
     <div
       className={`${
@@ -154,15 +198,15 @@ const MainMenu = ({
           <ul className="flex items-center">
             {menuItems.map((item, index) => {
               return (
-                <MenuLink
-                  key={item.id}
-                  className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
-                  onClick={() => {
-                    dispatch(setOpenedTab(0));
-                    router.push(item.url);
-                  }}>
-                  {item.name}
-                </MenuLink>
+                <Link href={item.url} key={item.id}>
+                  <MenuLink
+                    className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
+                    onClick={() => {
+                      dispatch(setOpenedTab(0));
+                    }}>
+                    {item.name}
+                  </MenuLink>
+                </Link>
               );
             })}
           </ul>
@@ -192,17 +236,16 @@ const MainMenu = ({
             }
           />
         )}
-        <div className="">
+        {/* <div className="">
           <button
             label="Need Help?"
             className=" text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4 hover:bg-menuHover text-white"
             onClick={() => {
-              FreshworksWidget('open');
+              // FreshworksWidget('open');
             }}>
             <ContactSupport className="h-[20px]" />
-            {/* Need help? */}
           </button>
-        </div>
+        </div> */}
         {/* <Button
           label="Import Google Contacts"
           className="mr-4 "
@@ -217,11 +260,7 @@ const MainMenu = ({
           <div>
             <Menu.Button className="">
               <a href="#">
-                <img
-                  className="inline-block h-8 w-8 rounded-full"
-                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                  alt=""
-                />
+                <Image width={32} height={32} className="inline-block rounded-full" src={placeholder} alt="" />
               </a>
             </Menu.Button>
           </div>
@@ -236,11 +275,7 @@ const MainMenu = ({
             <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
-                  <img
-                    className="inline-block h-10 w-10 rounded-full"
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-                    alt=""
-                  />
+                  <Image width={40} height={40} className="inline-block rounded-full" src={placeholder} alt="" />
                 </div>
                 <div className="max-w-[165px] w-full">
                   {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}

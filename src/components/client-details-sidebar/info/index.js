@@ -1,12 +1,12 @@
 import InfoCard from './card';
 import Dropdown from 'components/shared/dropdown';
 import * as contactServices from 'api/contacts';
-import { allStatusesQuickEdit, leadSourceOptions } from 'global/variables';
+import { allStatusesQuickEdit, leadSourceOptions, multiselectOptionsClients } from 'global/variables';
 import { formatDateMDY, formatDateAgo, findTagsOption } from 'global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { getContactCampaign, getCampaign, unassignContactFromCampaign } from 'api/campaign';
 // import ChipInput from 'components/shared/input/chipInput';
-import TagsInput from 'components/tagsInput';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 import DateChip from 'components/shared/chip/date-chip';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { useDispatch } from 'react-redux';
@@ -80,7 +80,9 @@ export default function Info({ client }) {
   }, [client]);
 
   const handleChangeSource = async (source) => {
+    console.log(source);
     try {
+      console.log(source);
       await contactServices.updateContact(client.id, {
         lead_source: source,
       });
@@ -122,7 +124,7 @@ export default function Info({ client }) {
   return (
     <>
       {client && (
-        <div className="px-6 py-3 flex flex-col">
+        <div className="px-6 py-3 flex flex-col  border-t border-gray-2">
           {![2, 3, 13, 14].includes(client?.category_id) && (
             <Dropdown
               label="Status"
@@ -165,10 +167,12 @@ export default function Info({ client }) {
             removeChip={removeTag}
             addChip={addTag}
           /> */}
-          <TagsInput
+          <DropdownWithSearch
+            isMulti
             label="Priority"
+            options={multiselectOptionsClients}
             typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
-            value={findTagsOption(tags, client?.category_1 === 'Client' ? 0 : 1)}
+            value={findTagsOption(tags)}
             onChange={(choice) => {
               handleChangeTags(choice.map((el) => el.label));
             }}
@@ -178,8 +182,11 @@ export default function Info({ client }) {
             openClassName={'pb-64'}
             activeIcon={false}
             options={leadSourceOptions}
-            className="my-3"
-            handleSelect={(source) => handleChangeSource(source.name)}
+            className="mt-3 mb-8"
+            handleSelect={(source) => {
+              console.log(source);
+              handleChangeSource(source.label);
+            }}
             initialSelect={client?.lead_source}
             placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
           />

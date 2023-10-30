@@ -41,23 +41,9 @@ const tabs = [
   },
   {
     title: 'ADDED SOURCE',
-    content: ['Google Contacts', 'Smart Sync A.I.', 'Gmail', 'Manually Added'],
+    content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
     value: 'import_source_text',
   },
-  {
-    title: 'PROFESSIONAL STATUSES',
-    content: allStatusesQuickEdit['professionals'].map((item) => item.name),
-    value: 'status_2',
-  },
-  {
-    title: 'CAMPAIGN',
-    content: ['In Campaign', 'Not In Campaign'],
-    value: 'is_in_campaign',
-  }, // {
-  //   title: 'TAGS',
-  //   content: multiselectOptionsProfessionals.map((option) => option.label),
-  //   value: 'tags',
-  // },
 ];
 
 const campaignFilterMeaning = {
@@ -205,10 +191,10 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
-              {professionalsStatuses[openedSubtab].statusMainTitle}
+              {professionalsStatuses[openedSubtab]?.statusMainTitle}
             </Text>
             <div className="flex items-center justify-self-end">
               <Search

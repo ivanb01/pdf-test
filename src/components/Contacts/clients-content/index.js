@@ -48,7 +48,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const clients = useSelector((state) => state.contacts.clients);
+  const clients = useSelector((state) => state.contacts.allContacts.data);
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleViewChange = (viewId) => {
@@ -69,7 +69,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     },
     {
       title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'Smart Sync A.I.', 'Gmail', 'Manually Added'],
+      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
       value: 'import_source_text',
     },
     {
@@ -201,7 +201,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
               {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}

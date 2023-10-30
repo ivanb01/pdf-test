@@ -2,7 +2,7 @@ import Badge from 'components/shared/badge';
 import DateChip from 'components/shared/chip/date-chip';
 // import { SpeakerphoneIcon } from '@heroicons/react/outline';
 import Edit from '@mui/icons-material/Edit';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { allStatusesQuickEdit } from 'global/variables';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,7 @@ import GoogleContact from '../../../../public/images/GoogleContact.png';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -55,7 +56,7 @@ export default function ContactCard({
   }, []);
 
   const getSource = (source) => {
-    if (source === 'GmailAI' || source === 'Smart Sync A.I.') {
+    if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
         name: 'AI Smart Synced Contact.',
         icon: <AIChip reviewed={contact.approved_ai} />,
@@ -72,12 +73,12 @@ export default function ContactCard({
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={16} width={16} />,
       };
-    }
+    } else return <></>;
   };
   const router = useRouter();
   const dispatch = useDispatch();
@@ -119,7 +120,7 @@ export default function ContactCard({
             )}
             <div className="flex-1 ml-2 pr-2">
               <div className="flex items-center space-x-3">
-                <h3 className="text-sm font-medium text-gray-900 max-w-[110px]">
+                <h3 className="text-sm font-medium text-gray-900 max-w-[110px] break-word">
                   {contact.first_name + ' ' + contact.last_name}
                 </h3>
               </div>
@@ -142,22 +143,33 @@ export default function ContactCard({
                 contactCategory={categoryType}
               />
             )}
-            {contact.summary !== null ? (
-              <TooltipComponent
-                side={'right'}
-                align={'center'}
-                triggerElement={<div>{getSource(contact.import_source_text).icon}</div>}>
-                <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                  <div className={'flex gap-1.5 mb-1.5'}>
-                    {getSource(contact.import_source_text).icon}
-                    <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
+            <div className={'flex items-center gap-1.5'}>
+              <div>
+                <div className={'h-5'}>{getSource(contact.import_source_text).icon}</div>
+              </div>
+              {contact.summary !== null ? (
+                <TooltipComponent
+                  side={'right'}
+                  align={'center'}
+                  triggerElement={
+                    <InfoSharpIcon
+                      className={`text-gray3 hover:text-gray4 mb-1.5`}
+                      style={{ height: '18px', width: '18px' }}
+                      aria-hidden="true"
+                    />
+                  }>
+                  <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                    <div className={`flex gap-1.5`}>
+                      {getSource(contact.import_source_text).icon}
+                      <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
+                    </div>
+                    <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                   </div>
-                  <p className="text-xs leading-4 font-normal">{contact.summary}</p>
-                </div>
-              </TooltipComponent>
-            ) : (
-              <div>{getSource(contact.import_source_text).icon}</div>
-            )}
+                </TooltipComponent>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
         <div

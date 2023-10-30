@@ -13,6 +13,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import { healthLastCommunicationDate } from '@global/variables';
 import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
+import withAuth from '@components/withAuth';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -80,8 +81,8 @@ const index = () => {
               type="smart-sync"
             />
           )}
-          <div className={'flex justify-between items-center p-6'}>
-            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate</h3>
+          <div className={'flex justify-between items-center p-6 py-4'}>
+            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate with</h3>
             <Search
               placeholder="Search here..."
               className="mr-4 text-sm"
@@ -90,7 +91,9 @@ const index = () => {
               }}
             />
           </div>
-          <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)', overflow: 'hidden' }}>
+          <div
+            className="w-auto relative flex"
+            style={{ height: `calc(100vh - ${unapprovedContactsLength > 0 ? '220px' : '160px'})`, overflow: 'hidden' }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
@@ -119,4 +122,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

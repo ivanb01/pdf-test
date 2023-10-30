@@ -79,10 +79,10 @@ const ForgotPassword = () => {
 
 export default ForgotPassword;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

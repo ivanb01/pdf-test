@@ -53,7 +53,7 @@ export const removeClientFromArray = (clientList, clientEmail) => {
   });
 };
 
-export const getContactTypeByTypeId = (typeId) => {
+export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
     allTypes.types.filter((type) => {
@@ -62,6 +62,10 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
+
+  if (!foundType) {
+    foundType = subtypes.find((subtype) => subtype.id == typeId).name;
+  }
   return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
@@ -255,21 +259,16 @@ export const isHealthyCommuncationDate = (inputDate) => {
   return inputDateTime.isSameOrBefore(moment(), 'day') && inputDateTime.isSameOrAfter(twoDaysAgo, 'day');
 };
 
-export const findTagsOption = (selectedOptions, typeOfContact) => {
-  if (!selectedOptions) {
-    return null;
-  }
-  const options = selectedOptions.map((label) => {
-    const value = label;
-    let multiselectOptions = typeOfContact === 0 ? multiselectOptionsClients : multiselectOptionsProfessionals;
-    const option = multiselectOptions.find((option) => option.value === value);
+export const findTagsOption = (selectedOptions) => {
+  if (!selectedOptions) return null;
+
+  return selectedOptions.map((label) => {
+    const option = multiselectOptionsClients.find((option) => option.value === label);
     return {
-      value: value,
+      value: label,
       label: option ? option.label : label,
     };
   });
-  return options;
-  // return multiselectOptions.find((option) => option.label === selectedOption);
 };
 
 export const getEmailParts = (email) => {

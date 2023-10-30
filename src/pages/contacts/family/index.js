@@ -13,6 +13,7 @@ import { setContacts } from 'store/contacts/slice';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const index = () => {
                 type="smart-sync"
               />
             )}
-            <div className="p-6 flex items-center justify-between">
+            <div className="p-6 py-4 flex items-center justify-between">
               <div className="flex items-center justify-between w-full">
                 <Text h3 className="text-gray7 text-xl">
                   Family & Friends
@@ -107,7 +108,7 @@ const index = () => {
       ) : (
         <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
           <lottie-player
-            src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+            src="/animations/family.json"
             loop
             autoplay
             style={{ width: '420px', height: '300px' }}></lottie-player>
@@ -120,4 +121,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

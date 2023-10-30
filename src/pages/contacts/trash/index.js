@@ -10,6 +10,7 @@ import Table from '@components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
 import { setOpenedTab } from 'store/global/slice';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -69,7 +70,7 @@ const index = () => {
               type="smart-sync"
             />
           )}
-          <div className={'flex justify-between items-center p-6'}>
+          <div className={'flex justify-between items-center p-6 py-4'}>
             <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
             <Search
               placeholder="Search"
@@ -86,6 +87,7 @@ const index = () => {
                 <Table
                   tableFor={'trash'}
                   data={onSearch(searchTerm)}
+                  searchTerm={searchTerm}
                   handleCardEdit={(contact) => {
                     setShowEditContact(true);
                     setContactToEdit(contact);
@@ -109,4 +111,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

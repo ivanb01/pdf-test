@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import { Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
-// import Head from 'next/head';
+import Head from 'next/head';
 import store from '../store';
 import 'pages/contacts/details/styles.scss';
 import 'components/client-details-sidebar/styles.scss';
@@ -21,6 +21,7 @@ import {
   devRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+// import { Head } from 'next/document';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -46,11 +47,12 @@ const MyApp = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
+    console.log('ran');
     configureAmplifyAuth();
-
     Auth.currentSession()
       .then((item) => {
         localStorage.setItem('currentSession', JSON.stringify(item));
+        console.log('logged in');
         setIsUserAuthenticated(true);
         setHelpEffect(true);
       })
@@ -61,16 +63,16 @@ const MyApp = ({ Component, pageProps }) => {
       });
   }, []);
 
-  useEffect(() => {
-    if (helpEffect) {
-      if (pageProps.requiresAuth && !isUserAuthenticated) {
-        router.push('/authentication/sign-in');
-      }
-      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-        router.push('/contacts/clients');
-      }
-    }
-  }, [helpEffect, isUserAuthenticated]);
+  // useEffect(() => {
+  //   if (helpEffect) {
+  //     if (pageProps.requiresAuth && !isUserAuthenticated) {
+  //       router.push('/authentication/sign-in');
+  //     }
+  //     if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+  //       router.push('/contacts/clients');
+  //     }
+  //   }
+  // }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
@@ -102,7 +104,7 @@ const MyApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(awsmobile);
-
+      console.log('configured amplify');
       return true;
     } catch (err) {
       console.error('Unable to initialize amplify auth.', err);
@@ -117,6 +119,9 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
+        <Head>
+          <meta name="viewport" content="width=device-width"></meta>
+        </Head>
         <div className={`main-page`} style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
             <GetSubtype />

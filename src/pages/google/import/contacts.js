@@ -138,10 +138,10 @@ const GoogleImportContacts = () => {
 
 export default GoogleImportContacts;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

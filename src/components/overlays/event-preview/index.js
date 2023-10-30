@@ -8,6 +8,7 @@ import Loader from 'components/shared/loader';
 import Events from 'components/shared/events';
 import { useEffect } from 'react';
 import { getContactCampaignEventPreview, getAllEvents } from 'api/campaign';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const EventPreview = ({
   topClass,
@@ -23,6 +24,7 @@ const EventPreview = ({
   const [events, setEvents] = useState(null);
   const [loadingEventPreview, setLoadingEventPreview] = useState(false);
   const [eventToPreview, setEventToPreview] = useState(null);
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
@@ -150,6 +152,7 @@ const EventPreview = ({
 
   useEffect(() => {
     if (campaignEvents) {
+      console.log(campaignEvents, 'campaignEvents', currentEvent, 'currentEvent');
       handleEventPreview();
     }
   }, [campaignEvents]);
@@ -185,8 +188,8 @@ const EventPreview = ({
                         <Loader />
                       </div>
                     ) : (
-                      <div className="flex h-full">
-                        <div className="bg-white border-gray2 border-r p-6 min-w-fit">
+                      <div className="flex flex-1">
+                        <div className="bg-white border-gray2 border-r p-6  h-full">
                           <nav aria-label="Progress">
                             <ol role="list" className="overflow-hidden">
                               {campaignEvents?.events.map((event, eventIdx) => (
@@ -199,7 +202,8 @@ const EventPreview = ({
                                   <>
                                     {eventIdx !== campaignEvents.events.length - 1 ? (
                                       <div
-                                        className="absolute left-3.5 top-3.5 -ml-px mt-0.5 h-full w-0.5 bg-gray3"
+                                        className="absolute -ml-px top-1.5 h-[210px] w-0.5 bg-gray3"
+                                        style={{ left: '18px' }}
                                         aria-hidden="true"
                                       />
                                     ) : null}
@@ -212,33 +216,36 @@ const EventPreview = ({
                                       aria-current="step">
                                       <span className="flex h-9 items-center" aria-hidden="true">
                                         <span
-                                          className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 ${
-                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                              ? 'border-lightBlue3'
-                                              : 'border-gray3'
-                                          } bg-white`}>
+                                          className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white border-gray3`}>
                                           <span
-                                            className={`h-3 w-3 rounded-full ${
-                                              `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                                ? 'bg-lightBlue3'
-                                                : 'bg-gray3'
-                                            }`}
-                                          />
+                                            className={`h-5 w-5 rounded-full text-white text-xs bg-gray3 flex items-center justify-center`}>
+                                            {eventIdx + 1}
+                                          </span>
                                         </span>
                                       </span>
+
                                       <span
                                         onClick={() => setCurrentEvent(eventIdx + 1)}
                                         className={`${
                                           `Event ${eventIdx + 1}` == eventInfo?.event_name && 'bg-lightBlue1 '
-                                        } ml-3 flex min-w-0 flex-col p-[10px] hover:bg-lightBlue1 w-full cursor-pointer`}>
-                                        <span
-                                          className={`${
-                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                              ? 'font-bold'
-                                              : 'font-medium'
-                                          } text-xs text-gray7 uppercase`}>
-                                          Event {eventIdx + 1}: {event.event_type}
-                                        </span>
+                                        } ml-3 flex  justify-between min-w-0 items-center p-[10px] hover:bg-lightBlue1 w-[350px]  cursor-pointer`}>
+                                        <div>
+                                          <span className={`font-bold text-xs text-gray7 uppercase`}>
+                                            {event.event_type}: {event.preview.preview.subject}
+                                          </span>
+                                          <br />
+                                          <span className={' text-gray-500 text-sm'}>
+                                            {' '}
+                                            {event?.execute_on?.includes('After')
+                                              ? event.execute_on
+                                                  .substring(event.execute_on.indexOf('After') + 5)
+                                                  .trim() + ' after added in Campaign'
+                                              : event?.execute_on}
+                                          </span>
+                                        </div>
+                                        <div>
+                                          <ArrowForwardIcon className={' text-lightBlue3 ml-3 '} />
+                                        </div>
                                       </span>
                                     </a>
                                   </>
@@ -249,11 +256,22 @@ const EventPreview = ({
                         </div>
 
                         <div className="w-full">
-                          <div className="p-7 bg-gray10 border-b border-gray2 sm:px-6">
+                          <div className="p-7  border-b border-gray2 sm:px-6">
                             <div className="flex items-start justify-between">
-                              <Dialog.Title className="w-full text-base font-semibold leading-6 text-gray-900">
+                              <Dialog.Title className="w-full text-base  leading-6 text-gray-600">
                                 <div>
-                                  <div>{eventInfo?.event_name}</div>
+                                  <div className={'flex gap-1 mt-1'}>
+                                    <CalendarIcon className="text-gray4" height={20} />
+                                    <span className={'text-sm'}>
+                                      {campaignEvents?.events[currentEvent - 1]?.execute_on?.includes('After')
+                                        ? campaignEvents?.events[currentEvent - 1]?.execute_on
+                                            .substring(
+                                              campaignEvents.events[currentEvent - 1].execute_on.indexOf('After') + 5,
+                                            )
+                                            .trim() + ' after added in Campaign'
+                                        : campaignEvents?.events[currentEvent - 1]?.execute_on}
+                                    </span>
+                                  </div>
                                   {/* <div className="flex flex-row mt-5">
                                     {isValidDate(
                                       eventInfo?.event_updated_at

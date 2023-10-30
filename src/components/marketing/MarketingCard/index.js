@@ -11,7 +11,7 @@ const MarketingCard = ({ src, title, listingUrl }) => {
   return (
     <div className={'flex flex-col'}>
       <div className="group relative rounded-lg">
-        <img className="w-full object-cover rounded-lg" src={src[0].src} style={{ height: '300px' }} alt={title} />
+        <img className="w-full object-cover rounded-lg" src={src[0]} style={{ height: '300px' }} alt={title} />
         <div className="absolute top-0 rounded-xl left-0 w-full h-0 flex flex-col justify-center items-center opacity-0 bg-transparentBlack group-hover:h-full  group-hover:opacity-100 duration-400">
           <Button
             primary
@@ -39,7 +39,12 @@ const MarketingCard = ({ src, title, listingUrl }) => {
         />
       )}
       {openPreviewTemplate && (
-        <PreviewTemplate template={src} name={title} handleCloseOverlay={() => setOpenPreviewTemplate(false)} />
+        <PreviewTemplate
+          listingUrl={listingUrl}
+          template={src}
+          name={title}
+          handleCloseOverlay={() => setOpenPreviewTemplate(false)}
+        />
       )}
     </div>
   );

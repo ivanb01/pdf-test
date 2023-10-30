@@ -14,13 +14,12 @@ const Authentication = ({ children }) => {
             </div>
             <div className="w-full md:h-[350px] md:w-[350px]">
               <lottie-player
-                src="https://assets3.lottiefiles.com/packages/lf20_7z8wtyb0.json"
+                src="/animations/authentication.json"
                 background="transparent"
                 speed="1"
                 style={{ width: '100%', height: '100%' }}
-                loop
-                autoplay
-              ></lottie-player>
+                loop="true"
+                autoplay></lottie-player>
             </div>
           </div>
         </div>
