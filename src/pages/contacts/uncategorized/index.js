@@ -43,6 +43,17 @@ const index = () => {
       setSelectedUncategorized(newUncategorized);
     }
   };
+
+  useEffect(() => {
+    if (selectedUncategorized.length) {
+      let contact = selectedUncategorized[0];
+      let indexOf = uncategorizedContacts.indexOf(contact);
+      document.getElementById('row_' + indexOf).scrollIntoView({
+        behavior: 'smooth',
+      });
+    }
+  }, [selectedUncategorized]);
+
   const handleStartCategorizing = (value) => {
     if (value) {
       document.querySelector('.main-menu-wrapper').style.display = 'none';
