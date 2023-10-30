@@ -13,6 +13,8 @@ const global = createSlice({
     refetchPart: null,
     userGaveConsent: null,
     unapprovedContacts: null,
+    clientsFilters: {},
+    professionalsFilters: {},
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
     user: typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
@@ -45,6 +47,13 @@ const global = createSlice({
     },
     setExpandedMenu(state, action) {
       state.expandedMenu = action.payload;
+    },
+    setClientsFilters(state, action) {
+      console.log(action.payload, 'action.payload');
+      state.clientsFilters = action.payload;
+    },
+    setProfessionalsFilter(state, action) {
+      state.professionalsFilters = action.payload;
     },
     setUser(state, action) {
       state.user = action.payload;
@@ -94,5 +103,7 @@ export const {
   setInitializeTabs,
   setActiveFilterOfProperties,
   setVendorSubtypes,
+  setClientsFilters,
+  setProfessionalsFilter,
 } = global.actions;
 export default global.reducer;
