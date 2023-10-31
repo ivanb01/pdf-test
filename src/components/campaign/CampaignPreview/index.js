@@ -6,84 +6,43 @@ import EmailIcon from '@mui/icons-material/Email';
 import ChatIcon from '@mui/icons-material/Chat';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { getAllEvents } from '@api/campaign';
 
-const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
-  const [activeEvent, setActiveEvent] = useState({
-    id: 0,
-    waitDays: 1,
-    name: 'Welcome to Oxford',
-    sentDate: 'send at 10:00 AM',
-    subject: 'Welcome to Oxford',
-    type: 'email',
-    message:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-  });
+const CampaignPreview = ({ open, setOpen, title, campaignId, className }) => {
+  const [campaignData, setCampaignData] = useState();
   useEffect(() => {
-    setActiveEvent({
-      id: 0,
-      waitDays: 1,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxford',
-      type: 'email',
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
+    getAllEvents(campaignId).then((res) => {
+      setCampaignData(res.data);
     });
-  }, []);
-  const events = [
-    {
-      id: 0,
-      waitDays: 1,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxford',
-      type: 'email',
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-    },
-    {
-      id: 1,
-      waitDays: 3,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxford',
-      type: 'sms',
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-    },
-    {
-      id: 2,
-      waitDays: 3,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxford',
-      type: 'email',
+  }, [campaignId]);
 
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-    },
-    {
-      id: 3,
-      waitDays: 3,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxfordd',
-      type: 'email',
+  const [activeEvent, setActiveEvent] = useState();
+  useEffect(() => {
+    if (campaignData) {
+      setActiveEvent(campaignData?.events[0]);
+    }
+  }, [campaignData]);
 
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-    },
-    {
-      id: 4,
-      waitDays: 3,
-      name: 'Welcome to Oxford',
-      sentDate: 'send at 10:00 AM',
-      subject: 'Welcome to Oxford',
-      type: 'sms',
-      message:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-    },
-  ];
+  function areObjectsEqual(obj1, obj2) {
+    if (!obj2) {
+      return;
+    }
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2 && obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (let key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -104,31 +63,27 @@ const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
                     <div className="flex flex-shrink-0 justify-between items-center p-6 border border-gray2">
                       <div className={'flex flex-col gap-1'}>
                         <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
-                        <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
-                          <span className={'mr-1'}>{`${Number(sms + email)}  Events: `}</span>
-                          <span className={'mr-2'}>
-                            {email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
-                          </span>
-                          <span>
-                            {sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
-                          </span>
-                        </div>
+                        {campaignData === undefined ? (
+                          <div className="animate-pulse  bg-gray-300 w-[120px] h-4"></div>
+                        ) : (
+                          <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
+                            <span className={'mr-1'}>{`${campaignData?.events?.length}  Events: `}</span>
+                            <span className={'mr-2'}>
+                              {campaignData.events?.filter((event) => event.event_type === 'Email').length}{' '}
+                              <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+                            </span>
+                            <span>
+                              {campaignData.events?.filter((event) => event.event_type === 'SMS').length}{' '}
+                              <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="ml-3 flex h-7 items-center">
                         <button
                           type="button"
                           className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
                           onClick={() => {
-                            setActiveEvent({
-                              id: 0,
-                              waitDays: 1,
-                              name: 'Welcome to Oxford',
-                              sentDate: 'send at 10:00 AM',
-                              subject: 'Welcome to Oxford',
-                              type: 'email',
-                              message:
-                                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been nly five centuries',
-                            });
                             setOpen(false);
                           }}>
                           <span className="sr-only">Close panel</span>
@@ -146,56 +101,70 @@ const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
                                 Here are the events for this campaign along with their scheduled send dates and time.
                               </span>
                             </div>
-                            {events.map((e) => (
-                              <div className={'flex flex-col mt-2'}>
-                                <div
-                                  style={{ width: 'max-content' }}
-                                  className={'font-semibold text-gray4 text-xs  leading-5 bg-gray1 px-1.5'}>
-                                  Wait {e.waitDays} days
-                                </div>
-                                <div
-                                  className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
-                                  style={{ width: 2 }}></div>
-                                <div
-                                  role={'button'}
-                                  onClick={() => setActiveEvent({ ...e })}
-                                  className={`p-3 flex ${
-                                    activeEvent.id === e.id
-                                      ? 'bg-lightBlue1 border border-lightBlue1 rounded-none'
-                                      : 'border border-[#BAE6FD] rounded-md'
-                                  } justify-between items-start hover:bg-lightBlue1`}>
-                                  <div className={'flex gap-2 '}>
-                                    {e.type === 'email' ? (
-                                      <EmailIcon className={'h-4 w-4 text-lightBlue3 mt-0.5'} />
-                                    ) : (
-                                      <ChatIcon className={'h-4 w-4 text-lightBlue3 mt-0.5'} />
-                                    )}
-                                    <div>
-                                      <h6 className={'text-sm leading-5 font-medium text-gray7 '}>{e.name}</h6>
-                                      <h6 className={'text-gray4 text-xs font-medium leading-5'}>{e.sentDate}</h6>
-                                    </div>
-                                  </div>
-                                  {activeEvent.id === e.id && (
-                                    <ArrowForwardIosIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-0.5'} />
-                                  )}
-                                </div>
-                                <div
-                                  className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
-                                  style={{ width: 2 }}></div>
+                            {campaignData === undefined && activeEvent === undefined ? (
+                              <div className={'flex flex-col mt-2 gap-8'}>
+                                {[1, 2, 3].map(() => (
+                                  <div className="animate-pulse  bg-gray-300 h-[66px] w-[350px]"></div>
+                                ))}
                               </div>
-                            ))}
+                            ) : (
+                              <div>
+                                {campaignData?.events?.map((e, index) => {
+                                  const execute_on =
+                                    e?.execute_on === 'Same day as added in system' ? 0 : e?.execute_on.split(' ')[1];
+                                  return (
+                                    <div className={'flex flex-col mt-2'}>
+                                      <div
+                                        style={{ width: 'max-content' }}
+                                        className={'font-semibold text-gray4 text-xs  leading-5 bg-gray1 px-1.5'}>
+                                        Wait {execute_on} {execute_on === 0 ? 'day' : 'days'}
+                                      </div>
+                                      <div
+                                        className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
+                                        style={{ width: 2 }}></div>
+                                      <div
+                                        role={'button'}
+                                        onClick={() => setActiveEvent({ ...e })}
+                                        className={`p-3 flex ${
+                                          areObjectsEqual(campaignData?.events[index], activeEvent)
+                                            ? 'bg-lightBlue1 border border-lightBlue1 rounded-none'
+                                            : 'border border-[#BAE6FD] rounded-md'
+                                        } justify-between items-start hover:bg-lightBlue1`}>
+                                        <div className={'flex gap-2 '}>
+                                          {e?.event_type === 'Email' ? (
+                                            <EmailIcon className={'h-4 w-4 text-lightBlue3 mt-0.5'} />
+                                          ) : (
+                                            <ChatIcon className={'h-4 w-4 text-lightBlue3 mt-0.5'} />
+                                          )}
+                                          <div>
+                                            <h6 className={'text-sm leading-5 font-medium text-gray7 '}>{'test'}</h6>
+                                            <h6 className={'text-gray4 text-xs font-medium leading-5'}>{'data'}</h6>
+                                          </div>
+                                        </div>
+                                        {areObjectsEqual(campaignData?.events[index], activeEvent) && (
+                                          <ArrowForwardIosIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-0.5'} />
+                                        )}
+                                      </div>
+                                      <div
+                                        className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
+                                        style={{ width: 2 }}></div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
                           <div className={'flex-1'}>
                             <div className={'px-6 py-3 border-b border-gray2 '}>
                               <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
                               <div className={'flex items-center gap-1'}>
-                                {activeEvent.type === 'email' ? (
+                                {activeEvent?.event_type === 'Email' ? (
                                   <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-1'} />
                                 ) : (
                                   <ChatIcon className={'h-3.5 w-3.5 text-lightBlue3  mt-1'} />
                                 )}
-                                <span className={'font-inter text-sm font-medium leading-5 text-gray4 '}>
-                                  {activeEvent.type} Event
+                                <span className={'font-inter text-sm font-medium leading-5 text-gray4'}>
+                                  {activeEvent?.event_type} Event
                                 </span>
                               </div>
                             </div>
@@ -204,14 +173,18 @@ const CampaignPreview = ({ open, setOpen, title, sms, email, className }) => {
                                 <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
                                   SUBJECT
                                 </span>
-                                <p className={'text-xl leading-7 font-medium text-gray8'}>{activeEvent.subject}</p>
+                                <p className={'text-xl leading-7 font-medium text-gray8'}>
+                                  {activeEvent?.preview?.preview?.subject}
+                                </p>
                               </div>
                               <div>
                                 <span
                                   className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4 mb-3'}>
                                   MESSAGE
                                 </span>
-                                <p className={'text-sm leading-5 font-normal text-gray5'}>{activeEvent.message}</p>
+                                <p className={'text-sm leading-5 font-normal text-gray5'}>
+                                  {activeEvent?.preview?.preview?.body_text ?? activeEvent?.preview?.preview?.message}
+                                </p>
                               </div>
                             </div>
                           </div>

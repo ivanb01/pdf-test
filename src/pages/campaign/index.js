@@ -2,92 +2,23 @@ import MainMenu from '@components/shared/menu';
 import SimpleBar from 'simplebar-react';
 import Search from '@components/shared/input/search';
 import Tabs from '@components/shared/tabs';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CampaignWrapper from '@components/campaign/CampaignWrapper';
 import CustomCampaign from '@components/campaign/CustomCampaign';
 import { getCampaignsByCategory } from '@api/campaign';
 import Loader from '@components/shared/loader';
+import useElementInView from '../../hooks/useElementInScreen';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const campaignCards = [
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'New Lead',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 1,
-      sms: 2,
-      status_2: 'Attempted Contact',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'In Communication',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'Appointment Set',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'Actively Working',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'Offer Submitted',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'Contract Signed',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'Closed',
-      category_1: 'Renter',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'New Lead',
-      category_1: 'Buyers',
-    },
-    {
-      title: 'Campaign Title',
-      email: 2,
-      sms: 3,
-      status_2: 'New Lead',
-      category_1: 'Landlords',
-    },
-  ];
   const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
   const [campaigns, setCampaigns] = useState([]);
-  const renderCampaignWrapper = (category) => {
-    console.log(category, 'category');
+  const [loading, setLoading] = useState(false);
+  const elementRef = useRef(null);
+  let isVisible = useElementInView(elementRef);
 
+  const renderCampaignWrapper = (category) => {
     const filteredCampaigns = campaigns?.campaigns?.filter(
       (campaign) =>
         (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -101,6 +32,7 @@ const index = () => {
         category={category}
         headerTitle={`${filteredCampaigns?.length} Campaign for ${category}s`}
         campaignCards={filteredCampaigns && filteredCampaigns}
+        isVisible={isVisible}
       />
     );
   };
@@ -111,9 +43,15 @@ const index = () => {
       href: '#',
       content: (
         <>
-          {uniqueCategories.map((category) => {
-            return renderCampaignWrapper(category);
-          })}
+          {loading === true ? (
+            <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px)' }}>
+              <Loader />
+            </div>
+          ) : (
+            uniqueCategories.map((category) => {
+              return renderCampaignWrapper(category);
+            })
+          )}
         </>
       ),
     },
@@ -121,36 +59,84 @@ const index = () => {
       id: 2,
       name: 'for Renters',
       href: '#',
-      content: renderCampaignWrapper('Renter'),
+      content: (
+        <>
+          {loading === true ? (
+            <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px) mt-10' }}>
+              <Loader />
+            </div>
+          ) : (
+            renderCampaignWrapper('Renter')
+          )}
+        </>
+      ),
     },
     {
       id: 3,
       name: 'for Buyers',
       href: '#',
-      content: renderCampaignWrapper('Buyer'),
+      content: (
+        <>
+          {loading === true ? (
+            <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px)' }}>
+              <Loader />
+            </div>
+          ) : (
+            renderCampaignWrapper('Buyer')
+          )}
+        </>
+      ),
     },
     {
       id: 4,
       name: 'for Sellers',
       href: '#',
-      content: renderCampaignWrapper('Seller'),
+      content: (
+        <>
+          {loading === true ? (
+            <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px)' }}>
+              <Loader />
+            </div>
+          ) : (
+            renderCampaignWrapper('Seller')
+          )}
+        </>
+      ),
     },
     {
       id: 5,
       name: 'for Landlords',
       href: '#',
-      content: renderCampaignWrapper('Landlord'),
+      content: (
+        <>
+          {loading === true ? (
+            <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px)' }}>
+              <Loader />
+            </div>
+          ) : (
+            renderCampaignWrapper('Landlord')
+          )}
+        </>
+      ),
     },
   ];
   useEffect(() => {
-    getCampaignsByCategory('Client').then((res) => setCampaigns(res.data));
+    setLoading(true);
+    getCampaignsByCategory('Client')
+      .then((res) => setCampaigns(res.data))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
   useEffect(() => {
     console.log(campaigns, 'campaigns');
   }, [campaigns]);
+
   return (
     <SimpleBar style={{ maxHeight: '100%' }}>
-      <MainMenu />
+      <div ref={elementRef}>
+        <MainMenu />
+      </div>
       <div
         className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
         style={{ height: '230px' }}>

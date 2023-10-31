@@ -7,7 +7,7 @@ import NotInCampaign from '../../../../public/images/campaign/notInCampaign.svg'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from 'next/router';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CampaignCard = ({
   campaign_name,
@@ -16,6 +16,7 @@ const CampaignCard = ({
   campaign_id,
   contact_never_assigned_count,
   contact_assigned_count,
+  isVisible,
 }) => {
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
@@ -82,16 +83,17 @@ const CampaignCard = ({
           Template Preview
         </p>
       </div>
-      {
+      {openCampaignPreview && (
         <CampaignPreview
+          campaignId={campaign_id}
           open={openCampaignPreview}
           setOpen={setOpenCampaignPreview}
-          className={'mt-[68px]'}
+          className={`${isVisible ? 'mt-[68px]' : ''}`}
           title={'Campaign Name'}
           sms={2}
           email={3}
         />
-      }
+      )}
     </div>
   );
 };

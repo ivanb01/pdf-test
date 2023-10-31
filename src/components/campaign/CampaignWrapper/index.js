@@ -1,6 +1,7 @@
 import CampaignCard from '@components/campaign/CampaignCard';
+import { useEffect } from 'react';
 
-const CampaignWrapper = ({ headerTitle, campaignCards, category }) => {
+const CampaignWrapper = ({ headerTitle, campaignCards, category, isVisible }) => {
   return (
     <>
       <div className={'p-[50px] pb-0'}>
@@ -8,7 +9,7 @@ const CampaignWrapper = ({ headerTitle, campaignCards, category }) => {
         {campaignCards?.length > 0 ? (
           <div className={'grid grid-cols-4 gap-6'}>
             {campaignCards.map((campaign) => {
-              return <CampaignCard {...campaign} />;
+              return <CampaignCard {...campaign} isVisible={isVisible} category={category} />;
             })}
           </div>
         ) : (

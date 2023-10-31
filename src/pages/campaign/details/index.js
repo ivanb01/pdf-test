@@ -167,14 +167,17 @@ const index = () => {
         />
       </div>
       {allContacts === undefined ? <></> : renderTable(currentButton)}
-      <CampaignPreview
-        open={openCampaignPreview}
-        setOpen={setOpenCampaignPreview}
-        title={'Campaign Name'}
-        className={'mt-[68px]'}
-        sms={2}
-        email={3}
-      />
+      {openCampaignPreview && (
+        <CampaignPreview
+          campaignId={id}
+          open={openCampaignPreview}
+          setOpen={setOpenCampaignPreview}
+          title={'Campaign Name'}
+          className={'mt-[68px]'}
+          sms={2}
+          email={3}
+        />
+      )}
     </SimpleBar>
   );
 };
