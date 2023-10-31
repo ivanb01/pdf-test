@@ -1677,6 +1677,7 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
+    console.log(data, 'Data');
     const getChip = (item) => {
       if (item.category_id == 3) {
         return 'Trash';
@@ -1775,8 +1776,10 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[100px]">
-                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[160px]">
+                <Chip typeStyle>
+                  {vendorSubtypes && getChip(dataItem)} - {dataItem.category_2 && dataItem.category_2}
+                </Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
