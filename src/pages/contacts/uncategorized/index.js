@@ -48,9 +48,11 @@ const index = () => {
     if (selectedUncategorized.length) {
       let contact = selectedUncategorized[0];
       let indexOf = uncategorizedContacts.indexOf(contact);
-      document.getElementById('row_' + indexOf).scrollIntoView({
-        behavior: 'smooth',
-      });
+      if (indexOf > 5) {
+        document.getElementById('row_' + indexOf).scrollIntoView({
+          behavior: 'smooth',
+        });
+      }
     }
   }, [selectedUncategorized]);
 

@@ -17,6 +17,7 @@ import Chip from 'components/shared/chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
 import { updateAllContacts, updateContactLocally, updateContacts } from '@store/contacts/slice';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -35,7 +36,15 @@ const CategorizePage = ({
 }) => {
   const dispatch = useDispatch();
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
-
+  const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
+  useEffect(() => {
+    setVendorSubtypesFormatted(
+      vendorSubtypes?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    );
+  }, [vendorSubtypes]);
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
@@ -172,7 +181,7 @@ const CategorizePage = ({
               bottom: '72px',
               maxHeight: '100%',
             }}>
-            <div className="p-6">
+            <div className="p-6 pb-[77px]">
               <div className="flex items-center mb-4">
                 <CircleStepNumber number={1} className="mr-2" />
                 <Text h3>What type of contact is this for you?</Text>
@@ -198,7 +207,7 @@ const CategorizePage = ({
                       <CircleStepNumber number={2} className="mr-2" />
                       <Text h3>
                         {selectedUncategorizedContactType == 8
-                          ? 'What type of vendor is this?'
+                          ? 'What kind of vendor is this?'
                           : 'In what stage of communication?'}
                       </Text>
                     </div>
@@ -214,17 +223,29 @@ const CategorizePage = ({
                         />
                       </>
                     ) : (
-                      <div className="flex flex-wrap">
-                        {vendorSubtypes.map((type) => (
-                          <Chip
-                            selectedStatus={type.id == selectedUncategorizedContactType}
-                            key={type.id}
-                            label={type.name}
-                            className="mr-3 mb-3"
-                            onClick={() => handleSelectUncategorizedType(type.id)}
-                          />
-                        ))}
-                      </div>
+                      // <div className="flex flex-wrap">
+                      //   {vendorSubtypes.map((type) => (
+                      //     <Chip
+                      //       selectedStatus={type.id == selectedUncategorizedContactType}
+                      //       key={type.id}
+                      //       label={type.name}
+                      //       className="mr-3 mb-3"
+                      //       onClick={() => handleSelectUncategorizedType(type.id)}
+                      //     />
+                      //   ))}
+                      // </div>
+                      <DropdownWithSearch
+                        options={vendorSubtypesFormatted}
+                        label="What kind of vendor is this for you?"
+                        onChange={(type) => {
+                          console.log(type);
+                          handleSelectUncategorizedType(type.value);
+                        }}
+                        // onChange={(type) => {
+                        //   formikStep2.setFieldValue('selectedContactSubtype', type.value);
+                        // }}
+                        maxMenuHeight={230}
+                      />
                     )}
                   </>
                 )}
@@ -289,7 +310,15 @@ const CategorizePage = ({
       <div
         style={{ zIndex: '99999 !important' }}
         className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
-        <Button primary label="Save & Exit" className="mr-4" onClick={() => handleStartCategorizing(false)} />
+        <Button
+          primary
+          label="Save & Exit"
+          className="mr-4"
+          onClick={() => {
+            setSelectedUncategorized([]);
+            handleStartCategorizing(false);
+          }}
+        />
       </div>
     </>
   );
