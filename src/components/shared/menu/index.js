@@ -163,9 +163,13 @@ const MainMenu = ({ className, fixed }) => {
 
   useEffect(() => {
     if (userGaveConsent == null || userGaveConsent == undefined) {
-      getUserConsentStatus().then((results) => {
-        dispatch(setUserGaveConsent(results.data.scopes));
-      });
+      getUserConsentStatus()
+        .then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        })
+        .catch((error) => {
+          console.log(error, 'error');
+        });
     }
   }, []);
 
