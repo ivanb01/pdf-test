@@ -36,11 +36,10 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.clients);
-  const clients = useSelector((state) => state.contacts.clients);
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-
+  const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
 
   const [filteredContacts, setFilteredContacts] = useState(
@@ -116,6 +115,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
   const [contactToModify, setContactToModify] = useState(null);
 
+  useEffect(() => {
+    setFilteredContacts(clients);
+  }, [clients, openedSubtab, searchTerm, contacts, sortAsc]);
   const handleChangeStatus = async (status, contact) => {
     try {
       if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -254,19 +256,24 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
             height: 'calc(100vh - 224px) !important',
           }}>
           <div className="p-[16px] contact-column-custom-height">
-            {filteredContacts.map((contact, index) => (
-              <ContactCard
-                handleCardEdit={handleCardEdit}
-                handleCardClick={handleCardClick}
-                contact={contact}
-                key={index}
-                categoryType={categoryType}
-                addActivityPopup={addActivityPopup}
-                setAddActivityPopup={setAddActivityPopup}
-                handleAddActivity={handleAddActivity}
-                handleChangeStatus={handleChangeStatus}
-              />
-            ))}
+            {filteredContacts.map((contact, index) => {
+              if (contact.status_id === status.id && contact.category_1.toLowerCase() === category) {
+                return (
+                  <ContactCard
+                    handleCardEdit={handleCardEdit}
+                    handleCardClick={handleCardClick}
+                    contact={contact}
+                    key={index}
+                    categoryType={categoryType}
+                    addActivityPopup={addActivityPopup}
+                    setAddActivityPopup={setAddActivityPopup}
+                    handleAddActivity={handleAddActivity}
+                    handleChangeStatus={handleChangeStatus}
+                  />
+                );
+              }
+              return null;
+            })}
           </div>
         </SimpleBar>
       ) : (

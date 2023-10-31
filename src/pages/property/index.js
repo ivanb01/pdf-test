@@ -49,6 +49,7 @@ import placeholder from '/public/images/placeholder.png';
 import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const index = () => {
   const router = useRouter();
@@ -615,7 +616,7 @@ const index = () => {
             </div>
           </div>
           <div>
-            <div className="md:flex hidden mt-0 clip-path min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
+            <div className="md:flex hidden mt-0 clipPath min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
               {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
             </div>
@@ -776,6 +777,14 @@ const index = () => {
           {isAuthenticated && (
             <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
               {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
+              <GlobalAlert
+                className="mb-4"
+                smallText
+                noBorder
+                rounded
+                type="warning"
+                message={`NOTE: The agent name is only visible to you. It will not show when you share the link with someone.`}
+              />
               <div className="flex items-center">
                 <div className="mr-4 w-24 h-24 rounded-lg">
                   <img

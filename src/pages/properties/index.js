@@ -15,6 +15,7 @@ import React, { useState, useRef, useMemo, useEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
+import withAuth from '@components/withAuth';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -31,7 +32,7 @@ const index = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [filterValue, setFilterValue] = useState('newest');
-  const [searchKey, setSearchKey] = useState();
+  const [searchKey, setSearchKey] = useState('');
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [status, setStatus] = useState();
   const [bedrooms, setBedrooms] = useState();
@@ -216,16 +217,12 @@ const index = () => {
     setStatus();
     setBedrooms();
     setBathrooms();
-    setSearchKey();
+    setSearchKey('');
   };
 
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, []);
-
-  useEffect(() => {
-    fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, status, searchKey, minPrice, maxPrice, filterValue]);
+  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
@@ -446,12 +443,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

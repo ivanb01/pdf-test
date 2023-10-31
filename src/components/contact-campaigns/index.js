@@ -45,7 +45,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   const router = useRouter();
   const handleSelectContact = (event, contact) => {
-    if (event.target.checked) {
+    if (event?.target.checked) {
       // add to array
       setSelectedContacts((prevState) => [...prevState, contact.email]);
     } else {
@@ -302,10 +302,10 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
 export default ContactCampaigns;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

@@ -3,16 +3,14 @@ import {
   getContactStatusByStatusId,
   getContactTypeByTypeId,
   getContactStatusColorByStatusId,
-  phoneNumberFormat,
   formatDateLL,
-  findProfessionalSubtype,
   getInitials,
   getDateFormat,
 } from 'global/functions';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EventStatus from 'components/event-status';
 import Text from '../text';
 import Error from '@mui/icons-material/Error';
@@ -49,8 +47,9 @@ import List from '@mui/icons-material/List';
 import AddActivity from 'components/overlays/add-activity';
 import ChangeStatus from 'components/overlays/change-contact-status';
 import { getAllEvents, unassignContactFromCampaign } from 'api/campaign';
+import ArrowDropDownTwoToneIcon from '@mui/icons-material/ArrowDropDownTwoTone';
+import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { getContact } from 'api/contacts';
-import { useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Fragment } from 'react';
 import ClientHealth from 'components/clientHealth';
@@ -76,6 +75,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Toggle from '@components/shared/Toggle';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
+import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -152,12 +152,12 @@ const Table = ({
           </svg>
         ),
       };
-    } else {
+    } else if (source === 'Google Contacts') {
       return {
         name: 'Google Contact',
         icon: <Image src={GoogleContact} height={16} width={16} />,
       };
-    }
+    } else return <></>;
   };
 
   const getContactInfo = async () => {
@@ -428,9 +428,9 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-center">
-                    <div className={'flex gap-1.5 items-center justify-center'}>
-                      {getSource(dataItem.import_source_text).icon}
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
+                    <div className={'flex gap-1.5 items-center justify-start'}>
+                      {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
                         {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                       </p>
@@ -516,10 +516,14 @@ const Table = ({
                           onChange={(event) => handleClickRow(dataItem, event)}></Input>
                       )}
                       <ContactInfo
+                        inCategorization={tableFor === 'in-categorization'}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
                           image: dataItem.profile_image_path,
+                          import_source_text: dataItem.import_source_text,
+                          summary: dataItem.summary,
+                          approved_ai: !dataItem.approved_ai,
                         }}
                       />
                       {/* {(contact.type != null || contact.status != null) && (
@@ -540,9 +544,9 @@ const Table = ({
                   )} */}
                     </td>
                     {tableFor != 'in-categorization' && (
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
-                          {getSource(dataItem.import_source_text).icon}
+                      <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                        <div className={'flex gap-1.5 items-center justify-start'}>
+                          {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                           <p className={'text-xs leading-4 font-medium text-gray8'}>
                             {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
                           </p>
@@ -591,27 +595,18 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-              {data.length} Categorized Contacts
-            </th>
-            <th
-              scope="col"
               className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-              {/* <Button white onClick={() => undoAllCategorizations()}> */}
-              {/* Undo All */}
-              {/* </Button> */}
-              <div className="relative flex justify-center">
-                <a
-                  className="cursor-pointer text-xs"
-                  onClick={() => undoAllCategorizations()}
-                  onMouseEnter={() =>
-                    document.querySelector('#tooltip-undo-all').classList.remove('invisible', 'opacity-0')
-                  }
-                  onMouseLeave={() =>
-                    document.querySelector('#tooltip-undo-all').classList.add('invisible', 'opacity-0')
-                  }>
-                  {/* <Image src={undoIcon} className="w-5"></Image> */}
-                  <svg version="1.1" viewBox="0 0 16 20" width="15px" xmlns="http://www.w3.org/2000/svg">
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  <svg
+                    className={'cursor-pointer'}
+                    version="1.1"
+                    viewBox="0 0 16 20"
+                    width="15px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => undoAllCategorizations()}>
                     <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
                       <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
                         <g id="undo" transform="translate(424.000000, 464.000000)">
@@ -623,13 +618,12 @@ const Table = ({
                       </g>
                     </g>
                   </svg>
-                </a>
-                <div
-                  id="tooltip-undo-all"
-                  className="inline-block capitalize -right-3 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                  Undo All
-                </div>
-              </div>
+                }>
+                <p className="text-xs leading-4 font-normal"> Undo All</p>
+              </TooltipComponent>
+            </th>
+            <th scope="col" className="py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              {data.length} Categorized Contacts
             </th>
           </tr>
         </thead>
@@ -637,46 +631,18 @@ const Table = ({
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
-                <td className="whitespace-nowrap py-4 pl-6  text-sm sm:pl-6">
-                  <ContactInfo
-                    data={{
-                      name: dataItem.first_name + ' ' + dataItem.last_name,
-                      email: dataItem.email,
-                      image: dataItem.profile_image_path,
-                    }}
-                  />
-                  {(dataItem.category_id != null || dataItem.status_id != null) && (
-                    <div className="flex items-center mt-3 type-and-status">
-                      {dataItem.category_id != null && (
-                        <Chip typeStyle>{getContactTypeByTypeId(dataItem.category_id)}</Chip>
-                      )}
-                      {showStatus(dataItem) && (
-                        <Chip
-                          statusStyle
-                          className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
-                          {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
-                        </Chip>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td className="relative whitespace-nowrap h-[72.5px] py-4 pr-6 sm:pr-6 flex justify-end items-center">
-                  <div className="relative">
-                    <a
-                      className="cursor-pointer text-xs"
-                      onClick={() => undoCategorization(dataItem.id)}
-                      onMouseEnter={() =>
-                        document
-                          .querySelector('#tooltip-undo-categorization-' + dataItem.id)
-                          .classList.remove('invisible', 'opacity-0')
-                      }
-                      onMouseLeave={() =>
-                        document
-                          .querySelector('#tooltip-undo-categorization-' + dataItem.id)
-                          .classList.add('invisible', 'opacity-0')
-                      }>
-                      {/* <Image src={undoIcon} className="w-5"></Image> */}
-                      <svg version="1.1" viewBox="0 0 16 20" width="15px" xmlns="http://www.w3.org/2000/svg">
+                <td className="relative whitespace-nowrap h-[72.5px] py-4 px-6 flex ">
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <svg
+                        version="1.1"
+                        viewBox="0 0 16 20"
+                        width="15px"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={'cursor-pointer'}
+                        onClick={() => undoCategorization(dataItem.id)}>
                         <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
                           <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
                             <g id="undo" transform="translate(424.000000, 464.000000)">
@@ -688,13 +654,32 @@ const Table = ({
                           </g>
                         </g>
                       </svg>
-                    </a>
-                    <div
-                      id={'tooltip-undo-categorization-' + dataItem.id}
-                      className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
-                      Undo Categorization
+                    }>
+                    <p className="text-xs leading-4 font-normal"> Undo Categorization</p>
+                  </TooltipComponent>
+                </td>
+                <td className="whitespace-nowrap py-4  text-sm ">
+                  <ContactInfo
+                    data={{
+                      name: dataItem.first_name + ' ' + dataItem.last_name,
+                      email: dataItem.email,
+                      image: dataItem.profile_image_path,
+                    }}
+                  />
+                  {(dataItem.category_id != null || dataItem.status_id != null) && (
+                    <div className="flex items-center mt-3 type-and-status">
+                      {dataItem.category_id != null && (
+                        <Chip typeStyle>{getContactTypeByTypeId(vendorSubtypes, dataItem.category_id)}</Chip>
+                      )}
+                      {showStatus(dataItem) && (
+                        <Chip
+                          statusStyle
+                          className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
+                          {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
+                        </Chip>
+                      )}
                     </div>
-                  </div>
+                  )}
                 </td>
               </tr>
             </CSSTransition>
@@ -777,7 +762,6 @@ const Table = ({
     const contacts = useSelector((state) => state.contacts.clients);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
-    useEffect(() => console.log(contacts.status_1), [contacts]);
     const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
@@ -852,7 +836,7 @@ const Table = ({
     };
 
     function filterContacts(category, contactTypes) {
-      const filteredContacts = contacts.filter(
+      const filteredContacts = contacts?.filter(
         (contact) =>
           searchTerm.split(' ').every((word) => {
             const lowercaseWord = word.toLowerCase();
@@ -868,40 +852,72 @@ const Table = ({
       return filteredContacts;
     }
 
+    const [isExpanded, setIsExpanded] = useState(
+      contactsStatuses[openedSubtab].statuses.map((category) => ({
+        categoryId: category.id,
+        expanded: true,
+      })),
+    );
+
+    React.useEffect(() => {
+      setIsExpanded(
+        contactsStatuses[openedSubtab].statuses.map((category) => ({
+          categoryId: category.id,
+          expanded: true,
+        })),
+      );
+    }, [openedSubtab, contactsStatuses]);
+    const toggleExpanded = (categoryId) => {
+      setIsExpanded((prevState) => {
+        return prevState.map((item) => {
+          if (item.categoryId === categoryId) {
+            return { ...item, expanded: !item.expanded };
+          }
+          return item;
+        });
+      });
+    };
+
     return (
       <>
         <thead className="bg-gray-50">
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[200px] xl:w-[100px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
               ></Input> */}
               {openedTab == 0 ? 'Client' : 'Professional'}
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[500px]">
               Type
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[265px] xl:w-[400px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
               <th
                 scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
                 LAST COMMUNICATION
               </th>
             ) : null}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
               ACTIONS
             </th>
           </tr>
         </thead>
         <tbody className="bg-white">
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
-            contacts.filter(
+            contacts?.filter(
               (contact) =>
                 searchTerm.split(' ').every((word) => {
                   const lowercaseWord = word.toLowerCase();
@@ -914,7 +930,20 @@ const Table = ({
               <div>
                 <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                   <td colSpan="10">
-                    <div className="flex items-center px-6 py-2">
+                    <div
+                      className="flex items-center px-6 py-2"
+                      role={'button'}
+                      onClick={() => toggleExpanded(category.id)}>
+                      {filterContacts(category, contactTypes).length > 0 &&
+                        isExpanded
+                          .filter((item) => item.categoryId === category.id)
+                          .map((item) =>
+                            item.expanded ? (
+                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ) : (
+                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ),
+                          )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -922,7 +951,11 @@ const Table = ({
                         side={'bottom'}
                         align={'start'}
                         triggerElement={
-                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          <InfoSharpIcon
+                            className="h-4 w-4 text-gray3 hover:text-gray4"
+                            aria-hidden="true"
+                            onClick={(e) => e.stopPropagation()}
+                          />
                         }>
                         <div
                           // style={{ width: '300px' }}
@@ -948,18 +981,23 @@ const Table = ({
                     </div>
                   </td>
                 </tr>
-                {filterContacts(category, contactTypes).length > 0 ? (
+
+                {filterContacts(category, contactTypes).length ? (
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
-                      className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                        isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                          ? 'hidden'
+                          : ''
+                      }`}
                       onClick={() =>
                         router.push({
                           pathname: '/contacts/details',
                           query: { id: contact.id },
                         })
                       }>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
@@ -969,15 +1007,17 @@ const Table = ({
                           }}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center">
-                          {contact.category_2}
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
+                        <div className={'flex justify-center items-center'}>
+                          <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center lg:w-[76px] xl:w-[86px]">
+                            {contact.category_2}
+                          </div>
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-center'}>
+                      <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
+                        <div className={'flex gap-1.5 items-center justify-start'}>
                           {getSource(contact.import_source_text, contact.approved_ai).icon}
-                          <p className={'text-xs leading-4 font-medium text-gray8'}>
+                          <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
                             {getSource(contact.import_source_text, contact.approved_ai).name}
                           </p>
                         </div>
@@ -988,7 +1028,7 @@ const Table = ({
                             triggerElement={
                               <div
                                 className={
-                                  'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                  'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                 }>
                                 {contact.summary}
                               </div>
@@ -1000,7 +1040,7 @@ const Table = ({
                         )}
                       </td>
                       {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
+                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
                           <div className="text-gray7 font-medium">
                             <DateChip
                               lastCommunication={contact.last_communication_date}
@@ -1136,7 +1176,52 @@ const Table = ({
                 )}
               </div>
             ) : (
-              <></>
+              <>
+                <div key={category.id}>
+                  <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
+                    <td colSpan="10">
+                      <div className="flex items-center px-6 py-2">
+                        <Text chipText className="text-gray4 mr-1">
+                          {category.name == 'Vendor' ? 'Other Vendors' : category.name}
+                        </Text>
+                        <TooltipComponent
+                          side={'bottom'}
+                          align={'start'}
+                          triggerElement={
+                            <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+                          }>
+                          <div
+                            // style={{ width: '300px' }}
+                            className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                            <p className="mb-2">{`You must interact with these clients every ${
+                              healthLastCommunicationDate[categoryType][category?.name] === 1
+                                ? 'day'
+                                : `${healthLastCommunicationDate[categoryType][category?.name]} days`
+                            } in order to maintain healthy communication.`}</p>
+                            <p className="mb-2">Chip statuses of communication in cards represent:</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center mr-2">
+                                <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
+                                <span>Healthy Communication</span>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
+                                <span>Unhealthy Communication</span>
+                              </div>
+                            </div>
+                          </div>
+                        </TooltipComponent>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                    <td colSpan={6} className={'text-center pt-[30px]'}>
+                      No Contacts
+                    </td>
+                  </tr>
+                </div>
+              </>
             ),
           )}
         </tbody>
@@ -1210,7 +1295,7 @@ const Table = ({
             >
               Type
             </th> */}
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Contact summary
             </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
@@ -1267,8 +1352,8 @@ const Table = ({
                           {contact.category_2}
                         </div>
                       </td> */}
-                        <td className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500">
-                          <div className={'flex gap-1.5 items-center justify-center'}>
+                        <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
+                          <div className={'flex gap-1.5 items-center justify-start'}>
                             {getSource(contact.import_source_text, contact.approved_ai).icon}
                             <p className={'text-xs leading-4 font-medium text-gray8'}>
                               {getSource(contact.import_source_text, contact.approved_ai).name}
@@ -1281,7 +1366,7 @@ const Table = ({
                               triggerElement={
                                 <div
                                   className={
-                                    'mx-auto max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                                    'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                                   }>
                                   {contact.summary}
                                 </div>
@@ -1537,7 +1622,7 @@ const Table = ({
         <tbody className=" bg-white">
           {data.map((dataItem, index) => (
             <tr
-              key={dataItem.index}
+              key={index}
               className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
               // onClick={(event) => handleClickRow(contact, event)}
             >
@@ -1590,7 +1675,7 @@ const Table = ({
                     <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
                   </>
                 ) : (
-                  <div className="text-red-500">No Interaction</div>
+                  <div className="text-red-500">No Communication</div>
                 )}
               </td>
             </tr>
@@ -1601,6 +1686,7 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
+    console.log(data, 'Data');
     const getChip = (item) => {
       if (item.category_id == 3) {
         return 'Trash';
@@ -1628,31 +1714,37 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center ">
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px] ">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-                ref={checkbox}
+                ref={checkbox && checkbox}
                 checked={checked}
                 onChange={toggleAll}
               />
               Contact
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:max-w-[100px] md:max-w-[100px] lg:max-w-[300px] xl:max-w-[500px]">
               Email Summary
             </th>
-            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
               Actions
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
+              className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
           </tr>
         </thead>
         <tbody className=" bg-white">
@@ -1666,7 +1758,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 pr-3 text-sm pl-6 flex items-center">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:max-w-[340px]">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1693,106 +1785,86 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[160px]">
+                <Chip typeStyle>
+                  {vendorSubtypes && getChip(dataItem)} {dataItem.category_2 && '- ' + dataItem.category_2}
+                </Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <div className=" flex items-center">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[230px] xl:min-w-[500px]">
+                <div className=" flex items-center break-all flex-wrap">
+                  {dataItem.ai_email_summary && (
+                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
+                      <Launch className="h-5 w-5 text-blue-500 mr-2" />
+                    </a>
+                  )}
                   {dataItem.ai_email_summary ? (
                     <div className="email-summary-styling">{dataItem.ai_email_summary}</div>
                   ) : (
                     '-'
                   )}
-                  {dataItem.ai_email_summary && (
-                    <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
-                      <Launch className="h-5 w-5 text-blue-500 ml-2" />
-                    </a>
-                  )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
-                <div className="flex items-center justify-center">
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-delete-${dataItem.id}-2`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-delete-${dataItem.id}-2`).classList.add('invisible', 'opacity-0')
-                    }
-                    className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
-                    <CheckCircle
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAction('approve', dataItem);
-                      }}
-                      id={'edit-contact-icon-' + dataItem.id}
-                      className="group-hover/check:text-white text-[16px]"
-                    />
-                    <div
-                      id={`tooltip-delete-${dataItem.id}-2`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Mark as Correct
-                    </div>
-                  </div>
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-edit-${dataItem.id}-1`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-edit-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                    }
-                    className="mx-6 h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      handleCardEdit(dataItem);
-                    }}>
-                    <div
-                      id={`tooltip-edit-${dataItem.id}-1`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Edit Contact
-                    </div>
-                    <Edit id={'edit-contact-icon-' + dataItem.id} className="text-gray3 w-4 h-4" />
-                  </div>
-                  <div
-                    onMouseEnter={() => {
-                      document
-                        .querySelector(`#tooltip-delete-${dataItem.id}-1`)
-                        .classList.remove('invisible', 'opacity-0');
-                    }}
-                    onMouseLeave={() =>
-                      document.querySelector(`#tooltip-delete-${dataItem.id}-1`).classList.add('invisible', 'opacity-0')
-                    }
-                    className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
-                    <Delete
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAction('delete', dataItem);
-                      }}
-                      id={'edit-contact-icon-' + dataItem.id}
-                      className="group-hover/delete:text-white text-[16px]"
-                    />
-                    <div
-                      id={`tooltip-delete-${dataItem.id}-1`}
-                      role="tooltip"
-                      className="inline-block absolute bottom-[40px] left-[-40px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm  dark:bg-gray-700">
-                      Move to Trash
-                    </div>
-                  </div>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
+                <div className="flex items-center justify-center gap-6">
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAction('approve', dataItem);
+                        }}
+                        className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
+                        <CheckCircle
+                          id={'edit-contact-icon-' + dataItem.id}
+                          className="group-hover/check:text-white text-[16px]"
+                        />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white">Mark as Correct</p>
+                  </TooltipComponent>
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCardEdit(dataItem);
+                        }}
+                        className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                        <Edit className="text-gray3 w-4 h-4" />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white"> Edit Contact</p>
+                  </TooltipComponent>
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAction('delete', dataItem);
+                        }}
+                        className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
+                        <Delete className="group-hover/delete:text-white text-[16px]" />
+                      </div>
+                    }>
+                    <p className=" text-xs font-medium text-white"> Move to trash</p>
+                  </TooltipComponent>
                 </div>
               </td>
-              <td className="pr-8"></td>
+              <td className="pr-1"></td>
             </tr>
           ))}
         </tbody>
@@ -1800,9 +1872,6 @@ const Table = ({
     );
   };
   const trashTable = () => {
-    {
-      console.log(data, 'Data');
-    }
     return data.length > 0 ? (
       <>
         <thead>
@@ -1910,7 +1979,9 @@ const Table = ({
             fill="#D1D5DB"
           />
         </svg>
-        <h5 className={'text-sm leading-5 font-medium text-gray-900'}>Trash is Empty</h5>
+        <h5 className={'text-sm leading-5 font-medium text-gray-900'}>
+          {searchTerm.length <= 0 ? 'Trash is Empty' : 'No Contacts found'}
+        </h5>
         <p className={'text-xs leading-4 font-normal text-gray-500'}>
           Contacts that you moved to trash will be listed here
         </p>
@@ -2492,7 +2563,7 @@ const Table = ({
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
-        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : ' overflow-x-auto'}`}>
+        <div className={`h-full ${tableFor === 'categorized' ? 'overflow-x-hidden' : 'overflow-x-auto'}`}>
           <div className="h-full inline-block min-w-full align-middle">
             <div className="ring-black ring-opacity-5">
               <table className="min-w-full divide-y divide-gray-200">

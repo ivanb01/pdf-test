@@ -134,7 +134,7 @@ export default function LookingFor({ contactId, category }) {
   const initializePropertyInterests = async () => {
     try {
       const lookingProperties = lookingForData;
-      if (lookingProperties[0]) {
+      if (lookingProperties && lookingProperties[0]) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
           bedrooms: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
@@ -142,7 +142,11 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
+        console.log('ran first');
         fetchProperties(lookingProperties[0], page, filterValue);
+      } else {
+        console.log('ran second');
+        fetchProperties(formik.values, page, filterValue);
       }
     } catch (error) {
       console.log(error);
@@ -240,11 +244,10 @@ export default function LookingFor({ contactId, category }) {
   }, [router.pathname]);
 
   useEffect(() => {
-    if (lookingForData != null) initializePropertyInterests();
-    else {
-      console.log('fetch properties', lookingForData, refetchData, filterValue);
-      fetchProperties(formik.values, page, filterValue);
-    }
+    if (lookingForData !== null) initializePropertyInterests();
+    // else {
+    // fetchProperties(formik.values, page, filterValue);
+    // }
     setLoadingPropertyInterests(false);
   }, [contactId, lookingForData, refetchData, filterValue]);
 
@@ -298,7 +301,7 @@ export default function LookingFor({ contactId, category }) {
       ) : (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
           <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
-            {loadingPropertyInterests ? (
+            {loadingPropertyInterests || propertyInterests === undefined ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>

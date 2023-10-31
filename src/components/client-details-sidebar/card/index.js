@@ -12,6 +12,7 @@ import { getInitials, phoneNumberFormat } from 'global/functions';
 import { useRouter } from 'next/router';
 import ReviewContact from '@components/overlays/review-contact';
 import TooltipComponent from '@components/shared/tooltip';
+import Chip from '@components/shared/chip';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -84,6 +85,15 @@ export default function ClientCard({ client }) {
                 </TooltipComponent>
               )}
             </div>
+            <div className="mt-2 flex">
+              <Chip typeStyle label={client.category_2}></Chip>
+            </div>
+            {/* <div
+              className={
+                'mt-2 bg-white border border-borderColor text-gray-700 py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2'
+              }>
+              {client.category_2}
+            </div> */}
           </span>
         </div>
         <div className="ml-auto mr-4">

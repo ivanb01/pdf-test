@@ -8,7 +8,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
 import { ShieldCheckIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
 import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
@@ -16,16 +16,26 @@ import Router from 'next/router';
 import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
-import { getUserConsentForGoogleEmail } from '@api/google';
+import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
+import ClearContacts from '@components/overlays/clear-all-contacts';
 
 const index = () => {
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
+  const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
+
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    if (hostname.includes('dev') || hostname === 'localhost') {
+      setShowDeleteFunctionality(true);
+    }
+  }, []);
 
   const consentGiven = () => {
     return userGaveConsent && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts');
@@ -34,7 +44,7 @@ const index = () => {
   const activateGoogleConsent = async () => {
     setLoadingActivate(true);
     try {
-      const { data } = await getUserConsentForGoogleEmail();
+      const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');
@@ -133,13 +143,19 @@ const index = () => {
               </Button>
             </div>
           </div>
-          <hr className="my-6" />
-          <div className="font-medium">Delete Your Account</div>
-          <div className="text-sm text-gray-700 mt-1 mb-6">
-            By deleting your account, you will no longer be able to access any information within the platform or login
-            to Oneline.
-          </div>
-          <Button white label="Delete Account" onClick={() => deleteData()} />
+          {showDeleteFunctionality && (
+            <>
+              <hr className="my-6" />
+              <div className="font-medium">Clear Your Contacts</div>
+              <div className="text-sm text-gray-700 mt-1 mb-6">
+                By clicking the button below, all contacts will be cleared from your account
+              </div>
+              <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
+            </>
+          )}
+          {showClearConfirmation && (
+            <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
+          )}
           {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">
             Password
@@ -244,13 +260,13 @@ const index = () => {
 
 export default index;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }
 
 // export async function getServerSideProps(context) {
 

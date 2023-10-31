@@ -6,7 +6,7 @@ const Overlay = ({ handleCloseOverlay, children, className, bgOverlay = 'bg-over
   const router = useRouter();
   return (
     <div
-      className={`grid items-center justify-center overflow-y-auto overflow-x-hidden fixed top-40 right-0 left-0 z-[100] w-full md:inset-0 h-modal md:h-full ${bgOverlay}`}>
+      className={`grid items-center justify-center overflow-y-auto overflow-x-hidden fixed top-40 right-0 left-0 z-[999] w-full md:inset-0 h-modal md:h-full ${bgOverlay}`}>
       <div className={`relative p-4 h-full md:h-auto ${className}`}>
         <div className={`relative bg-white rounded-lg shadow overflow-hidden`}>
           {title || handleCloseOverlay ? (

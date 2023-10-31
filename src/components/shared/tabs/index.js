@@ -1,4 +1,4 @@
-import Image from 'next/dist/client/image';
+import Image from 'next/image';
 import { classNames } from 'global/functions';
 import { useState } from 'react';
 import Loader from '../loader';

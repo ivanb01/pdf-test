@@ -5,6 +5,7 @@ import Chip from '../chip';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 
 export default function Accordion({ tabs = [], handleClick, activeSelections, defaultOpen, ...props }) {
+  console.log(tabs, 'tabs');
   return (
     <div className="max-w-3xl mx-auto">
       <dl>

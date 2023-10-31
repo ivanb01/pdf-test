@@ -27,10 +27,10 @@ const ProfessionalsCampaigns = () => {
 
 export default ProfessionalsCampaigns;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

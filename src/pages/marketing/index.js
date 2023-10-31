@@ -30,121 +30,122 @@ import ListingShowSheet21 from '../../../public/images/marketing/ListingShowShee
 import JustListedPostcard1 from '../../../public/images/marketing/JustListedPostcard1.jpg';
 import NewDevelopmentPostcard1 from '../../../public/images/marketing/NewDevelopmentPostcard1.png';
 import BusinessCard1 from '../../../public/images/marketing/BusinessCard1.jpg';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
   const cardItems = [
     {
       type: 'show_sheet',
-      src: [ListingShowSheet1, ListingShowSheet11],
+      src: ['https://i.imgur.com/k1nH4ap.png', 'https://i.imgur.com/2bONvky.png'],
       title: 'Listing Show Sheet 1',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: [ListingShowSheet2, ListingShowSheet21],
+      src: ['https://i.imgur.com/ENAZVuA.png', 'https://i.imgur.com/SuhlsnQ.png'],
       title: 'Listing Show Sheet 2',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: [OnePageShowSheet1],
+      src: ['https://i.imgur.com/qdrKKZd.png'],
       title: 'One Page Sheet 1',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: [OnePageShowSheet2],
+      src: ['https://i.imgur.com/5J1yoki.jpg'],
       title: 'One Page Sheet 2',
       listingUrl: true,
     },
     {
       type: 'instagram_post',
-      src: [ListingCarouselInstagram],
+      src: ['https://i.imgur.com/9hXnnLt.jpg'],
       title: 'Listing Carousel Instagram',
       listingUrl: true,
     },
     {
       type: 'instagram_post',
-      src: [HolidayPostCardInstagram1],
+      src: ['https://i.imgur.com/EM1dH2z.jpg'],
       title: 'Holiday Post Card Instagram 1',
       listingUrl: false,
     },
     {
       type: 'instagram_post',
-      src: [HolidayPostCardInstagram2],
+      src: ['https://i.imgur.com/WRArADS.jpg'],
       title: 'Holiday Post Card Instagram 2',
       listingUrl: false,
     },
     {
       type: 'instagram_post',
-      src: [HolidayPostCardInstagram3],
+      src: ['https://i.imgur.com/37D52Xy.jpg'],
       title: 'Holiday Post Card Instagram 3',
       listingUrl: false,
     },
     {
       type: 'facebook_post',
-      src: [ListingCarouselFacebook],
+      src: ['https://i.imgur.com/dKM7cl4.jpg'],
       title: 'Listing Carousel Facebook ',
       listingUrl: true,
     },
     {
       type: 'facebook_post',
-      src: [HolidayPostCardFacebook1],
+      src: ['https://i.imgur.com/HEbFAsj.jpg'],
       title: 'Holiday Post Card Facebook 1',
       listingUrl: false,
     },
     {
       type: 'facebook_post',
-      src: [HolidayPostCardFacebook2],
+      src: ['https://i.imgur.com/rxoYZrJ.jpg'],
       title: 'Holiday Post Card Facebook 2',
       listingUrl: false,
     },
     {
       title: 'Just Listed Postcard',
-      src: [JustListedPostcard, JustListedPostcard1],
+      src: ['https://i.imgur.com/Vfv4Nc1.jpg', 'https://i.imgur.com/oOZrWnL.jpg'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       title: 'Just Sold Postcard',
-      src: [JustSoldPostcard, JustListedPostcard1],
+      src: ['https://i.imgur.com/ywezELt.jpg', 'https://i.imgur.com/oOZrWnL.jpg'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       title: 'New Development Postcard',
-      src: [NewDevelopmentPostcard],
+      src: ['https://i.imgur.com/sxBG24Y.png'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       type: 'banners',
-      src: [VerticalBannersRent],
+      src: ['https://i.imgur.com/SfhTRg5.jpg'],
       title: 'Vertical Banners - Rent',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: [VerticalBannersSale],
+      src: ['https://i.imgur.com/OAqc1P5.jpg'],
       title: 'Vertical Banners - Sale',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: [HorizontalBannersRent],
+      src: ['https://i.imgur.com/hQQdb8T.jpg'],
       title: 'Horizontal Banners - Rent',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: [HorizontalBannersSale],
+      src: ['https://i.imgur.com/FkaxRji.jpg'],
       title: 'Horizontal Banners - Sale',
       listingUrl: false,
     },
     {
       type: 'business_card',
-      src: [BusinessCard1, BusinessCards],
+      src: ['https://i.imgur.com/iPbRFOb.jpg', 'https://i.imgur.com/fYTGKin.jpg'],
       title: 'Business Cards',
       listingUrl: false,
     },
@@ -162,7 +163,7 @@ const index = () => {
         <>
           {filteredCards.length > 0 && (
             <div className="grid grid-cols-5 gap-6 gap-y-12 mx-[50px] mt-[60px]">
-              {filteredCards.length > 0 && filteredCards.map((card) => <MarketingCard key={card.id} {...card} />)}
+              {filteredCards.length > 0 && filteredCards.map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -180,7 +181,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'show_sheet')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -198,7 +199,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'instagram_post')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -216,7 +217,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'facebook_post')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -234,7 +235,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'postcard')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -252,7 +253,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'banners')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -270,7 +271,7 @@ const index = () => {
               {filteredCards.length > 0 &&
                 filteredCards
                   .filter((card) => card.type === 'business_card')
-                  .map((card) => <MarketingCard key={card.id} {...card} />)}
+                  .map((card, index) => <MarketingCard key={index} {...card} />)}
             </div>
           )}
           {filteredCards.length === 0 && <MarketingEmptyState />}
@@ -312,12 +313,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

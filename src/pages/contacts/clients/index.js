@@ -22,6 +22,7 @@ import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
 import { getContactCategories } from '@api/contacts';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -98,12 +99,20 @@ const index = () => {
       if (queryParams?.code && queryParams?.prompt == 'consent') {
         setActivatingSmartSync(true);
         setShowSmartSyncOverlay(true);
-        getGoogleAuthCallback(queryParams, '/contacts/clients').then(() => {
-          getUserConsentStatus().then((results) => {
-            setActivatingSmartSync(false);
-            dispatch(setUserGaveConsent(results.data.scopes));
+        getGoogleAuthCallback(queryParams, '/contacts/clients')
+          .then(() => {
+            getUserConsentStatus()
+              .then((results) => {
+                setActivatingSmartSync(false);
+                dispatch(setUserGaveConsent(results.data.scopes));
+              })
+              .catch((error) => {
+                console.log(error, 'error');
+              });
+          })
+          .catch((error) => {
+            console.log(error, 'error');
           });
-        });
       }
     }
   }, [router.query]);
@@ -171,12 +180,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

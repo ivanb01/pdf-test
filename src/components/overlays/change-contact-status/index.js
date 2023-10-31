@@ -17,11 +17,10 @@ const ChangeStatus = ({ handleCloseOverlay, onSubmit }) => {
           <div className="">
             <div className="flex justify-center">
               <lottie-player
-                src="https://assets7.lottiefiles.com/packages/lf20_uq33Y9gg2u.json"
+                src="/animations/change.json"
                 loop
                 autoplay
-                style={{ width: '226px', height: '171px' }}
-              ></lottie-player>
+                style={{ width: '226px', height: '171px' }}></lottie-player>
             </div>
             <Text h2 className="text-gray7 justify-center my-6">
               Changing status will affect the Campaign
@@ -44,8 +43,7 @@ const ChangeStatus = ({ handleCloseOverlay, onSubmit }) => {
                 onClick={() => {
                   setLoadingButton(true);
                   onSubmit();
-                }}
-              >
+                }}>
                 Yes, change status
               </Button>
             </div>

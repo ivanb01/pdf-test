@@ -32,6 +32,7 @@ import { setOpenedTab, setOpenedSubtab, setExpandedTab } from 'store/global/slic
 import SimpleBar from 'simplebar-react';
 import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
@@ -62,8 +63,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   useEffect(() => {
     if (allContacts && !allContacts?.length) {
-      console.log(allContacts);
-      setShowOnboarding(true);
+      if (window.location.pathname.includes('/contacts/clients')) setShowOnboarding(true);
     }
   }, [allContacts]);
 
@@ -119,7 +119,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       <SimpleBar autoHide={true} style={{ maxHeight: '63vh' }}>
         <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
-            <div key={groupName} className={index === 0 ? '' : ' pt-4'}>
+            <div
+              key={groupName}
+              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}>
               <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />
@@ -148,7 +150,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     <>
       <div
         className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
-          pinned ? 'w-[315px]' : 'w-[62px]'
+          pinned ? 'w-[265px]' : 'w-[62px]'
         }`}>
         {showSSOverlay && (
           <SmartSyncOverlay
@@ -203,18 +205,20 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           })
                         }
                         className="group cursor-pointer pb-3 pt-0 flex items-center justify-start font-semibold text-blue-600">
-                        Re-import Google Contacts
+                        Re-import
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                       </a>
                     </div>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-purple1 p-3 pb-0 text-xs m-3 setup-smart-sync`}>
-                      Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
-                      <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
-                      Gmail.
+                    <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
+                      <div className="p-3">
+                        Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
+                        <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
+                        Gmail.
+                      </div>
                       <a
-                        className="group cursor-pointer py-3 pt-6 flex items-center justify-end font-medium text-purple6"
+                        className="px-3 bg-purple-100 text-[14px] group cursor-pointer py-3 flex items-center justify-end font-medium text-purple6"
                         onClick={() => setShowSSOverlay(true)}>
                         Setup
                         <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
@@ -245,7 +249,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             className="absolute cursor-pointer"
             style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 1 }}>
             <div className="">
-              <img src={pinned ? ArrowLeft.src : ArrowRight.src} />
+              <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
           </div>
         )}
@@ -306,10 +310,10 @@ const TabBar = ({ tab }) => {
   };
 
   return (
-    <div className={`accordion w-inherit`} key={tab.id}>
+    <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
         href="#"
-        className={`flex items-center h-8 justify-between pl-2  pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
+        className={`flex items-center h-8 justify-between pl-2 pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||

@@ -75,9 +75,13 @@ const NoContactPage = () => {
         setModalList(list3);
         setMotionImage(true);
         setTimeout(() => handleImportGoogleContact(false), 4000);
-        getUserConsentStatus().then((results) => {
-          dispatch(setUserGaveConsent(results.data.scopes));
-        });
+        getUserConsentStatus()
+          .then((results) => {
+            dispatch(setUserGaveConsent(results.data.scopes));
+          })
+          .catch((error) => {
+            console.log(error, 'error');
+          });
 
         // handleImportGoogleContact();
       } else {
@@ -101,7 +105,7 @@ const NoContactPage = () => {
         // } else {
       } else if (queryParams?.code) {
         setShowImportGoogleContactsModal(true);
-        setEmptyModal(true);
+        // setEmptyModal(true);
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -183,10 +187,10 @@ const NoContactPage = () => {
 
 export default NoContactPage;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

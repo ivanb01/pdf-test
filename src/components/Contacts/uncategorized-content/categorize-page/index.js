@@ -16,7 +16,8 @@ import { bulkUpdateContacts } from 'api/contacts';
 import Chip from 'components/shared/chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
-import { updateContactLocally, updateContacts } from '@store/contacts/slice';
+import { updateAllContacts, updateContactLocally, updateContacts } from '@store/contacts/slice';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -35,15 +36,24 @@ const CategorizePage = ({
 }) => {
   const dispatch = useDispatch();
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
-
+  const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
+  useEffect(() => {
+    setVendorSubtypesFormatted(
+      vendorSubtypes?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    );
+  }, [vendorSubtypes]);
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
     setUncategorizedContacts(uncategorizedCopy);
     setCategorizedInThisSession([]);
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     dispatch(setRefetchData(true));
     bulkUpdateContacts(uncategorizedInitialState);
   };
@@ -54,16 +64,19 @@ const CategorizePage = ({
     dispatch(updateContactLocally(contact));
     let contactInitial = uncategorizedCopy.find((element) => element.id === contactToUndo);
     setUncategorizedContacts((prevState) => [contactInitial, ...prevState]);
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     dispatch(setRefetchData(true));
     bulkUpdateContacts({ contacts: [contact] });
   };
 
   const handleSelectUncategorizedType = (type) => {
+    let vendorSubtypesArray = vendorSubtypes?.map((subtype) => subtype.id);
     setSelectedUncategorizedContactType(type);
+    console.log(vendorSubtypesArray, type);
     if (
       selectedUncategorizedContactStatus ||
-      [2, 3, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27].includes(type)
+      vendorSubtypesArray?.includes(type) ||
+      [2, 3, 9, 12, 13, 14].includes(type)
     ) {
       updateTypeStatus(1, type);
     }
@@ -98,14 +111,17 @@ const CategorizePage = ({
       .filter((contact) => contact !== undefined);
     setCategorizedInThisSession((prevState) => [...updatedContacts, ...prevState]);
     afterCategorizationProcess(ids);
-    dispatch(setRefetchData(true));
-    dispatch(updateContacts(contactsArray));
+    contactsArray.forEach((contact) => {
+      dispatch(updateContactLocally(contact));
+    });
+    // dispatch(updateContacts(contactsArray));
     bulkUpdateContacts(contacts);
     // console.log('update: ', ids, 'with status', status, 'with type: ', type);
   };
   const afterCategorizationProcess = (ids) => {
     let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
     setUncategorizedContacts(uncategorized);
+    dispatch(updateAllContacts(allContacts.filter((contact) => !ids.includes(contact.id))));
     selectFirstToCategorize();
     setSelectedUncategorizedContactStatus(null);
     setSelectedUncategorizedContactType(null);
@@ -127,7 +143,7 @@ const CategorizePage = ({
 
   const toggleAllUncategorized = (event) => {
     console.log(event.target.checked);
-    if (event.target.checked) {
+    if (event?.target.checked) {
       document.querySelectorAll("[id^='row_'] input:not(:checked)").forEach((el) => el.click());
     } else {
       document.querySelectorAll("[id^='row_'] input:checked").forEach((el) => el.click());
@@ -138,8 +154,8 @@ const CategorizePage = ({
   return (
     <>
       {uncategorizedContacts.length > 0 && (
-        <div className={`border border-gray-200 overflow-hidden relative h-full w-[25%] pb-[72px]`}>
-          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+        <div className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full w-[27%] pb-[72px]`}>
+          <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 217px)', overflowX: 'hidden' }}>
             <Table
               tableFor="in-categorization"
               data={uncategorizedContacts}
@@ -165,7 +181,7 @@ const CategorizePage = ({
               bottom: '72px',
               maxHeight: '100%',
             }}>
-            <div className="p-6">
+            <div className="p-6 pb-[77px]">
               <div className="flex items-center mb-4">
                 <CircleStepNumber number={1} className="mr-2" />
                 <Text h3>What type of contact is this for you?</Text>
@@ -191,31 +207,45 @@ const CategorizePage = ({
                       <CircleStepNumber number={2} className="mr-2" />
                       <Text h3>
                         {selectedUncategorizedContactType == 8
-                          ? 'What type of vendor is this?'
+                          ? 'What kind of vendor is this?'
                           : 'In what stage of communication?'}
                       </Text>
                     </div>
-                    {selectedUncategorizedContactType != 8 ? (
-                      <StatusSelect
-                        className="pl-9"
-                        selectedStatus={selectedUncategorizedContactStatus}
-                        setSelectedStatus={handleSelectUncategorizedStatus}
-                        statuses={
-                          [9, 12].includes(selectedUncategorizedContactType) ? professionalsStatuses : clientStatuses
-                        }
-                      />
+                    {selectedUncategorizedContactType !== 8 ? (
+                      <>
+                        <StatusSelect
+                          className="pl-9"
+                          selectedStatus={selectedUncategorizedContactStatus}
+                          setSelectedStatus={handleSelectUncategorizedStatus}
+                          statuses={
+                            [9, 12].includes(selectedUncategorizedContactType) ? professionalsStatuses : clientStatuses
+                          }
+                        />
+                      </>
                     ) : (
-                      <div className="flex flex-wrap">
-                        {vendorSubtypes.map((type) => (
-                          <Chip
-                            selectedStatus={type.id == selectedUncategorizedContactType}
-                            key={type.id}
-                            label={type.name}
-                            className="mr-3 mb-3"
-                            onClick={() => handleSelectUncategorizedType(type.id)}
-                          />
-                        ))}
-                      </div>
+                      // <div className="flex flex-wrap">
+                      //   {vendorSubtypes.map((type) => (
+                      //     <Chip
+                      //       selectedStatus={type.id == selectedUncategorizedContactType}
+                      //       key={type.id}
+                      //       label={type.name}
+                      //       className="mr-3 mb-3"
+                      //       onClick={() => handleSelectUncategorizedType(type.id)}
+                      //     />
+                      //   ))}
+                      // </div>
+                      <DropdownWithSearch
+                        options={vendorSubtypesFormatted}
+                        label="What kind of vendor is this for you?"
+                        onChange={(type) => {
+                          console.log(type);
+                          handleSelectUncategorizedType(type.value);
+                        }}
+                        // onChange={(type) => {
+                        //   formikStep2.setFieldValue('selectedContactSubtype', type.value);
+                        // }}
+                        maxMenuHeight={230}
+                      />
                     )}
                   </>
                 )}
@@ -224,7 +254,7 @@ const CategorizePage = ({
         ) : uncategorizedContacts?.length == 0 ? (
           <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
             <lottie-player
-              src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+              src="/animations/categorize.json"
               style={{ width: '420px', height: '300px' }}
               loop
               autoplay></lottie-player>
@@ -280,7 +310,15 @@ const CategorizePage = ({
       <div
         style={{ zIndex: '99999 !important' }}
         className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
-        <Button primary label="Save & Exit" className="mr-4" onClick={() => handleStartCategorizing(false)} />
+        <Button
+          primary
+          label="Save & Exit"
+          className="mr-4"
+          onClick={() => {
+            setSelectedUncategorized([]);
+            handleStartCategorizing(false);
+          }}
+        />
       </div>
     </>
   );

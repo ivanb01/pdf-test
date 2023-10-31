@@ -10,6 +10,7 @@ import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -32,8 +33,8 @@ const index = () => {
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
-    let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
-    if (event.target.checked) {
+    let row = document.querySelector('#row_' + event?.target.id.split('_')[1]);
+    if (event?.target.checked) {
       row.classList.add('bg-lightBlue1');
       setSelectedUncategorized((prevState) => [...prevState, contact]);
     } else {
@@ -42,6 +43,19 @@ const index = () => {
       setSelectedUncategorized(newUncategorized);
     }
   };
+
+  useEffect(() => {
+    if (selectedUncategorized.length) {
+      let contact = selectedUncategorized[0];
+      let indexOf = uncategorizedContacts.indexOf(contact);
+      if (indexOf > 5) {
+        document.getElementById('row_' + indexOf).scrollIntoView({
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [selectedUncategorized]);
+
   const handleStartCategorizing = (value) => {
     if (value) {
       document.querySelector('.main-menu-wrapper').style.display = 'none';
@@ -61,7 +75,7 @@ const index = () => {
   const handleFetchUncategorized = () => {
     let uncategorized = {
       ...allContacts,
-      data: allContacts?.data?.filter((contact) => contact.category_1 === 'Uncategorized'),
+      data: allContacts?.data?.filter((contact) => contact.category_id == 1),
     };
     setUncategorizedContactsOriginal(uncategorized);
     dispatch(setContacts(uncategorized));
@@ -86,11 +100,10 @@ const index = () => {
 
   useEffect(() => {
     if (!hasRun.current && allContacts.data) {
-      console.log('test');
       handleFetchUncategorized();
       hasRun.current = true;
     }
-  }, [allContacts.data]);
+  }, [allContacts.data, uncategorizedContactsOriginal]);
 
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
@@ -112,9 +125,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
-            unapprovedContacts={
-              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-            }
+            unapprovedContacts={unapprovedContacts?.data.filter((contact) => contact.category_id == 1).length}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}
@@ -132,12 +143,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

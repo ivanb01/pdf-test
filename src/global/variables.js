@@ -56,7 +56,7 @@ export const contactTypes = [
   { id: 0, name: 'Client' },
   { id: 1, name: 'Professional' },
   { id: 2, name: 'Other' },
-  { id: 3, name: 'Uncategorized' },
+  // { id: 3, name: 'Uncategorized' },
   { id: 4, name: 'Trash' },
 ];
 
