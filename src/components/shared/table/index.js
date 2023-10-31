@@ -1778,7 +1778,7 @@ const Table = ({
 
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[160px]">
                 <Chip typeStyle>
-                  {vendorSubtypes && getChip(dataItem)} - {dataItem.category_2 && dataItem.category_2}
+                  {vendorSubtypes && getChip(dataItem)} {dataItem.category_2 && '- ' + dataItem.category_2}
                 </Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
