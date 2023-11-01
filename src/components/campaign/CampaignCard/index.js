@@ -13,6 +13,7 @@ const CampaignCard = ({
   campaign_name,
   email,
   sms,
+  category,
   campaign_id,
   contact_never_assigned_count,
   contact_assigned_count,
@@ -31,7 +32,7 @@ const CampaignCard = ({
             onClick={() => {
               router.push({
                 pathname: '/campaign/details',
-                query: { id: campaign_id },
+                query: { id: campaign_id, category: category },
               });
             }}>
             <h6 className={'text-sm leading-5 font-semibold'}>{campaign_name}</h6>

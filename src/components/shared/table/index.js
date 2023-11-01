@@ -2219,10 +2219,10 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} />
+                  <Toggle active={person.campaign_name !== null} activePerson={person} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
-                      {person.campaign_name === null ? 'Inactive' : 'Active'}
+                      {person.is_in_campaign === null ? 'Inactive' : 'Active'}
                     </span>
                   </div>
                 </div>
@@ -2379,7 +2379,7 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} />
+                  <Toggle active={person.campaign_name !== null} activePerson={person} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}
@@ -2513,7 +2513,7 @@ const Table = ({
               ))}
               <td className={'px-6 py-4'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} />
+                  <Toggle active={person.campaign_name !== null} activePerson={person} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}

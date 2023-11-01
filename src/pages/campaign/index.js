@@ -8,18 +8,21 @@ import CustomCampaign from '@components/campaign/CustomCampaign';
 import { getCampaignsByCategory } from '@api/campaign';
 import Loader from '@components/shared/loader';
 import useElementInView from '../../hooks/useElementInScreen';
+import { setCRMCampaigns } from '@store/campaigns/slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
-  const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
   const elementRef = useRef(null);
   let isVisible = useElementInView(elementRef);
+  const dispatch = useDispatch();
+  const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
 
   const renderCampaignWrapper = (category) => {
-    const filteredCampaigns = campaigns?.campaigns?.filter(
+    const filteredCampaigns = CRMCampaigns?.campaigns?.filter(
       (campaign) =>
         (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
@@ -121,16 +124,17 @@ const index = () => {
     },
   ];
   useEffect(() => {
-    setLoading(true);
-    getCampaignsByCategory('Client')
-      .then((res) => setCampaigns(res.data))
-      .finally(() => {
-        setLoading(false);
-      });
+    if (CRMCampaigns === undefined) {
+      setLoading(true);
+      getCampaignsByCategory('Client')
+        .then((res) => {
+          dispatch(setCRMCampaigns(res.data));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }, []);
-  useEffect(() => {
-    console.log(campaigns, 'campaigns');
-  }, [campaigns]);
 
   return (
     <SimpleBar style={{ maxHeight: '100%' }}>

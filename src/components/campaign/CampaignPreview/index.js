@@ -8,13 +8,17 @@ import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
 
-const CampaignPreview = ({ open, setOpen, title, campaignId, className }) => {
+const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
   useEffect(() => {
-    getAllEvents(campaignId).then((res) => {
-      setCampaignData(res.data);
-    });
-  }, [campaignId]);
+    if (data) {
+      setCampaignData(data);
+    } else {
+      getAllEvents(campaignId).then((res) => {
+        setCampaignData(res.data);
+      });
+    }
+  }, [campaignId, data]);
 
   const [activeEvent, setActiveEvent] = useState();
   useEffect(() => {
@@ -137,7 +141,9 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className }) => {
                                             <ChatIcon className={'h-4 w-4 text-lightBlue3 mt-0.5'} />
                                           )}
                                           <div>
-                                            <h6 className={'text-sm leading-5 font-medium text-gray7 '}>{'test'}</h6>
+                                            <h6 className={'text-sm leading-5 font-medium text-gray7 '}>
+                                              {e?.preview?.preview?.subject}
+                                            </h6>
                                             <h6 className={'text-gray4 text-xs font-medium leading-5'}>{'data'}</h6>
                                           </div>
                                         </div>
