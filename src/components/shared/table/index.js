@@ -1705,7 +1705,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px] ">
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1715,22 +1715,16 @@ const Table = ({
               />
               Contact
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:max-w-[100px] md:max-w-[100px] lg:max-w-[300px] xl:max-w-[500px]">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
               Email Summary
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Actions
             </th>
             <th
@@ -1749,7 +1743,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:max-w-[340px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1776,17 +1770,17 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[160px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>
                   {vendorSubtypes && getChip(dataItem)} {dataItem.category_2 && '- ' + dataItem.category_2}
                 </Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[230px] xl:min-w-[500px]">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center break-all flex-wrap">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
@@ -1800,7 +1794,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center gap-6">
                   <TooltipComponent
                     side={'top'}
