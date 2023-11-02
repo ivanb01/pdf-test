@@ -11,7 +11,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import TooltipComponent from '@components/shared/tooltip';
 
-const ImageGallery = ({ images, id }) => {
+const ImageGallery = ({ images, property, url }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
   const showPrevButton = showButtons && currentIndex > 0;
@@ -26,7 +26,7 @@ const ImageGallery = ({ images, id }) => {
 
   return (
     <>
-      <a href={`${getBaseUrl()}/property?id=${id}`} target="_blank" rel="noreferrer">
+      <a href={url} target="_blank" rel="noreferrer">
         <img
           className="object-cover h-full w-full"
           src={images?.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
@@ -54,10 +54,18 @@ const ImageGallery = ({ images, id }) => {
 };
 
 const PropertyCard = ({ property }) => {
+  let status = '';
+  if (property.STATUS == 'Rented') {
+    status = '&status=22';
+  } else if (property.STATUS == 'Sold') {
+    status = '&status=19';
+  }
+  let url = `${getBaseUrl()}/property?id=${property.ID}` + status;
+
   return (
     <div className="border border-gray-200 rounded-[4px]">
       <div className="h-[160px] relative">
-        <ImageGallery images={property.PHOTOS} id={property.ID} />
+        <ImageGallery images={property.PHOTOS} property={property} url={url} />
         <div
           className={`absolute bottom-2 left-2 flex items-center justify-center border ${
             property.STATUS.toLowerCase() === 'sold'
@@ -73,7 +81,7 @@ const PropertyCard = ({ property }) => {
             <a
               className="cursor-pointer absolute bottom-2 right-2"
               onClick={() => {
-                navigator.clipboard.writeText(`${getBaseUrl()}/property?id=${property.ID}`);
+                navigator.clipboard.writeText(url);
                 toast.success('Link copied to clipboard');
               }}>
               <img className="h-7 w-7" src={link.src} alt="" />

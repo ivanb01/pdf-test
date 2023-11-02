@@ -35,6 +35,7 @@ import Alert from '@components/shared/alert';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
+import properties from 'pages/properties';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();

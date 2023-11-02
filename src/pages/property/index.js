@@ -54,6 +54,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 const index = () => {
   const router = useRouter();
   const id = router.query.id;
+  const status = router.query.status;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -474,6 +475,9 @@ const index = () => {
       callback: 'callback',
       id: id,
     };
+    if (status) {
+      params['status'] = status;
+    }
     const urlParams = new URLSearchParams({
       ...params,
     });
