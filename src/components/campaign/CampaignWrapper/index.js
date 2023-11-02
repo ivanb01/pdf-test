@@ -1,5 +1,4 @@
 import CampaignCard from '@components/campaign/CampaignCard';
-import { useEffect } from 'react';
 
 const CampaignWrapper = ({ headerTitle, campaignCards, category, isVisible }) => {
   return (
