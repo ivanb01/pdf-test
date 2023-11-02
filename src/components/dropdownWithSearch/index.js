@@ -74,9 +74,11 @@ const DropdownWithSearch = ({
             ...base,
             fontSize: '14px',
             marginBottom: '100px',
+            borderRadius: 5,
           }),
           menuList: (base) => ({
             ...base,
+            borderRadius: 5,
             div: {
               backgroundColor: 'white',
             },
