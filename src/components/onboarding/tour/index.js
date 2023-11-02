@@ -218,7 +218,7 @@ const tourOptions = {
   defaultStepOptions: {
     classes: 'shepherd-theme-custom',
     cancelIcon: {
-      enabled: true,
+      enabled: false,
     },
   },
   useModalOverlay: true,
