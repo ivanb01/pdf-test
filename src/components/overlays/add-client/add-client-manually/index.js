@@ -101,7 +101,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         }
       } catch (error) {
         console.log(error);
-        if (error.response.status === 404) {
+        if (error?.response?.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
           setCurrentStep(currentStep + 1);

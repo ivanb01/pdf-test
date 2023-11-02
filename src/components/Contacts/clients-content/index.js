@@ -26,6 +26,7 @@ import { setClients } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
+import { ArrowRight } from '@mui/icons-material';
 
 const buttons = [
   {

@@ -116,8 +116,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const [contactToModify, setContactToModify] = useState(null);
 
   useEffect(() => {
-    setFilteredContacts(clients);
-  }, [clients, openedSubtab, searchTerm, contacts, sortAsc]);
+    setFilteredContacts(contacts);
+  }, [openedSubtab, searchTerm, contacts, sortAsc]);
   const handleChangeStatus = async (status, contact) => {
     try {
       if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
