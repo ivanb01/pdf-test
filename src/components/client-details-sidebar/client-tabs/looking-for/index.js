@@ -202,8 +202,10 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
-    const data = await fetchJsonp(url)
+    const options = {
+      timeout: 30000,
+    };
+    const data = await fetchJsonp(url, options)
       .then((res) => res.json())
       .then((data) => {
         setPropertyInterests(data.LISTINGS);
