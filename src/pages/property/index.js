@@ -371,6 +371,20 @@ const index = () => {
     { name: 'Storage', icon: storage },
     { name: 'Elevator', icon: elevator },
   ];
+
+  const otherPropertyDetails = [
+    {
+      id: 0,
+      name: 'Fee',
+      value: data.COBROKE_FEE,
+    },
+    {
+      id: 0,
+      name: 'Listing Type',
+      value: data.LISTING_CATEGORY,
+    },
+  ];
+
   const otherDetails = [
     {
       id: 0,
@@ -788,8 +802,10 @@ const index = () => {
                 noBorder
                 rounded
                 type="warning"
-                message={`NOTE: The agent name is only visible to you. It will not show when you share the link with someone.`}
+                message={`NOTE: The information in this box is only visible to you. It will not show when you share the link with someone.`}
               />
+              <div className="text-gray7 text-xl mb-3 font-medium">Listing Agent</div>
+
               <div className="flex items-center">
                 <div className="mr-4 w-24 h-24 rounded-lg">
                   <img
@@ -800,7 +816,7 @@ const index = () => {
                 </div>
                 <div className=" break-words">
                   <div className="text-gray-500 text-sm">
-                    <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
+                    <div className="font-medium text-base text-gray-900">{data.AGENT_NAME}</div>
                     <a className="block">{data.COMPANY_NAME}</a>
                     <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
                       {data.AGENT_EMAIL}
@@ -821,6 +837,18 @@ const index = () => {
                     <Phone className="text-white" />
                   </a>
                 </div> */}
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <div className="text-gray7 text-xl mb-3 font-medium">Property Details</div>
+                <div className="flex flex-wrap">
+                  {otherPropertyDetails.map((detail, index) => (
+                    <div className="w-1/2 mb-4" key={index}>
+                      <div className="text-gray4 text-sm">{detail.name}</div>
+                      <div className="text-sm text-gray7 mt-1">{detail.value}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
