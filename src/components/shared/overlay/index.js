@@ -2,7 +2,14 @@ import Button from '../button';
 import Text from '../text';
 import { useRouter } from 'next/router';
 
-const Overlay = ({ handleCloseOverlay, children, className, bgOverlay = 'bg-overlayBackground', title }) => {
+const Overlay = ({
+  handleCloseOverlay,
+  children,
+  className,
+  bgOverlay = 'bg-overlayBackground',
+  title,
+  closeModal,
+}) => {
   const router = useRouter();
   return (
     <div
@@ -36,6 +43,7 @@ const Overlay = ({ handleCloseOverlay, children, className, bgOverlay = 'bg-over
                 )}
               </div>
               {handleCloseOverlay && <Button closeButton onClick={handleCloseOverlay} />}
+              {closeModal && <Button closeButton onClick={closeModal} />}
             </div>
           ) : null}
           {children}

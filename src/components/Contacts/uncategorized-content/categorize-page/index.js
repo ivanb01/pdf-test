@@ -234,18 +234,20 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <DropdownWithSearch
-                        options={vendorSubtypesFormatted}
-                        label="What kind of vendor is this for you?"
-                        onChange={(type) => {
-                          console.log(type);
-                          handleSelectUncategorizedType(type.value);
-                        }}
-                        // onChange={(type) => {
-                        //   formikStep2.setFieldValue('selectedContactSubtype', type.value);
-                        // }}
-                        maxMenuHeight={230}
-                      />
+                      <div className={'pb-[200px]'}>
+                        <DropdownWithSearch
+                          options={vendorSubtypesFormatted}
+                          label="What kind of vendor is this for you?"
+                          onChange={(type) => {
+                            console.log(type);
+                            handleSelectUncategorizedType(type.value);
+                          }}
+                          // onChange={(type) => {
+                          //   formikStep2.setFieldValue('selectedContactSubtype', type.value);
+                          // }}
+                          maxMenuHeight={230}
+                        />
+                      </div>
                     )}
                   </>
                 )}

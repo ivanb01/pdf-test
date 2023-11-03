@@ -160,7 +160,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           />
         )}
         {showOnboarding && !userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-          <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
+          <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
         )}
         {startedOnboarding && <Tour for={'clients'} />}
         <div>
