@@ -25,6 +25,7 @@ const index = () => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
+  const [searchKey, setSearchKey] = useState('');
 
   const fetchOther = () => {
     let other = {
@@ -46,11 +47,8 @@ const index = () => {
   };
 
   useEffect(() => {
-    console.log(actualContact, 'actualContact');
-  }, [actualContact]);
-  useEffect(() => {
     // setLoading(true);
-    if (allContacts.data) {
+    if (allContacts.data && !searchKey.length) {
       fetchOther();
     }
     dispatch(setOpenedTab(3));
@@ -93,8 +91,12 @@ const index = () => {
                 <div className="flex items-center justify-self-end">
                   <Search
                     placeholder="Search"
+                    value={searchKey}
                     className="mr-4 text-sm"
-                    onInput={(event) => onSearch(event.target.value)}
+                    onInput={(event) => {
+                      setSearchKey(event.target.value);
+                      onSearch(event.target.value);
+                    }}
                   />
                 </div>
               </div>
