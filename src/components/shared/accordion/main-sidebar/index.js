@@ -33,11 +33,13 @@ import SimpleBar from 'simplebar-react';
 import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import SubMenuContent from '@components/shared/SubMenuCard';
 
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -75,29 +77,62 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     }
     groupedTabs[tab.groupName].push(tab);
   });
+  const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const narrowMenu = (openedTab, openedSubtab) => {
+    const isSubtabActive = (currentSubtab, tabId) => {
+      return openedSubtab == currentSubtab && openedTab == tabId;
+    };
 
-  const narrowMenu = () => {
     return (
       <>
         {tabs.map((tab) => {
           return (
-            <div className="accordion w-inherit" key={tab.id}>
-              <Link
-                href="#"
-                className={`flex  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md ${
-                  openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
-                }`}
-                onClick={() => {
-                  setOpenedTab(tab.id);
-                  router.push(tab.href);
-                }}>
-                <div
-                  className={`flex items-center  ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
-                  title={tab.name}>
-                  {tab.icon}
+            <SubMenuContent
+              side={'start'}
+              align={'bottom'}
+              className={'bg-white border-gray2'}
+              style={{ marginLeft: '63px' }}
+              triggerElement={
+                <div className="accordion w-inherit cursor-pointer">
+                  <Link
+                    href="#"
+                    className={`flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                      openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
+                    }`}
+                    onClick={() => {
+                      setOpenedTab(tab.id);
+                      router.push(tab.href);
+                      setExpandedTab({ id: tab.id, opened: true });
+                    }}>
+                    <div
+                      className={`flex items-center cursor-pointer ${
+                        openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
+                      }`}
+                      title={tab.name}>
+                      {tab.icon}
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
+              }>
+              {tab.subtab &&
+                tab.subtab.map((t) => (
+                  <div
+                    className={`rounded-md ${
+                      isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                    }`}>
+                    <div
+                      role={'button'}
+                      onClick={() => {
+                        setOpenedTab(tab.id);
+                        dispatch(setOpenedSubtab(t.id));
+                        router.push(tab.href);
+                      }}
+                      className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
+                      {t?.dot} {t.name}
+                    </div>
+                  </div>
+                ))}
+            </SubMenuContent>
           );
         })}
         {importContacts && (
@@ -164,7 +199,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         )}
         {startedOnboarding && <Tour for={'clients'} />}
         <div>
-          {pinned ? expandedMenu() : narrowMenu()}
+          {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (
             <>
               {userGaveConsent && (

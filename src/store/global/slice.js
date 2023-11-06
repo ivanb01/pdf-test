@@ -49,7 +49,6 @@ const global = createSlice({
       state.expandedMenu = action.payload;
     },
     setClientsFilters(state, action) {
-      console.log(action.payload, 'action.payload');
       state.clientsFilters = action.payload;
     },
     setProfessionalsFilter(state, action) {
