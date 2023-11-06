@@ -125,8 +125,6 @@ export default function Info({ client }) {
     <>
       {client && (
         <div className="px-6 py-3 flex flex-col  border-t border-gray-2">
-          {client.summary && <InfoCard label="Summary" content={client.summary} client={client} />}
-
           {![2, 3, 13, 14].includes(client?.category_id) && (
             <Dropdown
               label="Status"
@@ -141,6 +139,8 @@ export default function Info({ client }) {
             />
           )}
           <InfoCard label="Import Source" content={client.import_source_text} client={client} />
+          {client.summary && <InfoCard label="Summary" content={client.summary} client={client} />}
+
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
