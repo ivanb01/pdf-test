@@ -120,6 +120,7 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
         <form onSubmit={formik.handleSubmit}>
           <div className="mx-auto relative">
             <SearchSelectInput
+              optional
               label="Neighborhood"
               options={NYCneighborhoods}
               value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
