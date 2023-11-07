@@ -50,6 +50,8 @@ import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const index = () => {
   const router = useRouter();
@@ -581,15 +583,21 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full">
-            <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+            <Zoom zoomMargin={45}>
+              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
+            </Zoom>
           </div>
         ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
-              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+              <Zoom zoomMargin={45}>
+                <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
+              </Zoom>
             </div>
             <div className="md:w-1/2 w-full h-full">
-              <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full h-full object-center" />
+              <Zoom zoomMargin={45}>
+                <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full  object-center  h-[500px]" />
+              </Zoom>
             </div>
           </>
         ) : (
@@ -603,11 +611,13 @@ const index = () => {
               modules={[Pagination, Navigation, Scrollbar]}>
               {data.PHOTOS.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
-                  <img
-                    src={picture.PHOTO_URL}
-                    alt={`Image ${index + 1}`}
-                    className="object-cover w-full h-full object-center"
-                  />
+                  <Zoom zoomMargin={45}>
+                    <img
+                      src={picture.PHOTO_URL}
+                      alt={`Image ${index + 1}`}
+                      className="object-cover w-full  object-center h-[500px]"
+                    />
+                  </Zoom>
                 </SwiperSlide>
               ))}
             </Swiper>
