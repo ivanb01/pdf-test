@@ -15,6 +15,29 @@ export const getInitials = (name) => {
   return (fullName[0][0] + fullName[1][0]).toUpperCase();
 };
 
+export const formatDateStringMDY = (dateString) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${month} ${day}, ${year}`;
+};
 export const classNames = (...classes) => {
   return classes.filter(Boolean).join(' ');
 };

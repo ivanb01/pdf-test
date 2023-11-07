@@ -1,6 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateAgo, formatDateCalendar, formatDateLL, formatDateLThour } from 'global/functions';
+import {
+  formatDate,
+  formatDateAgo,
+  formatDateCalendar,
+  formatDateLL,
+  formatDateStringMDY,
+  formatDateLThour,
+  formatDateMDY,
+} from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -21,6 +29,9 @@ import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import Mail from '@mui/icons-material/Mail';
+import TooltipComponent from '@components/shared/tooltip';
+
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -197,16 +208,34 @@ export default function Feeds({ contactId, activities, setActivities }) {
                         <div className="min-w-0 flex-1">
                           {activityItem.created_at && (
                             <p className="mt-0.5 text-sm text-gray-500">
-                              Created: {/* Commented 6d ago */}
-                              {formatDateCalendar(activityItem.created_at)} -{' '}
-                              {formatDateLThour(activityItem.created_at)}
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div>
+                                    Created: {/* Commented 6d ago */}
+                                    {formatDateCalendar(activityItem.created_at)} -{' '}
+                                    {formatDateLThour(activityItem.created_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
+                              </TooltipComponent>
                             </p>
                           )}
                           {activityItem.updated_at && (
                             <p className="mt-0.5 text-sm text-gray-500">
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div>
+                                    Updated: {formatDateCalendar(activityItem.updated_at)} -{' '}
+                                    {formatDateLThour(activityItem.updated_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>
+                              </TooltipComponent>
                               {/* Commented 6d ago */}
-                              Updated: {formatDateCalendar(activityItem.updated_at)} -{' '}
-                              {formatDateLThour(activityItem.updated_at)}
                             </p>
                           )}
                           <div className="mt-2 text-sm text-gray6">

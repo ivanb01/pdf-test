@@ -45,6 +45,10 @@ export default function ActivityLog({ contactId, source, contact }) {
   }, [contact.summary]);
   const activityLogData = useSelector((state) => state.clientDetails.activityLogData);
   const [activityLogLocal, setActivityLogLocal] = useState(activityLogData);
+
+  useEffect(() => {
+    console.log(activityLogLocal, 'activityLogLocal');
+  }, [activityLogLocal]);
   const deleteSummary = () => {
     dispatch(updateContactLocally({ ...contact, summary: null }));
     updateContact(contact.id, { ...contact, summary: null }).then(() => {
