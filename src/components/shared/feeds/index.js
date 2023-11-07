@@ -212,7 +212,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                 side={'right'}
                                 align="center"
                                 triggerElement={
-                                  <div>
+                                  <div className={'mr-3'}>
                                     Created: {/* Commented 6d ago */}
                                     {formatDateCalendar(activityItem.created_at)} -{' '}
                                     {formatDateLThour(activityItem.created_at)}
