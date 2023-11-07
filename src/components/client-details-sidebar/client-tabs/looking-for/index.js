@@ -400,24 +400,28 @@ export default function LookingFor({ contactId, category }) {
                   {propertyInterests && propertyInterests.length ? (
                     <>
                       <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
-                        {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties recommended
-                            {getLookingAction() === 1 ? ' for sale' : ' for rent'}
-                          </>
-                        )}
-                        {category.toLowerCase() === 'landlord' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                            Sold and Rented Properties
-                          </>
-                        )}
-                        {category.toLowerCase() === 'seller' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                            Sold Properties
-                          </>
-                        )}
+                        <div>
+                          {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties
+                              recommended
+                              {getLookingAction() === 1 ? ' for sale' : ' for rent'}
+                            </>
+                          )}
+                          {category.toLowerCase() === 'landlord' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold and Rented Properties
+                            </>
+                          )}
+                          {category.toLowerCase() === 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold Properties
+                            </>
+                          )}
+                          . These properties are sourced from REALTYMX database.
+                        </div>
                         <div className={'flex items-center gap-2'}>
                           <p
                             className="text-gray6 font-inter font-normal leading-5 text-sm"

@@ -375,12 +375,12 @@ const index = () => {
   const otherPropertyDetails = [
     {
       id: 0,
-      name: 'Fee',
+      name: 'Fee:',
       value: data.COBROKE_FEE,
     },
     {
       id: 0,
-      name: 'Listing Type',
+      name: 'Listing Type:',
       value: data.LISTING_CATEGORY,
     },
   ];

@@ -750,7 +750,7 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.clients);
+    const contacts = useSelector((state) => state.contacts.allContacts.data);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
@@ -1240,7 +1240,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.professionals);
+    const contactsOriginal = useSelector((state) => state.contacts.allContacts.data);
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
