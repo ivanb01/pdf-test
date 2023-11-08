@@ -155,7 +155,7 @@ const CategorizePage = ({
     <>
       {uncategorizedContacts.length > 0 && (
         <div
-          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full lg:w-[350px]  xl:w-[27%] pb-[72px]`}>
+          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%] pb-[72px]`}>
           <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 217px)', overflowX: 'hidden' }}>
             <Table
               tableFor="in-categorization"
@@ -168,7 +168,7 @@ const CategorizePage = ({
       )}
       <div
         className={`bg-white pb-[72px] border-t border-gray-200 relative ${
-          uncategorizedContacts.length ? 'lg:w-[60%] xl:w-[55%] xxl:w-[50%]' : 'w-[75%]'
+          uncategorizedContacts.length ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]' : 'w-[75%]'
         } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
@@ -287,7 +287,8 @@ const CategorizePage = ({
       </div>
 
       {showCategorizedSection && (
-        <div className={`border border-gray-200 overflow-hidden relative h-full lg:w-[270px] pb-[72px] xl:w-[25%]`}>
+        <div
+          className={`border border-gray-200 overflow-hidden relative h-full  sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
           {categorizedInThisSession?.length > 0 ? (
             <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               <Table
