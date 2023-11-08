@@ -31,7 +31,7 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
             </div>
           </div>
           <div className="w-1/2 text-center pl-6">
-            <Image src={img2} alt="header-img" />
+            <Image src={img2} className="mx-auto" alt="header-img" />
             <div className="text-xs text-gray-500">
               With <strong>"Import Google Contacts"</strong>
               <br /> you will be able to import your contacts that are already in your "Google Contact" list.

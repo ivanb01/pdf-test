@@ -224,7 +224,7 @@ const tourOptions = {
   useModalOverlay: true,
 };
 
-function TourInstance() {
+function TourInstance({ setShowSSOverlay }) {
   const tour = useContext(ShepherdTourContext);
   let functionRan = false;
 
@@ -233,16 +233,21 @@ function TourInstance() {
       tour.start();
       functionRan = true;
     }
+
+    tour.on('complete', () => {
+      localStorage.setItem('finishedTour', true);
+      setShowSSOverlay(true);
+    });
   }, [tour]);
 
   return <></>;
 }
 
-export default function Tour(props) {
+export default function Tour({ setShowSSOverlay, ...props }) {
   return (
     <>
       <ShepherdTour steps={props.for == 'clients' ? clientSteps : uncategorizedSteps} tourOptions={tourOptions}>
-        <TourInstance />
+        <TourInstance setShowSSOverlay={setShowSSOverlay} />
       </ShepherdTour>
     </>
   );
