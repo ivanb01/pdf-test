@@ -50,6 +50,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [finishedOnboarding, setFinishedOnboarding] = useState(false);
   const [startedOnboarding, setStartedOnboarding] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
@@ -68,6 +69,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       if (window.location.pathname.includes('/contacts/clients')) setShowOnboarding(true);
     }
   }, [allContacts]);
+
+  useEffect(() => {
+    let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
+    setFinishedOnboarding(finishedTour);
+  }, []);
 
   const groupedTabs = {};
 
@@ -194,10 +200,13 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             handleCloseOverlay={() => setShowSSOverlay(false)}
           />
         )}
-        {showOnboarding && !userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-          <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
-        )}
-        {startedOnboarding && <Tour for={'clients'} />}
+        {!finishedOnboarding &&
+          showOnboarding &&
+          !userGaveConsent?.includes('gmail') &&
+          !userGaveConsent?.includes('contacts') && (
+            <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
+          )}
+        {!finishedOnboarding && startedOnboarding && <Tour for={'clients'} />}
         <div>
           {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (

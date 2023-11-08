@@ -233,6 +233,10 @@ function TourInstance() {
       tour.start();
       functionRan = true;
     }
+
+    tour.on('complete', () => {
+      localStorage.setItem('finishedTour', true);
+    });
   }, [tour]);
 
   return <></>;
