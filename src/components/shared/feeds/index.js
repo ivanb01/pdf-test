@@ -207,7 +207,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                         </div>
                         <div className="min-w-0 flex-1">
                           {activityItem.created_at && (
-                            <p className="mt-0.5 text-sm text-gray-500">
+                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
                               <TooltipComponent
                                 side={'right'}
                                 align="center"
@@ -223,7 +223,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                             </p>
                           )}
                           {activityItem.updated_at && (
-                            <p className="mt-0.5 text-sm text-gray-500">
+                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
                               <TooltipComponent
                                 side={'right'}
                                 align="center"
