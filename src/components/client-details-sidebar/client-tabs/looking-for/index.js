@@ -35,6 +35,7 @@ import Alert from '@components/shared/alert';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
+import properties from 'pages/properties';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -202,8 +203,10 @@ export default function LookingFor({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
-    const data = await fetchJsonp(url)
+    const options = {
+      timeout: 30000,
+    };
+    const data = await fetchJsonp(url, options)
       .then((res) => res.json())
       .then((data) => {
         setPropertyInterests(data.LISTINGS);
@@ -397,24 +400,28 @@ export default function LookingFor({ contactId, category }) {
                   {propertyInterests && propertyInterests.length ? (
                     <>
                       <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
-                        {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties recommended
-                            {getLookingAction() === 1 ? ' for sale' : ' for rent'}
-                          </>
-                        )}
-                        {category.toLowerCase() === 'landlord' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                            Sold and Rented Properties
-                          </>
-                        )}
-                        {category.toLowerCase() === 'seller' && (
-                          <>
-                            {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                            Sold Properties
-                          </>
-                        )}
+                        <div>
+                          {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties
+                              recommended
+                              {getLookingAction() === 1 ? ' for sale' : ' for rent'}
+                            </>
+                          )}
+                          {category.toLowerCase() === 'landlord' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold and Rented Properties
+                            </>
+                          )}
+                          {category.toLowerCase() === 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold Properties
+                            </>
+                          )}
+                          . These properties are sourced from REALTYMX database.
+                        </div>
                         <div className={'flex items-center gap-2'}>
                           <p
                             className="text-gray6 font-inter font-normal leading-5 text-sm"

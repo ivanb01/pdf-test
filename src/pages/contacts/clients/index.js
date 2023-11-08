@@ -99,12 +99,20 @@ const index = () => {
       if (queryParams?.code && queryParams?.prompt == 'consent') {
         setActivatingSmartSync(true);
         setShowSmartSyncOverlay(true);
-        getGoogleAuthCallback(queryParams, '/contacts/clients').then(() => {
-          getUserConsentStatus().then((results) => {
-            setActivatingSmartSync(false);
-            dispatch(setUserGaveConsent(results.data.scopes));
+        getGoogleAuthCallback(queryParams, '/contacts/clients')
+          .then(() => {
+            getUserConsentStatus()
+              .then((results) => {
+                setActivatingSmartSync(false);
+                dispatch(setUserGaveConsent(results.data.scopes));
+              })
+              .catch((error) => {
+                console.log(error, 'error');
+              });
+          })
+          .catch((error) => {
+            console.log(error, 'error');
           });
-        });
       }
     }
   }, [router.query]);

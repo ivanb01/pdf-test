@@ -45,7 +45,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   const router = useRouter();
   const handleSelectContact = (event, contact) => {
-    if (event.target.checked) {
+    if (event?.target.checked) {
       // add to array
       setSelectedContacts((prevState) => [...prevState, contact.email]);
     } else {

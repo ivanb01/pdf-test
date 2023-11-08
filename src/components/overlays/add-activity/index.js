@@ -48,6 +48,7 @@ const AddActivity = ({ setActivities, className, handleClose, title, clientId, s
       addContactActivity(clientId, values).then(() => dispatch(setRefetchPart('activity-log')));
     } catch (error) {
       toast.error('Activity could not be added. An error occurred.');
+      console.log('blend');
     }
   };
 

@@ -70,11 +70,11 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
         )}
       </div>
       <div className="ml-3">
-        <div className="font-medium text-gray7 flex">
+        <div className="font-medium text-gray7 flex ellipsis-email xl:min-w-[180px] lg:w-[120px]">
           {data.name} {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
         </div>
         {data.email && (
-          <div title={data.email} className="ellipsis-email text-gray-500 font-medium">
+          <div title={data.email} className="ellipsis-email text-gray-500 font-medium xl:min-w-[180px] lg:w-[120px]">
             {data.email}
           </div>
         )}
@@ -95,7 +95,7 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
         </div>
       </div>
       {inCategorization && (
-        <div className={'flex items-center gap-1.5'}>
+        <div className={'flex items-center gap-1.5 flex-shrink-0 ml-6'}>
           <div>
             <div className={'h-5'}>{getSource(data.import_source_text).icon}</div>
           </div>

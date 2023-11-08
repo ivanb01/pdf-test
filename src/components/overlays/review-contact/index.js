@@ -119,14 +119,13 @@ const ReviewContact = ({
     },
     onSubmit: async (values) => {
       if (formik.values.email !== formik.initialValues.email) {
-        console.log('ereza');
         setUpdating(true);
         await userAlreadyExists(values.email)
           .then((response) => {
             if (response === undefined) {
               setExistingContactEmailError('');
               setExistingContactEmail('');
-              handleSubmit(values).then();
+              handleSubmit(values);
             } else {
               setExistingContactEmailError('This email already exists!');
               setExistingContactEmail(values.email);
@@ -201,9 +200,7 @@ const ReviewContact = ({
       toast.error(error);
     }
   };
-  useEffect(() => {
-    console.log(router.pathname, isUnapprovedAI, 'isUnapprovedAI');
-  }, [router.pathname, isUnapprovedAI]);
+
   const restoreContact = (newData) => {
     dispatch(updateContactLocally(newData));
     updateContact(newData.id, newData).catch(() => {
@@ -236,7 +233,7 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = values.selectedContactCategory === 0 ? values.selectedStatus : 1;
+    const status_id = values.selectedStatus;
 
     const category =
       values.selectedContactCategory === 0
@@ -379,6 +376,7 @@ const ReviewContact = ({
   const handleChooseActivityType = (id) => {
     formik.setFieldValue('type_of_activity_id', id);
   };
+
   useEffect(() => {
     if (formik.dirty || !isUnapprovedAI) {
       const { selectedContactCategory, selectedContactType, selectedContactSubtype, selectedStatus } = formik.values;
@@ -406,6 +404,18 @@ const ReviewContact = ({
       }
     } else {
       setSubmitDisabled(true);
+    }
+  }, [formik.values, formik.dirty]);
+
+  useEffect(() => {
+    if (formik.dirty) {
+      if (
+        formik.values.first_name.length === 0 ||
+        formik.values.last_name.length === 0 ||
+        formik.values.email.length === 0
+      ) {
+        setSubmitDisabled(true);
+      }
     }
   }, [formik.values, formik.dirty]);
 
@@ -499,6 +509,7 @@ const ReviewContact = ({
               <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
                 <Input
                   type="text"
+                  required
                   label="First Name"
                   id="first_name"
                   className=""
@@ -508,6 +519,7 @@ const ReviewContact = ({
                   errorText={errors.first_name}
                 />
                 <Input
+                  required
                   type="text"
                   label="Last Name"
                   id="last_name"
@@ -518,6 +530,7 @@ const ReviewContact = ({
                   errorText={errors.last_name}
                 />
                 <Input
+                  required
                   type="email"
                   label="Email"
                   id="email"
@@ -614,6 +627,7 @@ const ReviewContact = ({
             <div className="p-6 pt-0">
               <Radio
                 options={contactTypes}
+                required
                 label="What kind of contact is this for you?"
                 selectedOption={formik.values.selectedContactCategory}
                 setSelectedOption={(e) => {
@@ -637,6 +651,7 @@ const ReviewContact = ({
                       ? professionalsOptions
                       : othersOptions
                   }
+                  required
                   label="What type?"
                   selectedOption={
                     formik.values.selectedContactCategory == 1 &&
@@ -672,9 +687,11 @@ const ReviewContact = ({
                     )}
                     options={vendorSubtypesFormatted}
                     typeOfContact={openedTab}
+                    required
                     label="What kind of vendor is this for you"
                     onChange={(type) => {
                       formik.setFieldValue('selectedContactSubtype', type.value);
+                      formik.setFieldValue('selectedContactType', type.value);
                     }}
                     maxMenuHeight={230}
                   />
@@ -689,6 +706,7 @@ const ReviewContact = ({
                 formik.values.selectedContactType && (
                   <StatusSelect
                     selectedStatus={formik.values.selectedStatus}
+                    required
                     setSelectedStatus={(e) => formik.setFieldValue('selectedStatus', e)}
                     label="In what stage of communication?"
                     statuses={statuses}

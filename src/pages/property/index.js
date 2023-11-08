@@ -50,10 +50,13 @@ import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const index = () => {
   const router = useRouter();
   const id = router.query.id;
+  const status = router.query.status;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -370,6 +373,20 @@ const index = () => {
     { name: 'Storage', icon: storage },
     { name: 'Elevator', icon: elevator },
   ];
+
+  const otherPropertyDetails = [
+    {
+      id: 0,
+      name: 'Fee:',
+      value: data.COBROKE_FEE,
+    },
+    {
+      id: 0,
+      name: 'Listing Type:',
+      value: data.LISTING_CATEGORY,
+    },
+  ];
+
   const otherDetails = [
     {
       id: 0,
@@ -474,11 +491,15 @@ const index = () => {
       callback: 'callback',
       id: id,
     };
+    if (status) {
+      params['status'] = status;
+    }
     const urlParams = new URLSearchParams({
       ...params,
     });
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 
+    console.log(url);
     await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -562,15 +583,21 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full">
-            <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+            <Zoom zoomMargin={45}>
+              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
+            </Zoom>
           </div>
         ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
-              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+              <Zoom zoomMargin={45}>
+                <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
+              </Zoom>
             </div>
             <div className="md:w-1/2 w-full h-full">
-              <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full h-full object-center" />
+              <Zoom zoomMargin={45}>
+                <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full  object-center  h-[500px]" />
+              </Zoom>
             </div>
           </>
         ) : (
@@ -584,11 +611,13 @@ const index = () => {
               modules={[Pagination, Navigation, Scrollbar]}>
               {data.PHOTOS.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
-                  <img
-                    src={picture.PHOTO_URL}
-                    alt={`Image ${index + 1}`}
-                    className="object-cover w-full h-full object-center"
-                  />
+                  <Zoom zoomMargin={45}>
+                    <img
+                      src={picture.PHOTO_URL}
+                      alt={`Image ${index + 1}`}
+                      className="object-cover w-full  object-center h-[500px]"
+                    />
+                  </Zoom>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -783,8 +812,10 @@ const index = () => {
                 noBorder
                 rounded
                 type="warning"
-                message={`NOTE: The agent name is only visible to you. It will not show when you share the link with someone.`}
+                message={`NOTE: The information in this box is only visible to you. It will not show when you share the link with someone.`}
               />
+              <div className="text-gray7 text-xl mb-3 font-medium">Listing Agent</div>
+
               <div className="flex items-center">
                 <div className="mr-4 w-24 h-24 rounded-lg">
                   <img
@@ -795,7 +826,7 @@ const index = () => {
                 </div>
                 <div className=" break-words">
                   <div className="text-gray-500 text-sm">
-                    <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
+                    <div className="font-medium text-base text-gray-900">{data.AGENT_NAME}</div>
                     <a className="block">{data.COMPANY_NAME}</a>
                     <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
                       {data.AGENT_EMAIL}
@@ -816,6 +847,18 @@ const index = () => {
                     <Phone className="text-white" />
                   </a>
                 </div> */}
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <div className="text-gray7 text-xl mb-3 font-medium">Property Details</div>
+                <div className="flex flex-wrap">
+                  {otherPropertyDetails.map((detail, index) => (
+                    <div className="w-1/2 mb-4" key={index}>
+                      <div className="text-gray4 text-sm">{detail.name}</div>
+                      <div className="text-sm text-gray7 mt-1">{detail.value}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

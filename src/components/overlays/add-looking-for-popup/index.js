@@ -120,6 +120,7 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
         <form onSubmit={formik.handleSubmit}>
           <div className="mx-auto relative">
             <SearchSelectInput
+              optional
               label="Neighborhood"
               options={NYCneighborhoods}
               value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
@@ -134,7 +135,7 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
           <div className="grid grid-cols-2 gap-4 mt-4">
             <Input
               id="bedrooms"
-              type="number"
+              type="money"
               label="Bedrooms"
               className="col-span-1"
               iconAfter={<Image src={bedroom} height={20} />}
@@ -145,7 +146,7 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
             />
             <Input
               id="bathrooms"
-              type="number"
+              type="money"
               label="Bathrooms"
               iconAfter={<Image src={bathroom} height={20} />}
               className="col-span-1"

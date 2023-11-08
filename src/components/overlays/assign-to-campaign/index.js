@@ -30,7 +30,7 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
       <div className="p-[24px]">
         <div className="">
           <div className="">
-            <div className="text-center">
+            <div className="text-center flex items-center justify-center">
               <Image src={image} alt="header-img" height={180} width={180} />
             </div>
             <Text h2 className="text-gray7 justify-center mb-2">
@@ -49,8 +49,7 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
                 onClick={() => {
                   setLoadingButton(true);
                   onSubmit();
-                }}
-              >
+                }}>
                 Assign to Campaign
               </Button>
             </div>

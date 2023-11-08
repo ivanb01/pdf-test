@@ -207,9 +207,13 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     getCurrentUser();
-    getCount().then((data) => {
-      dispatch(setCount(data.data));
-    });
+    getCount()
+      .then((data) => {
+        dispatch(setCount(data.data));
+      })
+      .catch((error) => {
+        console.log(error, 'error');
+      });
   }, []);
 
   return (

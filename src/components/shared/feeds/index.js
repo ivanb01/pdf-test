@@ -1,6 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateAgo, formatDateCalendar, formatDateLL, formatDateLThour } from 'global/functions';
+import {
+  formatDate,
+  formatDateAgo,
+  formatDateCalendar,
+  formatDateLL,
+  formatDateStringMDY,
+  formatDateLThour,
+  formatDateMDY,
+} from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -19,6 +27,10 @@ import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
+
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import Mail from '@mui/icons-material/Mail';
+import TooltipComponent from '@components/shared/tooltip';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -95,10 +107,11 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   const handleUpdateActivity = async (values) => {
     setLoadingButton(true);
+    let todayDate = Date.now();
     try {
       const updatedActivity = activities.map((activity) => {
         if (activity.id === activityId) {
-          return { ...activity, ...values };
+          return { ...activity, ...values, updated_at: todayDate };
         }
         return activity;
       });
@@ -116,9 +129,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
   };
   const handleDeleteActivity = async (activity) => {
     try {
-      console.log(activities, 'activities', activity.id, 'activity.id');
       const filteredActivities = activities.filter((item) => item.id !== activity.id);
-      console.log(filteredActivities, 'filteredActivities');
       dispatch(setActivityLogData(filteredActivities));
       toast.success('Activity was deleted successfully!');
       contactServices
@@ -164,8 +175,13 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <SimpleBar style={{ maxHeight: 'calc(100vh - 400px)', paddingRight: '-10px' }} autoHide>
-        <div className="flow-root bg-white pt-6 pb-6 h-auto ">
+      <div className="bg-white pt-6">
+        <SimpleBar
+          style={{
+            height: '52vh',
+            paddingRight: '-10px',
+          }}
+          autoHide>
           <ul role="list" className="-mb-8">
             {activities
               ?.slice()
@@ -184,21 +200,44 @@ export default function Feeds({ contactId, activities, setActivities }) {
                       <>
                         <div className="relative">
                           <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                            {activitiesTypes[activityItem.type_of_activity_id]}
+                            {activitiesTypes[activityItem.type_of_activity_id] ?? (
+                              <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
+                            )}
                           </div>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="mt-0.5 text-sm text-gray-500">
-                            {/* Commented 6d ago */}
-                            {formatDateCalendar(
-                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
-                            )}{' '}
-                            -{' '}
-                            {formatDateLThour(
-                              activityItem.updated_at ? activityItem.updated_at : activityItem.created_at,
-                            )}
-                          </p>
-
+                          {activityItem.created_at && (
+                            <p className="mt-0.5 text-sm text-gray-500">
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div className={'mr-3'}>
+                                    Created: {/* Commented 6d ago */}
+                                    {formatDateCalendar(activityItem.created_at)} -{' '}
+                                    {formatDateLThour(activityItem.created_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
+                              </TooltipComponent>
+                            </p>
+                          )}
+                          {activityItem.updated_at && (
+                            <p className="mt-0.5 text-sm text-gray-500">
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div>
+                                    Updated: {formatDateCalendar(activityItem.updated_at)} -{' '}
+                                    {formatDateLThour(activityItem.updated_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>
+                              </TooltipComponent>
+                              {/* Commented 6d ago */}
+                            </p>
+                          )}
                           <div className="mt-2 text-sm text-gray6">
                             <p>
                               {activityItem.description
@@ -223,8 +262,8 @@ export default function Feeds({ contactId, activities, setActivities }) {
                 </li>
               ))}
           </ul>
-        </div>
-      </SimpleBar>
+        </SimpleBar>
+      </div>
       {activityModal && (
         <Overlay className="w-[550px]" handleCloseOverlay={handleCloseModal} title="Edit Activity">
           <div className="p-5 bg-white">

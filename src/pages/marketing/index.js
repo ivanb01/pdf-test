@@ -6,30 +6,6 @@ import MarketingCard from '@components/marketing/MarketingCard';
 import MarketingFooter from '@components/marketing/MarketingFooter';
 import SimpleBar from 'simplebar-react';
 import MarketingEmptyState from '@components/marketing/MarketingEmptyState';
-import ListingShowSheet1 from '../../../public/images/marketing/ListingShowSheet1.png';
-import ListingShowSheet2 from '../../../public/images/marketing/ListingShowSheet2.png';
-import OnePageShowSheet1 from '../../../public/images/marketing/OnePageShowSheet1.png';
-import OnePageShowSheet2 from '../../../public/images/marketing/OnePageShowSheet2.jpg';
-import ListingCarouselInstagram from '../../../public/images/marketing/ListingCarouselInstagram.jpg';
-import HolidayPostCardInstagram1 from '../../../public/images/marketing/HappyPostCardInstagram1.jpg';
-import HolidayPostCardInstagram2 from '../../../public/images/marketing/HappyPostCardInstagram2.jpg';
-import HolidayPostCardInstagram3 from '../../../public/images/marketing/HappyPostCardInstagram3.jpg';
-import ListingCarouselFacebook from '../../../public/images/marketing/ListingCarouselFacebook.jpg';
-import HolidayPostCardFacebook1 from '../../../public/images/marketing/HolidayPostCardFacebook1.jpg';
-import HolidayPostCardFacebook2 from '../../../public/images/marketing/HolidayPostCardFacebook2.jpg';
-import JustListedPostcard from '../../../public/images/marketing/JustListedPostcard.jpg';
-import JustSoldPostcard from '../../../public/images/marketing/JustSoldPostcard.jpg';
-import NewDevelopmentPostcard from '../../../public/images/marketing/NewDevelopmentPostcard.png';
-import VerticalBannersRent from '../../../public/images/marketing/VerticalBannersRent.jpg';
-import VerticalBannersSale from '../../../public/images/marketing/VerticalBannersSale.jpg';
-import BusinessCards from '../../../public/images/marketing/BusinessCards.jpg';
-import HorizontalBannersRent from '../../../public/images/marketing/HorizontalBannersRent.jpg';
-import HorizontalBannersSale from '../../../public/images/marketing/HorizontalBannersSale.jpg';
-import ListingShowSheet11 from '../../../public/images/marketing/ListingShowSheet1.1.png';
-import ListingShowSheet21 from '../../../public/images/marketing/ListingShowSheet2.1.png';
-import JustListedPostcard1 from '../../../public/images/marketing/JustListedPostcard1.jpg';
-import NewDevelopmentPostcard1 from '../../../public/images/marketing/NewDevelopmentPostcard1.png';
-import BusinessCard1 from '../../../public/images/marketing/BusinessCard1.jpg';
 import withAuth from '@components/withAuth';
 
 const index = () => {
@@ -37,115 +13,115 @@ const index = () => {
   const cardItems = [
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/k1nH4ap.png', 'https://i.imgur.com/2bONvky.png'],
+      src: ['https://i.imgur.com/l4aUVk2.png', 'https://i.imgur.com/adDX0aW.png'],
       title: 'Listing Show Sheet 1',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/ENAZVuA.png', 'https://i.imgur.com/SuhlsnQ.png'],
+      src: ['https://i.imgur.com/0wJWNAQ.png', 'https://i.imgur.com/ewfhd9R.png'],
       title: 'Listing Show Sheet 2',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/qdrKKZd.png'],
+      src: ['https://i.imgur.com/wEcmy3O.png'],
       title: 'One Page Sheet 1',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/5J1yoki.jpg'],
+      src: ['https://i.imgur.com/3s6FHnx.jpg'],
       title: 'One Page Sheet 2',
       listingUrl: true,
     },
     {
       type: 'instagram_post',
-      src: ['https://i.imgur.com/9hXnnLt.jpg'],
+      src: ['https://i.imgur.com/wq8xzZ1.jpg'],
       title: 'Listing Carousel Instagram',
       listingUrl: true,
     },
     {
       type: 'instagram_post',
-      src: ['https://i.imgur.com/EM1dH2z.jpg'],
+      src: ['https://i.imgur.com/kLJ7zIe.jpg'],
       title: 'Holiday Post Card Instagram 1',
       listingUrl: false,
     },
     {
       type: 'instagram_post',
-      src: ['https://i.imgur.com/WRArADS.jpg'],
+      src: ['https://i.imgur.com/5PL3nZK.jpg'],
       title: 'Holiday Post Card Instagram 2',
       listingUrl: false,
     },
     {
       type: 'instagram_post',
-      src: ['https://i.imgur.com/37D52Xy.jpg'],
+      src: ['https://i.imgur.com/OY04z2u.jpg'],
       title: 'Holiday Post Card Instagram 3',
       listingUrl: false,
     },
     {
       type: 'facebook_post',
-      src: ['https://i.imgur.com/dKM7cl4.jpg'],
+      src: ['https://i.imgur.com/u68sJ7g.jpg'],
       title: 'Listing Carousel Facebook ',
       listingUrl: true,
     },
     {
       type: 'facebook_post',
-      src: ['https://i.imgur.com/HEbFAsj.jpg'],
+      src: ['https://i.imgur.com/qkQ4687.jpg'],
       title: 'Holiday Post Card Facebook 1',
       listingUrl: false,
     },
     {
       type: 'facebook_post',
-      src: ['https://i.imgur.com/rxoYZrJ.jpg'],
+      src: ['https://i.imgur.com/HZSogrw.jpg'],
       title: 'Holiday Post Card Facebook 2',
       listingUrl: false,
     },
     {
       title: 'Just Listed Postcard',
-      src: ['https://i.imgur.com/Vfv4Nc1.jpg', 'https://i.imgur.com/oOZrWnL.jpg'],
+      src: ['https://i.imgur.com/V0hff1L.jpg', 'https://i.imgur.com/kwcGCHb.jpg'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       title: 'Just Sold Postcard',
-      src: ['https://i.imgur.com/ywezELt.jpg', 'https://i.imgur.com/oOZrWnL.jpg'],
+      src: ['https://i.imgur.com/P7iiADI.jpg', 'https://i.imgur.com/kwcGCHb.jpg'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       title: 'New Development Postcard',
-      src: ['https://i.imgur.com/sxBG24Y.png'],
+      src: ['https://i.imgur.com/dXKzgNB.png'],
       type: 'postcard',
       listingUrl: true,
     },
     {
       type: 'banners',
-      src: ['https://i.imgur.com/SfhTRg5.jpg'],
+      src: ['https://i.imgur.com/GpIkDYC.jpg'],
       title: 'Vertical Banners - Rent',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: ['https://i.imgur.com/OAqc1P5.jpg'],
+      src: ['https://i.imgur.com/aCe3PoH.jpg'],
       title: 'Vertical Banners - Sale',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: ['https://i.imgur.com/hQQdb8T.jpg'],
+      src: ['https://i.imgur.com/cJMYCfF.jpg'],
       title: 'Horizontal Banners - Rent',
       listingUrl: false,
     },
     {
       type: 'banners',
-      src: ['https://i.imgur.com/FkaxRji.jpg'],
+      src: ['https://i.imgur.com/10DelEH.jpg'],
       title: 'Horizontal Banners - Sale',
       listingUrl: false,
     },
     {
       type: 'business_card',
-      src: ['https://i.imgur.com/iPbRFOb.jpg', 'https://i.imgur.com/fYTGKin.jpg'],
+      src: ['https://i.imgur.com/k8s1Ic3.jpg', 'https://i.imgur.com/PJYCclf.jpg'],
       title: 'Business Cards',
       listingUrl: false,
     },
@@ -290,7 +266,12 @@ const index = () => {
       <div
         className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
         style={{ height: '230px' }}>
-        <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
+        <div>
+          <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
+          <p className={'text-[12px] text-center font-medium mt-2 text-white'}>
+            Receive custom digital templates to your email - Ready in 24 Hours or Less!
+          </p>
+        </div>
         <Search
           placeholder="Search here..."
           className="text-sm w-[550px]"

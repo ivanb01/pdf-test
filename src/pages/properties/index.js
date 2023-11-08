@@ -348,7 +348,8 @@ const index = () => {
               <div className="p-6">
                 <div className={'flex items-center justify-between mb-6'}>
                   <div className="text-gray-900 text-sm font-medium">
-                    {properties.TOTAL_COUNT.toLocaleString()} total properties
+                    {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from
+                    REALTYMX database.
                   </div>
                   <div className={'flex items-center gap-2'}>
                     <p className="text-gray6 font-inter font-normal leading-5 text-sm mt-1">Sort by</p>

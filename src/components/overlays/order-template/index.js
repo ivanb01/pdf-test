@@ -11,6 +11,7 @@ import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { sendMarketingEmail } from '@api/marketing';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 const validationSchemaWithListingUrl = Yup.object({
   listingUrl: Yup.string().url('Invalid URL format').required('Listing URL is required'),
@@ -20,6 +21,8 @@ const validationSchemaWithoutListingUrl = Yup.object({
   note: Yup.string().optional(),
 });
 const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
+  const user = useSelector((state) => state.global.user);
+
   const _sendMarketingEmail = async (body) => {
     try {
       return await sendMarketingEmail(body);
@@ -45,7 +48,8 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
       const noteContent = values.note ? `<p>${values.note}</p>` : '';
 
       _sendMarketingEmail({
-        to: 'jasuncion@opgny.com',
+        to: ['marketing@opgny.com'],
+        cc: [`${user}`],
         subject: `Order ${name && name}`,
         body: `<html>
 <body>

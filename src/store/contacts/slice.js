@@ -16,6 +16,9 @@ const contactsSlice = createSlice({
     setAllContacts(state, action) {
       state.allContacts = action.payload;
     },
+    updateAllContacts(state, action) {
+      state.allContacts.data = action.payload;
+    },
     setClients(state, action) {
       state.clients = action.payload;
     },
@@ -40,9 +43,12 @@ const contactsSlice = createSlice({
       }
     },
     addContactLocally(state, action) {
-      const newContact = action.payload;
-      console.log(state.allContacts, newContact);
-      state.allContacts.data = [...state.allContacts.data, newContact];
+      console.log(action.payload, [...state.allContacts.data, action.payload]);
+      state.allContacts = {
+        ...state.allContacts,
+        data: [...state.allContacts.data, action.payload],
+        count: state.allContacts.count + 1,
+      };
     },
   },
 });
@@ -50,6 +56,7 @@ const contactsSlice = createSlice({
 export const {
   setContacts,
   setAllContacts,
+  updateAllContacts,
   setClients,
   setProfessionals,
   setUncategorized,

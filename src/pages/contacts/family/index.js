@@ -17,6 +17,7 @@ import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
+  const [searchKey, setSearchKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [familyAndFriends, setFamilyAndFriends] = useState(null);
   const [unknown, setUnknown] = useState(null);
@@ -47,12 +48,12 @@ const index = () => {
 
   useEffect(() => {
     // setLoading(true);
-    if (allContacts.data) {
+    if (allContacts.data && !searchKey.length) {
       fetchOther();
     }
     dispatch(setOpenedTab(5));
     // dispatch(setOpenedSubtab(0));
-  }, [allContacts]);
+  }, [allContacts.data]);
 
   useEffect(() => {
     if (allContacts.data) {
@@ -64,6 +65,7 @@ const index = () => {
     const contactsCopy = familyAndFriends;
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
+    console.log(term, filteredArray);
   };
   const unapprovedContactsLength = unapprovedContacts?.data.filter(
     (contact) => contact.category_1 != 'Uncategorized',
@@ -91,7 +93,11 @@ const index = () => {
                   <Search
                     placeholder="Search"
                     className="mr-4 text-sm"
-                    onInput={(event) => onSearch(event.target.value)}
+                    value={searchKey}
+                    onInput={(event) => {
+                      setSearchKey(event.target.value);
+                      onSearch(event.target.value);
+                    }}
                   />
                 </div>
               </div>

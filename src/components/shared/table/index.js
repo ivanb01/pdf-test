@@ -3,9 +3,7 @@ import {
   getContactStatusByStatusId,
   getContactTypeByTypeId,
   getContactStatusColorByStatusId,
-  phoneNumberFormat,
   formatDateLL,
-  findProfessionalSubtype,
   getInitials,
   getDateFormat,
 } from 'global/functions';
@@ -588,27 +586,18 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-6 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-              {data.length} Categorized Contacts
-            </th>
-            <th
-              scope="col"
               className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-              {/* <Button white onClick={() => undoAllCategorizations()}> */}
-              {/* Undo All */}
-              {/* </Button> */}
-              <div className="relative flex justify-center">
-                <a
-                  className="cursor-pointer text-xs"
-                  onClick={() => undoAllCategorizations()}
-                  onMouseEnter={() =>
-                    document.querySelector('#tooltip-undo-all').classList.remove('invisible', 'opacity-0')
-                  }
-                  onMouseLeave={() =>
-                    document.querySelector('#tooltip-undo-all').classList.add('invisible', 'opacity-0')
-                  }>
-                  {/* <Image src={undoIcon} className="w-5"></Image> */}
-                  <svg version="1.1" viewBox="0 0 16 20" width="15px" xmlns="http://www.w3.org/2000/svg">
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  <svg
+                    className={'cursor-pointer'}
+                    version="1.1"
+                    viewBox="0 0 16 20"
+                    width="15px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => undoAllCategorizations()}>
                     <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
                       <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
                         <g id="undo" transform="translate(424.000000, 464.000000)">
@@ -620,13 +609,12 @@ const Table = ({
                       </g>
                     </g>
                   </svg>
-                </a>
-                <div
-                  id="tooltip-undo-all"
-                  className="inline-block capitalize -right-3 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                  Undo All
-                </div>
-              </div>
+                }>
+                <p className="text-xs leading-4 font-normal"> Undo All</p>
+              </TooltipComponent>
+            </th>
+            <th scope="col" className="py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+              {data.length} Categorized Contacts
             </th>
           </tr>
         </thead>
@@ -634,7 +622,34 @@ const Table = ({
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
-                <td className="whitespace-nowrap py-4 pl-6  text-sm sm:pl-6">
+                <td className="relative whitespace-nowrap h-[72.5px] py-4 px-6 flex ">
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <svg
+                        version="1.1"
+                        viewBox="0 0 16 20"
+                        width="15px"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={'cursor-pointer'}
+                        onClick={() => undoCategorization(dataItem.id)}>
+                        <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
+                          <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
+                            <g id="undo" transform="translate(424.000000, 464.000000)">
+                              <path
+                                d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
+                                id="Shape"
+                              />
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    }>
+                    <p className="text-xs leading-4 font-normal"> Undo Categorization</p>
+                  </TooltipComponent>
+                </td>
+                <td className="whitespace-nowrap py-4  text-sm ">
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
@@ -656,42 +671,6 @@ const Table = ({
                       )}
                     </div>
                   )}
-                </td>
-                <td className="relative whitespace-nowrap h-[72.5px] py-4 pr-6 sm:pr-6 flex justify-end items-center">
-                  <div className="relative">
-                    <a
-                      className="cursor-pointer text-xs"
-                      onClick={() => undoCategorization(dataItem.id)}
-                      onMouseEnter={() =>
-                        document
-                          .querySelector('#tooltip-undo-categorization-' + dataItem.id)
-                          .classList.remove('invisible', 'opacity-0')
-                      }
-                      onMouseLeave={() =>
-                        document
-                          .querySelector('#tooltip-undo-categorization-' + dataItem.id)
-                          .classList.add('invisible', 'opacity-0')
-                      }>
-                      {/* <Image src={undoIcon} className="w-5"></Image> */}
-                      <svg version="1.1" viewBox="0 0 16 20" width="15px" xmlns="http://www.w3.org/2000/svg">
-                        <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
-                          <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
-                            <g id="undo" transform="translate(424.000000, 464.000000)">
-                              <path
-                                d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"
-                                id="Shape"
-                              />
-                            </g>
-                          </g>
-                        </g>
-                      </svg>
-                    </a>
-                    <div
-                      id={'tooltip-undo-categorization-' + dataItem.id}
-                      className="inline-block -right-4 top-[30px] h-fit absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
-                      Undo Categorization
-                    </div>
-                  </div>
                 </td>
               </tr>
             </CSSTransition>
@@ -771,7 +750,7 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.clients);
+    const contacts = useSelector((state) => state.contacts.allContacts.data);
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
 
     const dispatch = useDispatch();
@@ -848,7 +827,7 @@ const Table = ({
     };
 
     function filterContacts(category, contactTypes) {
-      const filteredContacts = contacts.filter(
+      const filteredContacts = contacts?.filter(
         (contact) =>
           searchTerm.split(' ').every((word) => {
             const lowercaseWord = word.toLowerCase();
@@ -929,7 +908,7 @@ const Table = ({
         </thead>
         <tbody className="bg-white">
           {contactsStatuses[openedSubtab].statuses.map((category, index) =>
-            contacts.filter(
+            contacts?.filter(
               (contact) =>
                 searchTerm.split(' ').every((word) => {
                   const lowercaseWord = word.toLowerCase();
@@ -1261,7 +1240,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.professionals);
+    const contactsOriginal = useSelector((state) => state.contacts.allContacts.data);
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
@@ -1687,7 +1666,7 @@ const Table = ({
                     <div className="text-gray4">{formatDateLThour(dataItem.last_interaction)}</div>
                   </>
                 ) : (
-                  <div className="text-red-500">No Interaction</div>
+                  <div className="text-red-500">No Communication</div>
                 )}
               </td>
             </tr>
@@ -1699,6 +1678,7 @@ const Table = ({
 
   const aiSummaryTable = () => {
     const getChip = (item) => {
+      console.log(item, 'item');
       if (item.category_id == 3) {
         return 'Trash';
       }
@@ -1725,30 +1705,26 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px] ">
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-                ref={checkbox}
+                ref={checkbox && checkbox}
                 checked={checked}
                 onChange={toggleAll}
               />
               Contact
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
-            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
               Email Summary
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Actions
             </th>
             <th
@@ -1767,7 +1743,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:min-w-[340px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1794,16 +1770,16 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[100px]">
-                <Chip typeStyle>{vendorSubtypes && getChip(dataItem)}</Chip>
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip typeStyle>{dataItem?.category_2}</Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status  lg:min-w-[500px] xl:min-w-[600px]">
-                <div className=" flex items-center">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <div className=" flex items-center break-all flex-wrap">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
@@ -1816,7 +1792,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center gap-6">
                   <TooltipComponent
                     side={'top'}

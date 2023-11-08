@@ -8,7 +8,7 @@ import img4 from '/public/images/fourth.png';
 import { useState } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
-const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboarding }) => {
+const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding }) => {
   const [step, setStep] = useState(0);
 
   const nextStep = () => {
@@ -119,7 +119,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
               loading={loading}
               primary
               onClick={() => {
-                handleCloseOverlay();
+                closeModal();
                 setStartedOnboarding(true);
               }}
               label="Start the Onboard"
@@ -131,7 +131,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
   };
 
   return (
-    <Overlay className="w-[600px]" handleCloseOverlay={handleCloseOverlay}>
+    <Overlay className="w-[600px]" closeModal={closeModal}>
       <div className={`p-6 min-h-[450px] ${secondStep() && 'flex flex-col justify-between'}`}>
         {step == 0 ? firstStep() : step == 1 ? secondStep() : step == 2 ? thirdStep() : fourthStep()}
       </div>

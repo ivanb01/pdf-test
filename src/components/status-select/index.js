@@ -2,12 +2,22 @@ import Text from 'components/shared/text';
 import Chip from 'components/shared/chip';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-const StatusSelect = ({ label, selectedStatus, setSelectedStatus, className, statuses, error, errorText }) => {
+const StatusSelect = ({
+  label,
+  required,
+  selectedStatus,
+  setSelectedStatus,
+  className,
+  statuses,
+  error,
+  errorText,
+}) => {
   return (
     <div>
       {label && (
         <Text h4 className="text-gray7 text-left mb-3">
           {label}
+          {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
       <div className={`flex ${className}`}>

@@ -139,6 +139,8 @@ export default function Info({ client }) {
             />
           )}
           <InfoCard label="Import Source" content={client.import_source_text} client={client} />
+          {client.summary && <InfoCard label="Summary" content={client.summary} client={client} />}
+
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
