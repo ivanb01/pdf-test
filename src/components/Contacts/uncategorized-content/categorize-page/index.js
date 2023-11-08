@@ -122,7 +122,7 @@ const CategorizePage = ({
     let uncategorized = uncategorizedContacts.filter((contact) => !ids.includes(contact.id));
     setUncategorizedContacts(uncategorized);
     dispatch(updateAllContacts(allContacts.filter((contact) => !ids.includes(contact.id))));
-    selectFirstToCategorize();
+    // selectFirstToCategorize();
     setSelectedUncategorizedContactStatus(null);
     setSelectedUncategorizedContactType(null);
     setSelectedUncategorized([]);
