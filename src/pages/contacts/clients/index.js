@@ -90,6 +90,9 @@ const index = () => {
     }
   }, [refetchData]);
 
+  // useEffect(() => {
+  // }, [])
+
   useEffect(() => {
     const queryParams = {};
     for (const [key, value] of Object.entries(router.query)) {
@@ -151,6 +154,11 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
+          <div class="arrow pointer-events-none">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </>
       )}
       {showAddContactOverlay && (
