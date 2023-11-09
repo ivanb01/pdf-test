@@ -41,7 +41,6 @@ const index = () => {
   const [loading, setLoading] = useState(true);
 
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
-
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchData = useSelector((state) => state.global.refetchData);
@@ -92,6 +91,14 @@ const index = () => {
 
   // useEffect(() => {
   // }, [])
+
+  let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
+  const [currentButton, setCurrentButton] = useState(currentView);
+
+  const handleViewChange = (viewId) => {
+    setCurrentButton(viewId);
+    localStorage.setItem('currentView', viewId);
+  };
 
   useEffect(() => {
     const queryParams = {};
@@ -144,6 +151,8 @@ const index = () => {
             />
           )}
           <Clients
+            currentButton={currentButton}
+            handleViewChange={handleViewChange}
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);
@@ -154,11 +163,13 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          <div class="arrow pointer-events-none">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          {currentView == 0 && (
+            <div class="arrow pointer-events-none">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          )}
         </>
       )}
       {showAddContactOverlay && (

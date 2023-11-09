@@ -39,24 +39,25 @@ const buttons = [
   },
 ];
 
-const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
+const Clients = ({
+  setShowAddContactOverlay,
+  onSearch,
+  handleCardEdit,
+  unapprovedContacts,
+  handleViewChange,
+  currentButton,
+}) => {
   const dispatch = useDispatch();
 
-  let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(currentView);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleViewChange = (viewId) => {
-    setCurrentButton(viewId);
-    localStorage.setItem('currentView', viewId);
-  };
   const tabs = [
     {
       title: 'CLIENT TYPES',
