@@ -571,6 +571,11 @@ const index = () => {
   const filteredArray =
     data.PHOTOS.length > 0 && data.PHOTOS.filter((item) => item.ORIGINAL_URL.toLowerCase().includes('floor'));
 
+  const [lightboxController, setLightboxController] = useState({
+    toggler: false,
+    slide: 1,
+  });
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -583,21 +588,27 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full">
-            <Zoom zoomMargin={45}>
-              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
-            </Zoom>
+            <img
+              src={data.PHOTOS[0].PHOTO_URL}
+              onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
+              className="object-cover w-full  h-[500px] object-center"
+            />
           </div>
         ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
-              <Zoom zoomMargin={45}>
-                <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full  h-[500px] object-center" />
-              </Zoom>
+              <img
+                src={data.PHOTOS[0].PHOTO_URL}
+                className="object-cover w-full object-center"
+                onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
+              />
             </div>
-            <div className="md:w-1/2 w-full h-full">
-              <Zoom zoomMargin={45}>
-                <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full  object-center  h-[500px]" />
-              </Zoom>
+            <div className="md:w-1/2 w-full h-full min-h-[500px]">
+              <img
+                src={data.PHOTOS[1].PHOTO_URL}
+                className="object-cover w-full  object-center  h-[500px]"
+                onClick={() => setLightboxController((prev) => ({ slide: 1, toggler: !prev.toggler }))}
+              />
             </div>
           </>
         ) : (
@@ -611,13 +622,12 @@ const index = () => {
               modules={[Pagination, Navigation, Scrollbar]}>
               {data.PHOTOS.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
-                  <Zoom zoomMargin={45}>
-                    <img
-                      src={picture.PHOTO_URL}
-                      alt={`Image ${index + 1}`}
-                      className="object-cover w-full  object-center h-[500px]"
-                    />
-                  </Zoom>
+                  <img
+                    src={picture.PHOTO_URL}
+                    alt={`Image ${index + 1}`}
+                    className="object-cover w-full  object-center h-[500px] cursor-pointer"
+                    onClick={() => setLightboxController((prev) => ({ slide: index, toggler: !prev.toggler }))}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -869,6 +879,14 @@ const index = () => {
           toggler={toggler}
           zoomIncrement={0.5}
           sources={filteredArray.map((item) => item.ORIGINAL_URL)}
+        />
+
+        <FsLightbox
+          types={[...new Array(data?.PHOTOS?.length).fill('image')]}
+          toggler={lightboxController.toggler}
+          zoomIncrement={0.5}
+          sourceIndex={lightboxController.slide}
+          sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
         />
       </div>
     </>

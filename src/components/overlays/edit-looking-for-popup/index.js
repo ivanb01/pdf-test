@@ -121,7 +121,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
         <form onSubmit={formik.handleSubmit}>
           <div className="mx-auto relative">
             <SearchSelectInput
-              label="Neighborhood"
+              label="Neighborhood*"
               options={NYCneighborhoods}
               value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
               onChange={(choice) => {

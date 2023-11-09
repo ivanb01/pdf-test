@@ -218,7 +218,7 @@ const index = () => {
             autoHide={true}
             style={{
               height: '100%',
-              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 140px)' : 'calc(100vh - 87px)',
+              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 140px)' : '79vh',
             }}>
             <Table
               className="pb-5"

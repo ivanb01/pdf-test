@@ -90,19 +90,18 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     };
 
     return (
-      <>
+      <div className="accordion w-inherit cursor-pointer">
         {tabs.map((tab) => {
           return (
             <SubMenuContent
               side={'start'}
               align={'bottom'}
-              className={'bg-white border-gray2'}
-              style={{ marginLeft: '63px' }}
+              style={{ marginLeft: '62px' }}
               triggerElement={
-                <div className="accordion w-inherit cursor-pointer">
+                <div>
                   <Link
                     href="#"
-                    className={`flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                    className={`  flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
                       openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                     }`}
                     onClick={() => {
@@ -111,33 +110,36 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       setExpandedTab({ id: tab.id, opened: true });
                     }}>
                     <div
-                      className={`flex items-center cursor-pointer ${
+                      className={` flex items-center cursor-pointer ${
                         openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                       }`}
                       title={tab.name}>
-                      {tab.icon}
+                      <div>{tab.icon}</div>
                     </div>
                   </Link>
                 </div>
               }>
-              {tab.subtab &&
-                tab.subtab.map((t) => (
-                  <div
-                    className={`rounded-md ${
-                      isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
-                    }`}>
+              {tab.subtab && (
+                <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
+                  {tab.subtab.map((t) => (
                     <div
-                      role={'button'}
-                      onClick={() => {
-                        setOpenedTab(tab.id);
-                        dispatch(setOpenedSubtab(t.id));
-                        router.push(tab.href);
-                      }}
-                      className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
-                      {t?.dot} {t.name}
+                      className={` rounded-md ${
+                        isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                      }`}>
+                      <div
+                        role={'button'}
+                        onClick={() => {
+                          setOpenedTab(tab.id);
+                          dispatch(setOpenedSubtab(t.id));
+                          router.push(tab.href);
+                        }}
+                        className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
+                        {t?.dot} <span className={'w-[100px]'}>{t.name}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              )}
             </SubMenuContent>
           );
         })}
@@ -151,7 +153,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             </div>
           </>
         )}
-      </>
+      </div>
     );
   };
 

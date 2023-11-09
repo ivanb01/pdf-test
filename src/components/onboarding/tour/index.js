@@ -10,11 +10,6 @@ const clientSteps = [
     attachTo: { element: '.clients', on: 'right' },
     buttons: [
       {
-        classes: 'shepherd-button-primary back',
-        text: 'back',
-        type: 'back',
-      },
-      {
         classes: 'shepherd-button-primary',
         text: 'Next',
         type: 'next',

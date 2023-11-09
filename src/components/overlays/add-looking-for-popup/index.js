@@ -138,8 +138,8 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
               type="money"
               label="Bedrooms"
               className="col-span-1"
+              onChange={(val) => formik.setFieldValue('bedrooms', val)}
               iconAfter={<Image src={bedroom} height={20} />}
-              onChange={formik.handleChange}
               value={formik.values.bedrooms}
               error={errors.bedrooms && touched.bedrooms}
               errorText={errors.bedrooms}
@@ -150,7 +150,7 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
               label="Bathrooms"
               iconAfter={<Image src={bathroom} height={20} />}
               className="col-span-1"
-              onChange={formik.handleChange}
+              onChange={(val) => formik.setFieldValue('bathrooms', val)}
               value={formik.values.bathrooms}
               error={errors.bathrooms && touched.bathrooms}
               errorText={errors.bathrooms}
