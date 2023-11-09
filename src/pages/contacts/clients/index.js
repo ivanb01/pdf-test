@@ -91,9 +91,12 @@ const index = () => {
 
   // useEffect(() => {
   // }, [])
+  const [currentButton, setCurrentButton] = useState(0);
 
-  let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
-  const [currentButton, setCurrentButton] = useState(currentView);
+  useEffect(() => {
+    let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
+    setCurrentButton(currentView);
+  }, []);
 
   const handleViewChange = (viewId) => {
     setCurrentButton(viewId);
@@ -163,7 +166,7 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          {currentView == 0 && (
+          {currentButton == 0 && (
             <div class="arrow pointer-events-none">
               <span></span>
               <span></span>
