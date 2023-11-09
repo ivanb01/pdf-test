@@ -3,7 +3,18 @@ import Button from 'components/shared/button';
 import { ArrowForward } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import ErrorIcon from '@mui/icons-material/Error';
-const GlobalAlert = ({ className, overlay, type, message, rounded, onButtonClick, noBorder, smallText, title }) => {
+const GlobalAlert = ({
+  className,
+  overlay,
+  type,
+  message,
+  rounded,
+  onButtonClick,
+  noBorder,
+  smallText,
+  title,
+  textClassName,
+}) => {
   const router = useRouter();
   let bgColor =
     type == 'error'
@@ -47,7 +58,9 @@ const GlobalAlert = ({ className, overlay, type, message, rounded, onButtonClick
           </div>
           <div className="ml-3">
             {title && <p className={`text-sm font-semibold mb-2 ${textColor}`}>{title}</p>}
-            <p className={`${smallText ? 'text-xs' : 'text-sm'} ${textColor}`}>{message ? message : '\u00A0'}</p>
+            <p className={`${smallText ? 'text-xs' : 'text-sm'} ${textColor} ${textClassName}`}>
+              {message ? message : '\u00A0'}
+            </p>
           </div>
         </div>
         {onButtonClick && <Button white>Set up now</Button>}
