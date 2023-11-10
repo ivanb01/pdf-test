@@ -248,7 +248,9 @@ const Clients = ({
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder="Search"
+                placeholder={
+                  `Search ` + clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle].toLowerCase()
+                }
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}

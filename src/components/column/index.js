@@ -116,7 +116,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
 
   useEffect(() => {
     setFilteredContacts(contacts);
-  }, [openedSubtab, searchTerm, contacts, sortAsc]);
+  }, [openedSubtab, contacts]);
   const handleChangeStatus = async (status, contact) => {
     try {
       if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -247,7 +247,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
           )}
         </a>
       </div>
-      {filteredContacts.length > 0 ? (
+      {filteredContacts.filter(
+        (contact, index) => contact.status_id === status.id && contact.category_1.toLowerCase() === category,
+      ).length > 0 ? (
         <SimpleBar
           style={{
             overflowX: 'hidden',
