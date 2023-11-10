@@ -29,17 +29,16 @@ const categoryIds = {
   Professional: '8,9,12',
 };
 
-const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-  const clients = useSelector((state) => state.contacts.clients);
+  // const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
 
   const [filteredContacts, setFilteredContacts] = useState(
@@ -117,7 +116,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   useEffect(() => {
     setFilteredContacts(contacts);
-  }, [openedSubtab, searchTerm, contacts, sortAsc]);
+  }, [openedSubtab, contacts]);
   const handleChangeStatus = async (status, contact) => {
     try {
       if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -248,7 +247,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
           )}
         </a>
       </div>
-      {filteredContacts.length > 0 ? (
+      {filteredContacts.filter(
+        (contact, index) => contact.status_id === status.id && contact.category_1.toLowerCase() === category,
+      ).length > 0 ? (
         <SimpleBar
           style={{
             overflowX: 'hidden',
