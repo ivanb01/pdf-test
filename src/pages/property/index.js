@@ -814,7 +814,7 @@ const index = () => {
             </div>
           </div>
           {isAuthenticated && (
-            <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
+            <div className="opacity-50 hover:opacity-100 transition-all w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
               {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
               <GlobalAlert
                 className="mb-4 font-semibold"
@@ -822,11 +822,11 @@ const index = () => {
                 noBorder
                 rounded
                 type="warning"
-                message={`NOTE: The agent name in this box is only visible to you. It will not show when you share the link with someone.`}
+                message={`NOTE: The information in this box is only visible to you. It will not show when you share the link with someone.`}
               />
               <div className="text-gray7 text-xl mb-3 font-medium">Listing Agent</div>
 
-              <div className="flex items-center opacity-30 hover:opacity-100">
+              <div className="flex items-center hover:opacity-100">
                 <div className="mr-4 w-24 h-24 rounded-lg">
                   <img
                     src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
