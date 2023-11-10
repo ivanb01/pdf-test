@@ -7,6 +7,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
+import { useSelector } from 'react-redux';
 
 const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
@@ -26,6 +27,7 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
       setActiveEvent(campaignData?.events[0]);
     }
   }, [campaignData]);
+  const user = useSelector((state) => state.global.user);
 
   function areObjectsEqual(obj1, obj2) {
     if (!obj2) {
@@ -176,9 +178,16 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                             </div>
                             <div className={'p-6 flex flex-col gap-[31px]'}>
                               <div>
-                                <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
-                                  SUBJECT
-                                </span>
+                                <div className={'flex flex-col'}>
+                                  {activeEvent?.event_type === 'Email' && (
+                                    <span className={'text-[11px] leading-4 font-normal text-gray4 mb-3'}>
+                                      Sent from:{user?.email ? user?.email : user}{' '}
+                                    </span>
+                                  )}
+                                  <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
+                                    SUBJECT
+                                  </span>
+                                </div>
                                 <p className={'text-xl leading-7 font-medium text-gray8'}>
                                   {activeEvent?.preview?.preview?.subject}
                                 </p>
