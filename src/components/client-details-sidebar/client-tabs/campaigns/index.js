@@ -47,9 +47,6 @@ export default function Campaigns({ contactId, contact }) {
     }
   };
 
-  const hasEmailEvent = (data) => {
-    return data && data.some((event) => event.event_type === 'Email');
-  };
   const handleUnassignCampaignChange = async () => {
     try {
       await unassignContactFromCampaign(campaignId, contactId);
@@ -64,12 +61,7 @@ export default function Campaigns({ contactId, contact }) {
   const alerts = [
     {
       icon: <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />,
-      text: (
-        <>
-          <p>To be able to receive these emails, the client must be assigned to this campaign.</p>
-          {hasEmailEvent(campaignEvents) && <p>All emails will be sent from {user.email ? user.email : user}</p>}
-        </>
-      ),
+      text: 'To be able to receive these emails, the client must be assigned to this campaign.',
       button: (
         <Button
           className="p-0"

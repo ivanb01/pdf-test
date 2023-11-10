@@ -26,9 +26,7 @@ const EventPreview = ({
   const [events, setEvents] = useState(null);
   const [loadingEventPreview, setLoadingEventPreview] = useState(false);
   const [eventToPreview, setEventToPreview] = useState(null);
-  const hasEmailEvent = (data) => {
-    return data && data.events.some((event) => event.event_type === 'Email');
-  };
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
@@ -193,17 +191,6 @@ const EventPreview = ({
                       </div>
                     ) : (
                       <>
-                        {hasEmailEvent(campaignEvents) && (
-                          <GlobalAlert
-                            className="font-small "
-                            smallText
-                            noBorder
-                            rounded
-                            textClassName={'mt-1'}
-                            type="warning"
-                            message={`NOTE: All emails will be sent from ${user.email ? user.email : user}`}
-                          />
-                        )}
                         <div className="flex flex-1">
                           <div className="bg-white border-gray2 border-r p-6  h-full">
                             <nav aria-label="Progress">
