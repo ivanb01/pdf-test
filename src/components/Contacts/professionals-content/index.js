@@ -79,6 +79,10 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [searchTerm, setSearchTerm] = useState(' ');
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
+  useEffect(() => {
+    setFilteredProfessionals(contacts);
+  }, [contacts]);
+
   function hasAnyProperties(obj) {
     for (let prop in obj) {
       if (obj.hasOwnProperty(prop)) {
