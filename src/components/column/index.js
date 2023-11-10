@@ -29,17 +29,16 @@ const categoryIds = {
   Professional: '8,9,12',
 };
 
-const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-  const clients = useSelector((state) => state.contacts.clients);
+  // const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
 
   const [filteredContacts, setFilteredContacts] = useState(
