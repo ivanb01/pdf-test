@@ -114,7 +114,14 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       let status = formik.values.selectedStatus ? formik.values.selectedStatus : 1;
 
       const contactToAdd = {
-        ...formik.values,
+        first_name: formik.values.first_name,
+        last_name: formik.values.last_name,
+        email: formik.values.email,
+        phone_number: formik.values.phone_number,
+        summary: formik.values.summary,
+        lead_source: formik.values.lead_source,
+        import_source: 'Manually Added',
+        tags: formik.values.tags,
         category_id: type,
         status_id: status,
       };
@@ -129,6 +136,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         }
       });
 
+      // dispatch(addContactLocally(contactToAdd));
       dispatch(setOpenedTab(globalTabs[title]));
       dispatch(setOpenedSubtab(subtabValue));
       setTimeout(() => {
