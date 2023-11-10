@@ -63,35 +63,7 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
   return (
     <div className="flex items-center relative">
       {handleSelect && <Input type="checkbox" className="mr-1" onChange={(e) => handleSelect(e, data)}></Input>}
-      {inCategorization && (
-        <div className={'flex items-center gap-1.5 flex-shrink-0 mr-3'}>
-          <div>
-            <div className={'h-2'}>{getSource(data.import_source_text).icon}</div>
-          </div>
-          {data.summary !== null ? (
-            <TooltipComponent
-              side={'top'}
-              align={'center'}
-              triggerElement={
-                <InfoSharpIcon
-                  className={`text-gray3 hover:text-gray4 mt-1`}
-                  style={{ height: '15px', width: '15px' }}
-                  aria-hidden="true"
-                />
-              }>
-              <div className={`max-w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                <div className={`flex gap-1.5`}>
-                  {getSource(data.import_source_text).icon}
-                  <p className={'text-xs leading-4 font-medium'}>{getSource(data.import_source_text).name}</p>
-                </div>
-                <p className="text-xs leading-4 font-normal">{data.summary}</p>
-              </div>
-            </TooltipComponent>
-          ) : (
-            <></>
-          )}
-        </div>
-      )}
+
       <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
         {data.image && data.image !== null ? (
           <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400" src={data.image} />
@@ -109,7 +81,38 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
           {data.name} {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
         </div>
         {data.email && (
-          <div title={data.email} className="ellipsis-email text-gray-500 font-medium xl:min-w-[180px] lg:w-[120px]">
+          <div
+            title={data.email}
+            className="ellipsis-email text-gray-500 font-medium xl:min-w-[180px] lg:w-[120px] flex ">
+            {inCategorization && (
+              <div className={'flex items-center gap-1.5 flex-shrink-0 mr-1'}>
+                <div>
+                  <div className={'h-2'}>{getSource(data.import_source_text).icon}</div>
+                </div>
+                {data.summary !== null ? (
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <InfoSharpIcon
+                        className={`text-gray3 hover:text-gray4 mt-1`}
+                        style={{ height: '15px', width: '15px' }}
+                        aria-hidden="true"
+                      />
+                    }>
+                    <div className={`max-w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                      <div className={`flex gap-1.5`}>
+                        {getSource(data.import_source_text).icon}
+                        <p className={'text-xs leading-4 font-medium'}>{getSource(data.import_source_text).name}</p>
+                      </div>
+                      <p className="text-xs leading-4 font-normal">{data.summary}</p>
+                    </div>
+                  </TooltipComponent>
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
             {data.email}
           </div>
         )}
