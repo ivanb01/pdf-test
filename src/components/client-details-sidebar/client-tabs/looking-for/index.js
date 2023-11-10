@@ -322,10 +322,8 @@ export default function LookingFor({ contactId, category }) {
                         </p>
                         <Button
                           className="p-0"
-                          label={
-                            category === 'Landlord' || category === 'Seller' ? 'Add Property Details' : 'Add Interests'
-                          }
-                          leftIcon={<PlusIcon />}
+                          buttonPadding={'px-0'}
+                          label={'Edit property details'}
                           primary
                           onClick={() => setShowAddPopup(true)}
                         />
