@@ -283,7 +283,7 @@ export default function LookingFor({ contactId, category }) {
         <AddLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
-          title="Edit Property Interests"
+          title="Add Property Interests"
           className="w-[580px]"
           handleClose={() => setShowAddPopup(false)}
         />
