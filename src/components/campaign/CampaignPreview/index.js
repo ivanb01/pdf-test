@@ -177,17 +177,20 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                               </div>
                             </div>
                             <div className={'p-6 flex flex-col gap-[31px]'}>
-                              <div>
-                                <div className={'flex flex-col'}>
-                                  {activeEvent?.event_type === 'Email' && (
-                                    <span className={'text-[11px] leading-4 font-normal text-gray4 mb-3'}>
-                                      Sent from:{user?.email ? user?.email : user}{' '}
-                                    </span>
-                                  )}
+                              {activeEvent?.event_type === 'Email' && (
+                                <div>
                                   <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
-                                    SUBJECT
+                                    SENT FROM
                                   </span>
+                                  <p className={'text-sm leading-5 font-normal text-gray5'}>
+                                    {user?.email ? user?.email : user}
+                                  </p>
                                 </div>
+                              )}
+                              <div>
+                                <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
+                                  SUBJECT
+                                </span>
                                 <p className={'text-xl leading-7 font-medium text-gray8'}>
                                   {activeEvent?.preview?.preview?.subject}
                                 </p>
