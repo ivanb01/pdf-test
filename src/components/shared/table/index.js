@@ -1240,7 +1240,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.allContacts.data);
+    const contactsOriginal = data;
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
