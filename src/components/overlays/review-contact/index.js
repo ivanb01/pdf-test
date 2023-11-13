@@ -233,7 +233,7 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = values.selectedStatus;
+    const status_id = category_id == 3 ? 1 : values.selectedStatus;
 
     const category =
       values.selectedContactCategory === 0
@@ -305,11 +305,12 @@ const ReviewContact = ({
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
+      console.log(newData);
       if (newData.category_id === 3 && router.pathname.includes('details')) {
-        const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
-        const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
-
-        router.push(targetCategory);
+        // const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
+        // const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
+        // console.log(lowercaseCategory);
+        router.push('/contacts/trash');
       }
 
       // make changes to global state
