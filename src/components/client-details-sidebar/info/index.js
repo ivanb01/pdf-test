@@ -125,7 +125,7 @@ export default function Info({ client }) {
     <>
       {client && (
         <div className="px-6 py-3 flex flex-col  border-t border-gray-2">
-          {![2, 3, 13, 14].includes(client?.category_id) && (
+          {![1, 2, 3, 13, 14].includes(client?.category_id) && (
             <Dropdown
               label="Status"
               placeHolder="Choose"
