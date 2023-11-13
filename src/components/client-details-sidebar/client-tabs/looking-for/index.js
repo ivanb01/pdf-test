@@ -283,7 +283,7 @@ export default function LookingFor({ contactId, category }) {
         <AddLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
-          title="Add Property Interests"
+          title="Edit Property Interests"
           className="w-[580px]"
           handleClose={() => setShowAddPopup(false)}
         />
@@ -323,7 +323,7 @@ export default function LookingFor({ contactId, category }) {
                         <Button
                           className="p-0"
                           buttonPadding={'px-0'}
-                          label={'Edit property Interests'}
+                          label={'Edit Property Interests'}
                           primary
                           onClick={() => setShowAddPopup(true)}
                         />
