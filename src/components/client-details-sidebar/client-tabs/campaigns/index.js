@@ -65,7 +65,7 @@ export default function Campaigns({ contactId, contact }) {
       button: (
         <Button
           className="p-0"
-          label="Assign"
+          label="Start Campaign"
           leftIcon={<PlusIcon />}
           primary
           onClick={() => setShowAssignToCampaign(true)}
@@ -81,7 +81,7 @@ export default function Campaigns({ contactId, contact }) {
           white
           className="text-red5"
           leftIcon={<MinusCircleIcon className="text-red5" />}
-          label="Unassign"
+          label="Cancel Campaign"
           onClick={() => setShowUnassignFromCampaign(true)}
         />
       ),
