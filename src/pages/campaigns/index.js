@@ -17,6 +17,7 @@ import Mail from '@mui/icons-material/Mail';
 import { sortDateAsc } from 'global/functions';
 import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
+import { setExpandedMenu } from '@store/global/slice';
 
 Chart.register(ArcElement, ChartDataLabels);
 
