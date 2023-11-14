@@ -119,6 +119,9 @@ const Uncategorized = ({
       </>
     );
   };
+  useEffect(() => {
+    console.log('Test');
+  }, []);
 
   return (
     <>
@@ -179,7 +182,7 @@ const Uncategorized = ({
         <div
           className="w-auto relative flex"
           style={{
-            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 200px)'}`,
+            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 110px)'}`,
           }}>
           {categorizing ? (
             <CategorizePage
