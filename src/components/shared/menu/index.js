@@ -185,7 +185,7 @@ const MainMenu = ({ className, fixed }) => {
     <div
       className={`${
         fixed && 'fixed top-0 left-0 right-0'
-      } main-menu px-6 py-4 bg-oxford-gradient z-50 flex items-center justify-between`}>
+      } main-menu px-6 py-4 bg-oxford-gradient flex items-center justify-between z-[999]`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
           <Image
