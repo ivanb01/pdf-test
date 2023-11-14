@@ -1,0 +1,36 @@
+.button {
+  cursor: pointer;
+  border: 0;
+  flex-shrink: 0;
+  font-family: inherit;
+
+  &--primary {
+    color: #fff;
+    background-color: #3B82F6;
+    padding: 9px 17px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.10);
+  }
+
+  &--primary-light {
+    color: #6B7280;
+    background-color: #FFF;
+  }
+
+  &--secondary {
+    color: #fff;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    padding: 0;
+  }
+
+  &--disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+}

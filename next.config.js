@@ -18,7 +18,7 @@ module.exports = {
       },
       {
         source: '/',
-        destination: '/contacts',
+        destination: '/public/features',
         permanent: true,
       },
       {

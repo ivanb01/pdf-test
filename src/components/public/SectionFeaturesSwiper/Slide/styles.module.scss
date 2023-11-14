@@ -1,0 +1,42 @@
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 150px;
+  width: 100%;
+  height: 100%;
+
+  @media screen and (max-width: $screen-xl) {
+    padding-left: 280px;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    padding-left: 0;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    max-width: 50%;
+
+    p {
+      text-align: center;
+      max-width: 600px;
+      color: #6B7280;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 21px;
+    }
+
+    span {
+      display: block !important;
+
+      @media screen and (max-width: $screen-md) {
+        max-width: 100% !important;
+      }
+    }
+  }
+}
