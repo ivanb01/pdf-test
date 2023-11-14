@@ -48,6 +48,7 @@ const CategorizePage = ({
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
@@ -235,9 +236,11 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <div className={'pb-[50px]'}>
+                      <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          onMenuOpen={() => setIsMenuOpen(true)}
+                          onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"
                           onChange={(type) => {
                             console.log(type);
