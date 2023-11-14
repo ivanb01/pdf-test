@@ -7,7 +7,7 @@ import NotInCampaign from '../../../../public/images/campaign/notInCampaign.svg'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from 'next/router';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const CampaignCard = ({
   campaign_name,
@@ -62,7 +62,7 @@ const CampaignCard = ({
             </div>
             <div className={'flex gap-2 text-xs leading-5 font-medium text-gray6'}>
               <div className={'flex items-center gap-1'}>
-                <img src={InCampaing.src} className={'h-4 w-4'} />
+                <img src={InCampaing.src} className={'h-4 w-4'} alt={''} />
                 <span>{contact_assigned_count}</span>
               </div>
               <div className={'flex items-center gap-1'}>

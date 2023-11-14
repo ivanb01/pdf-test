@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaignsByCategory, getCampaignsUsers, getContactCampaignEventPreview } from '@api/campaign';
+import { getAllEvents, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 
@@ -41,7 +41,7 @@ const index = () => {
     if (CRMCampaigns === undefined) {
       getCampaignsByCategory('Client').then((res) => dispatch(setCRMCampaigns(res.data)));
     } else if (CRMCampaigns !== undefined) {
-      const campaigns = CRMCampaigns.campaigns.find((c) => c.campaign_id == id);
+      const campaigns = CRMCampaigns.campaigns.find((c) => c.campaign_id === id);
       setCampaignDetails(campaigns);
     }
   }, [CRMCampaigns, id]);
@@ -126,9 +126,6 @@ const index = () => {
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
-  useEffect(() => {
-    console.log(campaignData);
-  }, [campaignData]);
 
   const renderTable = (currentButton) => {
     switch (currentButton) {
@@ -183,7 +180,7 @@ const index = () => {
                   index === 2 ? 'border-r border-borderColor mr-1.5' : ''
                 }`}>
                 <div className={'flex gap-3 items-center justify-center'}>
-                  <img src={event.icon.src} className={'h-[30px] w-[30px]'} />
+                  <img src={event.icon.src} className={'h-[30px] w-[30px]'} alt={''} />
                   <span className="text-gray4 font-inter font-medium text-sm leading-5">{event.name}</span>
                 </div>
                 <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
