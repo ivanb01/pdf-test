@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuAlt2Icon } from '@heroicons/react/outline';
 import { InformationCircleIcon } from '@heroicons/react/solid';
 import Checkbox from 'components/shared/checkbox';
@@ -20,24 +20,25 @@ import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
 import { setRefetchCount, setRefetchData } from '@store/global/slice';
+import TooltipComponent from '@components/shared/tooltip';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { createPortal } from 'react-dom';
 
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
 
-const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  const contacts = useSelector((state) => state.contacts.clients);
-  const clients = useSelector((state) => state.contacts.clients);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
-
+  // const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
 
   const [filteredContacts, setFilteredContacts] = useState(
@@ -113,6 +114,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
   const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
   const [contactToModify, setContactToModify] = useState(null);
 
+  useEffect(() => {
+    setFilteredContacts(contacts);
+  }, [openedSubtab, contacts]);
   const handleChangeStatus = async (status, contact) => {
     try {
       if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -132,7 +136,6 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
     try {
       await unassignContactFromCampaign(contactToModify.campaign_id, contactToModify.id);
       await changeStatus(statusIdToUpdate, contactToModify);
-      console.log('unassin then change status');
 
       setChangeStatusModal(false);
     } catch (error) {
@@ -147,7 +150,6 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
       const foundStatus = categoryStatuses.find((status) => status.statuses.findIndex((s) => s.id === statusId) !== -1);
       const statusMainTitle = foundStatus ? foundStatus.statusMainTitle : null;
-      console.log('tesr', foundStatus);
       let statusName = foundStatus.statuses.find((foundstatus) => foundstatus.id == status).name;
 
       dispatch(
@@ -172,15 +174,17 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
 
   return (
     <div className="flex flex-col border-r border-gray2">
-      {addActivityPopup && (
-        <AddActivity
-          clientId={clientToModify.id}
-          className="min-w-[550px]"
-          title={`Add Activity`}
-          setAddActivityPopup={setAddActivityPopup}
-          handleClose={() => setAddActivityPopup(false)}
-        />
-      )}
+      {addActivityPopup &&
+        createPortal(
+          <AddActivity
+            clientId={clientToModify.id}
+            className="min-w-[550px]"
+            title={`Add Activity`}
+            setAddActivityPopup={setAddActivityPopup}
+            handleClose={() => setAddActivityPopup(false)}
+          />,
+          document.getElementById('modal-portal'),
+        )}
       {changeStatusModal && (
         <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
       )}
@@ -188,16 +192,17 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
           {healthLastCommunicationDate[categoryType][status?.name] > 0 && (
-            <div className="group relative cursor-pointer">
-              <InformationCircleIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
+            <TooltipComponent
+              side={'bottom'}
+              align={'start'}
+              triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
               <div
-                className={`group-hover:opacity-100 opacity-0 w-[360px] pointer-events-none ${
-                  status?.name === 'New Lead' ? 'left-0' : 'right-0'
-                } top-6 left-0 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700`}>
+                // style={{ width: '300px' }}
+                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                 <p className="mb-2">{`You must interact with these clients every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
-                    : `${healthLastCommunicationDate[categoryType][status?.name]} days`
+                    : healthLastCommunicationDate[categoryType][status?.name] + ' days'
                 } in order to maintain healthy communication.`}</p>
                 <p className="mb-2">Chip statuses of communication in cards represent:</p>
                 <div className="flex items-center justify-between">
@@ -211,7 +216,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </TooltipComponent>
           )}
         </div>
 
@@ -242,28 +247,41 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit }) => {
           )}
         </a>
       </div>
-      <SimpleBar
-        style={{
-          overflowX: 'hidden',
-          maxHeight: '100%',
-          height: 'calc(100vh - 224px) !important',
-        }}>
-        <div className="p-[16px] contact-column-custom-height">
-          {filteredContacts.map((contact, index) => (
-            <ContactCard
-              handleCardEdit={handleCardEdit}
-              handleCardClick={handleCardClick}
-              contact={contact}
-              key={index}
-              categoryType={categoryType}
-              addActivityPopup={addActivityPopup}
-              setAddActivityPopup={setAddActivityPopup}
-              handleAddActivity={handleAddActivity}
-              handleChangeStatus={handleChangeStatus}
-            />
-          ))}
+      {filteredContacts.filter(
+        (contact, index) => contact.status_id === status.id && contact.category_1.toLowerCase() === category,
+      ).length > 0 ? (
+        <SimpleBar
+          style={{
+            overflowX: 'hidden',
+            maxHeight: '100%',
+            height: 'calc(100vh - 224px) !important',
+          }}>
+          <div className="p-[16px] contact-column-custom-height">
+            {filteredContacts.map((contact, index) => {
+              if (contact.status_id === status.id && contact.category_1.toLowerCase() === category) {
+                return (
+                  <ContactCard
+                    handleCardEdit={handleCardEdit}
+                    handleCardClick={handleCardClick}
+                    contact={contact}
+                    key={index}
+                    categoryType={categoryType}
+                    addActivityPopup={addActivityPopup}
+                    setAddActivityPopup={setAddActivityPopup}
+                    handleAddActivity={handleAddActivity}
+                    handleChangeStatus={handleChangeStatus}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
+        </SimpleBar>
+      ) : (
+        <div className={'flex align-center justify-center text-center flex-col flex-1'}>
+          <p className={' text-xs leading-4 font-normal text-gray4'}>No Contacts</p>
         </div>
-      </SimpleBar>
+      )}
       {/* <div
         id="dropdown"
         className={`hidden z-50 w-48 bg-white rounded divide-y divide-gray-100 shadow fixed`}

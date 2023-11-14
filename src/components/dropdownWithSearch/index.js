@@ -1,19 +1,38 @@
 import Select from 'react-select';
-import { multiselectOptionsClients, multiselectOptionsProfessionals, tagsForProfessionals } from 'global/variables';
 
-const TagsInput = ({ onChange, label, value, typeOfContact }) => {
+const DropdownWithSearch = ({
+  options,
+  onChange,
+  label,
+  value,
+  typeOfContact,
+  isMulti,
+  onMenuOpen,
+  onMenuClose,
+  required,
+  ...props
+}) => {
   return (
-    <div className="w-full custom-chipinput-styles col-span-2">
-      {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+    <div className=" custom-chipinput-styles col-span-2">
+      {label && (
+        <div className="block text-sm font-medium text-gray6 mb-1">
+          {label}
+          {required && <span className="text-gray-500 ml-1">*</span>}
+        </div>
+      )}
       <Select
-        isMulti
+        {...props}
+        isMulti={isMulti}
         value={value}
-        options={multiselectOptionsClients}
+        onMenuOpen={onMenuOpen}
+        onMenuClose={onMenuClose}
+        options={options}
         onChange={onChange}
         styles={{
           input: (base) => ({
             ...base,
             input: {
+              fontSize: '14px !important',
               borderColor: 'transparent !important',
               '&:focus': {
                 borderColor: 'transparent !important',
@@ -30,6 +49,10 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
             ...base,
             borderRadius: '8px',
             borderColor: '#D1D5DB',
+          }),
+          singleValue: (base) => ({
+            ...base,
+            fontSize: '14px',
           }),
           multiValue: (base) => ({
             ...base,
@@ -50,25 +73,29 @@ const TagsInput = ({ onChange, label, value, typeOfContact }) => {
           menu: (base) => ({
             ...base,
             fontSize: '14px',
+            marginBottom: '100px',
+            borderRadius: 5,
           }),
           menuList: (base) => ({
             ...base,
+            borderRadius: 5,
             div: {
               backgroundColor: 'white',
             },
           }),
-          option: (base) => ({
+          option: (base, state) => ({
             ...base,
             backgroundColor: 'white',
+            color: 'black',
+            fontWeight: state.isSelected ? '600' : '400',
             '&:hover': {
               background: '#3B82F6 !important',
               color: 'white !important',
             },
           }),
-        }}
-      ></Select>
+        }}></Select>
     </div>
   );
 };
 
-export default TagsInput;
+export default DropdownWithSearch;

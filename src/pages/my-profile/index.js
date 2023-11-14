@@ -8,7 +8,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
 import { ShieldCheckIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
 import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
@@ -16,14 +16,26 @@ import Router from 'next/router';
 import aiIcon from '/public/images/ai-icon.svg';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
-import { getUserConsentForGoogleEmail } from '@api/google';
+import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
+import { clearData } from '@api/contacts';
+import toast from 'react-hot-toast';
+import ClearContacts from '@components/overlays/clear-all-contacts';
 
 const index = () => {
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
+  const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
+
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    if (hostname.includes('dev') || hostname === 'localhost') {
+      setShowDeleteFunctionality(true);
+    }
+  }, []);
 
   const consentGiven = () => {
     return userGaveConsent && userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts');
@@ -32,7 +44,7 @@ const index = () => {
   const activateGoogleConsent = async () => {
     setLoadingActivate(true);
     try {
-      const { data } = await getUserConsentForGoogleEmail();
+      const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
     } catch (error) {
       console.log('error occurredw with google import');
@@ -43,125 +55,14 @@ const index = () => {
     console.log('deactivate');
   };
 
-  // const importsSummary = [
-  //   {
-  //     id: 0,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 1,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 2,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 3,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 4,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 5,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 6,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 7,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 3,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 4,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 5,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 6,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  //   {
-  //     id: 7,
-  //     fileName: 'Oxford Contacts Template',
-  //     newRecords: 12,
-  //     updatedRecords: 5,
-  //     errorCount: 8,
-  //     uploadedDate: '04/28/2022',
-  //     uploadedTime: '10:45PM',
-  //   },
-  // ];
+  const deleteData = () => {
+    clearData().then((response) => {
+      toast.success('All data has been cleared, refreshing so that changes take effect!');
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    });
+  };
 
   const importsSummary = [];
 
@@ -215,12 +116,11 @@ const index = () => {
       <>
         <TopBar text="Account Management" />
         <div className="p-6">
-          <div className="font-medium">Connected Social Media Accounts</div>
-          <div className="text-sm text-gray-700 mt-6 mb-3">Smart Sync Contacts and Google Contacts from Gmail</div>
+          <div className="font-medium mb-6">Smart Sync Contacts and Google Contacts from Gmail</div>
           <div className=" w-fit rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
-              <div className=" mt-6 text-xs text-gray-500">
+              <div className="mt-6 text-xs text-gray-500">
                 With <strong>Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze each
                 contact's information, swiftly identifying their type, status, and most importantly, their interests.
               </div>
@@ -236,19 +136,27 @@ const index = () => {
               <Button
                 googleButton
                 loading={loadingActivate}
-                disabled={consentGiven()}
+                googleActivated={consentGiven()}
+                // disabled={consentGiven()}
                 onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
-                {consentGiven() ? 'Disconnect' : 'Connect'}
+                {consentGiven() ? 'Connected' : 'Connect'}
               </Button>
             </div>
           </div>
-          <hr className="my-6" />
-          <div className="font-medium">Delete Your Account</div>
-          <div className="text-sm text-gray-700 mt-1 mb-6">
-            By deleting your account, you will no longer be able to access any information within the platform or login
-            to Oneline.
-          </div>
-          <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} />
+          {showDeleteFunctionality && (
+            <>
+              <hr className="my-6" />
+              <div className="font-medium">Clear Your Contacts</div>
+              <div className="text-sm text-gray-700 mt-1 mb-6">
+                By clicking the button below, all contacts will be cleared from your account
+              </div>
+              <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
+            </>
+          )}
+          {showClearConfirmation && (
+            <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
+          )}
+          {/* <Button disabled white label="Delete Account" onClick={() => setShowDeleteAccountPopup(true)} /> */}
           {/* <Text h3 className="mb-1">
             Password
           </Text>
@@ -352,13 +260,13 @@ const index = () => {
 
 export default index;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }
 
 // export async function getServerSideProps(context) {
 

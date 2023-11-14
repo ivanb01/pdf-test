@@ -12,7 +12,7 @@ import TableRows from '@mui/icons-material/TableRows';
 import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
-import { multiselectOptionsClients, multiselectOptionsProfessionals } from 'global/variables';
+import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
 import GlobalAlert from 'components/shared/alert/global-alert';
 import {
   clientStatuses,
@@ -25,6 +25,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setClients } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
+import { setClientsFilters } from '@store/global/slice';
+import { ArrowRight } from '@mui/icons-material';
 
 const buttons = [
   {
@@ -37,24 +39,30 @@ const buttons = [
   },
 ];
 
-const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
+const Clients = ({
+  setShowAddContactOverlay,
+  onSearch,
+  handleCardEdit,
+  unapprovedContacts,
+  handleViewChange,
+  currentButton,
+}) => {
   const dispatch = useDispatch();
 
-  let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
-  const [filters, setFilters] = useState({});
+  const clientsFilters = useSelector((state) => state.global.clientsFilters);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(currentView);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredContacts, setFilteredContacts] = useState(contacts);
 
-  const handleViewChange = (viewId) => {
-    setCurrentButton(viewId);
-    localStorage.setItem('currentView', viewId);
-  };
+  useEffect(() => {
+    setFilteredContacts(contacts);
+  }, [contacts]);
+
   const tabs = [
     {
       title: 'CLIENT TYPES',
@@ -69,12 +77,12 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     },
     {
       title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'GmailAI', 'Gmail', 'Manually Added'],
-      value: 'import_source',
+      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
+      value: 'import_source_text',
     },
     {
       title: 'CLIENT STATUS',
-      content: allStatusesQuickEdit['clients'].map((item) => item.name),
+      content: allStatusesQuickEdit['clients'].map((item) => item.label),
       value: 'status_2',
     },
     {
@@ -83,7 +91,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
       value: 'is_in_campaign',
     },
     {
-      title: 'TAGS',
+      title: 'PRIORITY',
       content: multiselectOptionsClients.map((option) => option.label),
       value: 'tags',
     },
@@ -93,49 +101,81 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     'Not In Campaign': null,
   };
 
-  useEffect(() => {
-    if (contacts.length) {
-      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
+  function hasAnyProperties(obj) {
+    for (let prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        return true;
+      }
     }
-  }, [contacts]);
+    return false;
+  }
+
+  useEffect(() => {
+    if (contacts.length && !hasAnyProperties(clientsFilters)) {
+      dispatch(
+        setClients(
+          contacts.filter(
+            (contact) =>
+              contact.category_1 == 'Client' &&
+              contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+          ),
+        ),
+      );
+    }
+  }, [openedSubtab, clientsFilters]);
 
   const filterContacts = () => {
-    if (filtersCleared) {
-      dispatch(setClients(contacts.filter((contact) => contact.category_1 == 'Client')));
-      setFiltersCleared(false);
-      return;
-    }
-    let contactsState = contacts.filter((contact) => contact.category_1 == 'Client');
-    Object.keys(filters).map((key) => {
+    // if (filtersCleared && hasAnyProperties(clientsFilters)) {
+    //   dispatch(
+    //     setClients(
+    //       contacts.filter(
+    //         (contact) =>
+    //           contact.category_1 == 'Client' &&
+    //           contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+    //       ),
+    //     ),
+    //   );
+    //   setFiltersCleared(false);
+    //   return;
+    // }
+    let contactsState = contacts.filter(
+      (contact) =>
+        contact.category_1 == 'Client' &&
+        contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+    );
+    Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
-          filterLastCommuncationDate(contact[key], filters[key][0], contact.category_1, contact.status_2),
+          filterLastCommuncationDate(contact[key], clientsFilters[key][0], contact.category_1, contact.status_2),
         );
-      } else if (key == 'import_source' && filters['import_source'] == 'Manually Added') {
+      } else if (key == 'import_source_text' && clientsFilters['import_source_text'] == 'Manually Added') {
         contactsState = contactsState.filter(
           (contact) =>
-            contact.import_source != 'Google Contacts' &&
-            contact.import_source != 'GmailAI' &&
-            contact.import_source != 'Gmail',
+            contact.import_source_text != 'Google Contacts' &&
+            contact.import_source_text != 'Smart Sync A.I.' &&
+            contact.import_source_text != 'Gmail',
         );
       } else if (key == 'is_in_campaign') {
-        let booleanFilter = filters[key].map((filter) => campaignFilterMeaning[filter]);
+        let booleanFilter = clientsFilters[key].map((filter) => campaignFilterMeaning[filter]);
         contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
       } else {
         contactsState = contactsState.filter((contact) => {
           if (Array.isArray(contact[key])) {
-            return contact[key].reduce((accumulator, current) => accumulator || filters[key].includes(current), false);
+            return contact[key].reduce(
+              (accumulator, current) => accumulator || clientsFilters[key].includes(current),
+              false,
+            );
           }
-          return filters[key].includes(contact[key]);
+          return clientsFilters[key].includes(contact[key]);
         });
       }
     });
 
-    dispatch(setClients(contactsState));
+    setFilteredContacts(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
-    let filtersCopy = { ...filters };
+    let filtersCopy = { ...clientsFilters };
     if (filtersCopy[filterType]) {
       if (filtersCopy[filterType].includes(selectedFilter)) {
         filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
@@ -154,7 +194,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
     }
 
     // console.log('filters', filtersCopy)
-    setFilters(filtersCopy);
+    dispatch(setClientsFilters(filtersCopy));
 
     if (Object.keys(filtersCopy).length === 0) {
       setFiltersCleared(true);
@@ -162,15 +202,14 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   };
 
   const removeFilter = (filterToRemove, filterType) => {
-    let filtersCopy = { ...filters };
+    let filtersCopy = { ...clientsFilters };
 
     filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== filterToRemove);
     if (filtersCopy[filterType].length < 1) {
       delete filtersCopy[filterType];
     }
 
-    // console.log('filters', filtersCopy)
-    setFilters(filtersCopy);
+    dispatch(setClientsFilters(filtersCopy));
 
     if (Object.keys(filtersCopy).length === 0) {
       setFiltersCleared(true);
@@ -178,7 +217,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   };
 
   const getFilterCount = () => {
-    return clients.filter(
+    return filteredContacts.filter(
       (contact) =>
         contact.category_1 == 'Client' &&
         contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
@@ -187,7 +226,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
 
   useEffect(() => {
     filterContacts();
-  }, [filters]);
+  }, [clientsFilters, openedSubtab]);
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
@@ -201,7 +240,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             type="smart-sync"
           />
         )}
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
               {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
@@ -209,7 +248,9 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder="Search"
+                placeholder={
+                  `Search ` + clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle].toLowerCase()
+                }
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
@@ -239,16 +280,16 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             </div>
           </div>
         </div>
-        {Object.keys(filters).length > 0 && (
+        {Object.keys(clientsFilters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {getFilterCount()}
-                  {getFilterCount() ? ' result' : ' results'} for:
+                  {filteredContacts.length}
+                  {filteredContacts.length == 1 ? ' result' : ' results'} for:
                 </div>
-                {Object.keys(filters).map((key, index) =>
-                  filters[key].map((filter, i) => (
+                {Object.keys(clientsFilters).map((key, index) =>
+                  clientsFilters[key].map((filter, i) => (
                     <Chip
                       closable
                       removeChip={(filterToRemove) => removeFilter(filterToRemove, key)}
@@ -264,7 +305,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
                 className="flex flex-row items-center cursor-pointer"
                 onClick={() => {
                   setFiltersCleared(true);
-                  setFilters({});
+                  dispatch(setClientsFilters({}));
                 }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
@@ -284,13 +325,16 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <Column
-                  key={index}
-                  status={status}
-                  categoryType="clients"
-                  handleCardEdit={handleCardEdit}
-                  searchTerm={searchTerm}
-                />
+                <>
+                  <Column
+                    contacts={filteredContacts}
+                    key={index}
+                    status={status}
+                    categoryType="clients"
+                    handleCardEdit={handleCardEdit}
+                    searchTerm={searchTerm}
+                  />
+                </>
               ))}
             </div>
           </SimpleBar>
@@ -299,6 +343,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
+                  contacts={filteredContacts}
                   tableFor="contactsList"
                   categoryType="clients"
                   handleCardEdit={handleCardEdit}
@@ -316,16 +361,15 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
         className="top-[70px]"
         buttons={
           <>
-            {Object.values(filters).flat().length > 0 && (
-              <Button
-                white
-                label="Clear Filter"
-                onClick={() => {
-                  setFiltersCleared(true);
-                  setFilters({});
-                }}
-              />
-            )}
+            <Button
+              disabled={!Object.values(clientsFilters).flat().length > 0}
+              white
+              label="Clear Filter"
+              onClick={() => {
+                setFiltersCleared(true);
+                dispatch(setClientsFilters({}));
+              }}
+            />
             {/* <Button
               onClick={filterContacts}
               primary
@@ -336,7 +380,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             /> */}
           </>
         }>
-        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={filters} defaultOpen />
+        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
       </SlideOver>
     </>
   );

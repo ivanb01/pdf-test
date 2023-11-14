@@ -15,6 +15,7 @@ const Input = ({
   value,
   autocomplete,
   handleChange,
+  required,
   optional,
   flat,
   type = 'text',
@@ -23,6 +24,7 @@ const Input = ({
   placeholder = '',
   onKeyDown,
   onInput,
+  onBlur,
   onChange,
   iconBefore,
   iconAfter,
@@ -49,6 +51,7 @@ const Input = ({
           id={id}
           placeholder={placeholder}
           onInput={onInput}
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
@@ -70,6 +73,7 @@ const Input = ({
           id={id}
           placeholder={placeholder}
           onInput={onInput}
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
@@ -94,6 +98,7 @@ const Input = ({
           placeholder={placeholder}
           onInput={onInput}
           onChange={onChange}
+          onBlur={onBlur}
           onKeyDown={onKeyDown}
           value={value}
           readOnly={saved || readonly}
@@ -368,7 +373,8 @@ const Input = ({
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
-          {label} {optional && <span className="text-gray3 ml-1">(optional)</span>}
+          {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
+          {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
       {secondaryLabel && (

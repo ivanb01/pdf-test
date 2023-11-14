@@ -18,12 +18,13 @@ const MultiStepOverlay = ({
   isSubmittingButton,
   className,
   hideHeader,
+  disabled,
 }) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
-  useEffect(() => {
-    setLoadingButton(isSubmittingButton);
-  }, [isSubmittingButton]);
+  // useEffect(() => {
+  //   setLoadingButton(isSubmittingButton);
+  // }, [isSubmittingButton]);
 
   return (
     <div className="flex items-center justify-center overflow-y-auto overflow-x-hidden fixed top-40 right-0 left-0 z-50 w-full md:inset-0 h-modal bg-overlayBackground">
@@ -35,9 +36,9 @@ const MultiStepOverlay = ({
             </Text>
             <Button closeButton onClick={handleClose}></Button>
           </div>
-          <div className="p-6">
+          <div>
             {!hideHeader && (
-              <nav aria-label="Progress" className="mb-10">
+              <nav aria-label="Progress" className="mb-10 p-6 pb-0">
                 <ol role="list" className="space-y-4 md:flex md:space-y-0 md:space-x-8">
                   {steps.map(
                     (step) =>
@@ -46,8 +47,7 @@ const MultiStepOverlay = ({
                           {currentStep >= step.id ? (
                             <a
                               href={step.href}
-                              className="group pl-4 py-2 flex flex-col border-l-4 border-lightBlue3 hover:border-lightBlue5 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
-                            >
+                              className="group pl-4 py-2 flex flex-col border-l-4 border-lightBlue3 hover:border-lightBlue5 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
                               <span className="text-xs text-lightBlue3 font-semibold tracking-wide uppercase group-hover:text-lightBlue5">
                                 Step {step.id}
                               </span>
@@ -56,8 +56,7 @@ const MultiStepOverlay = ({
                           ) : (
                             <a
                               href={step.href}
-                              className="group pl-4 py-2 flex flex-col border-l-4 border-gray-200 hover:border-gray-300 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
-                            >
+                              className="group pl-4 py-2 flex flex-col border-l-4 border-gray-200 hover:border-gray-300 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4">
                               <span className="text-xs text-gray-500 font-semibold tracking-wide uppercase group-hover:text-gray6">
                                 Step {step.id}
                               </span>
@@ -81,8 +80,7 @@ const MultiStepOverlay = ({
                   secondary
                   leftIcon={<ArrowLeftIcon height={15} />}
                   className="mr-3"
-                  onClick={prevStep}
-                ></Button>
+                  onClick={prevStep}></Button>
               )}
             </div>
             <div>
@@ -92,19 +90,18 @@ const MultiStepOverlay = ({
                   label="Next"
                   rightIcon={<ArrowRightIcon height={15} />}
                   loading={isSubmittingNextButton}
-                  onClick={nextStep}
-                ></Button>
+                  onClick={nextStep}></Button>
               )}
               {currentStep == steps.length && (
                 <Button
                   label="Save"
                   loading={loadingButton}
+                  disabled={disabled}
                   // rightIcon={<ArrowRightIcon height={15} />}
                   onClick={() => {
-                    // setLoadingButton(true);
+                    setLoadingButton(true);
                     submit();
-                  }}
-                ></Button>
+                  }}></Button>
               )}
             </div>
           </div>

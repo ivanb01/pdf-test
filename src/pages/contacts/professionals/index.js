@@ -1,7 +1,7 @@
 import Layout from 'components/Layout';
 import Professionals from 'components/Contacts/professionals-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab, setRefetchData } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setRefetchData, setExpandedTab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
@@ -12,6 +12,7 @@ import { searchContacts } from 'global/functions';
 import EditContactOverlay from 'components/overlays/edit-client';
 import { types } from 'global/variables';
 import ReviewContact from '@components/overlays/review-contact';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const refetchData = useSelector((state) => state.global.refetchData);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
     dispatch(setProfessionals(filteredArray.data));
@@ -48,8 +49,6 @@ const index = () => {
     setProfessionalsCopy(professionals);
     setLoading(false);
     dispatch(setOpenedTab(1));
-    console.log(professionals, 'professionals');
-    // dispatch(setOpenedSubtab(0));
   };
 
   useEffect(() => {
@@ -75,6 +74,9 @@ const index = () => {
           <Professionals
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchProfessionals}
+            unapprovedContacts={
+              unapprovedContacts?.data.filter((contact) => contact.category_1 !== 'Uncategorized').length
+            }
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);
@@ -105,12 +107,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

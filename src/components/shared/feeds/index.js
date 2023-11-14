@@ -1,6 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateAgo } from 'global/functions';
+import {
+  formatDate,
+  formatDateAgo,
+  formatDateCalendar,
+  formatDateLL,
+  formatDateStringMDY,
+  formatDateLThour,
+  formatDateMDY,
+} from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -18,6 +26,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
+import SimpleBar from 'simplebar-react';
+
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import Mail from '@mui/icons-material/Mail';
+import TooltipComponent from '@components/shared/tooltip';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -89,15 +102,16 @@ export default function Feeds({ contactId, activities, setActivities }) {
     setActivityId(activity.id);
     setActivityModal(true);
     const found = activityTypes.find((element) => element.id == activity.type_of_activity_id);
-    setActivityTypeToEdit(found.name);
+    setActivityTypeToEdit(found.label);
   };
 
   const handleUpdateActivity = async (values) => {
     setLoadingButton(true);
+    let todayDate = Date.now();
     try {
       const updatedActivity = activities.map((activity) => {
         if (activity.id === activityId) {
-          return { ...activity, ...values };
+          return { ...activity, ...values, updated_at: todayDate };
         }
         return activity;
       });
@@ -117,7 +131,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
     try {
       const filteredActivities = activities.filter((item) => item.id !== activity.id);
       dispatch(setActivityLogData(filteredActivities));
-      toast.success('Activity log was deleted successfully!');
+      toast.success('Activity was deleted successfully!');
       contactServices
         .deleteContactActivity(contactId, activity.id)
         .then(() => dispatch(setRefetchPart('activity-log')));
@@ -161,58 +175,94 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <div className="flow-root bg-white p-6 h-auto ">
-        <ul role="list" className="-mb-8">
-          {activities
-            ?.slice()
-            .sort((a, b) => b.id - a.id)
-            .map((activityItem, activityItemIdx) => (
-              <li key={activityItem.activityItemIdx}>
-                <div className="relative pb-8 flex justify-between">
-                  {activityItemIdx !== activities.length - 1 ? (
-                    <span
-                      style={{ zIndex: '0 !important' }}
-                      className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                  <div className="relative flex items-start space-x-3">
-                    <>
-                      <div className="relative">
-                        <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                          {activitiesTypes[activityItem.type_of_activity_id]}
-                        </div>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="mt-0.5 text-sm text-gray-500">
-                          {/* Commented 6d ago */}
-                          {formatDateAgo(activityItem.updated_at ? activityItem.updated_at : activityItem.created_at)}
-                        </p>
-
-                        <div className="mt-2 text-sm text-gray6">
-                          <p>
-                            {activityItem.description
-                              ? activityItem.description
-                              : placeholderDescription(activityItem.type_of_activity_id)}
-                          </p>
-                        </div>
-                      </div>
-                    </>
-                  </div>
-                  {activityItem.contact_id && (
-                    <div className="flex">
-                      <FilterDropdown
-                        types={types}
-                        icon={<More className="w-5" />}
-                        data={activityItem}
-                        positionClass="right-0"
+      <div className="bg-white pt-6">
+        <SimpleBar
+          style={{
+            height: '52vh',
+            paddingRight: '-10px',
+          }}
+          autoHide>
+          <ul role="list" className="-mb-8">
+            {activities
+              ?.slice()
+              .sort((a, b) => b.id - a.id)
+              .map((activityItem, activityItemIdx) => (
+                <li key={activityItemIdx}>
+                  <div className="relative pb-8 flex justify-between">
+                    {activityItemIdx !== activities.length - 1 ? (
+                      <span
+                        style={{ zIndex: '0 !important' }}
+                        className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                        aria-hidden="true"
                       />
+                    ) : null}
+                    <div className="relative flex items-start space-x-3">
+                      <>
+                        <div className="relative">
+                          <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                            {activitiesTypes[activityItem.type_of_activity_id] ?? (
+                              <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
+                            )}
+                          </div>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          {activityItem.created_at && (
+                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div className={'mr-3'}>
+                                    Created: {/* Commented 6d ago */}
+                                    {formatDateCalendar(activityItem.created_at)} -{' '}
+                                    {formatDateLThour(activityItem.created_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
+                              </TooltipComponent>
+                            </p>
+                          )}
+                          {activityItem.updated_at && (
+                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                              <TooltipComponent
+                                side={'right'}
+                                align="center"
+                                triggerElement={
+                                  <div>
+                                    Updated: {formatDateCalendar(activityItem.updated_at)} -{' '}
+                                    {formatDateLThour(activityItem.updated_at)}
+                                  </div>
+                                }>
+                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>
+                              </TooltipComponent>
+                              {/* Commented 6d ago */}
+                            </p>
+                          )}
+                          <div className="mt-2 text-sm text-gray6">
+                            <p>
+                              {activityItem.description
+                                ? activityItem.description
+                                : placeholderDescription(activityItem.type_of_activity_id)}
+                            </p>
+                          </div>
+                        </div>
+                      </>
                     </div>
-                  )}
-                </div>
-              </li>
-            ))}
-        </ul>
+                    {activityItem.contact_id && (
+                      <div className="flex mr-3">
+                        <FilterDropdown
+                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : [types[1]]}
+                          icon={<More className="w-5" />}
+                          data={activityItem}
+                          positionClass="right-0"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </SimpleBar>
       </div>
       {activityModal && (
         <Overlay className="w-[550px]" handleCloseOverlay={handleCloseModal} title="Edit Activity">

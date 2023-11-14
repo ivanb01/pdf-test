@@ -13,15 +13,14 @@ const DropdownNoInput = ({ options, handleSelect, selectedOption }) => {
       {options?.map((option) => (
         <div
           className={`cursor-pointer block hover:bg-lightBlue1 p-2 py-2 pl-3 pr-9 ${
-            option.name == selectedOption && 'bg-lightBlue1 font-medium'
+            option.label == selectedOption && 'bg-lightBlue1 font-medium'
           }`}
           onClick={() => {
             handleSelect(option);
-            console.log(option.name, selectedOption);
+            console.log(option.label, selectedOption);
           }}
-          key={option.id}
-        >
-          {option.name}
+          key={option.id}>
+          {option.label}
         </div>
       ))}
     </div>

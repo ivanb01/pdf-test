@@ -1,12 +1,27 @@
 import Select from 'react-select';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 
-const SearchSelectInput = ({ onChange, label, value, defaultValue, options, error, errorText }) => {
+const SearchSelectInput = ({
+  className,
+  placeholder,
+  onChange,
+  label,
+  value,
+  optional = false,
+  defaultValue,
+  options,
+  error,
+  errorText,
+}) => {
   return (
-    <div className="w-full custom-chipinput-styles col-span-2">
-      {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+    <div className={`w-full custom-chipinput-styles col-span-2 ${className}`}>
+      <div className={'flex'}>
+        {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+        {optional && <div className={'text-gray-500 ml-1'}>*</div>}
+      </div>
       <Select
         defaultValue={defaultValue}
+        placeholder={placeholder}
         isMulti
         value={value}
         options={options}
@@ -66,8 +81,7 @@ const SearchSelectInput = ({ onChange, label, value, defaultValue, options, erro
               color: 'white !important',
             },
           }),
-        }}
-      ></Select>
+        }}></Select>
       {error && errorText && (
         <NotificationAlert className="mt-2 p-2" type={'error'}>
           {errorText}

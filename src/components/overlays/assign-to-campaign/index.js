@@ -11,7 +11,7 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
   let subtitle = '';
   let image = img;
   if (!contacts) {
-    title = 'Assigning to Campaign';
+    title = 'Starting Campaign';
     subtitle =
       'Contacts can easily be assigned to campaigns based on their stage in the sales process and type of contact. These campaigns help you stay engaged and connected with your clients.';
   } else if (contacts.first_name) {
@@ -30,7 +30,7 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
       <div className="p-[24px]">
         <div className="">
           <div className="">
-            <div className="text-center">
+            <div className="text-center flex items-center justify-center">
               <Image src={image} alt="header-img" height={180} width={180} />
             </div>
             <Text h2 className="text-gray7 justify-center mb-2">
@@ -49,9 +49,8 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
                 onClick={() => {
                   setLoadingButton(true);
                   onSubmit();
-                }}
-              >
-                Assign to Campaign
+                }}>
+                Start Campaign
               </Button>
             </div>
           </div>

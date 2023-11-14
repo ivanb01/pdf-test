@@ -3,6 +3,8 @@ import { ChevronRightIcon } from '@heroicons/react/solid';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import googleLogo from '/public/images/googleicon.svg';
+import check from '/public/images/check.svg';
+import checkMenu from '/public/images/check-menu.svg';
 
 const Button = ({
   title,
@@ -27,6 +29,7 @@ const Button = ({
   closeButton,
   bigButton,
   googleButton,
+  googleActivated,
   secondaryDanger,
   rounded,
   special,
@@ -35,6 +38,7 @@ const Button = ({
   narrow,
   color,
   transparent,
+  success,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
@@ -74,8 +78,8 @@ const Button = ({
   const googleBtn = () => {
     return (
       <a
-        className={`${
-          disabled && 'pointer-events-none opacity-50'
+        className={`${disabled && 'pointer-events-none opacity-50'} ${googleActivated && 'pointer-events-none'} ${
+          googleActivated && 'border-green-500 bg-green-50'
         } flex cursor-pointer border border-gray-300 rounded-[4px] min-w-[130px] justify-center items-center`}
         title="Coming Soon: We're actively developing this feature and it will be available shortly. Thank you for your patience."
         onClick={onClick}>
@@ -85,11 +89,16 @@ const Button = ({
           </div>
         ) : (
           <>
-            <div className="flex justify-center items-center p-[10px] border-r">
+            <div
+              className={`flex justify-center items-center p-[10px] border-r ${googleActivated && 'border-green-500'}`}>
               <img src={googleLogo.src} alt="" className="object-cover" />
             </div>
-            <div className="min-w-[90px] flex justify-center items-center p-[10px] px-4 text-gray-700 font-medium text-sm">
+            <div
+              className={`min-w-[90px] flex justify-center items-center p-[10px] px-4 ${
+                googleActivated && 'text-green-600'
+              } font-medium text-sm`}>
               {label ? label : children}
+              {googleActivated && <img className="ml-2 h-[18px] w-[18px]" src={check.src} />}
             </div>
           </>
         )}
@@ -99,11 +108,14 @@ const Button = ({
   const narrowButton = () => {
     return (
       <button
-        onClick={onClick}
+        onClick={!success ? onClick : console.log('all categorized')}
         type="button"
-        className={`${className} flex group items-center justify-between cursor-pointer rouded-xl bg-white text-lightBlue3 rounded-full text-sm px-3 py-1`}>
+        className={`${className} font-medium flex group items-center justify-between cursor-pointer rouded-xl ${
+          success ? 'bg-green-50 text-[#059669]' : 'bg-white text-lightBlue3'
+        }  rounded-full text-sm px-3 py-1`}>
+        {success && <img className="h-[17px] w-[17px] mr-1" src={checkMenu.src} />}
         {children ? children : label}
-        <ArrowForward className=" h-4 group-hover:translate-x-1 transition-all" />
+        {!success && <ArrowForward className=" h-4 group-hover:translate-x-1 transition-all" />}
       </button>
     );
   };
@@ -176,7 +188,9 @@ const Button = ({
         type="button"
         className={`${
           active ? 'bg-lightBlue1 text-lightBlue5 border-lightBlue3' : 'bg-gray1'
-        } border transition-all cursor-pointer py-2 px-[15px] uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
+        } border  transition-all cursor-pointer ${
+          size === 'small' ? 'px-2 py-1' : 'py-2 px-[15px]'
+        } uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
         onClick={onClick}>
         {children ? children : label}
       </button>

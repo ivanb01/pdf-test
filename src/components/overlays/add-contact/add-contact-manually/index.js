@@ -11,12 +11,12 @@ import { IdentificationIcon } from '@heroicons/react/solid';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import Dropdown from 'components/shared/dropdown';
-import TagsInput from 'components/tagsInput';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 // import * as contactServices from 'api/contacts';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
-import { setContacts } from 'store/contacts/slice';
+import { addContactLocally, setContacts, updateContactLocally } from 'store/contacts/slice';
 import {
   leadSourceOptions,
   phoneNumberRules,
@@ -98,6 +98,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       last_name: '',
       email: '',
       phone_number: '',
+      import_source: 'Manually Added',
       lead_source: '',
       tags: [],
     },
@@ -164,10 +165,10 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
         status_id: formik2.values.selectedStatus,
       };
 
-      console.log('contact to add: ', contactToAdd);
+      dispatch(addContactLocally(contactToAdd));
 
-      const res = await addContact(contactToAdd);
-      const { data } = await getContacts(categoryIds[selectedContact]);
+      const res = addContact(contactToAdd);
+      const { data } = getContacts(categoryIds[selectedContact]);
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
@@ -202,8 +203,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       title={title}
       submit={submitForm2}
       isSubmittingNextButton={isSubmitting1}
-      isSubmittingButton={isSubmitting2}
-    >
+      isSubmittingButton={isSubmitting2}>
       <div className="step">
         {currentStep == 1 ? (
           <div>
@@ -234,6 +234,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
               <form onSubmit={formik.handleSubmit}>
                 <div className="grid grid-cols-2 gap-4 mb-12">
                   <Input
+                    optional
                     type="text"
                     label="First Name"
                     id="first_name"
@@ -288,9 +289,9 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     initialSelect={formik.values.lead_source}
                     placeHolder={'Choose'}
                   />
-                  <TagsInput
+                  <DropdownWithSearch
                     typeOfContact={selectedContact}
-                    label="Tags"
+                    label="Priority"
                     onChange={(choice) => {
                       formik.setFieldValue(
                         'tags',

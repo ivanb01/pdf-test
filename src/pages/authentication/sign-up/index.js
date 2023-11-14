@@ -101,8 +101,7 @@ const SignUp = () => {
                 onChange={formik.handleChange}
                 value={formik.values.tenantTier}
                 id="tenantTier"
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              >
+                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                 <option selected>Select one...</option>
                 <option value="Basic">Basic</option>
                 <option value="Standard">Standard</option>
@@ -130,10 +129,10 @@ const SignUp = () => {
 
 export default SignUp;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

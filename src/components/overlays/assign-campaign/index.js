@@ -11,16 +11,15 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit, loading })
       <div className="p-[24px] text-center">
         <div className="h-[235px] mx-auto">
           <lottie-player
-            src="https://assets1.lottiefiles.com/packages/lf20_kdx6cani.json"
+            src="/animations/assign.json"
             background="transparent"
             speed="1"
             style={{ width: '100%', height: '100%' }}
             loop
-            autoplay
-          ></lottie-player>
+            autoplay></lottie-player>
         </div>
         <Text h2 className="max-w-xs mx-auto mb-3 leading-[1.4] mt-6 justify-center">
-          Assigning to Campaign
+          Starting Campaign
         </Text>
         <Text p className="text-gray4 max-w-xl mx-auto">
           Contacts can easily be assigned to campaigns based on their stage in the sales process and type of contact.

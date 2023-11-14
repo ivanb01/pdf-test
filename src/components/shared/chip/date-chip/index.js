@@ -1,7 +1,8 @@
 import Mail from '@mui/icons-material/Mail';
 import { healthLastCommunicationDate } from 'global/variables';
 import { isHealthyCommuncationDate, formatDateAgo, isValidDate, isToday } from 'global/functions';
-import moment from 'moment';
+import TooltipComponent from '@components/shared/tooltip';
+import React from 'react';
 
 export default function DateChip({
   className,
@@ -27,10 +28,31 @@ export default function DateChip({
     : 'No communication';
 
   return (
-    <div className={`${className} inline-flex rounded-full px-2 text-xs font-medium items-center ${styling}`}>
-      {/*the icon below depends from lastcommuncation category type */}
-      <Mail className="w-4 mr-1" />
-      <span>{lastCommunicationLabel} </span>
-    </div>
+    <TooltipComponent
+      side={'left'}
+      align="center"
+      triggerElement={
+        <div className={`${className} inline-flex rounded-full px-2 text-xs font-medium items-center ${styling}`}>
+          <Mail className="w-4 mr-1" />
+          <span>{lastCommunicationLabel} </span>
+        </div>
+      }>
+      <div style={{ width: '202px' }} className={`flex flex-col  gap-1.5`}>
+        <h6 className={' text-xs leading-4 font-medium'}>
+          Communication Health is {isHealthyCommunication ? 'good' : 'low'}!
+        </h6>
+        <p className={'text-xs leading-4 font-normal'}>
+          {healthLastCommunicationDate[contactCategory] && healthLastCommunicationDate[contactCategory][contactStatus]
+            ? isHealthyCommunication
+              ? 'You are doing a great job!'
+              : `It is recommended to communicate in this status every ${
+                  healthLastCommunicationDate[contactCategory.toLowerCase()][contactStatus] == 1
+                    ? 'day'
+                    : healthLastCommunicationDate[contactCategory.toLowerCase()][contactStatus] + ' days'
+                }.`
+            : null}
+        </p>
+      </div>
+    </TooltipComponent>
   );
 }

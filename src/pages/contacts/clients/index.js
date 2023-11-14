@@ -2,25 +2,27 @@ import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
 import {
-  setOpenedTab,
+  setExpandedTab,
   setOpenedSubtab,
+  setOpenedTab,
   setRefetchData,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setVendorSubtypes,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContacts, updateContacts, updateContact } from 'store/contacts/slice';
+import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
-import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
-import { CSSTransition } from 'react-transition-group';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
+import { getContactCategories } from '@api/contacts';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -39,7 +41,6 @@ const index = () => {
   const [loading, setLoading] = useState(true);
 
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
-
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchData = useSelector((state) => state.global.refetchData);
@@ -50,7 +51,6 @@ const index = () => {
     try {
       const response = await getUnapprovedContacts();
       dispatch(setUnapprovedContacts(response.data));
-      console.log(response.data);
     } catch (error) {
       console.log('error msg', error.message);
     }
@@ -73,11 +73,10 @@ const index = () => {
     setContactsCopy(clients);
     setLoading(false);
     dispatch(setOpenedTab(0));
-    // dispatch(setOpenedSubtab(0));
   };
   useEffect(() => {
     setLoading(true);
-    if (allContacts.data) {
+    if (allContacts?.data) {
       fetchClients();
     }
   }, [allContacts]);
@@ -90,6 +89,20 @@ const index = () => {
     }
   }, [refetchData]);
 
+  // useEffect(() => {
+  // }, [])
+  const [currentButton, setCurrentButton] = useState(0);
+
+  useEffect(() => {
+    let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
+    setCurrentButton(currentView);
+  }, []);
+
+  const handleViewChange = (viewId) => {
+    setCurrentButton(viewId);
+    localStorage.setItem('currentView', viewId);
+  };
+
   useEffect(() => {
     const queryParams = {};
     for (const [key, value] of Object.entries(router.query)) {
@@ -99,12 +112,20 @@ const index = () => {
       if (queryParams?.code && queryParams?.prompt == 'consent') {
         setActivatingSmartSync(true);
         setShowSmartSyncOverlay(true);
-        getGoogleAuthCallback(queryParams, '/contacts/clients').then(() => {
-          getUserConsentStatus().then((results) => {
-            setActivatingSmartSync(false);
-            dispatch(setUserGaveConsent(results.data.scopes));
+        getGoogleAuthCallback(queryParams, '/contacts/clients')
+          .then(() => {
+            getUserConsentStatus()
+              .then((results) => {
+                setActivatingSmartSync(false);
+                dispatch(setUserGaveConsent(results.data.scopes));
+              })
+              .catch((error) => {
+                console.log(error, 'error');
+              });
+          })
+          .catch((error) => {
+            console.log(error, 'error');
           });
-        });
       }
     }
   }, [router.query]);
@@ -133,6 +154,8 @@ const index = () => {
             />
           )}
           <Clients
+            currentButton={currentButton}
+            handleViewChange={handleViewChange}
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);
@@ -143,6 +166,13 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
+          {currentButton == 0 && (
+            <div class="arrow pointer-events-none">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          )}
         </>
       )}
       {showAddContactOverlay && (
@@ -172,12 +202,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

@@ -5,34 +5,36 @@ import { useState, useEffect } from 'react';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { getContacts } from 'api/contacts';
 import Loader from 'components/shared/loader';
-import { getStatuses } from 'api/categorize';
 import { setContacts } from 'store/contacts/slice';
 import { searchContacts } from 'global/functions';
 import dynamic from 'next/dynamic';
+import { useRef } from 'react';
+import withAuth from '@components/withAuth';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 
 const index = () => {
+  const hasRun = useRef(false);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [categorizing, setCategorizing] = useState(false);
+  const [categorizing, setCategorizing] = useState(true);
   const [uncategorizedContactsOriginal, setUncategorizedContactsOriginal] = useState([]);
   const [uncategorizedContacts, setUncategorizedContacts] = useState([]);
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
   const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
   const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
-    console.log(contact, event.target.checked);
-    let row = document.querySelector('#row_' + event.target.id.split('_')[1]);
-    if (event.target.checked) {
+    let row = document.querySelector('#row_' + event?.target.id.split('_')[1]);
+    if (event?.target.checked) {
       row.classList.add('bg-lightBlue1');
       setSelectedUncategorized((prevState) => [...prevState, contact]);
     } else {
@@ -41,6 +43,19 @@ const index = () => {
       setSelectedUncategorized(newUncategorized);
     }
   };
+
+  useEffect(() => {
+    if (selectedUncategorized.length) {
+      let contact = selectedUncategorized[0];
+      let indexOf = uncategorizedContacts.indexOf(contact);
+      if (indexOf > 5) {
+        document.getElementById('row_' + indexOf).scrollIntoView({
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [selectedUncategorized]);
+
   const handleStartCategorizing = (value) => {
     if (value) {
       document.querySelector('.main-menu-wrapper').style.display = 'none';
@@ -58,7 +73,6 @@ const index = () => {
   };
 
   const handleFetchUncategorized = () => {
-    console.log(allContacts);
     let uncategorized = {
       ...allContacts,
       data: allContacts?.data?.filter((contact) => contact.category_id == 1),
@@ -70,9 +84,9 @@ const index = () => {
     //   console.log(data.data, uncategorized);
     // });
 
-    let contacts = uncategorized.data.filter((element) => element.category_id == openedSubtab + 1);
+    let contacts = uncategorized.data;
     setUncategorizedContacts(contacts);
-    dispatch(setOpenedTab(2));
+    dispatch(setOpenedTab(4));
     // dispatch(setOpenedSubtab(0));
   };
 
@@ -83,11 +97,14 @@ const index = () => {
       setCategorizing(true);
     }
   }, [router.query.categorize]);
+
   useEffect(() => {
-    if (allContacts.data) {
+    if (!hasRun.current && allContacts.data) {
       handleFetchUncategorized();
+      hasRun.current = true;
     }
-  }, [allContacts]);
+  }, [allContacts.data, uncategorizedContactsOriginal]);
+
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
   //     (element) => element.category_id == openedSubtab + 1
@@ -96,6 +113,11 @@ const index = () => {
   //   console.log('uncategorized cont', uncategorizedContactsOriginal);
   //   setUncategorizedContacts(contacts);
   // }, [openedSubtab]);
+
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
+
   return (
     <Layout>
       {loading ? (
@@ -108,6 +130,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
+            unapprovedContacts={unapprovedContactsLength}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}
@@ -125,12 +148,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

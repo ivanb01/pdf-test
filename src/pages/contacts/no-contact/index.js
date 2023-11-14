@@ -5,9 +5,13 @@ import ImportGoogleContacts from 'components/overlays/importing-from-gmail';
 import MainMenu from 'components/shared/menu';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback } from 'api/google';
+import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback, getUserConsentStatus } from 'api/google';
+import { setAllContacts } from '@store/contacts/slice';
+import { useDispatch } from 'react-redux';
+import { setUserGaveConsent } from '@store/global/slice';
 
 const NoContactPage = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const [showAddContactManuallyOverlay, setShowAddContactManuallyOverlay] = useState(false);
@@ -71,6 +75,14 @@ const NoContactPage = () => {
         setModalList(list3);
         setMotionImage(true);
         setTimeout(() => handleImportGoogleContact(false), 4000);
+        getUserConsentStatus()
+          .then((results) => {
+            dispatch(setUserGaveConsent(results.data.scopes));
+          })
+          .catch((error) => {
+            console.log(error, 'error');
+          });
+
         // handleImportGoogleContact();
       } else {
         setShowImportGoogleContactsModal(false);
@@ -93,7 +105,7 @@ const NoContactPage = () => {
         // } else {
       } else if (queryParams?.code) {
         setShowImportGoogleContactsModal(true);
-        setEmptyModal(true);
+        // setEmptyModal(true);
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -134,11 +146,7 @@ const NoContactPage = () => {
   return (
     <>
       <MainMenu />
-      {googleContactResponse?.db_insertion === 'Successful' ||
-      (googleContactResponse?.db_insertion === 'Not needed' &&
-        (googleContactResponse?.importable_new_contacts_count > 0 ||
-          googleContactResponse?.invalid_contacts_count > 0 ||
-          googleContactResponse?.existing_contacts.length > 0)) ? (
+      {googleContactResponse?.importable_new_contacts_count > 0 || googleContactResponse?.invalid_contacts_count > 0 ? (
         <div className="w-full flex items-center justify-center">
           <div className="border-t border-gray2 flex  w-full">
             <div className="w-full relative">
@@ -148,7 +156,7 @@ const NoContactPage = () => {
         </div>
       ) : (
         <>
-          <div className="layout-fixed-height w-full flex items-center justify-center pt-[68px] overflow-y-scroll">
+          <div className="layout-fixed-height w-full flex items-center justify-center overflow-y-scroll">
             <SetupGmail
               error={errorImporting}
               setshowAddContactManuallyOverlay={setShowAddContactManuallyOverlay}
@@ -163,7 +171,7 @@ const NoContactPage = () => {
           )}
         </>
       )}
-      {showImportGoogleContactsModal && (
+      {showImportGoogleContactsModal && stateAfterImport != 'Not needed' && (
         <ImportGoogleContacts
           handleCloseOverlay={handleCloseImportGoogleContactsModal}
           title="Importing Google Contacts"
@@ -179,10 +187,10 @@ const NoContactPage = () => {
 
 export default NoContactPage;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

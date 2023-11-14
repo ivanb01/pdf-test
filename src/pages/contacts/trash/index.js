@@ -9,6 +9,8 @@ import SimpleBar from 'simplebar-react';
 import Table from '@components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
 import { setOpenedTab } from 'store/global/slice';
+import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -16,12 +18,11 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
-
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   useEffect(() => {
-    dispatch(setOpenedTab(4))
+    dispatch(setOpenedTab(6));
   }, []);
-
 
   useEffect(() => {
     if (allContacts.data === undefined) {
@@ -39,6 +40,9 @@ const index = () => {
       onSearch(searchTerm);
     }
   }, []);
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
 
   const onSearch = (searchTerm) => {
     const filteredItems =
@@ -60,7 +64,13 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          <div className={'flex justify-between items-center p-6'}>
+          {unapprovedContactsLength > 0 && (
+            <GlobalAlert
+              message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+              type="smart-sync"
+            />
+          )}
+          <div className={'flex justify-between items-center p-6 py-4'}>
             <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
             <Search
               placeholder="Search"
@@ -77,6 +87,7 @@ const index = () => {
                 <Table
                   tableFor={'trash'}
                   data={onSearch(searchTerm)}
+                  searchTerm={searchTerm}
                   handleCardEdit={(contact) => {
                     setShowEditContact(true);
                     setContactToEdit(contact);
@@ -100,4 +111,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

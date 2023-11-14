@@ -1,23 +1,43 @@
 import {
-  types,
-  statuses,
   clientStatuses,
-  contactStatuses,
-  professionalsStatuses,
   filtersForLastCommunicationDate,
   healthLastCommunicationDate,
   multiselectOptionsClients,
   multiselectOptionsProfessionals,
+  professionalsStatuses,
+  types,
 } from './variables';
 import moment from 'moment';
-import { multiselectOptions } from './variables';
 
 export const getInitials = (name) => {
   // let fullName = name.split(' ');
-  let fullName = name.split(/\s+/);
+  let fullName = name?.split(/\s+/);
   return (fullName[0][0] + fullName[1][0]).toUpperCase();
 };
 
+export const formatDateStringMDY = (dateString) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${month} ${day}, ${year}`;
+};
 export const classNames = (...classes) => {
   return classes.filter(Boolean).join(' ');
 };
@@ -56,7 +76,7 @@ export const removeClientFromArray = (clientList, clientEmail) => {
   });
 };
 
-export const getContactTypeByTypeId = (typeId) => {
+export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
     allTypes.types.filter((type) => {
@@ -65,6 +85,10 @@ export const getContactTypeByTypeId = (typeId) => {
       }
     });
   });
+
+  if (!foundType) {
+    foundType = subtypes.find((subtype) => subtype.id == typeId).name;
+  }
   return foundType ? foundType : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
@@ -137,6 +161,13 @@ export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };
 
+export const formatPrice = (price) => {
+  return price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+};
+
 export const isValidDate = (date) => {
   return moment(date).isValid();
 };
@@ -150,7 +181,7 @@ export const dateBeforeDate = (date1, date2) => {
 };
 
 export const dateAfterDate = (date1, date2) => {
-  return moment(date1).isAfter(date2);
+  return moment(date1).isSameOrAfter(date2);
 };
 
 export const sortDateAsc = (array, arrayFieldName) => {
@@ -222,12 +253,12 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
   if (filterForDate === 'healthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
     const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
-    return isHealthyCommuncationDate(date, healthyCommunicationDays);
+    return isHealthyCommuncationDate(date);
   }
   if (filterForDate === 'unhealthy') {
     const contactType = `${categoryType.toLowerCase()}s`;
     const healthyCommunicationDays = healthLastCommunicationDate[contactType][status];
-    return !isHealthyCommuncationDate(date, healthyCommunicationDays);
+    return !isHealthyCommuncationDate(date);
   }
   if (filterForDate === 'today') {
     return isToday(date);
@@ -237,34 +268,36 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
   return moment(date).isSameOrBefore(filterDate);
 };
 
-export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
-  const healthyCommunicationDate = moment().startOf('date').subtract(healthyCommunicationDays, 'days');
-  const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+// export const isHealthyCommuncationDate = (date, healthyCommunicationDays) => {
+//   const healthyCommunicationDate = moment().startOf('date').subtract(healthyCommunicationDays, 'days');
+//   const isHealthyCommunication = dateAfterDate(date, healthyCommunicationDate);
+//
+//   return isHealthyCommunication;
+// };
 
-  return isHealthyCommunication;
+export const isHealthyCommuncationDate = (inputDate) => {
+  const inputDateTime = moment(inputDate);
+  const twoDaysAgo = moment().subtract(2, 'days');
+
+  return inputDateTime.isSameOrBefore(moment(), 'day') && inputDateTime.isSameOrAfter(twoDaysAgo, 'day');
 };
 
-export const findTagsOption = (selectedOptions, typeOfContact) => {
-  if (!selectedOptions) {
-    return null;
-  }
-  const options = selectedOptions.map((label) => {
-    const value = label;
-    let multiselectOptions = typeOfContact === 0 ? multiselectOptionsClients : multiselectOptionsProfessionals;
-    const option = multiselectOptions.find((option) => option.value === value);
+export const findTagsOption = (selectedOptions) => {
+  if (!selectedOptions) return null;
+
+  return selectedOptions.map((label) => {
+    const option = multiselectOptionsClients.find((option) => option.value === label);
     return {
-      value: value,
+      value: label,
       label: option ? option.label : label,
     };
   });
-  return options;
-  // return multiselectOptions.find((option) => option.label === selectedOption);
 };
 
 export const getEmailParts = (email) => {
   const atIndex = email.indexOf('@');
   const dotIndex = email.indexOf('.');
-  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or other domain extensions
+  const domain = email.slice(dotIndex + 1, email.length - 4); // Remove '.com' or family domain extensions
 
   let firstName = email.slice(0, atIndex);
   let lastName = email.slice(atIndex + 1, dotIndex);
@@ -294,4 +327,18 @@ export const getEmailParts = (email) => {
 
 export const findProfessionalSubtype = (id) => {
   return professionalsStatuses[0].statuses.find((status) => status.id == id).name;
+};
+
+export const valueOptions = (selectedOptions, multiselectOptions) => {
+  if (!selectedOptions) {
+    return null;
+  }
+  const options = selectedOptions.map((el) => {
+    return multiselectOptions.find((option) => option.value === el);
+  });
+  return options;
+};
+
+export const getBaseUrl = () => {
+  if (typeof window !== 'undefined') return window.location.origin;
 };

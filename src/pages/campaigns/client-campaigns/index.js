@@ -1,3 +1,4 @@
+import withAuth from '@components/withAuth';
 import ContactCampaigns from 'components/contact-campaigns';
 import { useState } from 'react';
 
@@ -21,23 +22,23 @@ const ClientCampaigns = () => {
       value: 'Seller',
       subtab: [],
     },
-    {
-      id: 3,
-      name: 'for Landlords',
-      value: 'Landlord',
-      subtab: [],
-    },
+    // {
+    //   id: 3,
+    //   name: 'for Landlords',
+    //   value: 'Landlord',
+    //   subtab: [],
+    // },
   ]);
 
   return <ContactCampaigns isClient campaigns={campaigns} />;
 };
 
-export default ClientCampaigns;
+export default withAuth(ClientCampaigns);
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

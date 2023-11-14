@@ -9,8 +9,8 @@ export default function ClientDetailsSidebar({ client }) {
   return (
     <div className="client-details-wrapper z-10 w-[550px]">
       <ClientCard client={client} />
-      <CategoryTypes client={client} />
-      <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 340px)' }}>
+      {/* <CategoryTypes client={client} /> */}
+      <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 313px)' }}>
         <Info client={client} className="w-[635px]" />
         {/* <Relationships contactId={client?.id} /> */}
       </SimpleBar>

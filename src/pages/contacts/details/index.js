@@ -8,9 +8,15 @@ import backArrow from '/public/images/back-arrow.svg';
 import Image from 'next/image';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
-import { getContactNotes, getContact, getContactActivities } from 'api/contacts';
+import { getContactNotes, getContact, getContactActivities, getContactLookingProperties } from 'api/contacts';
 import { getContactCampaign } from 'api/campaign';
-import { setActivityLogData, setNotesData, setCampaignsData } from 'store/clientDetails/slice';
+import {
+  setActivityLogData,
+  setNotesData,
+  setCampaignsData,
+  setLookingFor,
+  setLookingForData,
+} from 'store/clientDetails/slice';
 import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
@@ -27,22 +33,33 @@ export default function Details() {
   // const contact = contacts.find((contact) => contact.id == id);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [loadingTabs, setLoadingTabs] = useState(true);
-  const [aiData, setAIData] = useState(null);
   const [contact, setContact] = useState(null);
   const [fetchContactRequired, setFetchContactRequired] = useState(false);
   const [current, setCurrent] = useState(0);
-
   const localTabs = tabs(id, contact);
 
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
-      toast.error('Error fetching activity log: ', error);
+      console.log(error);
+      toast.error('Error fetching activity');
     });
-    const activityLogData = activityLogResponse.data;
+    const activityLogData = activityLogResponse?.data;
     dispatch(setActivityLogData(activityLogData.data));
   };
   const getContactData = () => {
     getContact(id).then((result) => setContact(result.data));
+  };
+
+  const getLookingFor = () => {
+    getContactLookingProperties(id)
+      .then((propertiesResponse) => {
+        const propertiesData = propertiesResponse.data;
+        dispatch(setLookingForData(propertiesData.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching looking for');
+      });
   };
   const getNotes = () => {
     getContactNotes(id)
@@ -51,7 +68,8 @@ export default function Details() {
         dispatch(setNotesData(notesData.data));
       })
       .catch((error) => {
-        toast.error('Error fetching notes:', error);
+        console.log(error);
+        toast.error('Error fetching notes');
       });
   };
   const getCampaigns = () => {
@@ -61,28 +79,39 @@ export default function Details() {
         dispatch(setCampaignsData(campaignsData));
       })
       .catch((error) => {
-        toast.error('Error fetching campaigns:', error);
+        console.log(error);
+        toast.error('Error fetching campaigns');
       });
   };
-  const getAISummary = () => {
-    getAIData(id)
-      .then((result) => {
-        setAIData(result.data);
-        setShowReviewOverlay(true);
-      })
-      .catch((error) => {
-        toast.error('Error fetching ai summary:', error);
-      });
+  // const getAISummary = () => {
+  //   getAIData(id)
+  //     .then((result) => {
+  //       setAIData(result.data);
+  //       setShowReviewOverlay(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast.error('Error fetching ai summary');
+  //     });
+  // };
+  useEffect(() => {
+    if (contact?.import_source === 'GmailAI' && contact?.approved_ai !== true) {
+      setShowReviewOverlay(true);
+    }
+  }, [contact?.import_source, contact?.approved_ai]);
+  const resetData = () => {
+    dispatch(setNotesData(null));
+    dispatch(setCampaignsData(null));
+    dispatch(setActivityLogData(null));
   };
   const fetchContact = async () => {
+    resetData();
     let contactData = contacts.find((contact) => contact.id == id);
     setContact(contactData);
-    if (!contactData.approved_ai && contactData.import_source === 'GmailAI') {
-      getAISummary();
-    }
     await getActivityLog();
     setLoadingTabs(false);
     getCampaigns();
+    getLookingFor();
     getNotes();
   };
 
@@ -96,6 +125,9 @@ export default function Details() {
     } else if (refetchPart == 'campaigns') {
       getCampaigns();
       getContactData();
+      dispatch(setRefetchPart(null));
+    } else if (refetchPart == 'looking-for') {
+      getLookingFor();
       dispatch(setRefetchPart(null));
     }
   }, [refetchPart]);
@@ -111,12 +143,18 @@ export default function Details() {
       id && fetchContact();
     }
   }, [contacts, fetchContactRequired, id]);
-
   const [backUrl, setBackUrl] = useState(null);
   const tempUrl =
-    contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized' || contact?.category_1 === 'Other'
+    contact?.category_id === 14 || contact?.category_id === 13
+      ? 'family'
+      : contact?.category_2 === 'Uncategorized'
+      ? 'uncategorized'
+      : contact?.category_id === 2
+      ? 'unknown'
+      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized'
       ? contact?.category_1
       : `${contact?.category_1}s`;
+
   useEffect(() => {
     if (contact?.category_1) {
       setBackUrl(`/contacts/${tempUrl.toLowerCase()}`);
@@ -133,7 +171,17 @@ export default function Details() {
           redirectAfterMoveToTrash
           handleClose={() => setShowReviewOverlay(false)}
           title="Review AI Imported Contact"
-          client={aiData}
+          client={contact}
+        />
+      )}
+      {['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(contact?.import_source) && contact.approved_ai !== true && (
+        <ReviewContact
+          showToast
+          hideCloseButton
+          redirectAfterMoveToTrash
+          handleClose={() => setShowReviewOverlay(false)}
+          title="Review AI Imported Contact"
+          client={contact}
         />
       )}
       <div className="client-details-page-wrapper">
@@ -151,7 +199,12 @@ export default function Details() {
                 }}
                 className="items-center flex">
                 <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">Back to {tempUrl}</div>
+                <div className="ml-2 font-medium">
+                  Back to{' '}
+                  {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
+                    ? 'Family & Friends'
+                    : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
+                </div>
               </a>
             </div>
             {id && (
@@ -176,13 +229,13 @@ export default function Details() {
   );
 }
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }
 
 // export const getStaticPaths = async () => {
 //   return {

@@ -19,20 +19,19 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
         <div className="flex py-6">
           <div className="w-1/2 text-center border-r border-gray-200 pr-6">
             <lottie-player
-              src="https://lottie.host/487b1374-b859-4451-ae1f-72a19db4ecaa/Zt3ZqjwYNm.json"
+              src="/animations/ssoverlay.json"
               background="transparent"
               speed="1"
               style={{ height: '120px' }}
               loop
-              autoplay
-            ></lottie-player>
+              autoplay></lottie-player>
             <div className="text-xs text-gray-500">
               With <strong>Smart Sync Contacts</strong>:<br /> Our intelligent AI algorithms intelligently analyze each
               contact's information, swiftly identifying their type, status, and most importantly, their interests.
             </div>
           </div>
           <div className="w-1/2 text-center pl-6">
-            <Image src={img2} alt="header-img" />
+            <Image src={img2} className="mx-auto" alt="header-img" />
             <div className="text-xs text-gray-500">
               With <strong>"Import Google Contacts"</strong>
               <br /> you will be able to import your contacts that are already in your "Google Contact" list.

@@ -1,6 +1,13 @@
 import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
+export const clearData = () => {
+  return axiosInstance.post('/profile/delete/my/data');
+};
+export const getContactCategories = () => {
+  return axiosInstance.get('contact/categories');
+};
+
 export const getCount = () => {
   return axiosInstance.get('contact/count/by_category');
 };
@@ -61,7 +68,7 @@ export const getContactNote = (id, note_id) => {
 };
 
 export const addContactNote = (id, note) => {
-  return axiosInstance.post(`contact/${id}/note`, note);
+  return axiosInstance.post(`contact/${id}/note`, { ...note, title: ' ' });
 };
 
 export const updateContactNote = (id, note_id, note) => {

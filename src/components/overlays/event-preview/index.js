@@ -8,6 +8,9 @@ import Loader from 'components/shared/loader';
 import Events from 'components/shared/events';
 import { useEffect } from 'react';
 import { getContactCampaignEventPreview, getAllEvents } from 'api/campaign';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import GlobalAlert from '@components/shared/alert/global-alert';
+import { useSelector } from 'react-redux';
 
 const EventPreview = ({
   topClass,
@@ -23,6 +26,7 @@ const EventPreview = ({
   const [events, setEvents] = useState(null);
   const [loadingEventPreview, setLoadingEventPreview] = useState(false);
   const [eventToPreview, setEventToPreview] = useState(null);
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
@@ -150,9 +154,11 @@ const EventPreview = ({
 
   useEffect(() => {
     if (campaignEvents) {
+      console.log(campaignEvents, 'campaignEvents', currentEvent, 'currentEvent');
       handleEventPreview();
     }
   }, [campaignEvents]);
+  const user = useSelector((state) => state.global.user);
 
   useEffect(() => {
     if (currentEvent) handleEventPreview();
@@ -162,14 +168,12 @@ const EventPreview = ({
     <Transition.Root show={showEventPreview} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setShowEventPreview}>
         <div className="fixed inset-0" />
-
         <div className="fixed inset-0 overflow-hidden">
           <div className={`absolute inset-0 overflow-hidden ${overlay && 'bg-[#42424280]'}`}>
             <div
               className={`pointer-events-none fixed ${topClass ? topClass : 'top-[222px]'} ${
                 overlay && ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
-              } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ${overlay && ' h-[550px]'}`}
-            >
+              } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ${overlay && ' h-[550px]'}`}>
               <Transition.Child
                 as={Fragment}
                 enter={`${!overlay && 'transform transition ease-in-out duration-500 sm:duration-700'} `}
@@ -177,92 +181,101 @@ const EventPreview = ({
                 enterTo="translate-x-0"
                 leave={`${!overlay && 'transform transition ease-in-out duration-500 sm:duration-700'} `}
                 leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
+                leaveTo="translate-x-full">
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-4xl">
                   <div
-                    className={`relative flex h-full flex-col overflow-y-auto bg-white shadow-xl border border-gray-300`}
-                  >
+                    className={`relative flex h-full flex-col overflow-y-auto bg-white shadow-xl border border-gray-300`}>
                     {loadingEventPreview ? (
                       <div className="relative w-full h-full">
                         <Loader />
                       </div>
                     ) : (
-                      <div className="flex h-full">
-                        <div className="bg-white border-gray2 border-r p-6 min-w-fit">
-                          <nav aria-label="Progress">
-                            <ol role="list" className="overflow-hidden">
-                              {campaignEvents?.events.map((event, eventIdx) => (
-                                <li
-                                  key={event.name}
-                                  className={classNames(
-                                    eventIdx !== campaignEvents.events.length - 1 ? 'pb-10' : '',
-                                    'relative',
-                                  )}
-                                >
-                                  <>
-                                    {eventIdx !== campaignEvents.events.length - 1 ? (
-                                      <div
-                                        className="absolute left-3.5 top-3.5 -ml-px mt-0.5 h-full w-0.5 bg-gray3"
-                                        aria-hidden="true"
-                                      />
-                                    ) : null}
-                                    <a
-                                      href={event.href}
-                                      className="group relative flex items-center"
-                                      // onClick={() =>
-                                      //   handleEventPreview(eventIdx)
-                                      // }
-                                      aria-current="step"
-                                    >
-                                      <span className="flex h-9 items-center" aria-hidden="true">
-                                        <span
-                                          className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 ${
-                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                              ? 'border-lightBlue3'
-                                              : 'border-gray3'
-                                          } bg-white`}
-                                        >
+                      <>
+                        <div className="flex flex-1">
+                          <div className="bg-white border-gray2 border-r p-6  h-full">
+                            <nav aria-label="Progress">
+                              <ol role="list" className="overflow-hidden">
+                                {campaignEvents?.events.map((event, eventIdx) => (
+                                  <li
+                                    key={eventIdx}
+                                    className={classNames(
+                                      eventIdx !== campaignEvents.events.length - 1 ? 'pb-10' : '',
+                                      'relative',
+                                    )}>
+                                    <>
+                                      {eventIdx !== campaignEvents.events.length - 1 ? (
+                                        <div
+                                          className="absolute -ml-px top-1.5 h-[210px] w-0.5 bg-gray3"
+                                          style={{ left: '18px' }}
+                                          aria-hidden="true"
+                                        />
+                                      ) : null}
+                                      <a
+                                        href={event.href}
+                                        className="group relative flex items-center"
+                                        // onClick={() =>
+                                        //   handleEventPreview(eventIdx)
+                                        // }
+                                        aria-current="step">
+                                        <span className="flex h-9 items-center" aria-hidden="true">
                                           <span
-                                            className={`h-3 w-3 rounded-full ${
-                                              `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                                ? 'bg-lightBlue3'
-                                                : 'bg-gray3'
-                                            }`}
-                                          />
+                                            className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white border-gray3`}>
+                                            <span
+                                              className={`h-5 w-5 rounded-full text-white text-xs bg-gray3 flex items-center justify-center`}>
+                                              {eventIdx + 1}
+                                            </span>
+                                          </span>
                                         </span>
-                                      </span>
-                                      <span
-                                        onClick={() => setCurrentEvent(eventIdx + 1)}
-                                        className={`${
-                                          `Event ${eventIdx + 1}` == eventInfo?.event_name && 'bg-lightBlue1 '
-                                        } ml-3 flex min-w-0 flex-col p-[10px] hover:bg-lightBlue1 w-full cursor-pointer`}
-                                      >
-                                        <span
-                                          className={`${
-                                            `Event ${eventIdx + 1}` == eventInfo?.event_name
-                                              ? 'font-bold'
-                                              : 'font-medium'
-                                          } text-xs text-gray7 uppercase`}
-                                        >
-                                          Event {eventIdx + 1}: {event.event_type}
-                                        </span>
-                                      </span>
-                                    </a>
-                                  </>
-                                </li>
-                              ))}
-                            </ol>
-                          </nav>
-                        </div>
 
-                        <div className="w-full">
-                          <div className="p-7 bg-gray10 border-b border-gray2 sm:px-6">
-                            <div className="flex items-start justify-between">
-                              <Dialog.Title className="w-full text-base font-semibold leading-6 text-gray-900">
-                                <div>
-                                  <div>{eventInfo?.event_name}</div>
-                                  {/* <div className="flex flex-row mt-5">
+                                        <span
+                                          onClick={() => setCurrentEvent(eventIdx + 1)}
+                                          className={`${
+                                            `Event ${eventIdx + 1}` == eventInfo?.event_name && 'bg-lightBlue1 '
+                                          } ml-3 flex  justify-between min-w-0 items-center p-[10px] hover:bg-lightBlue1 w-[350px]  cursor-pointer`}>
+                                          <div>
+                                            <span className={`font-bold text-xs text-gray7 uppercase`}>
+                                              {event.event_type}: {event.preview.preview.subject}
+                                            </span>
+                                            <br />
+                                            <span className={' text-gray-500 text-sm'}>
+                                              {' '}
+                                              {event?.execute_on?.includes('After')
+                                                ? event.execute_on
+                                                    .substring(event.execute_on.indexOf('After') + 5)
+                                                    .trim() + ' after added in Campaign'
+                                                : event?.execute_on}
+                                            </span>
+                                          </div>
+                                          <div>
+                                            <ArrowForwardIcon className={' text-lightBlue3 ml-3 '} />
+                                          </div>
+                                        </span>
+                                      </a>
+                                    </>
+                                  </li>
+                                ))}
+                              </ol>
+                            </nav>
+                          </div>
+
+                          <div className="w-full">
+                            <div className="p-7  border-b border-gray2 sm:px-6">
+                              <div className="flex items-start justify-between">
+                                <Dialog.Title className="w-full text-base  leading-6 text-gray-600">
+                                  <div>
+                                    <div className={'flex gap-1 mt-1'}>
+                                      <CalendarIcon className="text-gray4" height={20} />
+                                      <span className={'text-sm'}>
+                                        {campaignEvents?.events[currentEvent - 1]?.execute_on?.includes('After')
+                                          ? campaignEvents?.events[currentEvent - 1]?.execute_on
+                                              .substring(
+                                                campaignEvents.events[currentEvent - 1].execute_on.indexOf('After') + 5,
+                                              )
+                                              .trim() + ' after added in Campaign'
+                                          : campaignEvents?.events[currentEvent - 1]?.execute_on}
+                                      </span>
+                                    </div>
+                                    {/* <div className="flex flex-row mt-5">
                                     {isValidDate(
                                       eventInfo?.event_updated_at
                                     ) ? (
@@ -298,35 +311,34 @@ const EventPreview = ({
                                       </>
                                     )}
                                   </div> */}
+                                  </div>
+                                </Dialog.Title>
+                                <div className="ml-3 flex h-7 items-center">
+                                  <button
+                                    type="button"
+                                    className="rounded-md text-gray-400 hover:text-gray-500"
+                                    onClick={() => setShowEventPreview(false)}>
+                                    <span className="sr-only">Close panel</span>
+                                    <Close className="h-6 w-6" aria-hidden="true" />
+                                  </button>
                                 </div>
-                              </Dialog.Title>
-                              <div className="ml-3 flex h-7 items-center">
-                                <button
-                                  type="button"
-                                  className="rounded-md text-gray-400 hover:text-gray-500"
-                                  onClick={() => setShowEventPreview(false)}
-                                >
-                                  <span className="sr-only">Close panel</span>
-                                  <Close className="h-6 w-6" aria-hidden="true" />
-                                </button>
                               </div>
                             </div>
-                          </div>
-                          <div className="relative flex-1 p-6">
-                            <div className="text-2xl text-gray8 mb-7 font-medium">
-                              {eventToPreview?.preview?.subject}
+                            <div className="relative flex-1 p-6">
+                              <div className="text-2xl text-gray8 mb-7 font-medium">
+                                {eventToPreview?.preview?.subject}
+                              </div>
+                              <div
+                                className="text-sm text-gray5"
+                                dangerouslySetInnerHTML={{
+                                  __html: eventToPreview?.preview?.body_html
+                                    ? eventToPreview?.preview.body_html
+                                    : eventToPreview?.preview.message,
+                                }}></div>
                             </div>
-                            <div
-                              className="text-sm text-gray5"
-                              dangerouslySetInnerHTML={{
-                                __html: eventToPreview?.preview?.body_html
-                                  ? eventToPreview?.preview.body_html
-                                  : eventToPreview?.preview.message,
-                              }}
-                            ></div>
                           </div>
                         </div>
-                      </div>
+                      </>
                     )}
                   </div>
                 </Dialog.Panel>

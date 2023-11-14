@@ -12,9 +12,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
+import GlobalAlert from '@components/shared/alert/global-alert';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
+  const [searchKey, setSearchKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [familyAndFriends, setFamilyAndFriends] = useState(null);
   const [unknown, setUnknown] = useState(null);
@@ -22,10 +25,8 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
+  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
-  useEffect(() => {
-    console.log(actualContact, 'actualContact');
-  }, [actualContact]);
   const fetchOther = () => {
     let other = {
       ...allContacts,
@@ -41,56 +42,69 @@ const index = () => {
     dispatch(setContacts(other));
     setFamilyAndFriends(contactsFamilyFriends);
     setUnknown(contactsUnknown);
-    openedSubtab === 0 ? setActualContact(contactsFamilyFriends) : setActualContact(contactsUnknown);
+    setActualContact(contactsFamilyFriends);
     setLoading(false);
   };
 
   useEffect(() => {
     // setLoading(true);
-    if (allContacts.data) {
+    if (allContacts.data && !searchKey.length) {
       fetchOther();
     }
-    dispatch(setOpenedTab(3));
+    dispatch(setOpenedTab(5));
     // dispatch(setOpenedSubtab(0));
-  }, [allContacts]);
+  }, [allContacts.data]);
 
   useEffect(() => {
     if (allContacts.data) {
       fetchOther();
     }
-  }, [openedSubtab]);
+  }, []);
 
   const onSearch = (term) => {
-    const contactsCopy = openedSubtab === 0 ? familyAndFriends : unknown;
+    const contactsCopy = familyAndFriends;
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
+    console.log(term, filteredArray);
   };
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
 
   return (
     <Layout>
       {loading ? (
         <Loader />
-      ) : (openedSubtab == 0 && familyAndFriends?.length) || (openedSubtab == 1 && unknown?.length) ? (
+      ) : familyAndFriends?.length ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-            <div className="p-6 flex items-center justify-between">
+            {unapprovedContactsLength > 0 && (
+              <GlobalAlert
+                message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+                type="smart-sync"
+              />
+            )}
+            <div className="p-6 py-4 flex items-center justify-between">
               <div className="flex items-center justify-between w-full">
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'Family & Friends' : 'Unknown'}
+                  Family & Friends
                 </Text>
                 <div className="flex items-center justify-self-end">
                   <Search
                     placeholder="Search"
                     className="mr-4 text-sm"
-                    onInput={(event) => onSearch(event.target.value)}
+                    value={searchKey}
+                    onInput={(event) => {
+                      setSearchKey(event.target.value);
+                      onSearch(event.target.value);
+                    }}
                   />
                 </div>
               </div>
             </div>
-
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-                <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                <SimpleBar autoHide style={{ maxHeight: '100%', height: '100%' }}>
                   <Table tableFor="other" data={actualContact} />
                 </SimpleBar>
               </div>
@@ -100,14 +114,12 @@ const index = () => {
       ) : (
         <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
           <lottie-player
-            src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
+            src="/animations/family.json"
             loop
             autoplay
             style={{ width: '420px', height: '300px' }}></lottie-player>
           <Text h3 className="text-gray7 mt-4 mb-2 text-center">
-            {openedSubtab == 0
-              ? 'You have no contacts categorized as family and friends.'
-              : 'You have no contacts categorized as unknown.'}
+            You have no contacts categorized as family and friends.
           </Text>
         </div>
       )}
@@ -115,4 +127,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

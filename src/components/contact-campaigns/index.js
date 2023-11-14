@@ -23,8 +23,11 @@ import {
 import Loader from 'components/shared/loader';
 import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
+import { useDispatch } from 'react-redux';
+import { setExpandedMenu } from '@store/global/slice';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
+  const dispatch = useDispatch();
   const [showEventPreview, setShowEventPreview] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(1);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
@@ -44,8 +47,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(setExpandedMenu(true));
+  }, []);
   const handleSelectContact = (event, contact) => {
-    if (event.target.checked) {
+    if (event?.target.checked) {
       // add to array
       setSelectedContacts((prevState) => [...prevState, contact.email]);
     } else {
@@ -78,8 +85,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
     getCampaign(campaignId).then((data) => {
       setCurrentCampaign(data.data);
-      tabs[0].count = data.data.contacts_assigned_count;
-      tabs[1].count = data.data.contacts_never_assigned_count;
+      tabs[0].count = data.data.contacts_never_assigned_count;
+      tabs[1].count = data.data.contacts_assigned_count;
       tabs[2].count = data.data.contacts_unassigned_count;
       setLoading(false);
       localStorage.setItem('openCampaign', campaignId);
@@ -105,12 +112,12 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [tabs, setTabs] = useState([
     {
       id: 0,
-      name: 'In Campaign',
+      name: 'Not in Campaign',
       count: 0,
     },
     {
       id: 1,
-      name: 'Not in Campaign',
+      name: 'In Campaign',
       count: 0,
     },
     {
@@ -173,9 +180,9 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
     console.log('testing');
     const contactsInCurrentCampaign =
       currentButton == 0
-        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
-        : currentButton == 1
         ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'never_assigned')
+        : currentButton == 1
+        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
         : currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'unassigned');
 
     const filteredArr = handleSearch(searchTerm, contactsInCurrentCampaign);
@@ -302,10 +309,10 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
 export default ContactCampaigns;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

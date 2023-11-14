@@ -1,12 +1,15 @@
 // import Accordion from 'components/shared/accordion';
 import Input from 'components/shared/input';
 import { useFormik } from 'formik';
+import bedroomBlack from '/public/images/bedroom-black.svg';
+import bathroomBlack from '/public/images/bathroom-black.svg';
+import room from '/public/images/room-black.svg';
 import bedroom from '/public/images/bedroom.svg';
 import bathroom from '/public/images/bathroom.svg';
+import lookingForEmpty from '/public/images/looking-for-empty.svg';
 import usd from '/public/images/usd.svg';
 import Image from 'next/image';
-import Accordion from 'components/shared/accordion';
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import * as Yup from 'yup';
@@ -14,26 +17,33 @@ import { NYCneighborhoods } from 'global/variables';
 import SearchSelectInput from 'components/shared/search-select-input';
 import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import Loader from '@components/shared/loader';
+import PropertyCard from '@components/property-card';
+import { getProperties } from '@api/realtyMX';
+import { formatPrice, valueOptions } from '@global/functions';
+import { useSelector } from 'react-redux';
+import { setRefetchPart } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
+import fetchJsonp from 'fetch-jsonp';
+import { useRouter } from 'next/router';
+import Link from '@mui/icons-material/Link';
+import LookingForPopup from '@components/overlays/edit-looking-for-popup';
+import { ExclamationIcon, PencilIcon, PlusIcon } from '@heroicons/react/solid';
+import ArrowLeft from '/public/images/arrow-circle-left.svg';
+import Alert from '@components/shared/alert';
+import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
+import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
+import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
+import properties from 'pages/properties';
 
-export default function LookingFor({ contactId }) {
+export default function LookingFor({ contactId, category }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array().required('Field is required'),
-    bedrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    bedrooms_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('bedrooms_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(Yup.ref('bedrooms_min'), 'Max bedrooms must be greater than min bedrooms'),
-      }),
-    bathrooms_min: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
-    bathrooms_max: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .when('bathrooms_min', {
-        is: (val) => val && val >= 0,
-        then: Yup.number().min(Yup.ref('bathrooms_min'), 'Max bathrooms must be greater than min bathrooms'),
-      }),
+    bedrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
+    bathrooms: Yup.number().integer('Must be integer').min(0, 'Minimum value is 0'),
     budget_min: Yup.number().min(0, 'Budget Min should be greater than 0').typeError('Budget Min should be an integer'),
     budget_max: Yup.number()
       .typeError('Budget Max should be an integer')
@@ -49,211 +59,459 @@ export default function LookingFor({ contactId }) {
       }),
   });
 
+  const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
+  const refetchData = useSelector((state) => state.global.refetchData);
+
   //* FORMIK *//
-  const [selections, setSelections] = useState([]);
+  const [page, setPage] = useState(1);
+  const [allPropertiesCount, setAllPropertiesCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [expandedHeader, setExpandedHeader] = useState(true);
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [lookingForState, setLookingForState] = useState(0);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [propertyInterests, setPropertyInterests] = useState();
+  const [filterValue, setFilterValue] = useState('newest');
+  const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
+
+  const getLookingAction = () => {
+    const lowerCaseCategory = category.toLowerCase();
+    if (lowerCaseCategory === 'buyer') {
+      return 1;
+    } else if (lowerCaseCategory === 'landlord') {
+      return '19,22';
+    } else if (lowerCaseCategory === 'seller') {
+      return 19;
+    } else {
+      return 2;
+    }
+  };
 
   const formik = useFormik({
+    validateOnMount: true,
     initialValues: {
       neighborhood_ids: '',
-      looking_action: 'sell',
-      bedrooms_min: '',
-      bedrooms_max: '',
-      bathrooms_min: '',
-      bathrooms_max: '',
+      looking_action: getLookingAction(),
+      bedrooms: '',
+      bathrooms: '',
       budget_min: '',
       budget_max: '',
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values) => {
-      console.log(values, 'valuesssssss');
       if (formik.isValid) {
         handleAddSubmit({
-          ...values,
-          budget_min: values.budget_min === '' ? null : Number(values.budget_min),
-          budget_max: values.budget_max === '' ? null : Number(values.budget_max),
+          neighborhood_ids: values.neighborhood_ids,
+          looking_action: getLookingAction(),
+          bedrooms_min: values.bedrooms,
+          bedrooms_max: values.bedrooms,
+          bathrooms_min: values.bathrooms,
+          bathrooms_max: values.bathrooms,
+          budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
+          budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
         });
       }
     },
   });
 
-  const { errors, touched } = formik;
+  const { errors, touched, resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      const res = await contactServices.addContactLookingProperty(contactId, values);
-      console.log('add', res);
+      await contactServices.addContactLookingProperty(contactId, values);
       setLoadingButton(false);
-      toast.success('Changes were successfully saved');
+      toast.success('Property interests saved successfully!');
+      dispatch(setRefetchPart('looking-for'));
+      resetForm();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
     }
   };
 
-  const fetchLookingProperties = async () => {
+  const initializePropertyInterests = async () => {
     try {
-      const { data } = await contactServices.getContactLookingProperties(contactId);
-      const lookingProperties = data.data;
-      if (lookingProperties.length > 0) {
+      const lookingProperties = lookingForData;
+      if (lookingProperties && lookingProperties[0]) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
-          looking_action: lookingProperties[0].looking_action,
-          bedrooms_min: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
-          bedrooms_max: lookingProperties[0].bedrooms_max != 0 ? lookingProperties[0].bedrooms_max : '',
-          bathrooms_min: lookingProperties[0].bathrooms_min != 0 ? lookingProperties[0].bathrooms_min : '',
-          bathrooms_max: lookingProperties[0].bathrooms_max != 0 ? lookingProperties[0].bathrooms_max : '',
+          bedrooms: lookingProperties[0].bedrooms_min != 0 ? lookingProperties[0].bedrooms_min : '',
+          bathrooms: lookingProperties[0].bathrooms_min != 0 ? lookingProperties[0].bathrooms_min : '',
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
+        console.log('ran first');
+        fetchProperties(lookingProperties[0], page, filterValue);
+      } else {
+        console.log('ran second');
+        fetchProperties(formik.values, page, filterValue);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const fetchProperties = async (values, page, filterValue) => {
+    let filters = values;
+    let params = {
+      apikey: '4d7139716e6b4a72',
+      callback: 'callback',
+      limit: 21,
+      page: page,
+    };
+    if (filterValue === 'newest') {
+      params['sort'] = 'date';
+      params['order'] = 'desc';
+    }
+    if (filterValue === 'oldest') {
+      params['sort'] = 'date';
+      params['order'] = 'asc';
+    }
+    if (filterValue === 'minPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'asc';
+    }
+    if (filterValue === 'maxPrice') {
+      params['sort'] = 'price';
+      params['order'] = 'desc';
+    }
+    params['status'] = getLookingAction();
+    if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
+    if (filters?.budget_min) params['priceMin'] = filters.budget_min;
+    if (filters?.budget_max) params['priceMax'] = filters.budget_max;
+    if (filters?.bedrooms_min) {
+      params['bedsMin'] = filters.bedrooms_min;
+    }
+    if (filters?.bedrooms_max) {
+      params['bedsMax'] = filters.bedrooms_max;
+    }
+
+    if (filters?.bathrooms_min) {
+      params['bathMin'] = filters.bathrooms_min;
+    }
+    if (filters?.bathrooms_max) {
+      params['bathMax'] = filters.bathrooms_max;
+    }
+
+    const urlParams = new URLSearchParams({
+      ...params,
+    });
+
+    const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    const options = {
+      timeout: 30000,
+    };
+    const data = await fetchJsonp(url, options)
+      .then((res) => res.json())
+      .then((data) => {
+        setPropertyInterests(data.LISTINGS);
+        setAllPropertiesCount(data.TOTAL_COUNT);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+        setLoadingPropertyInterests(false);
+        return data;
+      })
+      .catch((error) => {
+        console.log(error, 'error');
+      });
+  };
+
+  const getNeighborhoodValue = () => {
+    let neighborhoods = [];
+
+    if (formik.values.neighborhood_ids.length) {
+      formik.values.neighborhood_ids.forEach((element) => {
+        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+      });
+      return neighborhoods.length ? neighborhoods.join(', ') : null;
+    } else return null;
+  };
+
+  const getFromNumber = () => {
+    return (page - 1) * 21 + 1;
+  };
+  const getToNumber = () => {
+    return Math.min(page * 21, allPropertiesCount);
   };
 
   useEffect(() => {
-    fetchLookingProperties();
-  }, [contactId]);
+    resetForm();
+  }, [router.pathname]);
 
-  const valueOptions = (selectedOptions, multiselectOptions) => {
-    if (!selectedOptions) {
-      return null;
+  useEffect(() => {
+    if (lookingForData !== null) initializePropertyInterests();
+    // else {
+    // fetchProperties(formik.values, page, filterValue);
+    // }
+    setLoadingPropertyInterests(false);
+  }, [contactId, lookingForData, refetchData, filterValue]);
+
+  useLayoutEffect(() => {
+    if (formik.isValid) {
+      setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
     }
-    const options = selectedOptions.map((el) => {
-      return multiselectOptions.find((option) => option.value === el);
-    });
-    return options;
+  }, [formik]);
+  const onFiltersChange = (filter) => {
+    setFilterValue(filter);
   };
 
-  const tabs = [
-    {
-      title: 'AMENITIES',
-      value: 'amenities',
-      content: (
-        <div className='grid grid-cols-2 gap-4'>
-          <Input
-            id='bedrooms_min'
-            type='number'
-            label='Bedrooms Min'
-            iconAfter={<Image src={bedroom} height={20} />}
-            className='col-span-1'
-            onChange={formik.handleChange}
-            value={formik.values.bedrooms_min}
-            error={errors.bedrooms_min && touched.bedrooms_min}
-            errorText={errors.bedrooms_min}
-          />
-          <Input
-            id='bedrooms_max'
-            type='number'
-            label='Bedrooms Max'
-            className='col-span-1'
-            iconAfter={<Image src={bedroom} height={20} />}
-            onChange={formik.handleChange}
-            value={formik.values.bedrooms_max}
-            error={errors.bedrooms_max && touched.bedrooms_max}
-            errorText={errors.bedrooms_max}
-          />
-          <Input
-            id='bathrooms_min'
-            type='number'
-            label='Bathrooms Min'
-            iconAfter={<Image src={bathroom} height={20} />}
-            className='col-span-1'
-            onChange={formik.handleChange}
-            value={formik.values.bathrooms_min}
-            error={errors.bathrooms_min && touched.bathrooms_min}
-            errorText={errors.bathrooms_min}
-          />
-          <Input
-            id='bathrooms_max'
-            type='number'
-            label='Bathrooms Max'
-            className='col-span-1'
-            iconAfter={<Image src={bathroom} height={20} />}
-            onChange={formik.handleChange}
-            value={formik.values.bathrooms_max}
-            error={errors.bathrooms_max && touched.bathrooms_max}
-            errorText={errors.bathrooms_max}
-          />
-        </div>
-      ),
-    },
-    {
-      title: 'BUDGET MIN/MAX',
-      value: 'budget',
-      content: (
-        <div className='grid grid-cols-2 gap-4'>
-          <Input
-            id='budget_min'
-            type='money'
-            label='Budget Min'
-            iconAfter={<Image src={usd} height={20} />}
-            className='col-span-1'
-            name={'budget_min'}
-            onChange={(newValue) => {
-              formik.setFieldValue('budget_min', newValue);
-            }}
-            value={formik.values.budget_min}
-            error={errors.budget_min && touched.budget_min}
-            errorText={errors.budget_min}
-          />
-          <Input
-            id='budget_max'
-            type='money'
-            label='Budget Max'
-            iconAfter={<Image src={usd} height={20} />}
-            className='col-span-1'
-            name={'budget_max'}
-            onChange={(newValue) => {
-              formik.setFieldValue('budget_max', newValue);
-            }}
-            value={formik.values.budget_max}
-            error={errors.budget_max && touched.budget_max}
-            errorText={errors.budget_max}
-          />
-        </div>
-      ),
-    },
-  ];
-  return (
-    <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-      <div className='flex bg-gray10 flex-row'>
-        <div className='w-[65%] bg-gray10'>
-          <div className='bg-white p-6 m-[24px]'>
-            <form onSubmit={formik.handleSubmit}>
-              <div className='max-w-3xl mx-auto relative'>
-                <SearchSelectInput
-                  label='Neighborhood'
-                  options={NYCneighborhoods}
-                  value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
-                  onChange={(choice) => {
-                    let choices = choice.map((el) => el.value);
-                    formik.setFieldValue('neighborhood_ids', choices);
-                  }}
-                  error={errors.neighborhood_ids && touched.neighborhood_ids}
-                  errorText={errors.neighborhood_ids}
-                />
-                {/* <Input
-                id="neighborhood_ids"
-                type="number"
-                label="Neighborhood"
-                iconAfter={<SearchIcon className="text-gray3" height={20} />}
-                onChange={formik.handleChange}
-                value={formik.values.neighborhood_ids}
-                error={errors.neighborhood_ids && touched.neighborhood_ids}
-                errorText={errors.neighborhood_ids}
-              /> */}
-              </div>
-              <Accordion tabs={tabs} activeSelections={selections} defaultOpen />
-              <Button type='submit' primary className='mt-6' loading={loadingButton}>
-                Save
-              </Button>
-            </form>
-          </div>
+  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
+    return (
+      <div className={`${className} text-sm`}>
+        <div className="mb-1 text-gray-500 font-medium">{label}</div>
+        <div className="text-gray-900 flex items-center">
+          <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
+          {textAfter && <span className="text-gray-500">{textAfter}</span>}
         </div>
       </div>
-    </SimpleBar>
+    );
+  };
+
+  return (
+    <>
+      {showAddPopup && (
+        <AddLookingForPopup
+          action={getLookingAction()}
+          contactId={contactId}
+          title="Edit Property Interests"
+          className="w-[580px]"
+          handleClose={() => setShowAddPopup(false)}
+        />
+      )}
+      {showEditPopup && (
+        <EditLookingForPopup
+          action={getLookingAction()}
+          data={lookingForData[0]}
+          title="Edit Property Interests"
+          className="w-[580px]"
+          handleClose={() => setShowEditPopup(false)}
+        />
+      )}
+      {loading ? (
+        <div className="relative details-tabs-fixed-height bg-white">
+          <Loader></Loader>
+        </div>
+      ) : (
+        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
+          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
+            {loadingPropertyInterests || propertyInterests === undefined ? (
+              <Loader message="Please wait we're searching for matched properties"></Loader>
+            ) : (
+              <>
+                {!lookingForData?.length ? (
+                  <Alert type="orange">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <ExclamationIcon className="h-5 w-5 text-orange-600" aria-hidden="true" />
+                      </div>
+                      <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
+                        <p className={`text-sm text-orange-800`}>
+                          {category === 'Landlord' || category === 'Seller'
+                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
+                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
+                        </p>
+                        <Button
+                          className="p-0"
+                          buttonPadding={'px-0'}
+                          label={'Edit Property Interests'}
+                          primary
+                          onClick={() => setShowAddPopup(true)}
+                        />
+                      </div>
+                    </div>
+                  </Alert>
+                ) : (
+                  <header className={`transition-all bg-gray-50 p-6`}>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="text-gray-900 font-medium flex items-center">
+                        Property Interests
+                        {getLookingAction() === 1 ||
+                          (getLookingAction() === 2 && (
+                            <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
+                              {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
+                            </div>
+                          ))}
+                      </div>
+                      <div className="flex items-center">
+                        <Button
+                          className="min-w-fit mr-4"
+                          onClick={() => setShowEditPopup(true)}
+                          white
+                          leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
+                          Edit
+                        </Button>
+                        <div onClick={() => setExpandedHeader(!expandedHeader)} className="cursor-pointer z-10">
+                          <div className="">
+                            <img
+                              className={`transition-all h-7 ${expandedHeader ? 'rotate-90' : '-rotate-90'}`}
+                              src={ArrowLeft.src}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {expandedHeader && (
+                      <>
+                        <PropertyDetail className="mt-4 mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
+                        <div className="grid grid-cols-4">
+                          <PropertyDetail
+                            label="Rooms"
+                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                            iconAfter={<Image src={room} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Bedrooms"
+                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                            iconAfter={<Image src={bedroomBlack} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Bathrooms"
+                            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+                            iconAfter={<Image src={bathroomBlack} height={20} />}
+                          />
+                          <PropertyDetail
+                            label="Price Min / Max"
+                            value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
+                              formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
+                            }`}
+                            {...(getLookingAction() == 2 && {
+                              textAfter: 'monthly',
+                            })}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </header>
+                )}
+
+                <div className="p-6">
+                  {propertyInterests && propertyInterests.length ? (
+                    <>
+                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
+                        <div>
+                          {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties
+                              recommended
+                              {getLookingAction() === 1 ? ' for sale' : ' for rent'}
+                            </>
+                          )}
+                          {category.toLowerCase() === 'landlord' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold and Rented Properties
+                            </>
+                          )}
+                          {category.toLowerCase() === 'seller' && (
+                            <>
+                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
+                              Sold Properties
+                            </>
+                          )}
+                          . These properties are sourced from REALTYMX database.
+                        </div>
+                        <div className={'flex items-center gap-2'}>
+                          <p
+                            className="text-gray6 font-inter font-normal leading-5 text-sm"
+                            style={{ marginTop: '3px' }}>
+                            Sort by
+                          </p>
+                          <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-6">
+                        {propertyInterests.map((property, index) => (
+                          <PropertyCard key={index} property={property}></PropertyCard>
+                        ))}
+                      </div>
+                      {allPropertiesCount > 21 && (
+                        <nav
+                          className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
+                          aria-label="Pagination">
+                          <div className="hidden sm:block">
+                            <p className="text-sm text-gray-700">
+                              Showing{' '}
+                              <span className="font-medium">
+                                {getFromNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              to{' '}
+                              <span className="font-medium">
+                                {getToNumber()
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+                              </span>
+                              of{' '}
+                              <span className="font-medium">
+                                {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                              </span>{' '}
+                              results
+                            </p>
+                          </div>
+                          <div className="flex flex-1 justify-between sm:justify-end">
+                            {getFromNumber() != 1 && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchProperties(lookingForData[0], page - 1, filterValue);
+                                  setPage(page - 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
+                                  setLoadingPropertyInterests(true);
+                                }}
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Previous
+                              </a>
+                            )}
+                            {getToNumber() != allPropertiesCount && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  fetchProperties(lookingForData[0], page + 1, filterValue);
+                                  setPage(page + 1);
+                                  document.querySelector('.scrollable-area').scrollIntoView({
+                                    behavior: 'smooth',
+                                  });
+                                  setLoadingPropertyInterests(true);
+                                }}
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                Next
+                              </a>
+                            )}
+                          </div>
+                        </nav>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center flex-col text-center mt-6">
+                      <img src={lookingForEmpty.src} alt="" />
+                      <div className="mt-6 text-sm">
+                        <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
+                        <div className="text-gray-500 mt-[6px]">
+                          Whenever we have property that matched these interest, will list here.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+          {/* )} */}
+        </SimpleBar>
+      )}
+    </>
   );
 }

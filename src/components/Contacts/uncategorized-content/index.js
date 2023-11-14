@@ -11,6 +11,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Close from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
+import GlobalAlert from '@components/shared/alert/global-alert';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -26,6 +27,7 @@ const Uncategorized = ({
   setCategorizing,
   handleStartCategorizing,
   onSearch,
+  unapprovedContacts,
 }) => {
   //* DATA *//
 
@@ -64,10 +66,10 @@ const Uncategorized = ({
   const uncategorizedMainPage = () => {
     return (
       <>
-        {uncategorizedCopy?.length ? (
+        {uncategorizedCopy?.length > 0 ? (
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
-              <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
                   tableFor="uncategorized"
                   data={uncategorizedContacts}
@@ -92,8 +94,7 @@ const Uncategorized = ({
               <Button
                 className="bg-purple6"
                 rightIcon={<ArrowForward className=" h-[18px] w-[18px]" />}
-                onClick={() => handleStartCategorizing(true)}
-              >
+                onClick={() => handleStartCategorizing(true)}>
                 Let's go
               </Button>
             </div>
@@ -101,11 +102,10 @@ const Uncategorized = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
             <lottie-player
-              src="https://assets2.lottiefiles.com/packages/lf20_lnc7r5pw.json"
-              loop
+              src="/animations/uncategorized.json"
+              loop="true"
               autoplay
-              style={{ width: '420px', height: '300px' }}
-            ></lottie-player>
+              style={{ width: '420px', height: '300px' }}></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               {openedSubtab == 0
                 ? 'Yay, well done! No uncategorized new records.'
@@ -123,13 +123,19 @@ const Uncategorized = ({
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        <div className="p-6 flex items-center justify-between">
+        {unapprovedContacts > 0 && (
+          <GlobalAlert
+            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            type="smart-sync"
+          />
+        )}
+        <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             {categorizing ? (
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
-                    Uncategorized Contacts
+                    Contacts you need to categorize
                   </Text>
                   <Search
                     placeholder="Search"
@@ -141,14 +147,14 @@ const Uncategorized = ({
                     }}
                   />
                 </div>
-                <div>
-                  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />
-                </div>
+                {/*<div>*/}
+                {/*  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />*/}
+                {/*</div>*/}
               </>
             ) : (
               <>
                 <Text h3 className="text-gray7 text-xl">
-                  {openedSubtab == 0 ? 'New Records' : 'Unknown'}
+                  Contacts you need to categorize
                 </Text>
                 {uncategorizedCopy?.length > 0 && (
                   <div className="flex items-center justify-self-end">
@@ -170,7 +176,11 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+        <div
+          className="w-auto relative flex"
+          style={{
+            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 200px)'}`,
+          }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}

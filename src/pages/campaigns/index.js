@@ -17,6 +17,7 @@ import Mail from '@mui/icons-material/Mail';
 import { sortDateAsc } from 'global/functions';
 import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
+import { setExpandedMenu } from '@store/global/slice';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -87,7 +88,7 @@ const Campaigns = () => {
     console.log('selected / deselected all');
   };
   const handleSelectContact = (event, contact) => {
-    if (event.target.checked) {
+    if (event?.target.checked) {
       // add to array
       setSelectedContacts((prevState) => [...prevState, contact.email]);
     } else {
@@ -296,10 +297,10 @@ const Campaigns = () => {
 
 export default Campaigns;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

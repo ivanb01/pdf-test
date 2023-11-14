@@ -27,9 +27,13 @@ const Dropdown = ({
   white,
   error,
   errorText,
+  openClassName,
+  afterLabel,
   ...props
 }) => {
-  const firstSelect = initialSelect ? options?.find((item) => item.name === initialSelect) : null;
+  const firstSelect = initialSelect
+    ? options?.find((item) => item.label === initialSelect || item.value == initialSelect)
+    : null;
   const [selected, setSelected] = useState(firstSelect);
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
@@ -44,39 +48,38 @@ const Dropdown = ({
         onChange={(val) => {
           props?.noOptionChange ? null : setSelected(val);
           handleSelect(val);
-        }}
-      >
+        }}>
         {({ open }) => (
           <>
-            <div className={horizontal && 'flex items-center'}>
+            <div className={`${horizontal && 'flex items-center'}`}>
               {label && (
-                <Listbox.Label className={`block text-sm font-medium text-gray6 mr-2`}>
+                <Listbox.Label className={`block text-sm font-medium text-gray6 mr-2 mb-1`}>
                   {label} {optional && <span className="text-gray3 ml-1">(Optional)</span>}
                 </Listbox.Label>
               )}
-              <div className="mt-1 relative">
+              <div className={`relative ${open && openClassName}`}>
                 <Listbox.Button
                   className={`${selectClasses ? selectClasses : 'bg-white border rounded-md'} ${inputWidth} relative ${
                     !inputWidth && 'w-full'
-                  } border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
-                >
+                  } border-borderColor h-[38px] pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}>
                   <span
                     className={`${
                       selectedOption === 'statusColor' && `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
-                    }`}
-                  ></span>
+                    }`}></span>
 
                   {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
                   <span
-                    className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-gray6'} ${
-                      selected && selected.name && 'text-gray8'
-                    } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}
-                  >
+                    className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-[#808080]'} ${
+                      selected && selected.label && 'text-gray8'
+                    } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}
-                    {selected && selected.name}
+                    {selected && afterLabel ? selected.label + ` ${afterLabel}` : selected?.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <ChevronDownIcon className="h-5 w-5 text-gray3" aria-hidden="true" />
+                    <ChevronDownIcon
+                      className={`transition-all h-5 w-5 text-gray3 ${open && 'rotate-180'}`}
+                      aria-hidden="true"
+                    />
                   </span>
                 </Listbox.Button>
 
@@ -85,8 +88,7 @@ const Dropdown = ({
                   as={Fragment}
                   leave="transition ease-in duration-100"
                   leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
-                >
+                  leaveTo="opacity-0">
                   <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                     {options?.map((option) => (
                       <Listbox.Option
@@ -97,17 +99,15 @@ const Dropdown = ({
                             'cursor-pointer select-none relative py-2 pl-3 pr-9',
                           )
                         }
-                        value={option}
-                      >
+                        value={option}>
                         {({ selected, active }) => (
                           <>
                             <span
                               className={classNames(
                                 selected ? 'font-semibold' : 'font-normal',
                                 'block truncate capitalize',
-                              )}
-                            >
-                              {option.name}
+                              )}>
+                              {option.label}
                             </span>
 
                             {selected && activeIcon ? (
@@ -115,8 +115,7 @@ const Dropdown = ({
                                 className={classNames(
                                   active ? 'text-white' : 'text-blue2',
                                   'absolute inset-y-0 right-0 flex items-center pr-4 capitalize',
-                                )}
-                              >
+                                )}>
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>
                             ) : null}

@@ -107,15 +107,15 @@ const SignIn = () => {
   const brokerageNameOptions = [
     {
       id: 1,
-      name: 'Oxford Property Group',
+      label: 'Oxford Property Group',
     },
     {
       id: 2,
-      name: 'Level Group',
+      label: 'Level Group',
     },
     {
       id: 3,
-      name: 'Spire Group',
+      label: 'Spire Group',
     },
   ];
 
@@ -140,14 +140,14 @@ const SignIn = () => {
             className="mb-6 w-full text-sm"
             label="Brokerage Name"
             options={brokerageNameOptions}
-            initialSelect={brokerageNameOptions[0].name}
+            initialSelect={brokerageNameOptions[0].label}
             handleSelect={(item) => {
               // if (item.name == 'Other') {
               //   setShowOther(true);
               // } else {
               //   setShowOther(false);
               // }
-              formik.values.tenantName = item.name;
+              formik.values.tenantName = item.label;
             }}
           />
           {/* {showOther && (
@@ -176,10 +176,10 @@ const SignIn = () => {
 
 export default SignIn;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

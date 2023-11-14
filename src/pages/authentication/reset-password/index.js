@@ -161,10 +161,10 @@ const ResetPassword = () => {
 
 export default ResetPassword;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

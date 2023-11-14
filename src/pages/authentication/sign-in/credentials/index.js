@@ -32,9 +32,13 @@ const SignIn = () => {
     try {
       await Auth.federatedSignIn({ provider: 'Google' });
       let user = await Auth.currentAuthenticatedUser();
-      console.log('the user is here: ', user);
+      const days = 7;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + days);
+      localStorage.setItem('isAuthenticated', true);
     } catch (error) {
       console.log('fail', error);
+      localStorage.setItem('isAuthenticated', false);
     }
   };
 
@@ -147,15 +151,16 @@ const SignIn = () => {
   const handleSubmit = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
+      console.log('what is this');
       const user = await Auth.signIn(values.userName.toLowerCase(), values.password);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
         // displayAlert('success', 'Login successfully', 2000);
-
-        setTimeout(() => {
-          dispatch(setUser(user.attributes.email));
-          localStorage.setItem('user', JSON.stringify(user.attributes.email));
-          router.push('/contacts/clients');
-        }, 2000);
+        // setTimeout(() => {
+        dispatch(setUser(user.attributes.email));
+        localStorage.setItem('user', JSON.stringify(user.attributes.email));
+        console.log('set user');
+        router.push('/contacts/clients');
+        // }, 2000);
       } else {
         setCognitoUser(user);
         setNewPasswordRequired(true);
@@ -315,10 +320,10 @@ const SignIn = () => {
 
 export default SignIn;
 
-export async function getStaticProps(context) {
-  return {
-    props: {
-      requiresAuth: false,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: false,
+//     },
+//   };
+// }

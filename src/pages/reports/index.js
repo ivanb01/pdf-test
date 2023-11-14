@@ -8,6 +8,7 @@ import { getReports } from 'api/team';
 import { useEffect } from 'react';
 import Loader from 'components/shared/loader';
 import { getEmailParts } from 'global/functions';
+import withAuth from '@components/withAuth';
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -29,49 +30,49 @@ const index = () => {
       id: 1,
       key: 'full_name',
       type: 'asc',
-      name: 'Name A-Z',
+      label: 'Name A-Z',
     },
     {
       id: 2,
       key: 'full_name',
       type: 'desc',
-      name: 'Name Z-A',
+      label: 'Name Z-A',
     },
     {
       id: 3,
       key: 'total_clients',
       type: 'desc',
-      name: '# of Clients',
+      label: '# of Clients',
     },
     {
       id: 4,
       key: 'clients_in_funnel',
       type: 'desc',
-      name: 'Clients in the funnel',
+      label: 'Clients in the funnel',
     },
     {
       id: 5,
       key: 'percentage_healthy_clients',
       type: 'desc',
-      name: 'Highest Client Health',
+      label: 'Highest Client Health',
     },
     {
       id: 6,
       key: 'percentage_healthy_clients',
       type: 'asc',
-      name: 'Lowest Client Health',
+      label: 'Lowest Client Health',
     },
     {
       id: 7,
       key: 'clients_closed',
       type: 'desc',
-      name: 'Closed Clients',
+      label: 'Closed Clients',
     },
     {
       id: 8,
       key: 'percentage_closed_clients',
       type: 'desc',
-      name: 'Conversion',
+      label: 'Conversion',
     },
   ]);
 
@@ -183,4 +184,12 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
+
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

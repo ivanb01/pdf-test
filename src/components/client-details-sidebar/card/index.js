@@ -11,6 +11,8 @@ import EditClientOverlay from 'components/overlays/edit-client';
 import { getInitials, phoneNumberFormat } from 'global/functions';
 import { useRouter } from 'next/router';
 import ReviewContact from '@components/overlays/review-contact';
+import TooltipComponent from '@components/shared/tooltip';
+import Chip from '@components/shared/chip';
 
 export default function ClientCard({ client }) {
   const [editingContact, setEditingContact] = useState(false);
@@ -57,8 +59,12 @@ export default function ClientCard({ client }) {
           </Text>
           <span className="flex flex-col">
             <div className="flex items-center mt-2">
-              <MailIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />
-              <div className="text-sm">{client?.email}</div>
+              <div>
+                <MailIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />
+              </div>
+              <div className="text-sm" style={{ wordBreak: 'break-all', whiteSpace: 'normal' }}>
+                {client?.email}
+              </div>
             </div>
             <div className="flex items-center mt-2">
               <PhoneIcon className="h-4 w-4 text-[#9fa6b1] mr-1" aria-hidden="true" />
@@ -68,16 +74,26 @@ export default function ClientCard({ client }) {
                   : 'No phone number'}
               </div>
               {phoneNumberFormat(client?.phone_number) === 'N/A' && (
-                <div className="group relative cursor-pointer">
-                  <ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />
-
-                  <div className="group-hover:opacity-100 opacity-0 w-[270px] pointer-events-none left-6 -top-5 inline-block absolute z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                <TooltipComponent
+                  side={'right'}
+                  align={'center'}
+                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}>
+                  <div style={{ width: '238px' }} className=" pointer-events-none  text-xs font-medium text-white ">
                     <p className="mb-2 font-semibold">Please add a phone number!</p>
                     <p>Without a phone number the SMS events in campaign cannot run.</p>
                   </div>
-                </div>
+                </TooltipComponent>
               )}
             </div>
+            <div className="mt-2 flex">
+              <Chip typeStyle label={client.category_2}></Chip>
+            </div>
+            {/* <div
+              className={
+                'mt-2 bg-white border border-borderColor text-gray-700 py-2 px-[15px] uppercase text-center rounded text-xs font-medium mr-2'
+              }>
+              {client.category_2}
+            </div> */}
           </span>
         </div>
         <div className="ml-auto mr-4">

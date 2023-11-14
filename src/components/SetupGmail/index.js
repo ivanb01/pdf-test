@@ -2,13 +2,14 @@ import GlobalAlert from 'components/shared/alert/global-alert';
 import Image from 'next/image';
 import Text from 'components/shared/text';
 import Button from 'components/shared/button';
-import gmailToOneline from '/public/images/gmail-to-oneline.svg';
+import noContacts from '/public/images/no-contacts.svg';
 import { MailIcon, PlusIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 import { useDispatch } from 'react-redux';
 import { setSkippedEmptyState } from 'store/global/slice';
 import NotificationAlert from 'components/shared/alert/notification-alert';
+import { ArrowBack } from '@mui/icons-material';
 
 const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoogleContactsModal }) => {
   const router = useRouter();
@@ -22,37 +23,17 @@ const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoog
             {error}
           </NotificationAlert>
         )}
-        <Image src={gmailToOneline} />
-        <Text h2 className="text-gray7 mt-9 mb-4 justify-center">
-          Setup Gmail Account to Import Contacts
+        <img src={noContacts.src} />
+        <Text h2 className="text-gray7 mt-9 mb-4 justify-center text-lg">
+          No contacts to be imported
         </Text>
-        <Text paragraph className="text-gray4 mb-6">
-          Automatically sync your google contacts. Run this process once you have new contacts added to your google
-          contacts. We will automatically add them to your uncategorized contacts in the CRM.
-        </Text>
-        <Button
-          className="mb-4"
-          leftIcon={<MailIcon />}
-          label="Import Google Contacts"
-          onClick={() =>
-            router.push({
-              pathname: '/contacts/no-contact/',
-              query: { start_importing: true },
-            })
-          }
-        ></Button>
-        <Text paragraph className="text-gray8 mb-4 justify-center">
-          or
+        <Text paragraph className="text-gray4 mb-[50px] text-sm">
+          There is no contacts to be imported to the CRM. Please try again another time.
         </Text>
         <Button
-          label="Add Manually"
-          leftIcon={<PlusIcon />}
+          label="Back to contacts"
+          leftIcon={<ArrowBack className="h-4" />}
           secondary
-          onClick={() => setshowAddContactManuallyOverlay(true)}
-        />
-        <hr className="bg-[#E5E7EB] mt-10 mb-10" />
-        <div
-          className={`text-sm font-medium' cursor-pointer text-lightBlue3 hover:text-lightBlue4 mb-6 justify-center flex items-center`}
           onClick={() => {
             localStorage.setItem('skippedEmptyState', true);
             dispatch(setSkippedEmptyState(true));
@@ -60,10 +41,7 @@ const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoog
               pathname: '/contacts/clients',
             });
           }}
-        >
-          <span>Skip for now, maybe later</span>
-          <div className={`ml-2 -mr-0.5`}>{<ArrowRightIcon className="w-4 h-4 " />}</div>
-        </div>
+        />
       </div>
     </>
   );

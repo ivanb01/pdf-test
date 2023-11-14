@@ -34,13 +34,12 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
               {!emptyModal ? (
                 motionImage ? (
                   <lottie-player
-                    src="https://assets8.lottiefiles.com/packages/lf20_o9df1rnx.json"
+                    src="/animations/importing.json"
                     background="transparent"
                     speed="1"
                     style={{ width: '160px', height: '128px' }}
                     loop
-                    autoplay
-                  ></lottie-player>
+                    autoplay></lottie-player>
                 ) : (
                   <Image src={img} alt="header-img" />
                 )
@@ -49,7 +48,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
               )}
             </div>
 
-            {stateAfterImport ? (
+            {stateAfterImport && stateAfterImport != 'Not needed' ? (
               <>
                 <Text h2 className="text-gray7 justify-center mb-2">
                   {titleAfterImport[stateAfterImport]}
@@ -65,8 +64,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
               list.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex ${item.state === 'button' ? 'flex-row justify-end mt-5' : 'justify-center'}`}
-                >
+                  className={`flex ${item.state === 'button' ? 'flex-row justify-end mt-5' : 'justify-center'}`}>
                   {item.state === 'button' ? (
                     <>
                       <Button className="mr-3 " white label="Cancel" onClick={handleCloseOverlay} />
