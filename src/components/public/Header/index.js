@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import clsx from 'clsx';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from './styles.module.scss';
@@ -12,8 +12,8 @@ import open from '/public/images/public/menu.svg';
 
 const links = [
   {
-    href: '/public/features',
-    label: 'Features'
+    href: '/public/home',
+    label: 'Home',
   },
   /*{
     href: '/properties',
@@ -25,12 +25,12 @@ const links = [
   },*/
   {
     href: '/public/pricing',
-    label: 'Pricing'
+    label: 'Pricing',
   },
   {
     href: '/public/contact',
-    label: 'Contact Us'
-  }
+    label: 'Contact Us',
+  },
 ];
 
 export const Header = () => {
@@ -39,7 +39,7 @@ export const Header = () => {
   const router = useRouter();
   const currentRoute = router.pathname;
 
-  console.log(currentRoute)
+  console.log(currentRoute);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -67,69 +67,65 @@ export const Header = () => {
       <div className="container-public">
         <div className={styles['header__content']}>
           <div className={styles['header__content-left']}>
-            <Link href="/public/features">
+            <Link href="/public/home">
               <Image src={logo} alt="oneline-logo" />
             </Link>
             <div className={styles['hide-on-smaller-screens']}>
               <ul className={styles['header__content-list']}>
-                {
-                  links.map(item => (
-                    <li key={item.href}>
-                      <Link href={item.href} >
-                        <a className={currentRoute === item.href ? styles.active : ''}> {item.label}</a>
-                      </Link>
-                    </li>
-                  ))
-                }
+                {links.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href}>
+                      <div className={currentRoute === item.href ? styles.active : ''}> {item.label}</div>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
           <div className={styles['header__content-right']}>
             <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
-              <Button type="secondary" onClick={() => router.push('/authentication/sign-in')} style={{ color: '#6B7280' }}>
+              <Button
+                type="secondary"
+                onClick={() => router.push('/authentication/sign-in')}
+                style={{ color: '#6B7280' }}>
                 Log In
               </Button>
-              <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+              {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
                 Register for Free
-              </Button>
+              </Button> */}
             </div>
             <div className={styles['hide-on-bigger-screens']}>
               <div onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {
-                  isMenuOpen ? (
-                    <Image src={close} alt="icon-close-menu" />
-                  ) : (
-                    <Image src={open} alt="icon-open-menu" />
-                  )
-                }
+                {isMenuOpen ? <Image src={close} alt="icon-close-menu" /> : <Image src={open} alt="icon-open-menu" />}
               </div>
             </div>
           </div>
-          {
-            isMenuOpen && (
-              <div className={styles['header__content-menu']}>
-                <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
-                  {
-                    links.map(item => (
-                      <li key={item.href}>
-                        <Link href={item.href} >
-                          <a onClick={() => setIsMenuOpen(!isMenuOpen)} className={currentRoute === item.href ? styles.active : ''}> {item.label}</a>
-                        </Link>
-                      </li>
-                    ))
-                  }
-                </ul>
-                <div className={styles['header__content-menu-footer']}>
-                  <Button type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
-                    Log in
-                  </Button>
-                  <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
-                    Register for free
-                  </Button>
-                </div>
+          {isMenuOpen && (
+            <div className={styles['header__content-menu']}>
+              <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
+                {links.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href}>
+                      <div
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className={currentRoute === item.href ? styles.active : styles.active}>
+                        {' '}
+                        {item.label}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className={styles['header__content-menu-footer']}>
+                <Button type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
+                  Log in
+                </Button>
+                {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+                  Register for free
+                </Button> */}
               </div>
-            )
-          }
+            </div>
+          )}
         </div>
       </div>
     </header>

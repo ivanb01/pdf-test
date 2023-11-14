@@ -18,7 +18,7 @@ module.exports = {
       },
       {
         source: '/',
-        destination: '/public/features',
+        destination: '/public/home',
         permanent: true,
       },
       {
