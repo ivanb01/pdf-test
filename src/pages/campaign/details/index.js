@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaignsByCategory, getContactCampaignEventPreview } from '@api/campaign';
+import { getAllEvents, getCampaignsByCategory, getCampaignsUsers, getContactCampaignEventPreview } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 
@@ -29,6 +29,7 @@ const index = () => {
   const [campaignDetails, setCampaignDetails] = useState();
   const [campaignData, setCampaignData] = useState();
   const dispatch = useDispatch();
+  const [campaignDetailsV2, setCampaignsDetailsV2] = useState();
 
   useEffect(() => {
     getAllEvents(id).then((res) => {
@@ -44,6 +45,9 @@ const index = () => {
       setCampaignDetails(campaigns);
     }
   }, [CRMCampaigns, id]);
+  useEffect(() => {
+    getCampaignsUsers(id).then((res) => setCampaignsDetailsV2(res.data));
+  }, [id]);
 
   const totalContacts = allContacts?.filter(
     (contact) =>
@@ -122,6 +126,9 @@ const index = () => {
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
+  useEffect(() => {
+    console.log(campaignData);
+  }, [campaignData]);
 
   const renderTable = (currentButton) => {
     switch (currentButton) {
@@ -153,10 +160,10 @@ const index = () => {
                 onClick={() => router.back()}
               />
               <div>
-                <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>Campaign Title</h4>
-                <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-center'}>
+                <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.campaign_name}</h4>
+                <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
                   <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {`${category}s`}: {campaignData?.campaign_name}
+                    {`${category}s`}: {campaignDetailsV2?.contact_status_1}
                   </span>
                 </div>
               </div>

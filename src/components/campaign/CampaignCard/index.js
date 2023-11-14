@@ -11,13 +11,13 @@ import { useEffect, useState } from 'react';
 
 const CampaignCard = ({
   campaign_name,
-  email,
-  sms,
+  events,
   category,
   campaign_id,
   contact_never_assigned_count,
   contact_assigned_count,
   contact_unassigned_count,
+  contact_status_1,
   isVisible,
 }) => {
   const router = useRouter();
@@ -40,12 +40,12 @@ const CampaignCard = ({
             <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
           </div>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
-            <span className={'mr-1'}>{`${Number(sms + email)}  Events: `}</span>
+            <span className={'mr-1'}>{`${Number(events.sms + events.email)}  Events: `}</span>
             <span className={'mr-2'}>
-              {email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+              {events.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
             </span>
             <span>
-              {sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
+              {events.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
             </span>
           </div>
           <div className={'flex justify-between items-center'}>
@@ -54,7 +54,7 @@ const CampaignCard = ({
               className={
                 'bg-gray1 text-xs leading-5 font-medium text-gray6 px-1.5 py-0.5 flex gap-1 items-center-center'
               }>
-              <div className={'m-auto'}>{campaign_name}:</div>
+              <div className={'m-auto'}>{contact_status_1}:</div>
               <div>
                 {contact_never_assigned_count + contact_assigned_count}
                 <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
