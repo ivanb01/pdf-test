@@ -38,6 +38,9 @@ export default function Details() {
   const [current, setCurrent] = useState(0);
   const localTabs = tabs(id, contact);
 
+  useEffect(() => {
+    console.log(contact);
+  }, [contact]);
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
       console.log(error);
