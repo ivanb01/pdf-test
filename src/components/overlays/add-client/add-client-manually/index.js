@@ -103,6 +103,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   });
   const { errors, touched } = formik;
 
+  useEffect(() => {
+    console.log(formik.values);
+  }, [formik.values]);
   const addClient = async () => {
     let subtabs = [[2, 3, 4, 5, 7, 16], [9, 10], [8], [11]];
 
@@ -138,7 +141,15 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
 
       // dispatch(addContactLocally(contactToAdd));
       dispatch(setOpenedTab(globalTabs[title]));
-      dispatch(setOpenedSubtab(subtabValue));
+      if (formik.values.selectedContactType === 8 && formik.values.selectedContactType === 19) {
+        setOpenedSubtab(0);
+      } else if (formik.values.selectedContactType === 12) {
+        dispatch(setOpenedSubtab(1));
+      } else if (formik.values.selectedContactType === 9) {
+        dispatch(setOpenedSubtab(2));
+      } else {
+        dispatch(setOpenedSubtab(subtabValue));
+      }
       setTimeout(() => {
         handleClose();
       }, 1500);
@@ -338,6 +349,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           // rightIcon={<ArrowRightIcon height={15} />}
           onClick={() => {
             setLoading(false);
+
             formik.submitForm();
           }}></Button>
       </div>
