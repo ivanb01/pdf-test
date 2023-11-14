@@ -1,0 +1,17 @@
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-bottom: 30px;
+
+  &:last-child {
+     margin-bottom: 0;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
