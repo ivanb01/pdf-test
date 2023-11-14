@@ -123,7 +123,7 @@ const Uncategorized = ({
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && !categorizing && (
+        {unapprovedContacts > 0 && (
           <GlobalAlert
             message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
             type="smart-sync"
@@ -147,9 +147,9 @@ const Uncategorized = ({
                     }}
                   />
                 </div>
-                <div>
-                  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />
-                </div>
+                {/*<div>*/}
+                {/*  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />*/}
+                {/*</div>*/}
               </>
             ) : (
               <>
@@ -176,7 +176,11 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 142px)' }}>
+        <div
+          className="w-auto relative flex"
+          style={{
+            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 200px)'}`,
+          }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}

@@ -235,7 +235,7 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <div className={'pb-[200px]'}>
+                      <div className={'pb-[50px]'}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
                           label="What kind of vendor is this for you?"
@@ -270,15 +270,15 @@ const CategorizePage = ({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
-            <Image src={noContactsSelected}></Image>
-            <Text h3 className="text-gray7 my-4 text-center">
+            <Image src={noContactsSelected} />
+            <Text h3 className="text-gray7 my-4 text-center text-[15px]">
               You haven’t selected any contact from left side panel yet
             </Text>
             <Text p className="text-gray4 relative text-center">
-              <div className="absolute -left-40 bottom-1">
+              <div className="absolute left-[-110px] bottom-1 w-24">
                 <Image src={noContactsSelectedArrow}></Image>
               </div>
-              <span>
+              <span className={''}>
                 <strong>Select a contact</strong> to start the categorization
               </span>
             </Text>
@@ -299,12 +299,12 @@ const CategorizePage = ({
               />
             </SimpleBar>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
+            <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0 p-3">
               <Image src={noCategorized}></Image>
-              <Text h3 className="text-gray7 mt-4 mb-2 text-center">
+              <Text h3 className="text-gray7 mt-4 mb-2 text-center text-[15px]">
                 You haven’t categorized any contact in this session yet
               </Text>
-              <Text p className="text-gray4 relative text-center">
+              <Text p className="text-gray4 relative text-center text-sm">
                 To categorize please specify type and {selectedUncategorizedContactType == 8 ? 'subtype' : 'status'}.
               </Text>
             </div>
@@ -313,14 +313,15 @@ const CategorizePage = ({
       )}
       <div
         style={{ zIndex: '99999 !important' }}
-        className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
+        className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu  flex items-center justify-end">
         <Button
           primary
-          label="Save & Exit"
+          label="Save"
           className="mr-4"
           onClick={() => {
             setSelectedUncategorized([]);
-            handleStartCategorizing(false);
+            setCategorizedInThisSession([]);
+            // handleStartCategorizing(false);
           }}
         />
       </div>

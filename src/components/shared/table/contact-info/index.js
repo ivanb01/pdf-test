@@ -10,6 +10,7 @@ import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import clients from '../../../../pages/contacts/clients';
 import GoogleContact from '../../../../../public/images/GoogleContact.png';
 import React from 'react';
+
 const statusColors = {
   'New Lead': 'bg-lightBlue1',
   'Attempted Contact': 'bg-lightBlue2',
@@ -26,7 +27,16 @@ const statusColors = {
   'Strong Relationship': 'bg-purple1',
 };
 
-const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategorization }) => {
+const ContactInfo = ({
+  data,
+  handleSelect,
+  handleAction,
+  showAIChip,
+  inCategorization,
+  emailsLength,
+  maxWidth,
+  emailHover,
+}) => {
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
@@ -77,13 +87,30 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
         )}
       </div>
       <div className="ml-3">
-        <div className="font-medium text-gray7 flex ellipsis-email xl:min-w-[180px] lg:w-[120px]">
+        <div
+          className={`font-medium text-gray7 flex ${
+            maxWidth && `lg-w-[${maxWidth}]`
+          }  ellipsis-email xl:min-w-[100px] lg:w-[120px]`}>
           {data.name} {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
         </div>
         {data.email && (
           <div
             title={data.email}
-            className="ellipsis-email text-gray-500 font-medium xl:min-w-[180px] lg:w-[120px] flex ">
+            className={`ellipsis-email text-gray-500 font-medium ${
+              maxWidth && `xl:min-w-[${maxWidth}]`
+            } xl:min-w-[180px] lg:w-[120px] flex `}>
+            {emailHover && (
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
+                    {data.email}
+                  </div>
+                }>
+                <div className={'text-sm'}>{data.email}</div>
+              </TooltipComponent>
+            )}
             {inCategorization && (
               <div className={'flex items-center gap-1.5 flex-shrink-0 mr-1'}>
                 <div>
@@ -113,7 +140,24 @@ const ContactInfo = ({ data, handleSelect, handleAction, showAIChip, inCategoriz
                 )}
               </div>
             )}
-            {data.email}
+            {inCategorization && data.email.length >= emailsLength ? (
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
+                    {data.email}
+                  </div>
+                }>
+                <div className={'text-sm'}>{data.email}</div>
+              </TooltipComponent>
+            ) : (
+              !emailHover && (
+                <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
+                  {data.email}
+                </div>
+              )
+            )}
           </div>
         )}
         <div className="flex flex-row">

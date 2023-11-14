@@ -509,6 +509,7 @@ const Table = ({
                       )}
                       <ContactInfo
                         inCategorization={tableFor === 'in-categorization'}
+                        emailsLength={19}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
@@ -650,13 +651,16 @@ const Table = ({
                     <p className="text-xs leading-4 font-normal"> Undo Categorization</p>
                   </TooltipComponent>
                 </td>
-                <td className="whitespace-nowrap py-4  text-sm ">
+                <td className="whitespace-nowrap py-4  text-sm">
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
                       email: dataItem.email,
                       image: dataItem.profile_image_path,
                     }}
+                    emailsLength={15}
+                    maxWidth={'50px'}
+                    emailHover
                   />
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
@@ -1626,6 +1630,7 @@ const Table = ({
                     email: dataItem.agent_id,
                     // image: dataItem.profile_image_path,
                   }}
+
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
                   // }
@@ -1763,6 +1768,8 @@ const Table = ({
                     email: dataItem.email,
                     // image: dataItem.profile_image_path,
                   }}
+                  maxWidth={'300px'}
+
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
                   // }

@@ -24,7 +24,7 @@ const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [categorizing, setCategorizing] = useState(false);
+  const [categorizing, setCategorizing] = useState(true);
   const [uncategorizedContactsOriginal, setUncategorizedContactsOriginal] = useState([]);
   const [uncategorizedContacts, setUncategorizedContacts] = useState([]);
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
@@ -113,6 +113,11 @@ const index = () => {
   //   console.log('uncategorized cont', uncategorizedContactsOriginal);
   //   setUncategorizedContacts(contacts);
   // }, [openedSubtab]);
+
+  const unapprovedContactsLength = unapprovedContacts?.data.filter(
+    (contact) => contact.category_1 != 'Uncategorized',
+  ).length;
+
   return (
     <Layout>
       {loading ? (
@@ -125,7 +130,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
-            unapprovedContacts={unapprovedContacts?.data.filter((contact) => contact.category_id == 1).length}
+            unapprovedContacts={unapprovedContactsLength}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}
