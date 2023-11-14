@@ -119,6 +119,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
+        {/* <div className={`main-page overflow-y-auto overflow-x-hidden`}></div> */}
         <Head>
           <meta name="viewport" content="width=device-width"></meta>
         </Head>

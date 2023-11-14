@@ -4,12 +4,117 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
+    <list default="true" id="84ed9a37-8d0e-4854-a960-d219b99775b6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/public/images/public/campaign-reports-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/campaign-reports-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-a.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-bg-detail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-detail-slide-2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-yourself.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/close.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/contact-us-bg.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/create-campaign-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/create-campaign-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-add-tasks.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-ai.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-check.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-checklist.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-consumer-websites.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-discuss.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-drive-campaigns.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-email.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-feature-application.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-feature-email.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-gmail-integration.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-mail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-phone.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-send-form.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-statistics.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/icon-sync.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/intro-chat-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/intro-left-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/intro-mobile-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/intro-right-bg-mobile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/intro-right-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/level-logo-dark.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/level-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/logo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/menu.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/oxford-logo-dark.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-active.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-completed.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-inactive.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/quote.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/robot.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/run-campaign-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/run-campaign-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/section-online-forms-bg-detail.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/section-online-forms-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/section-smart-sync-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/spire-logo-dark.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/spire-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/start-trial-arrow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/start-trial-section-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-avatar-one.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-section-bottom.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-section-top.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/categorize-contacts-slide-1.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/categorize-contacts-slide-2.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-4.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-5.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-6.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-7.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-8.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/animations/monitor-campaigns.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Feature/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Feature/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Footer/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Footer/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Header/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Header/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/InfoItem/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/InfoItem/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Input/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Input/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/PriceCard/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/PriceCard/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionAllInOne/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionAllInOne/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/Slide/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/Slide/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionContact/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionContact/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/Slide/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/Slide/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionIntro/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionIntro/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionMonitorCampaigns/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionMonitorCampaigns/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionOnlineForms/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionOnlineForms/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionSmartSync/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionSmartSync/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionStartTrial/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/SectionStartTrial/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Testimonials/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Testimonials/styles.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Textarea/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/public/Textarea/styles.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/_global.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/_global.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/_variables.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,24 +124,32 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/AiEmailInEditPopup" />
+        <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectId" id="2Uk7wW6N96LlVPqkmVVRwOcHXlF" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "f/erza/ShowNoContact",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
-  }
-}]]></component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/images/public" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images/public" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/components/public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/images/marketing" />
+      <recent name="$PROJECT_DIR$/src/pages/front" />
+      <recent name="$PROJECT_DIR$/src/components/public" />
+      <recent name="$PROJECT_DIR$/src/pages" />
       <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
@@ -61,6 +174,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -156,16 +270,11 @@
     <option name="localTasksCounter" value="12" />
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="check formatter issues" />

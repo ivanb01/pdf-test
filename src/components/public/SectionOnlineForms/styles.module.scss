@@ -1,0 +1,131 @@
+.section {
+  display: flex;
+  padding: 0 0 0 100px;
+
+  @media screen and (max-width: $screen-xl) {
+    padding: 0 0 0 16px;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    padding: 0 24px;
+    overflow: hidden;
+  }
+
+  &__content {
+    display: flex;
+    flex: 0.5;
+    align-items: center;
+    justify-content: center;
+
+    @media screen and (max-width: $screen-md) {
+      flex: 1;
+    }
+
+    &--bg {
+      margin-right: -130px;
+
+      @media screen and (max-width: $screen-md) {
+        margin: 0 -24px 50px -24px;
+      }
+
+      img {
+        width: 905px;
+
+        @media screen and (max-width: $screen-xl) {
+          max-width: 690px;
+        }
+
+        @media screen and (max-width: $screen-lg) {
+          max-width: 500px;
+        }
+
+        @media screen and (max-width: $screen-md) {
+          max-width: 110%;
+        }
+      }
+    }
+
+    &--hide-sm {
+      @media screen and (max-width: $screen-md) {
+        display: none;
+      }
+    }
+
+    &--hide-lg {
+      @media screen and (min-width: $screen-md) {
+        display: none;
+      }
+    }
+
+    &--description {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-right: 40px;
+      position: relative;
+
+      @media screen and (max-width: $screen-md) {
+        padding: 0;
+      }
+    }
+  }
+
+  &__content-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 40px;
+
+    @media screen and (max-width: $screen-md) {
+      margin-bottom: 30px;
+    }
+
+    .tag {
+      color: #B45309;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 24px;
+      border-radius: 16px;
+      border: 1px solid #F59E0B;
+      background: #FFFBEB;
+      padding: 3px 16px;
+    }
+
+    .description {
+      color: #374151;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 28px;
+
+      @media screen and (max-width: $screen-md) {
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+
+  &__content-features {
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+
+    @media screen and (max-width: $screen-md) {
+      gap: 40px;
+    }
+  }
+
+  &__content-bg-detail {
+    position: absolute;
+    left: -275px;
+    bottom: -150px;
+    z-index: -1;
+
+    @media screen and (max-width: $screen-xl) {
+      left: -200px;
+    }
+
+    @media screen and (max-width: $screen-md) {
+      display: none;
+    }
+  }
+}
