@@ -184,7 +184,7 @@ const Uncategorized = ({
         <div
           className="w-auto relative flex"
           style={{
-            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 142px)'}`,
+            height: `${unapprovedContacts > 0 ? 'calc(100vh - 202px)' : 'calc(100vh - 142px)'}`,
           }}>
           {categorizing ? (
             <CategorizePage
