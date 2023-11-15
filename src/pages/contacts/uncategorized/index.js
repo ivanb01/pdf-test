@@ -2,7 +2,7 @@ import Layout from 'components/Layout';
 import { types } from 'global/variables';
 import Uncategorized from 'components/Contacts/uncategorized-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setExpandedMenu } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Loader from 'components/shared/loader';
@@ -113,6 +113,14 @@ const index = () => {
   //   console.log('uncategorized cont', uncategorizedContactsOriginal);
   //   setUncategorizedContacts(contacts);
   // }, [openedSubtab]);
+
+  useEffect(() => {
+    dispatch(setExpandedMenu(false));
+
+    return () => {
+      dispatch(setExpandedMenu(true));
+    };
+  }, [dispatch]);
 
   const unapprovedContactsLength = unapprovedContacts?.data
     ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
