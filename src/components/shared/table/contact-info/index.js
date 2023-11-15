@@ -88,10 +88,11 @@ const ContactInfo = ({
       </div>
       <div className="ml-3">
         <div
-          className={`font-medium text-gray7 flex ${
-            maxWidth && `lg-w-[${maxWidth}]`
-          }  ellipsis-email xl:min-w-[100px] lg:w-[120px]`}>
-          {data.name} {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
+          className={`font-medium text-gray7 flex  ${maxWidth && `lg-w-[${maxWidth}]`}  xl:min-w-[100px] lg:w-[120px]`}>
+          <p className={'word-break overflow-hidden '} style={{ textOverflow: 'ellipsis' }}>
+            {data.name}
+          </p>{' '}
+          {showAIChip && <AIChip className="ml-2" reviewed={data.approved_ai} />}
         </div>
         {data.email && (
           <div
