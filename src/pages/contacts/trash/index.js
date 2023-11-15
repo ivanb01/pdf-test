@@ -11,6 +11,7 @@ import ReviewContact from '@components/overlays/review-contact';
 import { setOpenedTab } from 'store/global/slice';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -40,9 +41,9 @@ const index = () => {
       onSearch(searchTerm);
     }
   }, []);
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   const onSearch = (searchTerm) => {
     const filteredItems =
@@ -65,7 +66,8 @@ const index = () => {
       ) : (
         <>
           {unapprovedContactsLength > 0 && (
-            <GlobalAlert
+            <FloatingAlert
+              className="mx-[21px] mt-[14px]"
               message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
               type="smart-sync"
             />

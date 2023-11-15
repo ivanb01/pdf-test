@@ -14,6 +14,7 @@ import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -67,9 +68,9 @@ const index = () => {
     setActualContact(filteredArray?.data);
     console.log(term, filteredArray);
   };
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   return (
     <Layout>
@@ -79,7 +80,8 @@ const index = () => {
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             {unapprovedContactsLength > 0 && (
-              <GlobalAlert
+              <FloatingAlert
+                className="mx-[21px] mt-[14px]"
                 message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
                 type="smart-sync"
               />
