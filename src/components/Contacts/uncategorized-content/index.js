@@ -120,8 +120,8 @@ const Uncategorized = ({
     );
   };
   useEffect(() => {
-    console.log('Test');
-  }, []);
+    console.log(uncategorizedCopy, 'uncategorizedCopy');
+  }, [uncategorizedCopy]);
 
   return (
     <>
@@ -132,9 +132,11 @@ const Uncategorized = ({
             type="smart-sync"
           />
         )}
-        <div className="p-6 py-4 flex items-center justify-between">
+        <div className={` ${uncategorizedCopy?.length === 0 ? 'p-0' : 'p-6 py-4'}  flex items-center justify-between`}>
           <div className="flex items-center justify-between w-full">
-            {categorizing ? (
+            {uncategorizedCopy?.length === 0 ? (
+              <></>
+            ) : categorizing ? (
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
@@ -182,7 +184,7 @@ const Uncategorized = ({
         <div
           className="w-auto relative flex"
           style={{
-            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 110px)'}`,
+            height: `${unapprovedContacts?.length > 0 ? 'calc(100vh - 142px)' : 'calc(100vh - 142px)'}`,
           }}>
           {categorizing ? (
             <CategorizePage
@@ -195,6 +197,7 @@ const Uncategorized = ({
               setSelectedUncategorizedContactType={setSelectedUncategorizedContactType}
               selectedUncategorizedContactStatus={selectedUncategorizedContactStatus}
               setSelectedUncategorizedContactStatus={setSelectedUncategorizedContactStatus}
+              setUncategorizedCopy={setUncategorizedCopy}
               uncategorizedInitialState={uncategorizedInitialState}
               uncategorizedCopy={uncategorizedCopy}
               openedSubtab={openedSubtab}
