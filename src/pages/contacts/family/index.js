@@ -68,9 +68,9 @@ const index = () => {
     setActualContact(filteredArray?.data);
     console.log(term, filteredArray);
   };
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   return (
     <Layout>
@@ -79,10 +79,10 @@ const index = () => {
       ) : familyAndFriends?.length ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-            {unapprovedContacts > 0 && (
+            {unapprovedContactsLength > 0 && (
               <FloatingAlert
                 className="mx-[21px] mt-[14px]"
-                message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+                message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
                 type="smart-sync"
               />
             )}

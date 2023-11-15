@@ -247,7 +247,7 @@ const ReviewContact = ({
       email: values.email,
       phone_number: values.phone_number,
       category_id: category_id,
-      status_id: status_id,
+      status_id: status_id == '' ? 1 : status_id,
       category_2: category,
       summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
