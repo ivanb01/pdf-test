@@ -143,17 +143,15 @@ const index = () => {
               </Button>
             </div>
           </div>
-          {showDeleteFunctionality && (
-            <>
-              <hr className="my-6" />
-              <div className="font-medium">Clear Your Contacts and revoke access</div>
-              <div className="text-sm text-gray-700 mt-1 mb-6">
-                By clicking the button below, all contacts will be cleared from your account and Google access will be
-                revoked
-              </div>
-              <Button danger label="Clear & Revoke Access" onClick={() => setShowClearConfirmation(true)} />
-            </>
-          )}
+          <>
+            <hr className="my-6" />
+            <div className="font-medium">Clear Your Contacts and revoke access</div>
+            <div className="text-sm text-gray-700 mt-1 mb-6">
+              By clicking the button below, all contacts will be cleared from your account and Google access will be
+              revoked
+            </div>
+            <Button danger label="Clear & Revoke Access" onClick={() => setShowClearConfirmation(true)} />
+          </>
           {showClearConfirmation && (
             <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
           )}
