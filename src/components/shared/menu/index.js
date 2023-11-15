@@ -235,7 +235,6 @@ const MainMenu = ({ className, fixed }) => {
             onClick={() =>
               router.push({
                 pathname: '/contacts/uncategorized',
-                query: { categorize: true },
               })
             }
           />
