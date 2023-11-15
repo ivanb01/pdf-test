@@ -176,7 +176,7 @@ const GoogleContactsImportSummary = ({ data }) => {
                 onClick={() =>
                   router.push({
                     pathname: '/contacts/uncategorized',
-                    query: { categorize: true },
+                    // query: { categorize: true },
                   })
                 }
               />
