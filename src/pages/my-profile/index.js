@@ -146,11 +146,12 @@ const index = () => {
           {showDeleteFunctionality && (
             <>
               <hr className="my-6" />
-              <div className="font-medium">Clear Your Contacts</div>
+              <div className="font-medium">Clear Your Contacts and revoke access</div>
               <div className="text-sm text-gray-700 mt-1 mb-6">
-                By clicking the button below, all contacts will be cleared from your account
+                By clicking the button below, all contacts will be cleared from your account and Google access will be
+                revoked
               </div>
-              <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
+              <Button danger label="Clear & Revoke Access" onClick={() => setShowClearConfirmation(true)} />
             </>
           )}
           {showClearConfirmation && (

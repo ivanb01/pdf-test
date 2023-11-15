@@ -16,12 +16,14 @@ const ClearContacts = ({ title, handleCloseOverlay, onSubmit }) => {
           </div>
           <div className="flex flex-col ml-2">
             <Text h3 className="mb-4">
-              Clear all your contacts?
+              Clear all your contacts and revoke access?
             </Text>
             <Text p className="text-gray4 ">
               {/* Clients are not going to get events from this campaign. Are you
               sure you want to unassign client from campaign? */}
               Once you confirm, all of your contacts will be deleted from your account and you cannot bring them back.
+              Also Google consent will be revoked, you will have to set it up again.
+              <br />
               <br />
               Are you sure you want to clear?
             </Text>
