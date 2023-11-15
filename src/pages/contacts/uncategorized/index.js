@@ -114,9 +114,9 @@ const index = () => {
   //   setUncategorizedContacts(contacts);
   // }, [openedSubtab]);
 
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   return (
     <Layout>

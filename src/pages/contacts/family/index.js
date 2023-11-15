@@ -14,6 +14,7 @@ import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -78,9 +79,10 @@ const index = () => {
       ) : familyAndFriends?.length ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-            {unapprovedContactsLength > 0 && (
-              <GlobalAlert
-                message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            {unapprovedContacts > 0 && (
+              <FloatingAlert
+                className="mx-[21px] mt-[14px]"
+                message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
                 type="smart-sync"
               />
             )}

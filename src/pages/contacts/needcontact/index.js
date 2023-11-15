@@ -14,6 +14,7 @@ import { healthLastCommunicationDate } from '@global/variables';
 import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
 import withAuth from '@components/withAuth';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 const index = () => {
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
@@ -75,9 +76,10 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          {unapprovedContactsLength > 0 && (
-            <GlobalAlert
-              message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+          {unapprovedContacts > 0 && (
+            <FloatingAlert
+              className="mx-[21px] mt-[14px]"
+              message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
               type="smart-sync"
             />
           )}

@@ -27,6 +27,7 @@ import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
 import { ArrowRight } from '@mui/icons-material';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const buttons = [
   {
@@ -235,9 +236,9 @@ const Clients = ({
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
-          <GlobalAlert
+          <FloatingAlert
+            className="mx-[21px] mt-[14px]"
             message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
-            type="smart-sync"
           />
         )}
         <div className="p-6 py-4 flex items-center justify-between">

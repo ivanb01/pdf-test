@@ -12,6 +12,7 @@ import Close from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -127,7 +128,8 @@ const Uncategorized = ({
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
-          <GlobalAlert
+          <FloatingAlert
+            className="mx-[21px] mt-[14px]"
             message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
             type="smart-sync"
           />
