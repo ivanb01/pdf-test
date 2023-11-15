@@ -145,7 +145,7 @@ const index = () => {
           </div>
           <>
             <hr className="my-6" />
-            <div className="font-medium">Clear Your Contacts and revoke access</div>
+            <div className="font-medium">Clear Your Contacts and Revoke Access</div>
             <div className="text-sm text-gray-700 mt-1 mb-6">
               By clicking the button below, all contacts will be cleared from your account and Google access will be
               revoked
