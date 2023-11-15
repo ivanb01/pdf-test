@@ -28,6 +28,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
 import { ArrowRight } from '@mui/icons-material';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRef } from 'react';
 
 const buttons = [
   {
@@ -49,7 +50,7 @@ const Clients = ({
   currentButton,
 }) => {
   const dispatch = useDispatch();
-
+  const scrollRef = useRef();
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
@@ -232,6 +233,20 @@ const Clients = ({
     setSearchTerm('');
   }, [openedSubtab]);
 
+  useEffect(() => {
+    const handleScroll = (event) => {
+      if (event.target.scrollLeft > 80) {
+        document.querySelector('.arrow').style.opacity = '0';
+        scrollElement?.removeEventListener('scroll', handleScroll);
+      }
+    };
+
+    const scrollElement = scrollRef.current?.getScrollElement();
+    scrollElement?.addEventListener('scroll', handleScroll);
+
+    return () => scrollElement?.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -319,6 +334,7 @@ const Clients = ({
         {currentButton == 0 ? (
           <SimpleBar
             autoHide
+            ref={scrollRef}
             style={{
               maxWidth: '100%',
               height: '100%',
