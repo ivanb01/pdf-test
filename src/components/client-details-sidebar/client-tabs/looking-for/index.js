@@ -283,7 +283,7 @@ export default function LookingFor({ contactId, category }) {
         <AddLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
-          title="Add Property Interests"
+          title="Edit Property Interests"
           className="w-[580px]"
           handleClose={() => setShowAddPopup(false)}
         />
@@ -302,8 +302,8 @@ export default function LookingFor({ contactId, category }) {
           <Loader></Loader>
         </div>
       ) : (
-        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
+        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 158px)' }}>
+          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 158px)' }}>
             {loadingPropertyInterests || propertyInterests === undefined ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
@@ -322,10 +322,8 @@ export default function LookingFor({ contactId, category }) {
                         </p>
                         <Button
                           className="p-0"
-                          label={
-                            category === 'Landlord' || category === 'Seller' ? 'Add Property Details' : 'Add Interests'
-                          }
-                          leftIcon={<PlusIcon />}
+                          buttonPadding={'px-0'}
+                          label={'Edit Property Interests'}
                           primary
                           onClick={() => setShowAddPopup(true)}
                         />

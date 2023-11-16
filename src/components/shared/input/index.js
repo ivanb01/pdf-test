@@ -2,7 +2,7 @@ import Text from 'components/shared/text';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import Link from 'components/Link';
 import Router from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
@@ -349,23 +349,22 @@ const Input = ({
   };
 
   const dateInput = () => {
+    const ref = useRef();
     return (
       <>
         <input
           type={'date'}
+          onChange={onChange}
+          ref={ref}
           placeholder={'dd/mm/yyyy'}
-          className={
-            'relative w-full py-[9px] px-[13px] border border-gray-300 rounded-md h-10 text-sm leading-5 font-normal text-gray-500 placeholder:text-gray-500'
-          }
+          className={`relative w-full py-[9px] px-[13px] border border-gray-300 rounded-md h-10 text-sm leading-5 font-normal text-gray-500 placeholder:text-gray-500 ${
+            errorClasses && errorClasses
+          } `}
         />
-        <div className={'absolute text-gray-300 mr-[13px]'} style={{ marginTop: '-34px', right: 0 }}>
-          <CalendarTodayIcon className={'h-5 w-5'} />
+        <div className={'absolute text-gray-300 mr-[13px] cursor-pointer'} style={{ marginTop: '-34px', right: 0 }}>
+          <CalendarTodayIcon className={'h-5 w-5'} onClick={() => ref.current.focus()} />
         </div>
-        {error && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-          </div>
-        )}
+        {error && <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"></div>}
       </>
     );
   };

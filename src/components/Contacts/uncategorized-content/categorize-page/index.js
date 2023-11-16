@@ -22,6 +22,7 @@ import DropdownWithSearch from '@components/dropdownWithSearch';
 const CategorizePage = ({
   uncategorizedContacts,
   setUncategorizedContacts,
+  setUncategorizedCopy,
   selectedUncategorized,
   setSelectedUncategorized,
   handleSelectUncategorized,
@@ -48,6 +49,17 @@ const CategorizePage = ({
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  useEffect(() => {
+    console.log(
+      categorizedInThisSession,
+      'categorizedInThisSession',
+      categorizationInProcess,
+      'categorizationInProcess',
+      uncategorizedContacts,
+      'uncategorizedContacts',
+    );
+  }, [categorizedInThisSession, categorizationInProcess, uncategorizedContacts]);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
@@ -168,7 +180,11 @@ const CategorizePage = ({
       )}
       <div
         className={`bg-white pb-[72px] border-t border-gray-200 relative ${
-          uncategorizedContacts.length ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]' : 'w-[75%]'
+          uncategorizedContacts.length
+            ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]'
+            : uncategorizedContacts.length === 0 && categorizedInThisSession.length === 0
+            ? 'w-[100%]'
+            : 'w-[75%]'
         } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
@@ -235,9 +251,11 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <div className={'pb-[200px]'}>
+                      <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          onMenuOpen={() => setIsMenuOpen(true)}
+                          onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"
                           onChange={(type) => {
                             console.log(type);
@@ -255,7 +273,7 @@ const CategorizePage = ({
             </div>
           </SimpleBar>
         ) : uncategorizedContacts?.length == 0 ? (
-          <div className="flex flex-col items-center justify-center h-full mx-auto my-0">
+          <div className="flex flex-col items-center justify-center h-full mx-auto my-12">
             <lottie-player
               src="/animations/categorize.json"
               style={{ width: '420px', height: '300px' }}
@@ -270,15 +288,15 @@ const CategorizePage = ({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
-            <Image src={noContactsSelected}></Image>
-            <Text h3 className="text-gray7 my-4 text-center">
+            <Image src={noContactsSelected} />
+            <Text h3 className="text-gray7 my-4 text-center text-[15px]">
               You haven’t selected any contact from left side panel yet
             </Text>
             <Text p className="text-gray4 relative text-center">
-              <div className="absolute -left-40 bottom-1">
+              <div className="absolute left-[-110px] bottom-1 w-24">
                 <Image src={noContactsSelectedArrow}></Image>
               </div>
-              <span>
+              <span className={''}>
                 <strong>Select a contact</strong> to start the categorization
               </span>
             </Text>
@@ -286,44 +304,53 @@ const CategorizePage = ({
         )}
       </div>
 
-      {showCategorizedSection && (
+      {categorizedInThisSession?.length > 0 ? (
         <div
-          className={`border border-gray-200 overflow-hidden relative h-full  sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
-          {categorizedInThisSession?.length > 0 ? (
-            <SimpleBar autoHide style={{ maxHeight: '100%' }}>
-              <Table
-                tableFor="categorized"
-                data={categorizedInThisSession}
-                undoAllCategorizations={undoAllCategorizations}
-                undoCategorization={undoCategorization}
-              />
-            </SimpleBar>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0">
-              <Image src={noCategorized}></Image>
-              <Text h3 className="text-gray7 mt-4 mb-2 text-center">
-                You haven’t categorized any contact in this session yet
-              </Text>
-              <Text p className="text-gray4 relative text-center">
-                To categorize please specify type and {selectedUncategorizedContactType == 8 ? 'subtype' : 'status'}.
-              </Text>
-            </div>
-          )}
+          className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
+          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+            <Table
+              tableFor="categorized"
+              data={categorizedInThisSession}
+              undoAllCategorizations={undoAllCategorizations}
+              undoCategorization={undoCategorization}
+            />
+          </SimpleBar>
+        </div>
+      ) : null}
+
+      {categorizedInThisSession.length === 0 && uncategorizedContacts.length > 0 && (
+        <div
+          className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
+          <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0 p-3">
+            <Image src={noCategorized} />
+            <Text h3 className="text-gray7 mt-4 mb-2 text-center text-[15px]">
+              You haven’t categorized any contact in this session yet
+            </Text>
+            <Text p className="text-gray4 relative text-center text-sm">
+              To categorize, please specify type and {selectedUncategorizedContactType == 8 ? 'subtype' : 'status'}.
+            </Text>
+          </div>
         </div>
       )}
-      <div
-        style={{ zIndex: '99999 !important' }}
-        className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu rounded-b-lg flex items-center justify-end">
-        <Button
-          primary
-          label="Save & Exit"
-          className="mr-4"
-          onClick={() => {
-            setSelectedUncategorized([]);
-            handleStartCategorizing(false);
-          }}
-        />
-      </div>
+      {(categorizedInThisSession.length > 0 || uncategorizedContacts.length > 0) && (
+        <div
+          style={{ zIndex: '99999 !important' }}
+          className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu  flex items-center justify-end">
+          <Button
+            primary
+            label="Save"
+            className="mr-4"
+            onClick={() => {
+              setSelectedUncategorized([]);
+              setCategorizedInThisSession([]);
+              if (uncategorizedContacts.length === 0) {
+                setUncategorizedCopy([]);
+              }
+              // handleStartCategorizing(false);
+            }}
+          />
+        </div>
+      )}
     </>
   );
 };

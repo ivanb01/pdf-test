@@ -16,15 +16,15 @@ const UnassignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
           </div>
           <div className="flex flex-col ml-2">
             <Text h3 className="mb-4">
-              Unassign Client from Campaign?
+              Cancel campaign for this client?
             </Text>
             <Text p className="text-gray4 ">
               {/* Clients are not going to get events from this campaign. Are you
               sure you want to unassign client from campaign? */}
-              Once you unassign client from this campaign, you can’t assign back again. Unassigning the client from
-              campaign will stop immediately the events of this campaign.
+              Once you cancel campaign for this client, you can’t re-start it. Canceling the campaign will immediately
+              stop all events that are scheduled in this campaign.
               <br />
-              Are you sure you want to unassign?
+              Are you sure you want to cancel?
             </Text>
 
             {/* <Text p className="text-gray4 mt-2">
@@ -35,7 +35,7 @@ const UnassignOverlay = ({ title, handleCloseOverlay, onSubmit }) => {
         <div className="flex flex-row justify-end mt-4">
           <Button onClick={handleCloseOverlay} label="Cancel" white className="mr-2" />
           <Button
-            label="Yes, unassign"
+            label="Yes, cancel"
             danger
             loading={loadingButton}
             onClick={() => {

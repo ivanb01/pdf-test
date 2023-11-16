@@ -12,6 +12,7 @@ import Close from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -119,19 +120,25 @@ const Uncategorized = ({
       </>
     );
   };
+  useEffect(() => {
+    console.log(uncategorizedCopy, 'uncategorizedCopy');
+  }, [uncategorizedCopy]);
 
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && !categorizing && (
-          <GlobalAlert
-            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+        {unapprovedContacts > 0 && (
+          <FloatingAlert
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
         )}
-        <div className="p-6 py-4 flex items-center justify-between">
+        <div className={` ${uncategorizedCopy?.length === 0 ? 'p-0' : 'p-6 py-4'}  flex items-center justify-between`}>
           <div className="flex items-center justify-between w-full">
-            {categorizing ? (
+            {uncategorizedCopy?.length === 0 ? (
+              <></>
+            ) : categorizing ? (
               <>
                 <div className="flex items-center justify-between w-full">
                   <Text h3 className="text-gray7">
@@ -147,9 +154,9 @@ const Uncategorized = ({
                     }}
                   />
                 </div>
-                <div>
-                  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />
-                </div>
+                {/*<div>*/}
+                {/*  <Close className="text-gray3 cursor-pointer" onClick={() => handleStartCategorizing(false)} />*/}
+                {/*</div>*/}
               </>
             ) : (
               <>
@@ -176,7 +183,11 @@ const Uncategorized = ({
             )}
           </div>
         </div>
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 142px)' }}>
+        <div
+          className="w-auto relative flex"
+          style={{
+            height: `${unapprovedContacts > 0 ? 'calc(100vh - 202px)' : 'calc(100vh - 142px)'}`,
+          }}>
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}
@@ -188,6 +199,7 @@ const Uncategorized = ({
               setSelectedUncategorizedContactType={setSelectedUncategorizedContactType}
               selectedUncategorizedContactStatus={selectedUncategorizedContactStatus}
               setSelectedUncategorizedContactStatus={setSelectedUncategorizedContactStatus}
+              setUncategorizedCopy={setUncategorizedCopy}
               uncategorizedInitialState={uncategorizedInitialState}
               uncategorizedCopy={uncategorizedCopy}
               openedSubtab={openedSubtab}

@@ -30,7 +30,7 @@ const GoogleImportContacts = () => {
   };
 
   const handleStartCategorizing = () => {
-    router.push('/contacts/uncategorized?categorize=true');
+    router.push('/contacts/uncategorized');
   };
   const renderTable = (title, data) => {
     if (!data || data.length === 0) {

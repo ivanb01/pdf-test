@@ -2,7 +2,7 @@ import Layout from 'components/Layout';
 import { types } from 'global/variables';
 import Uncategorized from 'components/Contacts/uncategorized-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setExpandedMenu } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Loader from 'components/shared/loader';
@@ -24,7 +24,7 @@ const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [categorizing, setCategorizing] = useState(false);
+  const [categorizing, setCategorizing] = useState(true);
   const [uncategorizedContactsOriginal, setUncategorizedContactsOriginal] = useState([]);
   const [uncategorizedContacts, setUncategorizedContacts] = useState([]);
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
@@ -113,6 +113,21 @@ const index = () => {
   //   console.log('uncategorized cont', uncategorizedContactsOriginal);
   //   setUncategorizedContacts(contacts);
   // }, [openedSubtab]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(setExpandedMenu(false));
+    }, 1000);
+
+    return () => {
+      dispatch(setExpandedMenu(true));
+    };
+  }, [dispatch]);
+
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
+
   return (
     <Layout>
       {loading ? (
@@ -125,7 +140,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
-            unapprovedContacts={unapprovedContacts?.data.filter((contact) => contact.category_id == 1).length}
+            unapprovedContacts={unapprovedContactsLength}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}

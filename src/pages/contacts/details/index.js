@@ -21,8 +21,9 @@ import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
 import Loader from '@components/shared/loader';
+import withAuth from '@components/withAuth';
 
-export default function Details() {
+const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
@@ -38,6 +39,9 @@ export default function Details() {
   const [current, setCurrent] = useState(0);
   const localTabs = tabs(id, contact);
 
+  useEffect(() => {
+    console.log(contact);
+  }, [contact]);
   const getActivityLog = async () => {
     const activityLogResponse = await getContactActivities(id).catch((error) => {
       console.log(error);
@@ -191,26 +195,28 @@ export default function Details() {
           </div>
         ) : (
           <>
-            <div className="p-6 inline-block">
-              <a
-                href="#"
-                onClick={() => {
-                  backUrl !== null ? router.push(backUrl) : router.back();
-                }}
-                className="items-center flex">
-                <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">
-                  Back to{' '}
-                  {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
-                    ? 'Family & Friends'
-                    : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
-                </div>
-              </a>
-            </div>
             {id && (
               <div className="flex flex-row border-t border-gray-2">
                 <ClientDetailsSidebar
                   client={contact}
+                  backButton={
+                    <div className="pl-6 pt-6 inline-block">
+                      <a
+                        href="#"
+                        onClick={() => {
+                          backUrl !== null ? router.push(backUrl) : router.back();
+                        }}
+                        className="items-center flex">
+                        <Image className="cursor-pointer" src={backArrow} />
+                        <div className="ml-2 font-medium">
+                          Back to{' '}
+                          {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
+                            ? 'Family & Friends'
+                            : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
+                        </div>
+                      </a>
+                    </div>
+                  }
                   // afterUpdate={fetchContact}
                 />
                 <Tabs
@@ -227,7 +233,8 @@ export default function Details() {
       </div>
     </>
   );
-}
+};
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

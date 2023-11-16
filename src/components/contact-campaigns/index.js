@@ -23,8 +23,11 @@ import {
 import Loader from 'components/shared/loader';
 import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
+import { useDispatch } from 'react-redux';
+import { setExpandedMenu } from '@store/global/slice';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
+  const dispatch = useDispatch();
   const [showEventPreview, setShowEventPreview] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(1);
   const [showUnassignOverlay, setShowUnassignOverlay] = useState(false);
@@ -44,6 +47,10 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(setExpandedMenu(true));
+  }, []);
   const handleSelectContact = (event, contact) => {
     if (event?.target.checked) {
       // add to array

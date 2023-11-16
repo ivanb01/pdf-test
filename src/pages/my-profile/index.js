@@ -20,6 +20,7 @@ import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail }
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
@@ -143,16 +144,15 @@ const index = () => {
               </Button>
             </div>
           </div>
-          {showDeleteFunctionality && (
-            <>
-              <hr className="my-6" />
-              <div className="font-medium">Clear Your Contacts</div>
-              <div className="text-sm text-gray-700 mt-1 mb-6">
-                By clicking the button below, all contacts will be cleared from your account
-              </div>
-              <Button white label="Clear All Contacts" onClick={() => setShowClearConfirmation(true)} />
-            </>
-          )}
+          <>
+            <hr className="my-6" />
+            <div className="font-medium">Clear Your Contacts and Revoke Access</div>
+            <div className="text-sm text-gray-700 mt-1 mb-6">
+              By clicking the button below, all contacts will be cleared from your account and Google access will be
+              revoked
+            </div>
+            <Button danger label="Clear & Revoke Access" onClick={() => setShowClearConfirmation(true)} />
+          </>
           {showClearConfirmation && (
             <ClearContacts handleCloseOverlay={() => setShowClearConfirmation(false)} onSubmit={() => deleteData()} />
           )}
@@ -258,7 +258,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

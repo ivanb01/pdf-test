@@ -50,8 +50,10 @@ const index = () => {
   const fetchUnapproved = async () => {
     try {
       const response = await getUnapprovedContacts();
+      console.log(response.data);
       dispatch(setUnapprovedContacts(response.data));
     } catch (error) {
+      dispatch(setUnapprovedContacts([]));
       console.log('error msg', error.message);
     }
   };
@@ -161,12 +163,14 @@ const index = () => {
               setContactToEdit(contact);
             }}
             unapprovedContacts={
-              unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+              unapprovedContacts?.data
+                ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+                : 0
             }
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          {currentButton == 0 && (
+          {currentButton == 0 && openedTab == 0 && openedSubtab == 0 && (
             <div class="arrow pointer-events-none">
               <span></span>
               <span></span>

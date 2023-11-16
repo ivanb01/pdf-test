@@ -27,6 +27,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { setProfessionalsFilter } from '@store/global/slice';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 const tabs = [
   {
@@ -77,6 +78,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const professionals = useSelector((state) => state.contacts.professionals);
   const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
   const [searchTerm, setSearchTerm] = useState(' ');
+  const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
+
+  useEffect(() => {
+    setFilteredProfessionals(contacts);
+  }, [contacts]);
+
   function hasAnyProperties(obj) {
     for (let prop in obj) {
       if (obj.hasOwnProperty(prop)) {
@@ -87,7 +94,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   }
   useEffect(() => {
     if (contacts.length && !hasAnyProperties(professionalsFilters)) {
-      dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
+      setFilteredProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional'));
     }
   }, [openedSubtab, professionalsFilters]);
 
@@ -127,7 +134,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       }
     });
 
-    dispatch(setProfessionals(contactsState));
+    setFilteredProfessionals(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -176,12 +183,14 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
   const getFilterCount = () => {
     if (openedSubtab == 1) {
-      return professionals.filter((contact) => contact.category_id == 12 && contact.category_1 == 'Professional')
-        .length;
+      return filteredProfessionals.filter(
+        (contact) => contact.category_id == 12 && contact.category_1 == 'Professional',
+      ).length;
     } else if (openedSubtab == 2) {
-      return professionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional').length;
+      return filteredProfessionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional')
+        .length;
     } else {
-      return professionals.filter(
+      return filteredProfessionals.filter(
         (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
       ).length;
     }
@@ -198,8 +207,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
-          <GlobalAlert
-            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+          <FloatingAlert
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
         )}
@@ -210,7 +220,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder="Search"
+                placeholder={`Search ` + professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()}
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
@@ -300,6 +310,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
               <Table
+                data={filteredProfessionals}
                 tableFor="professionals"
                 categoryType="professionals"
                 handleCardEdit={handleCardEdit}

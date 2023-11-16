@@ -106,6 +106,47 @@ html {
   margin: 0;
 }
 
+h1 {
+  font-size: 48px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 28px;
+  }
+}
+
+h2 {
+  font-size: 36px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 24px;
+  }
+}
+
+h3 {
+  font-size: 30px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 24px;
+  }
+}
+
+h4 {
+  font-size: 20px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 18px;
+  }
+}
+
+h5 {
+  font-size: 18px;
+}
+
+.container-public {
+  margin: 0 auto;
+  max-width: 1440px;
+}
+
 .main-page {
   width: 100%;
 }
@@ -189,8 +230,6 @@ html {
     fill: #8f95b2;
   }
 }
-
-
 
 .custom-menu-item.active {
   background-color: rgba(255, 255, 255, 0.1);
@@ -370,7 +409,7 @@ html {
 }
 
 .details-tabs-fixed-height {
-  height: calc(100vh - 222px) !important;
+  height: calc(100vh - 170px) !important;
 }
 
 .details-campaign-fixed-height {
@@ -469,7 +508,6 @@ tbody > div {
   display: -webkit-inline-box;
 }
 
-
 .map-container {
   height: 500px;
   width: 100%;
@@ -524,7 +562,6 @@ tbody > div {
   display: block;
   transition: opacity 300ms ease-in-out;
 }
-
 
 .TooltipContent {
   border-radius: 8px;
@@ -710,9 +747,10 @@ tbody > div {
 }
 
 .arrow {
+  transition: all 0.3s ease;
   position: absolute;
   right: 70px;
-  top: 35%;
+  top: 45%;
   transform: rotate(270deg);
   cursor: pointer;
 }

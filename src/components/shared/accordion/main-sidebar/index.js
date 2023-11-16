@@ -189,6 +189,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     );
   };
 
+  useEffect(() => {
+    console.log(openedSubtab);
+  }, [openedSubtab]);
   return (
     <>
       <div
@@ -314,7 +317,15 @@ const TabBar = ({ tab }) => {
 
   useEffect(() => {
     setOpenedTab(0);
-    setOpenedSubtab(0);
+    if (openedSubtab !== 0) {
+      console.log('test');
+      setOpenedSubtab(0);
+    } else {
+      console.log('test2');
+
+      setOpenedSubtab(openedSubtab);
+    }
+
     dispatch(setExpandedTab({ id: 0, opened: true }));
   }, []);
 

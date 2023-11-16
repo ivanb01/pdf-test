@@ -27,6 +27,8 @@ import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
 import { ArrowRight } from '@mui/icons-material';
+import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRef } from 'react';
 
 const buttons = [
   {
@@ -48,7 +50,7 @@ const Clients = ({
   currentButton,
 }) => {
   const dispatch = useDispatch();
-
+  const scrollRef = useRef();
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
@@ -57,6 +59,11 @@ const Clients = ({
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredContacts, setFilteredContacts] = useState(contacts);
+
+  useEffect(() => {
+    setFilteredContacts(contacts);
+  }, [contacts]);
 
   const tabs = [
     {
@@ -166,7 +173,7 @@ const Clients = ({
       }
     });
 
-    dispatch(setClients(contactsState));
+    setFilteredContacts(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -212,7 +219,7 @@ const Clients = ({
   };
 
   const getFilterCount = () => {
-    return clients.filter(
+    return filteredContacts.filter(
       (contact) =>
         contact.category_1 == 'Client' &&
         contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
@@ -226,13 +233,26 @@ const Clients = ({
     setSearchTerm('');
   }, [openedSubtab]);
 
+  useEffect(() => {
+    const handleScroll = (event) => {
+      if (event.target.scrollLeft > 80) {
+        document.querySelector('.arrow').style.opacity = '0';
+      }
+    };
+
+    const scrollElement = scrollRef.current?.getScrollElement();
+    scrollElement?.addEventListener('scroll', handleScroll);
+
+    // return () => scrollElement?.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
-          <GlobalAlert
-            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
-            type="smart-sync"
+          <FloatingAlert
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           />
         )}
         <div className="p-6 py-4 flex items-center justify-between">
@@ -243,7 +263,9 @@ const Clients = ({
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder="Search"
+                placeholder={
+                  `Search ` + clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle].toLowerCase()
+                }
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
@@ -278,8 +300,8 @@ const Clients = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {clients.length}
-                  {getFilterCount() ? ' result' : ' results'} for:
+                  {filteredContacts.length}
+                  {filteredContacts.length == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(clientsFilters).map((key, index) =>
                   clientsFilters[key].map((filter, i) => (
@@ -311,6 +333,7 @@ const Clients = ({
         {currentButton == 0 ? (
           <SimpleBar
             autoHide
+            ref={scrollRef}
             style={{
               maxWidth: '100%',
               height: '100%',
@@ -320,6 +343,7 @@ const Clients = ({
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
                 <>
                   <Column
+                    contacts={filteredContacts}
                     key={index}
                     status={status}
                     categoryType="clients"
@@ -335,6 +359,7 @@ const Clients = ({
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
+                  contacts={filteredContacts}
                   tableFor="contactsList"
                   categoryType="clients"
                   handleCardEdit={handleCardEdit}
@@ -352,16 +377,15 @@ const Clients = ({
         className="top-[70px]"
         buttons={
           <>
-            {Object.values(clientsFilters).flat().length > 0 && (
-              <Button
-                white
-                label="Clear Filter"
-                onClick={() => {
-                  setFiltersCleared(true);
-                  dispatch(setClientsFilters({}));
-                }}
-              />
-            )}
+            <Button
+              disabled={!Object.values(clientsFilters).flat().length > 0}
+              white
+              label="Clear Filter"
+              onClick={() => {
+                setFiltersCleared(true);
+                dispatch(setClientsFilters({}));
+              }}
+            />
             {/* <Button
               onClick={filterContacts}
               primary
