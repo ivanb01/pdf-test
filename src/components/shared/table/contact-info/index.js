@@ -88,7 +88,7 @@ const ContactInfo = ({
       </div>
       <div className="ml-3">
         <div
-          className={`font-medium text-gray7 flex  ${maxWidth && `lg-w-[${maxWidth}]`}  xl:min-w-[100px] lg:w-[130px]`}>
+          className={`font-medium text-gray7 flex  ${maxWidth && `lg-w-[${maxWidth}]`}  xl:min-w-[100px] lg:w-[150px]`}>
           <p className={'word-break overflow-hidden '} style={{ textOverflow: 'ellipsis' }}>
             {data.name}
           </p>{' '}
