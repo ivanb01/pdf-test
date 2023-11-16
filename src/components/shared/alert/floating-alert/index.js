@@ -18,18 +18,12 @@ const FloatingAlert = ({ message, className }) => {
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-semibold text-[#B54708]">{message}</h3>
-          <div className="mt-1 text-sm text-[#B54708]">
-            <p>
-              New contacts have automatically been pulled from your email and categorized by AI. Click below on "See
-              Summary" to see and review them.
-            </p>
-          </div>
-          <div className="mt-2">
+          <div className="mt-4">
             <div className="-mx-2 -my-1.5 flex">
               <button
                 onClick={() => router.push('/ai-summary')}
                 type="button"
-                className="rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-orange-50">
+                className="ml-2 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-orange-50">
                 See Summary {'->'}
               </button>
             </div>
