@@ -115,7 +115,9 @@ const index = () => {
   // }, [openedSubtab]);
 
   useEffect(() => {
-    dispatch(setExpandedMenu(false));
+    setTimeout(() => {
+      dispatch(setExpandedMenu(false));
+    }, 1000);
 
     return () => {
       dispatch(setExpandedMenu(true));
