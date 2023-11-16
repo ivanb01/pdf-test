@@ -17,90 +17,77 @@ import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
 import { getAllEvents, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
-import { setCRMCampaigns } from '@store/campaigns/slice';
+import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 
 const index = () => {
   const router = useRouter();
   const { id, category } = router.query;
   const [currentButton, setCurrentButton] = useState(0);
-  const allContacts = useSelector((state) => state.contacts.allContacts.data);
-  const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
+  const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
   const [campaignDetails, setCampaignDetails] = useState();
-  const [campaignData, setCampaignData] = useState();
+  const [campaignEvents, setCampaignEvents] = useState();
   const dispatch = useDispatch();
-  const [campaignDetailsV2, setCampaignsDetailsV2] = useState();
 
   useEffect(() => {
     getAllEvents(id).then((res) => {
-      setCampaignData(res.data);
+      setCampaignEvents(res.data);
     });
   }, [id]);
+  useEffect(() => {
+    console.log(usersInCampaignGlobally, 'v2');
+  }, [usersInCampaignGlobally]);
 
   useEffect(() => {
     if (CRMCampaigns === undefined) {
-      getCampaignsByCategory('Client').then((res) => dispatch(setCRMCampaigns(res.data)));
+      getCampaignsByCategory('Client').then((res) => {
+        dispatch(setCRMCampaigns(res.data));
+        setCampaignDetails(res.data.campaigns.find((c) => c.campaign_id == id));
+      });
     } else if (CRMCampaigns !== undefined) {
-      const campaigns = CRMCampaigns.campaigns.find((c) => c.campaign_id === id);
+      const campaigns = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
       setCampaignDetails(campaigns);
     }
   }, [CRMCampaigns, id]);
   useEffect(() => {
-    getCampaignsUsers(id).then((res) => setCampaignsDetailsV2(res.data));
+    getCampaignsUsers(id).then((res) => {
+      dispatch(setUsersInCampaignGlobally(res.data));
+    });
   }, [id]);
 
-  const totalContacts = allContacts?.filter(
-    (contact) =>
-      contact.category_1 === 'Client' &&
-      contact.category_2 === category &&
-      contact.status_2 === campaignData?.campaign_name,
-  );
-  const inCampaignContacts = allContacts?.filter(
-    (contact) =>
-      contact.category_1 === 'Client' &&
-      contact.category_2 === category &&
-      campaignData?.campaign_name === contact.status_2 &&
-      contact.is_in_campaign === 'assigned',
-  );
-  const notInCamapaignContacts = allContacts?.filter(
-    (contact) =>
-      contact.category_1 === 'Client' &&
-      contact.category_2 === category &&
-      campaignData?.campaign_name === contact.status_2 &&
-      contact.is_in_campaign === null,
-  );
+  const totalContacts = usersInCampaignGlobally?.contacts;
+  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign;
+  const notInCamapaignContacts = usersInCampaignGlobally?.contacts_not_campaign;
   const eventTypes = [
     {
       name: 'ALL EVENTS',
       icon: allEventsIcon,
-      amount:
-        campaignData?.events?.filter((event) => event.event_type === 'Email').length +
-        campaignData?.events?.filter((event) => event.event_type === 'SMS').length,
+      amount: usersInCampaignGlobally?.events.count,
     },
     {
       name: 'EMAIL EVENTS',
       icon: emailEventsIcon,
-      amount: campaignData?.events?.filter((event) => event.event_type === 'Email').length,
+      amount: usersInCampaignGlobally?.events.email,
     },
     {
       name: 'SMS EVENTS',
       icon: smsEventsIcon,
-      amount: campaignData?.events?.filter((event) => event.event_type === 'SMS').length,
+      amount: usersInCampaignGlobally?.events.sms,
     },
     {
       name: 'CAMPAIGN MATCHED TO',
       icon: campaignsMatchedTo,
-      amount: totalContacts?.length,
+      amount: usersInCampaignGlobally?.contacts.length,
     },
     {
       name: 'CLIENTS IN CAMPAIGN',
       icon: inCampaign,
-      amount: campaignDetails?.contact_assigned_count,
+      amount: usersInCampaignGlobally?.contacts_assigned_count,
     },
     {
       name: 'CLIENTS NOT IN CAMPAIGN',
       icon: notInCampaign,
-      amount: campaignDetails?.contact_unassigned_count,
+      amount: usersInCampaignGlobally?.contacts_unassigned_count,
     },
   ];
   const buttons = [
@@ -126,25 +113,40 @@ const index = () => {
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
+  useEffect(() => {
+    console.log(campaignEvents, 'CampaignEvents');
+  }, [campaignEvents]);
 
   const renderTable = (currentButton) => {
     switch (currentButton) {
       case 0:
-        return <Table tableFor={'allCampaignContacts'} data={totalContacts} />;
+        return (
+          <SimpleBar style={{ height: '100%' }} autoHide>
+            <Table tableFor={'allCampaignContacts'} data={totalContacts} />
+          </SimpleBar>
+        );
       case 1:
-        return <Table tableFor={'inCampaignContacts'} data={inCampaignContacts} setCurrentButton={setCurrentButton} />;
+        return (
+          <SimpleBar style={{ height: '100%' }} autoHide>
+            <Table tableFor={'inCampaignContacts'} data={inCampaignContacts} setCurrentButton={setCurrentButton} />
+          </SimpleBar>
+        );
       case 2:
-        return <Table tableFor={'notInCampaignContacts'} data={notInCamapaignContacts} />;
+        return (
+          <SimpleBar style={{ height: '100%' }} autoHide>
+            <Table tableFor={'notInCampaignContacts'} data={notInCamapaignContacts} />
+          </SimpleBar>
+        );
     }
   };
 
   return (
-    <SimpleBar style={{ maxHeight: '100%' }}>
+    <>
       <MainMenu />
-      {allContacts === undefined ||
-      campaignData === undefined ||
+      {campaignEvents === undefined ||
       CRMCampaigns === undefined ||
-      campaignDetails === undefined ? (
+      campaignDetails === undefined ||
+      usersInCampaignGlobally === undefined ? (
         <div className="relative h-[90vh]">
           <Loader />
         </div>
@@ -160,7 +162,7 @@ const index = () => {
                 <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.campaign_name}</h4>
                 <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
                   <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {`${category}s`}: {campaignDetailsV2?.contact_status_1}
+                    {`${category}s`}: {usersInCampaignGlobally?.contact_status_1}
                   </span>
                 </div>
               </div>
@@ -196,10 +198,10 @@ const index = () => {
               onInput={(event) => setSearchTerm(event.target.value)}
             />
           </div>
-          {allContacts === undefined ? <></> : renderTable(currentButton)}
+          {renderTable(currentButton)}
           {openCampaignPreview && (
             <CampaignPreview
-              data={campaignData}
+              data={campaignEvents}
               campaignId={id}
               open={openCampaignPreview}
               setOpen={setOpenCampaignPreview}
@@ -211,7 +213,7 @@ const index = () => {
           )}
         </>
       )}
-    </SimpleBar>
+    </>
   );
 };
 

@@ -123,7 +123,30 @@ export const formatDateLT = (date) => {
 export const formatDateLThour = (date) => {
   return moment(date).format('LT');
 };
+//TODO remove from here
+export const formatDateStringMDY = (dateString) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${month} ${day}, ${year}`;
+};
 export const formatDateCalendar = (date) => {
   const calendarDate = moment(date).calendar();
   const calendarDateArray = calendarDate.split(' ');

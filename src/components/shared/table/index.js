@@ -6,6 +6,7 @@ import {
   formatDateLL,
   getInitials,
   getDateFormat,
+  formatDateStringMDY,
 } from 'global/functions';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
@@ -2105,8 +2106,8 @@ const Table = ({
   const allCampaignContacts = () => {
     return data && data?.length > 0 ? (
       <>
-        <thead>
-          <tr className="bg-gray-50 text-gray4">
+        <thead className={'sticky top-0 z-10'}>
+          <tr className="bg-gray-50 text-gray4 sticky top-0">
             <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
               RENTER-NEW LEAD
             </th>
@@ -2137,7 +2138,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className={'overflow-y-scroll'}>
           {data.map((person) => (
             <tr
               key={person.id}
@@ -2155,32 +2156,30 @@ const Table = ({
                       <img
                         className="inline-block h-10 w-10 rounded-full"
                         src={person.profile_image_path}
-                        alt={person.first_name}
+                        alt={person.contact_name}
                       />
                     ) : (
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
                         <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                          {getInitials(person.contact_name).toUpperCase()}
                         </span>
                       </span>
                     )}
                   </div>
                   <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                      {person.first_name} {person.last_name}
-                    </h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4">
-                <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
-                  <p className={'text-xs leading-4 font-medium text-gray8'}>
-                    {getSource(person.import_source_text, person.approved_ai).name}
-                  </p>
-                </div>
-                {person.summary !== null && person.summary.length > 0 && (
+                {/*<div className={'flex gap-1.5 items-center justify-start'}>*/}
+                {/*  {getSource(person.import_source_text).icon}*/}
+                {/*  <p className={'text-xs leading-4 font-medium text-gray8'}>*/}
+                {/*    {getSource(person.import_source_text, person.approved_ai).name}*/}
+                {/*  </p>*/}
+                {/*</div>*/}
+                {person.contact_summary !== null && person.contact_summary.length > 0 ? (
                   <TooltipComponent
                     side={'bottom'}
                     align={'center'}
@@ -2189,21 +2188,27 @@ const Table = ({
                         className={
                           'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                         }>
-                        {person.summary}
+                        {person.contact_summary}
                       </div>
                     }>
                     <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                      <p className="text-xs leading-4 font-normal">{person.summary}</p>
+                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
                   </TooltipComponent>
+                ) : (
+                  <>-</>
                 )}
               </td>
               <td className={'px-6 py-4'}>
-                <DateChip
-                  lastCommunication={person.last_communication_date}
-                  contactStatus={person.status_2}
-                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
-                />
+                {person.last_communication ? (
+                  <DateChip
+                    lastCommunication={person.last_communication}
+                    contactStatus={person.status_2}
+                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  />
+                ) : (
+                  <>-</>
+                )}
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-4'}>
@@ -2219,10 +2224,14 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} activePerson={person} />
+                  <Toggle
+                    active={person.contact_campaign_status === 'assigned'}
+                    disabled={person.contact_campaign_status === 'unassigned'}
+                    activePerson={person}
+                  />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
-                      {person.is_in_campaign === null ? 'Inactive' : 'Active'}
+                      {person.contact_campaign_status !== 'assigned' ? 'Inactive' : 'Active'}
                     </span>
                   </div>
                 </div>
@@ -2232,14 +2241,24 @@ const Table = ({
                   <div className={'flex gap-1 items-center'}>
                     <div
                       className={`h-2 w-2 rounded-xl ${
-                        person.campaign_name === null ? 'bg-red-500' : 'bg-green-500'
+                        person.contact_campaign_status === 'assigned' ? 'bg-green-500' : 'bg-red-500'
                       }`}></div>
                     <p className={'text-sm leading-5 font-medium text-gray7'}>
-                      {person.campaign_name === null ? 'Never in Campaign' : 'Campaign is Running'}
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Campaign is Running'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Campaign Deactivated'
+                        : 'Never In Campaign'}
                     </p>
                   </div>
-                  {person.campaign_name !== null && (
-                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>from July 20, 2023</div>
+                  {person.contact_campaign_status !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
+                        : person.contact_campaign_status === 'unassigned'
+                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                        : ''}
+                    </div>
                   )}
                 </div>
               </td>
@@ -2310,40 +2329,31 @@ const Table = ({
                     {person.profile_image_path ? (
                       <img
                         className="inline-block h-10 w-10 rounded-full"
-                        src={person.profile_image_path}
-                        alt={person.first_name}
+                        src={person.profile_image_path ?? ''}
+                        alt={person.contact_name}
                       />
                     ) : (
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
                         <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                          {getInitials(person.contact_name).toUpperCase()}
                         </span>
                       </span>
                     )}
                   </div>
                   <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                      {person.first_name} {person.last_name}
-                    </h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
                   </div>
                 </div>
               </td>
-              <td className={'px-6 py-4'}>
-                <DateChip
-                  lastCommunication={person.last_communication_date}
-                  contactStatus={person.status_2}
-                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
-                />
-              </td>
               <td className="px-6 py-4">
-                <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
-                  <p className={'text-xs leading-4 font-medium text-gray8'}>
-                    {getSource(person.import_source_text, person.approved_ai).name}
-                  </p>
-                </div>
-                {person.summary !== null && person.summary.length > 0 && (
+                {/*<div className={'flex gap-1.5 items-center justify-start'}>*/}
+                {/*  {getSource(person.import_source_text).icon}*/}
+                {/*  <p className={'text-xs leading-4 font-medium text-gray8'}>*/}
+                {/*    {getSource(person.import_source_text, person.approved_ai).name}*/}
+                {/*  </p>*/}
+                {/*</div>*/}
+                {person.contact_summary !== null && person.contact_summary.length > 0 ? (
                   <TooltipComponent
                     side={'bottom'}
                     align={'center'}
@@ -2352,38 +2362,50 @@ const Table = ({
                         className={
                           'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                         }>
-                        {person.summary}
+                        {person.contact_summary}
                       </div>
                     }>
                     <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                      <p className="text-xs leading-4 font-normal">{person.summary}</p>
+                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
                   </TooltipComponent>
+                ) : (
+                  <div className={'text-center'}>-</div>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                {person.last_communication_date ? (
+                  <DateChip
+                    lastCommunication={person.last_communication_date}
+                    contactStatus={person.status_2}
+                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  />
+                ) : (
+                  <div className={'text-center'}>-</div>
                 )}
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex flex-col gap-1'}>
                   <div className={'flex gap-1 items-center'}>
-                    <div
-                      className={`h-2 w-2 rounded-xl ${
-                        person.campaign_name === null ? 'bg-red-500' : 'bg-green-500'
-                      }`}></div>
+                    <div className={`h-2 w-2 rounded-xl bg-red-500`} />
                     <p className={'text-sm leading-5 font-medium text-gray7'}>
-                      {person.campaign_name === null ? 'Never in Campaign' : 'Campaign is Running'}
+                      {person.contact_campaign_status === 'never_assigned'
+                        ? 'Never in Campaign'
+                        : 'Campaign is Running'}
                     </p>
                   </div>
-                  {person.campaign_name !== null && (
-                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>from July 20, 2023</div>
+                  {person.contact_unenrolment_date !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
+                      from {person.contact_unenrolment_date}
+                    </div>
                   )}
                 </div>
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} activePerson={person} />
+                  <Toggle active={false} activePerson={person} />
                   <div>
-                    <span className={'text-xs leading-5 font-medium text-gray7'}>
-                      {person.campaign_name === null ? 'Inactive' : 'Active'}
-                    </span>
+                    <span className={'text-xs leading-5 font-medium text-gray7'}>Inactive</span>
                   </div>
                 </div>
               </td>
@@ -2468,25 +2490,23 @@ const Table = ({
               <td className="pl-6 py-4 pr-4 border-r border-gray2">
                 <div className={'flex gap-4'}>
                   <div>
-                    {person.profile_image_path ? (
+                    {person?.profile_image_path ? (
                       <img
                         className="inline-block h-10 w-10 rounded-full"
-                        src={person.profile_image_path}
-                        alt={person.first_name}
+                        src={person?.profile_image_path}
+                        alt={person.contact_name}
                       />
                     ) : (
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
                         <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                          {getInitials(person.contact_name).toUpperCase()}
                         </span>
                       </span>
                     )}
                   </div>
                   <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                      {person.first_name} {person.last_name}
-                    </h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
                   </div>
                 </div>
               </td>
@@ -2513,7 +2533,7 @@ const Table = ({
               ))}
               <td className={'px-6 py-4'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person.campaign_name !== null} activePerson={person} />
+                  <Toggle active activePerson={person} />
                   <div>
                     <span className={'text-xs leading-5 font-medium text-gray7'}>
                       {person.campaign_name === null ? 'Inactive' : 'Active'}

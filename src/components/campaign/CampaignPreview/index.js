@@ -146,7 +146,6 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                                             <h6 className={'text-sm leading-5 font-medium text-gray7 '}>
                                               {e?.preview?.preview?.subject}
                                             </h6>
-                                            <h6 className={'text-gray4 text-xs font-medium leading-5'}>{'data'}</h6>
                                           </div>
                                         </div>
                                         {areObjectsEqual(campaignData?.events[index], activeEvent) && (
