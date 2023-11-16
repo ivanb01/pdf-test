@@ -252,7 +252,7 @@ const Clients = ({
         {unapprovedContacts > 0 && (
           <FloatingAlert
             className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           />
         )}
         <div className="p-6 py-4 flex items-center justify-between">

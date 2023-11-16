@@ -79,7 +79,7 @@ const index = () => {
           {unapprovedContactsLength > 0 && (
             <FloatingAlert
               className="mx-[21px] mt-[14px]"
-              message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
               type="smart-sync"
             />
           )}
