@@ -103,27 +103,24 @@ export const Header = () => {
           {isMenuOpen && (
             <div className={styles['header__content-menu']}>
               <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
-                {links.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>
-                      <div
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className={currentRoute === item.href ? styles.active : styles.active}>
-                        {' '}
-                        {item.label}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div className={styles['header__content-menu-footer']}>
-                <Button type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
+                <Button className="w-full" type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
                   Log in
                 </Button>
-                {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
-                  Register for free
-                </Button> */}
-              </div>
+                {links.map((item) => (
+                  <>
+                    <li key={item.href}>
+                      <Link href={item.href}>
+                        <div
+                          onClick={() => setIsMenuOpen(!isMenuOpen)}
+                          className={currentRoute === item.href ? styles.active : styles.active}>
+                          {' '}
+                          {item.label}
+                        </div>
+                      </Link>
+                    </li>
+                  </>
+                ))}
+              </ul>
             </div>
           )}
         </div>
