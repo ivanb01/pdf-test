@@ -21,8 +21,9 @@ import ReviewContact from '@components/overlays/review-contact';
 import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
 import Loader from '@components/shared/loader';
+import withAuth from '@components/withAuth';
 
-export default function Details() {
+const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
@@ -232,7 +233,8 @@ export default function Details() {
       </div>
     </>
   );
-}
+};
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {

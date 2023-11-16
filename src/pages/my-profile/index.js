@@ -20,6 +20,7 @@ import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail }
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
@@ -257,7 +258,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);
 
 // export async function getServerSideProps(context) {
 //   return {
