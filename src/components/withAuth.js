@@ -1,24 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import Loader from './shared/loader';
 
 export default function withAuth(Component) {
-  var isAuthenticated = null;
-
   return function WithAuth(props) {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      if (typeof document !== 'undefined') {
+      if (typeof window !== 'undefined') {
         const isAuthenticated = localStorage.getItem('isAuthenticated');
-        // isAuthenticated = document.cookie.match('(^|;)\\s*isAuthenticated\\s*=\\s*([^;]+)')?.pop() || '';
-        // console.log(isAuthenticated, document.cookie);
+
         if (!isAuthenticated) {
-          console.log('isauthenticated', localStorage.getItem('isAuthenticated'));
           router.push('/authentication/sign-in');
+        } else {
+          setIsLoading(false);
         }
       }
-    }, []);
+    }, [router]);
+
+    if (isLoading) {
+      return <Loader />;
+    }
 
     return <Component {...props} />;
   };
