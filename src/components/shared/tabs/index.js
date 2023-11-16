@@ -34,7 +34,7 @@ export default function Tabs({
           ))}
         </select>
       </div>
-      <div className={`hidden sm:block ${className} bg-white pt-5`}>
+      <div className={`hidden sm:block ${className} bg-white pt-2`}>
         <div className="border-b border-gray-200">
           <nav className={`-mb-px flex space-x-8 ${navClassName}`} aria-label="Tabs">
             {tabs.map((tab) => (
