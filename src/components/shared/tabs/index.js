@@ -76,7 +76,7 @@ export default function Tabs({
         </div>
       </div>
       {loadingTabs ? (
-        <div className="relative" style={{ height: 'calc(100vh - 170px)' }}>
+        <div className="relative" style={{ height: 'calc(100vh - 158px)' }}>
           <Loader />
         </div>
       ) : (
