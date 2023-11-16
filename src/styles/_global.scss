@@ -231,8 +231,6 @@ h5 {
   }
 }
 
-
-
 .custom-menu-item.active {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -411,7 +409,7 @@ h5 {
 }
 
 .details-tabs-fixed-height {
-  height: calc(100vh - 222px) !important;
+  height: calc(100vh - 170px) !important;
 }
 
 .details-campaign-fixed-height {
@@ -510,7 +508,6 @@ tbody > div {
   display: -webkit-inline-box;
 }
 
-
 .map-container {
   height: 500px;
   width: 100%;
@@ -565,7 +562,6 @@ tbody > div {
   display: block;
   transition: opacity 300ms ease-in-out;
 }
-
 
 .TooltipContent {
   border-radius: 8px;

@@ -171,7 +171,7 @@ const EventPreview = ({
         <div className="fixed inset-0 overflow-hidden">
           <div className={`absolute inset-0 overflow-hidden ${overlay && 'bg-[#42424280]'}`}>
             <div
-              className={`pointer-events-none fixed ${topClass ? topClass : 'top-[222px]'} ${
+              className={`pointer-events-none fixed ${topClass ? topClass : 'top-[170px]'} ${
                 overlay && ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
               } inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16 ${overlay && ' h-[550px]'}`}>
               <Transition.Child

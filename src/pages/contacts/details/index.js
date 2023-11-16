@@ -194,26 +194,28 @@ export default function Details() {
           </div>
         ) : (
           <>
-            <div className="p-6 inline-block">
-              <a
-                href="#"
-                onClick={() => {
-                  backUrl !== null ? router.push(backUrl) : router.back();
-                }}
-                className="items-center flex">
-                <Image className="cursor-pointer" src={backArrow} />
-                <div className="ml-2 font-medium">
-                  Back to{' '}
-                  {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
-                    ? 'Family & Friends'
-                    : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
-                </div>
-              </a>
-            </div>
             {id && (
               <div className="flex flex-row border-t border-gray-2">
                 <ClientDetailsSidebar
                   client={contact}
+                  backButton={
+                    <div className="pl-6 pt-6 inline-block">
+                      <a
+                        href="#"
+                        onClick={() => {
+                          backUrl !== null ? router.push(backUrl) : router.back();
+                        }}
+                        className="items-center flex">
+                        <Image className="cursor-pointer" src={backArrow} />
+                        <div className="ml-2 font-medium">
+                          Back to{' '}
+                          {tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1) == 'Family'
+                            ? 'Family & Friends'
+                            : tempUrl.charAt(0).toUpperCase() + tempUrl.slice(1)}
+                        </div>
+                      </a>
+                    </div>
+                  }
                   // afterUpdate={fetchContact}
                 />
                 <Tabs

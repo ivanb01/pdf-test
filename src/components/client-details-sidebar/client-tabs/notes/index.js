@@ -165,14 +165,14 @@ export default function Notes({ contactId }) {
       <SimpleBar
         autoHide
         style={{
-          maxHeight: 'calc(100vh - 222px)',
+          maxHeight: 'calc(100vh - 170px)',
         }}>
         {notesOriginal &&
           (notesOriginal.length == 0 ? (
             <div className="h-full">
               <div
                 className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0"
-                style={{ minHeight: 'calc(100vh - 222px)' }}>
+                style={{ minHeight: 'calc(100vh - 170px)' }}>
                 <Image src={noNotes}></Image>
                 <Text h3 className="text-gray7 mb-2 mt-4 text-center">
                   You don’t have any notes for this contact yet

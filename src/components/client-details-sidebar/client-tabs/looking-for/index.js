@@ -302,8 +302,8 @@ export default function LookingFor({ contactId, category }) {
           <Loader></Loader>
         </div>
       ) : (
-        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 222px)' }}>
-          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 222px)' }}>
+        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 170px)' }}>
+          <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 170px)' }}>
             {loadingPropertyInterests || propertyInterests === undefined ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
