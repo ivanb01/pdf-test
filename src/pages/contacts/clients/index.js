@@ -170,7 +170,7 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          {currentButton == 0 && (
+          {currentButton == 0 && openedTab == 0 && openedSubtab == 0 && (
             <div class="arrow pointer-events-none">
               <span></span>
               <span></span>

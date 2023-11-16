@@ -237,14 +237,13 @@ const Clients = ({
     const handleScroll = (event) => {
       if (event.target.scrollLeft > 80) {
         document.querySelector('.arrow').style.opacity = '0';
-        scrollElement?.removeEventListener('scroll', handleScroll);
       }
     };
 
     const scrollElement = scrollRef.current?.getScrollElement();
     scrollElement?.addEventListener('scroll', handleScroll);
 
-    return () => scrollElement?.removeEventListener('scroll', handleScroll);
+    // return () => scrollElement?.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
