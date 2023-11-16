@@ -52,7 +52,6 @@ const Toggle = ({ active, activePerson, disabled }) => {
         onChange={() => handleCampaignAssignment()}
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray2',
-          disabled && 'bg-gray1',
           'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ',
         )}>
         <span className="sr-only">Use setting</span>
@@ -60,8 +59,7 @@ const Toggle = ({ active, activePerson, disabled }) => {
           aria-hidden="true"
           className={classNames(
             enabled ? 'translate-x-3' : 'translate-x-0',
-            disabled ? 'bg-gray1' : 'bg-white',
-            'pointer-events-none inline-block h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out',
+            'pointer-events-none inline-block bg-white h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out',
           )}
         />
       </Switch>

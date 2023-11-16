@@ -2230,8 +2230,15 @@ const Table = ({
                     activePerson={person}
                   />
                   <div>
-                    <span className={'text-xs leading-5 font-medium text-gray7'}>
-                      {person.contact_campaign_status !== 'assigned' ? 'Inactive' : 'Active'}
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Deactivated'
+                        : 'Active'}
                     </span>
                   </div>
                 </div>
@@ -2535,8 +2542,15 @@ const Table = ({
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle active activePerson={person} />
                   <div>
-                    <span className={'text-xs leading-5 font-medium text-gray7'}>
-                      {person.campaign_name === null ? 'Inactive' : 'Active'}
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Disabled'
+                        : 'Active'}
                     </span>
                   </div>
                 </div>
