@@ -104,7 +104,7 @@ export default function ContactCard({
     <>
       <div
         key={contact.id}
-        className={`${dropdownOpened && 'border-t-4'} ${isUnapprovedAIContact && 'opacity-50'} ${
+        className={`${dropdownOpened && 'border-t-4'} ${isUnapprovedAIContact && 'opacity-50 hover:opacity-100'} ${
           isUnapprovedAIContact && hideUnapproved && 'hidden'
         } change-status-dropdown relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
         {dropdownOpened && (
