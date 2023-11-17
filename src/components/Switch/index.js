@@ -29,7 +29,7 @@ const SwitchComponent = ({ label }) => {
           aria-hidden="true"
           className={classNames(
             enabled ? 'translate-x-4' : 'translate-x-0',
-            'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+            'absolute top-1/2 -translate-y-1/2 pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
           )}
         />
       </Switch>
