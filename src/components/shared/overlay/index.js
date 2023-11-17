@@ -19,7 +19,7 @@ const Overlay = ({
           {title || handleCloseOverlay ? (
             <div className={`flex justify-between items-center ${title ? 'p-5' : 'p-5 pb-1'} rounded-t`}>
               <div className={`flex items-center`}>
-                {title === 'Review AI Smart Synced Contact' && (
+                {(title === 'Review AI Smart Synced Contact' || title === 'Review AI Imported Contact') && (
                   <svg
                     onClick={() => router.back()}
                     xmlns="http://www.w3.org/2000/svg"
