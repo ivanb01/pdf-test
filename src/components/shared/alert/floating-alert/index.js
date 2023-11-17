@@ -22,7 +22,7 @@ const FloatingAlert = ({ message, className }) => {
         <button
           onClick={() => router.push('/ai-summary')}
           type="button"
-          className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-orange-50">
+          className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none">
           Review Now {'->'}
         </button>
       </div>

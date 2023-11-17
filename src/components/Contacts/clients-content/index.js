@@ -29,6 +29,8 @@ import { setClientsFilters } from '@store/global/slice';
 import { ArrowRight } from '@mui/icons-material';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
+import Switch from '@components/Switch';
+import SwitchComponent from '@components/Switch';
 
 const buttons = [
   {
@@ -58,8 +60,23 @@ const Clients = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
+  const [toggleAIContacts, setToggleAIContacts] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredContacts, setFilteredContacts] = useState(contacts);
+  const [originalFilteredContacts, setOriginalFilteredContacts] = useState(filteredContacts);
+
+  useEffect(() => {
+    if (!toggleAIContacts) {
+      setOriginalFilteredContacts(filteredContacts);
+      let contactsWithoutUnapproved = originalFilteredContacts.filter(
+        (contact) =>
+          ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) && !contact?.approved_ai,
+      );
+      setFilteredContacts(contactsWithoutUnapproved);
+    } else {
+      setFilteredContacts(originalFilteredContacts);
+    }
+  }, [toggleAIContacts]);
 
   useEffect(() => {
     setFilteredContacts(contacts);
@@ -257,10 +274,23 @@ const Clients = ({
         )}
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
-            <Text h3 className="text-gray7 text-xl">
-              {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
-              {/* {openedTab} - {openedSubtab} */}
-            </Text>
+            <div className="flex items-center">
+              <Text h3 className="text-gray7 text-xl mr-4">
+                {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
+                {/* {openedTab} - {openedSubtab} */}
+              </Text>
+              {filteredContacts.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) &&
+                  !contact?.approved_ai,
+              ).length > 0 && (
+                <SwitchComponent
+                  enabled={toggleAIContacts}
+                  setEnabled={setToggleAIContacts}
+                  label="Unapproved AI Contacts"
+                />
+              )}
+            </div>
             <div className="flex items-center justify-self-end">
               <Search
                 placeholder={
