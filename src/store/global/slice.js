@@ -18,6 +18,7 @@ const global = createSlice({
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
     user: typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
+    hideUnapproved: true,
     skippedEmptyState:
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')
@@ -69,6 +70,9 @@ const global = createSlice({
     setActiveFilterOfProperties(state, action) {
       state.activeFilterOfProperties = action.payload;
     },
+    setHideUnapproved(state, action) {
+      state.hideUnapproved = action.payload;
+    },
     setExpandedTab(state, action) {
       if (state.tabs.length == 0) {
         return;
@@ -104,5 +108,6 @@ export const {
   setVendorSubtypes,
   setClientsFilters,
   setProfessionalsFilter,
+  setHideUnapproved,
 } = global.actions;
 export default global.reducer;

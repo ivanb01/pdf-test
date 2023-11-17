@@ -1,6 +1,21 @@
 import { Switch } from '@headlessui/react';
 import { classNames } from '@global/functions';
-const SwitchComponent = ({ enabled, setEnabled, label }) => {
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setHideUnapproved } from '@store/global/slice';
+import { useEffect } from 'react';
+const SwitchComponent = ({ label }) => {
+  const dispatch = useDispatch();
+  const [enabled, setEnabled] = useState(true);
+
+  useEffect(() => {
+    if (enabled) {
+      dispatch(setHideUnapproved(false));
+    } else {
+      dispatch(setHideUnapproved(true));
+    }
+  }, [enabled]);
+
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch

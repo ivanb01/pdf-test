@@ -60,23 +60,8 @@ const Clients = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
-  const [toggleAIContacts, setToggleAIContacts] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredContacts, setFilteredContacts] = useState(contacts);
-  const [originalFilteredContacts, setOriginalFilteredContacts] = useState(filteredContacts);
-
-  useEffect(() => {
-    if (!toggleAIContacts) {
-      setOriginalFilteredContacts(filteredContacts);
-      let contactsWithoutUnapproved = originalFilteredContacts.filter(
-        (contact) =>
-          ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) && !contact?.approved_ai,
-      );
-      setFilteredContacts(contactsWithoutUnapproved);
-    } else {
-      setFilteredContacts(originalFilteredContacts);
-    }
-  }, [toggleAIContacts]);
 
   useEffect(() => {
     setFilteredContacts(contacts);
@@ -283,13 +268,7 @@ const Clients = ({
                 (contact) =>
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) &&
                   !contact?.approved_ai,
-              ).length > 0 && (
-                <SwitchComponent
-                  enabled={toggleAIContacts}
-                  setEnabled={setToggleAIContacts}
-                  label="Unapproved AI Contacts"
-                />
-              )}
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">
               <Search

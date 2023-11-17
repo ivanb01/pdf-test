@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { useSelector } from 'react-redux';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -55,6 +56,14 @@ export default function ContactCard({
     };
   }, []);
 
+  let isUnapprovedAIContact = null;
+  if (
+    contact?.import_source_text === 'GmailAI' ||
+    contact?.import_source_text === 'Smart Sync A.I.' ||
+    contact?.import_source_text === 'Gmail'
+  ) {
+    if (!contact?.approved_ai) isUnapprovedAIContact = true;
+  }
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
@@ -85,6 +94,8 @@ export default function ContactCard({
   const status = contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
   // const [dropdownVal, setDropdownVal] = useState(
   //   allStatusesQuickEdit[categoryType][0]
   // );
@@ -93,8 +104,8 @@ export default function ContactCard({
     <>
       <div
         key={contact.id}
-        className={`${
-          dropdownOpened && 'border-t-4'
+        className={`${dropdownOpened && 'border-t-4'} ${isUnapprovedAIContact && 'opacity-50'} ${
+          isUnapprovedAIContact && hideUnapproved && 'hidden'
         } change-status-dropdown relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
         {dropdownOpened && (
           <DropdownNoInput
