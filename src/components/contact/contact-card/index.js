@@ -99,6 +99,78 @@ export default function ContactCard({
   // const [dropdownVal, setDropdownVal] = useState(
   //   allStatusesQuickEdit[categoryType][0]
   // );
+  const options = [
+    {
+      id: 2,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'New Lead',
+      color: 'bg-lightBlue1',
+    },
+    {
+      id: 3,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Attempted Contact',
+      color: 'bg-lightBlue2',
+    },
+    {
+      id: 5,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'In Communication',
+      color: 'bg-purple1',
+    },
+    {
+      id: 4,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Appointment Set',
+      color: 'bg-purple2',
+    },
+    {
+      id: 7,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Actively Working',
+      color: 'bg-purple3',
+    },
+    {
+      id: 16,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Offer Submitted',
+      color: 'bg-purple4',
+    },
+    {
+      id: 9,
+      category: 'Closed',
+      dot: <span className="h-2 w-2 rounded-full bg-green6" />,
+      label: 'Contract Signed',
+      color: 'bg-green8',
+    },
+    {
+      id: 10,
+      category: 'Closed',
+      dot: <span className="h-2 w-2 rounded-full bg-green6" />,
+      label: 'Closed Client',
+      color: 'bg-green2',
+    },
+    {
+      id: 8,
+      label: 'On Hold',
+      dot: <span className="h-2 w-2 rounded-full bg-orange1" />,
+      category: 'On Hold',
+      color: 'bg-orange2',
+    },
+    {
+      id: 11,
+      label: 'Dropped',
+      category: 'Dropped',
+      dot: <span className="h-2 w-2 rounded-full bg-red3" />,
+      color: 'bg-red2',
+    },
+  ];
 
   return (
     <>
@@ -110,7 +182,7 @@ export default function ContactCard({
         {dropdownOpened && (
           <DropdownNoInput
             selectedOption={contact?.status_2}
-            options={allStatusesQuickEdit[categoryType]}
+            options={options}
             handleSelect={(item) => {
               // console.log(item);
               handleChangeStatus(item.id, contact);
