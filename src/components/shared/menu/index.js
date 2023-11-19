@@ -250,19 +250,21 @@ const MainMenu = ({ className, fixed }) => {
             )}
           </>
         )}
-        <div className="">
-          <button
-            label="Need Help?"
-            className={`text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4  ${
-              !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
-            } text-white`}
-            onClick={() => {
-              FreshworksWidget('open');
-            }}>
-            <ContactSupport className="h-[20px]" />
-            {/* Need help? */}
-          </button>
-        </div>
+        {!router.pathname.includes('campaign') && (
+          <div className="">
+            <button
+              label="Need Help?"
+              className={`text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4  ${
+                !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+              } text-white`}
+              onClick={() => {
+                FreshworksWidget('open');
+              }}>
+              <ContactSupport className="h-[20px]" />
+              {/* Need help? */}
+            </button>
+          </div>
+        )}
         {/* <Button
           label="Import Google Contacts"
           className="mr-4 "

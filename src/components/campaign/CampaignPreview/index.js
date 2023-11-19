@@ -48,7 +48,24 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
 
     return true;
   }
+  function getTimeWithAMPM(timestamp) {
+    const dateObject = new Date(timestamp);
 
+    // Get hours and minutes
+    let hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+
+    // Determine AM or PM
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    // Convert to 12-hour format
+    hours = hours % 12 || 12;
+
+    // Format the time as hh:mm AM/PM
+    const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+
+    return formattedTime;
+  }
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -146,6 +163,9 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                                             <h6 className={'text-sm leading-5 font-medium text-gray7 '}>
                                               {e?.preview?.preview?.subject}
                                             </h6>
+                                            <p className={'text-[11px] leading-5 font-medium text-gray4 '}>
+                                              send at {getTimeWithAMPM(e?.execute_date)}
+                                            </p>
                                           </div>
                                         </div>
                                         {areObjectsEqual(campaignData?.events[index], activeEvent) && (

@@ -17,7 +17,7 @@ const CampaignCard = ({
   contact_never_assigned_count,
   contact_assigned_count,
   contact_unassigned_count,
-  contact_status_1,
+  contact_status_2,
   isVisible,
 }) => {
   const router = useRouter();
@@ -54,7 +54,7 @@ const CampaignCard = ({
               className={
                 'bg-gray1 text-xs leading-5 font-medium text-gray6 px-1.5 py-0.5 flex gap-1 items-center-center'
               }>
-              <div className={'m-auto'}>{contact_status_1}:</div>
+              <div className={'m-auto'}>{contact_status_2}:</div>
               <div>
                 {contact_never_assigned_count + contact_assigned_count}
                 <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />

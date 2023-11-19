@@ -20,6 +20,7 @@ const index = () => {
   let isVisible = useElementInView(elementRef);
   const dispatch = useDispatch();
   const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
 
   const renderCampaignWrapper = (category) => {
     const filteredCampaigns = CRMCampaigns?.campaigns?.filter(
@@ -124,16 +125,14 @@ const index = () => {
     },
   ];
   useEffect(() => {
-    if (CRMCampaigns === undefined) {
-      setLoading(true);
-      getCampaignsByCategory('Client')
-        .then((res) => {
-          dispatch(setCRMCampaigns(res.data));
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    setLoading(true);
+    getCampaignsByCategory('Client')
+      .then((res) => {
+        dispatch(setCRMCampaigns(res.data));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (

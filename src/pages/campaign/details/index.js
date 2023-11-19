@@ -27,6 +27,8 @@ const index = () => {
   const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
   const [campaignDetails, setCampaignDetails] = useState();
   const [campaignEvents, setCampaignEvents] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,9 +57,15 @@ const index = () => {
     });
   }, [id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts;
-  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign;
-  const notInCamapaignContacts = usersInCampaignGlobally?.contacts_not_campaign;
+  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
+    .concat(usersInCampaignGlobally?.contacts_not_campaign)
+    .filter((contact) => contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
+    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+  const notInCamapaignContacts = usersInCampaignGlobally?.contacts_not_campaign.filter((contact) =>
+    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   const eventTypes = [
     {
       name: 'ALL EVENTS',
@@ -107,8 +115,6 @@ const index = () => {
       count: notInCamapaignContacts?.length,
     },
   ];
-  const [searchTerm, setSearchTerm] = useState('');
-  const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
   useEffect(() => {
     setSearchTerm('');
@@ -122,19 +128,35 @@ const index = () => {
       case 0:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table tableFor={'allCampaignContacts'} data={totalContacts} />
+            <Table
+              tableFor={'allCampaignContacts'}
+              data={totalContacts}
+              categoryType={category}
+              status={usersInCampaignGlobally?.contact_status_1}
+            />
           </SimpleBar>
         );
       case 1:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table tableFor={'inCampaignContacts'} data={inCampaignContacts} setCurrentButton={setCurrentButton} />
+            <Table
+              tableFor={'inCampaignContacts'}
+              data={inCampaignContacts}
+              setCurrentButton={setCurrentButton}
+              categoryType={category}
+              status={usersInCampaignGlobally?.contact_status_1}
+            />
           </SimpleBar>
         );
       case 2:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table tableFor={'notInCampaignContacts'} data={notInCamapaignContacts} />
+            <Table
+              tableFor={'notInCampaignContacts'}
+              data={notInCamapaignContacts}
+              categoryType={category}
+              status={usersInCampaignGlobally?.contact_status_2}
+            />
           </SimpleBar>
         );
     }
@@ -162,7 +184,7 @@ const index = () => {
                 <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.campaign_name}</h4>
                 <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
                   <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {`${category}s`}: {usersInCampaignGlobally?.contact_status_1}
+                    {`${category}s`}: {usersInCampaignGlobally?.contact_status_2}
                   </span>
                 </div>
               </div>

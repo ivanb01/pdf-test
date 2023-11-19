@@ -107,6 +107,7 @@ const Table = ({
   toggleAll,
   selectedPeople,
   setSelectedPeople,
+  status,
 }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
@@ -2108,8 +2109,8 @@ const Table = ({
       <>
         <thead className={'sticky top-0 z-10'}>
           <tr className="bg-gray-50 text-gray4 sticky top-0">
-            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
-              RENTER-NEW LEAD
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider uppercase">
+              {categoryType}-{status}
             </th>
             <th
               scope="col"
@@ -2145,7 +2146,7 @@ const Table = ({
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
-                  query: { id: person?.id },
+                  query: { id: person?.contact_id },
                 })
               }
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
@@ -2173,13 +2174,13 @@ const Table = ({
                 </div>
               </td>
               <td className="px-6 py-4">
-                {/*<div className={'flex gap-1.5 items-center justify-start'}>*/}
-                {/*  {getSource(person.import_source_text).icon}*/}
-                {/*  <p className={'text-xs leading-4 font-medium text-gray8'}>*/}
-                {/*    {getSource(person.import_source_text, person.approved_ai).name}*/}
-                {/*  </p>*/}
-                {/*</div>*/}
-                {person.contact_summary !== null && person.contact_summary.length > 0 ? (
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.contact_summary !== null && person.contact_summary.length > 0 && (
                   <TooltipComponent
                     side={'bottom'}
                     align={'center'}
@@ -2195,8 +2196,6 @@ const Table = ({
                       <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
                   </TooltipComponent>
-                ) : (
-                  <>-</>
                 )}
               </td>
               <td className={'px-6 py-4'}>
@@ -2294,8 +2293,8 @@ const Table = ({
       <>
         <thead>
           <tr className="bg-gray-50 text-gray4">
-            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider">
-              RENTER-NEW LEAD
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider uppercase">
+              {categoryType}-{status}
             </th>
             <th
               scope="col"
@@ -2326,7 +2325,7 @@ const Table = ({
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
-                  query: { id: person?.id },
+                  query: { id: person?.contact_id },
                 })
               }
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
@@ -2354,13 +2353,13 @@ const Table = ({
                 </div>
               </td>
               <td className="px-6 py-4">
-                {/*<div className={'flex gap-1.5 items-center justify-start'}>*/}
-                {/*  {getSource(person.import_source_text).icon}*/}
-                {/*  <p className={'text-xs leading-4 font-medium text-gray8'}>*/}
-                {/*    {getSource(person.import_source_text, person.approved_ai).name}*/}
-                {/*  </p>*/}
-                {/*</div>*/}
-                {person.contact_summary !== null && person.contact_summary.length > 0 ? (
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.contact_summary !== null && person.contact_summary.length > 0 && (
                   <TooltipComponent
                     side={'bottom'}
                     align={'center'}
@@ -2376,8 +2375,6 @@ const Table = ({
                       <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
                   </TooltipComponent>
-                ) : (
-                  <div className={'text-center'}>-</div>
                 )}
               </td>
               <td className={'px-6 py-4'}>
@@ -2464,8 +2461,8 @@ const Table = ({
           <tr className="bg-gray-50 text-gray4">
             <th
               scope="col"
-              className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2">
-              RENTER-NEW LEAD
+              className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+              {categoryType}-{status}
             </th>
             {events.map((e, index) => (
               <th
@@ -2490,7 +2487,7 @@ const Table = ({
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
-                  query: { id: person?.id },
+                  query: { id: person?.contact_id },
                 })
               }
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>

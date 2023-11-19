@@ -14,6 +14,8 @@ function classNames(...classes) {
 
 const Toggle = ({ active, activePerson, disabled }) => {
   const [enabled, setEnabled] = useState(false);
+  const [makeChanges, setMakeChanges] = useState(false);
+  const [openDeactivate, setOpenDeactivate] = useState(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -39,17 +41,30 @@ const Toggle = ({ active, activePerson, disabled }) => {
       });
     }
   };
+  const makeChangesAndClosePopup = () => {
+    setMakeChanges(true);
+  };
 
   useEffect(() => {
     setEnabled(active);
   }, [active]);
+
+  useEffect(() => {
+    if (makeChanges) {
+      handleCampaignAssignment();
+    }
+  }, [makeChanges]);
   return (
     <>
       <Switch
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!active) {
+            setOpenDeactivate(true);
+          }
+        }}
         checked={enabled}
         disabled={disabled}
-        onChange={() => handleCampaignAssignment()}
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray2',
           'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ',
@@ -63,6 +78,13 @@ const Toggle = ({ active, activePerson, disabled }) => {
           )}
         />
       </Switch>
+      {openDeactivate && (
+        <DeactivateCampaign
+          active={active}
+          makeChanges={setMakeChanges}
+          handleCloseModal={() => setOpenDeactivate(false)}
+        />
+      )}
     </>
   );
 };
