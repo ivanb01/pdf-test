@@ -624,7 +624,7 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         <div className="w-1/2 relative">
-          <SimpleBar autoHide={true} style={{ maxHeight: '500px', height: '100%' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '510px', height: '100%' }}>
             <div className="p-6 pt-0">
               <Radio
                 options={contactTypes}
