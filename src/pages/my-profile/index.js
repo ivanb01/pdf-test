@@ -122,8 +122,9 @@ const index = () => {
             <div className="text-center max-w-[265px] mr-6">
               <img className="m-auto" src={aiIcon.src} alt="" />
               <div className="mt-6 text-xs text-gray-500">
-                With <strong>Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze each
-                contact's information, swiftly identifying their type, status, and most importantly, their interests.
+                With <strong>Gmail Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze
+                each contact's information, swiftly identifying their type, status, and most importantly, their
+                interests.
               </div>
             </div>
             <div className="text-center max-w-[265px] mr-6">

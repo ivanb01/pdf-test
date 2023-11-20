@@ -262,7 +262,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
                     <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
                       <div className="p-3">
-                        Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
+                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
                         <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
                         Gmail.
                       </div>
