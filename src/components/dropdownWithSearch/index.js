@@ -2,6 +2,7 @@ import Select from 'react-select';
 
 const DropdownWithSearch = ({
   options,
+  placeholder,
   onChange,
   label,
   value,
@@ -22,7 +23,7 @@ const DropdownWithSearch = ({
       )}
       <Select
         {...props}
-        placeholder="Type or select type of vendor"
+        placeholder={placeholder}
         isMulti={isMulti}
         value={value}
         onMenuOpen={onMenuOpen}

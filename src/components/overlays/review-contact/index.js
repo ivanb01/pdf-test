@@ -687,6 +687,7 @@ const ReviewContact = ({
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       /> */}
                   <DropdownWithSearch
+                    placeholder="Type or select type of vendor"
                     value={vendorSubtypesFormatted?.find(
                       (vendor) => vendor.value == formik.values.selectedContactSubtype,
                     )}
