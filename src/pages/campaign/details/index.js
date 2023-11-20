@@ -57,9 +57,9 @@ const index = () => {
     });
   }, [id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
-    .concat(usersInCampaignGlobally?.contacts_not_campaign)
-    .filter((contact) => contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const totalContacts = usersInCampaignGlobally?.contacts.filter((contact) =>
+    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
