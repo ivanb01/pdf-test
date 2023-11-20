@@ -1579,6 +1579,21 @@ const Table = ({
       return percentage.toFixed(2);
     }
 
+    function reorderAgents(agents, email) {
+      const index = agents.findIndex((agent) => agent.agent_id === email);
+
+      if (index > -1) {
+        const [agent] = agents.splice(index, 1);
+        agents.unshift(agent);
+      }
+
+      return agents;
+    }
+
+    const user = useSelector((state) => state.global.user);
+    const agentsArray = data;
+    const reorderedArray = reorderAgents(agentsArray, user);
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -1615,10 +1630,10 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
+          {reorderedArray.map((dataItem, index) => (
             <tr
               key={index}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+              className={` ${index == 0 ? 'bg-lightBlue1' : 'bg-white'} contact-row group border-b border-gray-200`}
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
