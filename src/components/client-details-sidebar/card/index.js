@@ -54,9 +54,9 @@ export default function ClientCard({ client }) {
 
         {/* profile_image_path */}
         <div className="flex flex-col ml-[18px] max-w-[230px]">
-          <Text h1 className="">
+          <h1 className={'text-2xl font-bold relative flex items-center'} style={{ wordBreak: 'break-word' }}>
             {client?.first_name} {client?.last_name}
-          </Text>
+          </h1>
           <span className="flex flex-col">
             <div className="flex items-center mt-2">
               <div>
