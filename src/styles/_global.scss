@@ -790,3 +790,17 @@ tbody > div {
     transform: rotate(45deg) translate(20px, 20px);
   }
 }
+
+::-webkit-scrollbar {
+  width: 7px;
+  margin-left: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(161, 161, 161, 0.9);
+  border-radius: 9px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
