@@ -254,6 +254,7 @@ const CategorizePage = ({
                       <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          placeholder="Start typing to search or select one of the options"
                           onMenuOpen={() => setIsMenuOpen(true)}
                           onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"

@@ -306,6 +306,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   value={vendorSubtypesFormatted?.find(
                     (vendor) => vendor.value == formik.values.selectedContactSubtype,
                   )}
+                  placeholder="Start typing to search or select one of the options"
                   options={vendorSubtypesFormatted}
                   typeOfContact={openedTab}
                   required
