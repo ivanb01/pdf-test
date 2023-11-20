@@ -151,9 +151,7 @@ const MainMenu = ({ className, fixed }) => {
 
   const showSuccessButton = () => {
     return (
-      allContacts &&
-      allContacts.length &&
-      allContacts.filter((contact) => contact.category_1 == 'Uncategorized').length == 0
+      allContacts && allContacts.length && allContacts.data?.filter((contact) => contact.category_1 == 1).length == 0
     );
   };
 
