@@ -327,7 +327,7 @@ const index = () => {
           />
           <MinMaxPrice
             // options={bathroomOptions}
-            label={windowWidth >= 1310 ? 'Min/Max Price' : 'Min/Max'}
+            label={windowWidth >= 1310 ? 'Min/Max Price' : 'Price'}
             className="mr-4 w-[220px]"
             minPrice={minPrice}
             maxPrice={maxPrice}
