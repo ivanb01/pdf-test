@@ -22,6 +22,7 @@ const DropdownWithSearch = ({
       )}
       <Select
         {...props}
+        placeholder="Type or select type of vendor"
         isMulti={isMulti}
         value={value}
         onMenuOpen={onMenuOpen}

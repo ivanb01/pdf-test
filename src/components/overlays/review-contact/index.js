@@ -633,7 +633,11 @@ const ReviewContact = ({
                 selectedOption={formik.values.selectedContactCategory}
                 setSelectedOption={(e) => {
                   formik.setFieldValue('selectedContactCategory', e);
-                  formik.setFieldValue('selectedContactType', '');
+                  if (e == 1) {
+                    formik.setFieldValue('selectedContactType', 8);
+                  } else {
+                    formik.setFieldValue('selectedContactType', '');
+                  }
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedStatus', '');
                 }}
