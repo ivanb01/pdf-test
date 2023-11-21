@@ -2,6 +2,8 @@ import Select from 'react-select';
 
 const DropdownWithSearch = ({
   options,
+  top,
+  maxMenuHeight,
   placeholder,
   onChange,
   label,
@@ -74,6 +76,7 @@ const DropdownWithSearch = ({
           }),
           menu: (base) => ({
             ...base,
+            top: top && top,
             fontSize: '14px',
             marginBottom: '100px',
             borderRadius: 5,

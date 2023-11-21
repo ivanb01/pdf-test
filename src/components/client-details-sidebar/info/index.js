@@ -171,6 +171,8 @@ export default function Info({ client }) {
           {client?.category_2 !== 'Family' && (
             <DropdownWithSearch
               isMulti
+              top={'-130px'}
+              maxMenuHeight={200}
               label="Priority"
               options={multiselectOptionsClients}
               typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
@@ -182,7 +184,8 @@ export default function Info({ client }) {
           )}
           <Dropdown
             label="Lead Source"
-            openClassName={'pb-64'}
+            openClassName={'mb-2'}
+            top={'top-[-260px]'}
             activeIcon={false}
             options={leadSourceOptions}
             className="mt-3 mb-8"

@@ -256,9 +256,10 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             <div className={'grid grid-cols-2 gap-4 col-span-full'}>
               <div>
                 <Dropdown
-                  openClassName={'mb-2 h-[245px]'}
                   className="col-span-2 mb-5"
                   white
+                  openClassName={'mb-2'}
+                  top={'top-[-260px]'}
                   label="Lead Source"
                   activeIcon={false}
                   options={leadSourceOptions}
@@ -271,6 +272,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                 <DropdownWithSearch
                   onMenuOpen={() => setIsMenuOpen(true)}
                   isMulti
+                  top={'-130px'}
+                  maxMenuHeight={200}
                   onMenuClose={() => setIsMenuOpen(false)}
                   options={multiselectOptionsClients}
                   value={findTagsOption(formik.values.tags)}
