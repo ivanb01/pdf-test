@@ -2495,91 +2495,114 @@ const Table = ({
         date: '01/08/2022',
       },
     ];
-    return data && data?.length > 0 ? (
-      <>
-        <thead>
-          <tr className="bg-gray-50 text-gray4">
-            <th
-              scope="col"
-              className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
-              {categoryType}-{status}
-            </th>
-            <div className={'max-w-[1000px] overflow-y-scroll'}>
-              {events.map((e, index) => (
-                <th
-                  scope="col"
-                  className={`${
-                    index === events.length ? 'border-r border-gray2' : ''
-                  } flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
-                  {e.eventName}
-                </th>
-              ))}
-            </div>
-            <th
-              scope="col"
-              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
-              campaign
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((person) => (
-            <tr
-              key={person.id}
-              onClick={() =>
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: person?.contact_id },
-                })
-              }
-              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
-              <td className="pl-6 py-4 pr-4 border-r border-gray2">
-                <div className={'flex gap-4'}>
-                  <div>
-                    {person?.profile_image_path ? (
-                      <img
-                        className="inline-block h-10 w-10 rounded-full"
-                        src={person?.profile_image_path}
-                        alt={person.contact_name}
-                      />
-                    ) : (
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                        <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.contact_name).toUpperCase()}
-                        </span>
-                      </span>
-                    )}
+    const eventsTable = () => {
+      return (
+        <div className={'max-w-[1000px] overflow-y-scroll'}>
+          <thead>
+            {events.map((e, index) => (
+              <th
+                scope="col"
+                className={`${
+                  index === events.length ? 'border-r border-gray2' : ''
+                } flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+                {e.eventName}
+              </th>
+            ))}
+          </thead>
+          <tbody>
+            {events.map((e, index) => (
+              <td
+                className={`px-6 py-4 border-b border-gray2 ${index === events.length ? 'border-r border-gray2' : ''}`}>
+                <div className={'flex flex-col gap-1'}>
+                  <div className={'flex gap-1.5 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-xl ${
+                        e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
+                      }`}></div>
+                    <p
+                      className={`text-sm leading-5 font-medium ${
+                        e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
+                      }`}>
+                      {e.eventName}
+                    </p>
                   </div>
-                  <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
-                  </div>
+                  {e.date !== null && <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>}
                 </div>
               </td>
-              <div className={'max-w-[1000px] overflow-y-scroll'}>
-                {events.map((e, index) => (
-                  <td className={`px-6 py-4 ${index === events.length ? 'border-r border-gray2' : ''}`}>
-                    <div className={'flex flex-col gap-1'}>
-                      <div className={'flex gap-1.5 items-center'}>
-                        <div
-                          className={`h-2 w-2 rounded-xl ${
-                            e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
-                          }`}></div>
-                        <p
-                          className={`text-sm leading-5 font-medium ${
-                            e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
-                          }`}>
-                          {e.eventName}
-                        </p>
-                      </div>
-                      {e.date !== null && (
-                        <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>
+            ))}
+          </tbody>
+        </div>
+      );
+    };
+    const other = () => {
+      return (
+        <>
+          <thead>
+            <tr className="bg-gray-50 text-gray4">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+                {categoryType}-{status}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((person) => (
+              <tr
+                key={person.id}
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.contact_id },
+                  })
+                }
+                className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+                <td className="pl-6 py-4 pr-4 border-r border-gray2">
+                  <div className={'flex gap-4'}>
+                    <div>
+                      {person?.profile_image_path ? (
+                        <img
+                          className="inline-block h-10 w-10 rounded-full"
+                          src={person?.profile_image_path}
+                          alt={person.contact_name}
+                        />
+                      ) : (
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {getInitials(person.contact_name).toUpperCase()}
+                          </span>
+                        </span>
                       )}
                     </div>
-                  </td>
-                ))}
-              </div>
-              <td className={'px-6 py-4'} style={{ width: 120 }}>
+                    <div>
+                      <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                      <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </>
+      );
+    };
+    const assignToCampaign = () => {
+      return (
+        <>
+          <thead>
+            <tr className="bg-gray-50 text-gray4">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+                Campaign
+              </th>
+            </tr>
+          </thead>
+          <tbody className={'flex flex-col'}>
+            {data.map((person) => (
+              <td
+                className={'px-6 py-4 pl-6 py-4 pr-4 border-r border-gray2 h-[72px] border-b border'}
+                style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle active activePerson={person} />
                   <div>
@@ -2596,10 +2619,18 @@ const Table = ({
                   </div>
                 </div>
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </>
+            ))}
+          </tbody>
+        </>
+      );
+    };
+
+    return data && data?.length > 0 ? (
+      <div className={'flex'}>
+        <div>{other()}</div>
+        <div className={'flex-1'}>{eventsTable()}</div>
+        <div>{assignToCampaign()}</div>
+      </div>
     ) : (
       <div>
         <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
