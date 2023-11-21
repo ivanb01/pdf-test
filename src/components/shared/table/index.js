@@ -2454,6 +2454,46 @@ const Table = ({
         campaignStatus: 'to_be_sent',
         date: '01/08/2022',
       },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
+      {
+        eventName: 'Event 4',
+        campaignStatus: 'to_be_sent',
+        date: '01/08/2022',
+      },
     ];
     return data && data?.length > 0 ? (
       <>
@@ -2464,15 +2504,17 @@ const Table = ({
               className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
               {categoryType}-{status}
             </th>
-            {events.map((e, index) => (
-              <th
-                scope="col"
-                className={`${
-                  index === 3 ? 'border-r border-gray2' : ''
-                }flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
-                {e.eventName}
-              </th>
-            ))}
+            <div className={'max-w-[1000px] overflow-y-scroll'}>
+              {events.map((e, index) => (
+                <th
+                  scope="col"
+                  className={`${
+                    index === events.length ? 'border-r border-gray2' : ''
+                  } flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+                  {e.eventName}
+                </th>
+              ))}
+            </div>
             <th
               scope="col"
               className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
@@ -2514,27 +2556,29 @@ const Table = ({
                   </div>
                 </div>
               </td>
-              {events.map((e, index) => (
-                <td className={`px-6 py-4 ${index === 3 ? 'border-r border-gray2' : ''}`}>
-                  <div className={'flex flex-col gap-1'}>
-                    <div className={'flex gap-1.5 items-center'}>
-                      <div
-                        className={`h-2 w-2 rounded-xl ${
-                          e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
-                        }`}></div>
-                      <p
-                        className={`text-sm leading-5 font-medium ${
-                          e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
-                        }`}>
-                        {e.eventName}
-                      </p>
+              <div className={'max-w-[1000px] overflow-y-scroll'}>
+                {events.map((e, index) => (
+                  <td className={`px-6 py-4 ${index === events.length ? 'border-r border-gray2' : ''}`}>
+                    <div className={'flex flex-col gap-1'}>
+                      <div className={'flex gap-1.5 items-center'}>
+                        <div
+                          className={`h-2 w-2 rounded-xl ${
+                            e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
+                          }`}></div>
+                        <p
+                          className={`text-sm leading-5 font-medium ${
+                            e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
+                          }`}>
+                          {e.eventName}
+                        </p>
+                      </div>
+                      {e.date !== null && (
+                        <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>
+                      )}
                     </div>
-                    {e.date !== null && (
-                      <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>
-                    )}
-                  </div>
-                </td>
-              ))}
+                  </td>
+                ))}
+              </div>
               <td className={'px-6 py-4'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle active activePerson={person} />
