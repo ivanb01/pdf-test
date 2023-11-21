@@ -590,8 +590,9 @@ const ReviewContact = ({
               <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                 <div>
                   <Dropdown
-                    openClassName={'mb-2 h-[245px]'}
-                    className="col-span-2 mb-5"
+                    openClassName={'mb-2'}
+                    className="col-span-2"
+                    top={'top-[-260px]'}
                     white
                     label="Lead Source"
                     activeIcon={false}
@@ -601,13 +602,15 @@ const ReviewContact = ({
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                 </div>
-                <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                <div>
                   <DropdownWithSearch
                     isMulti
                     options={multiselectOptionsClients}
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
+                    top={'-130px'}
+                    maxMenuHeight={200}
                     value={findTagsOption(formik.values.tags)}
                     label="Priority"
                     onChange={(choice) => {
@@ -616,7 +619,6 @@ const ReviewContact = ({
                         choice.map((el) => el.label),
                       );
                     }}
-                    maxMenuHeight={80}
                   />
                 </div>
               </div>
