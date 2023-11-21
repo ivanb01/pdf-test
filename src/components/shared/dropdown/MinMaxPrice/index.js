@@ -1,11 +1,13 @@
 import Input from '@components/shared/input';
 import { ChevronDownIcon } from '@heroicons/react/solid';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Dropdown from '..';
 import { minPriceOptions, maxPriceOptions } from '@global/variables';
-import { useEffect } from 'react';
 
 const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, maxPrice, options }) => {
+  useEffect(() => {
+    setInitialLabel(label);
+  }, [label]);
   const [opened, setOpened] = useState(false);
   const [intialLabel, setInitialLabel] = useState(label);
   const [touched, setTouched] = useState(false);
