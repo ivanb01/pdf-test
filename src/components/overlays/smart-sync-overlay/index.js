@@ -41,9 +41,7 @@ const SmartSyncOverlay = ({ handleCloseOverlay, handleAction, loading }) => {
           </div>
         </div>
         <div className="flex items-center justify-between mt-6">
-          <button className="text-lightBlue3 text-sm font-medium" onClick={() => handleCloseOverlay()}>
-            Skip for now, maybe later
-          </button>
+          <div></div>
           <Button loading={loading} primary onClick={handleAction}>
             Setup now
           </Button>
