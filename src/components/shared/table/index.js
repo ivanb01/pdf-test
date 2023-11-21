@@ -768,7 +768,18 @@ const Table = ({
     const [changeStatusModal, setChangeStatusModal] = useState(false);
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
     const handleChangeStatus = async (status, contact) => {
       try {
         if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -981,7 +992,11 @@ const Table = ({
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
-                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                      className={`
+                      ${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
+                      ${
+                        isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
+                      } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
                         isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
                           ? 'hidden'
                           : ''
