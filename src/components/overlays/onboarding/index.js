@@ -54,8 +54,8 @@ const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding })
           </div>
           <div className="text-lg font-semibold text-gray-900 mb-3">Sync with G-mail Directly</div>
           <div className="text-xs text-gray-900">
-            By using “Smart sync contacts” and Google Contacts, your clients will show up in your dashboard without
-            needing to add them manually.
+            By using “Gmail Smart sync contacts” and Google Contacts, your clients will show up in your dashboard
+            without needing to add them manually.
           </div>
         </div>
         <div className="flex items-center justify-end mt-6">
