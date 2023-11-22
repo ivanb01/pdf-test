@@ -36,6 +36,7 @@ import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import properties from 'pages/properties';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -309,27 +310,14 @@ export default function LookingFor({ contactId, category }) {
             ) : (
               <>
                 {!lookingForData?.length ? (
-                  <Alert type="orange">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <ExclamationIcon className="h-5 w-5 text-orange-600" aria-hidden="true" />
-                      </div>
-                      <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
-                        <p className={`text-sm text-orange-800`}>
-                          {category === 'Landlord' || category === 'Seller'
-                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
-                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
-                        </p>
-                        <Button
-                          className="p-0"
-                          buttonPadding={'px-0'}
-                          label={'Edit Property Interests'}
-                          primary
-                          onClick={() => setShowAddPopup(true)}
-                        />
-                      </div>
-                    </div>
-                  </Alert>
+                  <FloatingAlert
+                    className="mx-[21px] mt-[14px]"
+                    message={
+                      "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."
+                    }
+                    type="smart-sync"
+                    buttonText={'Edit property interests'}
+                  />
                 ) : (
                   <header className={`transition-all bg-gray-50 p-6`}>
                     <div className="flex items-center justify-between text-sm">

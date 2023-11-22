@@ -1,11 +1,11 @@
 import { WarningAmber } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-const FloatingAlert = ({ message, className }) => {
+const FloatingAlert = ({ message, className, buttonText }) => {
   const router = useRouter();
   return (
     <div className={`${className} bg-[#FFFCF5] p-3 border border-[#FEC84B] rounded-xl`}>
       <div className="flex items-center justify-between">
-        <div className="flex">
+        <div className="flex items-center">
           <div className="flex-shrink-0">
             <svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -23,7 +23,7 @@ const FloatingAlert = ({ message, className }) => {
           onClick={() => router.push('/ai-summary')}
           type="button"
           className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none">
-          Review Now {'->'}
+          {buttonText ? buttonText : `Review Now ${'->'}`}
         </button>
       </div>
     </div>
