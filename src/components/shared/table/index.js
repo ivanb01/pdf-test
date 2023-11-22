@@ -60,7 +60,7 @@ import { Delete } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount } from '@store/global/slice';
+import { setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -75,6 +75,7 @@ const categoryIds = {
 };
 
 const Table = ({
+  handleFilteredContacts,
   undoAllCategorizations,
   undoCategorization,
   data,
@@ -755,7 +756,17 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
+    const sorted = useSelector((state) => state.global.sorted);
+
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const handleToggleSorting = (name) => {
+      const currentItem = sorted.find((item) => item.name === name);
+      if (currentItem) {
+        const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+        handleFilteredContacts(name, newOrder);
+        dispatch(setSorted({ name, order: newOrder }));
+      }
+    };
 
     const dispatch = useDispatch();
 
@@ -984,6 +995,37 @@ const Table = ({
                           </div>
                         </div>
                       </TooltipComponent>
+                      <a
+                        href="#"
+                        className={'ml-2'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleSorting(category?.name);
+                        }}>
+                        {sorted.find((s) => s.name === category?.name)?.sorted === 'asc' ? (
+                          <svg
+                            className="sort-asc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-ascending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="sort-desc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-descending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        )}
+                      </a>
                     </div>
                   </td>
                 </tr>

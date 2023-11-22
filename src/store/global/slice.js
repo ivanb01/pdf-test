@@ -17,6 +17,18 @@ const global = createSlice({
     professionalsFilters: {},
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
+    sorted: [
+      { name: 'New Lead', sorted: 'asc' },
+      { name: 'Attempted Contact', sorted: 'asc' },
+      { name: 'In Communication', sorted: 'asc' },
+      { name: 'Appointment Set', sorted: 'asc' },
+      { name: 'Actively Working', sorted: 'asc' },
+      { name: 'Contract Signed', sorted: 'asc' },
+      { name: 'Closed Client', sorted: 'asc' },
+      { name: 'Dropped', sorted: 'asc' },
+      { name: 'On Hold', sorted: 'asc' },
+      { name: 'Offer Submitted', sorted: 'asc' },
+    ],
     user: typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
     hideUnapproved: true,
     skippedEmptyState:
@@ -73,6 +85,7 @@ const global = createSlice({
     setHideUnapproved(state, action) {
       state.hideUnapproved = action.payload;
     },
+
     setExpandedTab(state, action) {
       if (state.tabs.length == 0) {
         return;
@@ -86,6 +99,21 @@ const global = createSlice({
     setInitializeTabs(state, action) {
       const createArrayOfObjects = (length) => Array.from({ length }, (_, id) => ({ id, opened: false }));
       state.tabs = createArrayOfObjects(action.payload);
+    },
+    setSorted(state, action) {
+      const { name, order } = action.payload;
+
+      if (order !== 'asc' && order !== 'desc') {
+        throw new Error("Invalid order parameter. Use 'asc' or 'desc'.");
+      }
+
+      const updatedItem = state.sorted.find((item) => item.name === name);
+
+      if (updatedItem) {
+        updatedItem.sorted = order;
+      } else {
+        state.sorted.push({ name, sorted: order });
+      }
     },
   },
 });
@@ -108,6 +136,7 @@ export const {
   setVendorSubtypes,
   setClientsFilters,
   setProfessionalsFilter,
+  setSorted,
   setHideUnapproved,
 } = global.actions;
 export default global.reducer;

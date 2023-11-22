@@ -5,7 +5,7 @@ const FloatingAlert = ({ message, className, buttonText, onClick }) => {
   return (
     <div className={`${className} bg-[#FFFCF5] p-3 border border-[#FEC84B] rounded-xl`}>
       <div className="flex items-center justify-between">
-        <div className="flex">
+        <div className="flex items-center">
           <div className="flex-shrink-0">
             <svg width="20" height="17" viewBox="0 0 20 17" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
