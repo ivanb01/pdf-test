@@ -217,6 +217,11 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className="flex items-center justify-between w-full">
             <Text h3 className="text-gray7 text-xl">
               {professionalsStatuses[openedSubtab]?.statusMainTitle}
+              {filteredProfessionals.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) &&
+                  !contact?.approved_ai,
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </Text>
             <div className="flex items-center justify-self-end">
               <Search
