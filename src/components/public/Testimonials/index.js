@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import levelLogo from '/public/images/public/level-logo.png';
 import spireLogo from '/public/images/public/spire-logo.png';
 import testimonialsTop from '/public/images/public/testimonials-section-top.png';
-import testimonialsBottom from '/public/images/public/testimonials-section-bottom.png';
+import testimonialsBottom from '/public/images/public/testimonials.svg';
 import quote from '/public/images/public/quote.svg';
 import testimonialsAvatar from '/public/images/public/testimonials-avatar-one.png';
 
