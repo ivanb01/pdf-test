@@ -88,7 +88,8 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
               {listingUrl && (
                 <Input
                   type="text"
-                  label="Listing url"
+                  label="Listing URL"
+                  required
                   id="listingUrl"
                   onChange={formik.handleChange}
                   error={formik.errors.listingUrl && formik.touched.listingUrl}

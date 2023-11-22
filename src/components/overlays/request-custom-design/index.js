@@ -63,7 +63,8 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
               <div className={'mx-6 mb-8 flex-1 flex gap-10 flex-col'}>
                 <Input
                   type="text"
-                  label="Listing url"
+                  label="Listing URL"
+                  required
                   id="listingUrl"
                   onChange={formik.handleChange}
                   error={formik.errors.listingUrl && formik.touched.listingUrl}
@@ -79,6 +80,7 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
                 <div className={'grid grid-cols-2 gap-6'}>
                   <Input
                     type="date"
+                    required
                     label="I need this to be ready until"
                     id="date"
                     value={formik.values.date}
