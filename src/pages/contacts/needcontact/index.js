@@ -15,7 +15,10 @@ import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 const index = () => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);

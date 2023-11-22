@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -30,6 +31,8 @@ const Uncategorized = ({
   onSearch,
   unapprovedContacts,
 }) => {
+  const router = useRouter();
+
   //* DATA *//
 
   const openedSubtab = useSelector((state) => state.global.openedSubtab);

@@ -29,6 +29,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import { setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import SwitchComponent from '@components/Switch';
+import { useRouter } from 'next/router';
 
 const tabs = [
   {
@@ -66,6 +67,8 @@ const buttons = [
 ];
 
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
@@ -218,14 +221,15 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         )}
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
-            <Text h3 className="text-gray7 text-xl">
-              {professionalsStatuses[openedSubtab]?.statusMainTitle}
+            <div className=" flex items-center">
+              <Text h3 className="text-gray7 text-xl mr-4">
+                {professionalsStatuses[openedSubtab]?.statusMainTitle}
+              </Text>
               {filteredProfessionals.filter(
                 (contact) =>
-                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) &&
-                  !contact?.approved_ai,
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
               ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
-            </Text>
+            </div>
             <div className="flex items-center justify-self-end">
               <Search
                 placeholder={`Search ` + professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()}

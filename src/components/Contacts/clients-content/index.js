@@ -14,6 +14,7 @@ import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
 import GlobalAlert from 'components/shared/alert/global-alert';
+import { useRouter } from 'next/router';
 import {
   clientStatuses,
   clientStatusMainTitlesUpdated,
@@ -51,6 +52,7 @@ const Clients = ({
   handleViewChange,
   currentButton,
 }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const scrollRef = useRef();
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
@@ -286,8 +288,7 @@ const Clients = ({
               </Text>
               {filteredContacts.filter(
                 (contact) =>
-                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact?.import_source_text) &&
-                  !contact?.approved_ai,
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
               ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">

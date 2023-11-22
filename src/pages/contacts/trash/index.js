@@ -12,7 +12,9 @@ import { setOpenedTab } from 'store/global/slice';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 const index = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);
