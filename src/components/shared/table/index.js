@@ -1849,7 +1849,7 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+              <td className="max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <Chip typeStyle>{dataItem?.category_2}</Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
