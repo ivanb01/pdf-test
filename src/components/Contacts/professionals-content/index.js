@@ -28,6 +28,7 @@ import { multiselectOptionsProfessionals } from 'global/variables';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import SwitchComponent from '@components/Switch';
 
 const tabs = [
   {
