@@ -1,6 +1,6 @@
 import { WarningAmber } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-const FloatingAlert = ({ message, className }) => {
+const FloatingAlert = ({ message, className, buttonText, onClick }) => {
   const router = useRouter();
   return (
     <div className={`${className} bg-[#FFFCF5] p-3 border border-[#FEC84B] rounded-xl`}>
@@ -19,12 +19,14 @@ const FloatingAlert = ({ message, className }) => {
           </div>
           <h3 className="ml-3 text-sm font-semibold text-[#B54708]">{message}</h3>
         </div>
-        <button
-          onClick={() => router.push('/ai-summary')}
-          type="button"
-          className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none">
-          Review Now {'->'}
-        </button>
+        {buttonText && (
+          <button
+            onClick={onClick}
+            type="button"
+            className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none">
+            {buttonText} {'->'}
+          </button>
+        )}
       </div>
     </div>
   );

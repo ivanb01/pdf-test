@@ -208,6 +208,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
           <FloatingAlert
+            onClick={() => router.push('/ai-summary')}
+            buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
             message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"

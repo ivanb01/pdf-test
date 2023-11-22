@@ -67,6 +67,8 @@ const index = () => {
         <>
           {unapprovedContactsLength > 0 && (
             <FloatingAlert
+              onClick={() => router.push('/ai-summary')}
+              buttonText={'Review Now'}
               className="mx-[21px] mt-[14px]"
               message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
               type="smart-sync"
