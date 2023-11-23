@@ -60,7 +60,7 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (router.asPath.includes('contacts')) {
+        if (!router.asPath.includes('public')) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
