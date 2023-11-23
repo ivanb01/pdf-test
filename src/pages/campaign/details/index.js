@@ -36,9 +36,6 @@ const index = () => {
       setCampaignEvents(res.data);
     });
   }, [id]);
-  useEffect(() => {
-    console.log(usersInCampaignGlobally, 'v2');
-  }, [usersInCampaignGlobally]);
 
   useEffect(() => {
     if (CRMCampaigns === undefined) {
@@ -85,43 +82,43 @@ const index = () => {
     {
       name: 'CAMPAIGN MATCHED TO',
       icon: campaignsMatchedTo,
-      amount: usersInCampaignGlobally?.contacts.length,
+      amount: usersInCampaignGlobally?.contacts?.length,
     },
     {
       name: 'CLIENTS IN CAMPAIGN',
       icon: inCampaign,
-      amount: usersInCampaignGlobally?.contacts_assigned_count,
+      amount: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
       name: 'CLIENTS NOT IN CAMPAIGN',
       icon: notInCampaign,
-      amount: usersInCampaignGlobally?.contacts_unassigned_count,
+      amount: usersInCampaignGlobally?.contacts_not_campaign?.length,
     },
   ];
   const buttons = [
     {
       id: 0,
       name: 'All',
-      count: totalContacts?.length,
+      count: usersInCampaignGlobally?.contacts?.length,
     },
     {
       id: 1,
       name: 'In Campaign',
-      count: inCampaignContacts?.length,
+      count: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
       id: 2,
       name: 'Not In Campaign',
-      count: notInCamapaignContacts?.length,
+      count: usersInCampaignGlobally?.contacts_not_campaign?.length,
     },
   ];
 
   useEffect(() => {
+    console.log(usersInCampaignGlobally);
+  }, [usersInCampaignGlobally]);
+  useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
-  useEffect(() => {
-    console.log(campaignEvents, 'CampaignEvents');
-  }, [campaignEvents]);
 
   const renderTable = (currentButton) => {
     switch (currentButton) {

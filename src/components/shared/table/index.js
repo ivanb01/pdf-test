@@ -7,6 +7,8 @@ import {
   getInitials,
   getDateFormat,
   formatDateStringMDY,
+  getFormattedDateFromTimestamp,
+  isAfterToday,
 } from 'global/functions';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
@@ -2206,17 +2208,19 @@ const Table = ({
                     contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
                   />
                 ) : (
-                  <>-</>
+                  <div>-</div>
                 )}
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-4'}>
                   <div className={'flex gap-[5px] items-center justify-center'}>
-                    <span className={'text-sm leading-5 font-normal text-gray7'}>0</span>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>
+                      {person?.event_sent?.email ?? '-'}
+                    </span>
                     <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
                   </div>
                   <div className={'flex gap-[5px] items-center justify-center'}>
-                    <span className={'text-sm leading-5 font-normal text-gray7'}>0</span>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>{person?.event_sent?.sms ?? '-'}</span>
                     <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />
                   </div>
                 </div>
@@ -2224,8 +2228,11 @@ const Table = ({
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle
-                    active={person.contact_campaign_status === 'assigned'}
-                    disabled={person.contact_campaign_status === 'unassigned'}
+                    active={
+                      person?.contact_campaign_status !== 'never_assigned' &&
+                      person?.contact_campaign_status !== 'unassigned'
+                    }
+                    disabled={person?.contact_campaign_status === 'unassigned'}
                     activePerson={person}
                   />
                   <div>
@@ -2237,7 +2244,7 @@ const Table = ({
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
                         ? 'Deactivated'
-                        : 'Active'}
+                        : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -2385,7 +2392,7 @@ const Table = ({
                     contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
                   />
                 ) : (
-                  <div className={'text-center'}>-</div>
+                  <div>-</div>
                 )}
               </td>
               <td className={'px-6 py-4'}>
@@ -2395,21 +2402,34 @@ const Table = ({
                     <p className={'text-sm leading-5 font-medium text-gray7'}>
                       {person.contact_campaign_status === 'never_assigned'
                         ? 'Never in Campaign'
-                        : 'Campaign is Running'}
+                        : 'Campaign Deactivated'}
                     </p>
                   </div>
                   {person.contact_unenrolment_date !== null && (
                     <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
-                      from {person.contact_unenrolment_date}
+                      from {getFormattedDateFromTimestamp(person.contact_unenrolment_date)}
                     </div>
                   )}
                 </div>
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={false} activePerson={person} />
+                  <Toggle
+                    active={false}
+                    disabled={person.contact_campaign_status === 'unassigned'}
+                    activePerson={person}
+                  />
                   <div>
-                    <span className={'text-xs leading-5 font-medium text-gray7'}>Inactive</span>
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Deactivated'
+                        : 'Inactive'}
+                    </span>
                   </div>
                 </div>
               </td>
@@ -2496,39 +2516,54 @@ const Table = ({
       },
     ];
     const eventsTable = () => {
+      {
+        console.log(data, 'dataevents');
+      }
       return (
-        <div className={'max-w-[1000px] overflow-y-scroll'}>
-          <thead>
-            {events.map((e, index) => (
+        <div>
+          <thead className={' flex  w-full'}>
+            {data[0].events?.map((e, index) => (
               <th
+                key={index}
                 scope="col"
                 className={`${
-                  index === events.length ? 'border-r border-gray2' : ''
-                } flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
-                {e.eventName}
+                  index === data[0].events.length - 1 ? ' border-gray-2' : ''
+                } flex-grow flex-1 pl-6 pr-20 py-3 bg-gray-50  border-b text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+                <div className={'min-w-[200px]'}> Event {index}</div>
               </th>
             ))}
           </thead>
-          <tbody>
-            {events.map((e, index) => (
-              <td
-                className={`px-6 py-4 border-b border-gray2 ${index === events.length ? 'border-r border-gray2' : ''}`}>
-                <div className={'flex flex-col gap-1'}>
-                  <div className={'flex gap-1.5 items-center'}>
-                    <div
-                      className={`h-2 w-2 rounded-xl ${
-                        e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
-                      }`}></div>
-                    <p
-                      className={`text-sm leading-5 font-medium ${
-                        e.campaignStatus === 'to_be_sent' ? 'text-yellow3' : 'text-green7'
-                      }`}>
-                      {e.eventName}
-                    </p>
-                  </div>
-                  {e.date !== null && <div className={'text-sm leading-4 font-normal text-gray5  ml-3'}>{e.date}</div>}
-                </div>
-              </td>
+          <tbody className={'flex  w-full'}>
+            {data.map((events, rowIndex) => (
+              <tr key={rowIndex} className={'flex  w-full'}>
+                {events.events.map((e, cellIndex) => (
+                  <td
+                    key={cellIndex}
+                    className={` flex-grow flex-1 px-6 py-4 border-b border-gray2 pr-20 ${
+                      cellIndex === events.events.length - 1 ? ' border-gray2' : ''
+                    }`}>
+                    <div className={'flex flex-col gap-1 min-w-[200px] '}>
+                      <div className={'flex gap-1.5 items-center'}>
+                        <div
+                          className={`h-2 w-2 rounded-xl ${
+                            e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
+                          }`}></div>
+                        <p
+                          className={`text-sm leading-5 font-medium ${
+                            isAfterToday(e.updated_at) === true ? 'text-yellow3' : 'text-green7'
+                          }`}>
+                          {isAfterToday(e.updated_at) === true ? 'To be sent' : 'Sent'}
+                        </p>
+                      </div>
+                      {e.date !== null && (
+                        <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
+                          {getFormattedDateFromTimestamp(e.updated_at)}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                ))}
+              </tr>
             ))}
           </tbody>
         </div>
@@ -2537,16 +2572,16 @@ const Table = ({
     const other = () => {
       return (
         <>
-          <thead>
+          <thead className={'w-[350px]'}>
             <tr className="bg-gray-50 text-gray4">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+                className="px-6 py-3 text-left border-b text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
                 {categoryType}-{status}
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className={'w-[350px]'}>
             {data.map((person) => (
               <tr
                 key={person.id}
@@ -2557,7 +2592,7 @@ const Table = ({
                   })
                 }
                 className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
-                <td className="pl-6 py-4 pr-4 border-r border-gray2">
+                <td className="pl-6 py-4 pr-[100px] border-b border-r  border-gray2">
                   <div className={'flex gap-4'}>
                     <div>
                       {person?.profile_image_path ? (
@@ -2593,16 +2628,14 @@ const Table = ({
             <tr className="bg-gray-50 text-gray4">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+                className="px-6 py-3 text-left text-xs border-l leading-4 font-medium tracking-wider border-b border-gray2 uppercase">
                 Campaign
               </th>
             </tr>
           </thead>
           <tbody className={'flex flex-col'}>
             {data.map((person) => (
-              <td
-                className={'px-6 py-4 pl-6 py-4 pr-4 border-r border-gray2 h-[72px] border-b border'}
-                style={{ width: 120 }}>
+              <td className={'px-6 py-4 pl-6  pr-4  border-l border-gray2 h-[73px] border-b'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle active activePerson={person} />
                   <div>
@@ -2626,10 +2659,10 @@ const Table = ({
     };
 
     return data && data?.length > 0 ? (
-      <div className={'flex'}>
-        <div>{other()}</div>
-        <div className={'flex-1'}>{eventsTable()}</div>
-        <div>{assignToCampaign()}</div>
+      <div className={'flex overflow-x-clip w-[100vw]'}>
+        <div className={'shrink-0'}>{other()}</div>
+        <div className={'flex-1 shrink overflow-y-scroll'}>{eventsTable()}</div>
+        <div className={'shrink-0 '}>{assignToCampaign()}</div>
       </div>
     ) : (
       <div>

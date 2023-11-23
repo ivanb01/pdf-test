@@ -4,8 +4,6 @@ import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { updateContactLocally } from '@store/contacts/slice';
-import { setRefetchData } from '@store/global/slice';
 import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
 
 function classNames(...classes) {
@@ -18,31 +16,34 @@ const Toggle = ({ active, activePerson, disabled }) => {
   const [openDeactivate, setOpenDeactivate] = useState(false);
 
   const router = useRouter();
-  useEffect(() => {
-    console.log(active);
-  }, [active]);
+
   const { id } = router.query;
   const dispatch = useDispatch();
-  const handleCampaignAssignment = () => {
+  const [loading, setLoading] = useState(false);
+  const handleCampaignAssignment = async () => {
     if (!active) {
       setEnabled(true);
-      assignContactToCampaign(id, activePerson.contact_id).then((res) => {
-        getCampaignsUsers(id).then((res) => {
-          dispatch(setUsersInCampaignGlobally(res.data));
-        });
+      setLoading(true);
+      await assignContactToCampaign(id, activePerson.contact_id).then((res) => {
+        setLoading(false);
+        setOpenDeactivate(false);
+      });
+      getCampaignsUsers(id).then((res) => {
+        dispatch(setUsersInCampaignGlobally(res.data));
+        setLoading(false);
+        setOpenDeactivate(false);
       });
     } else if (active) {
-      console.log('erza');
       setEnabled(false);
-      unassignContactFromCampaign(id, activePerson.contact_id).then((res) => {
+      setLoading(true);
+      await unassignContactFromCampaign(id, activePerson.contact_id).then((res) => {
+        setLoading(false);
+        setOpenDeactivate(false);
         getCampaignsUsers(id).then((res) => {
           dispatch(setUsersInCampaignGlobally(res.data));
         });
       });
     }
-  };
-  const makeChangesAndClosePopup = () => {
-    setMakeChanges(true);
   };
 
   useEffect(() => {
@@ -54,12 +55,13 @@ const Toggle = ({ active, activePerson, disabled }) => {
       handleCampaignAssignment();
     }
   }, [makeChanges]);
+
   return (
     <>
       <Switch
         onClick={(e) => {
           e.stopPropagation();
-          if (!active) {
+          if (!disabled) {
             setOpenDeactivate(true);
           }
         }}
@@ -78,13 +80,7 @@ const Toggle = ({ active, activePerson, disabled }) => {
           )}
         />
       </Switch>
-      {openDeactivate && (
-        <DeactivateCampaign
-          active={active}
-          makeChanges={setMakeChanges}
-          handleCloseModal={() => setOpenDeactivate(false)}
-        />
-      )}
+      {openDeactivate && <DeactivateCampaign active={active} loading={loading} makeChanges={setMakeChanges} />}
     </>
   );
 };

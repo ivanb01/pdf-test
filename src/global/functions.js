@@ -157,6 +157,18 @@ export const formatDateAgo = (date, param) => {
   return moment(date).startOf(param).fromNow();
 };
 
+export function getFormattedDateFromTimestamp(timestamp) {
+  const date = moment(timestamp);
+
+  return date.format('MM/DD/YYYY');
+}
+
+export function isAfterToday(timestamp) {
+  const currentDate = moment();
+  const dateToCompare = moment(timestamp);
+
+  return dateToCompare.isAfter(currentDate);
+}
 export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };

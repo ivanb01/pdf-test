@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import image from '/public/images/assign-to-campaign-2.gif';
 
-const DeactivateCampaign = ({ handleCloseModal, makeChanges, active }) => {
+const DeactivateCampaign = ({ handleCloseModal, makeChanges, active, loading }) => {
   useEffect(() => {
     makeChanges(false);
   }, []);
@@ -37,7 +37,7 @@ const DeactivateCampaign = ({ handleCloseModal, makeChanges, active }) => {
                 <div className="text-center flex items-center justify-center ml-[-39px]">
                   <Image src={image} alt="header-img" height={180} width={180} />
                 </div>
-                <h6 className={'text-sm leading-5 font-normal text-gray4 ml-[-40px]'}>
+                <h6 className={'text-sm leading-5 font-normal text-gray4 ml-[-40px] text-center'}>
                   Assigned client will get emails/events from campaign. Your communication will be improved and healthy
                 </h6>
               </>
@@ -56,10 +56,10 @@ const DeactivateCampaign = ({ handleCloseModal, makeChanges, active }) => {
           <Button
             danger={active}
             primary={!active}
+            loading={loading}
             onClick={(e) => {
               e.stopPropagation();
               makeChanges(true);
-              handleCloseModal();
             }}>
             {active ? 'Yes, deactivate' : 'Yes, assign'}
           </Button>
