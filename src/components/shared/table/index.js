@@ -2526,75 +2526,10 @@ const Table = ({
     );
   };
   const inCampaignContacts = () => {
-    const events = [
-      {
-        eventName: 'Event 1',
-        campaignStatus: 'sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 2',
-        campaignStatus: 'sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 3',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-      {
-        eventName: 'Event 4',
-        campaignStatus: 'to_be_sent',
-        date: '01/08/2022',
-      },
-    ];
     const eventsTable = () => {
-      {
-        console.log(data, 'dataevents');
-      }
       return (
         <div>
-          <thead className={' flex  w-full'}>
+          <thead className={' flex w-full'}>
             {data[0].events?.map((e, index) => (
               <th
                 key={index}
@@ -2602,7 +2537,7 @@ const Table = ({
                 className={`${
                   index === data[0].events.length - 1 ? ' border-gray-2' : ''
                 } flex-grow flex-1 pl-6 pr-20 py-3 bg-gray-50  border-b text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
-                <div className={'min-w-[200px]'}> Event {index}</div>
+                <div className={'min-w-[200px]'}> {e?.event_name}</div>
               </th>
             ))}
           </thead>
@@ -2710,7 +2645,7 @@ const Table = ({
             {data.map((person) => (
               <td className={'px-6 py-4 pl-6  pr-4  border-l border-gray2 h-[73px] border-b'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active activePerson={person} />
+                  <Toggle active={person?.contact_campaign_status === 'assigned'} activePerson={person} />
                   <div>
                     <span
                       className={`text-xs leading-5 font-medium ${
@@ -2732,9 +2667,13 @@ const Table = ({
     };
 
     return data && data?.length > 0 ? (
-      <div className={'flex overflow-x-clip w-[100vw]'}>
+      <div className={'flex overflow-x-clip w-[100vw] overflow-y-hidden '}>
         <div className={'shrink-0'}>{other()}</div>
-        <div className={'flex-1 shrink overflow-y-scroll'}>{eventsTable()}</div>
+        <div
+          className={'flex-1 shrink mr-[-8px]'}
+          style={{ overflowY: 'scroll', overflowX: 'auto', maxHeight: '390px' }}>
+          {eventsTable()}
+        </div>
         <div className={'shrink-0 '}>{assignToCampaign()}</div>
       </div>
     ) : (

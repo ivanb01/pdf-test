@@ -39,16 +39,18 @@ const Toggle = ({ active, activePerson, disabled }) => {
       await unassignContactFromCampaign(id, activePerson.contact_id).then((res) => {
         setLoading(false);
         setOpenDeactivate(false);
-        getCampaignsUsers(id).then((res) => {
-          dispatch(setUsersInCampaignGlobally(res.data));
-        });
+      });
+      getCampaignsUsers(id).then((res) => {
+        dispatch(setUsersInCampaignGlobally(res.data));
+        setLoading(false);
+        setOpenDeactivate(false);
       });
     }
   };
 
   useEffect(() => {
     setEnabled(active);
-  }, [active]);
+  }, [active, disabled, activePerson]);
 
   useEffect(() => {
     if (makeChanges) {

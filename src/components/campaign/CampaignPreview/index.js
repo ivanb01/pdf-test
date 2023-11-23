@@ -115,7 +115,7 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                       </div>
                     </div>
                     <div className="flex min-h-0 flex-1 flex-col">
-                      <SimpleBar autoHide style={{ height: '100vh' }}>
+                      <div className={'overflow-y-scroll'}>
                         <div className="relative  flex flex-1 h-full">
                           <div className={'w-[400px] border-r border-gray2 p-6 pb-0'}>
                             <div className={'flex items-start justify-start gap-1 mb-6'}>
@@ -226,7 +226,7 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                             </div>
                           </div>
                         </div>
-                      </SimpleBar>
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
