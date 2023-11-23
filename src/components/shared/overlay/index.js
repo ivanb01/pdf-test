@@ -39,13 +39,23 @@ const Overlay = ({
                     />
                   </svg>
                 )}
-                {title && (
+                {title && typeof title === 'string' ? (
                   <Text h3 className="text-gray7">
                     {router.pathname.includes('/trash') ? 'Restore Contact' : title}
                   </Text>
+                ) : (
+                  title
                 )}
               </div>
-              {handleCloseOverlay && <Button closeButton onClick={handleCloseOverlay} />}
+              {handleCloseOverlay && (
+                <Button
+                  closeButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCloseOverlay();
+                  }}
+                />
+              )}
               {closeModal && <Button closeButton onClick={closeModal} />}
             </div>
           ) : null}

@@ -4,117 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84ed9a37-8d0e-4854-a960-d219b99775b6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/images/public/campaign-reports-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/campaign-reports-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-a.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-bg-detail.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-contacts-detail-slide-2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/categorize-yourself.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/close.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/contact-us-bg.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/create-campaign-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/create-campaign-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-6.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/features-slide-8.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-add-tasks.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-ai.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-check.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-checklist.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-consumer-websites.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-discuss.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-drive-campaigns.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-email.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-feature-application.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-feature-email.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-gmail-integration.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-mail.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-phone.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-send-form.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-statistics.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/icon-sync.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/intro-chat-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/intro-left-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/intro-mobile-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/intro-right-bg-mobile.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/intro-right-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/level-logo-dark.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/level-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/menu.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/oxford-logo-dark.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-active.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-completed.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/pagination-inactive.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/quote.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/robot.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/run-campaign-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/run-campaign-2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/section-online-forms-bg-detail.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/section-online-forms-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/section-smart-sync-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/spire-logo-dark.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/spire-logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/start-trial-arrow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/start-trial-section-bg.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-avatar-one.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-section-bottom.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/public/testimonials-section-top.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/categorize-contacts-slide-1.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/categorize-contacts-slide-2.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-5.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-6.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-7.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/features-slide-8.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/animations/monitor-campaigns.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Feature/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Feature/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Footer/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Footer/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Header/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Header/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/InfoItem/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/InfoItem/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Input/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Input/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/PriceCard/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/PriceCard/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionAllInOne/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionAllInOne/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/Slide/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/Slide/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionCategorizeContacts/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionContact/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionContact/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/Slide/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/Slide/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionFeaturesSwiper/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionIntro/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionIntro/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionMonitorCampaigns/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionMonitorCampaigns/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionOnlineForms/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionOnlineForms/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionSmartSync/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionSmartSync/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionStartTrial/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/SectionStartTrial/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Testimonials/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Testimonials/styles.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Textarea/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/public/Textarea/styles.module.scss" afterDir="false" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/_global.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/_global.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/_variables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,19 +22,18 @@
         <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="2Uk7wW6N96LlVPqkmVVRwOcHXlF" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/images/public" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "f/erza/ShowNoContact",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
+    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/images/public" />
@@ -147,9 +41,7 @@
       <recent name="$PROJECT_DIR$/src/components/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/pages/front" />
-      <recent name="$PROJECT_DIR$/src/components/public" />
-      <recent name="$PROJECT_DIR$/src/pages" />
+      <recent name="$PROJECT_DIR$/public/images/marketing" />
       <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
@@ -167,6 +59,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
@@ -267,8 +160,219 @@
       <option name="project" value="LOCAL" />
       <updated>1695721422095</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="add campaign main page logic">
+      <option name="closed" value="true" />
+      <created>1696490511132</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1696490511132</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add search function">
+      <option name="closed" value="true" />
+      <created>1696497586711</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1696497586711</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add search function">
+      <option name="closed" value="true" />
+      <created>1696500920553</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1696500920553</updated>
+    </task>
+    <task id="LOCAL-00015" summary="add date imported at activity log">
+      <option name="closed" value="true" />
+      <created>1696509980085</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1696509980085</updated>
+    </task>
+    <task id="LOCAL-00016" summary="remove Gmail Filter">
+      <option name="closed" value="true" />
+      <created>1696510530896</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1696510530896</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add no contacts when there is no contact for each subcategory">
+      <option name="closed" value="true" />
+      <created>1696581987537</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1696581987537</updated>
+    </task>
+    <task id="LOCAL-00018" summary="remove uncategorized table when no uncategorized contacts">
+      <option name="closed" value="true" />
+      <created>1696584083132</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1696584083132</updated>
+    </task>
+    <task id="LOCAL-00019" summary="remove uncategorized table when no uncategorized contacts">
+      <option name="closed" value="true" />
+      <created>1696584181042</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1696584181042</updated>
+    </task>
+    <task id="LOCAL-00020" summary="change tooltip position">
+      <option name="closed" value="true" />
+      <created>1696588249334</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1696588249334</updated>
+    </task>
+    <task id="LOCAL-00021" summary="remove arrow padding">
+      <option name="closed" value="true" />
+      <created>1696590556307</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1696590556307</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="remove arrow padding" />
+      <created>1696601536995</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1696601536995</updated>
+      <workItem from="1696601538276" duration="59065000" />
+    </task>
+    <task id="LOCAL-00022" summary="add info icon on cards">
+      <option name="closed" value="true" />
+      <created>1696604337614</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1696604337614</updated>
+    </task>
+    <task id="LOCAL-00023" summary="add zoom on preview marketing">
+      <option name="closed" value="true" />
+      <created>1696605809641</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1696605809641</updated>
+    </task>
+    <task id="LOCAL-00024" summary="make size of main sidebar smaller and do refactoring at ai-summary">
+      <option name="closed" value="true" />
+      <created>1696606967346</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1696606967346</updated>
+    </task>
+    <task id="LOCAL-00025" summary="do refactoring at ai-summary">
+      <option name="closed" value="true" />
+      <created>1696838037020</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1696838037020</updated>
+    </task>
+    <task id="LOCAL-00026" summary="change direction of Tooltip">
+      <option name="closed" value="true" />
+      <created>1696843101926</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1696843101926</updated>
+    </task>
+    <task id="LOCAL-00027" summary="change ai-summary table">
+      <option name="closed" value="true" />
+      <created>1696843939090</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1696843939090</updated>
+    </task>
+    <task id="LOCAL-00028" summary="enable scrolling when in need to contacgt page">
+      <option name="closed" value="true" />
+      <created>1696844891924</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1696844891924</updated>
+    </task>
+    <task id="LOCAL-00029" summary="improve lead source">
+      <option name="closed" value="true" />
+      <created>1696849110999</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1696849110999</updated>
+    </task>
+    <task id="LOCAL-00030" summary="fix ui of add manually client">
+      <option name="closed" value="true" />
+      <created>1696865207404</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1696865207404</updated>
+    </task>
+    <task id="LOCAL-00031" summary="control tags on add client manually">
+      <option name="closed" value="true" />
+      <created>1696866689299</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1696866689299</updated>
+    </task>
+    <task id="LOCAL-00032" summary="differentiate unknown from uncategorized">
+      <option name="closed" value="true" />
+      <created>1696879499157</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1696879499157</updated>
+    </task>
+    <task id="LOCAL-00033" summary="change campaign style">
+      <option name="closed" value="true" />
+      <created>1696931201637</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1696931201637</updated>
+    </task>
+    <task id="LOCAL-00034" summary="make campaignEvents?.events optional">
+      <option name="closed" value="true" />
+      <created>1696949404359</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1696949404359</updated>
+    </task>
+    <task id="LOCAL-00035" summary="make campaignEvents?.events optional">
+      <option name="closed" value="true" />
+      <created>1696952880502</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1696952880502</updated>
+    </task>
+    <task id="LOCAL-00036" summary="add campaign details page">
+      <option name="closed" value="true" />
+      <created>1697025842748</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1697025842748</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
@@ -277,19 +381,31 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="check formatter issues" />
-    <MESSAGE value="add main menu" />
-    <MESSAGE value="add gradient" />
-    <MESSAGE value="improve others sum and uncategorized sum" />
-    <MESSAGE value="implement marketing page UI" />
-    <MESSAGE value="fix button issues" />
-    <MESSAGE value="change popup when ai contact" />
-    <MESSAGE value="change on focus summary textarea" />
-    <MESSAGE value="remove unused code" />
-    <MESSAGE value="remove 0 values" />
     <MESSAGE value="add coma to result" />
     <MESSAGE value="change icons of floorplan and vtour" />
     <MESSAGE value="add coma in pagination" />
-    <option name="LAST_COMMIT_MESSAGE" value="add coma in pagination" />
+    <MESSAGE value="add campaign main page logic" />
+    <MESSAGE value="add search function" />
+    <MESSAGE value="add date imported at activity log" />
+    <MESSAGE value="remove Gmail Filter" />
+    <MESSAGE value="add no contacts when there is no contact for each subcategory" />
+    <MESSAGE value="remove uncategorized table when no uncategorized contacts" />
+    <MESSAGE value="change tooltip position" />
+    <MESSAGE value="remove arrow padding" />
+    <MESSAGE value="add info icon on cards" />
+    <MESSAGE value="add zoom on preview marketing" />
+    <MESSAGE value="make size of main sidebar smaller and do refactoring at ai-summary" />
+    <MESSAGE value="do refactoring at ai-summary" />
+    <MESSAGE value="change direction of Tooltip" />
+    <MESSAGE value="change ai-summary table" />
+    <MESSAGE value="enable scrolling when in need to contacgt page" />
+    <MESSAGE value="improve lead source" />
+    <MESSAGE value="fix ui of add manually client" />
+    <MESSAGE value="control tags on add client manually" />
+    <MESSAGE value="differentiate unknown from uncategorized" />
+    <MESSAGE value="change campaign style" />
+    <MESSAGE value="make campaignEvents?.events optional" />
+    <MESSAGE value="add campaign details page" />
+    <option name="LAST_COMMIT_MESSAGE" value="add campaign details page" />
   </component>
 </project>

@@ -22,7 +22,9 @@ export const getContactCampaignEventPreview = (id) => {
 export const getAllEvents = (id) => {
   return axiosInstance.get(`/campaign/${id}/preview`);
 };
-
+export const getCampaignsUsers = (id) => {
+  return axiosInstance.get(`/campaign/${id}`);
+};
 export const getCampaigns = (searchterm) => {
   return axiosInstance.get('campaigns', {
     params: { search_term: searchterm },
