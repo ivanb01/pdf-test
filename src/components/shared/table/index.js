@@ -2554,18 +2554,19 @@ const Table = ({
                       <div className={'flex gap-1.5 items-center'}>
                         <div
                           className={`h-2 w-2 rounded-xl ${
-                            e.campaignStatus === 'to_be_sent' ? 'bg-yellow2' : 'bg-green5'
+                            isAfterToday(e.event_updated_at) === true ? 'bg-yellow2' : 'bg-green5'
                           }`}></div>
                         <p
                           className={`text-sm leading-5 font-medium ${
-                            isAfterToday(e.updated_at) === true ? 'text-yellow3' : 'text-green7'
+                            isAfterToday(e.event_updated_at) === true ? 'text-yellow3' : 'text-green7'
                           }`}>
-                          {isAfterToday(e.updated_at) === true ? 'To be sent' : 'Sent'}
+                          {isAfterToday(e.event_updated_at) === true ? 'To be sent' : 'Sent'}
                         </p>
                       </div>
                       {e.date !== null && (
                         <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
-                          {getFormattedDateFromTimestamp(e.updated_at)}
+                          {console.log(e.updated_at)}
+                          {getFormattedDateFromTimestamp(e.event_updated_at)}
                         </div>
                       )}
                     </div>
