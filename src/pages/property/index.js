@@ -50,10 +50,13 @@ import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
 import GlobalAlert from '@components/shared/alert/global-alert';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const index = () => {
   const router = useRouter();
   const id = router.query.id;
+  const status = router.query.status;
   const scrollElement = useRef(null);
   const pictures = [one, one, one, one, one, one, one, one];
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -370,6 +373,20 @@ const index = () => {
     { name: 'Storage', icon: storage },
     { name: 'Elevator', icon: elevator },
   ];
+
+  const otherPropertyDetails = [
+    {
+      id: 0,
+      name: 'Fee:',
+      value: data.COBROKE_FEE,
+    },
+    {
+      id: 0,
+      name: 'Listing Type:',
+      value: data.LISTING_CATEGORY,
+    },
+  ];
+
   const otherDetails = [
     {
       id: 0,
@@ -474,11 +491,15 @@ const index = () => {
       callback: 'callback',
       id: id,
     };
+    if (status) {
+      params['status'] = status;
+    }
     const urlParams = new URLSearchParams({
       ...params,
     });
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 
+    console.log(url);
     await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -550,6 +571,11 @@ const index = () => {
   const filteredArray =
     data.PHOTOS.length > 0 && data.PHOTOS.filter((item) => item.ORIGINAL_URL.toLowerCase().includes('floor'));
 
+  const [lightboxController, setLightboxController] = useState({
+    toggler: false,
+    slide: 1,
+  });
+
   return loading ? (
     <div className="h-full w-full relative">
       <Loader />
@@ -562,15 +588,27 @@ const index = () => {
       <div className="flex md:h-[500px] h-[300px] relative">
         {data.PHOTOS.length == 1 ? (
           <div className="w-full h-full">
-            <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+            <img
+              src={data.PHOTOS[0].PHOTO_URL}
+              onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
+              className="object-cover w-full  h-[500px] object-center"
+            />
           </div>
         ) : data.PHOTOS.length == 2 ? (
           <>
             <div className="md:w-1/2 w-full h-full pr-3">
-              <img src={data.PHOTOS[0].PHOTO_URL} className="object-cover w-full h-full object-center" />
+              <img
+                src={data.PHOTOS[0].PHOTO_URL}
+                className="object-cover w-full object-center"
+                onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
+              />
             </div>
-            <div className="md:w-1/2 w-full h-full">
-              <img src={data.PHOTOS[1].PHOTO_URL} className="object-cover w-full h-full object-center" />
+            <div className="md:w-1/2 w-full h-full min-h-[500px]">
+              <img
+                src={data.PHOTOS[1].PHOTO_URL}
+                className="object-cover w-full  object-center  h-[500px]"
+                onClick={() => setLightboxController((prev) => ({ slide: 1, toggler: !prev.toggler }))}
+              />
             </div>
           </>
         ) : (
@@ -587,7 +625,8 @@ const index = () => {
                   <img
                     src={picture.PHOTO_URL}
                     alt={`Image ${index + 1}`}
-                    className="object-cover w-full h-full object-center"
+                    className="object-cover w-full  object-center h-[500px] cursor-pointer"
+                    onClick={() => setLightboxController((prev) => ({ slide: index, toggler: !prev.toggler }))}
                   />
                 </SwiperSlide>
               ))}
@@ -775,36 +814,39 @@ const index = () => {
             </div>
           </div>
           {isAuthenticated && (
-            <div className="w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
+            <div className="transition-all w-auto custom-box-shadow p-6 h-fit min-w-[400px]">
               {/* <div className="text-gray-900 text-base mb-2">Contact the property agent directly</div> */}
               <GlobalAlert
-                className="mb-4"
+                className="mb-4 font-semibold"
                 smallText
                 noBorder
                 rounded
                 type="warning"
-                message={`NOTE: The agent name is only visible to you. It will not show when you share the link with someone.`}
+                message={`NOTE: The information in this box is only visible to you. It will not show when you share the link with someone.`}
               />
-              <div className="flex items-center">
-                <div className="mr-4 w-24 h-24 rounded-lg">
-                  <img
-                    src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
-                    className="object-cover rounded-lg"
-                    alt=""
-                  />
-                </div>
-                <div className=" break-words">
-                  <div className="text-gray-500 text-sm">
-                    <div className="font-medium text-lg text-gray-900">{data.AGENT_NAME}</div>
-                    <a className="block">{data.COMPANY_NAME}</a>
-                    <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
-                      {data.AGENT_EMAIL}
-                    </a>
-                    <a className="block hover:underline" href={`tel:${data.AGENT_PHONE}`}>
-                      {data.AGENT_PHONE}
-                    </a>
+              <div className={' opacity-50 hover:opacity-100'}>
+                <div className="text-gray7 text-xl mb-3 font-medium ">Listing Agent</div>
+
+                <div className="flex items-center ">
+                  <div className="mr-4 w-24 h-24 rounded-lg">
+                    <img
+                      src={data.AGENT_IMAGE ? data.AGENT_IMAGE : placeholder.src}
+                      className="object-cover rounded-lg"
+                      alt=""
+                    />
                   </div>
-                  {/* <div className="flex mt-2">
+                  <div className=" break-words">
+                    <div className="text-gray-500 text-sm">
+                      <div className="font-medium text-base text-gray-900">{data.AGENT_NAME}</div>
+                      <a className="block">{data.COMPANY_NAME}</a>
+                      <a className="block hover:underline" href={`mailto:${data.AGENT_EMAIL}`}>
+                        {data.AGENT_EMAIL}
+                      </a>
+                      <a className="block hover:underline" href={`tel:${data.AGENT_PHONE}`}>
+                        {data.AGENT_PHONE}
+                      </a>
+                    </div>
+                    {/* <div className="flex mt-2">
                   <a
                     className="flex mr-2 items-center justify-center h-[35px] w-[35px] bg-purple-500 rounded-full "
                     href={`email:${data.AGENT_EMAIL}`}>
@@ -816,17 +858,42 @@ const index = () => {
                     <Phone className="text-white" />
                   </a>
                 </div> */}
+                  </div>
+                </div>
+
+                <div className={'mt-10'}>
+                  <div className="text-gray7 text-xl mb-3 font-medium">Property Details</div>
+                  <div className="flex flex-wrap">
+                    {otherPropertyDetails.map((detail, index) => (
+                      <div className="w-1/2 mb-4" key={index}>
+                        <div className="text-gray4 text-sm">{detail.name}</div>
+                        <div className="text-sm text-gray7 mt-1">{detail.value}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
         </div>
-        <FsLightbox
-          types={[...new Array(filteredArray.length).fill('image')]}
-          toggler={toggler}
-          zoomIncrement={0.5}
-          sources={filteredArray.map((item) => item.ORIGINAL_URL)}
-        />
+        {filteredArray.length > 0 && (
+          <>
+            <FsLightbox
+              types={[...new Array(filteredArray.length).fill('image')]}
+              toggler={toggler}
+              zoomIncrement={0.5}
+              sources={filteredArray.map((item) => item.ORIGINAL_URL)}
+            />
+
+            <FsLightbox
+              types={[...new Array(data?.PHOTOS?.length).fill('image')]}
+              toggler={lightboxController.toggler}
+              zoomIncrement={0.5}
+              sourceIndex={lightboxController.slide}
+              sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
+            />
+          </>
+        )}
       </div>
     </>
   );

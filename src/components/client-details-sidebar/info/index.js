@@ -125,7 +125,7 @@ export default function Info({ client }) {
     <>
       {client && (
         <div className="px-6 py-3 flex flex-col  border-t border-gray-2">
-          {![2, 3, 13, 14].includes(client?.category_id) && (
+          {![1, 2, 3, 13, 14].includes(client?.category_id) && (
             <Dropdown
               label="Status"
               placeHolder="Choose"
@@ -139,6 +139,7 @@ export default function Info({ client }) {
             />
           )}
           <InfoCard label="Import Source" content={client.import_source_text} client={client} />
+          {client.summary && <InfoCard label="Summary" content={client.summary} client={client} />}
           {campaginName ? (
             <InfoCard label="Campaign" showDot={client?.campaign_id ? client?.campaign_id : 0} content={campaginName} />
           ) : (
@@ -167,19 +168,24 @@ export default function Info({ client }) {
             removeChip={removeTag}
             addChip={addTag}
           /> */}
-          <DropdownWithSearch
-            isMulti
-            label="Priority"
-            options={multiselectOptionsClients}
-            typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
-            value={findTagsOption(tags)}
-            onChange={(choice) => {
-              handleChangeTags(choice.map((el) => el.label));
-            }}
-          />
+          {client?.category_2 !== 'Family' && (
+            <DropdownWithSearch
+              isMulti
+              top={'-130px'}
+              maxMenuHeight={200}
+              label="Priority"
+              options={multiselectOptionsClients}
+              typeOfContact={client?.category_1 === 'Client' ? 0 : 1}
+              value={findTagsOption(tags)}
+              onChange={(choice) => {
+                handleChangeTags(choice.map((el) => el.label));
+              }}
+            />
+          )}
           <Dropdown
             label="Lead Source"
-            openClassName={'pb-64'}
+            openClassName={'mb-2'}
+            top={'top-[-260px]'}
             activeIcon={false}
             options={leadSourceOptions}
             className="mt-3 mb-8"

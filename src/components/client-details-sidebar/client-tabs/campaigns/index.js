@@ -56,15 +56,16 @@ export default function Campaigns({ contactId, contact }) {
       console.log(error);
     }
   };
+  const user = useSelector((state) => state.global.user);
 
   const alerts = [
     {
       icon: <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />,
-      text: 'To be able to receive these emails. Client must need to be assigned to this campaign.',
+      text: 'To be able to receive these emails, the client must be assigned to this campaign.',
       button: (
         <Button
           className="p-0"
-          label="Assign"
+          label="Start Campaign"
           leftIcon={<PlusIcon />}
           primary
           onClick={() => setShowAssignToCampaign(true)}
@@ -80,7 +81,7 @@ export default function Campaigns({ contactId, contact }) {
           white
           className="text-red5"
           leftIcon={<MinusCircleIcon className="text-red5" />}
-          label="Unassign"
+          label="Cancel Campaign"
           onClick={() => setShowUnassignFromCampaign(true)}
         />
       ),

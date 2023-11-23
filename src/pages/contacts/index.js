@@ -19,6 +19,7 @@ import AddContactOverlay from 'components/overlays/add-contact';
 import ImportFromCsv from 'components/overlays/add-contact/import-from-csv';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useSelector, useDispatch } from 'react-redux';
+import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -875,7 +876,7 @@ const Contacts = ({ data }) => {
   );
 };
 
-export default Contacts;
+export default withAuth(Contacts);
 
 // export async function getServerSideProps(context) {
 //   return {

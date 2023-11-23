@@ -233,7 +233,7 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = values.selectedStatus;
+    const status_id = category_id == 3 ? 1 : values.selectedStatus;
 
     const category =
       values.selectedContactCategory === 0
@@ -247,7 +247,7 @@ const ReviewContact = ({
       email: values.email,
       phone_number: values.phone_number,
       category_id: category_id,
-      status_id: status_id,
+      status_id: status_id == '' ? 1 : status_id,
       category_2: category,
       summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
@@ -305,11 +305,12 @@ const ReviewContact = ({
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
+      console.log(newData);
       if (newData.category_id === 3 && router.pathname.includes('details')) {
-        const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
-        const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
-
-        router.push(targetCategory);
+        // const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
+        // const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
+        // console.log(lowercaseCategory);
+        router.push('/contacts/trash');
       }
 
       // make changes to global state
@@ -589,8 +590,9 @@ const ReviewContact = ({
               <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                 <div>
                   <Dropdown
-                    openClassName={'mb-2 h-[245px]'}
-                    className="col-span-2 mb-5"
+                    openClassName={'mb-2'}
+                    className="col-span-2"
+                    top={'top-[-260px]'}
                     white
                     label="Lead Source"
                     activeIcon={false}
@@ -600,13 +602,15 @@ const ReviewContact = ({
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                 </div>
-                <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                <div>
                   <DropdownWithSearch
                     isMulti
                     options={multiselectOptionsClients}
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
+                    top={'-130px'}
+                    maxMenuHeight={200}
                     value={findTagsOption(formik.values.tags)}
                     label="Priority"
                     onChange={(choice) => {
@@ -615,7 +619,6 @@ const ReviewContact = ({
                         choice.map((el) => el.label),
                       );
                     }}
-                    maxMenuHeight={80}
                   />
                 </div>
               </div>
@@ -623,7 +626,7 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         <div className="w-1/2 relative">
-          <SimpleBar autoHide={true} style={{ maxHeight: '500px', height: '100%' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '510px', height: '100%' }}>
             <div className="p-6 pt-0">
               <Radio
                 options={contactTypes}
@@ -632,7 +635,11 @@ const ReviewContact = ({
                 selectedOption={formik.values.selectedContactCategory}
                 setSelectedOption={(e) => {
                   formik.setFieldValue('selectedContactCategory', e);
-                  formik.setFieldValue('selectedContactType', '');
+                  if (e == 1) {
+                    formik.setFieldValue('selectedContactType', 8);
+                  } else {
+                    formik.setFieldValue('selectedContactType', '');
+                  }
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedStatus', '');
                 }}
@@ -682,6 +689,7 @@ const ReviewContact = ({
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       /> */}
                   <DropdownWithSearch
+                    placeholder="Start typing to search or select one of the options"
                     value={vendorSubtypesFormatted?.find(
                       (vendor) => vendor.value == formik.values.selectedContactSubtype,
                     )}

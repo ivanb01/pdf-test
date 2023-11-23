@@ -7,6 +7,7 @@ const SearchSelectInput = ({
   onChange,
   label,
   value,
+  optional = false,
   defaultValue,
   options,
   error,
@@ -14,7 +15,10 @@ const SearchSelectInput = ({
 }) => {
   return (
     <div className={`w-full custom-chipinput-styles col-span-2 ${className}`}>
-      {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+      <div className={'flex'}>
+        {label && <div className="block text-sm font-medium text-gray6 mb-1">{label}</div>}
+        {optional && <div className={'text-gray-500 ml-1'}>*</div>}
+      </div>
       <Select
         defaultValue={defaultValue}
         placeholder={placeholder}

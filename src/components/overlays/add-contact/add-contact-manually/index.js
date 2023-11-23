@@ -282,6 +282,7 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                   <Dropdown
                     className="col-span-2"
                     white
+                    openClassName={'mb-2 h-[245px]'}
                     label="Lead Source"
                     activeIcon={false}
                     options={leadSourceOptions}
@@ -292,6 +293,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                   <DropdownWithSearch
                     typeOfContact={selectedContact}
                     label="Priority"
+                    top={'-130px'}
+                    maxMenuHeight={200}
                     onChange={(choice) => {
                       formik.setFieldValue(
                         'tags',

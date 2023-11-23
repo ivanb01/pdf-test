@@ -9,6 +9,7 @@ import { postGoogleContacts, getGoogleAuthorize, getGoogleAuthCallback, getUserC
 import { setAllContacts } from '@store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { setUserGaveConsent } from '@store/global/slice';
+import withAuth from '@components/withAuth';
 
 const NoContactPage = () => {
   const dispatch = useDispatch();
@@ -185,7 +186,7 @@ const NoContactPage = () => {
   );
 };
 
-export default NoContactPage;
+export default withAuth(NoContactPage);
 
 // export async function getServerSideProps(context) {
 //   return {

@@ -1,0 +1,18 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFEFC;
+  padding: 75px 24px;
+
+  @media screen and (max-width: $screen-md) {
+    padding: 24px;
+  }
+
+  p {
+    color: #9CA3AF;
+    text-align: center;
+    font-size: 16px;
+    line-height: 24px;
+  }
+}

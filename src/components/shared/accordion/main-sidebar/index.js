@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import Text from 'components/shared/text';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
 import Link from 'components/Link';
@@ -33,11 +33,14 @@ import SimpleBar from 'simplebar-react';
 import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import GoogleContact from '../../../../../public/images/GoogleContact.png';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import SubMenuContent from '@components/shared/SubMenuCard';
+import AIChip from '@components/shared/chip/ai-chip';
 
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -48,6 +51,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
   const [showSSOverlay, setShowSSOverlay] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [finishedOnboarding, setFinishedOnboarding] = useState(false);
   const [startedOnboarding, setStartedOnboarding] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
@@ -67,6 +71,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     }
   }, [allContacts]);
 
+  useEffect(() => {
+    let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
+    setFinishedOnboarding(finishedTour);
+  }, []);
+
   const groupedTabs = {};
 
   tabs.forEach((tab) => {
@@ -75,29 +84,64 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     }
     groupedTabs[tab.groupName].push(tab);
   });
+  const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const narrowMenu = (openedTab, openedSubtab) => {
+    const isSubtabActive = (currentSubtab, tabId) => {
+      return openedSubtab == currentSubtab && openedTab == tabId;
+    };
 
-  const narrowMenu = () => {
     return (
-      <>
+      <div className="accordion w-inherit cursor-pointer">
         {tabs.map((tab) => {
           return (
-            <div className="accordion w-inherit" key={tab.id}>
-              <Link
-                href="#"
-                className={`flex  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md ${
-                  openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
-                }`}
-                onClick={() => {
-                  setOpenedTab(tab.id);
-                  router.push(tab.href);
-                }}>
-                <div
-                  className={`flex items-center  ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}
-                  title={tab.name}>
-                  {tab.icon}
+            <SubMenuContent
+              side={'start'}
+              align={'bottom'}
+              style={{ marginLeft: '62px' }}
+              triggerElement={
+                <div>
+                  <Link
+                    href="#"
+                    className={`  flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                      openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
+                    }`}
+                    onClick={() => {
+                      setOpenedTab(tab.id);
+                      router.push(tab.href);
+                      setExpandedTab({ id: tab.id, opened: true });
+                    }}>
+                    <div
+                      className={` flex items-center cursor-pointer ${
+                        openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
+                      }`}
+                      title={tab.name}>
+                      <div>{tab.icon}</div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
+              }>
+              {tab.subtab && (
+                <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
+                  {tab.subtab.map((t) => (
+                    <div
+                      className={` rounded-md ${
+                        isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                      }`}>
+                      <div
+                        role={'button'}
+                        onClick={() => {
+                          setOpenedTab(tab.id);
+                          dispatch(setOpenedSubtab(t.id));
+                          router.push(tab.href);
+                        }}
+                        className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
+                        {t?.dot} <span className={'w-[100px]'}>{t.name}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </SubMenuContent>
           );
         })}
         {importContacts && (
@@ -110,7 +154,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             </div>
           </>
         )}
-      </>
+      </div>
     );
   };
 
@@ -146,6 +190,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     );
   };
 
+  useEffect(() => {
+    console.log(openedSubtab);
+  }, [openedSubtab]);
   return (
     <>
       <div
@@ -159,28 +206,43 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             handleCloseOverlay={() => setShowSSOverlay(false)}
           />
         )}
-        {showOnboarding && !userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-          <Onboarding handleCloseOverlay={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
-        )}
-        {startedOnboarding && <Tour for={'clients'} />}
+        {!finishedOnboarding &&
+          showOnboarding &&
+          !userGaveConsent?.includes('gmail') &&
+          !userGaveConsent?.includes('contacts') && (
+            <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
+          )}
+        {!finishedOnboarding && startedOnboarding && <Tour for={'clients'} setShowSSOverlay={setShowSSOverlay} />}
         <div>
-          {pinned ? expandedMenu() : narrowMenu()}
+          {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (
             <>
               {userGaveConsent && (
                 <>
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
-                    <div
-                      className={`absolute  absoluteWidth bottom-6 transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <img src={checkmark.src} className="h-[17px] w-[17px]" />
-                          <div className="ml-[6px] font-medium">Smart Sync: Active</div>
+                    <>
+                      <div
+                        className={`absolute flex gap-[10px]  absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
+                        <div className={'relative  w-6 mt-1'}>
+                          <img
+                            src={checkmark.src}
+                            className="h-[13px] w-[13px] border border-white absolute top-[-13px] left-[11px] rounded-full"
+                          />
+                          <Image src={GoogleContact} height={20} width={20} style={{ marginTop: '-6px' }} />
                         </div>
                         <TooltipComponent
                           side={'bottom'}
                           align={'start'}
-                          triggerElement={<Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+                          style={{ marginBottom: '12px' }}
+                          triggerElement={
+                            <div className={'relative  w-6 mt-1 h-4'}>
+                              <img
+                                src={checkmark.src}
+                                className="h-[15px] w-[15px] absolute top-[-10px]   rounded-full left-[13px] border border-white"
+                              />
+                              <AIChip reviewed={false} />
+                            </div>
+                          }>
                           <div className={`w-[270px] pointer-events-none text-xs text-white bg-neutral1 rounded-lg`}>
                             <p className="">
                               From now on each new contact that you will communicate in Gmail will be synced here and
@@ -188,32 +250,24 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                             </p>
                           </div>
                         </TooltipComponent>
+                        <a
+                          onClick={() =>
+                            router.push({
+                              pathname: '/contacts/no-contact/',
+                              query: { start_importing: true },
+                            })
+                          }
+                          className="group cursor-pointer ml-5 pt-0 flex items-center justify-start font-semibold text-blue-600">
+                          Re-import
+                          <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                        </a>
                       </div>
-                      <hr className="my-3" />
-                      <div className="flex items-center mb-4">
-                        <div className="flex items-center">
-                          <img src={checkmark.src} className="h-[17px] w-[17px]" />
-                          <div className="ml-[6px] font-medium">Google Contacts: Active</div>
-                        </div>
-                        <div></div>
-                      </div>
-                      <a
-                        onClick={() =>
-                          router.push({
-                            pathname: '/contacts/no-contact/',
-                            query: { start_importing: true },
-                          })
-                        }
-                        className="group cursor-pointer pb-3 pt-0 flex items-center justify-start font-semibold text-blue-600">
-                        Re-import
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
-                    </div>
+                    </>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
                     <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
                       <div className="p-3">
-                        Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
+                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
                         <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
                         Gmail.
                       </div>
@@ -268,7 +322,15 @@ const TabBar = ({ tab }) => {
 
   useEffect(() => {
     setOpenedTab(0);
-    setOpenedSubtab(0);
+    if (openedSubtab !== 0) {
+      console.log('test');
+      setOpenedSubtab(0);
+    } else {
+      console.log('test2');
+
+      setOpenedSubtab(openedSubtab);
+    }
+
     dispatch(setExpandedTab({ id: 0, opened: true }));
   }, []);
 

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import backBtn from '/public/images/back.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import clients from '../contacts/clients';
+import withAuth from '@components/withAuth';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -218,7 +219,7 @@ const index = () => {
             autoHide={true}
             style={{
               height: '100%',
-              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 140px)' : 'calc(100vh - 87px)',
+              maxHeight: selectedPeople.length > 1 ? 'calc(100vh - 140px)' : '79vh',
             }}>
             <Table
               className="pb-5"
@@ -300,4 +301,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default withAuth(index);

@@ -59,6 +59,10 @@ const MyApp = ({ Component, pageProps }) => {
       .catch((e) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
+        // console.log('this is happening');
+        if (!router.asPath.includes('public')) {
+          router.push('/authentication/sign-in');
+        }
         console.log('error', e);
       });
   }, []);
@@ -119,10 +123,13 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <div className={`main-app-wrapper`}>
+        {/* <div className={`main-page overflow-y-auto overflow-x-hidden`}></div> */}
         <Head>
           <meta name="viewport" content="width=device-width"></meta>
         </Head>
-        <div className={`main-page`} style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          className={`main-page overflow-y-auto overflow-x-hidden`}
+          style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
             <GetSubtype />
             <Component {...pageProps} />

@@ -75,7 +75,9 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchProfessionals}
             unapprovedContacts={
-              unapprovedContacts?.data.filter((contact) => contact.category_1 !== 'Uncategorized').length
+              unapprovedContacts?.data
+                ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+                : 0
             }
             handleCardEdit={(contact) => {
               setShowEditContact(true);

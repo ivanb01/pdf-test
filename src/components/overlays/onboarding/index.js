@@ -8,7 +8,7 @@ import img4 from '/public/images/fourth.png';
 import { useState } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 
-const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboarding }) => {
+const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding }) => {
   const [step, setStep] = useState(0);
 
   const nextStep = () => {
@@ -54,8 +54,8 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
           </div>
           <div className="text-lg font-semibold text-gray-900 mb-3">Sync with G-mail Directly</div>
           <div className="text-xs text-gray-900">
-            By using “Smart sync contacts” and Google Contacts, your clients will show up in your dashboard without
-            needing to add them manually.
+            By using “Gmail Smart sync contacts” and Google Contacts, your clients will show up in your dashboard
+            without needing to add them manually.
           </div>
         </div>
         <div className="flex items-center justify-end mt-6">
@@ -119,7 +119,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
               loading={loading}
               primary
               onClick={() => {
-                handleCloseOverlay();
+                closeModal();
                 setStartedOnboarding(true);
               }}
               label="Start the Onboard"
@@ -131,7 +131,7 @@ const Onboarding = ({ handleCloseOverlay, handleAction, loading, setStartedOnboa
   };
 
   return (
-    <Overlay className="w-[600px]" handleCloseOverlay={handleCloseOverlay}>
+    <Overlay className="w-[600px]" closeModal={closeModal}>
       <div className={`p-6 min-h-[450px] ${secondStep() && 'flex flex-col justify-between'}`}>
         {step == 0 ? firstStep() : step == 1 ? secondStep() : step == 2 ? thirdStep() : fourthStep()}
       </div>

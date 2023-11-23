@@ -14,6 +14,7 @@ import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
 import GlobalAlert from 'components/shared/alert/global-alert';
+import { useRouter } from 'next/router';
 import {
   clientStatuses,
   clientStatusMainTitlesUpdated,
@@ -22,10 +23,15 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClients } from 'store/contacts/slice';
+import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
+import { ArrowRight } from '@mui/icons-material';
+import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRef } from 'react';
+import Switch from '@components/Switch';
+import SwitchComponent from '@components/Switch';
 
 const buttons = [
   {
@@ -38,24 +44,31 @@ const buttons = [
   },
 ];
 
-const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
+const Clients = ({
+  setShowAddContactOverlay,
+  onSearch,
+  handleCardEdit,
+  unapprovedContacts,
+  handleViewChange,
+  currentButton,
+}) => {
+  const router = useRouter();
   const dispatch = useDispatch();
-
-  let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
+  const scrollRef = useRef();
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(currentView);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredContacts, setFilteredContacts] = useState(contacts);
 
-  const handleViewChange = (viewId) => {
-    setCurrentButton(viewId);
-    localStorage.setItem('currentView', viewId);
-  };
+  useEffect(() => {
+    setFilteredContacts(contacts);
+  }, [contacts]);
+
   const tabs = [
     {
       title: 'CLIENT TYPES',
@@ -164,7 +177,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
       }
     });
 
-    dispatch(setClients(contactsState));
+    setFilteredContacts(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -210,7 +223,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   };
 
   const getFilterCount = () => {
-    return clients.filter(
+    return filteredContacts.filter(
       (contact) =>
         contact.category_1 == 'Client' &&
         contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
@@ -223,25 +236,68 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
+  const handleFilteredContacts = (status, sortOrder) => {
+    let filteredClients = contacts.filter((client) => client.status_2 === status);
+
+    filteredClients.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (sortOrder === 'desc') {
+        return b.first_name.localeCompare(a.first_name);
+      }
+    });
+
+    dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
+    setFilteredContacts((prevContacts) => {
+      const updatedContacts = [...new Set([...filteredClients, ...prevContacts])];
+      return updatedContacts;
+    });
+    return filteredClients;
+  };
+
+  useEffect(() => {
+    const handleScroll = (event) => {
+      if (event.target.scrollLeft > 80) {
+        document.querySelector('.arrow').style.opacity = '0';
+      }
+    };
+
+    const scrollElement = scrollRef.current?.getScrollElement();
+    scrollElement?.addEventListener('scroll', handleScroll);
+
+    // return () => scrollElement?.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
-          <GlobalAlert
-            message={`${unapprovedContacts} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
-            type="smart-sync"
+          <FloatingAlert
+            onClick={() => router.push('/ai-summary')}
+            buttonText={'Review Now'}
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           />
         )}
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
-            <Text h3 className="text-gray7 text-xl">
-              {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
-              {/* {openedTab} - {openedSubtab} */}
-            </Text>
+            <div className="flex items-center">
+              <Text h3 className="text-gray7 text-xl mr-4">
+                {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
+                {/* {openedTab} - {openedSubtab} */}
+              </Text>
+              {filteredContacts.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+                  !contact.approved_ai &&
+                  contact.category_1 == 'Client',
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+            </div>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder="Search"
+                placeholder={
+                  `Search ` + clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle].toLowerCase()
+                }
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
@@ -276,8 +332,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {clients.length}
-                  {getFilterCount() ? ' result' : ' results'} for:
+                  {filteredContacts.length}
+                  {filteredContacts.length == 1 ? ' result' : ' results'} for:
                 </div>
                 {Object.keys(clientsFilters).map((key, index) =>
                   clientsFilters[key].map((filter, i) => (
@@ -309,6 +365,7 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
         {currentButton == 0 ? (
           <SimpleBar
             autoHide
+            ref={scrollRef}
             style={{
               maxWidth: '100%',
               height: '100%',
@@ -318,6 +375,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
                 <>
                   <Column
+                    handleFilteredContacts={handleFilteredContacts}
+                    contacts={filteredContacts}
                     key={index}
                     status={status}
                     categoryType="clients"
@@ -333,6 +392,8 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
+                  handleFilteredContacts={handleFilteredContacts}
+                  contacts={filteredContacts}
                   tableFor="contactsList"
                   categoryType="clients"
                   handleCardEdit={handleCardEdit}
@@ -350,16 +411,15 @@ const Clients = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprove
         className="top-[70px]"
         buttons={
           <>
-            {Object.values(clientsFilters).flat().length > 0 && (
-              <Button
-                white
-                label="Clear Filter"
-                onClick={() => {
-                  setFiltersCleared(true);
-                  dispatch(setClientsFilters({}));
-                }}
-              />
-            )}
+            <Button
+              disabled={!Object.values(clientsFilters).flat().length > 0}
+              white
+              label="Clear Filter"
+              onClick={() => {
+                setFiltersCleared(true);
+                dispatch(setClientsFilters({}));
+              }}
+            />
             {/* <Button
               onClick={filterContacts}
               primary

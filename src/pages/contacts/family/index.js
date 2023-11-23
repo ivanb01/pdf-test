@@ -14,9 +14,12 @@ import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
-
+import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 const index = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const [searchKey, setSearchKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [familyAndFriends, setFamilyAndFriends] = useState(null);
   const [unknown, setUnknown] = useState(null);
@@ -47,12 +50,12 @@ const index = () => {
 
   useEffect(() => {
     // setLoading(true);
-    if (allContacts.data) {
+    if (allContacts.data && !searchKey.length) {
       fetchOther();
     }
     dispatch(setOpenedTab(5));
     // dispatch(setOpenedSubtab(0));
-  }, [allContacts]);
+  }, [allContacts.data]);
 
   useEffect(() => {
     if (allContacts.data) {
@@ -64,10 +67,11 @@ const index = () => {
     const contactsCopy = familyAndFriends;
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
+    console.log(term, filteredArray);
   };
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   return (
     <Layout>
@@ -77,8 +81,11 @@ const index = () => {
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             {unapprovedContactsLength > 0 && (
-              <GlobalAlert
-                message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+              <FloatingAlert
+                onClick={() => router.push('/ai-summary')}
+                buttonText={'Review Now'}
+                className="mx-[21px] mt-[14px]"
+                message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
                 type="smart-sync"
               />
             )}
@@ -91,7 +98,11 @@ const index = () => {
                   <Search
                     placeholder="Search"
                     className="mr-4 text-sm"
-                    onInput={(event) => onSearch(event.target.value)}
+                    value={searchKey}
+                    onInput={(event) => {
+                      setSearchKey(event.target.value);
+                      onSearch(event.target.value);
+                    }}
                   />
                 </div>
               </div>

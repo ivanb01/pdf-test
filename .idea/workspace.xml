@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add campaign details page">
-      <change afterPath="$PROJECT_DIR$/public/images/campaign/deactivateCampaign.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/overlays/DeactivateCampaign/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/shared/Toggle/index.js" afterDir="false" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/overlay/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/overlay/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/campaign/details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/campaign/details/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,36 +22,25 @@
         <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: -1
-}</component>
-  <component name="ProjectId" id="2WORFZOcr7kJdOEW152ClS5APUh" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;f/erza/CampaignsMainPage&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "f/erza/ShowNoContact",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
+    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images/public" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/components/public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public/images/campaign" />
       <recent name="$PROJECT_DIR$/public/images/marketing" />
       <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/src/assets" />
@@ -388,16 +374,11 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add coma to result" />

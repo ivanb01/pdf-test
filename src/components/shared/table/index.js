@@ -63,7 +63,7 @@ import { Delete, Email } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount } from '@store/global/slice';
+import { setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -86,6 +86,7 @@ const categoryIds = {
 };
 
 const Table = ({
+  handleFilteredContacts,
   undoAllCategorizations,
   setCurrentButton,
   undoCategorization,
@@ -110,6 +111,7 @@ const Table = ({
   selectedPeople,
   setSelectedPeople,
   status,
+  contacts,
 }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
@@ -521,6 +523,7 @@ const Table = ({
                       )}
                       <ContactInfo
                         inCategorization={tableFor === 'in-categorization'}
+                        emailsLength={19}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
@@ -662,13 +665,16 @@ const Table = ({
                     <p className="text-xs leading-4 font-normal"> Undo Categorization</p>
                   </TooltipComponent>
                 </td>
-                <td className="whitespace-nowrap py-4  text-sm ">
+                <td className="whitespace-nowrap py-4  text-sm">
                   <ContactInfo
                     data={{
                       name: dataItem.first_name + ' ' + dataItem.last_name,
                       email: dataItem.email,
                       image: dataItem.profile_image_path,
                     }}
+                    emailsLength={15}
+                    maxWidth={'50px'}
+                    emailHover
                   />
                   {(dataItem.category_id != null || dataItem.status_id != null) && (
                     <div className="flex items-center mt-3 type-and-status">
@@ -763,8 +769,17 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contacts = useSelector((state) => state.contacts.clients);
+    const sorted = useSelector((state) => state.global.sorted);
+
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const handleToggleSorting = (name) => {
+      const currentItem = sorted.find((item) => item.name === name);
+      if (currentItem) {
+        const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+        handleFilteredContacts(name, newOrder);
+        dispatch(setSorted({ name, order: newOrder }));
+      }
+    };
 
     const dispatch = useDispatch();
 
@@ -777,7 +792,18 @@ const Table = ({
     const [changeStatusModal, setChangeStatusModal] = useState(false);
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
     const handleChangeStatus = async (status, contact) => {
       try {
         if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -982,6 +1008,37 @@ const Table = ({
                           </div>
                         </div>
                       </TooltipComponent>
+                      <a
+                        href="#"
+                        className={'ml-2'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleSorting(category?.name);
+                        }}>
+                        {sorted.find((s) => s.name === category?.name)?.sorted === 'asc' ? (
+                          <svg
+                            className="sort-asc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-ascending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="sort-desc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-descending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        )}
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -990,7 +1047,11 @@ const Table = ({
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
-                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                      className={`
+                      ${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
+                      ${
+                        isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
+                      } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
                         isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
                           ? 'hidden'
                           : ''
@@ -1253,7 +1314,7 @@ const Table = ({
   const professionalsTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
-    const contactsOriginal = useSelector((state) => state.contacts.professionals);
+    const contactsOriginal = data;
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
@@ -1588,6 +1649,21 @@ const Table = ({
       return percentage.toFixed(2);
     }
 
+    function reorderAgents(agents, email) {
+      const index = agents.findIndex((agent) => agent.agent_id === email);
+
+      if (index > -1) {
+        const [agent] = agents.splice(index, 1);
+        agents.unshift(agent);
+      }
+
+      return agents;
+    }
+
+    const user = useSelector((state) => state.global.user);
+    const agentsArray = data;
+    const reorderedArray = reorderAgents(agentsArray, user);
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -1624,10 +1700,10 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
+          {reorderedArray.map((dataItem, index) => (
             <tr
               key={index}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+              className={` ${index == 0 ? 'bg-lightBlue1' : 'bg-white'} contact-row group border-b border-gray-200`}
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
@@ -1639,6 +1715,7 @@ const Table = ({
                     email: dataItem.agent_id,
                     // image: dataItem.profile_image_path,
                   }}
+
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
                   // }
@@ -1690,8 +1767,8 @@ const Table = ({
   };
 
   const aiSummaryTable = () => {
-    console.log(data, 'Data');
     const getChip = (item) => {
+      console.log(item, 'item');
       if (item.category_id == 3) {
         return 'Trash';
       }
@@ -1718,7 +1795,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px] ">
+              className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]">
               <input
                 type="checkbox"
                 className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1728,22 +1805,16 @@ const Table = ({
               />
               Contact
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Type
             </th>
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
               Status
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:max-w-[100px] md:max-w-[100px] lg:max-w-[300px] xl:max-w-[500px]">
+            <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
               Email Summary
             </th>
-            <th
-              scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[100px]">
+            <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Actions
             </th>
             <th
@@ -1762,7 +1833,7 @@ const Table = ({
                 handleCardEdit(dataItem);
               }}>
               {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
-              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center xl:max-w-[340px]">
+              <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
                 <input
                   type="checkbox"
                   className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -1782,6 +1853,8 @@ const Table = ({
                     email: dataItem.email,
                     // image: dataItem.profile_image_path,
                   }}
+                  maxWidth={'300px'}
+
                   // handleSelect={(e, dataItem) =>
                   //   handleSelectContact(e, dataItem)
                   // }
@@ -1789,17 +1862,17 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status xl:min-w-[160px]">
-                <Chip typeStyle>
-                  {vendorSubtypes && getChip(dataItem)} {dataItem.category_2 && '- ' + dataItem.category_2}
+              <td className="max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip className="break-words" typeStyle>
+                  {dataItem?.category_2}
                 </Chip>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:min-w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                   {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                 </Chip>
               </td>
-              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status sm:min-w-[100px] md:min-w-[100px] lg:min-w-[230px] xl:min-w-[500px]">
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center break-all flex-wrap">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
@@ -1813,7 +1886,7 @@ const Table = ({
                   )}
                 </div>
               </td>
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 xl:w-[100px]">
+              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center gap-6">
                   <TooltipComponent
                     side={'top'}

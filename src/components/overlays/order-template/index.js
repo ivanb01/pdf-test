@@ -48,8 +48,8 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
       const noteContent = values.note ? `<p>${values.note}</p>` : '';
 
       _sendMarketingEmail({
-        to: 'marketing@opgny.com',
-        cc: `${user}`,
+        to: ['marketing@opgny.com'],
+        cc: [`${user}`],
         subject: `Order ${name && name}`,
         body: `<html>
 <body>
@@ -88,7 +88,8 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
               {listingUrl && (
                 <Input
                   type="text"
-                  label="Listing url"
+                  label="Listing URL"
+                  required
                   id="listingUrl"
                   onChange={formik.handleChange}
                   error={formik.errors.listingUrl && formik.touched.listingUrl}

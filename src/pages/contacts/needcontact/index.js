@@ -14,7 +14,11 @@ import { healthLastCommunicationDate } from '@global/variables';
 import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
 import withAuth from '@components/withAuth';
+import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 const index = () => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);
@@ -65,9 +69,9 @@ const index = () => {
     }
   }, [allContacts]);
 
-  const unapprovedContactsLength = unapprovedContacts?.data.filter(
-    (contact) => contact.category_1 != 'Uncategorized',
-  ).length;
+  const unapprovedContactsLength = unapprovedContacts?.data
+    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
+    : 0;
 
   return (
     <Layout>
@@ -76,8 +80,11 @@ const index = () => {
       ) : (
         <>
           {unapprovedContactsLength > 0 && (
-            <GlobalAlert
-              message={`${unapprovedContactsLength} New Smart Synced Contacts need to be reviewed. Please review and make any change before you start the communication.`}
+            <FloatingAlert
+              onClick={() => router.push('/ai-summary')}
+              buttonText={'Review Now'}
+              className="mx-[21px] mt-[14px]"
+              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
               type="smart-sync"
             />
           )}

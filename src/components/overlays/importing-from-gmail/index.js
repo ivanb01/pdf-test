@@ -25,7 +25,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
   }, [stateAfterImport]);
 
   return (
-    <Overlay title={mainTitle} handleCloseOverlay={handleCloseOverlay} className="min-w-[512px] max-w-[512px]">
+    <Overlay title={mainTitle} className="min-w-[512px] max-w-[512px]">
       <div className="p-[24px]">
         <div className="">
           <div className="">

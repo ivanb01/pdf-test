@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { useSelector } from 'react-redux';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -55,6 +56,14 @@ export default function ContactCard({
     };
   }, []);
 
+  let isUnapprovedAIContact = null;
+  if (
+    contact?.import_source_text === 'GmailAI' ||
+    contact?.import_source_text === 'Smart Sync A.I.' ||
+    contact?.import_source_text === 'Gmail'
+  ) {
+    if (!contact?.approved_ai) isUnapprovedAIContact = true;
+  }
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {
@@ -85,21 +94,95 @@ export default function ContactCard({
   const status = contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
   // const [dropdownVal, setDropdownVal] = useState(
   //   allStatusesQuickEdit[categoryType][0]
   // );
+  const options = [
+    {
+      id: 2,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'New Lead',
+      color: 'bg-lightBlue1',
+    },
+    {
+      id: 3,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Attempted Contact',
+      color: 'bg-lightBlue2',
+    },
+    {
+      id: 5,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'In Communication',
+      color: 'bg-purple1',
+    },
+    {
+      id: 4,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Appointment Set',
+      color: 'bg-purple2',
+    },
+    {
+      id: 7,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Actively Working',
+      color: 'bg-purple3',
+    },
+    {
+      id: 16,
+      category: 'In the funnel',
+      dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
+      label: 'Offer Submitted',
+      color: 'bg-purple4',
+    },
+    {
+      id: 9,
+      category: 'Closed',
+      dot: <span className="h-2 w-2 rounded-full bg-green6" />,
+      label: 'Contract Signed',
+      color: 'bg-green8',
+    },
+    {
+      id: 10,
+      category: 'Closed',
+      dot: <span className="h-2 w-2 rounded-full bg-green6" />,
+      label: 'Closed Client',
+      color: 'bg-green2',
+    },
+    {
+      id: 8,
+      label: 'On Hold',
+      dot: <span className="h-2 w-2 rounded-full bg-orange1" />,
+      category: 'On Hold',
+      color: 'bg-orange2',
+    },
+    {
+      id: 11,
+      label: 'Dropped',
+      category: 'Dropped',
+      dot: <span className="h-2 w-2 rounded-full bg-red3" />,
+      color: 'bg-red2',
+    },
+  ];
 
   return (
     <>
       <div
         key={contact.id}
-        className={`${
-          dropdownOpened && 'border-t-4'
+        className={`${dropdownOpened && 'border-t-4'} ${isUnapprovedAIContact && 'opacity-50 hover:opacity-100'} ${
+          isUnapprovedAIContact && hideUnapproved && 'hidden'
         } change-status-dropdown relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
         {dropdownOpened && (
           <DropdownNoInput
             selectedOption={contact?.status_2}
-            options={allStatusesQuickEdit[categoryType]}
+            options={options}
             handleSelect={(item) => {
               // console.log(item);
               handleChangeStatus(item.id, contact);

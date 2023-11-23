@@ -168,6 +168,8 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
             />
             <Dropdown
               label="Lead Source"
+              openClassName={'mb-2'}
+              top={'top-[-260px]'}
               activeIcon={false}
               options={leadSourceOptions}
               className="col-span-2"
@@ -176,6 +178,8 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
             <DropdownWithSearch
+              top={'-130px'}
+              maxMenuHeight={200}
               label="Priority"
               typeOfContact={openedTab}
               value={findTagsOption(formik.values.tags)}

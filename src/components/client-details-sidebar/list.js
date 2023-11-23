@@ -12,7 +12,10 @@ export const tabs = (contactId, contact) => {
   const clientTabs = [
     {
       id: 0,
-      name: contact?.category_2 === 'Landlord' || contact?.category_2 === 'Seller' ? 'Comps' : 'Looking for',
+      name:
+        contact?.category_2 === 'Landlord' || contact?.category_2 === 'Seller'
+          ? "Client's Comps"
+          : "Client's Properties",
       href: '#',
       icon: <Home />,
       content: <LookingForContent category={contact?.category_2} contactId={contactId} />,
@@ -47,15 +50,15 @@ export const tabs = (contactId, contact) => {
       icon: <List />,
       content: <ActivityLogContent contactId={contactId} source={contact?.import_source_text} contact={contact} />,
     },
+    // {
+    //   id: 1,
+    //   name: 'Campaigns',
+    //   href: '#',
+    //   icon: <Campaigns />,
+    //   content: <CampaignsContent contactId={contactId} contact={contact} />,
+    // },
     {
       id: 1,
-      name: 'Campaigns',
-      href: '#',
-      icon: <Campaigns />,
-      content: <CampaignsContent contactId={contactId} contact={contact} />,
-    },
-    {
-      id: 2,
       name: 'Notes',
       href: '#',
       icon: <Note />,

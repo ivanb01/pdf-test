@@ -106,6 +106,47 @@ html {
   margin: 0;
 }
 
+h1 {
+  font-size: 48px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 28px;
+  }
+}
+
+h2 {
+  font-size: 36px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 24px;
+  }
+}
+
+h3 {
+  font-size: 30px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 24px;
+  }
+}
+
+h4 {
+  font-size: 20px;
+
+  @media screen and (max-width: $screen-sm) {
+    font-size: 18px;
+  }
+}
+
+h5 {
+  font-size: 18px;
+}
+
+.container-public {
+  margin: 0 auto;
+  max-width: 1440px;
+}
+
 .main-page {
   width: 100%;
 }
@@ -189,8 +230,6 @@ html {
     fill: #8f95b2;
   }
 }
-
-
 
 .custom-menu-item.active {
   background-color: rgba(255, 255, 255, 0.1);
@@ -372,7 +411,7 @@ html {
 }
 
 .details-tabs-fixed-height {
-  height: calc(100vh - 222px) !important;
+  height: calc(100vh - 170px) !important;
 }
 
 .details-campaign-fixed-height {
@@ -471,7 +510,6 @@ tbody > div {
   display: -webkit-inline-box;
 }
 
-
 .map-container {
   height: 500px;
   width: 100%;
@@ -491,7 +529,6 @@ tbody > div {
 }
 
 .ellipsis-email {
-  width: 230px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -711,6 +748,74 @@ tbody > div {
   box-shadow: 0px 20px 25px -5px #0000001a;
 }
 
+.arrow {
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 70px;
+  top: 45%;
+  transform: rotate(270deg);
+  cursor: pointer;
+}
+
+.arrow span {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-bottom: 3px solid rgb(145, 145, 145);
+  border-right: 3px solid rgb(145, 145, 145);
+  transform: rotate(45deg);
+  margin: -10px;
+  animation: animate 2s infinite;
+  border-radius: 2px;
+}
+
+.arrow span:nth-child(2) {
+  animation-delay: -0.2s;
+}
+
+.arrow span:nth-child(3) {
+  animation-delay: -0.4s;
+}
+
+@keyframes animate {
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) translate(-20px, -20px);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(45deg) translate(20px, 20px);
+  }
+}
+
+
+@media (max-width: 769px){
+  .pagination-dots-custom{
+    content-visibility: hidden;
+  }
+}
+
+@media (min-width: 600px){
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    margin-left: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.9);
+    border-radius: 9px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
 .campaigns-box-shadow{
   box-shadow: 0px 0px 20px 0px #E1E2E3;
 }
