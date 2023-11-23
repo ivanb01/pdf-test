@@ -2541,7 +2541,7 @@ const Table = ({
               </th>
             ))}
           </thead>
-          <tbody className={'flex flex-col w-full'}>
+          <tbody className={'flex flex-col w-full max-h-[390px]'}>
             {data.map((events, rowIndex) => (
               <tr key={rowIndex} className={'flex   w-full'}>
                 {events.events.map((e, cellIndex) => (
