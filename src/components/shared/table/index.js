@@ -2667,7 +2667,7 @@ const Table = ({
     };
 
     return data && data?.length > 0 ? (
-      <div className={'flex overflow-x-clip w-[100vw] overflow-y-hidden '}>
+      <div className={'flex overflow-x-clip w-[100vw] overflow-y-hidden max-h-[390px]'}>
         <div className={'shrink-0'}>{other()}</div>
         <div
           className={'flex-1 shrink mr-[-8px]'}
