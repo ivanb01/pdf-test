@@ -55,33 +55,40 @@ export const SectionContact = () => {
     try {
       return await sendMarketingEmail(sendEmail);
     } catch (e) {
-      toast.error('Something went wrong');
+      console.log(e, 'error');
     }
   };
   const handleButtonClick = (e) => {
     e.preventDefault();
-    sendMessage(formik).then(() =>
-      toast.custom((t) => {
-        return (
-          <div
-            className={`${
-              t.visible ? 'animate-enter' : 'animate-leave'
-            } p-4 bg-white items-center  gap-3 border border-[#D0E3FD] shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 text-sm text-gray7`}>
-            <div>
-              <p>Thanks for reaching out! We'll get back to you soon.</p>
-            </div>
+    sendMessage(formik)
+      .then(() => {
+        toast.custom((t) => {
+          return (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } p-4 bg-white items-center  gap-3 border border-[#D0E3FD] shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 text-sm text-gray7`}>
+              <div>
+                <p>Thanks for reaching out! We'll get back to you soon.</p>
+              </div>
 
-            <ClearIcon
-              className={'text-gray4 h-5 w-5 cursor-pointer'}
-              onClick={() => {
-                toast.dismiss(t.id);
-              }}
-            />
-          </div>
-        );
-      }),
-    );
-    formik.resetForm();
+              <ClearIcon
+                className={'text-gray4 h-5 w-5 cursor-pointer'}
+                onClick={() => {
+                  toast.dismiss(t.id);
+                }}
+              />
+            </div>
+          );
+        });
+      })
+      .then(() => {
+        formik.resetForm();
+      })
+      .catch((e) => {
+        console.log(e, 'error');
+        toast.error('Something went wrong');
+      });
   };
 
   return (
