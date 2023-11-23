@@ -59,7 +59,10 @@ const MyApp = ({ Component, pageProps }) => {
       .catch((e) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
-        router.push('/authentication/sign-in');
+        // console.log('this is happening');
+        if (!router.asPath.includes('public')) {
+          router.push('/authentication/sign-in');
+        }
         console.log('error', e);
       });
   }, []);
