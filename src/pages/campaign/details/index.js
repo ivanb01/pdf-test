@@ -141,7 +141,7 @@ const index = () => {
           <SimpleBar style={{ height: '100%' }} autoHide>
             <Table
               tableFor={'inCampaignContacts'}
-              data={notInCamapaignContacts}
+              data={inCampaignContacts}
               setCurrentButton={setCurrentButton}
               categoryType={category}
               status={usersInCampaignGlobally?.contact_status_1}
