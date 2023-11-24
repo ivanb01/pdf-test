@@ -1,7 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import Close from '@mui/icons-material/Close';
-import SimpleBar from 'simplebar-react';
 import EmailIcon from '@mui/icons-material/Email';
 import ChatIcon from '@mui/icons-material/Chat';
 import InfoIcon from '@mui/icons-material/Info';
@@ -150,10 +149,10 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                                       <div
                                         role={'button'}
                                         onClick={() => setActiveEvent({ ...e })}
-                                        className={`p-3 flex ${
+                                        className={`p-3 flex border rounded-md ${
                                           areObjectsEqual(campaignData?.events[index], activeEvent)
-                                            ? 'bg-lightBlue1 border border-lightBlue1 rounded-none'
-                                            : 'border border-[#BAE6FD] rounded-md'
+                                            ? 'bg-lightBlue1 border border-[#87ccf0]'
+                                            : 'bg-white border  border-[#BAE6FD]'
                                         } justify-between items-start hover:bg-lightBlue1`}>
                                         <div className={'flex gap-2 '}>
                                           {e?.event_type === 'Email' ? (
