@@ -232,7 +232,7 @@ const MainMenu = ({ className, fixed }) => {
               />
             )}
             {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
-            {showUncategorizedButton() && (
+            {/* {showUncategorizedButton() && (
               <Button
                 label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
                 narrow
@@ -244,7 +244,7 @@ const MainMenu = ({ className, fixed }) => {
                   })
                 }
               />
-            )}
+            )} */}
           </>
         )}
         {!router.pathname.includes('campaign') && (
