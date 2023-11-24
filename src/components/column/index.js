@@ -210,6 +210,12 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
               <div
                 // style={{ width: '300px' }}
                 className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                <div className="text-sm font-semibold mb-2">
+                  Every{' '}
+                  {healthLastCommunicationDate[categoryType][status?.name] === 1
+                    ? 'day'
+                    : healthLastCommunicationDate[categoryType][status?.name] + ' days'}
+                </div>
                 <p className="mb-2">{`In order to maintain healthy communication, you must communicate every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
