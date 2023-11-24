@@ -23,6 +23,8 @@ import { setRefetchCount, setRefetchData, setSorted } from '@store/global/slice'
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
+import DateChip from '@components/shared/chip/date-chip';
+import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -208,20 +210,29 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
               <div
                 // style={{ width: '300px' }}
                 className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                <p className="mb-2">{`You must interact with these clients every ${
+                <p className="mb-2">{`In order to maintain healthy communication, you must communicate every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
                     : healthLastCommunicationDate[categoryType][status?.name] + ' days'
-                } in order to maintain healthy communication.`}</p>
-                <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center mr-2">
-                    <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
-                    <span>Healthy Communication</span>
+                } with this client.`}</p>
+                <p className="mb-2">
+                  Healthy / unhealthy communication is represented in the contact card with the icons below:
+                </p>
+                <div className="flex flex-col mt-4">
+                  <div className="flex items-center mb-2">
+                    <div
+                      className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
+                      <Mail className="w-4 mr-1" />
+                      <span>Today</span>
+                    </div>
+                    <span className="ml-4">Healthy Communication</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
-                    <span>Unhealthy Communication</span>
+                    <div className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
+                      <Mail className="w-4 mr-1" />
+                      <span>4 days ago</span>
+                    </div>
+                    <span className="ml-4">Unhealthy Communication</span>
                   </div>
                 </div>
               </div>
