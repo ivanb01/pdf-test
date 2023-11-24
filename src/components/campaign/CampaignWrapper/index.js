@@ -13,7 +13,7 @@ const CampaignWrapper = ({ headerTitle, campaignCards, category, isVisible }) =>
           </div>
         ) : (
           <div className={'bg-gray10 text-xs leading-5 font-normal text-gray6 px-4 py-3'}>
-            There is no campaign for {category}s yet.
+            There are no campaigns for {category}s currently available.
           </div>
         )}
       </div>
