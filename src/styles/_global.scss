@@ -814,6 +814,27 @@ tbody > div {
   }
 }
 
+.floatingAlert-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.floatingAlert-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.floatingAlert-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.floatingAlert-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
 
 @media (max-width: 769px) {
   .pagination-dots-custom {

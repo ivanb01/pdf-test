@@ -271,14 +271,13 @@ const Clients = ({
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && (
-          <FloatingAlert
-            onClick={() => router.push('/ai-summary')}
-            buttonText={'Review Now'}
-            className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-          />
-        )}
+        <FloatingAlert
+          inProp={unapprovedContacts > 0}
+          onClick={() => router.push('/ai-summary')}
+          buttonText={'Review Now'}
+          className="mx-[21px] mt-[14px]"
+          message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+        />
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
