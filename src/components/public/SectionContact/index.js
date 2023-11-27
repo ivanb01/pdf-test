@@ -145,7 +145,6 @@ export const SectionContact = () => {
                     label="Phone"
                     id="phone"
                     name="phone"
-                    type="number"
                     onChange={formik.handleChange}
                     value={formik.values.phone}
                   />
