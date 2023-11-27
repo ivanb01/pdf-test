@@ -17,25 +17,25 @@ import { Footer } from '@components/public/Footer';
 export default function Features() {
   return (
     <div>
-        <Header />
-        <>
-            <SectionIntro/>
-            <div className={styles.divider1}/>
-            <SectionFeaturesSwiper/>
-            <div className={styles.divider2}/>
-            <SectionSmartSync/>
-            <div className={styles.divider3}/>
-            <SectionOnlineForms/>
-            <div className={styles.divider4}/>
-            <SectionMonitorCampaigns/>
-            <div className={styles.divider5}/>
-            <SectionCategorizeContacts/>
-            <div className={styles.divider4}/>
-            <SectionAllInOne/>
-            <Testimonials/>
-            <SectionStartTrial/>
-        </>
-        <Footer />
+      <Header />
+      <>
+        <SectionIntro />
+        <div className={styles.divider1} />
+        <SectionFeaturesSwiper />
+        <div className={styles.divider2} />
+        <SectionSmartSync />
+        <div className={styles.divider3} />
+        <SectionOnlineForms />
+        <div className={styles.divider4} />
+        <SectionMonitorCampaigns />
+        <div className={styles.divider5} />
+        <SectionCategorizeContacts />
+        <div className={styles.divider4} />
+        <SectionAllInOne />
+        <Testimonials />
+        <SectionStartTrial />
+      </>
+      <Footer />
     </div>
   );
 }
