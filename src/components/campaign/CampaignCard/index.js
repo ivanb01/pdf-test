@@ -36,7 +36,7 @@ const CampaignCard = ({
                 query: { id: campaign_id, category: category },
               });
             }}>
-            <h6 className={'text-sm leading-5 font-semibold'}>{campaign_name}</h6>
+            <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
             <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
           </div>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>

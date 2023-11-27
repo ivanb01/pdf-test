@@ -7,6 +7,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
@@ -49,20 +50,14 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   }
   function getTimeWithAMPM(timestamp) {
     const dateObject = new Date(timestamp);
-
-    // Get hours and minutes
     let hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-
-    // Determine AM or PM
     const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    // Convert to 12-hour format
     hours = hours % 12 || 12;
-
-    // Format the time as hh:mm AM/PM
     return `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
   }
+  const router = useRouter();
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -79,10 +74,13 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
-                  <div className="flex h-full flex-col bg-white shadow-xl">
-                    <div className="flex flex-shrink-0 justify-between items-center p-6 border border-gray2">
+                  <div
+                    className={`flex h-full flex-col bg-white shadow-xl ${
+                      !router.pathname.includes('/details') && 'border-0 rounded-ss-lg'
+                    }  `}>
+                    <div className="flex flex-shrink-0 justify-between items-center p-6 border-b border-gray2">
                       <div className={'flex flex-col gap-1'}>
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                        <Dialog.Title className="text-base font-medium text-gray-900">
                           {campaignData?.campaign_name}
                         </Dialog.Title>
                         {campaignData === undefined ? (
@@ -172,7 +170,11 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                         )}
                                       </div>
                                       <div
-                                        className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
+                                        className={`${
+                                          campaignData.events.length - 1 !== index
+                                            ? 'border-r border-dashed border-lightBlue3 h-3 mx-4'
+                                            : 'pb-6'
+                                        }`}
                                         style={{ width: 2 }}></div>
                                     </div>
                                   );
@@ -182,7 +184,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                           </div>
                           <div className={'flex-1'}>
                             <div className={'sticky top-0'}>
-                              <div className={'px-6 py-3 border-b border-gray2 '}>
+                              <div className={'px-6 py-3 border-b border-gray2 rounded-br-lg'}>
                                 <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
                                 <div className={'flex items-center gap-1'}>
                                   {activeEvent?.event_type === 'Email' ? (
