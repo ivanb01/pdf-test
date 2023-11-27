@@ -91,7 +91,6 @@ const CampaignCard = ({
           open={openCampaignPreview}
           setOpen={setOpenCampaignPreview}
           className={`${isVisible ? 'mt-[68px]' : ''}`}
-          title={'Campaign Name'}
           sms={2}
           email={3}
         />
