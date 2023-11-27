@@ -67,15 +67,14 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          {unapprovedContactsLength > 0 && (
-            <FloatingAlert
-              onClick={() => router.push('/ai-summary')}
-              buttonText={'Review Now'}
-              className="mx-[21px] mt-[14px]"
-              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-              type="smart-sync"
-            />
-          )}
+          <FloatingAlert
+            inProp={unapprovedContactsLength > 0}
+            onClick={() => router.push('/ai-summary')}
+            buttonText={'Review Now'}
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            type="smart-sync"
+          />
           <div className={'flex justify-between items-center p-6 py-4'}>
             <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
             <Search
