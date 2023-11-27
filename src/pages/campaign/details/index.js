@@ -201,7 +201,7 @@ const index = () => {
                   index === 2 ? 'border-r border-borderColor mr-1.5' : ''
                 }`}>
                 <div className={'flex gap-3 items-center justify-center'}>
-                  <img src={event.icon.src} className={'h-[30px] w-[30px]'} alt={''} />
+                  <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
                   <span className="text-gray4 font-inter font-medium text-sm leading-5">{event.name}</span>
                 </div>
                 <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
