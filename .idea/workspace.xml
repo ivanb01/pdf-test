@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="implement marketing page UI">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change icons in campaign page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Contacts/clients-content/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/column/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/column/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/chip/date-chip/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/campaign/details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/campaign/details/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +25,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/ShowNoContact",
+    "git-widget-placeholder": "development",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -368,27 +365,93 @@
       <option name="project" value="LOCAL" />
       <updated>1697025842748</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="remove scrollbar">
+      <option name="closed" value="true" />
+      <created>1700775727623</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1700775727623</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix events">
+      <option name="closed" value="true" />
+      <created>1700776017790</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1700776017791</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix events">
+      <option name="closed" value="true" />
+      <created>1700776421047</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1700776421047</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fix events">
+      <option name="closed" value="true" />
+      <created>1700776506738</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1700776506738</updated>
+    </task>
+    <task id="LOCAL-00041" summary="make campaign name dynamic">
+      <option name="closed" value="true" />
+      <created>1700834108820</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1700834108820</updated>
+    </task>
+    <task id="LOCAL-00042" summary="change text for empty campaign">
+      <option name="closed" value="true" />
+      <created>1700834257349</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1700834257349</updated>
+    </task>
+    <task id="LOCAL-00043" summary="change text for empty campaign">
+      <option name="closed" value="true" />
+      <created>1700836657450</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1700836657450</updated>
+    </task>
+    <task id="LOCAL-00044" summary="change text color for active event">
+      <option name="closed" value="true" />
+      <created>1700837160321</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1700837160321</updated>
+    </task>
+    <task id="LOCAL-00045" summary="make right side of campaign preview sticky">
+      <option name="closed" value="true" />
+      <created>1701075873077</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1701075873077</updated>
+    </task>
+    <task id="LOCAL-00046" summary="change icons in campaign page">
+      <option name="closed" value="true" />
+      <created>1701076289369</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1701076289369</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add coma to result" />
-    <MESSAGE value="change icons of floorplan and vtour" />
-    <MESSAGE value="add coma in pagination" />
-    <MESSAGE value="add campaign main page logic" />
-    <MESSAGE value="add search function" />
-    <MESSAGE value="add date imported at activity log" />
-    <MESSAGE value="remove Gmail Filter" />
-    <MESSAGE value="add no contacts when there is no contact for each subcategory" />
     <MESSAGE value="remove uncategorized table when no uncategorized contacts" />
     <MESSAGE value="change tooltip position" />
     <MESSAGE value="remove arrow padding" />
@@ -406,6 +469,14 @@
     <MESSAGE value="change campaign style" />
     <MESSAGE value="make campaignEvents?.events optional" />
     <MESSAGE value="add campaign details page" />
-    <option name="LAST_COMMIT_MESSAGE" value="add campaign details page" />
+    <MESSAGE value="push campaigns page" />
+    <MESSAGE value="remove scrollbar" />
+    <MESSAGE value="fix events" />
+    <MESSAGE value="make campaign name dynamic" />
+    <MESSAGE value="change text for empty campaign" />
+    <MESSAGE value="change text color for active event" />
+    <MESSAGE value="make right side of campaign preview sticky" />
+    <MESSAGE value="change icons in campaign page" />
+    <option name="LAST_COMMIT_MESSAGE" value="change icons in campaign page" />
   </component>
 </project>

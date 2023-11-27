@@ -7,8 +7,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
-const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) => {
+const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
   useEffect(() => {
     if (data) {
@@ -49,22 +50,14 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
   }
   function getTimeWithAMPM(timestamp) {
     const dateObject = new Date(timestamp);
-
-    // Get hours and minutes
     let hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
-
-    // Determine AM or PM
     const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    // Convert to 12-hour format
     hours = hours % 12 || 12;
-
-    // Format the time as hh:mm AM/PM
-    const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-
-    return formattedTime;
+    return `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
   }
+  const router = useRouter();
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -81,10 +74,13 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
-                  <div className="flex h-full flex-col bg-white shadow-xl">
-                    <div className="flex flex-shrink-0 justify-between items-center p-6 border border-gray2">
+                  <div
+                    className={`flex h-full flex-col bg-white shadow-xl ${
+                      !router.pathname.includes('/details') && 'border-0 rounded-ss-lg'
+                    }  `}>
+                    <div className="flex flex-shrink-0 justify-between items-center p-6 border-b border-gray2">
                       <div className={'flex flex-col gap-1'}>
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                        <Dialog.Title className="text-base font-medium text-gray-900">
                           {campaignData?.campaign_name}
                         </Dialog.Title>
                         {campaignData === undefined ? (
@@ -117,7 +113,7 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                     </div>
                     <div className="flex min-h-0 flex-1 flex-col">
                       <div className={'overflow-y-scroll'}>
-                        <div className="relative  flex flex-1 h-full">
+                        <div className="flex" style={{ minHeight: 'calc(100vh - 172px)' }}>
                           <div className={'w-[400px] border-r border-gray2 p-6 pb-0'}>
                             <div className={'flex items-start justify-start gap-1 mb-6'}>
                               <InfoIcon className={'h-3 w-3 text-[#909CBE] mt-0.5'} />
@@ -174,7 +170,11 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                                         )}
                                       </div>
                                       <div
-                                        className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
+                                        className={`${
+                                          campaignData.events.length - 1 !== index
+                                            ? 'border-r border-dashed border-lightBlue3 h-3 mx-4'
+                                            : 'pb-6'
+                                        }`}
                                         style={{ width: 2 }}></div>
                                     </div>
                                   );
@@ -183,46 +183,51 @@ const CampaignPreview = ({ open, setOpen, title, campaignId, className, data }) 
                             )}
                           </div>
                           <div className={'flex-1'}>
-                            <div className={'px-6 py-3 border-b border-gray2 '}>
-                              <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
-                              <div className={'flex items-center gap-1'}>
-                                {activeEvent?.event_type === 'Email' ? (
-                                  <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-1'} />
-                                ) : (
-                                  <ChatIcon className={'h-3.5 w-3.5 text-lightBlue3  mt-1'} />
-                                )}
-                                <span className={'font-inter text-sm font-medium leading-5 text-gray4'}>
-                                  {activeEvent?.event_type} Event
-                                </span>
+                            <div className={'sticky top-0'}>
+                              <div className={'px-6 py-3 border-b border-gray2 rounded-br-lg'}>
+                                <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
+                                <div className={'flex items-center gap-1'}>
+                                  {activeEvent?.event_type === 'Email' ? (
+                                    <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-1'} />
+                                  ) : (
+                                    <ChatIcon className={'h-3.5 w-3.5 text-lightBlue3  mt-1'} />
+                                  )}
+                                  <span className={'font-inter text-sm font-medium leading-5 text-gray4'}>
+                                    {activeEvent?.event_type} Event
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                            <div className={'p-6 flex flex-col gap-[31px]'}>
-                              {activeEvent?.event_type === 'Email' && (
+                              <div className={'p-6 flex flex-col gap-[31px]'}>
+                                {activeEvent?.event_type === 'Email' && (
+                                  <div>
+                                    <span
+                                      className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
+                                      SENT FROM
+                                    </span>
+                                    <p className={'text-sm leading-5 font-normal text-gray5'}>
+                                      {user?.email ? user?.email : user}
+                                    </p>
+                                  </div>
+                                )}
                                 <div>
                                   <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
-                                    SENT FROM
+                                    SUBJECT
                                   </span>
-                                  <p className={'text-sm leading-5 font-normal text-gray5'}>
-                                    {user?.email ? user?.email : user}
+                                  <p className={'text-xl leading-7 font-medium text-gray8'}>
+                                    {activeEvent?.preview?.preview?.subject}
                                   </p>
                                 </div>
-                              )}
-                              <div>
-                                <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
-                                  SUBJECT
-                                </span>
-                                <p className={'text-xl leading-7 font-medium text-gray8'}>
-                                  {activeEvent?.preview?.preview?.subject}
-                                </p>
-                              </div>
-                              <div>
-                                <span
-                                  className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4 mb-3'}>
-                                  MESSAGE
-                                </span>
-                                <p className={'text-sm leading-5 font-normal text-gray5'}>
-                                  {activeEvent?.preview?.preview?.body_text ?? activeEvent?.preview?.preview?.message}
-                                </p>
+                                <div>
+                                  <span
+                                    className={
+                                      'text-xs leading-4 font-medium tracking-wider uppercase text-gray4 mb-3'
+                                    }>
+                                    MESSAGE
+                                  </span>
+                                  <p className={'text-sm leading-5 font-normal text-gray5'}>
+                                    {activeEvent?.preview?.preview?.body_text ?? activeEvent?.preview?.preview?.message}
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
