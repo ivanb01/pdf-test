@@ -9,6 +9,7 @@ import { Button } from '../Button';
 import logo from '/public/images/public/logo.svg';
 import close from '/public/images/public/close.svg';
 import open from '/public/images/public/menu.svg';
+import { Auth } from 'aws-amplify';
 
 const links = [
   {
@@ -36,10 +37,9 @@ const links = [
 export const Header = () => {
   let lastScrollPosition = 0;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const currentRoute = router.pathname;
-
-  console.log(currentRoute);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -61,6 +61,20 @@ export const Header = () => {
 
     lastScrollPosition = verticalScrollPosition;
   };
+
+  const isLoggedIn = async () => {
+    await Auth.currentSession()
+      .then((item) => {
+        setIsAuthenticated(true);
+      })
+      .catch((e) => {
+        setIsAuthenticated(false);
+      });
+  };
+
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -84,12 +98,18 @@ export const Header = () => {
           </div>
           <div className={styles['header__content-right']}>
             <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
-              <Button
-                type="secondary"
-                onClick={() => router.push('/authentication/sign-in')}
-                style={{ color: '#6B7280' }}>
-                Log In
-              </Button>
+              {!isAuthenticated ? (
+                <Button
+                  type="secondary"
+                  onClick={() => router.push('/authentication/sign-in')}
+                  style={{ color: '#6B7280' }}>
+                  Log In
+                </Button>
+              ) : (
+                <Button type="secondary" onClick={() => router.push('/contacts/clients')} style={{ color: '#6B7280' }}>
+                  Go to CRM {'->'}
+                </Button>
+              )}
               {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
                 Register for Free
               </Button> */}
