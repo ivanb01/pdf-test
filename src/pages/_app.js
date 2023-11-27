@@ -47,7 +47,6 @@ const MyApp = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
-    console.log('ran');
     configureAmplifyAuth();
     Auth.currentSession()
       .then((item) => {

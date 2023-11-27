@@ -10,6 +10,7 @@ import logo from '/public/images/public/logo.svg';
 import close from '/public/images/public/close.svg';
 import open from '/public/images/public/menu.svg';
 import { Auth } from 'aws-amplify';
+import { useSelector } from 'react-redux';
 
 const links = [
   {
@@ -35,6 +36,7 @@ const links = [
 ];
 
 export const Header = () => {
+  const user = useSelector((state) => state.global.user);
   let lastScrollPosition = 0;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,15 +68,17 @@ export const Header = () => {
     await Auth.currentSession()
       .then((item) => {
         setIsAuthenticated(true);
+        console.log('test');
       })
       .catch((e) => {
         setIsAuthenticated(false);
+        console.log('not logged in');
       });
   };
 
   useEffect(() => {
     isLoggedIn();
-  }, []);
+  }, [user]);
 
   return (
     <header className={styles.header}>
