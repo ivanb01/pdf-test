@@ -179,7 +179,10 @@ const index = () => {
       params['sort'] = 'price';
       params['order'] = 'desc';
     }
-    if (searchKey) params['address'] = searchKey;
+    if (searchKey) {
+      params['address'] = searchKey;
+      params['page'] = 1;
+    }
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (neighborhoods.length)
       params['neighborhood_id'] = neighborhoods.map((neighborhood) => neighborhood.value).join(',');
