@@ -130,6 +130,7 @@ const index = () => {
               data={totalContacts}
               categoryType={category}
               status={usersInCampaignGlobally?.contact_status_1}
+              status_2={usersInCampaignGlobally?.contact_status_2}
             />
           </SimpleBar>
         );
@@ -142,6 +143,7 @@ const index = () => {
               setCurrentButton={setCurrentButton}
               categoryType={category}
               status={usersInCampaignGlobally?.contact_status_1}
+              status_2={usersInCampaignGlobally?.contact_status_2}
             />
           </SimpleBar>
         );
@@ -152,7 +154,8 @@ const index = () => {
               tableFor={'notInCampaignContacts'}
               data={notInCamapaignContacts}
               categoryType={category}
-              status={usersInCampaignGlobally?.contact_status_2}
+              status={usersInCampaignGlobally?.contact_status_1}
+              status_2={usersInCampaignGlobally?.contact_status_2}
             />
           </SimpleBar>
         );
@@ -202,7 +205,7 @@ const index = () => {
                 }`}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
-                  <span className="text-gray4 font-inter font-medium text-sm leading-5">{event.name}</span>
+                  <span className="text-gray4 font-inter font-medium text-xs leading-5">{event.name}</span>
                 </div>
                 <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
               </div>
