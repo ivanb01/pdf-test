@@ -76,7 +76,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
                   <div
                     className={`flex h-full flex-col bg-white shadow-xl ${
-                      !router.pathname.includes('/details') && 'border-0 rounded-ss-lg'
+                      !router.pathname.includes('/details') ? 'border-0 rounded-ss-lg' : ' rounded-bl-lg'
                     }  `}>
                     <div className="flex flex-shrink-0 justify-between items-center p-6 border-b border-gray2">
                       <div className={'flex flex-col gap-1'}>
