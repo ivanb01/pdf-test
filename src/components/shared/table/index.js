@@ -1077,6 +1077,8 @@ const Table = ({
                       }>
                       <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
+                          maxWidth={'300px'}
+                          emailsLength={100}
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
                             email: contact.email,
