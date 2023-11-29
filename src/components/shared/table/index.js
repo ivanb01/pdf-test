@@ -1646,13 +1646,25 @@ const Table = ({
                         <div className="font-medium text-gray7">{dataItem.details}</div>
                       </div>
                     ) : (
-                      <ContactInfo
-                        data={{
-                          name: dataItem.first_name + ' ' + dataItem.last_name,
-                          email: dataItem.email,
-                          image: dataItem.profile_image_path,
-                        }}
-                      />
+                      <div className="flex items-center relative">
+                        <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
+                          {dataItem.image && dataItem.image !== null ? (
+                            <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400" src={dataItem.image} />
+                          ) : (
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                              <span className="text-sm font-medium leading-none sss text-white">
+                                {getInitials(dataItem.name).toUpperCase()}
+                              </span>
+                            </span>
+                          )}
+                        </div>
+                        <div className=" flex flex-col">
+                          <div className={`font-medium text-gray7 flex`}>
+                            <p>{dataItem?.name}</p>
+                          </div>
+                          <p className={'text-gray-500 font-medium'}>{dataItem?.email}</p>
+                        </div>
+                      </div>
                     )}
                     {tableFor == 'import-google-contacts-failed' && (
                       <div className="flex items-center justify-center">

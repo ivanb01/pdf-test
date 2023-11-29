@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change icons in campaign page">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="fix width in importing contact table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/campaign/details/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/campaign/details/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,14 +23,14 @@
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "development",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/images/public" />
@@ -445,14 +445,29 @@
       <option name="project" value="LOCAL" />
       <updated>1701076289369</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="fix width in importing contact table">
+      <option name="closed" value="true" />
+      <created>1701267810190</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1701267810191</updated>
+    </task>
+    <task id="LOCAL-00048" summary="fix width in importing contact table">
+      <option name="closed" value="true" />
+      <created>1701268679140</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1701268679140</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="remove uncategorized table when no uncategorized contacts" />
     <MESSAGE value="change tooltip position" />
     <MESSAGE value="remove arrow padding" />
     <MESSAGE value="add info icon on cards" />
@@ -477,6 +492,7 @@
     <MESSAGE value="change text color for active event" />
     <MESSAGE value="make right side of campaign preview sticky" />
     <MESSAGE value="change icons in campaign page" />
-    <option name="LAST_COMMIT_MESSAGE" value="change icons in campaign page" />
+    <MESSAGE value="fix width in importing contact table" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix width in importing contact table" />
   </component>
 </project>
