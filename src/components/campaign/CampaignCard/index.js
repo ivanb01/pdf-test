@@ -74,16 +74,14 @@ const CampaignCard = ({
         </div>
       </div>
       <div
+        onClick={() => {
+          setOpenCampaignPreview(true);
+        }}
+        role={'button'}
         style={{ height: '42px' }}
         className={'flex items-center justify-center gap-2 text-gray5 bg-lightBlue1 cursor-pointer'}>
         <VisibilityIcon className={'h-4 w-4'} />
-        <p
-          className={'text-xs leading-4 font-medium'}
-          onClick={() => {
-            setOpenCampaignPreview(true);
-          }}>
-          Template Preview
-        </p>
+        <p className={'text-xs leading-4 font-medium'}>Template Preview</p>
       </div>
       {openCampaignPreview && (
         <CampaignPreview

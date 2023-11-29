@@ -82,7 +82,14 @@ const Toggle = ({ active, activePerson, disabled }) => {
           )}
         />
       </Switch>
-      {openDeactivate && <DeactivateCampaign active={active} loading={loading} makeChanges={setMakeChanges} />}
+      {openDeactivate && (
+        <DeactivateCampaign
+          active={active}
+          handleCloseModal={() => setOpenDeactivate(false)}
+          loading={loading}
+          makeChanges={setMakeChanges}
+        />
+      )}
     </>
   );
 };

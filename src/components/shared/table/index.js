@@ -91,6 +91,7 @@ const Table = ({
   setCurrentButton,
   undoCategorization,
   data,
+  status_2,
   handleSelectAll,
   handleSelectContact,
   showCategorize,
@@ -2208,6 +2209,9 @@ const Table = ({
     );
   };
   const allCampaignContacts = () => {
+    {
+      console.log(data, 'data');
+    }
     return data && data?.length > 0 ? (
       <>
         <thead className={'sticky top-0 z-10'}>
@@ -2302,11 +2306,11 @@ const Table = ({
                 )}
               </td>
               <td className={'px-6 py-4'}>
-                {person.last_communication ? (
+                {person.last_communication !== null ? (
                   <DateChip
-                    lastCommunication={person.last_communication}
-                    contactStatus={person.status_2}
-                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                    lastCommunication={person.last_communication ?? ''}
+                    contactStatus={status_2}
+                    contactCategory={'clients'}
                   />
                 ) : (
                   <div>-</div>
@@ -2593,7 +2597,6 @@ const Table = ({
                       </div>
                       {e.date !== null && (
                         <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
-                          {console.log(e.updated_at)}
                           {getFormattedDateFromTimestamp(e.event_updated_at)}
                         </div>
                       )}
