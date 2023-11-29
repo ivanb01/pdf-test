@@ -16,7 +16,7 @@ const ImportGoogleContacts = ({ title, handleCloseOverlay, list, stateAfterImpor
   };
   const subtitleAfterImport = {
     'Not needed': 'There are no contacts to be imported from your Google Account.',
-    Successful: 'Your contacts have been imported successfully.',
+    Successful: 'Your contactss have been imported successfully.',
     Failed: 'Please contact dev@opgny.com so we can help you get your contacts imported.',
   };
 
