@@ -1659,7 +1659,7 @@ const Table = ({
                             </span>
                           )}
                         </div>
-                        <div className=" flex flex-col">
+                        <div className="ml-3 flex flex-col">
                           <div className={`font-medium text-gray7 flex`}>
                             <p>{dataItem?.first_name}</p>
                           </div>
