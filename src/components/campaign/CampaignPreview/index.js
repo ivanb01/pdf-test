@@ -137,7 +137,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                       <div
                                         style={{ width: 'max-content' }}
                                         className={'font-semibold text-gray4 text-xs  leading-5 bg-gray1 px-1.5'}>
-                                        Wait {execute_on} {execute_on === 0 ? 'day' : 'days'}
+                                        Wait {execute_on} {execute_on == 0 || execute_on == 1 ? 'day' : 'days'}
                                       </div>
                                       <div
                                         className={'border-r border-dashed border-lightBlue3 h-3 mx-4'}
@@ -188,11 +188,11 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                 <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
                                 <div className={'flex items-center gap-1'}>
                                   {activeEvent?.event_type === 'Email' ? (
-                                    <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3 mt-1'} />
+                                    <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3'} />
                                   ) : (
-                                    <ChatIcon className={'h-3.5 w-3.5 text-lightBlue3  mt-1'} />
+                                    <ChatIcon className={'h-3.5 w-3.5 text-lightBlue3 '} />
                                   )}
-                                  <span className={'font-inter text-sm font-medium leading-5 text-gray4'}>
+                                  <span className={'font-inter text-xs font-medium leading-5 text-gray4'}>
                                     {activeEvent?.event_type} Event
                                   </span>
                                 </div>

@@ -80,7 +80,7 @@ export default function Tabs({
           <Loader />
         </div>
       ) : (
-        tabs.find((tab) => tab.id == current).content
+        tabs.find((tab) => tab.id == current)?.content
       )}
     </div>
   );

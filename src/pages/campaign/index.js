@@ -20,13 +20,13 @@ const index = () => {
   let isVisible = useElementInView(elementRef);
   const dispatch = useDispatch();
   const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
-  const allContacts = useSelector((state) => state.contacts.allContacts);
 
   const renderCampaignWrapper = (category) => {
     const filteredCampaigns = CRMCampaigns?.campaigns?.filter(
       (campaign) =>
         (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
         campaign.contact_category_2 === category,
     );
 
@@ -34,7 +34,9 @@ const index = () => {
       <CampaignWrapper
         key={category}
         category={category}
-        headerTitle={`${filteredCampaigns?.length} Campaign for ${category}s`}
+        headerTitle={`${filteredCampaigns?.length} ${
+          filteredCampaigns?.length === 1 ? 'Campaign' : 'Campaigns'
+        } for ${category}s`}
         campaignCards={filteredCampaigns && filteredCampaigns}
         isVisible={isVisible}
       />
@@ -136,7 +138,7 @@ const index = () => {
   }, []);
 
   return (
-    <SimpleBar style={{ maxHeight: '100%' }}>
+    <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
       <div ref={elementRef}>
         <MainMenu />
       </div>
@@ -162,7 +164,7 @@ const index = () => {
         />
       </div>
       <CustomCampaign />
-    </SimpleBar>
+    </div>
   );
 };
 
