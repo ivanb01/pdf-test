@@ -142,7 +142,8 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
+    console.log(approvedAI, 'appr');
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
@@ -2224,9 +2225,6 @@ const Table = ({
     );
   };
   const allCampaignContacts = () => {
-    {
-      console.log(data, 'data');
-    }
     return data && data?.length > 0 ? (
       <>
         <thead className={'sticky top-0 z-10'}>
@@ -2297,7 +2295,7 @@ const Table = ({
               </td>
               <td className="px-6 py-4">
                 <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
+                  {getSource(person.import_source_text, person.approved_ai).icon}
                   <p className={'text-xs leading-4 font-medium text-gray8'}>
                     {getSource(person.import_source_text, person.approved_ai).name}
                   </p>
@@ -2481,7 +2479,7 @@ const Table = ({
               </td>
               <td className="px-6 py-4">
                 <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
+                  {getSource(person.import_source_text, person.approved_ai).icon}
                   <p className={'text-xs leading-4 font-medium text-gray8'}>
                     {getSource(person.import_source_text, person.approved_ai).name}
                   </p>
