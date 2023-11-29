@@ -5,7 +5,7 @@ const FloatingAlert = ({ message, className, buttonText, onClick, inProp = true 
   const router = useRouter();
   return (
     <CSSTransition in={inProp} timeout={500} classNames="floatingAlert" unmountOnExit>
-      <div className={`${className} bg-[#FFFCF5] p-3 border border-[#FEC84B] rounded-xl`}>
+      <div className={`${className} bg-[#FFFCF5] p-3  border border-[#FEC84B] rounded-xl`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center w-[80%]">
             <div className="flex-shrink-0">
