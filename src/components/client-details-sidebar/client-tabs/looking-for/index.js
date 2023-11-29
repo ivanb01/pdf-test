@@ -368,7 +368,7 @@ export default function LookingFor({ contactId, category }) {
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
+                      <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
                         <div>
                           {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                             <>

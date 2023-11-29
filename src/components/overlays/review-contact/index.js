@@ -563,6 +563,7 @@ const ReviewContact = ({
                 id="summary"
                 label="Summary"
                 name={'summary'}
+                link={client.email_link}
                 handleChange={formik.handleChange}
                 value={formik.values.summary}
               />
@@ -579,15 +580,6 @@ const ReviewContact = ({
                       {client.email_subject}
                       <span />
                     </div>
-                  )}
-                  {client.email_link && (
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="ml-1 cursor-pointer flex items-center text-xs text-gray-900 underline"
-                      rel="noreferrer">
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
                   )}
                 </div>
               </div>
