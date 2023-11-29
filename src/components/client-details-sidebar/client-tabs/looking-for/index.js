@@ -314,10 +314,10 @@ export default function LookingFor({ contactId, category }) {
                     <FloatingAlert
                       message={
                         category === 'Landlord' || category === 'Seller'
-                          ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
-                          : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."
+                          ? 'For precise property recommendations, include specific details for accurate comparisons.'
+                          : 'Please specify property interests for tailored client recommendations'
                       }
-                      buttonText={'Edit Property Interests'}
+                      buttonText={'Edit'}
                       onClick={() => setShowAddPopup(true)}
                     />
                   </div>
@@ -365,7 +365,6 @@ export default function LookingFor({ contactId, category }) {
                     </header>
                   </div>
                 )}
-
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
@@ -392,6 +391,7 @@ export default function LookingFor({ contactId, category }) {
                           )}
                           . These properties are sourced from REALTYMX database.
                         </div>
+
                         <div className={'flex items-center gap-2'}>
                           <p
                             className="text-gray6 font-inter font-normal leading-5 text-sm"

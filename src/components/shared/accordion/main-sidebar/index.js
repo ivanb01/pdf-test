@@ -160,7 +160,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   const expandedMenu = () => {
     return (
-      <SimpleBar autoHide={true} style={{ maxHeight: '63vh' }}>
+      <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
         <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
             <div
@@ -222,7 +222,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
                     <>
                       <div
-                        className={`absolute flex gap-[10px]  absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
+                        className={`absolute flex gap-[10px] bg-white mb-[-10px] absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3`}>
                         <div className={'relative  w-6 mt-1'}>
                           <img
                             src={checkmark.src}
