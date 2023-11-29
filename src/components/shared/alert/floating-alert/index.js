@@ -1,7 +1,7 @@
 import { WarningAmber } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { CSSTransition } from 'react-transition-group';
-const FloatingAlert = ({ message, className, buttonText, onClick, inProp }) => {
+const FloatingAlert = ({ message, className, buttonText, onClicki, inProp = true }) => {
   const router = useRouter();
   return (
     <CSSTransition in={inProp} timeout={500} classNames="floatingAlert" unmountOnExit>
