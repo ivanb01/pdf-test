@@ -85,6 +85,10 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           </div>
           <div className={'flex-1 '}>
             <div className={'flex flex-col gap-6 '}>
+              <p className={'text-sm text-gray5 border rounded-xl border-lightBlue2 p-2 pl-4 bg-lightBlue1'}>
+                Complete the fields below to customize and generate your listing's or general promotional materials,
+                ready for both print and digital use. You will receive the file to your email within 24 Hours.
+              </p>
               {listingUrl && (
                 <Input
                   type="text"
