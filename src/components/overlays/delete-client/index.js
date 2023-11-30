@@ -37,7 +37,7 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
           <div className="rounded-3xl	bg-red2 h-[40px] w-[40px] flex items-center justify-center">
             <ExclamationIcon className="text-red3" height={20} />
           </div>
-          <div className="flex flex-col ml-2">
+          <div className=" w-fit flex flex-col ml-2">
             <Text h3>No longer working with this contact?</Text>
             <Text p className="text-gray4 ">
               Moving the contact to Trash will no longer be part of your contact list.

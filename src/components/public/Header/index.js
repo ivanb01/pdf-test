@@ -64,16 +64,13 @@ export const Header = () => {
     lastScrollPosition = verticalScrollPosition;
   };
 
-  const isLoggedIn = async () => {
-    await Auth.currentSession()
-      .then((item) => {
-        setIsAuthenticated(true);
-        console.log('test');
-      })
-      .catch((e) => {
-        setIsAuthenticated(false);
-        console.log('not logged in');
-      });
+  const isLoggedIn = () => {
+    let user = localStorage.getItem('user');
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
   };
 
   useEffect(() => {
