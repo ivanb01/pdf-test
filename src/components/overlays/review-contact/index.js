@@ -563,29 +563,25 @@ const ReviewContact = ({
                 id="summary"
                 label="Summary"
                 name={'summary'}
+                link={client.email_link}
                 handleChange={formik.handleChange}
                 value={formik.values.summary}
               />
               <div className="text-xs mb-6 text-gray6">
-                <div className="mt-2">
-                  <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
-                </div>
-                {client && client.summary && (
-                  <div className="flex items-center">
+                {client.created_at && (
+                  <div className="mt-2">
+                    <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+                  </div>
+                )}
+                <div className="flex items-center">
+                  {client.email_subject && (
                     <div className="mt-0.5">
                       <span className="font-medium">Subject: </span>
                       {client.email_subject}
                       <span />
                     </div>
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="ml-1 cursor-pointer flex items-center text-xs text-gray-900 underline"
-                      rel="noreferrer">
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
               <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                 <div>

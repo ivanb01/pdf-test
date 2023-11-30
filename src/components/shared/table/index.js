@@ -142,7 +142,8 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
+    console.log(approvedAI, 'appr');
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
@@ -1077,6 +1078,8 @@ const Table = ({
                       }>
                       <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
+                          maxWidth={'300px'}
+                          emailsLength={100}
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
                             email: contact.email,
@@ -1628,6 +1631,7 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
+          {console.log(data, 'data')}
           {!data.length ? (
             <tr className="h-[233px] text-center align-middle">
               <td className="text-center align-middle text-gray-400 text-sm italic">
@@ -1644,13 +1648,25 @@ const Table = ({
                         <div className="font-medium text-gray7">{dataItem.details}</div>
                       </div>
                     ) : (
-                      <ContactInfo
-                        data={{
-                          name: dataItem.first_name + ' ' + dataItem.last_name,
-                          email: dataItem.email,
-                          image: dataItem.profile_image_path,
-                        }}
-                      />
+                      <div className="flex items-center relative">
+                        <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
+                          {dataItem.image && dataItem.image !== null ? (
+                            <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400" src={dataItem.image} />
+                          ) : (
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                              <span className="text-sm font-medium leading-none sss text-white">
+                                {getInitials(dataItem.first_name + ' ' + dataItem.last_name).toUpperCase()}
+                              </span>
+                            </span>
+                          )}
+                        </div>
+                        <div className="ml-3 flex flex-col">
+                          <div className={`font-medium text-gray7 flex`}>
+                            <p>{dataItem?.first_name}</p>
+                          </div>
+                          <p className={'text-gray-500 font-medium'}>{dataItem?.email}</p>
+                        </div>
+                      </div>
                     )}
                     {tableFor == 'import-google-contacts-failed' && (
                       <div className="flex items-center justify-center">
@@ -2209,9 +2225,6 @@ const Table = ({
     );
   };
   const allCampaignContacts = () => {
-    {
-      console.log(data, 'data');
-    }
     return data && data?.length > 0 ? (
       <>
         <thead className={'sticky top-0 z-10'}>
@@ -2282,7 +2295,7 @@ const Table = ({
               </td>
               <td className="px-6 py-4">
                 <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
+                  {getSource(person.import_source_text, person.approved_ai).icon}
                   <p className={'text-xs leading-4 font-medium text-gray8'}>
                     {getSource(person.import_source_text, person.approved_ai).name}
                   </p>
@@ -2466,7 +2479,7 @@ const Table = ({
               </td>
               <td className="px-6 py-4">
                 <div className={'flex gap-1.5 items-center justify-start'}>
-                  {getSource(person.import_source_text).icon}
+                  {getSource(person.import_source_text, person.approved_ai).icon}
                   <p className={'text-xs leading-4 font-medium text-gray8'}>
                     {getSource(person.import_source_text, person.approved_ai).name}
                   </p>

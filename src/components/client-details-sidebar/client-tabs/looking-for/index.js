@@ -368,7 +368,7 @@ export default function LookingFor({ contactId, category }) {
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
+                      <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
                         <div>
                           {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                             <>
@@ -388,8 +388,8 @@ export default function LookingFor({ contactId, category }) {
                               {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
                               Sold Properties
                             </>
-                          )}
-                          . These properties are sourced from REALTYMX database.
+                          )}{' '}
+                          from the REBNY database.
                         </div>
 
                         <div className={'flex items-center gap-2'}>

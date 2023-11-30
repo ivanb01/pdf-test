@@ -57,10 +57,14 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
   return (
     <Overlay title={'Request Custom Digital Design'} handleCloseOverlay={handleOverlayClose} className="w-[700px]">
       <div className={'flex gap-10 '}>
-        <SimpleBar autoHide style={{ maxHeight: '550px', width: '100%', height: '100%' }}>
+        <SimpleBar autoHide style={{ maxHeight: '660px', width: '100%', height: '100%' }}>
           <div className={'flex-1'}>
-            <form className={'flex flex-1 flex-col justify-center h-[550px]'} onSubmit={formik.handleSubmit}>
+            <form className={'flex flex-1 flex-col justify-center h-[660px]'} onSubmit={formik.handleSubmit}>
               <div className={'mx-6 mb-8 flex-1 flex gap-10 flex-col'}>
+                <p className={'text-sm text-gray5 border rounded-xl border-lightBlue2 p-2 pl-4 bg-lightBlue1'}>
+                  Complete the fields below to customize and generate your listing's or general promotional materials,
+                  ready for both print and digital use. You will receive the file to your email within 24 Hours.
+                </p>
                 <Input
                   type="text"
                   label="Listing URL"
