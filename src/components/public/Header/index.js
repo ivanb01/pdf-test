@@ -80,6 +80,10 @@ export const Header = () => {
     isLoggedIn();
   }, [user]);
 
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+
   return (
     <header className={styles.header}>
       <div className="container-public">
