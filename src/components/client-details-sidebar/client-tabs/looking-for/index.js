@@ -388,8 +388,8 @@ export default function LookingFor({ contactId, category }) {
                               {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
                               Sold Properties
                             </>
-                          )}
-                          . These properties are sourced from REALTYMX database.
+                          )}{' '}
+                          from the REBNY database.
                         </div>
 
                         <div className={'flex items-center gap-2'}>
