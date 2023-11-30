@@ -171,7 +171,7 @@ export const SectionContact = () => {
                   />
                 </div>
                 <div className={styles['section__actions']}>
-                  <Button onClick={handleButtonClick} type="primary" disabled={!formik.isValid}>
+                  <Button type="primary" disabled={!formik.isValid}>
                     Submit
                   </Button>
                 </div>
