@@ -24,7 +24,7 @@ const CampaignCard = ({
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
   return (
-    <div className={'flex flex-col rounded-lg campaigns-box-shadow'}>
+    <div className={'flex flex-col rounded-lg campaigns-box-shadow justify-between'}>
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
           <div
