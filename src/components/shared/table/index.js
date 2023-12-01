@@ -2599,13 +2599,26 @@ const Table = ({
                       <div className={'flex gap-1.5 items-center'}>
                         <div
                           className={`h-2 w-2 rounded-xl ${
-                            isAfterToday(e.event_updated_at) === true ? 'bg-yellow2' : 'bg-green5'
+                            e?.event_status === 'scheduled'
+                              ? 'bg-yellow2'
+                              : e?.event_status === 'sent'
+                              ? 'bg-green5'
+                              : 'bg-red-500'
                           }`}></div>
                         <p
-                          className={`text-sm leading-5 font-medium ${
-                            isAfterToday(e.event_updated_at) === true ? 'text-yellow3' : 'text-green7'
-                          }`}>
-                          {isAfterToday(e.event_updated_at) === true ? 'To be sent' : 'Sent'}
+                          className={`text-sm leading-5 font-medium
+                           ${
+                             e?.event_status === 'scheduled'
+                               ? 'text-yellow3'
+                               : e?.event_status === 'sent'
+                               ? 'text-yellow3'
+                               : 'text-red5'
+                           }`}>
+                          {e?.event_status === 'scheduled'
+                            ? 'To be sent'
+                            : e?.event_stautus === 'sent'
+                            ? 'Sent'
+                            : 'Canceled'}
                         </p>
                       </div>
                       {e.date !== null && (
