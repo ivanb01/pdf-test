@@ -28,6 +28,8 @@ const DeleteClientOverlay = ({ title, handleCloseOverlay, contact }) => {
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
+    } finally {
+      handleCloseOverlay();
     }
   };
   return (
