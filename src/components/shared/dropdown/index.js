@@ -30,6 +30,7 @@ const Dropdown = ({
   errorText,
   openClassName,
   afterLabel,
+  menuHeight,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -91,7 +92,7 @@ const Dropdown = ({
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0">
                   <Listbox.Options
-                    className={`absolute z-10 mt-1 w-full bg-white shadow-lg max-h-[250px] rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm ${
+                    className={`absolute ${menuHeight} z-10 mt-1 w-full bg-white shadow-lg max-h-[250px] rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm ${
                       top && top
                     }`}>
                     {options?.map((option) => (
