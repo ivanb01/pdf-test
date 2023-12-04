@@ -118,7 +118,9 @@ const index = () => {
     getLookingFor();
     getNotes();
   };
-
+  useEffect(() => {
+    localStorage.getItem('route');
+  }, []);
   useEffect(() => {
     if (refetchPart == 'notes') {
       getNotes();
@@ -148,6 +150,9 @@ const index = () => {
     }
   }, [contacts, fetchContactRequired, id]);
   const [backUrl, setBackUrl] = useState(null);
+  const campaign_id = JSON.parse(localStorage.getItem('id'));
+  const campaign = JSON.parse(localStorage.getItem('category'));
+
   const tempUrl =
     contact?.category_id === 14 || contact?.category_id === 13
       ? 'family'
@@ -160,10 +165,12 @@ const index = () => {
       : `${contact?.category_1}s`;
 
   useEffect(() => {
-    if (contact?.category_1) {
+    if (campaign_id && campaign) {
+      setBackUrl(`/campaign/details?id=${campaign_id}&category=${campaign}`);
+    } else if (contact?.category_1) {
       setBackUrl(`/contacts/${tempUrl.toLowerCase()}`);
     }
-  }, [contact]);
+  }, [contact, campaign_id, campaign]);
 
   return (
     <>
