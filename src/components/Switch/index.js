@@ -4,16 +4,21 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHideUnapproved } from '@store/global/slice';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 const SwitchComponent = ({ label }) => {
   const dispatch = useDispatch();
-  const [enabled, setEnabled] = useState(true);
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+  const [enabled, setEnabled] = useState(!hideUnapproved);
 
   useEffect(() => {
-    if (enabled) {
-      dispatch(setHideUnapproved(false));
-    } else {
-      dispatch(setHideUnapproved(true));
-    }
+    let showUnapproved = localStorage.getItem('showUnapproved') === 'true' ? true : false;
+    setEnabled(showUnapproved);
+    dispatch(setHideUnapproved(!showUnapproved));
+  }, []);
+
+  useEffect(() => {
+    dispatch(setHideUnapproved(!enabled));
+    localStorage.setItem('showUnapproved', enabled);
   }, [enabled]);
 
   return (

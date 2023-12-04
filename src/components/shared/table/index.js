@@ -142,7 +142,6 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    console.log(approvedAI, 'appr');
     if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
       return {
         name: source,
