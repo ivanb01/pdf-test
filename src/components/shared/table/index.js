@@ -1934,7 +1934,7 @@ const Table = ({
                 </Chip>
               </td>
               <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <div className=" flex items-center break-all flex-wrap">
+                <div className=" flex items-center break-all">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
