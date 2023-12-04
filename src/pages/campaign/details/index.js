@@ -90,7 +90,7 @@ const index = () => {
       amount: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
-      name: 'Unassigned + Never Assigned Clients',
+      name: 'Unassigned + Never Assigned',
       icon: notInCampaign,
       amount: usersInCampaignGlobally?.contacts_not_campaign?.length,
     },
