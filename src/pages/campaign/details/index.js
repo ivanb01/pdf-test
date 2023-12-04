@@ -114,6 +114,11 @@ const index = () => {
   ];
 
   useEffect(() => {
+    localStorage.removeItem('id');
+    localStorage.removeItem('category');
+  }, []);
+
+  useEffect(() => {
     console.log(usersInCampaignGlobally);
   }, [usersInCampaignGlobally]);
   useEffect(() => {

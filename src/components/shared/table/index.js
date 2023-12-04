@@ -142,7 +142,6 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    console.log(approvedAI, 'appr');
     if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
       return {
         name: source,
@@ -2241,6 +2240,8 @@ const Table = ({
     );
   };
   const allCampaignContacts = () => {
+    const { id, category } = router.query;
+
     return data && data?.length > 0 ? (
       <>
         <thead className={'sticky top-0 z-10'}>
@@ -2279,12 +2280,14 @@ const Table = ({
           {data.map((person) => (
             <tr
               key={person.id}
-              onClick={() =>
+              onClick={() => {
+                localStorage.setItem('id', JSON.stringify(id));
+                localStorage.setItem('category', JSON.stringify(category));
                 router.push({
                   pathname: '/contacts/details',
                   query: { id: person?.contact_id },
-                })
-              }
+                });
+              }}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
               <td className="pl-6 py-4 pr-4">
                 <div className={'flex gap-4'}>
@@ -2430,6 +2433,8 @@ const Table = ({
     );
   };
   const notInCampaignContacts = () => {
+    const { id, category } = router.query;
+
     return data && data?.length > 0 ? (
       <>
         <thead>
@@ -2463,12 +2468,14 @@ const Table = ({
           {data.map((person) => (
             <tr
               key={person.id}
-              onClick={() =>
+              onClick={() => {
+                localStorage.setItem('id', JSON.stringify(id));
+                localStorage.setItem('category', JSON.stringify(category));
                 router.push({
                   pathname: '/contacts/details',
                   query: { id: person?.contact_id },
-                })
-              }
+                });
+              }}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
               <td className="pl-6 py-4 pr-4">
                 <div className={'flex gap-4'}>
@@ -2652,6 +2659,7 @@ const Table = ({
       );
     };
     const other = () => {
+      const { id, category } = router.query;
       return (
         <>
           <thead className={'w-[350px]'}>
@@ -2667,12 +2675,14 @@ const Table = ({
             {data.map((person) => (
               <tr
                 key={person.id}
-                onClick={() =>
+                onClick={() => {
+                  localStorage.setItem('id', JSON.stringify(id));
+                  localStorage.setItem('category', JSON.stringify(category));
                   router.push({
                     pathname: '/contacts/details',
                     query: { id: person?.contact_id },
-                  })
-                }
+                  });
+                }}
                 className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
                 <td className="pl-6 py-4 pr-[100px] border-b border-r  border-gray2">
                   <div className={'flex gap-4'}>
