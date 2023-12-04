@@ -114,6 +114,7 @@ const index = () => {
   ];
 
   useEffect(() => {
+    //this is done to detect back button on client details
     localStorage.removeItem('id');
     localStorage.removeItem('category');
   }, []);
@@ -233,8 +234,6 @@ const index = () => {
               open={openCampaignPreview}
               setOpen={setOpenCampaignPreview}
               className={'mt-[68px]'}
-              sms={2}
-              email={3}
             />
           )}
         </>

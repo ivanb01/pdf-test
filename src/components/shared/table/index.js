@@ -2571,6 +2571,7 @@ const Table = ({
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
                   <Toggle
+                    objectKey={'contacts_not_campaign'}
                     active={false}
                     disabled={person.contact_campaign_status === 'unassigned'}
                     activePerson={person}
@@ -2744,7 +2745,11 @@ const Table = ({
             {data.map((person) => (
               <td className={'px-6 py-4 pl-6  pr-4  border-l border-gray2 h-[73px] border-b'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle active={person?.contact_campaign_status === 'assigned'} activePerson={person} />
+                  <Toggle
+                    objectKey={'contacts_in_campaign'}
+                    active={person?.contact_campaign_status === 'assigned'}
+                    activePerson={person}
+                  />
                   <div>
                     <span
                       className={`text-xs leading-5 font-medium ${
