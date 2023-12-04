@@ -12,7 +12,7 @@ export default function withAuth(Component) {
         const isAuthenticated = localStorage.getItem('isAuthenticated');
 
         let maintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE;
-        console.log(maintenance);
+        console.log(process.env, maintenance);
         if (maintenance === 'true' || maintenance === true) {
           router.push('/maintenance');
         }
