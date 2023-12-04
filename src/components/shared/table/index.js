@@ -1373,6 +1373,19 @@ const Table = ({
 
     let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
 
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -1428,7 +1441,10 @@ const Table = ({
                     .map((contact) => (
                       <tr
                         key={contact.id}
-                        className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                        className={`${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
+                        ${
+                          isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
+                        } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
                         onClick={() =>
                           router.push({
                             pathname: '/contacts/details',
