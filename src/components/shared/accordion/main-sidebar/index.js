@@ -41,6 +41,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import SubMenuContent from '@components/shared/SubMenuCard';
 import AIChip from '@components/shared/chip/ai-chip';
+import { isHealthyCommuncationDate } from '@global/functions';
 
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -371,6 +372,21 @@ const TabBar = ({ tab }) => {
     router.push(tab.href);
   };
 
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
+  const showPulse = (tab) => {
+    if (tab.href == 'needcontact') {
+      return allContacts.filter((contact) => {
+        const categoryType = contact?.category_1?.toLowerCase() + 's';
+        if (categoryType !== 'clients') {
+          return false;
+        }
+        let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+        return !isHealthyCommunication;
+      }).length;
+    }
+  };
+
   return (
     <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
@@ -398,6 +414,12 @@ const TabBar = ({ tab }) => {
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}
           />
+        )}
+        {showPulse(tab) && (
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+          </span>
         )}
       </Link>
       {tab.subtab && (

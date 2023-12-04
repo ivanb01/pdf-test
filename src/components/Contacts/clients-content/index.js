@@ -285,7 +285,7 @@ const Clients = ({
                 {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
                 {/* {openedTab} - {openedSubtab} */}
               </Text>
-              {filteredContacts.filter(
+              {contacts.filter(
                 (contact) =>
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
                   !contact.approved_ai &&
