@@ -167,8 +167,8 @@ const CategorizePage = ({
     <>
       {uncategorizedContacts.length > 0 && (
         <div
-          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%] pb-[72px]`}>
-          <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 217px)', overflowX: 'hidden' }}>
+          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
+          <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>
             <Table
               tableFor="in-categorization"
               data={uncategorizedContacts}
@@ -179,7 +179,7 @@ const CategorizePage = ({
         </div>
       )}
       <div
-        className={`bg-white pb-[72px] border-t border-gray-200 relative ${
+        className={`bg-white border-t border-gray-200 relative ${
           uncategorizedContacts.length
             ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]'
             : uncategorizedContacts.length === 0 && categorizedInThisSession.length === 0
@@ -195,7 +195,7 @@ const CategorizePage = ({
               top: '0',
               left: '0',
               right: '0',
-              bottom: '72px',
+              bottom: '0',
               maxHeight: '100%',
             }}>
             <div className="p-6 pb-[77px]">
@@ -254,6 +254,7 @@ const CategorizePage = ({
                       <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          placeholder="Start typing to search or select one of the options"
                           onMenuOpen={() => setIsMenuOpen(true)}
                           onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"
@@ -305,8 +306,7 @@ const CategorizePage = ({
       </div>
 
       {categorizedInThisSession?.length > 0 ? (
-        <div
-          className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
+        <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
           <SimpleBar autoHide style={{ maxHeight: '100%' }}>
             <Table
               tableFor="categorized"
@@ -319,8 +319,7 @@ const CategorizePage = ({
       ) : null}
 
       {categorizedInThisSession.length === 0 && uncategorizedContacts.length > 0 && (
-        <div
-          className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] pb-[72px] xl:w-[25%]`}>
+        <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
           <div className="flex flex-col items-center justify-center h-full max-w-[290px] mx-auto my-0 p-3">
             <Image src={noCategorized} />
             <Text h3 className="text-gray7 mt-4 mb-2 text-center text-[15px]">
@@ -332,7 +331,7 @@ const CategorizePage = ({
           </div>
         </div>
       )}
-      {(categorizedInThisSession.length > 0 || uncategorizedContacts.length > 0) && (
+      {/* {(categorizedInThisSession.length > 0 || uncategorizedContacts.length > 0) && (
         <div
           style={{ zIndex: '99999 !important' }}
           className="bg-white absolute bottom-0 left-0 right-0 px-6 py-4 fixed-categorize-menu  flex items-center justify-end">
@@ -350,7 +349,7 @@ const CategorizePage = ({
             }}
           />
         </div>
-      )}
+      )} */}
     </>
   );
 };

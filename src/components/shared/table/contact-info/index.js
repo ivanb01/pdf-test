@@ -146,7 +146,7 @@ const ContactInfo = ({
                 side={'bottom'}
                 align={'center'}
                 triggerElement={
-                  <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
+                  <div className={`ellipsis-email xl:min-w-[150px] lg:w-[130px] ${maxWidth && `lg:w-[${maxWidth}]`} `}>
                     {data.email}
                   </div>
                 }>
@@ -154,7 +154,7 @@ const ContactInfo = ({
               </TooltipComponent>
             ) : (
               !emailHover && (
-                <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
+                <div className={`ellipsis-email xl:min-w-[150px] lg:w-[130px] ${maxWidth && `lg:w-[${maxWidth}]`} `}>
                   {data.email}
                 </div>
               )

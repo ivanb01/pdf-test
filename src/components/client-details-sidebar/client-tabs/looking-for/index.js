@@ -36,6 +36,7 @@ import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import properties from 'pages/properties';
+import FloatingAlert from '@components/shared/alert/floating-alert';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -309,61 +310,23 @@ export default function LookingFor({ contactId, category }) {
             ) : (
               <>
                 {!lookingForData?.length ? (
-                  <Alert type="orange">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <ExclamationIcon className="h-5 w-5 text-orange-600" aria-hidden="true" />
-                      </div>
-                      <div className="ml-3 flex flex-row justify-between w-[100%] items-center">
-                        <p className={`text-sm text-orange-800`}>
-                          {category === 'Landlord' || category === 'Seller'
-                            ? 'For more accurate recommendations on properties, it is advisable to provide specific property details for comparison.'
-                            : "To receive more precise property recommendations tailored to your client's preferences, kindly specify the property interests."}
-                        </p>
-                        <Button
-                          className="p-0"
-                          buttonPadding={'px-0'}
-                          label={'Edit Property Interests'}
-                          primary
-                          onClick={() => setShowAddPopup(true)}
-                        />
-                      </div>
-                    </div>
-                  </Alert>
+                  <div className="px-6">
+                    <FloatingAlert
+                      message={
+                        category === 'Landlord' || category === 'Seller'
+                          ? 'For precise property recommendations, include specific details for accurate comparisons.'
+                          : 'Please specify property interests for tailored client recommendations'
+                      }
+                      buttonText={'Edit'}
+                      onClick={() => setShowAddPopup(true)}
+                    />
+                  </div>
                 ) : (
-                  <header className={`transition-all bg-gray-50 p-6`}>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="text-gray-900 font-medium flex items-center">
-                        Property Interests
-                        {getLookingAction() === 1 ||
-                          (getLookingAction() === 2 && (
-                            <div className="ml-4 flex items-center justify-center border border-cyan-800 bg-cyan-50 rounded-full text-cyan-800 h-fit px-2 py-0 text-[10px] font-medium">
-                              {getLookingAction() == 1 ? 'for Sale' : 'for Rent'}
-                            </div>
-                          ))}
-                      </div>
-                      <div className="flex items-center">
-                        <Button
-                          className="min-w-fit mr-4"
-                          onClick={() => setShowEditPopup(true)}
-                          white
-                          leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
-                          Edit
-                        </Button>
-                        <div onClick={() => setExpandedHeader(!expandedHeader)} className="cursor-pointer z-10">
-                          <div className="">
-                            <img
-                              className={`transition-all h-7 ${expandedHeader ? 'rotate-90' : '-rotate-90'}`}
-                              src={ArrowLeft.src}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {expandedHeader && (
-                      <>
-                        <PropertyDetail className="mt-4 mb-4" label="Neighborhood" value={getNeighborhoodValue()} />
-                        <div className="grid grid-cols-4">
+                  <div className="px-6">
+                    <header className={`transition-all bg-teal-50 p-3 rounded-lg border border-gray2`}>
+                      <div className="flex justify-between">
+                        <div className="grid grid-cols-5 gap-14 items-center">
+                          <PropertyDetail label="Neighborhood" value={getNeighborhoodValue()} />
                           <PropertyDetail
                             label="Rooms"
                             value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
@@ -389,15 +352,23 @@ export default function LookingFor({ contactId, category }) {
                             })}
                           />
                         </div>
-                      </>
-                    )}
-                  </header>
+                        <div className="flex items-center">
+                          <Button
+                            className="min-w-fit mr-4"
+                            onClick={() => setShowEditPopup(true)}
+                            white
+                            leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    </header>
+                  </div>
                 )}
-
                 <div className="p-6">
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-sm font-medium flex justify-between items-center">
+                      <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
                         <div>
                           {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                             <>
@@ -417,9 +388,10 @@ export default function LookingFor({ contactId, category }) {
                               {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
                               Sold Properties
                             </>
-                          )}
-                          . These properties are sourced from REALTYMX database.
+                          )}{' '}
+                          from the REBNY database.
                         </div>
+
                         <div className={'flex items-center gap-2'}>
                           <p
                             className="text-gray6 font-inter font-normal leading-5 text-sm"

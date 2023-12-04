@@ -23,13 +23,6 @@ const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoog
             {error}
           </NotificationAlert>
         )}
-        <img src={noContacts.src} />
-        <Text h2 className="text-gray7 mt-9 mb-4 justify-center text-lg">
-          No contacts to be imported
-        </Text>
-        <Text paragraph className="text-gray4 mb-[50px] text-sm">
-          There is no contacts to be imported to the CRM. Please try again another time.
-        </Text>
         <Button
           label="Back to contacts"
           leftIcon={<ArrowBack className="h-4" />}
@@ -42,6 +35,13 @@ const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoog
             });
           }}
         />
+        <Text h2 className="text-gray8 mt-9 mb-4 justify-center text-lg">
+          No contacts to be imported
+        </Text>
+        <Text paragraph className="text-gray4 mb-[50px] text-sm font-bold">
+          Everything worked! But, you had no contacts saved in your Google Contacts folder to import.
+        </Text>
+        <img src={noContacts.src} />
       </div>
     </>
   );

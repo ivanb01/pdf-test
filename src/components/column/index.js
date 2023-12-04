@@ -19,23 +19,24 @@ import { unassignContactFromCampaign } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setContacts, updateContactLocally } from 'store/contacts/slice';
 import * as contactServices from 'api/contacts';
-import { setRefetchCount, setRefetchData } from '@store/global/slice';
+import { setRefetchCount, setRefetchData, setSorted } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
+import DateChip from '@components/shared/chip/date-chip';
+import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
 };
 
-const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) => {
+const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, handleFilteredContacts }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [clientToModify, setClientToModify] = useState(null);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
-  const [sortAsc, setSortAsc] = useState(true);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   // const clients = useSelector((state) => state.contacts.clients);
@@ -75,36 +76,46 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
     });
   };
 
-  const handleSortAsc = () => {
-    setFilteredContacts(
-      filteredContacts.sort(function (a, b) {
-        if (a.first_name < b.first_name) {
-          return -1;
-        }
-        if (a.first_name > b.first_name) {
-          return 1;
-        }
-        return 0;
-      }),
-    );
-    setSortAsc(!sortAsc);
+  // const handleSortAsc = () => {
+  //   const sortedContacts = [...filteredContacts].sort((a, b) => {
+  //     if (a.first_name < b.first_name) {
+  //       return -1;
+  //     }
+  //     if (a.first_name > b.first_name) {
+  //       return 1;
+  //     }
+  //     return 0;
+  //   });
+  //
+  //   setFilteredContacts(sortedContacts);
+  //   setSortAsc(!sortAsc);
+  // };
+
+  const sorted = useSelector((state) => state.global.sorted);
+
+  const handleToggleSorting = (name) => {
+    const currentItem = sorted.find((item) => item.name === name);
+    if (currentItem) {
+      const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+      handleFilteredContacts(name, newOrder);
+      dispatch(setSorted({ name, order: newOrder }));
+    }
   };
 
-  const handleSortDesc = () => {
-    setFilteredContacts(
-      filteredContacts.sort(function (a, b) {
-        if (a.first_name < b.first_name) {
-          return 1;
-        }
-        if (a.first_name > b.first_name) {
-          return -1;
-        }
-        return 0;
-      }),
-    );
-    setSortAsc(!sortAsc);
-  };
-
+  // const handleSortDesc = () => {
+  //   const sortedContacts = [...filteredContacts].sort((a, b) => {
+  //     if (a.first_name < b.first_name) {
+  //       return 1;
+  //     }
+  //     if (a.first_name > b.first_name) {
+  //       return -1;
+  //     }
+  //     return 0;
+  //   });
+  //
+  //   setFilteredContacts(sortedContacts);
+  //   setSortAsc(!sortAsc);
+  // };
   const handleAddActivity = (client) => {
     setClientToModify(client);
     setAddActivityPopup(true);
@@ -199,20 +210,35 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
               <div
                 // style={{ width: '300px' }}
                 className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                <p className="mb-2">{`You must interact with these clients every ${
+                <div className="text-sm font-semibold mb-2">
+                  Every{' '}
+                  {healthLastCommunicationDate[categoryType][status?.name] === 1
+                    ? 'day'
+                    : healthLastCommunicationDate[categoryType][status?.name] + ' days'}
+                </div>
+                <p className="mb-2">{`In order to maintain healthy communication, you must communicate every ${
                   healthLastCommunicationDate[categoryType][status?.name] === 1
                     ? 'day'
                     : healthLastCommunicationDate[categoryType][status?.name] + ' days'
-                } in order to maintain healthy communication.`}</p>
-                <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center mr-2">
-                    <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
-                    <span>Healthy Communication</span>
+                } with this client.`}</p>
+                <p className="mb-2">
+                  Healthy / unhealthy communication is represented in the contact card with the icons below:
+                </p>
+                <div className="flex flex-col mt-4">
+                  <div className="flex items-center mb-2">
+                    <div
+                      className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
+                      <Mail className="w-4 mr-1" />
+                      <span>Today</span>
+                    </div>
+                    <span className="ml-4">Healthy Communication</span>
                   </div>
                   <div className="flex items-center">
-                    <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
-                    <span>Unhealthy Communication</span>
+                    <div className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
+                      <Mail className="w-4 mr-1" />
+                      <span>4 days ago</span>
+                    </div>
+                    <span className="ml-4">Unhealthy Communication</span>
                   </div>
                 </div>
               </div>
@@ -221,8 +247,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
         </div>
 
         {/* <Checkbox label={status.name} /> */}
-        <a href="#" onClick={() => (sortAsc ? handleSortAsc() : handleSortDesc())}>
-          {sortAsc ? (
+        <a href="#" onClick={() => handleToggleSorting(status?.name)}>
+          {sorted.find((s) => s.name === status?.name)?.sorted === 'asc' ? (
             <svg
               className="sort-asc sort fill-gray5"
               xmlns="http://www.w3.org/2000/svg"
@@ -235,7 +261,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts }) 
             </svg>
           ) : (
             <svg
-              className="sort-desc sort fill-gray7"
+              className="sort-desc sort fill-gray5"
               xmlns="http://www.w3.org/2000/svg"
               version="1.1"
               id="mdi-sort-alphabetical-descending"

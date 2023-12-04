@@ -5,7 +5,7 @@ import SearchSelectInput from '@components/shared/search-select-input';
 import Overlay from '@components/shared/overlay';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { NYCneighborhoods } from '@global/variables';
+import { NYCneighborhoods, bathroomsOptions, roomsOptions } from '@global/variables';
 import bedroom from '/public/images/bedroom.svg';
 import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
+import Dropdown from '@components/shared/dropdown';
 
 const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
@@ -23,20 +24,8 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     neighborhood_ids: Yup.array()
       .required('Neighborhood IDs are required')
       .min(1, 'Please select at least one neighborhood'),
-    bedrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .transform((value, originalValue) =>
-        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
-      )
-      .notRequired(),
-    bathrooms: Yup.number()
-      .integer('Must be integer')
-      .min(0, 'Minimum value is 0')
-      .transform((value, originalValue) =>
-        typeof originalValue === 'string' && originalValue.trim() === '' ? undefined : isNaN(value) ? undefined : value,
-      )
-      .notRequired(),
+    bedrooms: Yup.string().notRequired(),
+    bathrooms: Yup.string().notRequired(),
     budget_min: Yup.number()
       .min(0, 'Budget Min should be greater than 0')
       .typeError('Budget Min should be an integer')
@@ -78,13 +67,16 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
       setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
       if (formik.isValid) {
+        let bathrooms = values.bathrooms ? parseFloat(values.bathrooms.replace('+', '')) : null;
+        let bedrooms = values.bedrooms ? parseFloat(values.bedrooms.replace('+', '')) : null;
+
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
           looking_action: values.looking_action ? values.looking_action : null,
-          bedrooms_min: values.bedrooms ? values.bedrooms : null,
-          bedrooms_max: values.bedrooms ? values.bedrooms : null,
-          bathrooms_min: values.bathrooms ? values.bathrooms : null,
-          bathrooms_max: values.bathrooms ? values.bathrooms : null,
+          bedrooms_min: bedrooms,
+          bedrooms_max: null,
+          bathrooms_min: bathrooms,
+          bathrooms_max: null,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
         });
@@ -97,7 +89,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      console.log(data);
+      // console.log(values);
       const res = await contactServices.addContactLookingProperty(data.contact_id, values);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
@@ -133,27 +125,31 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
             />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <Input
-              id="bedrooms"
-              type="number"
+            <Dropdown
+              white
+              top={'top-[40px]'}
+              menuHeight={'h-[150px]'}
               label="Bedrooms"
-              className="col-span-1"
-              iconAfter={<Image src={bedroom} height={20} />}
-              onChange={formik.handleChange}
               value={formik.values.bedrooms}
+              activeIcon={false}
+              options={roomsOptions}
               error={errors.bedrooms && touched.bedrooms}
               errorText={errors.bedrooms}
+              handleSelect={(val) => formik.setFieldValue('bedrooms', val.label)}
+              placeHolder={'Choose'}
             />
-            <Input
-              id="bathrooms"
-              type="number"
+            <Dropdown
+              white
+              top={'top-[40px]'}
+              menuHeight={'h-[150px]'}
               label="Bathrooms"
-              iconAfter={<Image src={bathroom} height={20} />}
-              className="col-span-1"
-              onChange={formik.handleChange}
               value={formik.values.bathrooms}
+              activeIcon={false}
+              options={bathroomsOptions}
               error={errors.bathrooms && touched.bathrooms}
               errorText={errors.bathrooms}
+              handleSelect={(val) => formik.setFieldValue('bathrooms', val.label)}
+              placeHolder={'Choose'}
             />
             <Input
               id="budget_min"

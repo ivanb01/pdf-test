@@ -1,11 +1,13 @@
 import Input from '@components/shared/input';
 import { ChevronDownIcon } from '@heroicons/react/solid';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Dropdown from '..';
 import { minPriceOptions, maxPriceOptions } from '@global/variables';
-import { useEffect } from 'react';
 
 const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, maxPrice, options }) => {
+  useEffect(() => {
+    setInitialLabel(label);
+  }, [label]);
   const [opened, setOpened] = useState(false);
   const [intialLabel, setInitialLabel] = useState(label);
   const [touched, setTouched] = useState(false);
@@ -13,7 +15,8 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
   const divRef = useRef(null);
 
   const handleDivClick = (e) => {
-    if (e.target === divRef.current) {
+    let element = e.target;
+    if (element === divRef.current || element.classList.contains('chevron-custom-icon') || element.tagName === 'path') {
       setOpened(!opened);
     }
     e.stopPropagation();
@@ -79,7 +82,10 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
         touched && 'text-gray8 font-normal'
       } cursor-pointer flex justify-between h-[38px] px-3 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
       {intialLabel}
-      <ChevronDownIcon className={`transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`} aria-hidden="true" />
+      <ChevronDownIcon
+        className={`chevron-custom-icon transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`}
+        aria-hidden="true"
+      />
       <div
         className={` ${
           !opened && 'hidden'

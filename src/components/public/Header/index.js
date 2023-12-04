@@ -9,6 +9,8 @@ import { Button } from '../Button';
 import logo from '/public/images/public/logo.svg';
 import close from '/public/images/public/close.svg';
 import open from '/public/images/public/menu.svg';
+import { Auth } from 'aws-amplify';
+import { useSelector } from 'react-redux';
 
 const links = [
   {
@@ -34,12 +36,12 @@ const links = [
 ];
 
 export const Header = () => {
+  const user = useSelector((state) => state.global.user);
   let lastScrollPosition = 0;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const currentRoute = router.pathname;
-
-  console.log(currentRoute);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -61,6 +63,23 @@ export const Header = () => {
 
     lastScrollPosition = verticalScrollPosition;
   };
+
+  const isLoggedIn = () => {
+    let user = localStorage.getItem('user');
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  };
+
+  useEffect(() => {
+    isLoggedIn();
+  }, [user]);
+
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -84,12 +103,18 @@ export const Header = () => {
           </div>
           <div className={styles['header__content-right']}>
             <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
-              <Button
-                type="secondary"
-                onClick={() => router.push('/authentication/sign-in')}
-                style={{ color: '#6B7280' }}>
-                Log In
-              </Button>
+              {!isAuthenticated ? (
+                <Button
+                  type="secondary"
+                  onClick={() => router.push('/authentication/sign-in')}
+                  style={{ color: '#6B7280' }}>
+                  Log In
+                </Button>
+              ) : (
+                <Button type="secondary" onClick={() => router.push('/contacts/clients')} style={{ color: '#6B7280' }}>
+                  Go to CRM {'->'}
+                </Button>
+              )}
               {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
                 Register for Free
               </Button> */}
@@ -103,27 +128,24 @@ export const Header = () => {
           {isMenuOpen && (
             <div className={styles['header__content-menu']}>
               <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
-                {links.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>
-                      <div
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className={currentRoute === item.href ? styles.active : styles.active}>
-                        {' '}
-                        {item.label}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div className={styles['header__content-menu-footer']}>
-                <Button type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
+                <Button className="w-full" type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
                   Log in
                 </Button>
-                {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
-                  Register for free
-                </Button> */}
-              </div>
+                {links.map((item) => (
+                  <>
+                    <li key={item.href}>
+                      <Link href={item.href}>
+                        <div
+                          onClick={() => setIsMenuOpen(!isMenuOpen)}
+                          className={currentRoute === item.href ? styles.active : styles.active}>
+                          {' '}
+                          {item.label}
+                        </div>
+                      </Link>
+                    </li>
+                  </>
+                ))}
+              </ul>
             </div>
           )}
         </div>

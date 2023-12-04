@@ -150,13 +150,32 @@ export const formatDateLThour = (date) => {
 export const formatDateCalendar = (date) => {
   const calendarDate = moment(date).calendar();
   const calendarDateArray = calendarDate.split(' ');
-  return calendarDateArray[0];
+  let indexOfAt = calendarDateArray.indexOf('at');
+
+  if (indexOfAt !== -1) {
+    calendarDateArray[indexOfAt] = '-';
+  }
+
+  let resultString = calendarDateArray.join(' ');
+  return resultString;
 };
 
 export const formatDateAgo = (date, param) => {
   return moment(date).startOf(param).fromNow();
 };
 
+export function getFormattedDateFromTimestamp(timestamp) {
+  const date = moment(timestamp);
+
+  return date.format('MM/DD/YYYY');
+}
+
+export function isAfterToday(timestamp) {
+  const currentDate = moment();
+  const dateToCompare = moment(timestamp);
+
+  return dateToCompare.isAfter(currentDate);
+}
 export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };

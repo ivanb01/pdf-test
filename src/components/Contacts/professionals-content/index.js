@@ -28,6 +28,8 @@ import { multiselectOptionsProfessionals } from 'global/variables';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import SwitchComponent from '@components/Switch';
+import { useRouter } from 'next/router';
 
 const tabs = [
   {
@@ -65,6 +67,8 @@ const buttons = [
 ];
 
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
@@ -206,18 +210,27 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && (
-          <FloatingAlert
-            className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-            type="smart-sync"
-          />
-        )}
+        <FloatingAlert
+          inProp={unapprovedContacts > 0}
+          onClick={() => router.push('/ai-summary')}
+          buttonText={'Review Now'}
+          className="mx-[21px] mt-[14px]"
+          message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+          type="smart-sync"
+        />
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
-            <Text h3 className="text-gray7 text-xl">
-              {professionalsStatuses[openedSubtab]?.statusMainTitle}
-            </Text>
+            <div className=" flex items-center">
+              <Text h3 className="text-gray7 text-xl mr-4">
+                {professionalsStatuses[openedSubtab]?.statusMainTitle}
+              </Text>
+              {filteredProfessionals.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+                  !contact.approved_ai &&
+                  contact.category_1 == 'Professional',
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+            </div>
             <div className="flex items-center justify-self-end">
               <Search
                 placeholder={`Search ` + professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()}

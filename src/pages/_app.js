@@ -47,11 +47,10 @@ const MyApp = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
-    console.log('ran');
     configureAmplifyAuth();
     Auth.currentSession()
       .then((item) => {
-        localStorage.setItem('currentSession', JSON.stringify(item));
+        localStorage.setItem('currentSession ', JSON.stringify(item));
         console.log('logged in');
         setIsUserAuthenticated(true);
         setHelpEffect(true);

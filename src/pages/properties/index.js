@@ -11,7 +11,7 @@ import Loader from '@components/shared/loader';
 import Button from '@components/shared/button';
 import { valueOptions } from '@global/functions';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
@@ -179,7 +179,10 @@ const index = () => {
       params['sort'] = 'price';
       params['order'] = 'desc';
     }
-    if (searchKey) params['address'] = searchKey;
+    if (searchKey) {
+      params['address'] = searchKey;
+      params['page'] = 1;
+    }
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (neighborhoods.length)
       params['neighborhood_id'] = neighborhoods.map((neighborhood) => neighborhood.value).join(',');
@@ -219,7 +222,16 @@ const index = () => {
     setBathrooms();
     setSearchKey('');
   };
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const setWindowDimensions = () => {
+    setWindowWidth(window.innerWidth);
+  };
+  useLayoutEffect(() => {
+    window.addEventListener('resize', setWindowDimensions);
+    return () => {
+      window.removeEventListener('resize', setWindowDimensions);
+    };
+  }, []);
   useEffect(() => {
     fetchProperties(filterValue, page);
   }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
@@ -318,7 +330,7 @@ const index = () => {
           />
           <MinMaxPrice
             // options={bathroomOptions}
-            label="Min/Max Price"
+            label={windowWidth >= 1310 ? 'Min/Max Price' : 'Price'}
             className="mr-4 w-[220px]"
             minPrice={minPrice}
             maxPrice={maxPrice}

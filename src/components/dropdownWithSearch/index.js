@@ -2,6 +2,9 @@ import Select from 'react-select';
 
 const DropdownWithSearch = ({
   options,
+  top,
+  maxMenuHeight,
+  placeholder,
   onChange,
   label,
   value,
@@ -22,6 +25,7 @@ const DropdownWithSearch = ({
       )}
       <Select
         {...props}
+        placeholder={placeholder}
         isMulti={isMulti}
         value={value}
         onMenuOpen={onMenuOpen}
@@ -72,6 +76,7 @@ const DropdownWithSearch = ({
           }),
           menu: (base) => ({
             ...base,
+            top: top && top,
             fontSize: '14px',
             marginBottom: '100px',
             borderRadius: 5,

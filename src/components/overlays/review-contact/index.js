@@ -563,35 +563,32 @@ const ReviewContact = ({
                 id="summary"
                 label="Summary"
                 name={'summary'}
+                link={client.email_link}
                 handleChange={formik.handleChange}
                 value={formik.values.summary}
               />
               <div className="text-xs mb-6 text-gray6">
-                <div className="mt-2">
-                  <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
-                </div>
-                {client && client.summary && (
-                  <div className="flex items-center">
+                {client.created_at && (
+                  <div className="mt-2">
+                    <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+                  </div>
+                )}
+                <div className="flex items-center">
+                  {client.email_subject && (
                     <div className="mt-0.5">
                       <span className="font-medium">Subject: </span>
                       {client.email_subject}
                       <span />
                     </div>
-                    <a
-                      target="_blank"
-                      href={client.email_link}
-                      className="ml-1 cursor-pointer flex items-center text-xs text-gray-900 underline"
-                      rel="noreferrer">
-                      <img src={newTab.src} alt="" className="ml-1" />
-                    </a>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
               <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                 <div>
                   <Dropdown
-                    openClassName={'mb-2 h-[245px]'}
-                    className="col-span-2 mb-5"
+                    openClassName={'mb-2'}
+                    className="col-span-2"
+                    top={'top-[-260px]'}
                     white
                     label="Lead Source"
                     activeIcon={false}
@@ -601,13 +598,15 @@ const ReviewContact = ({
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
                   />
                 </div>
-                <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+                <div>
                   <DropdownWithSearch
                     isMulti
                     options={multiselectOptionsClients}
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
+                    top={'-130px'}
+                    maxMenuHeight={200}
                     value={findTagsOption(formik.values.tags)}
                     label="Priority"
                     onChange={(choice) => {
@@ -616,7 +615,6 @@ const ReviewContact = ({
                         choice.map((el) => el.label),
                       );
                     }}
-                    maxMenuHeight={80}
                   />
                 </div>
               </div>
@@ -624,7 +622,7 @@ const ReviewContact = ({
           </SimpleBar>
         </div>
         <div className="w-1/2 relative">
-          <SimpleBar autoHide={true} style={{ maxHeight: '500px', height: '100%' }}>
+          <SimpleBar autoHide={true} style={{ maxHeight: '510px', height: '100%' }}>
             <div className="p-6 pt-0">
               <Radio
                 options={contactTypes}
@@ -633,7 +631,11 @@ const ReviewContact = ({
                 selectedOption={formik.values.selectedContactCategory}
                 setSelectedOption={(e) => {
                   formik.setFieldValue('selectedContactCategory', e);
-                  formik.setFieldValue('selectedContactType', '');
+                  if (e == 1) {
+                    formik.setFieldValue('selectedContactType', 8);
+                  } else {
+                    formik.setFieldValue('selectedContactType', '');
+                  }
                   formik.setFieldValue('selectedContactSubtype', '');
                   formik.setFieldValue('selectedStatus', '');
                 }}
@@ -683,6 +685,7 @@ const ReviewContact = ({
                         onClick={() => formik.setFieldValue('selectedContactSubtype', type.id)}
                       /> */}
                   <DropdownWithSearch
+                    placeholder="Start typing to search or select one of the options"
                     value={vendorSubtypesFormatted?.find(
                       (vendor) => vendor.value == formik.values.selectedContactSubtype,
                     )}

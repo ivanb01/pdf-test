@@ -10,6 +10,9 @@ import Image from 'next/image';
 import contactUs from '/public/images/public/contact-us-bg.svg';
 import iconPhone from '/public/images/public/icon-phone.png';
 import iconEmail from '/public/images/public/icon-mail.png';
+import { sendMarketingEmail } from '@api/marketing';
+import toast from 'react-hot-toast';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const validateSchema = Yup.object().shape({
   firstName: Yup.string().required('This field is required'),
@@ -21,7 +24,6 @@ const validateSchema = Yup.object().shape({
 });
 
 export const SectionContact = () => {
-
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -38,8 +40,55 @@ export const SectionContact = () => {
     },
   });
 
-  const sendMessage = () => {
-    window.location.href = `mailto:${formik.values.firstName} ${formik.values.lastName}<${formik.values.email}>?subject=${formik.values.subject}&body=${formik.values.body}`
+  const sendMessage = async (formik) => {
+    const sendEmail = {
+      to: ['jasuncion@opgny.com'],
+      subject: formik?.values.subject,
+      body: `<html>
+          <h4>First name : ${formik?.values.firstName}</h4>
+          <h4>Last name : ${formik?.values.lastName}</h4>
+          <h4>Phone number :${formik?.values.phone}</h4>
+          <h4>Email: ${formik.values.email}</h4>
+          <p>${formik?.values.body}</p>
+        </html>`,
+    };
+    try {
+      return await sendMarketingEmail(sendEmail);
+    } catch (e) {
+      console.log(e, 'error');
+    }
+  };
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    sendMessage(formik)
+      .then(() => {
+        toast.custom((t) => {
+          return (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } p-4 bg-white items-center  gap-3 border border-[#D0E3FD] shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 text-sm text-gray7`}>
+              <div>
+                <p>Thanks for reaching out! We'll get back to you soon.</p>
+              </div>
+
+              <ClearIcon
+                className={'text-gray4 h-5 w-5 cursor-pointer'}
+                onClick={() => {
+                  toast.dismiss(t.id);
+                }}
+              />
+            </div>
+          );
+        });
+      })
+      .then(() => {
+        formik.resetForm();
+      })
+      .catch((e) => {
+        console.log(e, 'error');
+        toast.error('Something went wrong');
+      });
   };
 
   return (
@@ -50,7 +99,7 @@ export const SectionContact = () => {
             <div className={styles['section__left-content']}>
               <h5>Contact information</h5>
               <p className={styles['section__left-content-text']}>5 west 37th street 12th Floor, NY NY 10018</p>
-              <InfoItem text="+1 (123) 123-1234" icon={iconPhone}/>
+              <InfoItem text="+1 (123) 123-1234" icon={iconPhone} />
               <InfoItem text="support@opgny.com" icon={iconEmail} />
             </div>
             <div className={styles['section__bg']}>
@@ -62,56 +111,67 @@ export const SectionContact = () => {
             <div className={styles['section__form']}>
               <form>
                 <div className={styles['section__form-row']}>
-                  <Input placeholder="First name"
-                         label="First name"
-                         id="firstName"
-                         name="firstName"
-                         type="text"
-                         onChange={formik.handleChange}
-                         value={formik.values.firstName}/>
-                  <Input placeholder="Last name"
-                         label="Last name"
-                         id="lastName"
-                         name="lastName"
-                         type="text"
-                         onChange={formik.handleChange}
-                         value={formik.values.lastName}/>
+                  <Input
+                    placeholder="First name"
+                    label="First name"
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.firstName}
+                  />
+                  <Input
+                    placeholder="Last name"
+                    label="Last name"
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.lastName}
+                  />
                 </div>
                 <div className={styles['section__form-row']}>
-                  <Input placeholder="Email"
-                         label="Email"
-                         id="email"
-                         name="email"
-                         type="email"
-                         onChange={formik.handleChange}
-                         value={formik.values.email}/>
-                  <Input placeholder="Phone"
-                         label="Phone"
-                         id="phone"
-                         name="phone"
-                         type="number"
-                         onChange={formik.handleChange}
-                         value={formik.values.phone}/>
+                  <Input
+                    placeholder="Email"
+                    label="Email"
+                    id="email"
+                    name="email"
+                    type="email"
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                  />
+                  <Input
+                    placeholder="Phone"
+                    label="Phone"
+                    id="phone"
+                    name="phone"
+                    onChange={formik.handleChange}
+                    value={formik.values.phone}
+                  />
                 </div>
                 <div className={styles['section__form-row']}>
-                  <Input placeholder="Subject"
-                         label="Subject"
-                         id="subject"
-                         name="subject"
-                         type="text"
-                         onChange={formik.handleChange}
-                         value={formik.values.subject}/>
+                  <Input
+                    placeholder="Subject"
+                    label="Subject"
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values.subject}
+                  />
                 </div>
                 <div className={styles['section__form-row']}>
-                  <Textarea placeholder="Message"
-                            label="Message"
-                            id="body"
-                            name="body"
-                            onChange={formik.handleChange}
-                            value={formik.values.body}/>
+                  <Textarea
+                    placeholder="Message"
+                    label="Message"
+                    id="body"
+                    name="body"
+                    onChange={formik.handleChange}
+                    value={formik.values.body}
+                  />
                 </div>
                 <div className={styles['section__actions']}>
-                  <Button onClick={sendMessage} type="primary" disabled={!formik.isValid}>
+                  <Button type="primary" disabled={!formik.isValid}>
                     Submit
                   </Button>
                 </div>

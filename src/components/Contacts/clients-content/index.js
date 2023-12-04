@@ -14,6 +14,7 @@ import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
 import GlobalAlert from 'components/shared/alert/global-alert';
+import { useRouter } from 'next/router';
 import {
   clientStatuses,
   clientStatusMainTitlesUpdated,
@@ -22,13 +23,15 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { setClients } from 'store/contacts/slice';
+import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
 import { ArrowRight } from '@mui/icons-material';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
+import Switch from '@components/Switch';
+import SwitchComponent from '@components/Switch';
 
 const buttons = [
   {
@@ -49,6 +52,7 @@ const Clients = ({
   handleViewChange,
   currentButton,
 }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const scrollRef = useRef();
   const clientsFilters = useSelector((state) => state.global.clientsFilters);
@@ -232,6 +236,24 @@ const Clients = ({
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
+  const handleFilteredContacts = (status, sortOrder) => {
+    let filteredClients = contacts.filter((client) => client.status_2 === status);
+
+    filteredClients.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (sortOrder === 'desc') {
+        return b.first_name.localeCompare(a.first_name);
+      }
+    });
+
+    dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
+    setFilteredContacts((prevContacts) => {
+      const updatedContacts = [...new Set([...filteredClients, ...prevContacts])];
+      return updatedContacts;
+    });
+    return filteredClients;
+  };
 
   useEffect(() => {
     const handleScroll = (event) => {
@@ -249,18 +271,27 @@ const Clients = ({
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-        {unapprovedContacts > 0 && (
-          <FloatingAlert
-            className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-          />
-        )}
+        <FloatingAlert
+          inProp={unapprovedContacts > 0}
+          onClick={() => router.push('/ai-summary')}
+          buttonText={'Review Now'}
+          className="mx-[21px] mt-[14px]"
+          message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+        />
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
-            <Text h3 className="text-gray7 text-xl">
-              {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
-              {/* {openedTab} - {openedSubtab} */}
-            </Text>
+            <div className="flex items-center">
+              <Text h3 className="text-gray7 text-xl mr-4">
+                {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
+                {/* {openedTab} - {openedSubtab} */}
+              </Text>
+              {contacts.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+                  !contact.approved_ai &&
+                  contact.category_1 == 'Client',
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+            </div>
             <div className="flex items-center justify-self-end">
               <Search
                 placeholder={
@@ -343,6 +374,7 @@ const Clients = ({
               {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
                 <>
                   <Column
+                    handleFilteredContacts={handleFilteredContacts}
                     contacts={filteredContacts}
                     key={index}
                     status={status}
@@ -359,6 +391,7 @@ const Clients = ({
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
+                  handleFilteredContacts={handleFilteredContacts}
                   contacts={filteredContacts}
                   tableFor="contactsList"
                   categoryType="clients"

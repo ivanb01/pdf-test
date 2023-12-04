@@ -13,7 +13,7 @@ import Table from 'components/shared/table';
 import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
-import aiIcon from '/public/images/ai-icon.svg';
+import aiIcon from '/public/animations/gmailsync.gif';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
 import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
@@ -117,13 +117,14 @@ const index = () => {
       <>
         <TopBar text="Account Management" />
         <div className="p-6">
-          <div className="font-medium mb-6">Smart Sync Contacts and Google Contacts from Gmail</div>
+          <div className="font-medium mb-6">Gmail Smart Sync Contacts and import Google Contacts from Gmail</div>
           <div className=" w-fit rounded-[4px] border border-gray-200 p-6 flex">
             <div className="text-center max-w-[265px] mr-6">
-              <img className="m-auto" src={aiIcon.src} alt="" />
+              <img className="m-auto h-[121px]" src={aiIcon.src} alt="" />
               <div className="mt-6 text-xs text-gray-500">
-                With <strong>Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze each
-                contact's information, swiftly identifying their type, status, and most importantly, their interests.
+                With <strong>Gmail Smart Sync Contacts:</strong> Our intelligent AI algorithms intelligently analyze
+                each contact's information, swiftly identifying their type, status, and most importantly, their
+                interests.
               </div>
             </div>
             <div className="text-center max-w-[265px] mr-6">

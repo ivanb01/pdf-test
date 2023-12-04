@@ -6,6 +6,9 @@ import {
   formatDateLL,
   getInitials,
   getDateFormat,
+  formatDateStringMDY,
+  getFormattedDateFromTimestamp,
+  isAfterToday,
 } from 'global/functions';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import eyeIcon from '/public/images/eye.svg';
@@ -56,17 +59,25 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
-import { Delete } from '@mui/icons-material';
+import { Delete, Email } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount } from '@store/global/slice';
+import { setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createPortal } from 'react-dom';
 import GoogleContact from '../../../../public/images/GoogleContact.png';
+import noUsersFound from '../../../../public/images/campaign/noUsersFound.svg';
+import EmailIcon from '@mui/icons-material/Email';
+import ChatIcon from '@mui/icons-material/Chat';
+import Button from '@components/shared/button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Toggle from '@components/shared/Toggle';
+import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
@@ -75,9 +86,12 @@ const categoryIds = {
 };
 
 const Table = ({
+  handleFilteredContacts,
   undoAllCategorizations,
+  setCurrentButton,
   undoCategorization,
   data,
+  status_2,
   handleSelectAll,
   handleSelectContact,
   showCategorize,
@@ -97,6 +111,7 @@ const Table = ({
   toggleAll,
   selectedPeople,
   setSelectedPeople,
+  status,
   contacts,
 }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
@@ -127,7 +142,7 @@ const Table = ({
   ];
   const router = useRouter();
   const getSource = (source, approvedAI = false) => {
-    if (source === 'Smart Sync A.I.' || source === 'GmailAI') {
+    if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
       return {
         name: source,
         icon: <AIChip reviewed={approvedAI} />,
@@ -755,7 +770,17 @@ const Table = ({
   const contactsListTable = () => {
     const openedTab = useSelector((state) => state.global.openedTab);
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
+    const sorted = useSelector((state) => state.global.sorted);
+
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const handleToggleSorting = (name) => {
+      const currentItem = sorted.find((item) => item.name === name);
+      if (currentItem) {
+        const newOrder = currentItem.sorted === 'asc' ? 'desc' : 'asc';
+        handleFilteredContacts(name, newOrder);
+        dispatch(setSorted({ name, order: newOrder }));
+      }
+    };
 
     const dispatch = useDispatch();
 
@@ -768,7 +793,18 @@ const Table = ({
     const [changeStatusModal, setChangeStatusModal] = useState(false);
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
     const handleChangeStatus = async (status, contact) => {
       try {
         if (contact?.is_in_campaign === 'assigned' && contact?.status_id !== status) {
@@ -946,33 +982,76 @@ const Table = ({
                         side={'bottom'}
                         align={'start'}
                         triggerElement={
-                          <InfoSharpIcon
-                            className="h-4 w-4 text-gray3 hover:text-gray4"
-                            aria-hidden="true"
-                            onClick={(e) => e.stopPropagation()}
-                          />
+                          <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
                         }>
                         <div
                           // style={{ width: '300px' }}
                           className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                          <p className="mb-2">{`You must interact with these clients every ${
+                          <div className="text-sm font-semibold mb-2">
+                            Every{' '}
+                            {healthLastCommunicationDate[categoryType][category?.name] === 1
+                              ? 'day'
+                              : healthLastCommunicationDate[categoryType][category?.name] + ' days'}
+                          </div>
+                          <p className="mb-2">{`In order to maintain healthy communication, you must communicate every ${
                             healthLastCommunicationDate[categoryType][category?.name] === 1
                               ? 'day'
-                              : `${healthLastCommunicationDate[categoryType][category?.name]} days`
-                          } in order to maintain healthy communication.`}</p>
-                          <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center mr-2">
-                              <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
-                              <span>Healthy Communication</span>
+                              : healthLastCommunicationDate[categoryType][category?.name] + ' days'
+                          } with this client.`}</p>
+                          <p className="mb-2">
+                            Healthy / unhealthy communication is represented in the contact card with the icons below:
+                          </p>
+                          <div className="flex flex-col mt-4">
+                            <div className="flex items-center mb-2">
+                              <div
+                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
+                                <Mail className="w-4 mr-1" />
+                                <span>Todays</span>
+                              </div>
+                              <span className="ml-4">Healthy Communication</span>
                             </div>
                             <div className="flex items-center">
-                              <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
-                              <span>Unhealthy Communication</span>
+                              <div
+                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
+                                <Mail className="w-4 mr-1" />
+                                <span>4 days ago</span>
+                              </div>
+                              <span className="ml-4">Unhealthy Communication</span>
                             </div>
                           </div>
                         </div>
                       </TooltipComponent>
+                      <a
+                        href="#"
+                        className={'ml-2'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleSorting(category?.name);
+                        }}>
+                        {sorted.find((s) => s.name === category?.name)?.sorted === 'asc' ? (
+                          <svg
+                            className="sort-asc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-ascending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="sort-desc sort fill-gray5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            version="1.1"
+                            id="mdi-sort-alphabetical-descending"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24">
+                            <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
+                          </svg>
+                        )}
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -981,7 +1060,11 @@ const Table = ({
                   filterContacts(category, contactTypes).map((contact) => (
                     <tr
                       key={contact.id}
-                      className={`hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
+                      className={`
+                      ${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
+                      ${
+                        isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
+                      } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
                         isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
                           ? 'hidden'
                           : ''
@@ -994,6 +1077,8 @@ const Table = ({
                       }>
                       <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                         <ContactInfo
+                          maxWidth={'300px'}
+                          emailsLength={100}
                           data={{
                             name: contact.first_name + ' ' + contact.last_name,
                             email: contact.email,
@@ -1188,20 +1273,36 @@ const Table = ({
                           <div
                             // style={{ width: '300px' }}
                             className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
-                            <p className="mb-2">{`You must interact with these clients every ${
+                            <div className="text-sm font-semibold mb-2">
+                              Every{' '}
+                              {healthLastCommunicationDate[categoryType][category?.name] === 1
+                                ? 'day'
+                                : healthLastCommunicationDate[categoryType][category?.name] + ' days'}
+                            </div>
+                            <p className="mb-2">{`In order to maintain healthy communication, you must communicate every ${
                               healthLastCommunicationDate[categoryType][category?.name] === 1
                                 ? 'day'
-                                : `${healthLastCommunicationDate[categoryType][category?.name]} days`
-                            } in order to maintain healthy communication.`}</p>
-                            <p className="mb-2">Chip statuses of communication in cards represent:</p>
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center mr-2">
-                                <span className="h-[13px] w-[13px] rounded bg-green5 mr-1" />
-                                <span>Healthy Communication</span>
+                                : healthLastCommunicationDate[categoryType][category?.name] + ' days'
+                            } with this client.`}</p>
+                            <p className="mb-2">
+                              Healthy / unhealthy communication is represented in the contact card with the icons below:
+                            </p>
+                            <div className="flex flex-col mt-4">
+                              <div className="flex items-center mb-2">
+                                <div
+                                  className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
+                                  <Mail className="w-4 mr-1" />
+                                  <span>Today</span>
+                                </div>
+                                <span className="ml-4">Healthy Communication</span>
                               </div>
                               <div className="flex items-center">
-                                <span className="h-[13px] w-[13px] rounded bg-red5 mr-1" />
-                                <span>Unhealthy Communication</span>
+                                <div
+                                  className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
+                                  <Mail className="w-4 mr-1" />
+                                  <span>4 days ago</span>
+                                </div>
+                                <span className="ml-4">Unhealthy Communication</span>
                               </div>
                             </div>
                           </div>
@@ -1271,6 +1372,19 @@ const Table = ({
 
     let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
 
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
+
     return (
       <>
         <thead className="bg-gray-50">
@@ -1326,7 +1440,10 @@ const Table = ({
                     .map((contact) => (
                       <tr
                         key={contact.id}
-                        className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
+                        className={`${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
+                        ${
+                          isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
+                        } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
                         onClick={() =>
                           router.push({
                             pathname: '/contacts/details',
@@ -1529,6 +1646,7 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
+          {console.log(data, 'data')}
           {!data.length ? (
             <tr className="h-[233px] text-center align-middle">
               <td className="text-center align-middle text-gray-400 text-sm italic">
@@ -1545,13 +1663,25 @@ const Table = ({
                         <div className="font-medium text-gray7">{dataItem.details}</div>
                       </div>
                     ) : (
-                      <ContactInfo
-                        data={{
-                          name: dataItem.first_name + ' ' + dataItem.last_name,
-                          email: dataItem.email,
-                          image: dataItem.profile_image_path,
-                        }}
-                      />
+                      <div className="flex items-center relative">
+                        <div className="h-10 w-10 flex-shrink-0 bg-gray-500 rounded-full">
+                          {dataItem.image && dataItem.image !== null ? (
+                            <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-400" src={dataItem.image} />
+                          ) : (
+                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                              <span className="text-sm font-medium leading-none sss text-white">
+                                {getInitials(dataItem.first_name + ' ' + dataItem.last_name).toUpperCase()}
+                              </span>
+                            </span>
+                          )}
+                        </div>
+                        <div className="ml-3 flex flex-col">
+                          <div className={`font-medium text-gray7 flex`}>
+                            <p>{dataItem?.first_name}</p>
+                          </div>
+                          <p className={'text-gray-500 font-medium'}>{dataItem?.email}</p>
+                        </div>
+                      </div>
                     )}
                     {tableFor == 'import-google-contacts-failed' && (
                       <div className="flex items-center justify-center">
@@ -1578,6 +1708,21 @@ const Table = ({
       let percentage = (closedClients / totalClients) * 100;
       return percentage.toFixed(2);
     }
+
+    function reorderAgents(agents, email) {
+      const index = agents.findIndex((agent) => agent.agent_id === email);
+
+      if (index > -1) {
+        const [agent] = agents.splice(index, 1);
+        agents.unshift(agent);
+      }
+
+      return agents;
+    }
+
+    const user = useSelector((state) => state.global.user);
+    const agentsArray = data;
+    const reorderedArray = reorderAgents(agentsArray, user);
 
     return (
       <>
@@ -1615,10 +1760,10 @@ const Table = ({
           </tr>
         </thead>
         <tbody className=" bg-white">
-          {data.map((dataItem, index) => (
+          {reorderedArray.map((dataItem, index) => (
             <tr
               key={index}
-              className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+              className={` ${index == 0 ? 'bg-lightBlue1' : 'bg-white'} contact-row group border-b border-gray-200`}
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
@@ -1777,8 +1922,10 @@ const Table = ({
                 />
               </td>
 
-              <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <Chip typeStyle>{dataItem?.category_2}</Chip>
+              <td className="max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                <Chip className="break-words" typeStyle>
+                  {dataItem?.category_2}
+                </Chip>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
@@ -1786,7 +1933,7 @@ const Table = ({
                 </Chip>
               </td>
               <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-                <div className=" flex items-center break-all flex-wrap">
+                <div className=" flex items-center break-all">
                   {dataItem.ai_email_summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
@@ -1980,6 +2127,18 @@ const Table = ({
   };
 
   const needToContactTable = () => {
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
     return (
       <>
         <thead>
@@ -2014,7 +2173,10 @@ const Table = ({
                   query: { id: person?.id },
                 })
               }
-              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
+              className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
+              ${
+                isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
+              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group`}
               style={{ height: '84px' }}>
               <td className="pl-6 py-3" style={{ width: '300px' }}>
                 <div className={'flex gap-4'}>
@@ -2092,6 +2254,562 @@ const Table = ({
       </>
     );
   };
+  const allCampaignContacts = () => {
+    const { id, category } = router.query;
+
+    return data && data?.length > 0 ? (
+      <>
+        <thead className={'sticky top-0 z-10'}>
+          <tr className="bg-gray-50 text-gray4 sticky top-0">
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider uppercase">
+              {categoryType}-{status}
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
+              contact summary
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
+              last communication
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              sent emails & SMS
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              campaign
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN history
+            </th>
+          </tr>
+        </thead>
+        <tbody className={'overflow-y-scroll'}>
+          {data.map((person) => (
+            <tr
+              key={person.id}
+              onClick={() => {
+                localStorage.setItem('id', JSON.stringify(id));
+                localStorage.setItem('category', JSON.stringify(category));
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.contact_id },
+                });
+              }}
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              <td className="pl-6 py-4 pr-4">
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path}
+                        alt={person.contact_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.contact_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4">
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text, person.approved_ai).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.contact_summary !== null && person.contact_summary.length > 0 && (
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <div
+                        className={
+                          'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                        }>
+                        {person.contact_summary}
+                      </div>
+                    }>
+                    <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
+                    </div>
+                  </TooltipComponent>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                {person.last_communication !== null ? (
+                  <DateChip
+                    lastCommunication={person.last_communication ?? ''}
+                    contactStatus={status_2}
+                    contactCategory={'clients'}
+                  />
+                ) : (
+                  <div>-</div>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-4'}>
+                  <div className={'flex gap-[5px] items-center justify-center'}>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>
+                      {person?.event_sent?.email ?? '-'}
+                    </span>
+                    <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+                  </div>
+                  <div className={'flex gap-[5px] items-center justify-center'}>
+                    <span className={'text-sm leading-5 font-normal text-gray7'}>{person?.event_sent?.sms ?? '-'}</span>
+                    <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />
+                  </div>
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <Toggle
+                    active={
+                      person?.contact_campaign_status !== 'never_assigned' &&
+                      person?.contact_campaign_status !== 'unassigned'
+                    }
+                    disabled={person?.contact_campaign_status === 'unassigned'}
+                    activePerson={person}
+                  />
+                  <div>
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Deactivated'
+                        : 'Inactive'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex flex-col gap-1'}>
+                  <div className={'flex gap-1 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-xl ${
+                        person.contact_campaign_status === 'assigned' ? 'bg-green-500' : 'bg-red-500'
+                      }`}></div>
+                    <p className={'text-sm leading-5 font-medium text-gray7'}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Campaign is Running'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Campaign Deactivated'
+                        : 'Never In Campaign'}
+                    </p>
+                  </div>
+                  {person.contact_campaign_status !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
+                        : person.contact_campaign_status === 'unassigned'
+                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                        : ''}
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>
+              There is no contact matching to this campaign
+            </h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              Here, you'll find a list of all contacts that have been matched to this campaign.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const notInCampaignContacts = () => {
+    const { id, category } = router.query;
+
+    return data && data?.length > 0 ? (
+      <>
+        <thead>
+          <tr className="bg-gray-50 text-gray4">
+            <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider uppercase">
+              {categoryType}-{status}
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
+              contact summary
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
+              last communication
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              CAMPAIGN history
+            </th>
+            <th
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
+              campaign
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((person) => (
+            <tr
+              key={person.id}
+              onClick={() => {
+                localStorage.setItem('id', JSON.stringify(id));
+                localStorage.setItem('category', JSON.stringify(category));
+                router.push({
+                  pathname: '/contacts/details',
+                  query: { id: person?.contact_id },
+                });
+              }}
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              <td className="pl-6 py-4 pr-4">
+                <div className={'flex gap-4'}>
+                  <div>
+                    {person.profile_image_path ? (
+                      <img
+                        className="inline-block h-10 w-10 rounded-full"
+                        src={person.profile_image_path ?? ''}
+                        alt={person.contact_name}
+                      />
+                    ) : (
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
+                          {getInitials(person.contact_name).toUpperCase()}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
+                  </div>
+                </div>
+              </td>
+              <td className="px-6 py-4">
+                <div className={'flex gap-1.5 items-center justify-start'}>
+                  {getSource(person.import_source_text, person.approved_ai).icon}
+                  <p className={'text-xs leading-4 font-medium text-gray8'}>
+                    {getSource(person.import_source_text, person.approved_ai).name}
+                  </p>
+                </div>
+                {person.contact_summary !== null && person.contact_summary.length > 0 && (
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <div
+                        className={
+                          'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
+                        }>
+                        {person.contact_summary}
+                      </div>
+                    }>
+                    <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
+                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
+                    </div>
+                  </TooltipComponent>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                {person.last_communication_date ? (
+                  <DateChip
+                    lastCommunication={person.last_communication_date}
+                    contactStatus={person.status_2}
+                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  />
+                ) : (
+                  <div>-</div>
+                )}
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex flex-col gap-1'}>
+                  <div className={'flex gap-1 items-center'}>
+                    <div className={`h-2 w-2 rounded-xl bg-red-500`} />
+                    <p className={'text-sm leading-5 font-medium text-gray7'}>
+                      {person.contact_campaign_status === 'never_assigned'
+                        ? 'Never in Campaign'
+                        : 'Campaign Deactivated'}
+                    </p>
+                  </div>
+                  {person.contact_unenrolment_date !== null && (
+                    <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
+                      from {getFormattedDateFromTimestamp(person.contact_unenrolment_date)}
+                    </div>
+                  )}
+                </div>
+              </td>
+              <td className={'px-6 py-4'}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <Toggle
+                    active={false}
+                    disabled={person.contact_campaign_status === 'unassigned'}
+                    activePerson={person}
+                  />
+                  <div>
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Deactivated'
+                        : 'Inactive'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[8%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact “Not in Campaign”</h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              Contacts that have been matched in this campaign but are still “inactive” <br /> in the campaign, will be
+              displayed here.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const inCampaignContacts = () => {
+    const eventsTable = () => {
+      return (
+        <div>
+          <thead className={' flex w-full'}>
+            {data[0].events?.map((e, index) => (
+              <th
+                key={index}
+                scope="col"
+                className={`${
+                  index === data[0].events.length - 1 ? ' border-gray-2' : ''
+                } flex-grow flex-1 pl-6 pr-20 py-3 bg-gray-50  border-b text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+                <div className={'min-w-[200px]'}> {e?.event_name}</div>
+              </th>
+            ))}
+          </thead>
+          <tbody className={'flex flex-col w-full max-h-[390px]'}>
+            {data.map((events, rowIndex) => (
+              <tr key={rowIndex} className={'flex   w-full'}>
+                {events.events.map((e, cellIndex) => (
+                  <td
+                    key={cellIndex}
+                    className={` flex-grow flex-1 px-6 py-4 border-b border-gray2 pr-20 ${
+                      cellIndex === events.events.length - 1 ? ' border-gray2' : ''
+                    }`}>
+                    <div className={'flex flex-col gap-1 min-w-[200px] '}>
+                      <div className={'flex gap-1.5 items-center'}>
+                        <div
+                          className={`h-2 w-2 rounded-xl ${
+                            e?.event_status === 'scheduled'
+                              ? 'bg-yellow2'
+                              : e?.event_status === 'sent'
+                              ? 'bg-green5'
+                              : 'bg-red-500'
+                          }`}></div>
+                        <p
+                          className={`text-sm leading-5 font-medium
+                           ${
+                             e?.event_status === 'scheduled'
+                               ? 'text-yellow3'
+                               : e?.event_status === 'sent'
+                               ? 'text-yellow3'
+                               : 'text-red5'
+                           }`}>
+                          {e?.event_status === 'scheduled'
+                            ? 'To be sent'
+                            : e?.event_stautus === 'sent'
+                            ? 'Sent'
+                            : 'Canceled'}
+                        </p>
+                      </div>
+                      {e.date !== null && (
+                        <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
+                          {getFormattedDateFromTimestamp(e.event_updated_at)}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </div>
+      );
+    };
+    const other = () => {
+      const { id, category } = router.query;
+      return (
+        <>
+          <thead className={'w-[350px]'}>
+            <tr className="bg-gray-50 text-gray4">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left border-b text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+                {categoryType}-{status}
+              </th>
+            </tr>
+          </thead>
+          <tbody className={'w-[350px]'}>
+            {data.map((person) => (
+              <tr
+                key={person.id}
+                onClick={() => {
+                  localStorage.setItem('id', JSON.stringify(id));
+                  localStorage.setItem('category', JSON.stringify(category));
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.contact_id },
+                  });
+                }}
+                className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+                <td className="pl-6 py-4 pr-[100px] border-b border-r  border-gray2">
+                  <div className={'flex gap-4'}>
+                    <div>
+                      {person?.profile_image_path ? (
+                        <img
+                          className="inline-block h-10 w-10 rounded-full"
+                          src={person?.profile_image_path}
+                          alt={person.contact_name}
+                        />
+                      ) : (
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {getInitials(person.contact_name).toUpperCase()}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                      <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </>
+      );
+    };
+    const assignToCampaign = () => {
+      return (
+        <>
+          <thead>
+            <tr className="bg-gray-50 text-gray4">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs border-l leading-4 font-medium tracking-wider border-b border-gray2 uppercase">
+                Campaign
+              </th>
+            </tr>
+          </thead>
+          <tbody className={'flex flex-col'}>
+            {data.map((person) => (
+              <td className={'px-6 py-4 pl-6  pr-4  border-l border-gray2 h-[73px] border-b'} style={{ width: 120 }}>
+                <div className={'flex gap-[5px] items-center justify-start'}>
+                  <Toggle active={person?.contact_campaign_status === 'assigned'} activePerson={person} />
+                  <div>
+                    <span
+                      className={`text-xs leading-5 font-medium ${
+                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                      }`}>
+                      {person.contact_campaign_status === 'assigned'
+                        ? 'Active'
+                        : person.contact_campaign_status === 'unassigned'
+                        ? 'Disabled'
+                        : 'Active'}
+                    </span>
+                  </div>
+                </div>
+              </td>
+            ))}
+          </tbody>
+        </>
+      );
+    };
+
+    return data && data?.length > 0 ? (
+      <div className={'flex overflow-x-clip w-[100vw] overflow-y-hidden max-h-[390px]'}>
+        <div className={'shrink-0'}>{other()}</div>
+        <div
+          className={'flex-1 shrink mr-[-8px]'}
+          style={{ overflowY: 'scroll', overflowX: 'auto', maxHeight: '390px' }}>
+          {eventsTable()}
+        </div>
+        <div className={'shrink-0 '}>{assignToCampaign()}</div>
+      </div>
+    ) : (
+      <div>
+        <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
+          <img src={noUsersFound.src} alt="No users found" />
+          <div>
+            <h4 className={'text-sm leading-5 font-medium text-gray7'}>There are no clients ”In Campaign”</h4>
+            <span className={'text-xs leading-4 font-normal text-gray4'}>
+              To start assigning clients please go to “All” or “Not in Campaign” list.
+            </span>
+            <div className={'mt-6 flex items-center justify-center'}>
+              <div
+                role={'button'}
+                className={'flex gap-3 items-center justify-center'}
+                onClick={() => setCurrentButton(0)}>
+                <ArrowBackIcon className={'text-lightBlue3 h-5 w-5'} />
+                <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">
+                  Back to all
+                </div>
+              </div>
+              <div className={'h-4 border-r border-[#D9D9D9] mx-6'} style={{ width: '2px' }} />
+              <div
+                role={'button'}
+                className={'flex gap-3 items-center justify-center'}
+                onClick={() => setCurrentButton(2)}>
+                <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">
+                  Not in campaign
+                </div>
+                <ArrowForwardIcon className={'text-lightBlue3 h-5 w-5'} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
   return (
     <div className="h-full ">
       <div className="h-full flex flex-col">
@@ -2121,6 +2839,12 @@ const Table = ({
                   ? otherTable()
                   : tableFor == 'ai-summary'
                   ? aiSummaryTable()
+                  : tableFor == 'allCampaignContacts'
+                  ? allCampaignContacts()
+                  : tableFor === 'notInCampaignContacts'
+                  ? notInCampaignContacts()
+                  : tableFor === 'inCampaignContacts'
+                  ? inCampaignContacts()
                   : tableFor == 'needToContact'
                   ? needToContactTable()
                   : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'

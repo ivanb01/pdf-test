@@ -15,7 +15,11 @@ import { isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
+import SwitchComponent from '@components/Switch';
 const index = () => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);
@@ -76,15 +80,22 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          {unapprovedContactsLength > 0 && (
-            <FloatingAlert
-              className="mx-[21px] mt-[14px]"
-              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-              type="smart-sync"
-            />
-          )}
+          <FloatingAlert
+            inProp={unapprovedContactsLength > 0}
+            onClick={() => router.push('/ai-summary')}
+            buttonText={'Review Now'}
+            className="mx-[21px] mt-[14px]"
+            message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            type="smart-sync"
+          />
           <div className={'flex justify-between items-center p-6 py-4'}>
-            <h3 className={'text-xl leading-7 font-medium'}>Contacts that you need to communicate with</h3>
+            <div className="flex items-center">
+              <h3 className={'text-xl leading-7 font-medium mr-4'}>Contacts that you need to communicate with</h3>
+              {getNeedToCommunicateContacts().filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+            </div>
             <Search
               placeholder="Search here..."
               className="mr-4 text-sm"

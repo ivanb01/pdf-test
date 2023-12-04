@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import CategorizePage from './categorize-page';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRouter } from 'next/router';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -30,6 +31,8 @@ const Uncategorized = ({
   onSearch,
   unapprovedContacts,
 }) => {
+  const router = useRouter();
+
   //* DATA *//
 
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
@@ -129,6 +132,8 @@ const Uncategorized = ({
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         {unapprovedContacts > 0 && (
           <FloatingAlert
+            onClick={() => router.push('/ai-summary')}
+            buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
             message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
@@ -186,7 +191,7 @@ const Uncategorized = ({
         <div
           className="w-auto relative flex"
           style={{
-            height: `${unapprovedContacts > 0 ? 'calc(100vh - 202px)' : 'calc(100vh - 142px)'}`,
+            height: `${unapprovedContacts > 0 ? 'calc(100vh - 211px)' : 'calc(100vh - 142px)'}`,
           }}>
           {categorizing ? (
             <CategorizePage

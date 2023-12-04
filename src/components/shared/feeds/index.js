@@ -213,9 +213,13 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                 align="center"
                                 triggerElement={
                                   <div className={'mr-3'}>
-                                    Created: {/* Commented 6d ago */}
-                                    {formatDateCalendar(activityItem.created_at)} -{' '}
-                                    {formatDateLThour(activityItem.created_at)}
+                                    Created:{' '}
+                                    {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.created_at).includes('PM')
+                                      ? formatDateCalendar(activityItem.created_at)
+                                      : formatDateCalendar(activityItem.created_at) +
+                                        ' - ' +
+                                        formatDateLThour(activityItem.created_at)}
                                   </div>
                                 }>
                                 <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
@@ -229,8 +233,13 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                 align="center"
                                 triggerElement={
                                   <div>
-                                    Updated: {formatDateCalendar(activityItem.updated_at)} -{' '}
-                                    {formatDateLThour(activityItem.updated_at)}
+                                    Updated:{' '}
+                                    {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('PM')
+                                      ? formatDateCalendar(activityItem.updated_at)
+                                      : formatDateCalendar(activityItem.updated_at) +
+                                        ' - ' +
+                                        formatDateLThour(activityItem.updated_at)}
                                   </div>
                                 }>
                                 <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>

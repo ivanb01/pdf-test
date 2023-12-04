@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     backgroundImage: {
       sidebar: "url('../public/images/sidebar.png')",
+      campaign: "url('/images/campaign/banner.svg')",
       'oxford-gradient': 'linear-gradient(90.01deg, #0E9AE9 0.18%, #0EA5E9 67.03%, #22C9FE 99.99%)',
       'marketing-header-gradient': 'linear-gradient(180deg, #0FA2EA 0%, #A5A9FF 100%)',
       'marketing-footer-gradient': 'linear-gradient(270deg, #3895CA 12.64%, #4338CA 100%)',
@@ -60,6 +61,7 @@ module.exports = {
         purple6: '#8B5CF6',
         borderColor: '#D1D5DB',
         menuHover: 'rgba(255, 255, 255, 0.1)',
+        campaignMenuHover: 'rgba(255, 255, 255, 0.5)',
         overlayBackground: '#6B7280BF',
         orange1: '#FB923C',
         orange2: '#FFEDD5',
@@ -67,6 +69,7 @@ module.exports = {
         yellow2: '#FBBF24',
         yellow3: '#92400E',
         rose1: '#FFE4E6',
+        campaignHeader: '#0E6B8A',
         onelineBackground: '#F4F6FE',
         onelineMainColor: '#163369',
       },

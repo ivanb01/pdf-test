@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import Text from 'components/shared/text';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import Menu from '@mui/icons-material/Menu';
 import Link from 'components/Link';
@@ -33,13 +33,15 @@ import SimpleBar from 'simplebar-react';
 import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-
+import GoogleContact from '../../../../../public/images/GoogleContact.png';
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import SubMenuContent from '@components/shared/SubMenuCard';
+import AIChip from '@components/shared/chip/ai-chip';
+import { isHealthyCommuncationDate } from '@global/functions';
 
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -159,7 +161,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
   const expandedMenu = () => {
     return (
-      <SimpleBar autoHide={true} style={{ maxHeight: '63vh' }}>
+      <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
         <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
             <div
@@ -219,17 +221,29 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
               {userGaveConsent && (
                 <>
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
-                    <div
-                      className={`absolute  absoluteWidth bottom-6 transition-all w-auto bg-blue-50 text-gray-700 p-3 pb-0 text-sm mx-3 mt-6`}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <img src={checkmark.src} className="h-[17px] w-[17px]" />
-                          <div className="ml-[6px] font-medium">Smart Sync: Active</div>
+                    <>
+                      <div
+                        className={`absolute flex gap-[10px] bg-white mb-[-10px] absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3`}>
+                        <div className={'relative  w-6 mt-1'}>
+                          <img
+                            src={checkmark.src}
+                            className="h-[13px] w-[13px] border border-white absolute top-[-13px] left-[11px] rounded-full"
+                          />
+                          <Image src={GoogleContact} height={20} width={20} style={{ marginTop: '-6px' }} />
                         </div>
                         <TooltipComponent
                           side={'bottom'}
                           align={'start'}
-                          triggerElement={<Info className="h-5 w-5 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+                          style={{ marginBottom: '12px' }}
+                          triggerElement={
+                            <div className={'relative  w-6 mt-1 h-4'}>
+                              <img
+                                src={checkmark.src}
+                                className="h-[15px] w-[15px] absolute top-[-10px]   rounded-full left-[13px] border border-white"
+                              />
+                              <AIChip reviewed={false} />
+                            </div>
+                          }>
                           <div className={`w-[270px] pointer-events-none text-xs text-white bg-neutral1 rounded-lg`}>
                             <p className="">
                               From now on each new contact that you will communicate in Gmail will be synced here and
@@ -237,32 +251,24 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                             </p>
                           </div>
                         </TooltipComponent>
+                        <a
+                          onClick={() =>
+                            router.push({
+                              pathname: '/contacts/no-contact/',
+                              query: { start_importing: true },
+                            })
+                          }
+                          className="group cursor-pointer ml-5 pt-0 flex items-center justify-start font-semibold text-blue-600">
+                          Re-import
+                          <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
+                        </a>
                       </div>
-                      <hr className="my-3" />
-                      <div className="flex items-center mb-4">
-                        <div className="flex items-center">
-                          <img src={checkmark.src} className="h-[17px] w-[17px]" />
-                          <div className="ml-[6px] font-medium">Google Contacts: Active</div>
-                        </div>
-                        <div></div>
-                      </div>
-                      <a
-                        onClick={() =>
-                          router.push({
-                            pathname: '/contacts/no-contact/',
-                            query: { start_importing: true },
-                          })
-                        }
-                        className="group cursor-pointer pb-3 pt-0 flex items-center justify-start font-semibold text-blue-600">
-                        Re-import
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
-                    </div>
+                    </>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
                     <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
                       <div className="p-3">
-                        Setup <span className="font-bold">“Smart Sync Contacts by AI”</span> and{' '}
+                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
                         <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
                         Gmail.
                       </div>
@@ -366,6 +372,23 @@ const TabBar = ({ tab }) => {
     router.push(tab.href);
   };
 
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
+  const showPulse = (tab) => {
+    if (allContacts) {
+      if (tab.href == 'needcontact') {
+        return allContacts.filter((contact) => {
+          const categoryType = contact?.category_1?.toLowerCase() + 's';
+          if (categoryType !== 'clients') {
+            return false;
+          }
+          let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+          return !isHealthyCommunication;
+        }).length;
+      }
+    }
+  };
+
   return (
     <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
@@ -393,6 +416,12 @@ const TabBar = ({ tab }) => {
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}
           />
+        )}
+        {showPulse(tab) && (
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+          </span>
         )}
       </Link>
       {tab.subtab && (

@@ -15,8 +15,9 @@ import { searchContacts } from 'global/functions';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
-
+import { useRouter } from 'next/router';
 const index = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [searchKey, setSearchKey] = useState('');
   const [loading, setLoading] = useState(true);
@@ -79,13 +80,14 @@ const index = () => {
       ) : familyAndFriends?.length ? (
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
-            {unapprovedContactsLength > 0 && (
-              <FloatingAlert
-                className="mx-[21px] mt-[14px]"
-                message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
-                type="smart-sync"
-              />
-            )}
+            <FloatingAlert
+              inProp={unapprovedContactsLength > 0}
+              onClick={() => router.push('/ai-summary')}
+              buttonText={'Review Now'}
+              className="mx-[21px] mt-[14px]"
+              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+              type="smart-sync"
+            />
             <div className="p-6 py-4 flex items-center justify-between">
               <div className="flex items-center justify-between w-full">
                 <Text h3 className="text-gray7 text-xl">
