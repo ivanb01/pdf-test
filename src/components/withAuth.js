@@ -13,7 +13,7 @@ export default function withAuth(Component) {
 
         let maintenance = process.env.NEXT_PUBLIC_MAINTENANCE_MODE;
         console.log(maintenance);
-        if (maintenance === 'true') {
+        if (maintenance === 'true' || maintenance === true) {
           router.push('/maintenance');
         }
         if (!isAuthenticated) {
