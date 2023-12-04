@@ -2127,6 +2127,18 @@ const Table = ({
   };
 
   const needToContactTable = () => {
+    const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
+    const isUnapprovedAIContact = (contact) => {
+      if (
+        contact.import_source_text === 'GmailAI' ||
+        contact.import_source_text === 'Smart Sync A.I.' ||
+        contact.import_source_text === 'Gmail'
+      ) {
+        if (!contact.approved_ai) return true;
+      }
+      return false;
+    };
     return (
       <>
         <thead>
@@ -2161,7 +2173,10 @@ const Table = ({
                   query: { id: person?.id },
                 })
               }
-              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
+              className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
+              ${
+                isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
+              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group`}
               style={{ height: '84px' }}>
               <td className="pl-6 py-3" style={{ width: '300px' }}>
                 <div className={'flex gap-4'}>
