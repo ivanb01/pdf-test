@@ -154,7 +154,9 @@ const index = () => {
   const campaign = JSON.parse(localStorage.getItem('category'));
 
   const tempUrl =
-    contact?.category_id === 14 || contact?.category_id === 13
+    campaign_id && campaign
+      ? 'Campaigns'
+      : contact?.category_id === 14 || contact?.category_id === 13
       ? 'family'
       : contact?.category_2 === 'Uncategorized'
       ? 'uncategorized'
