@@ -183,7 +183,7 @@ const index = () => {
             <div className={'flex gap-4 items-start'}>
               <ArrowBackIosIcon
                 className={'text-lightBlue3 h-4 w-4 mt-2 cursor-pointer'}
-                onClick={() => router.back()}
+                onClick={() => router.push('/campaign')}
               />
               <div>
                 <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.campaign_name}</h4>
