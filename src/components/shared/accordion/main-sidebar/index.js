@@ -375,15 +375,17 @@ const TabBar = ({ tab }) => {
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const showPulse = (tab) => {
-    if (tab.href == 'needcontact') {
-      return allContacts.filter((contact) => {
-        const categoryType = contact?.category_1?.toLowerCase() + 's';
-        if (categoryType !== 'clients') {
-          return false;
-        }
-        let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
-        return !isHealthyCommunication;
-      }).length;
+    if (allContacts) {
+      if (tab.href == 'needcontact') {
+        return allContacts.filter((contact) => {
+          const categoryType = contact?.category_1?.toLowerCase() + 's';
+          if (categoryType !== 'clients') {
+            return false;
+          }
+          let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+          return !isHealthyCommunication;
+        }).length;
+      }
     }
   };
 
