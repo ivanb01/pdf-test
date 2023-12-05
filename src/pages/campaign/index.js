@@ -42,6 +42,7 @@ const index = () => {
       />
     );
   };
+
   const localTabs = [
     {
       id: 0,
@@ -49,7 +50,7 @@ const index = () => {
       href: '#',
       content: (
         <>
-          {loading === true ? (
+          {loading === true || CRMCampaigns?.campaigns === undefined ? (
             <div className={'relative mt-10'} style={{ height: 'calc(100vh - 500px)' }}>
               <Loader />
             </div>
@@ -126,16 +127,20 @@ const index = () => {
       ),
     },
   ];
+  const contacts = useSelector((state) => state.contacts.data.data);
+
   useEffect(() => {
-    setLoading(true);
-    getCampaignsByCategory('Client')
-      .then((res) => {
-        dispatch(setCRMCampaigns(res.data));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    if (contacts === undefined) {
+      getCampaignsByCategory('Client')
+        .then((res) => {
+          setLoading(true);
+          dispatch(setCRMCampaigns(res.data));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [contacts]);
 
   return (
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>

@@ -90,7 +90,7 @@ const index = () => {
       amount: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
-      name: 'CLIENTS NOT IN CAMPAIGN',
+      name: 'Unassigned + Never Assigned',
       icon: notInCampaign,
       amount: usersInCampaignGlobally?.contacts_not_campaign?.length,
     },
@@ -114,6 +114,7 @@ const index = () => {
   ];
 
   useEffect(() => {
+    //this is done to detect back button on client details
     localStorage.removeItem('id');
     localStorage.removeItem('category');
   }, []);
@@ -210,7 +211,9 @@ const index = () => {
                 }`}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
-                  <span className="text-gray4 font-inter font-medium text-xs leading-5">{event.name}</span>
+                  <span className="text-gray4  text-center font-medium text-xs leading-5">
+                    {event.name.toUpperCase()}
+                  </span>
                 </div>
                 <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
               </div>
@@ -233,8 +236,6 @@ const index = () => {
               open={openCampaignPreview}
               setOpen={setOpenCampaignPreview}
               className={'mt-[68px]'}
-              sms={2}
-              email={3}
             />
           )}
         </>

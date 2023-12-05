@@ -21,6 +21,8 @@ import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
+import { getCampaignsByCategory } from '@api/campaign';
+import { setCRMCampaigns } from '@store/campaigns/slice';
 
 const MainMenu = ({ className, fixed }) => {
   const [originalMenuItems, setOriginalMenuItems] = useState([
@@ -176,6 +178,15 @@ const MainMenu = ({ className, fixed }) => {
       setMenuItems(originalMenuItems);
     }
   }, [allContacts]);
+  useEffect(() => {
+    if (router.pathname.includes('/campaign')) {
+      getCampaignsByCategory('Client')
+        .then((res) => {
+          dispatch(setCRMCampaigns(res.data));
+        })
+        .finally(() => {});
+    }
+  }, []);
 
   return (
     <div
