@@ -3,22 +3,44 @@ import { Switch } from '@headlessui/react';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const Toggle = ({ active, activePerson, disabled }) => {
+const Toggle = ({ active, activePerson, objectKey, disabled }) => {
   const [enabled, setEnabled] = useState(false);
   const [makeChanges, setMakeChanges] = useState(false);
   const [openDeactivate, setOpenDeactivate] = useState(false);
-
+  const dispatch = useDispatch();
   const router = useRouter();
+  const { usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
+
+  const updateUserLocally = (objectKey, contact_campaign_status) => {
+    if (objectKey === 'contacts_in_campaign') {
+      const updatedUsers = usersInCampaignGlobally?.contacts_in_campaign?.filter(
+        (arr) => arr.contact_id !== activePerson.contact_id,
+      );
+      dispatch(setUsersInCampaignGlobally({ ...usersInCampaignGlobally, contacts_in_campaign: updatedUsers }));
+    } else if (objectKey === 'contacts_not_campaign') {
+      const updatedContactsNotCampaign = usersInCampaignGlobally?.contacts_not_campaign?.filter(
+        (obj) => obj.contact_id !== activePerson.contact_id,
+      );
+
+      if (contact_campaign_status === 'never_assigned') {
+        dispatch(
+          setUsersInCampaignGlobally({
+            ...usersInCampaignGlobally,
+            contacts_not_campaign: updatedContactsNotCampaign,
+          }),
+        );
+      }
+    }
+  };
 
   const { id } = router.query;
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const handleCampaignAssignment = async () => {
     if (!active) {
@@ -28,6 +50,7 @@ const Toggle = ({ active, activePerson, disabled }) => {
         setLoading(false);
         setOpenDeactivate(false);
       });
+      updateUserLocally(objectKey, activePerson.contact_campaign_status);
       getCampaignsUsers(id).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
         setLoading(false);
@@ -40,6 +63,7 @@ const Toggle = ({ active, activePerson, disabled }) => {
         setLoading(false);
         setOpenDeactivate(false);
       });
+      updateUserLocally(objectKey, activePerson.contact_campaign_status);
       getCampaignsUsers(id).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
         setLoading(false);
@@ -93,5 +117,4 @@ const Toggle = ({ active, activePerson, disabled }) => {
     </>
   );
 };
-
 export default Toggle;
