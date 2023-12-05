@@ -224,6 +224,20 @@ export default function LookingFor({ contactId, category }) {
       });
   };
 
+  const getNeighborhoodShortVersion = () => {
+    let neighborhoods = [];
+
+    if (formik.values.neighborhood_ids.length) {
+      formik.values.neighborhood_ids.forEach((element) => {
+        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+      });
+      return neighborhoods.length
+        ? neighborhoods[0] + `, ` + neighborhoods[1] + `, +${neighborhoods.length - 2} more`
+        : null;
+    } else return null;
+  };
+
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
 
@@ -266,11 +280,11 @@ export default function LookingFor({ contactId, category }) {
     setFilterValue(filter);
   };
 
-  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
+  const PropertyDetail = ({ className, label, value, iconAfter, textAfter, title }) => {
     return (
       <div className={`${className} text-sm`}>
         <div className="mb-1 text-gray-500 font-medium">{label}</div>
-        <div className="text-gray-900 flex items-center">
+        <div className="text-gray-900 flex items-center" title={title}>
           <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
           {textAfter && <span className="text-gray-500">{textAfter}</span>}
         </div>
@@ -326,12 +340,16 @@ export default function LookingFor({ contactId, category }) {
                     <header className={`transition-all bg-teal-50 p-3 rounded-lg border border-gray2`}>
                       <div className="flex justify-between">
                         <div className="grid grid-cols-5 gap-14 items-center">
-                          <PropertyDetail label="Neighborhood" value={getNeighborhoodValue()} />
                           <PropertyDetail
+                            label="Neighborhood"
+                            title={getNeighborhoodValue()}
+                            value={getNeighborhoodShortVersion()}
+                          />
+                          {/* <PropertyDetail
                             label="Rooms"
                             value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
                             iconAfter={<Image src={room} height={20} />}
-                          />
+                          /> */}
                           <PropertyDetail
                             label="Bedrooms"
                             value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
