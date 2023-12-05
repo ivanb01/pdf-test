@@ -377,14 +377,16 @@ const TabBar = ({ tab }) => {
   const showPulse = (tab) => {
     if (allContacts) {
       if (tab.href == 'needcontact') {
-        return allContacts.filter((contact) => {
-          const categoryType = contact?.category_1?.toLowerCase() + 's';
-          if (categoryType !== 'clients') {
-            return false;
-          }
-          let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
-          return !isHealthyCommunication;
-        }).length;
+        return (
+          allContacts.filter((contact) => {
+            const categoryType = contact?.category_1?.toLowerCase() + 's';
+            if (categoryType !== 'clients') {
+              return false;
+            }
+            let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+            return !isHealthyCommunication;
+          }).length > 0
+        );
       }
     }
   };
@@ -408,6 +410,12 @@ const TabBar = ({ tab }) => {
           <Text h4 className={`px-3 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
             {tab.name}
           </Text>
+          {showPulse(tab) && (
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+            </span>
+          )}
         </div>
 
         {tab.subtab && (
@@ -416,12 +424,6 @@ const TabBar = ({ tab }) => {
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}
           />
-        )}
-        {showPulse(tab) && (
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-          </span>
         )}
       </Link>
       {tab.subtab && (
