@@ -68,6 +68,12 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
   const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
+  const [newLeadSource, setNewLeadSource] = useState(
+    leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
 
   const isUnapprovedAI = !(
     ['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(client.import_source) &&
@@ -585,17 +591,14 @@ const ReviewContact = ({
               </div>
               <div className={'grid grid-cols-2 gap-4 col-span-full'}>
                 <div>
-                  <Dropdown
-                    openClassName={'mb-2'}
-                    className="col-span-2"
-                    top={'top-[-260px]'}
-                    white
+                  <DropdownWithSearch
+                    bottom={'-58px'}
+                    options={newLeadSource}
                     label="Lead Source"
-                    activeIcon={false}
-                    options={leadSourceOptions}
-                    handleSelect={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
-                    initialSelect={formik.values.lead_source}
+                    value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
+                    onChange={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
                     placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                    maxMenuHeight={200}
                   />
                 </div>
                 <div>
@@ -605,7 +608,7 @@ const ReviewContact = ({
                     onMenuOpen={() => setIsMenuOpen(true)}
                     onMenuClose={() => setIsMenuOpen(false)}
                     typeOfContact={openedTab}
-                    top={'-130px'}
+                    bottom={'-59px'}
                     maxMenuHeight={200}
                     value={findTagsOption(formik.values.tags)}
                     label="Priority"

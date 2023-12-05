@@ -71,7 +71,12 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const openedTab = useSelector((state) => state.global.openedTab);
-
+  const [newLeadSource, setNewLeadSource] = useState(
+    leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
   const dispatch = useDispatch();
 
   const AddContactSchema = Yup.object().shape({
@@ -279,16 +284,14 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
                     error={errors.phone_number && touched.phone_number}
                     errorText={errors.phone_number}
                   />
-                  <Dropdown
-                    className="col-span-2"
-                    white
-                    openClassName={'mb-2 h-[245px]'}
+                  <DropdownWithSearch
+                    bottom={'-58px'}
+                    options={newLeadSource}
                     label="Lead Source"
-                    activeIcon={false}
-                    options={leadSourceOptions}
-                    handleSelect={(source) => (formik.values.lead_source = source.name)}
-                    initialSelect={formik.values.lead_source}
-                    placeHolder={'Choose'}
+                    value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
+                    onChange={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
+                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                    maxMenuHeight={200}
                   />
                   <DropdownWithSearch
                     typeOfContact={selectedContact}

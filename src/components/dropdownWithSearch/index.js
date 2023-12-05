@@ -3,6 +3,7 @@ import Select from 'react-select';
 const DropdownWithSearch = ({
   options,
   top,
+  bottom,
   maxMenuHeight,
   placeholder,
   onChange,
@@ -77,9 +78,11 @@ const DropdownWithSearch = ({
           menu: (base) => ({
             ...base,
             top: top && top,
+            bottom: bottom && bottom,
             fontSize: '14px',
             marginBottom: '100px',
             borderRadius: 5,
+            zIndex: 99,
           }),
           menuList: (base) => ({
             ...base,

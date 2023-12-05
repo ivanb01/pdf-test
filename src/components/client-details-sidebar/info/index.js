@@ -19,11 +19,21 @@ export default function Info({ client }) {
 
   const initialTags = client?.tags ? client.tags : [];
   const [tags, setTags] = useState(initialTags);
+  const [leadSource, setLeadSource] = useState(client?.lead_source);
 
   const [changeStatusModal, setChangeStatusModal] = useState(false);
   const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
   const [isContactInCampaign, setIsContactInCampaign] = useState(false);
+  const [newLeadSource, setNewLeadSource] = useState(
+    leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
 
+  useEffect(() => {
+    setLeadSource(client?.lead_source);
+  }, [client]);
   // const fetchContactCampaign = async () => {
   //   try {
   //     const { data } = await getContactCampaign(client?.id);
@@ -171,7 +181,7 @@ export default function Info({ client }) {
           {client?.category_2 !== 'Family' && (
             <DropdownWithSearch
               isMulti
-              top={'-130px'}
+              bottom={'-59px'}
               maxMenuHeight={200}
               label="Priority"
               options={multiselectOptionsClients}
@@ -182,20 +192,21 @@ export default function Info({ client }) {
               }}
             />
           )}
-          <Dropdown
-            label="Lead Source"
-            openClassName={'mb-2'}
-            top={'top-[-260px]'}
-            activeIcon={false}
-            options={leadSourceOptions}
-            className="mt-3 mb-8"
-            handleSelect={(source) => {
-              console.log(source);
-              handleChangeSource(source.label);
-            }}
-            initialSelect={client?.lead_source}
-            placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
-          />
+          <div className="mt-3 mb-8">
+            <DropdownWithSearch
+              bottom={'-58px'}
+              options={newLeadSource}
+              label="Lead Source"
+              placeHolder={client?.lead_source ? client?.lead_source : 'Choose'}
+              value={newLeadSource?.find((vendor) => vendor.value == leadSource)}
+              maxMenuHeight={200}
+              onChange={(source) => {
+                console.log(source.label);
+                setLeadSource(source.label);
+                handleChangeSource(source.label);
+              }}
+            />
+          </div>
         </div>
       )}
       {changeStatusModal && (

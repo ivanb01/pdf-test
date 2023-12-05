@@ -43,6 +43,12 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [existingContactEmailError, setExistingContactEmailError] = useState('');
   const [existingContactEmail, setExistingContactEmail] = useState('');
+  const [newLeadSource, setNewLeadSource] = useState(
+    leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
 
   const openedTab = useSelector((state) => state.global.openedTab);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -255,24 +261,21 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
             />
             <div className={'grid grid-cols-2 gap-4 col-span-full'}>
               <div>
-                <Dropdown
-                  className="col-span-2 mb-5"
-                  white
-                  openClassName={'mb-2'}
-                  top={'top-[-260px]'}
+                <DropdownWithSearch
+                  bottom={'-58px'}
+                  options={newLeadSource}
                   label="Lead Source"
-                  activeIcon={false}
-                  options={leadSourceOptions}
-                  handleSelect={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
-                  initialSelect={formik.values.lead_source}
+                  value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
+                  onChange={(source) => formik.setValues({ ...formik.values, ['lead_source']: source.label })}
                   placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                  maxMenuHeight={200}
                 />
               </div>
               <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
                 <DropdownWithSearch
                   onMenuOpen={() => setIsMenuOpen(true)}
                   isMulti
-                  top={'-130px'}
+                  bottom={'-59px'}
                   maxMenuHeight={200}
                   onMenuClose={() => setIsMenuOpen(false)}
                   options={multiselectOptionsClients}
