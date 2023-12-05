@@ -339,7 +339,7 @@ export default function LookingFor({ contactId, category }) {
                   <div className="px-6">
                     <header className={`transition-all bg-teal-50 p-3 rounded-lg border border-gray2`}>
                       <div className="flex justify-between">
-                        <div className="grid grid-cols-5 gap-14 items-center">
+                        <div className="grid grid-cols-4 gap-5 pr-5 items-center">
                           <PropertyDetail
                             label="Neighborhood"
                             title={getNeighborhoodValue()}
