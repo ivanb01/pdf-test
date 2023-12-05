@@ -8,6 +8,7 @@ import {
   formatDateStringMDY,
   formatDateLThour,
   formatDateMDY,
+  daysBefore,
 } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
@@ -222,7 +223,15 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                         formatDateLThour(activityItem.created_at)}
                                   </div>
                                 }>
-                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
+                                <h1 className={'text-sm'}>
+                                  {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                  formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                  formatDateCalendar(activityItem.created_at).includes('Today')
+                                    ? formatDateStringMDY(activityItem.created_at)
+                                    : daysBefore(activityItem.created_at)}
+                                </h1>
                               </TooltipComponent>
                             </p>
                           )}
@@ -242,7 +251,15 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                         formatDateLThour(activityItem.updated_at)}
                                   </div>
                                 }>
-                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>
+                                <h1 className={'text-sm'}>
+                                  {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                  formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                  formatDateCalendar(activityItem.updated_at).includes('Today')
+                                    ? formatDateStringMDY(activityItem.updated_at)
+                                    : daysBefore(activityItem.updated_at)}
+                                </h1>
                               </TooltipComponent>
                               {/* Commented 6d ago */}
                             </p>

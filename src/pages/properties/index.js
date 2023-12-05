@@ -16,6 +16,7 @@ import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import withAuth from '@components/withAuth';
+import PropertyFilters from '@components/overlays/property-filters';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -254,7 +255,7 @@ const index = () => {
   };
 
   const sortedNeighborhoods = sortOptionsByChecked(NYCneighborhoods, neighborhoods);
-
+  const [openFilters, setOpenFilters] = useState(false);
   return (
     <>
       <MainMenu />
@@ -338,7 +339,10 @@ const index = () => {
             setMaxPrice={setMaxPrice}
             options={options}
           />
-          <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
+          <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
+            Filters
+          </Button>
+          <Button onClick={() => resetFilters()} className="min-w-[120px] ml-2" primary>
             Clear Filters
           </Button>
           {/* <Dropdown
@@ -452,6 +456,7 @@ const index = () => {
           </div>
         </div>
       )}
+      {openFilters && <PropertyFilters open={openFilters} setOpen={() => setOpenFilters(false)} />}
     </>
   );
 };
