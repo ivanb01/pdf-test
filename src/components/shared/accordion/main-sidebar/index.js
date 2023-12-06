@@ -266,18 +266,19 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     </>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
-                      <div className="p-3">
-                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
-                        <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
-                        Gmail.
+                    <div
+                      className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}>
+                      <div className="text-xs font-semibold text-gray6">
+                        Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{' '}
+                        <span className="font-bold text-gray-900">“Import Google Contacts”</span> in order to import
+                        contacts from Gmail.
                       </div>
-                      <a
-                        className="px-3 bg-purple-100 text-[14px] group cursor-pointer py-3 flex items-center justify-end font-medium text-purple6"
-                        onClick={() => setShowSSOverlay(true)}>
-                        Setup
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
+                      <button
+                        onClick={() => setShowSSOverlay(true)}
+                        type="button"
+                        className="flex mt-2 bg-[#EDDDFD] rounded-md px-2 py-1.5 text-sm items-center font-medium text-gray7 ml-auto hover:bg-purple-200 focus:outline-none">
+                        Setup <ArrowForward className="ml-2 h-4 group-hover:translate-x-1 transition-all" />
+                      </button>
                     </div>
                   )}
                 </>
