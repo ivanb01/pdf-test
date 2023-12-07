@@ -123,7 +123,7 @@ const Layout = ({ children }) => {
       label: 'Need to Contact',
       href: 'needcontact',
       count: 0,
-      count_key: '',
+      count_key: 'need_to_contact',
       icon: <LocalPhoneIcon className={'h-5 w-5'} />,
     },
     {

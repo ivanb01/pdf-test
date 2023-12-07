@@ -23,6 +23,7 @@ import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
+import { isHealthyCommuncationDate } from '@global/functions';
 
 const MainMenu = ({ className, fixed }) => {
   const [originalMenuItems, setOriginalMenuItems] = useState([

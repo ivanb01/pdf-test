@@ -44,16 +44,33 @@ import SubMenuContent from '@components/shared/SubMenuCard';
 import AIChip from '@components/shared/chip/ai-chip';
 import { isHealthyCommuncationDate } from '@global/functions';
 
-const getCountForTabOrSubtab = (count_key, count) => {
-  if (!count) {
+const getNeedToCommunicateContacts = (allContacts) => {
+  if (!allContacts) {
     return;
   }
-  console.log(count[count_key], 'c key');
-  if (count_key === 'other_total') {
-    return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
+  return (
+    allContacts &&
+    allContacts.filter((contact) => {
+      const categoryType = contact?.category_1?.toLowerCase() + 's';
+      if (categoryType !== 'clients') {
+        return false;
+      }
+      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+      return !isHealthyCommunication;
+    }).length
+  );
+};
+const getCountForTabOrSubtab = (count_key, count, allContacts) => {
+  if (!count || !allContacts) {
+    return;
   }
-  console.log(count[count_key], 'count[count_key]');
-  return count && count[count_key] ? count[count_key] : 0;
+  if (count_key === 'need_to_contact' && allContacts) {
+    return '(' + getNeedToCommunicateContacts(allContacts) + ')';
+  } else if (count_key === 'other_total') {
+    return '(' + (count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0) + ')';
+  } else {
+    return '(' + (count && count[count_key] ? count[count_key] : 0) + ')';
+  }
 };
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
@@ -102,6 +119,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     const isSubtabActive = (currentSubtab, tabId) => {
       return openedSubtab == currentSubtab && openedTab == tabId;
     };
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
     return (
       <div className="accordion w-inherit cursor-pointer">
@@ -149,7 +167,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         }}
                         className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
                         {t?.dot} <div className={'w-[100px]'}>{t.name}</div>
-                        <p>({getCountForTabOrSubtab(t.count_key, count)})</p>
+                        <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
                   ))}
@@ -173,6 +191,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   };
 
   const expandedMenu = () => {
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
     return (
       <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
         <div className={'mx-3'}>
@@ -418,7 +438,7 @@ const TabBar = ({ tab }) => {
             {tab.name}
           </Text>
           <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-            ({getCountForTabOrSubtab(tab.count_key, count)})
+            {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
           </Text>
           {showPulse(tab) && (
             <span class="relative flex h-2 w-2 ml-4">
@@ -460,7 +480,7 @@ const TabBar = ({ tab }) => {
                   className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[10px]')}  py-[10px]  ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
-                  ({getCountForTabOrSubtab(subtab.count_key, count)})
+                  {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
                 </Text>
               </a>
             );
