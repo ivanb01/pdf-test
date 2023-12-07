@@ -150,7 +150,9 @@ const index = () => {
       <div
         className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
         style={{ height: '230px' }}>
-        <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
+        <h3 className={'text-3xl leading-9 font-semibold text-white'}>
+          Effortless Client and Contact Campaign Coordination
+        </h3>
         <Search
           placeholder="Search for campaign title or client status..."
           className="text-sm w-[550px]"

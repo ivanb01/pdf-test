@@ -7,7 +7,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import SimpleBar from 'simplebar-react';
 import { getUnapprovedContacts } from 'api/aiSmartSync';
 import Loader from 'components/shared/loader';
-import { bulkUpdateContacts, updateContact } from '@api/contacts';
+import { bulkUpdateContacts, getContacts, updateContact } from '@api/contacts';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
@@ -16,6 +16,7 @@ import backBtn from '/public/images/back.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import clients from '../contacts/clients';
 import withAuth from '@components/withAuth';
+import { setAllContacts } from '@store/contacts/slice';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -45,17 +46,43 @@ const index = () => {
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+
+  useEffect(() => {
+    console.log(
+      'contacts',
+      contacts?.filter((c) => c.approved_ai === null && c.import_source_text === 'Smart Sync A.I.'),
+    );
+  }, [contacts]);
 
   const fetchContacts = async () => {
-    try {
-      const response = await getUnapprovedContacts();
-      let finalData = response.data.data.filter((contact) => contact.category_1 != 'Uncategorized');
+    if (contacts === undefined) {
+      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')
+        .then((data) => {
+          dispatch(setAllContacts(data.data));
+          let finalData = data.data.data.filter(
+            (c) =>
+              c.category_1 != 'Uncategorized' &&
+              (c.approved_ai === null || c.approved_ai === false) &&
+              c.import_source_text === 'Smart Sync A.I.',
+          );
+          finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setData(finalData);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      console.log('Ereza');
+      setLoading(false);
+      let finalData = contacts.filter(
+        (c) =>
+          c.category_1 != 'Uncategorized' &&
+          (c.approved_ai === null || c.approved_ai === false) &&
+          c.import_source_text === 'Smart Sync A.I.',
+      );
       finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setData(finalData);
-    } catch (error) {
-      console.log('error msg', error.message);
-    } finally {
-      setLoading(false);
     }
   };
   const updateContactsLocally = (action, newData) => {
