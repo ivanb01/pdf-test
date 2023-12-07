@@ -135,6 +135,9 @@ const MainMenu = ({ className, fixed }) => {
   }, []);
 
   useEffect(() => {
+    console.log(count, 'count');
+  }, [count]);
+  useEffect(() => {
     const fetchCount = async () => {
       getCount().then((data) => {
         dispatch(setCount(data.data));

@@ -94,7 +94,6 @@ const Layout = ({ children }) => {
       href: 'professionals',
       groupName: 'In Communication',
       icon: <PermContactCalendar className="h-5 w-5" />,
-      count: 0,
       count_key: 'professionals_total',
       subtab: [
         {
@@ -150,12 +149,14 @@ const Layout = ({ children }) => {
       groupName: 'Needs Attention',
       icon: <InfoIcon className={'h-5 w-5'} />,
       href: 'uncategorized',
+      count_key: 'uncategorized_total',
     },
     {
       id: 5,
       name: 'Family & Friends',
       label: 'Family & Friends',
       href: 'family',
+      count_key: 'other_family_friends',
       icon: <Diversity3Icon className={'h-5 w-5'} />,
       groupName: 'Other',
     },
