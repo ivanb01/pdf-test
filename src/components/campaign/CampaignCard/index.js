@@ -31,7 +31,15 @@ const CampaignCard = ({
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
           <Link href={{ pathname: '/campaign/details', query: { id: campaign_id, category: category } }} passHref>
-            <div className={'flex justify-between items-center cursor-pointer'} role={'button'}>
+            <div
+              className={'flex justify-between items-center cursor-pointer'}
+              role={'button'}
+              onClick={() => {
+                router.push({
+                  pathname: '/campaign/details',
+                  query: { id: campaign_id, category: category },
+                });
+              }}>
               <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
               <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
             </div>
