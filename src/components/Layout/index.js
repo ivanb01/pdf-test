@@ -149,7 +149,7 @@ const Layout = ({ children }) => {
       groupName: 'Needs Attention',
       icon: <InfoIcon className={'h-5 w-5'} />,
       href: 'uncategorized',
-      count_key: 'uncategorized_total',
+      count_key: 'uncategorized_new_records',
     },
     {
       id: 5,
