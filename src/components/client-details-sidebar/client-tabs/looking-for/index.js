@@ -227,10 +227,13 @@ export default function LookingFor({ contactId, category }) {
   const getNeighborhoodShortVersion = () => {
     let neighborhoods = [];
 
-    formik.values.neighborhood_ids.forEach((element) => {
-      const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-      neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-    });
+    console.log(formik.values.neighborhood_ids);
+    if (formik.values.neighborhood_ids.length) {
+      formik.values.neighborhood_ids.forEach((element) => {
+        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+      });
+    }
     if (formik.values.neighborhood_ids.length > 2) {
       return neighborhoods.length
         ? neighborhoods[0] + `, ` + neighborhoods[1] + `, +${neighborhoods.length - 2} more`
