@@ -773,6 +773,27 @@ const Table = ({
     const sorted = useSelector((state) => state.global.sorted);
 
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const [isExpanded, setIsExpanded] = useState(
+      contactsStatuses[openedSubtab].statuses.map((category) => ({
+        categoryId: category.id,
+        expanded: true,
+      })),
+    );
+    useEffect(() => {
+      console.log(isExpanded);
+    }, [isExpanded]);
+
+    useEffect(() => {
+      if (contactsStatuses[openedSubtab]) {
+        setIsExpanded((prevExpanded) =>
+          contactsStatuses[openedSubtab].statuses.map((category) => ({
+            categoryId: category.name,
+            expanded: true,
+          })),
+        );
+      }
+    }, [openedSubtab, contactsStatuses[openedSubtab]]);
+
     const handleToggleSorting = (name) => {
       const currentItem = sorted.find((item) => item.name === name);
       if (currentItem) {
@@ -883,21 +904,6 @@ const Table = ({
       return filteredContacts;
     }
 
-    const [isExpanded, setIsExpanded] = useState(
-      contactsStatuses[openedSubtab].statuses.map((category) => ({
-        categoryId: category.id,
-        expanded: true,
-      })),
-    );
-
-    React.useEffect(() => {
-      setIsExpanded(
-        contactsStatuses[openedSubtab].statuses.map((category) => ({
-          categoryId: category.id,
-          expanded: true,
-        })),
-      );
-    }, [openedSubtab, contactsStatuses]);
     const toggleExpanded = (categoryId) => {
       setIsExpanded((prevState) => {
         return prevState.map((item) => {
@@ -915,7 +921,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[200px] xl:w-[100px]">
+              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[300px] xl:w-[300px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -924,12 +930,12 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[500px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[200px]">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[265px] xl:w-[400px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]">
               Contact summary
             </th>
             {openedTab !== 1 && openedSubtab !== 3 ? (
@@ -964,16 +970,17 @@ const Table = ({
                     <div
                       className="flex items-center px-6 py-2"
                       role={'button'}
-                      onClick={() => toggleExpanded(category.id)}>
-                      {isExpanded
-                        .filter((item) => item.categoryId === category.id)
-                        .map((item) =>
-                          item.expanded ? (
-                            <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                          ) : (
-                            <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                          ),
-                        )}
+                      onClick={() => toggleExpanded(category.name)}>
+                      {isExpanded &&
+                        isExpanded
+                          .filter((item) => item.categoryId === category.name)
+                          .map((item) =>
+                            item.expanded === true ? (
+                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ) : (
+                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                            ),
+                          )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -1064,7 +1071,7 @@ const Table = ({
                       ${
                         isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
                       } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
-                        isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                        isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
                           ? 'hidden'
                           : ''
                       }`}
@@ -1249,7 +1256,7 @@ const Table = ({
                 ) : (
                   <tr
                     className={`text-gray4 h-[76px] text-sm leading-5 font-medium ${
-                      isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                      isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
                         ? 'hidden'
                         : ''
                     } `}>
@@ -1264,7 +1271,20 @@ const Table = ({
                 <div key={category.id}>
                   <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                     <td colSpan="10">
-                      <div className="flex items-center px-6 py-2">
+                      <div
+                        className="flex items-center px-6 py-2"
+                        role={'button'}
+                        onClick={() => toggleExpanded(category.name)}>
+                        {isExpanded &&
+                          isExpanded
+                            .filter((item) => item.categoryId === category.name)
+                            .map((item) =>
+                              item.expanded === true ? (
+                                <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                              ) : (
+                                <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                              ),
+                            )}
                         <Text chipText className="text-gray4 mr-1">
                           {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                         </Text>
@@ -1315,7 +1335,12 @@ const Table = ({
                     </td>
                   </tr>
 
-                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                  <tr
+                    className={`text-gray4 h-[76px] text-sm leading-5 font-medium  ${
+                      isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
+                        ? 'hidden'
+                        : ''
+                    } `}>
                     <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>
