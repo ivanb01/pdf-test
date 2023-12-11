@@ -363,9 +363,9 @@ const index = () => {
             <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
               <div className="p-6">
                 <div className={'flex items-center justify-between mb-6'}>
-                  <div className="text-gray-900 text-sm font-medium">
-                    {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from
-                    REALTYMX database.
+                  <div className="text-gray-900 text-xs font-normal">
+                    {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from REBNY
+                    database.
                   </div>
                   <div className={'flex items-center gap-2'}>
                     <p className="text-gray6 font-inter font-normal leading-5 text-sm mt-1">Sort by</p>
