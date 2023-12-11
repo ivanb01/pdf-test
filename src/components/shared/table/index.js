@@ -599,7 +599,7 @@ const Table = ({
   const categorizedTable = () => {
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th
               scope="col"
@@ -635,7 +635,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <TransitionGroup component="tbody" className=" bg-white">
+        <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>

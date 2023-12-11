@@ -307,14 +307,14 @@ const CategorizePage = ({
 
       {categorizedInThisSession?.length > 0 ? (
         <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
-          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
-            <Table
-              tableFor="categorized"
-              data={categorizedInThisSession}
-              undoAllCategorizations={undoAllCategorizations}
-              undoCategorization={undoCategorization}
-            />
-          </SimpleBar>
+          {/*<SimpleBar autoHide style={{ maxHeight: '100%' }}>*/}
+          <Table
+            tableFor="categorized"
+            data={categorizedInThisSession}
+            undoAllCategorizations={undoAllCategorizations}
+            undoCategorization={undoCategorization}
+          />
+          {/*</SimpleBar>*/}
         </div>
       ) : null}
 
