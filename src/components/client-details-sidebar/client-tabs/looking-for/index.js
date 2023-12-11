@@ -227,20 +227,21 @@ export default function LookingFor({ contactId, category }) {
   const getNeighborhoodShortVersion = () => {
     let neighborhoods = [];
 
-    if (formik.values.neighborhood_ids.length) {
-      formik.values.neighborhood_ids.forEach((element) => {
-        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-      });
+    formik.values.neighborhood_ids.forEach((element) => {
+      const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+      neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+    });
+    if (formik.values.neighborhood_ids.length > 2) {
       return neighborhoods.length
         ? neighborhoods[0] + `, ` + neighborhoods[1] + `, +${neighborhoods.length - 2} more`
         : null;
+    } else if (formik.values.neighborhood_ids.length == 1 || formik.values.neighborhood_ids.length == 2) {
+      return neighborhoods.join(', ');
     } else return null;
   };
 
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
-
     if (formik.values.neighborhood_ids.length) {
       formik.values.neighborhood_ids.forEach((element) => {
         const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
