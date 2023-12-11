@@ -121,6 +121,23 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     };
     const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
+    const showPulse = (tab) => {
+      if (allContacts) {
+        if (tab.href == 'needcontact') {
+          return (
+            allContacts.filter((contact) => {
+              const categoryType = contact?.category_1?.toLowerCase() + 's';
+              if (categoryType !== 'clients') {
+                return false;
+              }
+              let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+              return !isHealthyCommunication;
+            }).length > 0
+          );
+        }
+      }
+    };
+
     return (
       <div className="accordion w-inherit cursor-pointer">
         {tabs.map((tab) => {
@@ -133,7 +150,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <div>
                   <Link
                     href="#"
-                    className={`  flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                    className={`relative flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
                       openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                     }`}
                     onClick={() => {
@@ -147,6 +164,12 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       }`}
                       title={tab.name}>
                       <div>{tab.icon}</div>
+                      {showPulse(tab) && (
+                        <span class="absolute right-0 top-2 flex h-2 w-2 ml-4">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                        </span>
+                      )}
                     </div>
                   </Link>
                 </div>
