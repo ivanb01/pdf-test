@@ -21,7 +21,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import { getProperties } from '@api/realtyMX';
-import { formatPrice, valueOptions } from '@global/functions';
+import { valueOptions } from '@global/functions';
 import { useSelector } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
@@ -227,20 +227,21 @@ export default function LookingFor({ contactId, category }) {
   const getNeighborhoodShortVersion = () => {
     let neighborhoods = [];
 
-    if (formik.values.neighborhood_ids.length) {
-      formik.values.neighborhood_ids.forEach((element) => {
-        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-      });
+    formik.values.neighborhood_ids.forEach((element) => {
+      const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
+      neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
+    });
+    if (formik.values.neighborhood_ids.length > 2) {
       return neighborhoods.length
         ? neighborhoods[0] + `, ` + neighborhoods[1] + `, +${neighborhoods.length - 2} more`
         : null;
+    } else if (formik.values.neighborhood_ids.length == 1 || formik.values.neighborhood_ids.length == 2) {
+      return neighborhoods.join(', ');
     } else return null;
   };
 
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
-
     if (formik.values.neighborhood_ids.length) {
       formik.values.neighborhood_ids.forEach((element) => {
         const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
@@ -284,13 +285,32 @@ export default function LookingFor({ contactId, category }) {
     return (
       <div className={`${className} text-sm`}>
         <div className="mb-1 text-gray-500 font-medium">{label}</div>
-        <div className="text-gray-900 flex items-center" title={title}>
+        <div className="text-gray-900 flex items-center flex-nowrap sm:flex-wrap" title={title}>
           <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
           {textAfter && <span className="text-gray-500">{textAfter}</span>}
         </div>
       </div>
     );
   };
+
+  function formatPrice(value) {
+    if (!isNaN(value)) {
+      const num = parseFloat(value);
+
+      if (num >= 1000) {
+        if (num % 1000 !== 0 && num % 100 === 0) {
+          return `$${(num / 1000).toFixed(1)}k`;
+        } else if (num % 1000 === 0) {
+          return `$${(num / 1000).toFixed(0)}k`;
+        }
+        return `$${num.toLocaleString()}`;
+      } else {
+        return `$${num}`;
+      }
+    } else {
+      return `$${value}`;
+    }
+  }
 
   return (
     <>
