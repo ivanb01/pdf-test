@@ -1665,7 +1665,7 @@ const Table = ({
     const [hovered, setHovered] = useState(false);
     return (
       <>
-        <thead className="bg-gray-50 overflow-x-hidden">
+        <thead className="bg-gray-50 overflow-x-hidden sticky z-10 top-0">
           <tr>
             <th
               // scope="col"
@@ -1674,7 +1674,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className=" bg-white">
+        <tbody className=" bg-white overflow-y-auto">
           {console.log(data, 'data')}
           {!data.length ? (
             <tr className="h-[233px] text-center align-middle">

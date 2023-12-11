@@ -103,13 +103,13 @@ const GoogleContactsImportSummary = ({ data }) => {
               value={searchTermImported}
             />
             <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
-              <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>
-                <Table
-                  tableFor="import-google-contacts-successful"
-                  data={importedContacts}
-                  // allContacts={imports1}
-                ></Table>
-              </SimpleBar>
+              {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
+              <Table
+                tableFor="import-google-contacts-successful"
+                data={allContacts}
+                // allContacts={imports1}
+              ></Table>
+              {/*</SimpleBar>*/}
             </div>
           </div>
           {allContacts?.invalid_contacts && (
@@ -152,9 +152,9 @@ const GoogleContactsImportSummary = ({ data }) => {
                 value={searchTermNotImported}
               />
               <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
-                <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>
-                  <Table tableFor="import-google-contacts-failed" data={notImportedContacts}></Table>
-                </SimpleBar>
+                {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
+                <Table tableFor="import-google-contacts-failed" data={notImportedContacts}></Table>
+                {/*</SimpleBar>*/}
               </div>
             </div>
           )}
