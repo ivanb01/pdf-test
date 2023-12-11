@@ -23,6 +23,7 @@ import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
+import { isHealthyCommuncationDate } from '@global/functions';
 
 const MainMenu = ({ className, fixed }) => {
   const [originalMenuItems, setOriginalMenuItems] = useState([
@@ -135,6 +136,9 @@ const MainMenu = ({ className, fixed }) => {
   }, []);
 
   useEffect(() => {
+    console.log(count, 'count');
+  }, [count]);
+  useEffect(() => {
     const fetchCount = async () => {
       getCount().then((data) => {
         dispatch(setCount(data.data));
@@ -233,14 +237,16 @@ const MainMenu = ({ className, fixed }) => {
         {!router.pathname.includes('campaign') && (
           <>
             {allContacts && allContacts.length > 0 && (
-              <SearchIcon
-                className={`h-[18px] w-[18px] text-white box-content p-2 rounded-full  ${
-                  !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
-                } cursor-pointer`}
-                onClick={() => {
-                  setOpenGlobalSearch(true);
-                }}
-              />
+              <div className={'h-[30px] w-[30px] flex items-center justify-center  rounded-full bg-lightBlue5'}>
+                <SearchIcon
+                  className={`text-bold h-[14px] w-[14px] text-white box-content p-2 rounded-full  ${
+                    !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+                  } cursor-pointer`}
+                  onClick={() => {
+                    setOpenGlobalSearch(true);
+                  }}
+                />
+              </div>
             )}
             {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
             {/* {showUncategorizedButton() && (

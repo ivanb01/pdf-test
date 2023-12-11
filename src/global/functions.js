@@ -159,6 +159,18 @@ export const formatDateCalendar = (date) => {
   let resultString = calendarDateArray.join(' ');
   return resultString;
 };
+export function daysBefore(dateString) {
+  // Parse the input date string using Moment.js
+  const inputDate = moment(dateString, 'YYYY-MM-DD');
+
+  // Get the current date
+  const currentDate = moment();
+
+  // Calculate the difference in days
+  const daysDifference = currentDate.diff(inputDate, 'days');
+
+  return daysDifference + ' days before';
+}
 
 export const formatDateAgo = (date, param) => {
   return moment(date).startOf(param).fromNow();

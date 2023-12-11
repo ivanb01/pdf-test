@@ -34,6 +34,7 @@ import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import GoogleContact from '../../../../../public/images/GoogleContact.png';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
@@ -43,10 +44,39 @@ import SubMenuContent from '@components/shared/SubMenuCard';
 import AIChip from '@components/shared/chip/ai-chip';
 import { isHealthyCommuncationDate } from '@global/functions';
 
+const getNeedToCommunicateContacts = (allContacts) => {
+  if (!allContacts) {
+    return;
+  }
+  return (
+    allContacts &&
+    allContacts.filter((contact) => {
+      const categoryType = contact?.category_1?.toLowerCase() + 's';
+      if (categoryType !== 'clients') {
+        return false;
+      }
+      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+      return !isHealthyCommunication;
+    }).length
+  );
+};
+const getCountForTabOrSubtab = (count_key, count, allContacts) => {
+  if (!count || !allContacts) {
+    return;
+  }
+  if (count_key === 'need_to_contact' && allContacts) {
+    return '(' + getNeedToCommunicateContacts(allContacts) + ')';
+  } else if (count_key === 'other_total') {
+    return '(' + (count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0) + ')';
+  } else {
+    return '(' + (count && count[count_key] ? count[count_key] : 0) + ')';
+  }
+};
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const count = useSelector((state) => state.global.count);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const pinned = useSelector((state) => state.global.expandedMenu);
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
@@ -55,7 +85,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const [finishedOnboarding, setFinishedOnboarding] = useState(false);
   const [startedOnboarding, setStartedOnboarding] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
     try {
@@ -90,6 +119,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     const isSubtabActive = (currentSubtab, tabId) => {
       return openedSubtab == currentSubtab && openedTab == tabId;
     };
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
     return (
       <div className="accordion w-inherit cursor-pointer">
@@ -136,7 +166,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           router.push(tab.href);
                         }}
                         className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
-                        {t?.dot} <span className={'w-[100px]'}>{t.name}</span>
+                        {t?.dot} <div className={'w-[100px]'}>{t.name}</div>
+                        <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
                   ))}
@@ -160,6 +191,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   };
 
   const expandedMenu = () => {
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
     return (
       <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
         <div className={'mx-3'}>
@@ -266,18 +299,19 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     </>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
-                      <div className="p-3">
-                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
-                        <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
-                        Gmail.
+                    <div
+                      className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}>
+                      <div className="text-xs font-semibold text-gray6">
+                        Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{' '}
+                        <span className="font-bold text-gray-900">“Import Google Contacts”</span> in order to import
+                        contacts from Gmail.
                       </div>
-                      <a
-                        className="px-3 bg-purple-100 text-[14px] group cursor-pointer py-3 flex items-center justify-end font-medium text-purple6"
-                        onClick={() => setShowSSOverlay(true)}>
-                        Setup
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
+                      <button
+                        onClick={() => setShowSSOverlay(true)}
+                        type="button"
+                        className="flex mt-2 bg-[#EDDDFD] rounded-md px-2 py-1.5 text-sm items-center font-medium text-gray7 ml-auto hover:bg-purple-200 focus:outline-none">
+                        Setup <ArrowForward className="ml-2 h-4 group-hover:translate-x-1 transition-all" />
+                      </button>
                     </div>
                   )}
                 </>
@@ -341,13 +375,6 @@ const TabBar = ({ tab }) => {
   const router = useRouter();
   const count = useSelector((state) => state.global.count);
 
-  const getCountForTabOrSubtab = (count_key) => {
-    if (count_key === 'other_total') {
-      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
-    }
-    return count && count[count_key] ? count[count_key] : 0;
-  };
-
   const findOpenedId = (tabId) => {
     return tabs.length > 0 && tabs.find((tab) => tab.id === tabId);
   };
@@ -407,11 +434,14 @@ const TabBar = ({ tab }) => {
         onClick={handleTabClick}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}
-          <Text h4 className={`px-3 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+          <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
             {tab.name}
           </Text>
+          <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+            {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
+          </Text>
           {showPulse(tab) && (
-            <span class="relative flex h-2 w-2">
+            <span class="relative flex h-2 w-2 ml-4">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
             </span>
@@ -444,6 +474,13 @@ const TabBar = ({ tab }) => {
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {subtab.name}
+                </Text>
+                <Text
+                  h4
+                  className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[10px]')}  py-[10px]  ${
+                    isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
+                  }`}>
+                  {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
                 </Text>
               </a>
             );

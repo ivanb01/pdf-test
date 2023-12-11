@@ -479,7 +479,7 @@ const Table = ({
       <>
         {data?.length ? (
           <>
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky z-10 top-0">
               <tr>
                 <th
                   scope="col"
@@ -498,7 +498,7 @@ const Table = ({
                 )}
               </tr>
             </thead>
-            <TransitionGroup component="tbody" className=" bg-white">
+            <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
               {data.map((dataItem, index) => (
                 <CSSTransition key={dataItem.id} timeout={500} classNames="item">
                   <tr
@@ -599,7 +599,7 @@ const Table = ({
   const categorizedTable = () => {
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th
               scope="col"
@@ -635,7 +635,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <TransitionGroup component="tbody" className=" bg-white">
+        <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
@@ -965,16 +965,15 @@ const Table = ({
                       className="flex items-center px-6 py-2"
                       role={'button'}
                       onClick={() => toggleExpanded(category.id)}>
-                      {filterContacts(category, contactTypes).length > 0 &&
-                        isExpanded
-                          .filter((item) => item.categoryId === category.id)
-                          .map((item) =>
-                            item.expanded ? (
-                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                            ) : (
-                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                            ),
-                          )}
+                      {isExpanded
+                        .filter((item) => item.categoryId === category.id)
+                        .map((item) =>
+                          item.expanded ? (
+                            <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                          ) : (
+                            <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                          ),
+                        )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -1248,7 +1247,12 @@ const Table = ({
                     </tr>
                   ))
                 ) : (
-                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                  <tr
+                    className={`text-gray4 h-[76px] text-sm leading-5 font-medium ${
+                      isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                        ? 'hidden'
+                        : ''
+                    } `}>
                     <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>

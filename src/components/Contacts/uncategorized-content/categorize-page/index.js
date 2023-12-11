@@ -168,14 +168,14 @@ const CategorizePage = ({
       {uncategorizedContacts.length > 0 && (
         <div
           className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
-          <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>
-            <Table
-              tableFor="in-categorization"
-              data={uncategorizedContacts}
-              handleClickRow={handleSelectUncategorized}
-              handleSelectAll={toggleAllUncategorized}
-            />
-          </SimpleBar>
+          {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>*/}
+          <Table
+            tableFor="in-categorization"
+            data={uncategorizedContacts}
+            handleClickRow={handleSelectUncategorized}
+            handleSelectAll={toggleAllUncategorized}
+          />
+          {/*</SimpleBar>*/}
         </div>
       )}
       <div
@@ -307,14 +307,14 @@ const CategorizePage = ({
 
       {categorizedInThisSession?.length > 0 ? (
         <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
-          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
-            <Table
-              tableFor="categorized"
-              data={categorizedInThisSession}
-              undoAllCategorizations={undoAllCategorizations}
-              undoCategorization={undoCategorization}
-            />
-          </SimpleBar>
+          {/*<SimpleBar autoHide style={{ maxHeight: '100%' }}>*/}
+          <Table
+            tableFor="categorized"
+            data={categorizedInThisSession}
+            undoAllCategorizations={undoAllCategorizations}
+            undoCategorization={undoCategorization}
+          />
+          {/*</SimpleBar>*/}
         </div>
       ) : null}
 
