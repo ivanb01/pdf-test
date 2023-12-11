@@ -965,16 +965,15 @@ const Table = ({
                       className="flex items-center px-6 py-2"
                       role={'button'}
                       onClick={() => toggleExpanded(category.id)}>
-                      {filterContacts(category, contactTypes).length > 0 &&
-                        isExpanded
-                          .filter((item) => item.categoryId === category.id)
-                          .map((item) =>
-                            item.expanded ? (
-                              <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                            ) : (
-                              <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
-                            ),
-                          )}
+                      {isExpanded
+                        .filter((item) => item.categoryId === category.id)
+                        .map((item) =>
+                          item.expanded ? (
+                            <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                          ) : (
+                            <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                          ),
+                        )}
                       <Text chipText className="text-gray4 mr-1">
                         {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                       </Text>
@@ -1248,7 +1247,12 @@ const Table = ({
                     </tr>
                   ))
                 ) : (
-                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                  <tr
+                    className={`text-gray4 h-[76px] text-sm leading-5 font-medium ${
+                      isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                        ? 'hidden'
+                        : ''
+                    } `}>
                     <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>
