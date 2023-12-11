@@ -479,7 +479,7 @@ const Table = ({
       <>
         {data?.length ? (
           <>
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky z-10 top-0">
               <tr>
                 <th
                   scope="col"
@@ -498,7 +498,7 @@ const Table = ({
                 )}
               </tr>
             </thead>
-            <TransitionGroup component="tbody" className=" bg-white">
+            <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
               {data.map((dataItem, index) => (
                 <CSSTransition key={dataItem.id} timeout={500} classNames="item">
                   <tr

@@ -168,14 +168,14 @@ const CategorizePage = ({
       {uncategorizedContacts.length > 0 && (
         <div
           className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
-          <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>
-            <Table
-              tableFor="in-categorization"
-              data={uncategorizedContacts}
-              handleClickRow={handleSelectUncategorized}
-              handleSelectAll={toggleAllUncategorized}
-            />
-          </SimpleBar>
+          {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>*/}
+          <Table
+            tableFor="in-categorization"
+            data={uncategorizedContacts}
+            handleClickRow={handleSelectUncategorized}
+            handleSelectAll={toggleAllUncategorized}
+          />
+          {/*</SimpleBar>*/}
         </div>
       )}
       <div
