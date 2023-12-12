@@ -19,6 +19,8 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { useSelector } from 'react-redux';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -172,6 +174,15 @@ export default function ContactCard({
     },
   ];
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   return (
     <>
       <div
@@ -256,28 +267,20 @@ export default function ContactCard({
             !dropdownOpened && 'h-0 opacity-0'
           } pointer-events-none group-hover:pointer-events-auto group-hover:h-[49px] group-hover:opacity-100 transition-all`}>
           <div className="border-t border-gray-200 px-4 py-[10px] flex items-center justify-end">
-            <div
-              className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
-              onMouseEnter={() => {
-                document
-                  .querySelector('#tooltip-edit-contact-' + contact.id)
-                  .classList.remove('invisible', 'opacity-0');
-                document.querySelector('#edit-contact-icon-' + contact.id).classList.add('text-gray4');
-                document.querySelector('#edit-contact-icon-' + contact.id).classList.remove('text-gray3');
-              }}
-              onMouseLeave={() => {
-                document.querySelector('#tooltip-edit-contact-' + contact.id).classList.add('invisible', 'opacity-0');
-                document.querySelector('#edit-contact-icon-' + contact.id).classList.add('text-gray3');
-                document.querySelector('#edit-contact-icon-' + contact.id).classList.remove('text-gray4');
-              }}
-              onClick={() => handleCardEdit(contact)}>
-              <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-              <div
-                id={'tooltip-edit-contact-' + contact.id}
-                className="inline-block bottom-11 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
-                Edit Contact
-              </div>
-            </div>
+            <TooltipComponent
+              side={'top'}
+              align="center"
+              style={{ marginBottom: '7px' }}
+              triggerElement={
+                <div
+                  role={'button'}
+                  onClick={() => handleCardEdit(contact)}
+                  className="cursor-pointer rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                  <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
+                </div>
+              }>
+              <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+            </TooltipComponent>
             {
               // temporarily removing send email and send sms buttons
             }
@@ -307,29 +310,25 @@ export default function ContactCard({
               Send SMS
             </div>
           </div> */}
-            <div
-              className="cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
-              onMouseEnter={() => {
-                document
-                  .querySelector('#tooltip-add-activity-' + contact.id)
-                  .classList.remove('invisible', 'opacity-0');
-                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray4');
-                document.querySelector('#add-activity-icon-' + contact.id).classList.remove('text-gray3');
-              }}
-              onMouseLeave={() => {
-                document.querySelector('#tooltip-add-activity-' + contact.id).classList.add('invisible', 'opacity-0');
-                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray3');
-                document.querySelector('#add-activity-icon-' + contact.id).classList.remove('text-gray4');
-              }}
-              onClick={() => handleAddActivity(contact)}>
-              <List id={'add-activity-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-              <div
-                id={'tooltip-add-activity-' + contact.id}
-                role="tooltip"
-                className="inline-block bottom-11 absolute whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Add Activity
-              </div>
-            </div>
+            <TooltipComponent
+              side={'top'}
+              align="center"
+              style={{ marginBottom: '7px' }}
+              triggerElement={
+                <div
+                  role={'button'}
+                  onClick={() => handleAddActivity(contact)}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="cursor-pointer rounded-full p-1.5 bg-gray2  hover:bg-[#BAE6FD] mr-2 flex items-center justify-center">
+                  <ChatBubbleOutlineIcon
+                    id={'add-activity-icon-' + contact.id}
+                    className={`w-4 h-4  ${isHovered ? 'text-[#0284C7]' : 'text-gray5 '}`}
+                  />
+                </div>
+              }>
+              <div className={'text-xs leading-4 font-medium'}>Add Activity</div>
+            </TooltipComponent>
             {/*<div*/}
             {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
             {/*  ref={dropdownRef}*/}
