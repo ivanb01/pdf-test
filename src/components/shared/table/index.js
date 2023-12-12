@@ -2193,92 +2193,93 @@ const Table = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((person) => (
-            <tr
-              key={person.id}
-              onClick={() =>
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: person?.id },
-                })
-              }
-              className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
+          {data &&
+            data.map((person) => (
+              <tr
+                key={person.id}
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.id },
+                  })
+                }
+                className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
               ${
                 isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
               } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group`}
-              style={{ height: '84px' }}>
-              <td className="pl-6 py-3" style={{ width: '300px' }}>
-                <div className={'flex gap-4'}>
-                  <div>
-                    {person.profile_image_path ? (
-                      <img
-                        className="inline-block h-10 w-10 rounded-full"
-                        src={person.profile_image_path}
-                        alt={person.first_name}
-                      />
-                    ) : (
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                        <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                style={{ height: '84px' }}>
+                <td className="pl-6 py-3" style={{ width: '300px' }}>
+                  <div className={'flex gap-4'}>
+                    <div>
+                      {person.profile_image_path ? (
+                        <img
+                          className="inline-block h-10 w-10 rounded-full"
+                          src={person.profile_image_path}
+                          alt={person.first_name}
+                        />
+                      ) : (
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                          </span>
                         </span>
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                      {person.first_name} {person.last_name}
-                    </h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
-                  </div>
-                </div>
-              </td>
-
-              <td>
-                <Chip label={person.category_2} typeStyle />
-                <Chip
-                  label={person.status_2}
-                  statusStyle
-                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
-                  {getContactStatusByStatusId(person.category_id, person.status_id)}
-                </Chip>
-              </td>
-              <td>
-                <div className={'flex gap-1.5 items-center'}>
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
-                    }`}></div>
-                  <p className={'text-sm leading-5 font-normal'}>
-                    {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
-                  </p>
-                </div>
-              </td>
-              <td>
-                <DateChip
-                  lastCommunication={person.last_communication_date}
-                  contactStatus={person.status_2}
-                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
-                />
-              </td>
-              <td>
-                <TooltipComponent
-                  side={'bottom'}
-                  align={'center'}
-                  triggerElement={
-                    <div
-                      className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCardEdit(person);
-                      }}>
-                      <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                      )}
                     </div>
-                  }>
-                  <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
-                </TooltipComponent>
-              </td>
-            </tr>
-          ))}
+                    <div>
+                      <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                        {person.first_name} {person.last_name}
+                      </h6>
+                      <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <Chip label={person.category_2} typeStyle />
+                  <Chip
+                    label={person.status_2}
+                    statusStyle
+                    className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
+                    {getContactStatusByStatusId(person.category_id, person.status_id)}
+                  </Chip>
+                </td>
+                <td>
+                  <div className={'flex gap-1.5 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
+                      }`}></div>
+                    <p className={'text-sm leading-5 font-normal'}>
+                      {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
+                    </p>
+                  </div>
+                </td>
+                <td>
+                  <DateChip
+                    lastCommunication={person.last_communication_date}
+                    contactStatus={person.status_2}
+                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  />
+                </td>
+                <td>
+                  <TooltipComponent
+                    side={'bottom'}
+                    align={'center'}
+                    triggerElement={
+                      <div
+                        className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCardEdit(person);
+                        }}>
+                        <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                      </div>
+                    }>
+                    <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
+                  </TooltipComponent>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </>
     );

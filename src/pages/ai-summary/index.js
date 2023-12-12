@@ -48,13 +48,6 @@ const index = () => {
   };
   const contacts = useSelector((state) => state.contacts.allContacts.data);
 
-  useEffect(() => {
-    console.log(
-      'contacts',
-      contacts?.filter((c) => c.approved_ai === null && c.import_source_text === 'Smart Sync A.I.'),
-    );
-  }, [contacts]);
-
   const fetchContacts = async () => {
     if (contacts === undefined) {
       getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')

@@ -9,7 +9,7 @@ import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import clients from '../../../../pages/contacts/clients';
 import GoogleContact from '../../../../../public/images/GoogleContact.png';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const statusColors = {
   'New Lead': 'bg-lightBlue1',
@@ -37,6 +37,9 @@ const ContactInfo = ({
   maxWidth,
   emailHover,
 }) => {
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {

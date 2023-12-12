@@ -1,15 +1,7 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import {
-  setExpandedTab,
-  setOpenedSubtab,
-  setOpenedTab,
-  setRefetchData,
-  setUnapprovedContacts,
-  setUserGaveConsent,
-  setVendorSubtypes,
-} from 'store/global/slice';
+import { setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -21,7 +13,6 @@ import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
-import { getContactCategories } from '@api/contacts';
 import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
@@ -86,7 +77,6 @@ const index = () => {
     if (refetchData) {
       fetchClients();
       dispatch(setOpenedTab(0));
-      // dispatch(setOpenedSubtab(0));
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
