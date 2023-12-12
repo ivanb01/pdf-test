@@ -19,7 +19,8 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { useSelector } from 'react-redux';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+
 import Mail from '@mui/icons-material/Mail';
 
 const categoryIds = {
@@ -322,10 +323,19 @@ export default function ContactCard({
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   className="cursor-pointer rounded-full p-1.5 bg-gray2  hover:bg-gray6 mr-2 flex items-center justify-center">
-                  <ChatBubbleOutlineIcon
+                  <svg
                     id={'add-activity-icon-' + contact.id}
                     className={`w-4 h-4  ${!isHovered ? 'text-gray5' : 'text-white '}`}
-                  />
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="currentColor">
+                    <path
+                      d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
+                      fill="currentColor"
+                    />
+                  </svg>
                 </div>
               }>
               <div className={'text-xs leading-4 font-medium'}>Add Communication</div>
