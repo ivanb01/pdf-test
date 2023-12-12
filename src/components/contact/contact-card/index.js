@@ -179,17 +179,17 @@ export default function ContactCard({
         className={`${dropdownOpened && 'border-t-4'} ${isUnapprovedAIContact && 'opacity-50 hover:opacity-100'} ${
           isUnapprovedAIContact && hideUnapproved && 'hidden'
         } change-status-dropdown relative group rounded-lg bg-white shadow-md mb-3 transition-all border-lightBlue3 hover:border-t-4 contact-card`}>
-        {dropdownOpened && (
-          <DropdownNoInput
-            selectedOption={contact?.status_2}
-            options={options}
-            handleSelect={(item) => {
-              // console.log(item);
-              handleChangeStatus(item.id, contact);
-              setDropdownOpened(false);
-            }}
-          />
-        )}
+        {/*{dropdownOpened && (*/}
+        {/*  <DropdownNoInput*/}
+        {/*    selectedOption={contact?.status_2}*/}
+        {/*    options={options}*/}
+        {/*    handleSelect={(item) => {*/}
+        {/*      // console.log(item);*/}
+        {/*      handleChangeStatus(item.id, contact);*/}
+        {/*      setDropdownOpened(false);*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*)}*/}
         <div className="p-4 cursor-pointer" onClick={() => handleCardClick(contact)}>
           <div className="flex w-full items-center justify-between">
             {contact.profile_image_path ? (
@@ -203,22 +203,18 @@ export default function ContactCard({
             )}
             <div className="flex-1 ml-2 pr-2">
               <div className="flex items-center space-x-3">
-                <h3 className="text-sm font-medium text-gray-900 max-w-[110px] break-word">
+                <h3 className="text-sm font-medium text-gray-900  break-word">
                   {contact.first_name + ' ' + contact.last_name}
                 </h3>
               </div>
             </div>
-            <Badge label={contact.category_2} className="text-gray8 bg-gray1" />
             {/* <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800">
               Badge
             </span> */}
           </div>
           {/* <Chip lastCommunication={formatDateAgo(contact.last_communication_date, 'hour')} lastCommunicationType={contact.last_communication_category_id} /> */}
-
-          <div
-            className={`flex w-full items-center ${
-              contact.status_2 !== 'Dropped' ? 'justify-between' : 'justify-end'
-            } mt-4`}>
+          <div className={`flex w-full items-center ${contact.status_2 !== 'Dropped' && 'justify-start'} mt-4 gap-2`}>
+            <Badge label={contact.category_2} className="text-gray8 bg-gray1 px-[6px] py-[4px] rounded-[2222px]" />
             {contact.status_2 !== 'Dropped' && (
               <DateChip
                 lastCommunication={contact.last_communication_date}
@@ -226,33 +222,33 @@ export default function ContactCard({
                 contactCategory={categoryType}
               />
             )}
-            <div className={'flex items-center gap-1.5'}>
-              <div>
-                <div className={'h-5'}>{getSource(contact.import_source_text).icon}</div>
-              </div>
-              {contact.summary !== null ? (
-                <TooltipComponent
-                  side={'right'}
-                  align={'center'}
-                  triggerElement={
-                    <InfoSharpIcon
-                      className={`text-gray3 hover:text-gray4 mb-1.5`}
-                      style={{ height: '18px', width: '18px' }}
-                      aria-hidden="true"
-                    />
-                  }>
-                  <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                    <div className={`flex gap-1.5`}>
-                      {getSource(contact.import_source_text).icon}
-                      <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>
-                    </div>
-                    <p className="text-xs leading-4 font-normal">{contact.summary}</p>
-                  </div>
-                </TooltipComponent>
-              ) : (
-                <></>
-              )}
-            </div>
+            {/*<div className={'flex items-center gap-1.5'}>*/}
+            {/*  <div>*/}
+            {/*    <div className={'h-5'}>{getSource(contact.import_source_text).icon}</div>*/}
+            {/*  </div>*/}
+            {/*  {contact.summary !== null ? (*/}
+            {/*    <TooltipComponent*/}
+            {/*      side={'right'}*/}
+            {/*      align={'center'}*/}
+            {/*      triggerElement={*/}
+            {/*        <InfoSharpIcon*/}
+            {/*          className={`text-gray3 hover:text-gray4 mb-1.5`}*/}
+            {/*          style={{ height: '18px', width: '18px' }}*/}
+            {/*          aria-hidden="true"*/}
+            {/*        />*/}
+            {/*      }>*/}
+            {/*      <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>*/}
+            {/*        <div className={`flex gap-1.5`}>*/}
+            {/*          {getSource(contact.import_source_text).icon}*/}
+            {/*          <p className={'text-xs leading-4 font-medium'}>{getSource(contact.import_source_text).name}</p>*/}
+            {/*        </div>*/}
+            {/*        <p className="text-xs leading-4 font-normal">{contact.summary}</p>*/}
+            {/*      </div>*/}
+            {/*    </TooltipComponent>*/}
+            {/*  ) : (*/}
+            {/*    <></>*/}
+            {/*  )}*/}
+            {/*</div>*/}
           </div>
         </div>
         <div
@@ -334,49 +330,49 @@ export default function ContactCard({
                 Add Activity
               </div>
             </div>
-            <div
-              className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-              ref={dropdownRef}
-              onMouseEnter={() => {
-                document
-                  .querySelector('#tooltip-change-status-' + contact.id)
-                  .classList.remove('invisible', 'opacity-0');
-                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
-                document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray3');
-              }}
-              onMouseLeave={() => {
-                document.querySelector('#tooltip-change-status-' + contact.id).classList.add('invisible', 'opacity-0');
-                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
-                document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray4');
-              }}
-              // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-              onClick={() => setDropdownOpened(!dropdownOpened)}>
-              {/* <SimpleBarDropdown
-                options={allStatusesQuickEdit[categoryType]}
-                activeIcon={false}
-                activeClasses="bg-lightBlue1"
-                handleSelect={(item) => {
-                  // setDropdownVal(item)
-                  handleChangeStatus(item.id, contact);
-                }}
-                iconLabel={
-                  <Category
-                    id={'change-status-icon-' + contact.id}
-                    className="text-gray3 w-4 h-4"
-                  />
-                }
-                dropdownValue={contact?.status_2}
-                handleDropdownClosed={(item) => setDropdownOpened(item)}
-                noOptionChange={contact?.is_in_campaign==="assigned"}
-              ></SimpleBarDropdown> */}
-              <Workspaces id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-              <div
-                id={'tooltip-change-status-' + contact.id}
-                role="tooltip"
-                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Change Status
-              </div>
-            </div>
+            {/*<div*/}
+            {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
+            {/*  ref={dropdownRef}*/}
+            {/*  onMouseEnter={() => {*/}
+            {/*    document*/}
+            {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
+            {/*      .classList.remove('invisible', 'opacity-0');*/}
+            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');*/}
+            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray3');*/}
+            {/*  }}*/}
+            {/*  onMouseLeave={() => {*/}
+            {/*    document.querySelector('#tooltip-change-status-' + contact.id).classList.add('invisible', 'opacity-0');*/}
+            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');*/}
+            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.remove('text-gray4');*/}
+            {/*  }}*/}
+            {/*  // onClick={(event) => handleDropdown(event, !dropdownOpened)}*/}
+            {/*  onClick={() => setDropdownOpened(!dropdownOpened)}>*/}
+            {/*  /!* <SimpleBarDropdown*/}
+            {/*    options={allStatusesQuickEdit[categoryType]}*/}
+            {/*    activeIcon={false}*/}
+            {/*    activeClasses="bg-lightBlue1"*/}
+            {/*    handleSelect={(item) => {*/}
+            {/*      // setDropdownVal(item)*/}
+            {/*      handleChangeStatus(item.id, contact);*/}
+            {/*    }}*/}
+            {/*    iconLabel={*/}
+            {/*      <Category*/}
+            {/*        id={'change-status-icon-' + contact.id}*/}
+            {/*        className="text-gray3 w-4 h-4"*/}
+            {/*      />*/}
+            {/*    }*/}
+            {/*    dropdownValue={contact?.status_2}*/}
+            {/*    handleDropdownClosed={(item) => setDropdownOpened(item)}*/}
+            {/*    noOptionChange={contact?.is_in_campaign==="assigned"}*/}
+            {/*  ></SimpleBarDropdown> *!/*/}
+            {/*  /!*<Workspaces id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />*!/*/}
+            {/*  /!*<div*!/*/}
+            {/*  /!*  id={'tooltip-change-status-' + contact.id}*!/*/}
+            {/*  /!*  role="tooltip"*!/*/}
+            {/*  /!*  className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">*!/*/}
+            {/*  /!*  Change Status*!/*/}
+            {/*  /!*</div>*!/*/}
+            {/*</div>*/}
           </div>
         </div>
       </div>

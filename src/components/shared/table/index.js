@@ -79,7 +79,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Toggle from '@components/shared/Toggle';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import Mail from '@mui/icons-material/Mail';
-
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -779,9 +779,6 @@ const Table = ({
         expanded: true,
       })),
     );
-    useEffect(() => {
-      console.log(isExpanded);
-    }, [isExpanded]);
 
     useEffect(() => {
       if (contactsStatuses[openedSubtab]) {
@@ -1129,6 +1126,7 @@ const Table = ({
                         <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
                           <div className="text-gray7 font-medium">
                             <DateChip
+                              noColors
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
                               contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
@@ -1145,7 +1143,7 @@ const Table = ({
                       <td>
                         <div className="px-4 py-[10px] flex items-center justify-center">
                           <div
-                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                            className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
                                 .querySelector('#tooltip-edit-contact-' + contact.id)
@@ -1164,7 +1162,7 @@ const Table = ({
                               e.stopPropagation();
                               handleCardEdit(contact);
                             }}>
-                            <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                            <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
                               className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
@@ -1172,7 +1170,7 @@ const Table = ({
                             </div>
                           </div>
                           <div
-                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                            className="group cursor-pointer relative rounded-full p-1.5 bg-gray2  hover:bg-[#BAE6FD] mr-2 flex items-center justify-center hover:text-[#0284C7"
                             onMouseEnter={() => {
                               document
                                 .querySelector('#tooltip-add-activity-' + contact.id)
@@ -1198,57 +1196,60 @@ const Table = ({
                               e.stopPropagation();
                               handleAddActivity(contact);
                             }}>
-                            <List id={'add-activity-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                            <ChatBubbleOutlineIcon
+                              id={'add-activity-icon-' + contact.id}
+                              className="text-gray5 w-4 h-4 group-hover:text-[#0284C7]"
+                            />
                             <div
                               id={'tooltip-add-activity-' + contact.id}
                               role="tooltip"
-                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                              className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
                               Add Activity
                             </div>
                           </div>
-                          <div
-                            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-                            onMouseEnter={() => {
-                              document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.remove('invisible', 'opacity-0');
-                              document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
-                              document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray3');
-                            }}
-                            onMouseLeave={() => {
-                              document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.add('invisible', 'opacity-0');
-                              document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
-                              document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray4');
-                            }}
-                            // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                            onClick={(e) => e.stopPropagation()}>
-                            {/* <Category className="text-gray3 w-4 h-4" /> */}
-                            <SimpleBarDropdown
-                              options={allStatusesQuickEdit[categoryType]}
-                              activeIcon={false}
-                              activeClasses="bg-lightBlue1"
-                              handleSelect={(item) => {
-                                // setDropdownVal(item)
-                                handleChangeStatus(item.id, contact);
-                              }}
-                              iconLabel={
-                                <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-                              }
-                              dropdownValue={contact?.status_2}
-                              handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
-                            <div
-                              id={'tooltip-change-status-' + contact.id}
-                              role="tooltip"
-                              className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                              Change Status
-                            </div>
-                          </div>
+                          {/*<div*/}
+                          {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
+                          {/*  onMouseEnter={() => {*/}
+                          {/*    document*/}
+                          {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
+                          {/*      .classList.remove('invisible', 'opacity-0');*/}
+                          {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');*/}
+                          {/*    document*/}
+                          {/*      .querySelector('#change-status-icon-' + contact.id)*/}
+                          {/*      .classList.remove('text-gray3');*/}
+                          {/*  }}*/}
+                          {/*  onMouseLeave={() => {*/}
+                          {/*    document*/}
+                          {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
+                          {/*      .classList.add('invisible', 'opacity-0');*/}
+                          {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');*/}
+                          {/*    document*/}
+                          {/*      .querySelector('#change-status-icon-' + contact.id)*/}
+                          {/*      .classList.remove('text-gray4');*/}
+                          {/*  }}*/}
+                          {/*  // onClick={(event) => handleDropdown(event, !dropdownOpened)}*/}
+                          {/*  onClick={(e) => e.stopPropagation()}>*/}
+                          {/*  /!* <Category className="text-gray3 w-4 h-4" /> *!/*/}
+                          {/*  <SimpleBarDropdown*/}
+                          {/*    options={allStatusesQuickEdit[categoryType]}*/}
+                          {/*    activeIcon={false}*/}
+                          {/*    activeClasses="bg-lightBlue1"*/}
+                          {/*    handleSelect={(item) => {*/}
+                          {/*      // setDropdownVal(item)*/}
+                          {/*      handleChangeStatus(item.id, contact);*/}
+                          {/*    }}*/}
+                          {/*    iconLabel={*/}
+                          {/*      <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />*/}
+                          {/*    }*/}
+                          {/*    dropdownValue={contact?.status_2}*/}
+                          {/*    handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>*/}
+                          {/*  <div*/}
+                          {/*    id={'tooltip-change-status-' + contact.id}*/}
+                          {/*    role="tooltip"*/}
+                          {/*    className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">*/}
+                          {/*    Change Status*/}
+                          {/*  </div>*/}
+                          {/*</div>*/}
                         </div>
                       </td>
                     </tr>

@@ -196,9 +196,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
           />,
           document.getElementById('modal-portal'),
         )}
-      {changeStatusModal && (
-        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
-      )}
+      {/*{changeStatusModal && (*/}
+      {/*  <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />*/}
+      {/*)}*/}
       <div className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
@@ -295,7 +295,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
                     addActivityPopup={addActivityPopup}
                     setAddActivityPopup={setAddActivityPopup}
                     handleAddActivity={handleAddActivity}
-                    handleChangeStatus={handleChangeStatus}
+                    // handleChangeStatus={handleChangeStatus}
                   />
                 );
               }

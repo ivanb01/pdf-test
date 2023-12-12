@@ -10,6 +10,7 @@ export default function DateChip({
   lastCommunicationType,
   contactCategory,
   contactStatus,
+  noColors,
 }) {
   let lastCommunicationLabel = '';
   let styling = '';
@@ -31,7 +32,10 @@ export default function DateChip({
       side={'left'}
       align="center"
       triggerElement={
-        <div className={`${className} inline-flex rounded-full px-2 text-xs font-medium items-center ${styling}`}>
+        <div
+          className={`inline-flex rounded-full px-2 text-xs font-medium items-center  ${
+            noColors ? 'bg-gray1 text-gray5' : styling
+          }  ${className}  `}>
           <Mail className="w-4 mr-1" />
           <span>{lastCommunicationLabel} </span>
         </div>
