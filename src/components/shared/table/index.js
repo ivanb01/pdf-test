@@ -80,6 +80,8 @@ import Toggle from '@components/shared/Toggle';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import Mail from '@mui/icons-material/Mail';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import CommunicationForm from '@components/overlays/communication-form';
+
 const categoryIds = {
   Client: '4,5,6,7',
   Professional: '8,9,12',
@@ -912,6 +914,7 @@ const Table = ({
       });
     };
 
+    const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     return (
       <>
         <thead className="bg-gray-50">
@@ -1169,7 +1172,7 @@ const Table = ({
                             </div>
                           </div>
                           <div
-                            className="group cursor-pointer relative rounded-full p-1.5 bg-gray2  hover:bg-[#BAE6FD] mr-2 flex items-center justify-center hover:text-[#0284C7"
+                            className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
                             onMouseEnter={() => {
                               document
                                 .querySelector('#tooltip-add-activity-' + contact.id)
@@ -1193,17 +1196,18 @@ const Table = ({
                             // }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleAddActivity(contact);
+                              // handleAddActivity(contact);
+                              setOpenCommunicationPopup(true);
                             }}>
                             <ChatBubbleOutlineIcon
                               id={'add-activity-icon-' + contact.id}
-                              className="text-gray5 w-4 h-4 group-hover:text-[#0284C7]"
+                              className="text-gray5 w-4 h-4 group-hover:text-white"
                             />
                             <div
                               id={'tooltip-add-activity-' + contact.id}
                               role="tooltip"
                               className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
-                              Add Activity
+                              Add Communication
                             </div>
                           </div>
                           {/*<div*/}
@@ -1367,6 +1371,11 @@ const Table = ({
             onSubmit={handleChangeStatusAndCampaign}
           />
         )}
+        {openCommuncationPopup &&
+          createPortal(
+            <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} />,
+            document.getElementById('modal-portal'),
+          )}
       </>
     );
   };
@@ -1647,6 +1656,7 @@ const Table = ({
               ),
             )}
         </tbody>
+
         {addActivityPopup &&
           createPortal(
             <AddActivity

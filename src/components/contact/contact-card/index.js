@@ -33,6 +33,7 @@ export default function ContactCard({
   handleCardClick,
   handleCardEdit,
   handleAddActivity,
+  handleCommunication,
   handleChangeStatus,
 }) {
   const dropdownRef = useRef(null);
@@ -317,17 +318,17 @@ export default function ContactCard({
               triggerElement={
                 <div
                   role={'button'}
-                  onClick={() => handleAddActivity(contact)}
+                  onClick={() => handleCommunication()}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                  className="cursor-pointer rounded-full p-1.5 bg-gray2  hover:bg-[#BAE6FD] mr-2 flex items-center justify-center">
+                  className="cursor-pointer rounded-full p-1.5 bg-gray2  hover:bg-gray6 mr-2 flex items-center justify-center">
                   <ChatBubbleOutlineIcon
                     id={'add-activity-icon-' + contact.id}
-                    className={`w-4 h-4  ${isHovered ? 'text-[#0284C7]' : 'text-gray5 '}`}
+                    className={`w-4 h-4  ${!isHovered ? 'text-gray5' : 'text-white '}`}
                   />
                 </div>
               }>
-              <div className={'text-xs leading-4 font-medium'}>Add Activity</div>
+              <div className={'text-xs leading-4 font-medium'}>Add Communication</div>
             </TooltipComponent>
             {/*<div*/}
             {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}

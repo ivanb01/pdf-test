@@ -25,6 +25,7 @@ import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
 import DateChip from '@components/shared/chip/date-chip';
 import Mail from '@mui/icons-material/Mail';
+import CommunicationForm from '@components/overlays/communication-form';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -41,6 +42,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   // const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
+  const [openCommunicationPopup, setOpenCommunicationPopup] = useState(false);
 
   const [filteredContacts, setFilteredContacts] = useState(
     contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
@@ -119,6 +121,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
   const handleAddActivity = (client) => {
     setClientToModify(client);
     setAddActivityPopup(true);
+  };
+  const handleCommunication = () => {
+    setOpenCommunicationPopup(true);
   };
 
   const [changeStatusModal, setChangeStatusModal] = useState(false);
@@ -295,6 +300,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
                     addActivityPopup={addActivityPopup}
                     setAddActivityPopup={setAddActivityPopup}
                     handleAddActivity={handleAddActivity}
+                    handleCommunication={handleCommunication}
                     // handleChangeStatus={handleChangeStatus}
                   />
                 );
@@ -343,6 +349,11 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
           </ul>
         </SimpleBar>
       </div> */}
+      {openCommunicationPopup &&
+        createPortal(
+          <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} />,
+          document.getElementById('modal-portal'),
+        )}
     </div>
   );
 };
