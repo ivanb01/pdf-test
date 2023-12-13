@@ -216,21 +216,21 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                   <div className={'mr-3'}>
                                     Created:{' '}
                                     {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.created_at).includes('PM')
+                                    formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Today')
                                       ? formatDateCalendar(activityItem.created_at)
-                                      : formatDateCalendar(activityItem.created_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.created_at)}
+                                      : daysBefore(activityItem.created_at)}
                                   </div>
                                 }>
                                 <h1 className={'text-sm'}>
                                   {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.created_at).includes('Last') ||
-                                  formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
-                                  formatDateCalendar(activityItem.created_at).includes('Today')
+                                  formatDateCalendar(activityItem.created_at).includes('PM')
                                     ? formatDateStringMDY(activityItem.created_at)
-                                    : daysBefore(activityItem.created_at)}
+                                    : formatDateCalendar(activityItem.created_at) +
+                                      ' - ' +
+                                      formatDateLThour(activityItem.created_at)}
                                 </h1>
                               </TooltipComponent>
                             </p>
@@ -244,21 +244,21 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                   <div>
                                     Updated:{' '}
                                     {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('PM')
+                                    formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Today')
                                       ? formatDateCalendar(activityItem.updated_at)
-                                      : formatDateCalendar(activityItem.updated_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.updated_at)}
+                                      : daysBefore(activityItem.updated_at)}
                                   </div>
                                 }>
                                 <h1 className={'text-sm'}>
                                   {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.updated_at).includes('Last') ||
-                                  formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
-                                  formatDateCalendar(activityItem.updated_at).includes('Today')
+                                  formatDateCalendar(activityItem.updated_at).includes('PM')
                                     ? formatDateStringMDY(activityItem.updated_at)
-                                    : daysBefore(activityItem.updated_at)}
+                                    : formatDateCalendar(activityItem.updated_at) +
+                                      ' - ' +
+                                      formatDateLThour(activityItem.updated_at)}
                                 </h1>
                               </TooltipComponent>
                               {/* Commented 6d ago */}

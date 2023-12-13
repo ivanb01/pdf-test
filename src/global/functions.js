@@ -169,7 +169,7 @@ export function daysBefore(dateString) {
   // Calculate the difference in days
   const daysDifference = currentDate.diff(inputDate, 'days');
 
-  return daysDifference + ' days before';
+  return daysDifference + ' days ago';
 }
 
 export const formatDateAgo = (date, param) => {
