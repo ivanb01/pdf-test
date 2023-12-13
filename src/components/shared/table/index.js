@@ -1938,16 +1938,12 @@ const Table = ({
               </td>
               <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center break-all">
-                  {dataItem.ai_email_summary && (
+                  {dataItem.summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
                     </a>
                   )}
-                  {dataItem.ai_email_summary ? (
-                    <div className="email-summary-styling">{dataItem.ai_email_summary}</div>
-                  ) : (
-                    '-'
-                  )}
+                  {dataItem.summary ? <div className="email-summary-styling">{dataItem.summary}</div> : '-'}
                 </div>
               </td>
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">

@@ -53,7 +53,7 @@ const ImageGallery = ({ images, property, url }) => {
   );
 };
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, selected, setSelected }) => {
   let status = '';
   if (property.STATUS == 'Rented') {
     status = '&status=22';
@@ -63,7 +63,10 @@ const PropertyCard = ({ property }) => {
   let url = `${getBaseUrl()}/property?id=${property.ID}` + status;
 
   return (
-    <div className="border border-gray-200 rounded-[4px]">
+    <div
+      className={`border-2 transition-all border-gray-200 rounded-[4px] ${
+        selected && ' border-2 border-lightBlue3 custom-box-shadow'
+      }`}>
       <div className="h-[160px] relative">
         <ImageGallery images={property.PHOTOS} property={property} url={url} />
         <div
@@ -116,9 +119,42 @@ const PropertyCard = ({ property }) => {
             </div>
           )}
         </div>
-        <div className="font-semibold text-gray-900 text-base">
-          {formatPrice(property.PRICE)}
-          {property.STATUS.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
+        <div className="flex items-center justify-between">
+          <div className="font-semibold text-gray-900 text-base">
+            {formatPrice(property.PRICE)}
+            {property.STATUS.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
+          </div>
+          <div class="form-checkbox">
+            <input
+              type="checkbox"
+              id={`checkbox-${property.ID}`}
+              class="hidden"
+              onChange={(event) => {
+                if (event.target.checked) {
+                  setSelected((prevSelected) => [...prevSelected, property.ID]);
+                } else {
+                  setSelected((prevSelected) => prevSelected.filter((id) => id !== property.ID));
+                }
+              }}
+            />
+            <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
+              <div
+                class={`${
+                  selected ? 'bg-lightBlue3' : 'border border-gray-300'
+                } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+                {selected && (
+                  <svg
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                    version="1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 48 48"
+                    enable-background="new 0 0 48 48">
+                    <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
+                  </svg>
+                )}
+              </div>
+            </label>
+          </div>
         </div>
       </div>
     </div>

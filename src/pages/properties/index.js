@@ -4,12 +4,10 @@ import lookingForEmpty from '/public/images/looking-for-empty.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
 import { NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
-import SearchSelectInput from '@components/shared/search-select-input';
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import Button from '@components/shared/button';
-import { valueOptions } from '@global/functions';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
@@ -17,6 +15,10 @@ import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
+import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
+import SlideOver from '@components/shared/slideOver';
+import { useSelector } from 'react-redux';
+import { getInitials, searchContacts } from '@global/functions';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -40,6 +42,8 @@ const index = () => {
   const [bathrooms, setBathrooms] = useState();
   const [minPrice, setMinPrice] = useState();
   const [maxPrice, setMaxPrice] = useState();
+  const [selectedProperties, setSelectedProperties] = useState([]);
+  const [open, setOpen] = useState(true);
 
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
@@ -256,6 +260,25 @@ const index = () => {
 
   const sortedNeighborhoods = sortOptionsByChecked(NYCneighborhoods, neighborhoods);
   const [openFilters, setOpenFilters] = useState(false);
+  const [sendMethod, setSendMethod] = useState(1);
+
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const [filteredContacts, setFilteredContacts] = useState(null);
+  const [selectedContacts, setSelectedContacts] = useState([]);
+
+  useEffect(() => {
+    setFilteredContacts(
+      sendMethod == 1
+        ? contacts?.filter((contact) => contact.email)
+        : contacts?.filter((contact) => contact.phone_number),
+    );
+  }, [contacts]);
+
+  const handleSearch = (searchTerm) => {
+    const filteredArray = searchContacts(contacts, searchTerm);
+    setFilteredContacts(filteredArray.data);
+  };
+
   return (
     <>
       <MainMenu />
@@ -360,10 +383,10 @@ const index = () => {
       ) : properties.LISTINGS && properties.LISTINGS.length ? (
         <div className="flex items-center justify-between">
           <div className="w-full">
-            <SimpleBar style={{ maxHeight: 'calc(100vh - 155px)' }}>
+            <SimpleBar style={{ maxHeight: 'calc(100vh - 156px)' }}>
               <div className="p-6">
                 <div className={'flex items-center justify-between mb-6'}>
-                  <div className="text-gray-900 text-xs font-normal">
+                  <div className="text-gray-900 text-sm font-normal">
                     {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from REBNY
                     database.
                   </div>
@@ -374,7 +397,12 @@ const index = () => {
                 </div>
                 <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
-                    <PropertyCard key={index} property={property}></PropertyCard>
+                    <PropertyCard
+                      setSelected={setSelectedProperties}
+                      selected={selectedProperties.includes(property.ID)}
+                      key={index}
+                      property={property}
+                    />
                   ))}
                 </div>
                 {properties.TOTAL_COUNT > 21 && (
@@ -428,6 +456,39 @@ const index = () => {
                 )}
               </div>
             </SimpleBar>
+            {selectedProperties.length > 0 && (
+              <div className="custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between">
+                <div className=" bg-gray1 px-[14px] py-[10px] w-fit">
+                  <span className="font-semibold text-gray7">{selectedProperties.length}</span>
+                  <span className="text-gray8 font-medium">
+                    {' '}
+                    {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
+                  </span>
+                </div>
+                <div className="flex">
+                  <Button white label="Save" className="mr-3" />
+                  <Button
+                    primary
+                    leftIcon={<MailIcon />}
+                    label="Send via Email"
+                    className="mr-3"
+                    onClick={() => {
+                      setSendMethod(1);
+                      setOpen(true);
+                    }}
+                  />
+                  <Button
+                    primary
+                    leftIcon={<AtSymbolIcon />}
+                    label="Send via SMS"
+                    onClick={() => {
+                      setSendMethod(2);
+                      setOpen(true);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
           {/* <div className="w-1/2">
             {isLoaded && (
@@ -457,6 +518,125 @@ const index = () => {
         </div>
       )}
       {openFilters && <PropertyFilters open={openFilters} setOpen={() => setOpenFilters(false)} />}
+      <SlideOver
+        open={open}
+        noHeader
+        setOpen={setOpen}
+        title={sendMethod == 1 ? 'Send via Email' : 'Send via SMS'}
+        withBackdrop
+        buttons={
+          <>
+            <Button
+              // disabled={!Object.values(clientsFilters).flat().length > 0}
+              transparent
+              label="Preview"
+            />
+            {sendMethod == 1 ? (
+              <Button
+                primary
+                leftIcon={<MailIcon />}
+                label="Send via Email"
+                disabled={!selectedContacts.length || !selectedProperties.length}
+              />
+            ) : (
+              <Button
+                primary
+                leftIcon={<AtSymbolIcon />}
+                label="Send via SMS"
+                disabled={!selectedContacts.length || !selectedProperties.length}
+              />
+            )}
+
+            {/* <Button
+              onClick={filterContacts}
+              primary
+              label="See Results"
+              disabled={
+                !Object.values(filters).flat().length && !filtersCleared
+              }
+            /> */}
+          </>
+        }>
+        <div>
+          <div className="font-semibold text-gray7">Select Clients</div>
+          <Search
+            placeholder={`Search for clients`}
+            className="w-full text-sm mt-2"
+            onInput={(event) => handleSearch(event.target.value)}
+            // value={searchTerm}
+            // onInput={(event) => setSearchTerm(event.target.value)}
+          />
+          <div className="my-4">
+            <span className="font-semibold text-gray7">{selectedContacts.length}</span>
+            <span className="text-gray8 font-medium">
+              {' '}
+              {selectedProperties.length == 1 ? 'Contact' : 'Contacts'} selected
+            </span>
+          </div>
+          <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
+            {filteredContacts &&
+              filteredContacts.map((contact) => (
+                <div className={'flex justify-between items-center mb-5 mr-4'}>
+                  <div className="flex gap-4">
+                    <div>
+                      {contact.profile_image_path ? (
+                        <img
+                          className="inline-block h-10 w-10 rounded-full"
+                          src={contact.profile_image_path}
+                          alt={contact.first_name}
+                        />
+                      ) : (
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {getInitials(contact.first_name + ' ' + contact.last_name).toUpperCase()}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <h6 className={'text-sm leading-5 text-gray7 font-semibold '}>
+                        {contact.first_name} {contact.last_name}
+                      </h6>
+                      <h6
+                        className={
+                          ' text-sm leading-5 font-medium text-gray5 ellipsis-email xl:min-w-[230px] lg:w-[130px]'
+                        }
+                        title={contact.email}>
+                        {contact.email}
+                      </h6>
+                    </div>
+                  </div>
+                  <div>
+                    {selectedContacts.includes(contact.id) ? (
+                      <button
+                        className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
+                        onClick={() =>
+                          setSelectedContacts((prevSelected) => prevSelected.filter((id) => id !== contact.id))
+                        }>
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-[#DBEAFE] text-lightBlue3 text-sm px-3 py-[6px] font-medium rounded-md"
+                        onClick={() => setSelectedContacts((prevSelected) => [...prevSelected, contact.id])}>
+                        Select
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </SimpleBar>
+          <hr className="my-3" />
+          <div className="font-semibold text-gray7">Properties</div>
+          <div className="my-4">
+            <span className="font-semibold text-gray7">{selectedProperties.length}</span>
+            <span className="text-gray8 font-medium">
+              {' '}
+              {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
+            </span>
+          </div>
+        </div>
+      </SlideOver>
     </>
   );
 };

@@ -225,22 +225,15 @@ export default function LookingFor({ contactId, category }) {
   };
 
   const getNeighborhoodShortVersion = () => {
-    let neighborhoods = [];
+    const { neighborhood_ids } = formik.values;
+    if (!neighborhood_ids.length) return null;
 
-    console.log(formik.values.neighborhood_ids);
-    if (formik.values.neighborhood_ids.length) {
-      formik.values.neighborhood_ids.forEach((element) => {
-        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-      });
+    const neighborhoods = neighborhood_ids.map((id) => NYCneighborhoods.find((n) => n.value === id)?.label);
+
+    if (neighborhoods.length > 2) {
+      return `${neighborhoods[0]}, ${neighborhoods[1]}, +${neighborhoods.length - 2} more`;
     }
-    if (formik.values.neighborhood_ids.length > 2) {
-      return neighborhoods.length
-        ? neighborhoods[0] + `, ` + neighborhoods[1] + `, +${neighborhoods.length - 2} more`
-        : null;
-    } else if (formik.values.neighborhood_ids.length == 1 || formik.values.neighborhood_ids.length == 2) {
-      return neighborhoods.join(', ');
-    } else return null;
+    return neighborhoods.join(', ');
   };
 
   const getNeighborhoodValue = () => {
