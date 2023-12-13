@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -6,17 +6,41 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Input from 'components/shared/input';
 import Dropdown from '@components/shared/dropdown';
 import Button from '@components/shared/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAmenities } from '@store/global/slice';
 
-const Tag = ({ children }) => {
+const Tag = ({ children, onClick, selected }) => {
   return (
-    <div className={'px-[10px] py-[5px] rounded-[70px] border border-gray2 mb-4'}>
-      <p className={'text-xs leading-4 font-medium text-neutral1'}> {children}</p>
+    <div
+      className={`px-[10px] py-[5px] rounded-[70px] border ${
+        !selected ? 'border-gray2 ' : 'border-blue2 bg-[#EFF6FF]'
+      } mb-4`}
+      onClick={onClick}
+      role={'button'}>
+      <p className={`text-xs leading-4 font-medium ${!selected ? 'text-neutral1' : 'text-[#3B82F6]'}`}> {children}</p>
     </div>
   );
 };
-const PropertyFilters = ({ open, setOpen, className }) => {
+const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
+  const amenities = ['WiFi', 'Pool'];
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [closeOthers, setCloseOthers] = useState(false);
   const [closeRental, setCloseRental] = useState(false);
+  const dispatch = useDispatch();
+  const reduxAmenities = useSelector((state) => state.global.amenities);
+
+  useEffect(() => {
+    console.log(reduxAmenities, 'reduxAmenities');
+  }, [reduxAmenities]);
+  // Assuming toggleAmenitySelection function
+  const toggleAmenitySelection = (amenity) => {
+    if (reduxAmenities.includes(amenity)) {
+      dispatch(setAmenities(reduxAmenities.filter((selected) => selected !== amenity)));
+    } else {
+      dispatch(setAmenities([...reduxAmenities, amenity]));
+    }
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -89,20 +113,39 @@ const PropertyFilters = ({ open, setOpen, className }) => {
                         </div>
                         {!closeOthers && (
                           <div className={'flex flex-wrap gap-x-2'}>
-                            <Tag>Wifi</Tag>
-                            <Tag>Air condition</Tag>
-                            <Tag>Heating</Tag>
-                            <Tag>TV</Tag>
-                            <Tag>Dryer</Tag>
-                            <Tag>Refrierator</Tag>
+                            {amenities.map((a) => {
+                              return (
+                                <Tag
+                                  key={a}
+                                  onClick={() => toggleAmenitySelection(a)}
+                                  selected={reduxAmenities.includes(a)}>
+                                  <span>{a}</span>
+                                </Tag>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
                       <div className={'flex items-center justify-between px-6 py-4 fixed-categorize-menu'}>
-                        <Button white label="Cancel" onClick={setOpen}>
+                        <Button
+                          white
+                          label="Cancel"
+                          onClick={() => {
+                            dispatch(setAmenities([]));
+                            selectAmenities([]);
+                            setOpen(false);
+                          }}>
                           Clear All Filters
                         </Button>
-                        <Button primary className={'bg-[#3B82F6]'}>
+                        <Button
+                          primary
+                          className={'bg-[#3B82F6]'}
+                          onClick={() => {
+                            if (reduxAmenities.length > 0) {
+                              selectAmenities(reduxAmenities.join(','));
+                            }
+                            setOpen(false);
+                          }}>
                           Apply Filter
                         </Button>
                       </div>

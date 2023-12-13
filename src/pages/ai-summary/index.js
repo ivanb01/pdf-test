@@ -17,6 +17,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import clients from '../contacts/clients';
 import withAuth from '@components/withAuth';
 import { setAllContacts } from '@store/contacts/slice';
+import { findTagsOption } from '@global/functions';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const index = () => {
   const [indeterminate, setIndeterminate] = useState(false);
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   useLayoutEffect(() => {
     if (data) {
@@ -57,7 +60,8 @@ const index = () => {
             (c) =>
               c.category_1 != 'Uncategorized' &&
               (c.approved_ai === null || c.approved_ai === false) &&
-              c.import_source_text === 'Smart Sync A.I.',
+              c.import_source_text === 'Smart Sync A.I.' &&
+              (categories.length === 0 || categories.map((category) => category.value).includes(c.category_1)),
           );
           finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           setData(finalData);
@@ -66,13 +70,13 @@ const index = () => {
           setLoading(false);
         });
     } else {
-      console.log('Ereza');
       setLoading(false);
       let finalData = contacts.filter(
         (c) =>
           c.category_1 != 'Uncategorized' &&
           (c.approved_ai === null || c.approved_ai === false) &&
-          c.import_source_text === 'Smart Sync A.I.',
+          c.import_source_text === 'Smart Sync A.I.' &&
+          (categories.length === 0 || categories.map((category) => category.value).includes(c.category_1)),
       );
       finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setData(finalData);
@@ -200,7 +204,7 @@ const index = () => {
 
   useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [categories]);
 
   function customSort(a, b) {
     const order = ['Client', 'Professional', 'Others'];
@@ -229,11 +233,28 @@ const index = () => {
         </div>
       ) : data && data.filter((data) => data.approved_ai != true).length ? (
         <>
-          <div className="p-6 text-gray-900 font-medium text-base">
-            <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-              {data.filter((item) => item.approved_ai != true).length} contacts
-            </div>{' '}
-            from Smart Synced Contacts need to be reviewed
+          <div className="p-6 text-gray-900 font-medium text-base flex justify-between">
+            <div>
+              <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
+                {data.length} contacts
+              </div>{' '}
+              from Smart Synced Contacts need to be reviewed
+            </div>
+            <div className={'max-w-[500px] min-w-[200px]'}>
+              <DropdownWithSearch
+                maxMenuHeight={200}
+                isMulti
+                options={[
+                  { value: 'Client', label: 'Client' },
+                  { value: 'Professional', label: 'Professional' },
+                  { value: 'Other', label: 'Other' },
+                  { value: 'Trash', label: 'Trash' },
+                ]}
+                onChange={(choice) => {
+                  setCategories(choice);
+                }}
+              />
+            </div>
           </div>
           <SimpleBar
             autoHide={true}

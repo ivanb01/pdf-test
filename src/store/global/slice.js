@@ -35,6 +35,7 @@ const global = createSlice({
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')
         : false,
+    amenities: [],
   },
   reducers: {
     setVendorSubtypes(state, action) {
@@ -100,6 +101,10 @@ const global = createSlice({
       const createArrayOfObjects = (length) => Array.from({ length }, (_, id) => ({ id, opened: false }));
       state.tabs = createArrayOfObjects(action.payload);
     },
+    setAmenities(state, action) {
+      console.log(action.payload);
+      state.amenities = action.payload;
+    },
     setSorted(state, action) {
       const { name, order } = action.payload;
 
@@ -138,5 +143,6 @@ export const {
   setProfessionalsFilter,
   setSorted,
   setHideUnapproved,
+  setAmenities,
 } = global.actions;
 export default global.reducer;

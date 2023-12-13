@@ -37,9 +37,6 @@ const ContactInfo = ({
   maxWidth,
   emailHover,
 }) => {
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   const getSource = (source) => {
     if (source === 'GmailAI' || source === 'Smart Sync A.I.' || source === 'Gmail') {
       return {

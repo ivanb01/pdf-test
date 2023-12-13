@@ -40,7 +40,11 @@ const index = () => {
   const [bathrooms, setBathrooms] = useState();
   const [minPrice, setMinPrice] = useState();
   const [maxPrice, setMaxPrice] = useState();
+  const [selectedAmenities, setSelectedAmenities] = useState('');
 
+  const selectAmenities = (a) => {
+    setSelectedAmenities(a);
+  };
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -163,6 +167,7 @@ const index = () => {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       page: page,
+      amenities: selectedAmenities,
     };
     if (filterValue === 'newest') {
       params['sort'] = 'date';
@@ -235,7 +240,7 @@ const index = () => {
   }, []);
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
+  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue, selectedAmenities]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
@@ -456,7 +461,9 @@ const index = () => {
           </div>
         </div>
       )}
-      {openFilters && <PropertyFilters open={openFilters} setOpen={() => setOpenFilters(false)} />}
+      {openFilters && (
+        <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
+      )}
     </>
   );
 };
