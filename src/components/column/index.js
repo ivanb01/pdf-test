@@ -25,6 +25,7 @@ import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 import { createPortal } from 'react-dom';
 import DateChip from '@components/shared/chip/date-chip';
 import Mail from '@mui/icons-material/Mail';
+import CommunicationForm from '@components/overlays/communication-form';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -41,6 +42,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   // const clients = useSelector((state) => state.contacts.clients);
   const category = 'client';
+  const [openCommunicationPopup, setOpenCommunicationPopup] = useState(false);
 
   const [filteredContacts, setFilteredContacts] = useState(
     contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
@@ -120,6 +122,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
     setClientToModify(client);
     setAddActivityPopup(true);
   };
+  const handleCommunication = () => {
+    setOpenCommunicationPopup(true);
+  };
 
   const [changeStatusModal, setChangeStatusModal] = useState(false);
   const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
@@ -196,9 +201,9 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
           />,
           document.getElementById('modal-portal'),
         )}
-      {changeStatusModal && (
-        <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />
-      )}
+      {/*{changeStatusModal && (*/}
+      {/*  <ChangeStatus handleCloseOverlay={() => setChangeStatusModal(false)} onSubmit={handleChangeStatusAndCampaign} />*/}
+      {/*)}*/}
       <div className={`flex flex-row w-[280px] items-center justify-between p-[16px] ${status.color}`}>
         <div className="flex justify-start">
           <p className="text-sm mr-1">{status.name}</p>
@@ -295,7 +300,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
                     addActivityPopup={addActivityPopup}
                     setAddActivityPopup={setAddActivityPopup}
                     handleAddActivity={handleAddActivity}
-                    handleChangeStatus={handleChangeStatus}
+                    handleCommunication={handleCommunication}
+                    // handleChangeStatus={handleChangeStatus}
                   />
                 );
               }
@@ -343,6 +349,11 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
           </ul>
         </SimpleBar>
       </div> */}
+      {openCommunicationPopup &&
+        createPortal(
+          <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} />,
+          document.getElementById('modal-portal'),
+        )}
     </div>
   );
 };

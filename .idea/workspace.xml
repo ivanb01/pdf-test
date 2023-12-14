@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change text" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add need to communicate popup">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/contact/contact-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contact/contact-card/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +20,7 @@
         <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -66,14 +71,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00002" summary="add gradient">
-      <option name="closed" value="true" />
-      <created>1693217871179</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1693217871179</updated>
-    </task>
     <task id="LOCAL-00003" summary="improve others sum and uncategorized sum">
       <option name="closed" value="true" />
       <created>1693218293738</created>
@@ -466,14 +463,21 @@
       <option name="project" value="LOCAL" />
       <updated>1701339286104</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="add need to communicate popup">
+      <option name="closed" value="true" />
+      <created>1702418715150</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1702418715150</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add info icon on cards" />
     <MESSAGE value="add zoom on preview marketing" />
     <MESSAGE value="make size of main sidebar smaller and do refactoring at ai-summary" />
     <MESSAGE value="do refactoring at ai-summary" />
@@ -498,6 +502,7 @@
     <MESSAGE value="fix width in importing contact table" />
     <MESSAGE value="add descriptive message on marketing page" />
     <MESSAGE value="change text" />
-    <option name="LAST_COMMIT_MESSAGE" value="change text" />
+    <MESSAGE value="add need to communicate popup" />
+    <option name="LAST_COMMIT_MESSAGE" value="add need to communicate popup" />
   </component>
 </project>

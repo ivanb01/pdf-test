@@ -44,7 +44,11 @@ const index = () => {
   const [maxPrice, setMaxPrice] = useState();
   const [selectedProperties, setSelectedProperties] = useState([]);
   const [open, setOpen] = useState(true);
+  const [selectedAmenities, setSelectedAmenities] = useState('');
 
+  const selectAmenities = (a) => {
+    setSelectedAmenities(a);
+  };
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -167,6 +171,7 @@ const index = () => {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       page: page,
+      amenities: selectedAmenities,
     };
     if (filterValue === 'newest') {
       params['sort'] = 'date';
@@ -239,7 +244,7 @@ const index = () => {
   }, []);
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue]);
+  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue, selectedAmenities]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
@@ -354,8 +359,8 @@ const index = () => {
           />
           <MinMaxPrice
             // options={bathroomOptions}
-            label={windowWidth >= 1310 ? 'Min/Max Price' : 'Price'}
-            className="mr-4 w-[220px]"
+            label={'Min/Max Price'}
+            className="mr-4 min-w-[170px]"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
@@ -517,7 +522,9 @@ const index = () => {
           </div>
         </div>
       )}
-      {openFilters && <PropertyFilters open={openFilters} setOpen={() => setOpenFilters(false)} />}
+      {openFilters && (
+        <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
+      )}
       <SlideOver
         open={open}
         noHeader
