@@ -268,7 +268,7 @@ export default function ContactCard({
           className={`${
             !dropdownOpened && 'h-0 opacity-0'
           } pointer-events-none group-hover:pointer-events-auto group-hover:h-[49px] group-hover:opacity-100 transition-all`}>
-          <div className="border-t border-gray-200 px-4 py-[10px] flex items-center justify-end">
+          <div className="border-t border-gray-200 py-[10px] flex items-center justify-end">
             <TooltipComponent
               side={'top'}
               align="center"
