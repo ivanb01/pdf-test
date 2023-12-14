@@ -527,7 +527,7 @@ const Table = ({
                       )}
                       <ContactInfo
                         inCategorization={tableFor === 'in-categorization'}
-                        emailsLength={19}
+                        emailsLength={15}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
