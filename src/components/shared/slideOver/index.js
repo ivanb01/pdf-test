@@ -40,18 +40,20 @@ export default function SlideOver({ noHeader, open, setOpen, title, buttons, chi
                         </div>
                       </div>
                     )}
-                    <div className="flex min-h-0 flex-1 flex-col">
+                    <div className="side-overlay-wrapper flex min-h-0 flex-1 flex-col">
                       <SimpleBar autoHide style={{ maxHeight: '100%' }}>
                         <div className="relative mt-[30px] mb-[30px] flex-1 px-4 sm:px-6">{children}</div>
                       </SimpleBar>
                     </div>
-                    <div
-                      className="flex flex-shrink-0 justify-between px-4 py-4"
-                      style={{
-                        boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-                      }}>
-                      {buttons}
-                    </div>
+                    {buttons && (
+                      <div
+                        className="flex flex-shrink-0 justify-between px-4 py-4"
+                        style={{
+                          boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
+                        }}>
+                        {buttons}
+                      </div>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

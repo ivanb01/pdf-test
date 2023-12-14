@@ -131,9 +131,9 @@ const PropertyCard = ({ property, selected, setSelected }) => {
               class="hidden"
               onChange={(event) => {
                 if (event.target.checked) {
-                  setSelected((prevSelected) => [...prevSelected, property.ID]);
+                  setSelected((prevSelected) => [...prevSelected, property]);
                 } else {
-                  setSelected((prevSelected) => prevSelected.filter((id) => id !== property.ID));
+                  setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
                 }
               }}
             />

@@ -1,6 +1,8 @@
 import PropertyCard from '@components/property-card';
 import MainMenu from '@components/shared/menu';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
+import saved from '/public/images/saved.svg';
+import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
 import { NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
@@ -19,6 +21,8 @@ import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
 import { getInitials, searchContacts } from '@global/functions';
+import { ImageGallery } from '@components/overlays/order-template';
+import placeholder from '/public/images/img-placeholder.png';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -43,7 +47,7 @@ const index = () => {
   const [minPrice, setMinPrice] = useState();
   const [maxPrice, setMaxPrice] = useState();
   const [selectedProperties, setSelectedProperties] = useState([]);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
 
   const selectAmenities = (a) => {
@@ -270,7 +274,7 @@ const index = () => {
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [filteredContacts, setFilteredContacts] = useState(null);
   const [selectedContacts, setSelectedContacts] = useState([]);
-
+  const [propertiesSent, setPropertiesSent] = useState(false);
   useEffect(() => {
     setFilteredContacts(
       sendMethod == 1
@@ -282,6 +286,83 @@ const index = () => {
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
+  };
+
+  const sendEmail = () => {
+    setPropertiesSent(true);
+    console.log(selectedContacts, selectedProperties, 'email');
+    resetPropertySelection();
+  };
+
+  const sendSMS = () => {
+    setPropertiesSent(true);
+    console.log(selectedContacts, selectedProperties, 'sms');
+    resetPropertySelection();
+  };
+
+  const resetPropertySelection = () => {
+    setSelectedContacts([]);
+    setSelectedProperties([]);
+  };
+  useEffect(() => {
+    if (!open) {
+      setSelectedContacts([]);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (document.querySelector('.side-overlay-wrapper')) {
+      if (propertiesSent) {
+        document.querySelector('.side-overlay-wrapper').classList.add('justify-center');
+      } else {
+        document.querySelector('.side-overlay-wrapper').classList.remove('justify-center');
+      }
+    }
+  }, [propertiesSent]);
+
+  const SelectedProperty = ({ property, setSelected, selected }) => {
+    return (
+      <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
+        <img
+          className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
+          src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+        />
+        <div className="font-semibold text-black mb-[6px] mr-3">
+          {property.PROPERTY_TYPE} in {property.ADDRESS}
+        </div>
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
+            id={`checkbox-${property.ID}`}
+            class="hidden"
+            onChange={(event) => {
+              if (event.target.checked) {
+                setSelected((prevSelected) => [...prevSelected, property]);
+              } else {
+                setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
+              }
+            }}
+          />
+          <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
+            <div
+              class={`${
+                selected ? 'bg-lightBlue3' : 'border border-gray-300'
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+              {selected && (
+                <svg
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  version="1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  enable-background="new 0 0 48 48">
+                  <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
+                </svg>
+              )}
+            </div>
+          </label>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -404,7 +485,7 @@ const index = () => {
                   {properties.LISTINGS.map((property, index) => (
                     <PropertyCard
                       setSelected={setSelectedProperties}
-                      selected={selectedProperties.includes(property.ID)}
+                      selected={selectedProperties.map((property) => property.ID).includes(property.ID)}
                       key={index}
                       property={property}
                     />
@@ -532,117 +613,132 @@ const index = () => {
         title={sendMethod == 1 ? 'Send via Email' : 'Send via SMS'}
         withBackdrop
         buttons={
-          <>
-            <Button
-              // disabled={!Object.values(clientsFilters).flat().length > 0}
-              transparent
-              label="Preview"
-            />
-            {sendMethod == 1 ? (
+          propertiesSent ? null : (
+            <>
               <Button
-                primary
-                leftIcon={<MailIcon />}
-                label="Send via Email"
-                disabled={!selectedContacts.length || !selectedProperties.length}
+                // disabled={!Object.values(clientsFilters).flat().length > 0}
+                transparent
+                label="Preview"
               />
-            ) : (
-              <Button
-                primary
-                leftIcon={<AtSymbolIcon />}
-                label="Send via SMS"
-                disabled={!selectedContacts.length || !selectedProperties.length}
-              />
-            )}
-
-            {/* <Button
-              onClick={filterContacts}
-              primary
-              label="See Results"
-              disabled={
-                !Object.values(filters).flat().length && !filtersCleared
-              }
-            /> */}
-          </>
+              {sendMethod == 1 ? (
+                <Button
+                  primary
+                  leftIcon={<MailIcon />}
+                  label="Send via Email"
+                  onClick={() => sendEmail()}
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              ) : (
+                <Button
+                  primary
+                  leftIcon={<AtSymbolIcon />}
+                  label="Send via SMS"
+                  onClick={() => sendSMS()}
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              )}
+            </>
+          )
         }>
-        <div>
-          <div className="font-semibold text-gray7">Select Clients</div>
-          <Search
-            placeholder={`Search for clients`}
-            className="w-full text-sm mt-2"
-            onInput={(event) => handleSearch(event.target.value)}
-            // value={searchTerm}
-            // onInput={(event) => setSearchTerm(event.target.value)}
-          />
-          <div className="my-4">
-            <span className="font-semibold text-gray7">{selectedContacts.length}</span>
-            <span className="text-gray8 font-medium">
-              {' '}
-              {selectedProperties.length == 1 ? 'Contact' : 'Contacts'} selected
-            </span>
+        {propertiesSent ? (
+          <div className="text-center">
+            <lottie-player
+              src="/animations/aisummary1.json"
+              background="transparent"
+              speed="1"
+              style={{ height: '200px' }}
+              autoplay></lottie-player>
+            <div className="text-gray7 font-medium text-lg -mt-4">Properties have been sent successfully</div>
+            <div className=" mt-2">
+              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
+              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
+            </div>
+            <Button primary label="Back to Properties" onClick={() => setOpen(false)} className="mt-6" />
           </div>
-          <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
-            {filteredContacts &&
-              filteredContacts.map((contact) => (
-                <div className={'flex justify-between items-center mb-5 mr-4'}>
-                  <div className="flex gap-4">
-                    <div>
-                      {contact.profile_image_path ? (
-                        <img
-                          className="inline-block h-10 w-10 rounded-full"
-                          src={contact.profile_image_path}
-                          alt={contact.first_name}
-                        />
-                      ) : (
-                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                          <span className="text-sm font-medium leading-none text-white">
-                            {getInitials(contact.first_name + ' ' + contact.last_name).toUpperCase()}
+        ) : (
+          <div>
+            <div className="font-semibold text-gray7">Select Clients</div>
+            <Search
+              placeholder={`Search for clients`}
+              className="w-full text-sm mt-2"
+              onInput={(event) => handleSearch(event.target.value)}
+              // value={searchTerm}
+              // onInput={(event) => setSearchTerm(event.target.value)}
+            />
+            <div className="my-4">
+              <span className="font-semibold text-gray7">{selectedContacts.length}</span>
+              <span className="text-gray8 font-medium">
+                {' '}
+                {selectedProperties.length == 1 ? 'Contact' : 'Contacts'} selected
+              </span>
+            </div>
+            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
+              {filteredContacts &&
+                filteredContacts.map((contact) => (
+                  <div className={'flex justify-between items-center mb-5 mr-4'}>
+                    <div className="flex gap-4">
+                      <div>
+                        {contact.profile_image_path ? (
+                          <img
+                            className="inline-block h-10 w-10 rounded-full"
+                            src={contact.profile_image_path}
+                            alt={contact.first_name}
+                          />
+                        ) : (
+                          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                            <span className="text-sm font-medium leading-none text-white">
+                              {getInitials(contact.first_name + ' ' + contact.last_name).toUpperCase()}
+                            </span>
                           </span>
-                        </span>
+                        )}
+                      </div>
+                      <div>
+                        <h6 className={'text-sm leading-5 text-gray7 font-semibold '}>
+                          {contact.first_name} {contact.last_name}
+                        </h6>
+                        <h6
+                          className={
+                            ' text-sm leading-5 font-medium text-gray5 ellipsis-email xl:min-w-[230px] lg:w-[130px]'
+                          }
+                          title={contact.email}>
+                          {contact.email}
+                        </h6>
+                      </div>
+                    </div>
+                    <div>
+                      {selectedContacts.includes(contact.id) ? (
+                        <button
+                          className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
+                          onClick={() =>
+                            setSelectedContacts((prevSelected) => prevSelected.filter((id) => id !== contact.id))
+                          }>
+                          Remove
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-[#DBEAFE] text-lightBlue3 text-sm px-3 py-[6px] font-medium rounded-md"
+                          onClick={() => setSelectedContacts((prevSelected) => [...prevSelected, contact.id])}>
+                          Select
+                        </button>
                       )}
                     </div>
-                    <div>
-                      <h6 className={'text-sm leading-5 text-gray7 font-semibold '}>
-                        {contact.first_name} {contact.last_name}
-                      </h6>
-                      <h6
-                        className={
-                          ' text-sm leading-5 font-medium text-gray5 ellipsis-email xl:min-w-[230px] lg:w-[130px]'
-                        }
-                        title={contact.email}>
-                        {contact.email}
-                      </h6>
-                    </div>
                   </div>
-                  <div>
-                    {selectedContacts.includes(contact.id) ? (
-                      <button
-                        className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
-                        onClick={() =>
-                          setSelectedContacts((prevSelected) => prevSelected.filter((id) => id !== contact.id))
-                        }>
-                        Remove
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-[#DBEAFE] text-lightBlue3 text-sm px-3 py-[6px] font-medium rounded-md"
-                        onClick={() => setSelectedContacts((prevSelected) => [...prevSelected, contact.id])}>
-                        Select
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-          </SimpleBar>
-          <hr className="my-3" />
-          <div className="font-semibold text-gray7">Properties</div>
-          <div className="my-4">
-            <span className="font-semibold text-gray7">{selectedProperties.length}</span>
-            <span className="text-gray8 font-medium">
-              {' '}
-              {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
-            </span>
+                ))}
+            </SimpleBar>
+            <hr className="my-3" />
+            <div className="font-semibold text-gray7">Properties</div>
+            <div className="my-4">
+              <span className="font-semibold text-gray7">{selectedProperties.length}</span>
+              <span className="text-gray8 font-medium">
+                {' '}
+                {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
+              </span>
+            </div>
+            {selectedProperties.map((property) => (
+              <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
+            ))}
           </div>
-        </div>
+        )}
       </SlideOver>
     </>
   );
