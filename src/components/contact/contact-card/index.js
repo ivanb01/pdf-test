@@ -22,6 +22,8 @@ import { useSelector } from 'react-redux';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 
 import Mail from '@mui/icons-material/Mail';
+import { createPortal } from 'react-dom';
+import CommunicationForm from '@components/overlays/communication-form';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -96,6 +98,7 @@ export default function ContactCard({
   const router = useRouter();
   const dispatch = useDispatch();
   const status = contact?.status?.length > 8 && contact?.status?.slice(0, 8) + '...';
+  const [openCommunicationPopup, setOpenCommunicationPopup] = useState(false);
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
@@ -184,6 +187,9 @@ export default function ContactCard({
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+  };
+  const handleCommunicationPopup = () => {
+    setOpenCommunicationPopup(true);
   };
   return (
     <>
@@ -319,7 +325,7 @@ export default function ContactCard({
               triggerElement={
                 <div
                   role={'button'}
-                  onClick={() => handleCommunication()}
+                  onClick={() => handleCommunicationPopup()}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   className="cursor-pointer rounded-full p-1.5 bg-gray2  hover:bg-gray6 mr-2 flex items-center justify-center">
@@ -383,6 +389,11 @@ export default function ContactCard({
             {/*  /!*  Change Status*!/*/}
             {/*  /!*</div>*!/*/}
             {/*</div>*/}
+            {openCommunicationPopup &&
+              createPortal(
+                <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contact} />,
+                document.getElementById('modal-portal'),
+              )}
           </div>
         </div>
       </div>

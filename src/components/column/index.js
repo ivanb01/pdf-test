@@ -122,7 +122,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
     setClientToModify(client);
     setAddActivityPopup(true);
   };
-  const handleCommunication = () => {
+  const handleCommunication = (contact) => {
     setOpenCommunicationPopup(true);
   };
 
@@ -291,18 +291,20 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
             {filteredContacts.map((contact, index) => {
               if (contact.status_id === status.id && contact.category_1.toLowerCase() === category) {
                 return (
-                  <ContactCard
-                    handleCardEdit={handleCardEdit}
-                    handleCardClick={handleCardClick}
-                    contact={contact}
-                    key={index}
-                    categoryType={categoryType}
-                    addActivityPopup={addActivityPopup}
-                    setAddActivityPopup={setAddActivityPopup}
-                    handleAddActivity={handleAddActivity}
-                    handleCommunication={handleCommunication}
-                    // handleChangeStatus={handleChangeStatus}
-                  />
+                  <>
+                    <ContactCard
+                      handleCardEdit={handleCardEdit}
+                      handleCardClick={handleCardClick}
+                      contact={contact}
+                      key={index}
+                      categoryType={categoryType}
+                      addActivityPopup={addActivityPopup}
+                      setAddActivityPopup={setAddActivityPopup}
+                      handleAddActivity={handleAddActivity}
+                      handleCommunication={handleCommunication}
+                      // handleChangeStatus={handleChangeStatus}
+                    />
+                  </>
                 );
               }
               return null;
@@ -349,11 +351,6 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
           </ul>
         </SimpleBar>
       </div> */}
-      {openCommunicationPopup &&
-        createPortal(
-          <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} />,
-          document.getElementById('modal-portal'),
-        )}
     </div>
   );
 };
