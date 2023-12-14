@@ -32,7 +32,7 @@ const index = () => {
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [categories, setCategories] = useState([]);
-
+  const [dataLength, setDataLength] = useState();
   useLayoutEffect(() => {
     if (data) {
       const isIndeterminate = selectedPeople.length > 0 && selectedPeople.length < data.length;
@@ -63,6 +63,13 @@ const index = () => {
               c.import_source_text === 'Smart Sync A.I.' &&
               (categories.length === 0 || categories.map((category) => category.value).includes(c.category_1)),
           );
+          let totalLength = data?.data?.data?.filter(
+            (c) =>
+              c.category_1 != 'Uncategorized' &&
+              (c.approved_ai === null || c.approved_ai === false) &&
+              c.import_source_text === 'Smart Sync A.I.',
+          );
+          setDataLength(totalLength.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
           finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           setData(finalData);
         })
@@ -78,6 +85,13 @@ const index = () => {
           c.import_source_text === 'Smart Sync A.I.' &&
           (categories.length === 0 || categories.map((category) => category.value).includes(c.category_1)),
       );
+      let totalLength = contacts.filter(
+        (c) =>
+          c.category_1 != 'Uncategorized' &&
+          (c.approved_ai === null || c.approved_ai === false) &&
+          c.import_source_text === 'Smart Sync A.I.',
+      );
+      setDataLength(totalLength.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
       finalData = finalData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setData(finalData);
     }
@@ -231,12 +245,12 @@ const index = () => {
         <div style={{ height: 'calc(100vh - 68px)' }} className="relative">
           <Loader />
         </div>
-      ) : data && data.filter((data) => data.approved_ai != true).length ? (
+      ) : dataLength && dataLength.filter((data) => data.approved_ai != true).length ? (
         <>
           <div className="p-6 text-gray-900 font-medium text-base flex justify-between">
             <div>
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-                {data.length} contacts
+                {data.filter((item) => item.approved_ai != true).length} contacts
               </div>{' '}
               from Smart Synced Contacts need to be reviewed
             </div>
