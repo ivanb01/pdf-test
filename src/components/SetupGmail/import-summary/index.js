@@ -53,6 +53,9 @@ const GoogleContactsImportSummary = ({ data }) => {
     setNotImportedContacts([...data?.invalid_contacts]);
   }, [data]);
 
+  useEffect(() => {
+    console.log(importedContacts);
+  }, [importedContacts]);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -106,7 +109,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
               <Table
                 tableFor="import-google-contacts-successful"
-                data={allContacts}
+                data={importedContacts}
                 // allContacts={imports1}
               ></Table>
               {/*</SimpleBar>*/}
