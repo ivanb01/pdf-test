@@ -708,6 +708,26 @@ export const roomsOptions = [
     id: 5,
     label: '5+',
   },
+  {
+    id: 6,
+    label: '6+',
+  },
+  {
+    id: 7,
+    label: '7+',
+  },
+  {
+    id: 8,
+    label: '8+',
+  },
+  {
+    id: 9,
+    label: '9+',
+  },
+  {
+    id: 10,
+    label: '10+',
+  },
 ];
 
 export const bathroomsOptions = [
