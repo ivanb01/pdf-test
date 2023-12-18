@@ -368,12 +368,12 @@ export default function LookingFor({ contactId, category }) {
                           /> */}
                           <PropertyDetail
                             label="Bedrooms"
-                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+                            value={formik.values.bedrooms ? String(`${formik.values.bedrooms}+`) : 'Any'}
                             iconAfter={<Image src={bedroomBlack} height={20} />}
                           />
                           <PropertyDetail
                             label="Bathrooms"
-                            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+                            value={formik.values.bathrooms ? String(`${formik.values.bathrooms}+`) : 'Any'}
                             iconAfter={<Image src={bathroomBlack} height={20} />}
                           />
                           <PropertyDetail
