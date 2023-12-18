@@ -56,6 +56,15 @@ const GoogleContactsImportSummary = ({ data }) => {
   useEffect(() => {
     console.log(importedContacts);
   }, [importedContacts]);
+  const [loading, setLoading] = useState(false);
+  const handleButtonClick = () => {
+    setLoading(true);
+    setTimeout(() => {
+      router.push({
+        pathname: '/contacts/uncategorized',
+      });
+    }, 2000);
+  };
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -173,16 +182,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               }
             />
             {importedContacts.length > 0 && (
-              <Button
-                label="Start categorization"
-                className=""
-                onClick={() =>
-                  router.push({
-                    pathname: '/contacts/uncategorized',
-                    // query: { categorize: true },
-                  })
-                }
-              />
+              <Button label="Start categorization" loading={loading} className="" onClick={() => handleButtonClick()} />
             )}
           </div>
         </div>

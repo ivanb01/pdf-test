@@ -99,11 +99,11 @@ const index = () => {
   }, [router.query.categorize]);
 
   useEffect(() => {
-    if (allContacts.data) {
+    if (!hasRun.current && allContacts.data) {
       handleFetchUncategorized();
-      // hasRun.current = true;
+      hasRun.current = true;
     }
-  }, [allContacts, uncategorizedContactsOriginal]);
+  }, [allContacts, uncategorizedContactsOriginal, hasRun.current]);
 
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
