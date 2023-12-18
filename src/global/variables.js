@@ -737,19 +737,19 @@ export const bathroomsOptions = [
   },
   {
     id: 2,
-    label: '1.5+',
-  },
-  {
-    id: 3,
     label: '2+',
   },
   {
-    id: 4,
+    id: 3,
     label: '3+',
   },
   {
-    id: 5,
+    id: 4,
     label: '4+',
+  },
+  {
+    id: 5,
+    label: '5+',
   },
 ];
 
