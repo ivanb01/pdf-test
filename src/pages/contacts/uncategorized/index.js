@@ -103,7 +103,7 @@ const index = () => {
       handleFetchUncategorized();
       hasRun.current = true;
     }
-  }, [allContacts, uncategorizedContactsOriginal]);
+  }, [allContacts, uncategorizedContactsOriginal, hasRun.current]);
 
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(
