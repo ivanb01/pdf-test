@@ -63,7 +63,7 @@ const GoogleContactsImportSummary = ({ data }) => {
       router.push({
         pathname: '/contacts/uncategorized',
       });
-    }, 2000);
+    }, 5000);
   };
   return (
     <>
