@@ -185,8 +185,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                           Clear All Filters
                         </Button>
                         <Button
-                          primary
                           disabled={reduxAmenities.length === 0}
+                          darkBlue
                           className={'bg-[#3B82F6]'}
                           onClick={() => {
                             if (reduxAmenities.length > 0) {

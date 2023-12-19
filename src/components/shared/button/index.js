@@ -31,6 +31,7 @@ const Button = ({
   googleButton,
   googleActivated,
   secondaryDanger,
+  darkBlue,
   rounded,
   special,
   loading,
@@ -54,6 +55,9 @@ const Button = ({
   if (danger) {
     bgColor = 'bg-red3';
     borderColor = 'border-red4';
+  }
+  if (darkBlue) {
+    bgColor = 'bg-[#3B82F6]';
   }
   if (secondaryDanger) {
     textColor = 'text-red5';
@@ -196,6 +200,26 @@ const Button = ({
       </button>
     );
   };
+  const darkBlueBtn = () => {
+    return (
+      <button
+        disabled={disabled}
+        onClick={onClick}
+        type="button"
+        className={`${disabled && 'opacity-50'} ${
+          loading && 'pointer-events-none'
+        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+          color ? color : textColor
+        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        {...props}>
+        {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
+        {leftIcon && !loading && <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>}
+        {!centerIcon && !loading && (children ? children : label)}
+        {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
+        {rightIcon && !loading && <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>}
+      </button>
+    );
+  };
 
   const bigBtn = () => {
     return (
@@ -246,6 +270,7 @@ const Button = ({
   else if (narrow) return narrowButton();
   else if (closeButton) return closeBtn();
   else if (ternary) return ternaryBtn();
+  else if (darkBlue) return darkBlueBtn();
   else if (bigButton) return bigBtn();
   else if (rounded) return roundedBtn();
   else if (googleButton) return googleBtn();
