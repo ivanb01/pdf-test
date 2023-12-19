@@ -1574,103 +1574,103 @@ const Table = ({
                                 Edit Contact
                               </div>
                             </div>
-                            <div
-                              className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
-                              onMouseEnter={() => {
-                                document
-                                  .querySelector('#tooltip-add-activity-' + contact.id)
-                                  .classList.remove('invisible', 'opacity-0');
-                                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray4');
-                                document
-                                  .querySelector('#add-activity-icon-' + contact.id)
-                                  .classList.remove('text-gray3');
-                              }}
-                              onMouseLeave={() => {
-                                document
-                                  .querySelector('#tooltip-add-activity-' + contact.id)
-                                  .classList.add('invisible', 'opacity-0');
-                                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray3');
-                                document
-                                  .querySelector('#add-activity-icon-' + contact.id)
-                                  .classList.remove('text-gray4');
-                              }}
-                              // onClick={(e) => {
-                              //   e.stopPropagation();
-                              //   router.push({
-                              //     pathname: '/contacts/details',
-                              //     query: { id: contact.id, campaigns: true },
-                              //   });
-                              // }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setContactToModify(contact);
-                                // handleAddActivity(contact);
-                                setOpenCommunicationPopup(true);
-                              }}>
-                              <svg
-                                id={'add-activity-icon-' + contact.id}
-                                className="text-gray5 w-4 h-4 group-hover:text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                fill="currentColor">
-                                <path
-                                  d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-
-                              <div
-                                id={'tooltip-add-activity-' + contact.id}
-                                role="tooltip"
-                                className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
-                                Add Communication
-                              </div>
-                            </div>
                             {/*<div*/}
-                            {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
+                            {/*  className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"*/}
                             {/*  onMouseEnter={() => {*/}
                             {/*    document*/}
-                            {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
+                            {/*      .querySelector('#tooltip-add-activity-' + contact.id)*/}
                             {/*      .classList.remove('invisible', 'opacity-0');*/}
-                            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');*/}
+                            {/*    document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray4');*/}
                             {/*    document*/}
-                            {/*      .querySelector('#change-status-icon-' + contact.id)*/}
+                            {/*      .querySelector('#add-activity-icon-' + contact.id)*/}
                             {/*      .classList.remove('text-gray3');*/}
                             {/*  }}*/}
                             {/*  onMouseLeave={() => {*/}
                             {/*    document*/}
-                            {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
+                            {/*      .querySelector('#tooltip-add-activity-' + contact.id)*/}
                             {/*      .classList.add('invisible', 'opacity-0');*/}
-                            {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');*/}
+                            {/*    document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray3');*/}
                             {/*    document*/}
-                            {/*      .querySelector('#change-status-icon-' + contact.id)*/}
+                            {/*      .querySelector('#add-activity-icon-' + contact.id)*/}
                             {/*      .classList.remove('text-gray4');*/}
                             {/*  }}*/}
-                            {/*  // onClick={(event) => handleDropdown(event, !dropdownOpened)}*/}
-                            {/*  onClick={(e) => e.stopPropagation()}>*/}
-                            {/*  /!* <Category className="text-gray3 w-4 h-4" /> *!/*/}
-                            {/*  <SimpleBarDropdown*/}
-                            {/*    options={allStatusesQuickEdit[categoryType]}*/}
-                            {/*    activeIcon={false}*/}
-                            {/*    activeClasses="bg-lightBlue1"*/}
-                            {/*    handleSelect={(item) => {*/}
-                            {/*      // setDropdownVal(item)*/}
-                            {/*      handleChangeStatus(item.id, contact);*/}
-                            {/*    }}*/}
-                            {/*    iconLabel={*/}
-                            {/*      <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />*/}
-                            {/*    }*/}
-                            {/*    dropdownValue={contact?.status_2}*/}
-                            {/*    handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>*/}
+                            {/*  // onClick={(e) => {*/}
+                            {/*  //   e.stopPropagation();*/}
+                            {/*  //   router.push({*/}
+                            {/*  //     pathname: '/contacts/details',*/}
+                            {/*  //     query: { id: contact.id, campaigns: true },*/}
+                            {/*  //   });*/}
+                            {/*  // }}*/}
+                            {/*  onClick={(e) => {*/}
+                            {/*    e.stopPropagation();*/}
+                            {/*    setContactToModify(contact);*/}
+                            {/*    // handleAddActivity(contact);*/}
+                            {/*    setOpenCommunicationPopup(true);*/}
+                            {/*  }}>*/}
+                            {/*  <svg*/}
+                            {/*    id={'add-activity-icon-' + contact.id}*/}
+                            {/*    className="text-gray5 w-4 h-4 group-hover:text-white"*/}
+                            {/*    xmlns="http://www.w3.org/2000/svg"*/}
+                            {/*    width="12"*/}
+                            {/*    height="12"*/}
+                            {/*    viewBox="0 0 12 12"*/}
+                            {/*    fill="currentColor">*/}
+                            {/*    <path*/}
+                            {/*      d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"*/}
+                            {/*      fill="currentColor"*/}
+                            {/*    />*/}
+                            {/*  </svg>*/}
+
                             {/*  <div*/}
-                            {/*    id={'tooltip-change-status-' + contact.id}*/}
+                            {/*    id={'tooltip-add-activity-' + contact.id}*/}
                             {/*    role="tooltip"*/}
-                            {/*    className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">*/}
-                            {/*    Change Status*/}
+                            {/*    className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">*/}
+                            {/*    Add Communication*/}
                             {/*  </div>*/}
                             {/*</div>*/}
+                            <div
+                              className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
+                              onMouseEnter={() => {
+                                document
+                                  .querySelector('#tooltip-change-status-' + contact.id)
+                                  .classList.remove('invisible', 'opacity-0');
+                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
+                                document
+                                  .querySelector('#change-status-icon-' + contact.id)
+                                  .classList.remove('text-gray3');
+                              }}
+                              onMouseLeave={() => {
+                                document
+                                  .querySelector('#tooltip-change-status-' + contact.id)
+                                  .classList.add('invisible', 'opacity-0');
+                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
+                                document
+                                  .querySelector('#change-status-icon-' + contact.id)
+                                  .classList.remove('text-gray4');
+                              }}
+                              // onClick={(event) => handleDropdown(event, !dropdownOpened)}
+                              onClick={(e) => e.stopPropagation()}>
+                              {/* <Category className="text-gray3 w-4 h-4" /> */}
+                              <SimpleBarDropdown
+                                options={allStatusesQuickEdit[categoryType]}
+                                activeIcon={false}
+                                activeClasses="bg-lightBlue1"
+                                handleSelect={(item) => {
+                                  // setDropdownVal(item)
+                                  handleChangeStatus(item.id, contact);
+                                }}
+                                iconLabel={
+                                  <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                                }
+                                dropdownValue={contact?.status_2}
+                                handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
+                              <div
+                                id={'tooltip-change-status-' + contact.id}
+                                role="tooltip"
+                                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Change Status
+                              </div>
+                            </div>
                           </div>
                         </td>
                       </tr>

@@ -2,12 +2,8 @@ import Overlay from '@components/shared/overlay';
 import sms from '../../../../public/images/sms.svg';
 import email from '../../../../public/images/email.svg';
 import whatsapp from '../../../../public/images/whatsapp.svg';
-import { useEffect } from 'react';
 
 const CommunicationForm = ({ handleCloseOverlay, client }) => {
-  useEffect(() => {
-    console.log(client);
-  }, [client]);
   const cards = [
     {
       name: 'Whatsapp',
@@ -39,49 +35,49 @@ const CommunicationForm = ({ handleCloseOverlay, client }) => {
   );
 };
 const Card = ({ name, icon, color, disabled, client }) => {
+  let message = '';
+  switch (client.category_2) {
+    case 'Renter':
+      message = "Hey, wanted to check in and see if you're still looking for a rental?";
+      break;
+    case 'Buyer':
+      message = 'Hey, wanted to see if we could help with anything related to your purchase.';
+      break;
+    case 'Landlord':
+      message = 'Hey just checking in on your property.';
+      break;
+    case 'Seller':
+      message = 'Hey, just wanted to check in and see if we could talk about your property.';
+      break;
+    default:
+      message = 'Hey, just checking in.';
+      break;
+  }
+
   const sendCommunication = () => {
     let link = '';
     switch (name) {
       case 'Whatsapp':
-        link = `https://wa.me/${client.phone_number}?text=${encodeURIComponent('Hello, I want to chat with you!')}`;
+        link = `https://wa.me/${client.phone_number}?text=${encodeURIComponent(message)}`;
         window.open(link, '_blank');
         break;
       case 'Email':
-        link = `mailto:${client.email}?subject=${encodeURIComponent('Hello')}&body=${encodeURIComponent(
-          'Hello, I want to send an email to you!',
-        )}`;
+        link = `mailto:${client.email}?subject=${encodeURIComponent(
+          "Connecting with You: Let's Discuss Your Needs",
+        )}&body=${encodeURIComponent(message)}`;
         window.location.href = link;
         break;
       case 'SMS':
-        link = `sms:${client.phone_number}4&body=hi`;
+        link = `sms:${client.phone_number}4&body=${message}`;
         window.location.href = link;
         break;
     }
   };
-  const handleButtonClick = () => {
-    const emailAddress = 'example@example.com';
-    const subject = 'Hello';
-    const body = 'Hello, I want to chat with you!';
-
-    // Create the mailto link
-    const mailtoLink = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-    // Open the default email application
-    window.location.href = mailtoLink;
-  };
-
-  const openWhatsApp = () => {
-    console.log('ereza');
-    const phoneNumber = '+38349519559'; // Replace with the actual phone number
-    const message = 'Hello, I want to chat with you!'; // Replace with your message
-
-    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-    window.open(whatsappLink, '_blank');
-  };
 
   return (
-    <div className={'w-full relative max-w-[270px] communication-box-shadow group'}>
+    <div
+      className={'w-full relative max-w-[270px] communication-box-shadow group'}
+      style={{ opacity: disabled ? '50%' : 1 }}>
       <div
         style={{
           height: '3px',
@@ -102,9 +98,7 @@ const Card = ({ name, icon, color, disabled, client }) => {
           <button
             disabled={disabled}
             onClick={() => sendCommunication()}
-            className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 ${
-              disabled ? 'bg-gray1' : 'bg-white'
-            }`}>
+            className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 bg-white`}>
             Send
           </button>
         </div>
