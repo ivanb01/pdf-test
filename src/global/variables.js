@@ -732,24 +732,24 @@ export const roomsOptions = [
 
 export const bathroomsOptions = [
   {
-    id: 1,
+    id: 2,
     label: '1+',
   },
   {
     id: 2,
-    label: '2+',
+    label: '1.5+',
   },
   {
     id: 3,
-    label: '3+',
+    label: '2+',
   },
   {
     id: 4,
-    label: '4+',
+    label: '3+',
   },
   {
     id: 5,
-    label: '5+',
+    label: '4+',
   },
 ];
 
