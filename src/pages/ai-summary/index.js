@@ -256,11 +256,12 @@ const index = () => {
             </div>
             <div className={'max-w-[500px] min-w-[200px]'}>
               <DropdownWithSearch
+                placeholder={'Filter...'}
                 maxMenuHeight={200}
                 isMulti
                 options={[
-                  { value: 'Client', label: 'Client' },
-                  { value: 'Professional', label: 'Professional' },
+                  { value: 'Client', label: 'Clients' },
+                  { value: 'Professional', label: 'Professionals' },
                   { value: 'Other', label: 'Other' },
                   { value: 'Trash', label: 'Trash' },
                 ]}
