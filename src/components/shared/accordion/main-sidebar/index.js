@@ -174,7 +174,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                   </Link>
                 </div>
               }>
-              {tab.subtab && (
+              {tab.subtab ? (
                 <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
                   {tab.subtab.map((t) => (
                     <div
@@ -194,6 +194,14 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       </div>
                     </div>
                   ))}
+                </div>
+              ) : (
+                <div className={`absolute flex mt-1 shadowCustom`}>
+                  <div className={'bg-[#11260F] h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
+                  <div
+                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-[#11260F] ml-[-10px] rounded-md z-10`}>
+                    {tab.name}
+                  </div>
                 </div>
               )}
             </SubMenuContent>
