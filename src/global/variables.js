@@ -689,6 +689,10 @@ export const globalTabsStates = {
 
 export const roomsOptions = [
   {
+    id: 999,
+    label: 'Any',
+  },
+  {
     id: 1,
     label: '1+',
   },
@@ -720,17 +724,13 @@ export const roomsOptions = [
     id: 8,
     label: '8+',
   },
-  {
-    id: 9,
-    label: '9+',
-  },
-  {
-    id: 10,
-    label: '10+',
-  },
 ];
 
 export const bathroomsOptions = [
+  {
+    id: 999,
+    label: 'Any',
+  },
   {
     id: 1,
     label: '1+',
@@ -750,6 +750,18 @@ export const bathroomsOptions = [
   {
     id: 5,
     label: '4+',
+  },
+  {
+    id: 6,
+    label: '5+',
+  },
+  {
+    id: 7,
+    label: '6+',
+  },
+  {
+    id: 8,
+    label: '7+',
   },
 ];
 

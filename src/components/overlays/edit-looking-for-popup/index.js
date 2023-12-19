@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
 import Dropdown from '@components/shared/dropdown';
+import RadioGroup from '@components/shared/radio/radio-chips';
+import RadioChips from '@components/shared/radio/radio-chips';
 
 const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
@@ -67,8 +69,10 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
       setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
       if (formik.isValid) {
-        let bathrooms = values.bathrooms ? parseFloat(values.bathrooms.replace('+', '')) : null;
-        let bedrooms = values.bedrooms ? parseFloat(values.bedrooms.replace('+', '')) : null;
+        let bathrooms =
+          values.bathrooms && values.bathrooms != 'Any' ? parseFloat(values.bathrooms.replace('+', '')) : null;
+        let bedrooms =
+          values.bedrooms && values.bedrooms != 'Any' ? parseFloat(values.bedrooms.replace('+', '')) : null;
 
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
@@ -124,8 +128,22 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               errorText={errors.neighborhood_ids}
             />
           </div>
+          <RadioChips
+            options={roomsOptions}
+            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+            label="Bedrooms"
+            className="mt-4"
+            handleSelect={(val) => formik.setFieldValue('bedrooms', val.label)}
+          />
+          <RadioChips
+            options={bathroomsOptions}
+            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+            label="Bathrooms"
+            className="mt-4"
+            handleSelect={(val) => formik.setFieldValue('bathrooms', val.label)}
+          />
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <Dropdown
+            {/* <Dropdown
               white
               top={'top-[40px]'}
               menuHeight={'h-[150px]'}
@@ -150,7 +168,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               errorText={errors.bathrooms}
               handleSelect={(val) => formik.setFieldValue('bathrooms', val.label)}
               placeHolder={'Choose'}
-            />
+            /> */}
             <Input
               id="budget_min"
               type="money"

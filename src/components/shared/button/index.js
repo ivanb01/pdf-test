@@ -156,7 +156,7 @@ const Button = ({
           loading && 'pointer-events-none'
         } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
           color ? color : textColor
-        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        } hover:${bgColor} ${bgColor} ${className}`}
         {...props}>
         {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
         {leftIcon && !loading && <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>}
