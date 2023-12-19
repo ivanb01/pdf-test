@@ -922,7 +922,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[300px] xl:w-[300px]">
+              className=" py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[300px] xl:w-[300px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -966,7 +966,9 @@ const Table = ({
                 }) && contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
             ).length > 0 ? (
               <div>
-                <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
+                <tr
+                  key={category.id}
+                  className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[-1px]`}>
                   <td colSpan="10">
                     <div
                       className="flex items-center px-6 py-2"

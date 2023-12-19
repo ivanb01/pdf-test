@@ -1,14 +1,12 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Input from 'components/shared/input';
-import Dropdown from '@components/shared/dropdown';
 import Button from '@components/shared/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAmenities } from '@store/global/slice';
-
+import React from 'react';
 const Tag = ({ children, onClick, selected }) => {
   return (
     <div
@@ -22,17 +20,84 @@ const Tag = ({ children, onClick, selected }) => {
   );
 };
 const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
-  const amenities = ['WiFi', 'Pool'];
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const [closeOthers, setCloseOthers] = useState(false);
-  const [closeRental, setCloseRental] = useState(false);
+  const amenities = [
+    'Diplomats OK',
+    'Furnished',
+    'Live Work',
+    'No Fee',
+    'Pied a Terre',
+    'Vacation Rental',
+    'Doorman',
+    'Elevator',
+    'Brownstone',
+    'Health Club',
+    'Pool',
+    'Garage',
+    'Recreational Room',
+    'Concierge',
+    'Senior Housing',
+    'High-Speed Internet',
+    'Live In Super',
+    'Children Playroom',
+    'Virtual Doorman',
+    'Business Center',
+    'Bicycle Room',
+    'Storage',
+    'Nursery',
+    'Lounge',
+    'Valet',
+    'Roof Deck',
+    'Maid Service',
+    'Courtyard',
+    'Dishwasher',
+    'Driveway',
+    'Fireplace',
+    'High Ceilings',
+    'Laundry',
+    'Laundry In Unit',
+    'Laundry Services',
+    'Open Kitchen',
+    'Common Outdoor Space',
+    'Subway',
+    'Washer',
+    'City View',
+    'Lake View',
+    'Open View',
+    'Park View',
+    'River View',
+    'Skyline View',
+  ];
+
   const dispatch = useDispatch();
   const reduxAmenities = useSelector((state) => state.global.amenities);
 
-  useEffect(() => {
-    console.log(reduxAmenities, 'reduxAmenities');
-  }, [reduxAmenities]);
-  // Assuming toggleAmenitySelection function
+  const [sections, setSections] = useState([
+    {
+      id: 1,
+      name: 'General',
+      expanded: true,
+      value: amenities.slice(0, 5),
+    },
+    {
+      id: 2,
+      name: 'Building Amenities',
+      expanded: true,
+      value: amenities.slice(amenities.indexOf('Doorman'), amenities.indexOf('Maid Service') + 1),
+    },
+    {
+      id: 3,
+      expanded: true,
+      name: 'Apartment Features',
+      value: amenities.slice(amenities.indexOf('Courtyard'), amenities.indexOf('Washer') + 1),
+    },
+    {
+      id: 4,
+      expanded: true,
+      name: 'Views',
+      value: amenities.slice(amenities.indexOf('City View'), amenities.indexOf('Skyline View') + 1),
+    },
+  ]);
+
   const toggleAmenitySelection = (amenity) => {
     if (reduxAmenities.includes(amenity)) {
       dispatch(setAmenities(reduxAmenities.filter((selected) => selected !== amenity)));
@@ -58,7 +123,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
-                  <div className={`flex h-full flex-col bg-white shadow-xl  `}>
+                  <div className={`flex flex-col bg-white shadow-xl overflow-y-auto h-full `}>
                     <div className="flex flex-shrink-0 justify-between items-center p-[20px] pr-6 pl-4 w-[100%]">
                       <div className={'flex justify-between items-center  w-[100%]'}>
                         <Dialog.Title className="text-base font-medium text-gray-900">Filters</Dialog.Title>
@@ -67,69 +132,51 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                     </div>
                     <div className={'flex justify-between flex-col h-[100%]'}>
                       <div className={'px-4 py-6 pr-6 pl-4 w-[100%]'}>
-                        <div
-                          className={'flex items-center justify-between border-b border-gray2 py-[6px]'}
-                          role={'button'}
-                          onClick={() => setCloseRental(!closeRental)}>
-                          <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray5'}>
-                            rental period Date (from-to)
-                          </p>
-                          {closeRental ? (
-                            <KeyboardArrowDownIcon className={'h-4 w-4 text-gray4'} />
-                          ) : (
-                            <KeyboardArrowUpIcon className={'h-4 w-4 text-gray4'} />
-                          )}
-                        </div>
-                        {!closeRental && (
-                          <>
-                            <div className={'flex justify-between items-center py-[5px]'}>
-                              <Input type={'date'}></Input>
-                              <div className={'text-[#323232]'}>-</div>
-                              <Input type={'date'}></Input>
-                            </div>
-                            <div>
-                              <p className={'italic font-normal text-sm text-gray4'}>
-                                You’re staying here for <span className={'text-gray5 font-medium'}>5 months</span>
+                        {sections.map((s) => (
+                          <React.Fragment key={s.name}>
+                            <div
+                              className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                              role={'button'}
+                              onClick={() =>
+                                setSections((prev) => {
+                                  const updatedSections = prev.map((section) => {
+                                    if (section.id === s.id) {
+                                      return { ...section, expanded: !section.expanded };
+                                    }
+                                    return section;
+                                  });
+                                  return updatedSections;
+                                })
+                              }>
+                              <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>
+                                {s.name}
                               </p>
+                              {!s.expanded ? (
+                                <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
+                              ) : (
+                                <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
+                              )}
                             </div>
-                            <div className={'my-[30px] grid grid-cols-2 gap-x-[23px] gap-y-[10px]'}>
-                              <Dropdown placeHolder={'Washer & Dryer'} />
-                              <Dropdown placeHolder={'Sublet Policy'} />
-                              <Dropdown placeHolder={'Sponsor Sale'} />
-                              <Dropdown placeHolder={'Option'} />
-                            </div>
-                          </>
-                        )}
-                        <div
-                          className={'flex items-center justify-between  border-b border-gray2 py-[6px] mb-3'}
-                          role={'button'}
-                          onClick={() => setCloseOthers(!closeOthers)}>
-                          <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray5'}>Other</p>
-                          {closeOthers ? (
-                            <KeyboardArrowDownIcon className={'h-4 w-4 text-gray4'} />
-                          ) : (
-                            <KeyboardArrowUpIcon className={'h-4 w-4 text-gray4'} />
-                          )}
-                        </div>
-                        {!closeOthers && (
-                          <div className={'flex flex-wrap gap-x-2'}>
-                            {amenities.map((a) => {
-                              return (
-                                <Tag
-                                  key={a}
-                                  onClick={() => toggleAmenitySelection(a)}
-                                  selected={reduxAmenities.includes(a)}>
-                                  <span>{a}</span>
-                                </Tag>
-                              );
-                            })}
-                          </div>
-                        )}
+                            {s.expanded && (
+                              <div className={'flex flex-wrap gap-x-2 '}>
+                                {s.value.map((a) => (
+                                  <Tag
+                                    key={a}
+                                    onClick={() => toggleAmenitySelection(a)}
+                                    selected={reduxAmenities.includes(a)}>
+                                    <span>{a}</span>
+                                  </Tag>
+                                ))}
+                              </div>
+                            )}
+                          </React.Fragment>
+                        ))}
                       </div>
                       <div className={'flex items-center justify-between px-6 py-4 fixed-categorize-menu'}>
                         <Button
                           white
                           label="Cancel"
+                          disabled={reduxAmenities.length === 0}
                           onClick={() => {
                             dispatch(setAmenities([]));
                             selectAmenities([]);
@@ -139,6 +186,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                         </Button>
                         <Button
                           primary
+                          disabled={reduxAmenities.length === 0}
                           className={'bg-[#3B82F6]'}
                           onClick={() => {
                             if (reduxAmenities.length > 0) {

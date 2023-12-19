@@ -11,7 +11,7 @@ import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
 import { valueOptions } from '@global/functions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
@@ -57,8 +57,8 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     initialValues: {
       neighborhood_ids: data?.neighborhood_ids ? data.neighborhood_ids : '',
       looking_action: action,
-      bedrooms: data?.bedrooms_max ? data.bedrooms_max : '',
-      bathrooms: data?.bathrooms_max ? data.bathrooms_max : '',
+      bedrooms: data?.bedrooms_min ? data.bedrooms_min : '',
+      bathrooms: data?.bathrooms_min ? data.bathrooms_min : '',
       budget_min: data?.budget_min ? data.budget_min : '',
       budget_max: data?.budget_max ? data.budget_max : '',
     },
@@ -87,6 +87,9 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
       }
     },
   });
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const { errors, touched } = formik;
 
@@ -148,6 +151,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               top={'top-[40px]'}
               menuHeight={'h-[150px]'}
               label="Bedrooms"
+              initialSelect={String(`${formik.values.bedrooms}+`)}
               value={formik.values.bedrooms}
               activeIcon={false}
               options={roomsOptions}
@@ -161,6 +165,7 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               top={'top-[40px]'}
               menuHeight={'h-[150px]'}
               label="Bathrooms"
+              initialSelect={String(`${formik.values.bathrooms}+`)}
               value={formik.values.bathrooms}
               activeIcon={false}
               options={bathroomsOptions}

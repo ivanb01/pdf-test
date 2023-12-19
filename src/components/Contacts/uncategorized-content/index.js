@@ -63,10 +63,8 @@ const Uncategorized = ({
     });
     uncategorizedInitialState.contacts = contactsArray;
     setUncategorizedCopy(uncategorizedContacts);
-  }, []);
-  const selectAll = (event) => {
-    console.log('test');
-  };
+  }, [uncategorizedInitialState]);
+
   const uncategorizedMainPage = () => {
     return (
       <>

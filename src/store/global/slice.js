@@ -102,7 +102,6 @@ const global = createSlice({
       state.tabs = createArrayOfObjects(action.payload);
     },
     setAmenities(state, action) {
-      console.log(action.payload);
       state.amenities = action.payload;
     },
     setSorted(state, action) {

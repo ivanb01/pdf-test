@@ -34,14 +34,16 @@ const Dropdown = ({
   ...props
 }) => {
   const firstSelect = initialSelect
-    ? options?.find((item) => item.label === initialSelect || item.value == initialSelect)
+    ? options?.find((item) => item.label === String(initialSelect) || item.value == initialSelect)
     : null;
-  const [selected, setSelected] = useState(firstSelect);
+  const [selected, setSelected] = useState(
+    initialSelect ? options?.find((item) => item.label === String(initialSelect) || item.value == initialSelect) : null,
+  );
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
-  useEffect(() => {
-    setSelected(firstSelect);
-  }, [initialSelect]);
+  // useEffect(() => {
+  //   setSelected(firstSelect);
+  // }, [initialSelect]);
 
   return (
     <div className={className}>

@@ -54,7 +54,7 @@ const index = () => {
         });
       }
     }
-  }, [selectedUncategorized]);
+  }, [selectedUncategorized, allContacts]);
 
   const handleStartCategorizing = (value) => {
     if (value) {
@@ -103,7 +103,7 @@ const index = () => {
       handleFetchUncategorized();
       hasRun.current = true;
     }
-  }, [allContacts.data, uncategorizedContactsOriginal]);
+  }, [allContacts, uncategorizedContactsOriginal, hasRun.current]);
 
   // useEffect(() => {
   //   let contacts = uncategorizedContactsOriginal.data.filter(

@@ -232,7 +232,7 @@ const Clients = ({
 
   useEffect(() => {
     filterContacts();
-  }, [clientsFilters, openedSubtab]);
+  }, [clientsFilters, contacts]);
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
