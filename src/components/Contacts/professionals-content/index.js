@@ -18,7 +18,7 @@ import {
 } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProfessionals, updateContacts } from 'store/contacts/slice';
+import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
@@ -85,6 +85,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
   useEffect(() => {
+    console.log(filteredProfessionals, 'filteredProff');
+  }, [filteredProfessionals]);
+  useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
 
@@ -96,11 +99,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     }
     return false;
   }
-  useEffect(() => {
-    if (contacts.length && !hasAnyProperties(professionalsFilters)) {
-      setFilteredProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional'));
-    }
-  }, [openedSubtab, professionalsFilters]);
+
+  // useEffect(() => {
+  //   if (contacts.length && !hasAnyProperties(professionalsFilters)) {
+  //     setFilteredProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional'));
+  //   }
+  // }, [professionalsFilters]);
 
   const filterContacts = () => {
     // if (filtersCleared) {
@@ -202,7 +206,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
   useEffect(() => {
     filterContacts();
-  }, [professionalsFilters, openedSubtab]);
+  }, [professionalsFilters, contacts]);
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
