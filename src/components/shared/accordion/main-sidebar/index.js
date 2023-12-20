@@ -197,9 +197,9 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 </div>
               ) : (
                 <div className={`absolute flex mt-1 shadowCustom`}>
-                  <div className={'bg-[#11260F] h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
+                  <div className={'bg-gray8 h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
                   <div
-                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-[#11260F] ml-[-10px] rounded-md z-10`}>
+                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-gray8 ml-[-10px] rounded-md z-10 text-white`}>
                     {tab.name}
                   </div>
                 </div>
