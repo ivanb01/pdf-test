@@ -163,7 +163,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                       }`}
                       title={tab.name}>
-                      <div>{tab.icon}</div>
+                      <div title={''}>{tab.icon}</div>
                       {showPulse(tab) && (
                         <span class="absolute right-0 top-2 flex h-2 w-2 ml-4">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
