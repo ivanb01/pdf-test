@@ -25,7 +25,7 @@ const CommunicationForm = ({ handleCloseOverlay, client }) => {
     },
   ];
   return (
-    <Overlay handleCloseOverlay={handleCloseOverlay} title={'How do you want to communicate'} className={'w-[630px]'}>
+    <Overlay handleCloseOverlay={handleCloseOverlay} title={'How do you want to communicate?'} className={'w-[630px]'}>
       <div className={'pt-6 mx-[22px] mb-[62px] flex gap-[18px]'}>
         {cards.map((c, index) => (
           <Card {...c} key={index} client={client} />
@@ -85,12 +85,13 @@ const Card = ({ name, icon, color, disabled, client }) => {
           borderRadius: '4px 4px 0 0',
           backgroundColor: color,
           position: 'absolute',
-          width: '100%',
+          width: '174px',
+          left: '-1px',
         }}></div>
       <div
         style={{ boxSizing: 'border-box' }}
         className={
-          'rounded-lg pt-[20px] pr-[15px] pb-[18px] pl-[17px] flex flex-col items-start gap-[26px] rounded-8 outline outline-solid outline-gray2 group-hover:outline-2'
+          'rounded-lg pt-[20px] w-[172px] h-[180px] pr-[15px] pb-[18px] pl-[17px] flex flex-col items-start gap-[26px] rounded-8 outline outline-solid rounded-tr-[1px] rounded-tl-[1px] outline-gray2 group-hover:outline-2'
         }>
         <img src={icon.src} />
         <div>
