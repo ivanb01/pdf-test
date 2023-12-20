@@ -2703,24 +2703,24 @@ const Table = ({
                       <div className={'flex gap-1.5 items-center'}>
                         <div
                           className={`h-2 w-2 rounded-xl ${
-                            e?.event_status === 'scheduled'
+                            e?.event_status?.toLowerCase() === 'scheduled'
                               ? 'bg-yellow2'
-                              : e?.event_status === 'sent'
-                              ? 'bg-green5'
+                              : e?.event_status?.toLowerCase() === 'sent'
+                              ? 'bg-[#10B981]'
                               : 'bg-red-500'
                           }`}></div>
                         <p
                           className={`text-sm leading-5 font-medium
                            ${
-                             e?.event_status === 'scheduled'
+                             e?.event_status?.toLowerCase() === 'scheduled'
                                ? 'text-yellow3'
-                               : e?.event_status === 'sent'
-                               ? 'text-yellow3'
+                               : e?.event_status?.toLowerCase() === 'sent'
+                               ? 'text-green7'
                                : 'text-red5'
                            }`}>
-                          {e?.event_status === 'scheduled'
+                          {e?.event_status?.toLowerCase() === 'scheduled'
                             ? 'To be sent'
-                            : e?.event_stautus === 'sent'
+                            : e?.event_status?.toLowerCase() === 'sent'
                             ? 'Sent'
                             : 'Canceled'}
                         </p>
