@@ -9,7 +9,6 @@ import { Button } from '../Button';
 import logo from '/public/images/public/logo.svg';
 import close from '/public/images/public/close.svg';
 import open from '/public/images/public/menu.svg';
-import { Auth } from 'aws-amplify';
 import { useSelector } from 'react-redux';
 
 const links = [
@@ -128,9 +127,23 @@ export const Header = () => {
           {isMenuOpen && (
             <div className={styles['header__content-menu']}>
               <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
-                <Button className="w-full" type="primaryLight" onClick={() => router.push('/authentication/sign-in')}>
-                  Log in
-                </Button>
+                {!isAuthenticated ? (
+                  <Button
+                    className="w-full"
+                    type="primaryLight"
+                    style={{ color: '#6B7280' }}
+                    onClick={() => router.push('/authentication/sign-in')}>
+                    Log In
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full"
+                    type="primaryLight"
+                    onClick={() => router.push('/contacts/clients')}
+                    style={{ color: '#6B7280' }}>
+                    Go to CRM {'->'}
+                  </Button>
+                )}
                 {links.map((item) => (
                   <>
                     <li key={item.href}>
