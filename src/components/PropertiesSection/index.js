@@ -1,46 +1,27 @@
 // import Accordion from 'components/shared/accordion';
-import Input from 'components/shared/input';
 import { useFormik } from 'formik';
-import bedroomBlack from '/public/images/bedroom-black.svg';
-import bathroomBlack from '/public/images/bathroom-black.svg';
-import room from '/public/images/room-black.svg';
 import filter from '/public/images/filter.svg';
-import bedroom from '/public/images/bedroom.svg';
-import bathroom from '/public/images/bathroom.svg';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
-import usd from '/public/images/usd.svg';
-import Image from 'next/image';
 import { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import * as Yup from 'yup';
 import { NYCneighborhoods } from 'global/variables';
-import SearchSelectInput from 'components/shared/search-select-input';
 import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
-import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
-import { getProperties } from '@api/realtyMX';
-import { valueOptions } from '@global/functions';
 import { useSelector } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
-import Link from '@mui/icons-material/Link';
-import LookingForPopup from '@components/overlays/edit-looking-for-popup';
-import { ExclamationIcon, PencilIcon, PlusIcon } from '@heroicons/react/solid';
-import ArrowLeft from '/public/images/arrow-circle-left.svg';
-import Alert from '@components/shared/alert';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
-import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
-import properties from 'pages/properties';
-import FloatingAlert from '@components/shared/alert/floating-alert';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
 
-export default function LookingFor({ contactId, category }) {
+export default function PropertiesSection({ contactId, category }) {
+  const refetchPart = useSelector((state) => state.global.refetchPart);
   const router = useRouter();
   const dispatch = useDispatch();
   const LookingPropertySchema = Yup.object().shape({
@@ -62,7 +43,27 @@ export default function LookingFor({ contactId, category }) {
       }),
   });
 
-  const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
+  const [lookingForData, setLookingForData] = useState();
+
+  const getLookingFor = () => {
+    return new Promise((resolve, reject) => {
+      contactServices
+        .getContactLookingProperties(contactId)
+        .then((propertiesResponse) => {
+          const propertiesData = propertiesResponse.data;
+          setLookingForData(propertiesData.data);
+          console.log('request done');
+          resolve(propertiesData.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error('Error fetching looking for');
+          reject(error);
+        });
+    });
+  };
+
+  // const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
   const refetchData = useSelector((state) => state.global.refetchData);
 
   //* FORMIK *//
@@ -137,7 +138,8 @@ export default function LookingFor({ contactId, category }) {
 
   const initializePropertyInterests = async () => {
     try {
-      const lookingProperties = lookingForData;
+      const lookingProperties = await getLookingFor();
+
       if (lookingProperties && lookingProperties[0]) {
         formik.setValues({
           neighborhood_ids: lookingProperties[0].neighborhood_ids,
@@ -146,12 +148,12 @@ export default function LookingFor({ contactId, category }) {
           budget_min: lookingProperties[0].budget_min != 0 ? lookingProperties[0].budget_min : '',
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
-        console.log('ran first');
         fetchProperties(lookingProperties[0], page, filterValue);
+        console.log(lookingProperties[0], page, filterValue);
       } else {
-        console.log('ran second');
         fetchProperties(formik.values, page, filterValue);
       }
+      setLoadingPropertyInterests(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -261,12 +263,15 @@ export default function LookingFor({ contactId, category }) {
   }, [router.pathname]);
 
   useEffect(() => {
-    if (lookingForData !== null) initializePropertyInterests();
-    // else {
-    // fetchProperties(formik.values, page, filterValue);
-    // }
-    setLoadingPropertyInterests(false);
-  }, [contactId, lookingForData, refetchData, filterValue]);
+    initializePropertyInterests();
+  }, []);
+
+  useEffect(() => {
+    if (refetchPart == 'looking-for') {
+      initializePropertyInterests();
+      dispatch(setRefetchPart(null));
+    }
+  }, [refetchPart]);
 
   useLayoutEffect(() => {
     if (formik.isValid) {
@@ -346,13 +351,13 @@ export default function LookingFor({ contactId, category }) {
           <Loader></Loader>
         </div>
       ) : (
-        <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 158px)' }}>
+        <SimpleBar autoHide>
           <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 158px)' }}>
             {loadingPropertyInterests || propertyInterests === undefined ? (
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                <div className="p-6 pt-0">
+                <div className="">
                   <div className="flex justify-between items-center">
                     <div className="font-semibold">Properties</div>
                     <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>

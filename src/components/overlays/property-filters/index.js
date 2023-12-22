@@ -7,18 +7,8 @@ import Button from '@components/shared/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAmenities } from '@store/global/slice';
 import React from 'react';
-const Tag = ({ children, onClick, selected }) => {
-  return (
-    <div
-      className={`px-[10px] py-[5px] rounded-[70px] border ${
-        !selected ? 'border-gray2 ' : 'border-blue2 bg-[#EFF6FF]'
-      } mb-4`}
-      onClick={onClick}
-      role={'button'}>
-      <p className={`text-xs leading-4 font-medium ${!selected ? 'text-neutral1' : 'text-[#3B82F6]'}`}> {children}</p>
-    </div>
-  );
-};
+import { amenities } from '@global/variables';
+import Tag from '@components/Tag';
 const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
   const amenities = [
     'Diplomats OK',

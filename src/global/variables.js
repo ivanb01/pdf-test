@@ -689,67 +689,97 @@ export const globalTabsStates = {
 
 export const roomsOptions = [
   {
+    id: 999,
+    label: 'Any',
+    value: null,
+  },
+  {
     id: 1,
     label: '1+',
+    value: 1,
   },
   {
     id: 2,
     label: '2+',
+    value: 2,
   },
   {
     id: 3,
     label: '3+',
+    value: 3,
   },
   {
     id: 4,
     label: '4+',
+    value: 4,
   },
   {
     id: 5,
     label: '5+',
+    value: 5,
   },
   {
     id: 6,
     label: '6+',
+    value: 6,
   },
   {
     id: 7,
     label: '7+',
+    value: 7,
   },
   {
     id: 8,
     label: '8+',
-  },
-  {
-    id: 9,
-    label: '9+',
-  },
-  {
-    id: 10,
-    label: '10+',
+    value: 8,
   },
 ];
 
 export const bathroomsOptions = [
   {
-    id: 2,
+    id: 999,
+    label: 'Any',
+    value: null,
+  },
+  {
+    id: 1,
     label: '1+',
+    value: 1,
   },
   {
     id: 2,
     label: '1.5+',
+    value: 1.5,
   },
   {
     id: 3,
     label: '2+',
+    value: 2,
   },
   {
     id: 4,
     label: '3+',
+    value: 3,
   },
   {
     id: 5,
     label: '4+',
+    value: 4,
+  },
+  {
+    id: 6,
+    label: '5+',
+    value: 5,
+  },
+  {
+    id: 7,
+    label: '6+',
+    value: 6,
+  },
+  {
+    id: 8,
+    label: '7+',
+    value: 7,
   },
 ];
 
@@ -2047,4 +2077,51 @@ export const salePriceOptions = [
   { id: 53, value: 20000000, label: '$20,000,000' },
   { id: 54, value: 25000000, label: '$25,000,000' },
   { id: 55, value: 30000000, label: '$30,000,000' },
+];
+export const amenities = [
+  'Diplomats OK',
+  'Furnished',
+  'Live Work',
+  'No Fee',
+  'Pied a Terre',
+  'Vacation Rental',
+  'Doorman',
+  'Elevator',
+  'Brownstone',
+  'Health Club',
+  'Pool',
+  'Garage',
+  'Recreational Room',
+  'Concierge',
+  'Senior Housing',
+  'High-Speed Internet',
+  'Live In Super',
+  'Children Playroom',
+  'Virtual Doorman',
+  'Business Center',
+  'Bicycle Room',
+  'Storage',
+  'Nursery',
+  'Lounge',
+  'Valet',
+  'Roof Deck',
+  'Maid Service',
+  'Courtyard',
+  'Dishwasher',
+  'Driveway',
+  'Fireplace',
+  'High Ceilings',
+  'Laundry',
+  'Laundry In Unit',
+  'Laundry Services',
+  'Open Kitchen',
+  'Common Outdoor Space',
+  'Subway',
+  'Washer',
+  'City View',
+  'Lake View',
+  'Open View',
+  'Park View',
+  'River View',
+  'Skyline View',
 ];

@@ -8,6 +8,7 @@ import checkMenu from '/public/images/check-menu.svg';
 
 const Button = ({
   title,
+  inline,
   children,
   coloredButton,
   label,
@@ -45,7 +46,7 @@ const Button = ({
   let bgColor = 'bg-lightBlue3';
   let textColor = 'text-white';
   let text = 'text-sm leading-none';
-  let padding = 'px-4 py-3';
+  let padding = label || children ? 'px-4 py-3' : ' p-2 w-[38px]';
   let borderColor = 'border-transparent';
 
   if (secondary) {
@@ -156,14 +157,19 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
         type="button"
-        className={`${disabled && 'opacity-50'} ${
-          loading && 'pointer-events-none'
-        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+        href={href}
+        className={`${disabled && 'opacity-50'} ${loading && 'pointer-events-none'} h-[38px] inline-flex ${
+          !inline && 'min-w-[100px]'
+        } justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
           color ? color : textColor
-        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        } hover:${bgColor} ${bgColor} ${className}`}
         {...props}>
         {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
-        {leftIcon && !loading && <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>}
+        {leftIcon && !loading && (
+          <div className={`-ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {leftIcon}
+          </div>
+        )}
         {!centerIcon && !loading && (children ? children : label)}
         {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
         {rightIcon && !loading && <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>}
