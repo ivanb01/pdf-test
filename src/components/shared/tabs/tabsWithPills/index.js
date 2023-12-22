@@ -47,15 +47,7 @@ export default function TabsWithPills({ propertiesCurrentTab, setPropertiesCurre
               )}
               aria-current={propertiesCurrentTab == index ? 'page' : undefined}>
               {tab.name}
-              {tab.count ? (
-                <span
-                  className={classNames(
-                    'bg-gray-100 text-gray-900',
-                    'ml-3 hidden rounded-full py-0.5 px-2.5 text-xs font-medium md:inline-block',
-                  )}>
-                  {tab.count}
-                </span>
-              ) : null}
+              {tab.count ? <span> ({tab.count})</span> : null}
             </a>
           ))}
         </nav>

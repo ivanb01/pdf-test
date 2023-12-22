@@ -1,5 +1,5 @@
 import MainMenu from '@components/shared/menu';
-import profile from '/public/images/placeholder.png';
+import profile from '/public/images/Portrait_Placeholder.png';
 import noteIcon from '/public/images/note-icon.svg';
 import documentsIcon from '/public/images/documents-icon.svg';
 import call from '/public/images/call-icon.svg';
@@ -162,7 +162,10 @@ const index = () => {
               <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
-                    <img src={contact.profile_image_path} className="h-[95px] w-[95px] rounded-full object-cover" />
+                    <img
+                      src={contact.profile_image_path ? contact.profile_image_path : profile.src}
+                      className="h-[95px] w-[95px] rounded-full object-cover"
+                    />
                   </div>
                   <div>
                     {contact.phone_number && (
@@ -178,15 +181,27 @@ const index = () => {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <div className="text-[#101828] text-2xl font-semibold">
+                  <div className="text-[#101828] text-xl font-semibold">
                     {contact?.first_name + ' ' + contact?.last_name}
                   </div>
-                  <div className="text-[#475467] text-base mt-1">{contact?.email}</div>
+                  <div className="text-[#475467] mt-1">{contact?.email}</div>
                 </div>
                 <div className="mt-[18px] flex items-center">
-                  <Button size="small" inline white label={contact.category_2} className="mr-2 pointer-events-none" />
+                  <Button
+                    size="small"
+                    inline
+                    white
+                    label={contact.category_2}
+                    className="mr-2 text-xs pointer-events-none"
+                  />
                   {contact.status_2 && contact.status_2 != 'Default' && (
-                    <Button size="small" inline white label={contact.status_2} className="pointer-events-none" />
+                    <Button
+                      size="small"
+                      inline
+                      white
+                      label={contact.status_2}
+                      className="pointer-events-none text-xs"
+                    />
                   )}
                 </div>
                 {contact.summary && (

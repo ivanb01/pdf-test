@@ -405,7 +405,7 @@ export default function PropertiesSection({ contactId, category }) {
                           <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
                         </div>
                       </div> */}
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
                           <PropertyCard key={index} property={property}></PropertyCard>
                         ))}
