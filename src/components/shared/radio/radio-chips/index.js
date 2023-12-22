@@ -18,7 +18,7 @@ export default function RadioChips({ className, options, value, label, handleSel
               onClick={() => handleSelect(option)}
               className={({ active }) =>
                 classNames(
-                  option.label == value
+                  option.value == value
                     ? 'bg-lightBlue3 text-white'
                     : 'ring-1 ring-inset ring-gray-300 bg-white text-gray-900 hover:bg-gray-50',
                   ' rounded-[2222px] flex items-center justify-center px-[22px] py-[10px] text-sm sm:flex-1 cursor-pointer',

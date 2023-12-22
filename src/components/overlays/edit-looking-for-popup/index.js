@@ -18,10 +18,17 @@ import { toast } from 'react-hot-toast';
 import Dropdown from '@components/shared/dropdown';
 import RadioGroup from '@components/shared/radio/radio-chips';
 import RadioChips from '@components/shared/radio/radio-chips';
-
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useSelector } from 'react-redux';
+import { setAmenities } from '@store/global/slice';
+import { amenities } from '@global/variables';
+import React from 'react';
+import Tag from '@components/Tag';
 const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
+  const reduxAmenities = useSelector((state) => state.global.amenities);
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array()
       .required('Neighborhood IDs are required')
@@ -69,10 +76,9 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
       setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
       if (formik.isValid) {
-        let bathrooms =
-          values.bathrooms && values.bathrooms != 'Any' ? parseFloat(values.bathrooms.replace('+', '')) : null;
-        let bedrooms =
-          values.bedrooms && values.bedrooms != 'Any' ? parseFloat(values.bedrooms.replace('+', '')) : null;
+        let bathrooms = values.bathrooms && values.bathrooms != 'Any' ? parseFloat(values.bathrooms) : null;
+
+        let bedrooms = values.bedrooms && values.bedrooms != 'Any' ? parseFloat(values.bedrooms) : null;
 
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
@@ -97,6 +103,8 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     setLoadingButton(true);
     try {
       // console.log(values);
+      console.log('submitting');
+
       const res = await contactServices.addContactLookingProperty(data.contact_id, values);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
@@ -107,6 +115,39 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
+    }
+  };
+  const [sections, setSections] = useState([
+    {
+      id: 1,
+      name: 'General',
+      expanded: true,
+      value: amenities.slice(0, 5),
+    },
+    {
+      id: 2,
+      name: 'Building Amenities',
+      expanded: true,
+      value: amenities.slice(amenities.indexOf('Doorman'), amenities.indexOf('Maid Service') + 1),
+    },
+    {
+      id: 3,
+      expanded: true,
+      name: 'Apartment Features',
+      value: amenities.slice(amenities.indexOf('Courtyard'), amenities.indexOf('Washer') + 1),
+    },
+    {
+      id: 4,
+      expanded: true,
+      name: 'Views',
+      value: amenities.slice(amenities.indexOf('City View'), amenities.indexOf('Skyline View') + 1),
+    },
+  ]);
+  const toggleAmenitySelection = (amenity) => {
+    if (reduxAmenities.includes(amenity)) {
+      dispatch(setAmenities(reduxAmenities.filter((selected) => selected !== amenity)));
+    } else {
+      dispatch(setAmenities([...reduxAmenities, amenity]));
     }
   };
 
@@ -133,17 +174,17 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
           </div>
           <RadioChips
             options={roomsOptions}
-            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
+            value={formik.values.bedrooms ? formik.values.bedrooms : null}
             label="Bedrooms"
             className="mt-4"
-            handleSelect={(val) => formik.setFieldValue('bedrooms', val.label)}
+            handleSelect={(val) => formik.setFieldValue('bedrooms', val.value)}
           />
           <RadioChips
             options={bathroomsOptions}
-            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
+            value={formik.values.bathrooms ? formik.values.bathrooms : null}
             label="Bathrooms"
             className="mt-4"
-            handleSelect={(val) => formik.setFieldValue('bathrooms', val.label)}
+            handleSelect={(val) => formik.setFieldValue('bathrooms', val.value)}
           />
           <div className="grid grid-cols-2 gap-4 mt-4">
             {/* <Dropdown
@@ -196,6 +237,42 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               error={errors.budget_max && touched.budget_max}
               errorText={errors.budget_max}
             />
+          </div>
+          <div className={'w-[100%] mt-6'}>
+            {sections.map((s) => (
+              <React.Fragment key={s.name}>
+                <div
+                  className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                  role={'button'}
+                  onClick={() =>
+                    setSections((prev) => {
+                      const updatedSections = prev.map((section) => {
+                        if (section.id === s.id) {
+                          return { ...section, expanded: !section.expanded };
+                        }
+                        return section;
+                      });
+                      return updatedSections;
+                    })
+                  }>
+                  <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
+                  {!s.expanded ? (
+                    <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
+                  ) : (
+                    <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
+                  )}
+                </div>
+                {s.expanded && (
+                  <div className={'flex flex-wrap gap-x-2 '}>
+                    {s.value.map((a) => (
+                      <Tag key={a} onClick={() => toggleAmenitySelection(a)} selected={reduxAmenities.includes(a)}>
+                        <span>{a}</span>
+                      </Tag>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
           </div>
           <div className="text-right">
             <Button white label="Cancel" className="mr-2" onClick={handleClose} />
