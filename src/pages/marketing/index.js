@@ -125,6 +125,78 @@ const index = () => {
       title: 'Business Cards',
       listingUrl: false,
     },
+    {
+      type: 'facebook_post',
+      src: ['https://i.imgur.com/u34H0ej.jpeg'],
+      title: 'Just Listed Facebook',
+      listingUrl: true,
+    },
+    {
+      type: 'show_sheet',
+      src: ['https://i.imgur.com/MUZu0ge.png', 'https://i.imgur.com/VZyWs7T.png'],
+      title: 'Showsheet (Multi Page)',
+      listingUrl: true,
+    },
+    {
+      type: 'show_sheet',
+      src: ['https://i.imgur.com/UPfR9aV.png'],
+      title: 'Showsheet 2 (Single Page)',
+      listingUrl: true,
+    },
+    {
+      type: 'facebook_post',
+      src: ['https://i.imgur.com/vUCcYJq.jpeg'],
+      title: 'Social Media Just Listed',
+      listingUrl: true,
+    },
+    {
+      type: 'instagram_post',
+      title: 'Social Media For Sale',
+      src: ['https://i.imgur.com/4sLG46w.jpeg'],
+      listingUrl: true,
+    },
+    {
+      type: 'show_sheet',
+      title: 'Showsheet For Sale',
+      src: ['https://i.imgur.com/JylORjL.png', 'https://i.imgur.com/6HnUu47_d.webp?maxwidth=760&fidelity=grand'],
+      listingUrl: true,
+    },
+    {
+      title: 'Featured Services Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/mQfKmTB.png'],
+      listingUrl: false,
+    },
+    {
+      title: 'Buyers Agent Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/XEU0moQ.png'],
+      listingUrl: false,
+    },
+    {
+      title: 'Buying in NYC Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/AX1lcDy.png', 'https://i.imgur.com/B40lDkv.jpeg'],
+      listingUrl: false,
+    },
+    {
+      title: 'Renting vs. Buying Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/nbzIFMw_d.webp?maxwidth=760&fidelity=grand'],
+      listingUrl: false,
+    },
+    {
+      title: 'Home Evaluation Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/M1uswLf.png'],
+      listingUrl: false,
+    },
+    {
+      title: 'Dream Home Buyer Postcard',
+      type: 'postcard',
+      src: ['https://i.imgur.com/XrB3d5Z_d.webp?maxwidth=760&fidelity=grand'],
+      listingUrl: false,
+    },
   ];
 
   const [searchTerm, setSearchTerm] = useState('');
