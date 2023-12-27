@@ -139,8 +139,8 @@ const index = () => {
   const Item = ({ item, className, icon }) => {
     return (
       <div className={`flex ${className}`}>
-        <div className="w-fit">
-          <img src={icon} className="w-[30px]" />
+        <div className="w-[30px]">
+          <img src={icon} className="w-[26px]" />
         </div>
         <div className="flex flex-col w-fit ml-2">
           <div className="text-gray6 text-sm font-medium mb-2">{item.description}</div>
