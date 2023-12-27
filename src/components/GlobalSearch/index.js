@@ -26,12 +26,13 @@ const GlobalSearch = ({ open, onClose }) => {
                 <li
                   key={item.id}
                   role="button"
-                  onClick={() =>
+                  onClick={() => {
+                    onClose();
                     router.push({
                       pathname: '/contacts/details',
                       query: { id: item?.id },
-                    })
-                  }
+                    });
+                  }}
                   className="py-2 px-3 flex gap-3 justify-between items-center hover:bg-lightBlue1 cursor-pointer">
                   {item.profile_image_path ? (
                     <img

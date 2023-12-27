@@ -2,6 +2,7 @@ import MainMenu from '@components/shared/menu';
 import profile from '/public/images/Portrait_Placeholder.png';
 import noteIcon from '/public/images/note-icon.svg';
 import documentsIcon from '/public/images/documents-icon.svg';
+import communication from '/public/images/communication.svg';
 import call from '/public/images/call-icon.svg';
 import edit from '/public/images/edit-icon.svg';
 import addNote from '/public/images/add-note.svg';
@@ -309,6 +310,13 @@ const index = () => {
             </div>
 
             <div className="flex-grow mx-3">
+              {/* <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+                <div className="flex items-center">
+                  <img src={communication.src} />
+                  <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div>
+                </div>
+              </div> */}
+
               <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg">
                 <PropertiesSection contactId={800902} category={'buyer'} />
               </div>
