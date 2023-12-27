@@ -202,7 +202,12 @@ export default function ActivityLog({ contactId, source, contact }) {
               </div>
             </div>
           ) : (
-            <Feeds contactId={contactId} activities={activityLogLocal} setActivities={setActivityLogLocal} />
+            <Feeds
+              height="52vh"
+              contactId={contactId}
+              activities={activityLogLocal}
+              setActivities={setActivityLogLocal}
+            />
           ))}
       </div>
       <div className=" bg-white p-6 relative flex-1 flex flex-col m-6 ml-0">

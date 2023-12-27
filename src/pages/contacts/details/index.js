@@ -5,6 +5,9 @@ import documentsIcon from '/public/images/documents-icon.svg';
 import communication from '/public/images/communication.svg';
 import call from '/public/images/call-icon.svg';
 import edit from '/public/images/edit-icon.svg';
+import email from '/public/images/email-icon.svg';
+import sms from '/public/images/sms-icon.svg';
+import whatsapp from '/public/images/whatsapp-icon.svg';
 import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
@@ -17,7 +20,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
 import Loader from '@components/shared/loader';
-import { addContactNote, getContactNotes } from '@api/contacts';
+import { addContactNote, getContactActivities, getContactNotes } from '@api/contacts';
 import Add from '@mui/icons-material/Add';
 import TextArea from '@components/shared/textarea';
 import * as Yup from 'yup';
@@ -26,6 +29,7 @@ import Overlay from '@components/shared/overlay';
 import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Feeds from '@components/shared/feeds';
 
 const index = () => {
   const router = useRouter();
@@ -39,6 +43,8 @@ const index = () => {
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contact, setContact] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [loadingActivities, setLoadingActivities] = useState(true);
   const [loadingNotes, setLoadingNotes] = useState(true);
   const [loadingButton, setLoadingButton] = useState(false);
   const [editingContact, setEditingContact] = useState(false);
@@ -48,6 +54,7 @@ const index = () => {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
       getNotes();
+      getActivityLog();
       if (contactData.campaign_name) {
         setCampaigns([
           {
@@ -69,6 +76,18 @@ const index = () => {
       .catch((error) => {
         console.log(error);
         toast.error('Error fetching notes');
+      });
+  };
+
+  const getActivityLog = async () => {
+    getContactActivities(id)
+      .then((response) => {
+        setActivities(response.data.data);
+        setLoadingActivities(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching activity');
       });
   };
 
@@ -310,15 +329,48 @@ const index = () => {
             </div>
 
             <div className="flex-grow mx-3">
-              {/* <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+              <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center">
                   <img src={communication.src} />
                   <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div>
                 </div>
-              </div> */}
+                <Feeds contactId={id} activities={activities} setActivities={setActivities} />
+                <div className="mt-6">
+                  <div className="text-gray8 text-sm font-semibold mb-2">Start to communicate via:</div>
+                  <div className="grid grid-cols-3">
+                    <div className="border-gray1 border mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
+                      <div>
+                        <img src={whatsapp.src} />
+                        <div className="text-sm text-gray7 ml-1 font-semibold mt-1">Whatsapp</div>
+                      </div>
+                      <Button secondary className="!rounded-[222px] !font-semibold !px-3 !py-2 self-end">
+                        Start Chat
+                      </Button>
+                    </div>
+                    <div className="border-gray1 border mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
+                      <div>
+                        <img src={sms.src} />
+                        <div className="text-sm text-gray7 ml-1 font-semibold mt-1">SMS</div>
+                      </div>
+                      <Button secondary className="!rounded-[222px] !font-semibold !px-3 !py-2 self-end">
+                        Send SMS
+                      </Button>
+                    </div>
+                    <div className="border-gray1 border client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
+                      <div>
+                        <img src={email.src} />
+                        <div className="text-sm text-gray7 ml-1 font-semibold mt-1">Email</div>
+                      </div>
+                      <Button secondary className="!rounded-[222px] !font-semibold !px-3 !py-2 self-end">
+                        Send Email
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg">
-                <PropertiesSection contactId={800902} category={'buyer'} />
+                <PropertiesSection contactId={id} category={'buyer'} />
               </div>
             </div>
             <div className="w-[270px]">
