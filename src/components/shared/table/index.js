@@ -1942,6 +1942,11 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
               Email Summary
             </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]">
+              Imported Date
+            </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Actions
             </th>
@@ -2010,6 +2015,10 @@ const Table = ({
                   {dataItem.summary ? <div className="email-summary-styling">{dataItem.summary}</div> : '-'}
                 </div>
               </td>
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                {formatDateStringMDY(dataItem.created_at)}
+              </td>
+
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center gap-6">
                   <TooltipComponent
