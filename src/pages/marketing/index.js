@@ -26,13 +26,13 @@ const index = () => {
     {
       type: 'show_sheet',
       src: ['https://i.imgur.com/wEcmy3O.png'],
-      title: 'One Page Sheet 1',
+      title: 'One Page Show Sheet 1',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
       src: ['https://i.imgur.com/3s6FHnx.jpg'],
-      title: 'One Page Sheet 2',
+      title: 'One Page Show Sheet 2',
       listingUrl: true,
     },
     {
@@ -133,13 +133,13 @@ const index = () => {
     },
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/MUZu0ge.png', 'https://i.imgur.com/VZyWs7T.png'],
+      src: ['https://i.imgur.com/VLquvQP.png', 'https://i.imgur.com/EM1VB8A.png'],
       title: 'Showsheet (Multi Page)',
       listingUrl: true,
     },
     {
       type: 'show_sheet',
-      src: ['https://i.imgur.com/UPfR9aV.png'],
+      src: ['https://i.imgur.com/6D0JA0d.png'],
       title: 'Showsheet 2 (Single Page)',
       listingUrl: true,
     },
