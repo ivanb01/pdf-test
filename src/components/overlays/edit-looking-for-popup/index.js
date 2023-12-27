@@ -25,6 +25,8 @@ import { setAmenities } from '@store/global/slice';
 import { amenities } from '@global/variables';
 import React from 'react';
 import Tag from '@components/Tag';
+import SimpleBar from 'simplebar-react';
+
 const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
@@ -155,39 +157,41 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     <Overlay
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
+      height="max-h-[500px]"
       title={title}
       className={className}>
-      <div className="p-5">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="mx-auto relative">
-            <SearchSelectInput
-              label="Neighborhood*"
-              options={NYCneighborhoods}
-              value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
-              onChange={(choice) => {
-                let choices = choice.map((el) => el.value);
-                formik.setFieldValue('neighborhood_ids', choices);
-              }}
-              error={errors.neighborhood_ids && touched.neighborhood_ids}
-              errorText={errors.neighborhood_ids}
+      <div className="relative">
+        <form onSubmit={formik.handleSubmit} className="p-5">
+          <SimpleBar autoHide style={{ maxHeight: '330px' }}>
+            <div className="mx-auto relative">
+              <SearchSelectInput
+                label="Neighborhood*"
+                options={NYCneighborhoods}
+                value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
+                onChange={(choice) => {
+                  let choices = choice.map((el) => el.value);
+                  formik.setFieldValue('neighborhood_ids', choices);
+                }}
+                error={errors.neighborhood_ids && touched.neighborhood_ids}
+                errorText={errors.neighborhood_ids}
+              />
+            </div>
+            <RadioChips
+              options={roomsOptions}
+              value={formik.values.bedrooms ? formik.values.bedrooms : null}
+              label="Bedrooms"
+              className="mt-4"
+              handleSelect={(val) => formik.setFieldValue('bedrooms', val.value)}
             />
-          </div>
-          <RadioChips
-            options={roomsOptions}
-            value={formik.values.bedrooms ? formik.values.bedrooms : null}
-            label="Bedrooms"
-            className="mt-4"
-            handleSelect={(val) => formik.setFieldValue('bedrooms', val.value)}
-          />
-          <RadioChips
-            options={bathroomsOptions}
-            value={formik.values.bathrooms ? formik.values.bathrooms : null}
-            label="Bathrooms"
-            className="mt-4"
-            handleSelect={(val) => formik.setFieldValue('bathrooms', val.value)}
-          />
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            {/* <Dropdown
+            <RadioChips
+              options={bathroomsOptions}
+              value={formik.values.bathrooms ? formik.values.bathrooms : null}
+              label="Bathrooms"
+              className="mt-4"
+              handleSelect={(val) => formik.setFieldValue('bathrooms', val.value)}
+            />
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              {/* <Dropdown
               white
               top={'top-[40px]'}
               menuHeight={'h-[150px]'}
@@ -215,77 +219,83 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
               handleSelect={(val) => formik.setFieldValue('bathrooms', val.label)}
               placeHolder={'Choose'}
             /> */}
-            <Input
-              id="budget_min"
-              type="money"
-              label="Budget Min"
-              iconAfter={<Image src={usd} height={20} />}
-              className="col-span-1"
-              onChange={(val) => formik.setFieldValue('budget_min', val)}
-              value={formik.values.budget_min}
-              error={errors.budget_min && touched.budget_min}
-              errorText={errors.budget_min}
-            />
-            <Input
-              id="budget_max"
-              type="money"
-              label="Budget Max"
-              iconAfter={<Image src={usd} height={20} />}
-              className="col-span-1"
-              onChange={(val) => formik.setFieldValue('budget_max', val)}
-              value={formik.values.budget_max}
-              error={errors.budget_max && touched.budget_max}
-              errorText={errors.budget_max}
-            />
-          </div>
-          <div className={'w-[100%] mt-6'}>
-            {sections.map((s) => (
-              <React.Fragment key={s.name}>
-                <div
-                  className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
-                  role={'button'}
-                  onClick={() =>
-                    setSections((prev) => {
-                      const updatedSections = prev.map((section) => {
-                        if (section.id === s.id) {
-                          return { ...section, expanded: !section.expanded };
-                        }
-                        return section;
-                      });
-                      return updatedSections;
-                    })
-                  }>
-                  <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
-                  {!s.expanded ? (
-                    <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
-                  ) : (
-                    <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
-                  )}
-                </div>
-                {s.expanded && (
-                  <div className={'flex flex-wrap gap-x-2 '}>
-                    {s.value.map((a) => (
-                      <Tag key={a} onClick={() => toggleAmenitySelection(a)} selected={reduxAmenities.includes(a)}>
-                        <span>{a}</span>
-                      </Tag>
-                    ))}
+              <Input
+                id="budget_min"
+                type="money"
+                label="Budget Min"
+                iconAfter={<Image src={usd} height={20} />}
+                className="col-span-1"
+                onChange={(val) => formik.setFieldValue('budget_min', val)}
+                value={formik.values.budget_min}
+                error={errors.budget_min && touched.budget_min}
+                errorText={errors.budget_min}
+              />
+              <Input
+                id="budget_max"
+                type="money"
+                label="Budget Max"
+                iconAfter={<Image src={usd} height={20} />}
+                className="col-span-1"
+                onChange={(val) => formik.setFieldValue('budget_max', val)}
+                value={formik.values.budget_max}
+                error={errors.budget_max && touched.budget_max}
+                errorText={errors.budget_max}
+              />
+            </div>
+            <div className={'w-[100%] mt-6'}>
+              {sections.map((s) => (
+                <React.Fragment key={s.name}>
+                  <div
+                    className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                    role={'button'}
+                    onClick={() =>
+                      setSections((prev) => {
+                        const updatedSections = prev.map((section) => {
+                          if (section.id === s.id) {
+                            return { ...section, expanded: !section.expanded };
+                          }
+                          return section;
+                        });
+                        return updatedSections;
+                      })
+                    }>
+                    <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
+                    {!s.expanded ? (
+                      <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
+                    ) : (
+                      <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
+                    )}
                   </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-          <div className="text-right">
-            <Button white label="Cancel" className="mr-2" onClick={handleClose} />
-            <Button
-              label="Save Changes"
-              type="submit"
-              primary
-              className="mt-6"
-              loading={loadingButton}
-              disabled={!formik.isValid}
-            />
-          </div>
+                  {s.expanded && (
+                    <div className={'flex flex-wrap gap-x-2 '}>
+                      {s.value.map((a) => (
+                        <Tag key={a} onClick={() => toggleAmenitySelection(a)} selected={reduxAmenities.includes(a)}>
+                          <span>{a}</span>
+                        </Tag>
+                      ))}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </SimpleBar>
         </form>
+        <div
+          className="text-right sticky left-0 right-0 bottom-0 bg-white p-5"
+          style={{
+            boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
+          }}>
+          <Button white label="Cancel" className="mr-2" onClick={handleClose} />
+          <Button
+            label="Save Changes"
+            type="submit"
+            primary
+            className=""
+            loading={loadingButton}
+            disabled={!formik.isValid}
+            onClick={formik.handleSubmit}
+          />
+        </div>
       </div>
     </Overlay>
   );
