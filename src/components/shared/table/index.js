@@ -918,7 +918,7 @@ const Table = ({
     const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky z-[9999] top-0">
           <tr>
             <th
               scope="col"
@@ -953,8 +953,8 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white">
-          {contactsStatuses[openedSubtab].statuses.map((category, index) =>
+        <tbody className="bg-white" style={{ overflowY: 'auto' }}>
+          {contactsStatuses[openedSubtab].statuses.map((category) =>
             contacts?.filter(
               (contact) =>
                 searchTerm.split(' ').every((word) => {
@@ -968,7 +968,7 @@ const Table = ({
               <div>
                 <tr
                   key={category.id}
-                  className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[-1px]`}>
+                  className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[40px]`}>
                   <td colSpan="10">
                     <div
                       className="flex items-center px-6 py-2"
@@ -1224,49 +1224,6 @@ const Table = ({
                               Add Communication
                             </div>
                           </div>
-                          {/*<div*/}
-                          {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
-                          {/*  onMouseEnter={() => {*/}
-                          {/*    document*/}
-                          {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
-                          {/*      .classList.remove('invisible', 'opacity-0');*/}
-                          {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');*/}
-                          {/*    document*/}
-                          {/*      .querySelector('#change-status-icon-' + contact.id)*/}
-                          {/*      .classList.remove('text-gray3');*/}
-                          {/*  }}*/}
-                          {/*  onMouseLeave={() => {*/}
-                          {/*    document*/}
-                          {/*      .querySelector('#tooltip-change-status-' + contact.id)*/}
-                          {/*      .classList.add('invisible', 'opacity-0');*/}
-                          {/*    document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');*/}
-                          {/*    document*/}
-                          {/*      .querySelector('#change-status-icon-' + contact.id)*/}
-                          {/*      .classList.remove('text-gray4');*/}
-                          {/*  }}*/}
-                          {/*  // onClick={(event) => handleDropdown(event, !dropdownOpened)}*/}
-                          {/*  onClick={(e) => e.stopPropagation()}>*/}
-                          {/*  /!* <Category className="text-gray3 w-4 h-4" /> *!/*/}
-                          {/*  <SimpleBarDropdown*/}
-                          {/*    options={allStatusesQuickEdit[categoryType]}*/}
-                          {/*    activeIcon={false}*/}
-                          {/*    activeClasses="bg-lightBlue1"*/}
-                          {/*    handleSelect={(item) => {*/}
-                          {/*      // setDropdownVal(item)*/}
-                          {/*      handleChangeStatus(item.id, contact);*/}
-                          {/*    }}*/}
-                          {/*    iconLabel={*/}
-                          {/*      <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />*/}
-                          {/*    }*/}
-                          {/*    dropdownValue={contact?.status_2}*/}
-                          {/*    handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>*/}
-                          {/*  <div*/}
-                          {/*    id={'tooltip-change-status-' + contact.id}*/}
-                          {/*    role="tooltip"*/}
-                          {/*    className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">*/}
-                          {/*    Change Status*/}
-                          {/*  </div>*/}
-                          {/*</div>*/}
                         </div>
                       </td>
                     </tr>
@@ -1439,7 +1396,7 @@ const Table = ({
 
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky z-[9999] top-0">
           <tr>
             <th
               scope="col"
@@ -1469,9 +1426,9 @@ const Table = ({
             professionalTypes.map((type, index) =>
               contacts.filter((contact) => contact.category_id == type.id).length ? (
                 <>
-                  <tr key={type.id} className={`contact-row border-b border-gray-200`}>
+                  <tr key={type.id} className={` bg-white sticky top-[40px] z-10 `}>
                     <td colSpan="10">
-                      <div className="flex items-center px-6 py-2">
+                      <div className="flex items-center px-6 py-2 border-b border-gray-200">
                         <Text chipText className="text-gray4">
                           {type.name == 'Vendor' ? 'Other Vendors' : type.name}
                         </Text>
@@ -1495,7 +1452,7 @@ const Table = ({
                         className={`${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
                         ${
                           isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
-                        } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
+                        } hover:bg-lightBlue1 cursor-pointer contact-row `}
                         onClick={() =>
                           router.push({
                             pathname: '/contacts/details',
