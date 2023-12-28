@@ -365,58 +365,42 @@ const index = () => {
     <>
       <MainMenu />
       <div className="border border-b">
-        <div className="flex p-6">
+        <div className="flex p-6 gap-4">
           <Search
-            className="w-[250px] mr-4 text-sm"
+            className="w-[250px]  text-sm"
             placeholder="Search by address"
             onInput={(event) => {
               setSearchKey(event.target.value);
             }}
             value={searchKey}
           />
-          {/* <SearchSelectInput
-              options={NYCneighborhoods}
-              className="mr-4"
-              placeholder="Neighborhood"
-              onChange={(choice) => {
-                let choices = choice.map((el) => el.value);
-                setNeighborhoods(choices);
+          <div style={{ flex: 1 }}>
+            <MultiSelect
+              options={sortedNeighborhoods}
+              value={neighborhoods}
+              onChange={(neighborhood) => {
+                setNeighborhoods(neighborhood);
               }}
-              value={valueOptions(neighborhoods, NYCneighborhoods)}
-            /> */}
-          <MultiSelect
-            options={sortedNeighborhoods}
-            value={neighborhoods}
-            onChange={(neighborhood) => {
-              setNeighborhoods(neighborhood);
-            }}
-            labelledBy="Select Neighborhoods"
-            overrideStrings={{
-              selectSomeItems: 'Select Neighborhoods',
-            }}
-            className="mr-4"
-          />
+              labelledBy="Select Neighborhoods"
+              overrideStrings={{
+                selectSomeItems: 'Select Neighborhoods',
+              }}
+              className="multi-select "
+            />
+          </div>
           <Dropdown
             options={forOptions}
-            className="mr-4 w-[130px]"
+            className=" w-[130px]"
             placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
             }}
             initialSelect={status?.label}
           />
-          {/* <Dropdown
-            options={NYCneighborhoods}
-            className="mr-4"
-            placeHolder="type: Choose"
-            handleSelect={(choice) => {
-              let choices = choice.map((el) => el.initialSelect);
-              setNeighborhoods(choices);
-            }}
-          /> */}
+
           <Dropdown
             options={bedroomsOptions}
-            className="mr-4 w-[140px]"
+            className=" min-w-[100px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
             handleSelect={(choice) => {
@@ -426,7 +410,7 @@ const index = () => {
           />
           <Dropdown
             options={bathroomOptions}
-            className="mr-4 w-[140px]"
+            className="w-[140px]"
             placeHolder="Bathrooms"
             afterLabel="Baths"
             handleSelect={(choice) => {
@@ -437,7 +421,7 @@ const index = () => {
           <MinMaxPrice
             // options={bathroomOptions}
             label={'Min/Max Price'}
-            className="mr-4 min-w-[170px]"
+            className="min-w-[170px]"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
@@ -447,7 +431,7 @@ const index = () => {
           <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
-          <Button onClick={() => resetFilters()} className="min-w-[120px] ml-2" primary>
+          <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
             Clear Filters
           </Button>
           {/* <Dropdown

@@ -80,7 +80,7 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
       onClick={handleDivClick}
       className={`${className} ${
         touched && 'text-gray8 font-normal'
-      } cursor-pointer flex justify-between h-[38px] px-3 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
+      } cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
       {intialLabel}
       <ChevronDownIcon
         className={`chevron-custom-icon transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`}
