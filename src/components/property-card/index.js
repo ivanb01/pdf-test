@@ -64,8 +64,8 @@ const PropertyCard = ({ property, selected, setSelected }) => {
 
   return (
     <div
-      className={`border-2 transition-all border-gray-200 rounded-[4px] ${
-        selected && ' border-2 border-lightBlue3 custom-box-shadow'
+      className={`border transition-all border-gray-200 rounded-[4px] ${
+        selected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
       <div className="h-[160px] relative">
         <ImageGallery images={property.PHOTOS} property={property} url={url} />
@@ -104,16 +104,16 @@ const PropertyCard = ({ property, selected, setSelected }) => {
           </div>
         </div>
         <div className="mb-3 flex font-medium">
-          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={room.src} alt="" />
             {property.BEDROOMS}
           </div>
-          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={bathroom.src} alt="" />
             {property.BATHROOMS}
           </div>
           {property.SQUARE_FOOTAGE != 0 && (
-            <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+            <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
               <img className="mr-1" src={sqft.src} alt="" />
               {property.SQUARE_FOOTAGE} sqft
             </div>
