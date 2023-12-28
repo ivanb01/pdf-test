@@ -20,10 +20,9 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
 import Loader from '@components/shared/loader';
-import { addContactNote, getContactActivities, getContactNotes } from '@api/contacts';
+import { addContactNote, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
 import Add from '@mui/icons-material/Add';
 import TextArea from '@components/shared/textarea';
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import Overlay from '@components/shared/overlay';
 import toast from 'react-hot-toast';
@@ -34,6 +33,7 @@ import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
 import { Delete, Edit, More } from '@mui/icons-material';
 import Text from '@components/shared/text';
 import MoreVert from '@mui/icons-material/MoreVert';
+import NoteModal from '@components/overlays/note-modal';
 
 const index = () => {
   const router = useRouter();
@@ -41,7 +41,8 @@ const index = () => {
   const { id } = router.query;
 
   const [noteId, setNoteId] = useState(0);
-  const [noteModal, setNoteModal] = useState(false);
+  const [addNoteModal, setAddNoteModal] = useState(false);
+  const [editNoteModal, setEditNoteModal] = useState(false);
   const refetchPart = useSelector((state) => state.global.refetchPart);
   const refetchData = useSelector((state) => state.global.refetchData);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
@@ -50,8 +51,8 @@ const index = () => {
   const [activities, setActivities] = useState([]);
   const [loadingActivities, setLoadingActivities] = useState(true);
   const [loadingNotes, setLoadingNotes] = useState(true);
-  const [loadingButton, setLoadingButton] = useState(false);
   const [editingContact, setEditingContact] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState(null);
 
   useEffect(() => {
     if (id && contacts?.length) {
@@ -95,44 +96,8 @@ const index = () => {
       });
   };
 
-  const AddNoteSchema = Yup.object().shape({
-    description: Yup.string().required('Description required'),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      // title: '',
-      description: '',
-    },
-    validationSchema: AddNoteSchema,
-    onSubmit: (values) => {
-      handleAddSubmit(values);
-    },
-  });
-
-  const { errors, touched, resetForm } = formik;
-
-  const handleAddSubmit = async (values) => {
-    try {
-      const newNote = {
-        id: Date.now().toString(),
-        description: values.description,
-        created_at: new Date().toISOString(),
-      };
-      handleCloseModal();
-      setNotes((prevNotes) => [...prevNotes, newNote]);
-      // setNotes([...(notesData || []), newNote]);
-      console.log(newNote);
-      toast.success('Note added successfully');
-      addContactNote(id, values);
-    } catch (error) {
-      toast.error(error);
-      setLoadingButton(false);
-    }
-  };
-
   const handleCloseModal = () => {
-    setNoteModal(false);
+    setAddNoteModal(false);
     setNoteId(0);
     resetForm();
   };
@@ -143,7 +108,7 @@ const index = () => {
 
   const [campaigns, setCampaigns] = useState([]);
 
-  const Item = ({ item, className, icon }) => {
+  const Item = ({ item, className, icon, isEditable }) => {
     return (
       <div className="flex justify-between">
         <div className={`flex ${className}`}>
@@ -155,17 +120,30 @@ const index = () => {
             <div className="text-gray3 text-sm">{formatDateLL(item.createdAt)}</div>
           </div>
         </div>
-        <FilterDropdown types={types} icon={<MoreVert className="w-5" />} data={item} positionClass="right-0" />
+        {isEditable && (
+          <FilterDropdown types={noteTypes} icon={<MoreVert className="w-5" />} data={item} positionClass="right-0" />
+        )}
       </div>
     );
   };
 
   const handleEditActivity = () => {
-    console.log('edit');
+    console.log('edit activity');
   };
 
   const handleDeleteActivity = () => {
-    console.log('delete');
+    console.log('delete activity');
+  };
+
+  const handleEditNote = (note) => {
+    setNoteToEdit(note);
+    setEditNoteModal(true);
+  };
+
+  const handleDeleteNote = (note) => {
+    setNoteToEdit(note);
+    setNotes((prevNotes) => prevNotes.filter((noteItem) => noteItem.id !== note.id));
+    deleteContactNote(note.contact_id, note.id);
   };
 
   const types = [
@@ -190,6 +168,31 @@ const index = () => {
         </span>
       ),
       handleClick: handleDeleteActivity,
+    },
+  ];
+
+  const noteTypes = [
+    {
+      name: (
+        <span className="flex flex-row">
+          <Edit className="text-gray6 mr-3 w-4" />
+          <Text smallText className="text-gray6">
+            Edit Note
+          </Text>
+        </span>
+      ),
+      handleClick: handleEditNote,
+    },
+    {
+      name: (
+        <span className="flex flex-row">
+          <Delete height={15} className="text-red5 mr-3 w-4" />
+          <Text smallText className="text-red5">
+            Delete Note
+          </Text>
+        </span>
+      ),
+      handleClick: handleDeleteNote,
     },
   ];
 
@@ -403,7 +406,7 @@ const index = () => {
                 <div className="flex items-start justify-between">
                   <div className="text-gray8 font-semibold text-sm mb-5">Notes</div>
                   {notes.length > 0 && (
-                    <a href="#" className="cursor-pointer" onClick={() => setNoteModal(true)}>
+                    <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                       <img src={addNote.src} />
                     </a>
                   )}
@@ -414,11 +417,16 @@ const index = () => {
                     <div className="text-gray5 text-sm mb-6">
                       You haven't created any notes for this client yet. To do so, simply hit the button below.
                     </div>
-                    <Button onClick={() => setNoteModal(true)} primary label="Create Note" />
+                    <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
                   notes.map((note, index) => (
-                    <Item className={` ${notes.length - 1 != index && 'mb-[18px]'}`} item={note} icon={noteIcon.src} />
+                    <Item
+                      isEditable
+                      className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
+                      item={note}
+                      icon={noteIcon.src}
+                    />
                   ))
                 )}
               </div>
@@ -450,26 +458,9 @@ const index = () => {
           </div>
         )}
       </div>
-      {noteModal && (
-        <Overlay className="w-[632px]" handleCloseOverlay={handleCloseModal} title={`Add Note`}>
-          <div className="p-6 pt-0 bg-white">
-            <form onSubmit={formik.handleSubmit}>
-              <TextArea
-                className="min-h-[120px]"
-                id="description"
-                label="Description"
-                handleChange={formik.handleChange}
-                value={formik.values.description}
-                error={errors.description && touched.description}
-                errorText={errors.description}
-              />
-              <div className="flex flex-row justify-end mt-6">
-                <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
-                <Button type="submit" primary label="Save" loading={loadingButton} />
-              </div>
-            </form>
-          </div>
-        </Overlay>
+      {addNoteModal && <NoteModal id={id} handleCloseModal={() => setAddNoteModal(false)} setNotes={setNotes} />}
+      {editNoteModal && (
+        <NoteModal setNotes={setNotes} note={noteToEdit} id={id} handleCloseModal={() => setEditNoteModal(false)} />
       )}
       {editingContact && (
         <ReviewContact handleClose={() => setEditingContact(false)} client={contact} title="Edit Contact" />
