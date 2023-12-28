@@ -918,7 +918,7 @@ const Table = ({
     const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     return (
       <>
-        <thead className="bg-gray-50 sticky z-[9999] top-0">
+        <thead className="bg-gray-50 sticky z-[10] top-0">
           <tr>
             <th
               scope="col"
@@ -1396,7 +1396,7 @@ const Table = ({
 
     return (
       <>
-        <thead className="bg-gray-50 sticky z-[9999] top-0">
+        <thead className="bg-gray-50 sticky z-[10] top-0">
           <tr>
             <th
               scope="col"

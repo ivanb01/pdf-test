@@ -28,7 +28,7 @@ export default function SlideOver({ noHeader, open, setOpen, title, buttons, chi
                         style={{
                           boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
                         }}>
-                        <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
+                        <h6 className="text-md font-medium text-gray-900">{title}</h6>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
