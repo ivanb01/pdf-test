@@ -18,8 +18,8 @@ const FilterDropdown = ({
       <div>
         <Menu.Button
           className={`inline-flex ${
-            buttonClassName ? buttonClassName : 'px-4'
-          } justify-center w-full rounded-md py-2 bg-white text-sm font-medium text-[#696F8C] hover:text-primaryOxford hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-primaryOxford z-0 `}>
+            buttonClassName ? buttonClassName : ''
+          } justify-center w-full rounded-md py-2 bg-white text-sm font-medium text-[#696F8C] z-0 `}>
           <div>{icon}</div>
           {label}
         </Menu.Button>

@@ -30,6 +30,10 @@ import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Feeds from '@components/shared/feeds';
+import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
+import { Delete, Edit, More } from '@mui/icons-material';
+import Text from '@components/shared/text';
+import MoreVert from '@mui/icons-material/MoreVert';
 
 const index = () => {
   const router = useRouter();
@@ -137,37 +141,58 @@ const index = () => {
 
   const [applications, setApplications] = useState([]);
 
-  const [campaigns, setCampaigns] = useState([
-    // {
-    //   id: 0,
-    //   title: `Campaign For New Leads`,
-    //   status: true,
-    // },
-    // {
-    //   id: 1,
-    //   title: `Happy Holidays`,
-    //   status: false,
-    // },
-    // {
-    //   id: 2,
-    //   title: `Follow-up Campaign`,
-    //   status: false,
-    // },
-  ]);
+  const [campaigns, setCampaigns] = useState([]);
 
   const Item = ({ item, className, icon }) => {
     return (
-      <div className={`flex ${className}`}>
-        <div className="w-[30px]">
-          <img src={icon} className="w-[26px]" />
+      <div className="flex justify-between">
+        <div className={`flex ${className}`}>
+          <div className="w-[30px]">
+            <img src={icon} className="w-[26px]" />
+          </div>
+          <div className="flex flex-col w-fit ml-2">
+            <div className="text-gray6 text-sm font-medium mb-2">{item.description}</div>
+            <div className="text-gray3 text-sm">{formatDateLL(item.createdAt)}</div>
+          </div>
         </div>
-        <div className="flex flex-col w-fit ml-2">
-          <div className="text-gray6 text-sm font-medium mb-2">{item.description}</div>
-          <div className="text-gray3 text-sm">{formatDateLL(item.createdAt)}</div>
-        </div>
+        <FilterDropdown types={types} icon={<MoreVert className="w-5" />} data={item} positionClass="right-0" />
       </div>
     );
   };
+
+  const handleEditActivity = () => {
+    console.log('edit');
+  };
+
+  const handleDeleteActivity = () => {
+    console.log('delete');
+  };
+
+  const types = [
+    {
+      name: (
+        <span className="flex flex-row">
+          <Edit className="text-gray6 mr-3 w-4" />
+          <Text smallText className="text-gray6">
+            Edit Activity
+          </Text>
+        </span>
+      ),
+      handleClick: handleEditActivity,
+    },
+    {
+      name: (
+        <span className="flex flex-row">
+          <Delete height={15} className="text-red5 mr-3 w-4" />
+          <Text smallText className="text-red5">
+            Delete Activity
+          </Text>
+        </span>
+      ),
+      handleClick: handleDeleteActivity,
+    },
+  ];
+
   return (
     <>
       <div>
