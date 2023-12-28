@@ -17,7 +17,7 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id }) => {
   const formik = useFormik({
     initialValues: {
       // title: '',
-      description: note.description ? note.description : '',
+      description: note ? note.description : '',
     },
     validationSchema: AddNoteSchema,
     onSubmit: (values) => {
