@@ -5,7 +5,7 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
-import { NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
+import { data, NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
@@ -23,12 +23,20 @@ import { useSelector } from 'react-redux';
 import { getInitials, searchContacts } from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
-
+import List from '@components/NestedCheckbox/List';
+import { ChevronDownIcon } from '@heroicons/react/solid';
+import CloseIcon from '@mui/icons-material/Close';
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
   { label: 'Mango 🥭', value: 'mango' },
   { label: 'Strawberry 🍓', value: 'strawberry', disabled: true },
 ];
+
+const statuss = Object.freeze({
+  unchecked: 0,
+  checked: 1,
+  indeterminate: -1,
+});
 
 const index = () => {
   const { isLoaded } = useLoadScript({
@@ -49,6 +57,101 @@ const index = () => {
   const [selectedProperties, setSelectedProperties] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
+  const setStatuss = (root, status) => {
+    root.status = status;
+    if (Array.isArray(root.items)) {
+      return root.items.forEach((item) => {
+        setStatuss(item, status);
+      });
+    }
+  };
+
+  const computeStatus = (items) => {
+    let checked = 0;
+    let indeterminate = 0;
+
+    items.forEach((item) => {
+      if (item.status && item.status === statuss?.checked) checked++;
+      if (item.status && item.status === statuss?.indeterminate) indeterminate++;
+    });
+
+    if (checked === items.length) {
+      return statuss.checked;
+    } else if (checked > 0 || indeterminate > 0) {
+      return statuss.indeterminate;
+    }
+  };
+
+  const traverse = (root, needle, status) => {
+    let id;
+    let items;
+
+    if (Array.isArray(root)) {
+      items = root;
+    } else {
+      id = root.id;
+      items = root.items;
+    }
+
+    // return if needle is found
+    // we don't have to compute the status of the items if root.id === needle
+    if (id === needle) {
+      return setStatuss(root, status);
+    }
+
+    if (!items) {
+      return root;
+    } else {
+      items.forEach((item) => traverse(item, needle, status));
+      root.status = computeStatus(items);
+    }
+  };
+
+  const [items, setItems] = useState(data);
+  const compute = (checkboxId, status) => {
+    traverse(items, checkboxId, status);
+    setItems(items.slice());
+  };
+  const initializeStatus = () => {
+    const updatedData = items.map((category) => ({
+      ...category,
+      status: 0,
+      items: category.items.map((item) => ({ ...item, status: 0 })),
+    }));
+
+    setItems(updatedData);
+  };
+
+  const [datav2, setDatav2] = useState([]);
+
+  useEffect(() => {
+    // Use a temporary variable to store the new data
+    const newData = [];
+    const idsOfNeighboorhoods = [];
+
+    items.forEach((d) => {
+      if (d.status === 1) {
+        console.log(d.status, 'd.status');
+        newData.push(d.name);
+      } else {
+        d.items.forEach((i) => {
+          if (i.status === 1) {
+            newData.push(i.name);
+            idsOfNeighboorhoods.push(i.id);
+          }
+        });
+      }
+    });
+
+    console.log(newData, 'newData');
+
+    // Convert idsOfNeighboorhoods to a string if needed
+    const idsString = idsOfNeighboorhoods.join(',');
+    setIds(idsString);
+
+    // Set the new data in the state
+    setDatav2(newData);
+  }, [items]);
 
   const selectAmenities = (a) => {
     setSelectedAmenities(a);
@@ -164,7 +267,11 @@ const index = () => {
       label: 'For Rent',
     },
   ];
+  const [ids, setIds] = useState();
 
+  useEffect(() => {
+    console.log(ids, 'ids');
+  }, [ids]);
   const fetchProperties = async (filterValue, page = 1) => {
     setLoading(true);
     let params = {
@@ -194,8 +301,7 @@ const index = () => {
       params['page'] = 1;
     }
     if (status) params['status'] = status.id == 0 ? 1 : 2;
-    if (neighborhoods.length)
-      params['neighborhood_id'] = neighborhoods.map((neighborhood) => neighborhood.value).join(',');
+    if (ids?.length) params['neighborhood_id'] = ids;
     if (bedrooms) {
       params['bedsMin'] = bedrooms.id + 1;
     }
@@ -213,7 +319,6 @@ const index = () => {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
 
     await fetchJsonp(url)
       .then((res) => res.json())
@@ -244,10 +349,11 @@ const index = () => {
   }, []);
   useEffect(() => {
     fetchProperties(filterValue, page);
-  }, [bedrooms, bathrooms, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue, selectedAmenities]);
+  }, [bedrooms, bathrooms, ids, neighborhoods, searchKey, status, minPrice, maxPrice, filterValue, selectedAmenities]);
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
+  const [openDropdown, setOpenDropdown] = useState(false);
   useEffect(() => {
     if (typeof status?.id !== 'undefined') {
       setOptions(status.id == 1 ? rentalPriceOptions : salePriceOptions);
@@ -374,20 +480,55 @@ const index = () => {
             }}
             value={searchKey}
           />
-          <div style={{ flex: 1 }}>
-            <MultiSelect
-              options={sortedNeighborhoods}
-              value={neighborhoods}
-              onChange={(neighborhood) => {
-                setNeighborhoods(neighborhood);
-              }}
-              labelledBy="Select Neighborhoods"
-              overrideStrings={{
-                selectSomeItems: 'Select Neighborhoods',
-              }}
-              className="multi-select "
-            />
+          <div
+            className={
+              'min-w-[170px] false cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
+            }
+            style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
+            onClick={() => setOpenDropdown(!openDropdown)}>
+            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>
+              {datav2.length > 0 ? datav2.join(',') : 'Select'}
+            </div>
+            <div className={'flex'}>
+              {datav2.length > 0 && (
+                <CloseIcon
+                  className={`transition-all h-5 w-5 text-gray3`}
+                  aria-hidden="true"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    initializeStatus();
+                    setDatav2([]);
+                  }}
+                />
+              )}
+              <ChevronDownIcon
+                className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
+                aria-hidden="true"
+              />
+            </div>
+            {openDropdown && (
+              <div
+                className={
+                  'flex-1 left-0 py-3 px-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm'
+                }>
+                <List items={items} compute={compute} setOpenDropdown={setOpenDropdown} />
+              </div>
+            )}
           </div>
+          {/*<div style={{ flex: 1 }}>*/}
+          {/*  <MultiSelect*/}
+          {/*    options={sortedNeighborhoods}*/}
+          {/*    value={neighborhoods}*/}
+          {/*    onChange={(neighborhood) => {*/}
+          {/*      setNeighborhoods(neighborhood);*/}
+          {/*    }}*/}
+          {/*    labelledBy="Select Neighborhoods"*/}
+          {/*    overrideStrings={{*/}
+          {/*      selectSomeItems: 'Select Neighborhoods',*/}
+          {/*    }}*/}
+          {/*    className="multi-select "*/}
+          {/*  />*/}
+          {/*</div>*/}
           <Dropdown
             options={forOptions}
             className=" w-[130px]"
