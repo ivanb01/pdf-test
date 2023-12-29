@@ -88,7 +88,7 @@ const Clients = ({
     },
     {
       title: 'CLIENT STATUS',
-      content: allStatusesQuickEdit['clients'].map((item) => item.label),
+      content: clientStatuses[openedSubtab].statuses.map((item) => item.name),
       value: 'status_2',
     },
     {
