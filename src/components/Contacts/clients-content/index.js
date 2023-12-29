@@ -130,10 +130,6 @@ const Clients = ({
     }
   }, [openedSubtab, clientsFilters]);
 
-  useEffect(() => {
-    dispatch(setClientsFilters({}));
-  }, [openedSubtab]);
-
   const filterContacts = () => {
     // if (filtersCleared && hasAnyProperties(clientsFilters)) {
     //   dispatch(
