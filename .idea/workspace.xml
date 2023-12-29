@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add need to communicate popup">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="fix slideover issues">
+      <change afterPath="$PROJECT_DIR$/src/components/NestedCheckbox/Checkbox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/NestedCheckbox/List.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/contact/contact-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contact/contact-card/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/table/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/table/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global/variables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/global/variables.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="development" />
+        <entry key="$PROJECT_DIR$" value="erza/f/Filters" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,46 +73,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00003" summary="improve others sum and uncategorized sum">
-      <option name="closed" value="true" />
-      <created>1693218293738</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1693218293738</updated>
-    </task>
-    <task id="LOCAL-00004" summary="fix button issues">
-      <option name="closed" value="true" />
-      <created>1695666365885</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1695666365885</updated>
-    </task>
-    <task id="LOCAL-00005" summary="change popup when ai contact">
-      <option name="closed" value="true" />
-      <created>1695666505165</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1695666505165</updated>
-    </task>
-    <task id="LOCAL-00006" summary="change on focus summary textarea">
-      <option name="closed" value="true" />
-      <created>1695666602788</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1695666602788</updated>
-    </task>
-    <task id="LOCAL-00007" summary="remove unused code">
-      <option name="closed" value="true" />
-      <created>1695669034927</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1695669034927</updated>
-    </task>
     <task id="LOCAL-00008" summary="remove 0 values">
       <option name="closed" value="true" />
       <created>1695670024707</created>
@@ -471,18 +433,53 @@
       <option name="project" value="LOCAL" />
       <updated>1702418715150</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="make table header sticky">
+      <option name="closed" value="true" />
+      <created>1703713366190</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1703713366190</updated>
+    </task>
+    <task id="LOCAL-00053" summary="fix images in marketing">
+      <option name="closed" value="true" />
+      <created>1703715024970</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1703715024970</updated>
+    </task>
+    <task id="LOCAL-00054" summary="make header responsive">
+      <option name="closed" value="true" />
+      <created>1703756737098</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1703756737098</updated>
+    </task>
+    <task id="LOCAL-00055" summary="hide price overflow in properties page">
+      <option name="closed" value="true" />
+      <created>1703758530491</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1703758530491</updated>
+    </task>
+    <task id="LOCAL-00056" summary="fix slideover issues">
+      <option name="closed" value="true" />
+      <created>1703765805054</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1703765805054</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add zoom on preview marketing" />
-    <MESSAGE value="make size of main sidebar smaller and do refactoring at ai-summary" />
-    <MESSAGE value="do refactoring at ai-summary" />
-    <MESSAGE value="change direction of Tooltip" />
-    <MESSAGE value="change ai-summary table" />
     <MESSAGE value="enable scrolling when in need to contacgt page" />
     <MESSAGE value="improve lead source" />
     <MESSAGE value="fix ui of add manually client" />
@@ -503,6 +500,11 @@
     <MESSAGE value="add descriptive message on marketing page" />
     <MESSAGE value="change text" />
     <MESSAGE value="add need to communicate popup" />
-    <option name="LAST_COMMIT_MESSAGE" value="add need to communicate popup" />
+    <MESSAGE value="make table header sticky" />
+    <MESSAGE value="fix images in marketing" />
+    <MESSAGE value="make header responsive" />
+    <MESSAGE value="hide price overflow in properties page" />
+    <MESSAGE value="fix slideover issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix slideover issues" />
   </component>
 </project>
