@@ -2,7 +2,7 @@ import axiosInstance from '@api/axiosInstance';
 
 export const sendMarketingEmail = (body) => {
   return axiosInstance.post(
-    'email/send',
+    'v1/email/send',
     { ...body },
     {
       headers: {
