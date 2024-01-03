@@ -8,13 +8,13 @@ export const getGoogleAuthCallback = (queryParams, callback) => {
 };
 
 export const getGoogleAuthorize = () => {
-  return axiosInstance.get('google/authorize', {
+  return axiosInstance.get('v1/google/authorize', {
     params: { test_callback: '/contacts/no-contact', scope: 'contacts,gmail' },
   });
 };
 
 export const getGmailAILogs = () => {
-  return axiosInstance.get('gmail/ai/logs');
+  return axiosInstance.get('v1/gmail/ai/logs');
 };
 
 export const postGoogleContacts = () => {
