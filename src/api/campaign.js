@@ -26,25 +26,25 @@ export const getCampaignsUsers = (id) => {
   return axiosInstance.get(`v1/campaign/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get('campaigns', {
+  return axiosInstance.get('v1/campaigns', {
     params: { search_term: searchterm },
   });
 };
 
 export const assignContactToCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`campaign/${campaignId}/add_contact/${contactId}`);
+  return axiosInstance.post(`v1/campaign/${campaignId}/add_contact/${contactId}`);
 };
 
 export const unassignContactFromCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`campaign/${campaignId}/remove_contact/${contactId}`);
+  return axiosInstance.post(`v1/campaign/${campaignId}/remove_contact/${contactId}`);
 };
 
 export const getCampaign = (id) => {
-  return axiosInstance.get('campaign/' + id);
+  return axiosInstance.get('v1/campaign/' + id);
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('campaigns', {
+  return axiosInstance.get('v1/campaigns', {
     params: { category: category },
   });
 };
