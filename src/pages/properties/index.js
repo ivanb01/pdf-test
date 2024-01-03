@@ -133,6 +133,11 @@ const index = () => {
       if (d.status === 1) {
         console.log(d.status, 'd.status');
         newData.push(d.name);
+        d.items.forEach((i) => {
+          if (i.status === 1) {
+            idsOfNeighboorhoods.push(i.id);
+          }
+        });
       } else {
         d.items.forEach((i) => {
           if (i.status === 1) {
