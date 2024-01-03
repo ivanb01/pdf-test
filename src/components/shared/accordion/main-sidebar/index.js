@@ -188,8 +188,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           dispatch(setOpenedSubtab(t.id));
                           router.push(tab.href);
                         }}
-                        className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
-                        {t?.dot} <div className={'w-[100px]'}>{t.name}</div>
+                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
+                        {t?.dot} <div className={'w-max'}>{t.name}</div>
                         <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
@@ -508,7 +508,7 @@ const TabBar = ({ tab }) => {
                 </Text>
                 <Text
                   h4
-                  className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[10px]')}  py-[10px]  ${
+                  className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[5px]')}  py-[10px]  ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
