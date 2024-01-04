@@ -40,7 +40,6 @@ export default function DateChip({
         <h6 className={' text-xs leading-4 font-medium'}>
           Communication Health is {isHealthyCommunication ? 'good' : 'low'}!
         </h6>
-        {console.log(healthLastCommunicationDate['clients'])}
         {healthLastCommunicationDate[contactCategory] &&
           healthLastCommunicationDate[contactCategory][contactStatus] && (
             <p className={'text-xs leading-4 font-normal'}>

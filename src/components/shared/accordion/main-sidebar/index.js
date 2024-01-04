@@ -189,7 +189,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           router.push(tab.href);
                         }}
                         className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
-                        {t?.dot} <div className={'w-max'}>{t.name}</div>
+                        {t?.dot}
+                        <div className={'w-max'}>{t.name}</div>
                         <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
@@ -387,16 +388,16 @@ const TabBar = ({ tab }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   useEffect(() => {
-    setOpenedTab(0);
-    if (openedSubtab !== 0) {
-      console.log('test');
-      setOpenedSubtab(0);
+    console.log(openedSubtab, 'openedSubtab');
+  }, [openedSubtab]);
+  useEffect(() => {
+    // dispatch(setOpenedSubtab(-1));
+    if (openedSubtab !== -1) {
+      console.log('Ereza');
+      dispatch(setOpenedSubtab(-1));
     } else {
-      console.log('test2');
-
       setOpenedSubtab(openedSubtab);
     }
-
     dispatch(setExpandedTab({ id: 0, opened: true }));
   }, []);
 
@@ -420,8 +421,11 @@ const TabBar = ({ tab }) => {
   const handleTabClick = () => {
     if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6) {
       router.push(tab.href);
+    } else {
+      router.push(tab.href);
+      dispatch(setOpenedTab(tab.id));
+      dispatch(setOpenedSubtab(-1));
     }
-    dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
   };
 
   const handleSubtabClick = (subtabId) => {
@@ -453,6 +457,9 @@ const TabBar = ({ tab }) => {
     <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
         href="#"
+        onClick={() => {
+          handleTabClick();
+        }}
         className={`flex items-center h-8 justify-between pl-2 pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
@@ -461,8 +468,7 @@ const TabBar = ({ tab }) => {
           (openedTab === 6 && tab.id === 6)
             ? 'bg-lightBlue1'
             : ''
-        }`}
-        onClick={handleTabClick}>
+        }`}>
         <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
           {tab.icon}
           <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
@@ -481,6 +487,10 @@ const TabBar = ({ tab }) => {
 
         {tab.subtab && (
           <ArrowDropDownIcon
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
+            }}
             className={`text-gray3 h-5 w-5 transition-all duration-300 ${
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}

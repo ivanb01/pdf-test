@@ -49,9 +49,13 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
   );
 
   useEffect(() => {
-    setFilteredContacts(
-      contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
-    );
+    if (openedSubtab === -1) {
+      setFilteredContacts(contacts);
+    } else {
+      setFilteredContacts(
+        contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+      );
+    }
   }, [openedSubtab, contacts]);
 
   useEffect(() => {
