@@ -2,49 +2,49 @@ import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
 export const getCampaignsEventsUpcoming = (queryParams) => {
-  return axiosInstance.get('campaigns/events/upcoming', {
+  return axiosInstance.get('v1/campaigns/events/upcoming', {
     params: queryParams,
   });
 };
 
 export const getCampaignsEnrollSummary = () => {
-  return axiosInstance.get(`campaigns/dashboard/enroll_summary`);
+  return axiosInstance.get(`v1/campaigns/dashboard/enroll_summary`);
 };
 
 export const getContactCampaign = (id) => {
-  return axiosInstance.get(`/campaign/active/contact/${id}`);
+  return axiosInstance.get(`v1/campaign/active/contact/${id}`);
 };
 
 export const getContactCampaignEventPreview = (id) => {
-  return axiosInstance.get(`/campaign/event/${id}/preview`);
+  return axiosInstance.get(`v1/campaign/event/${id}/preview`);
 };
 
 export const getAllEvents = (id) => {
-  return axiosInstance.get(`/campaign/${id}/preview`);
+  return axiosInstance.get(`v1/campaign/${id}/preview`);
 };
 export const getCampaignsUsers = (id) => {
-  return axiosInstance.get(`/campaign/${id}`);
+  return axiosInstance.get(`v1/campaign/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get('campaigns', {
+  return axiosInstance.get('v1/campaigns', {
     params: { search_term: searchterm },
   });
 };
 
 export const assignContactToCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`campaign/${campaignId}/add_contact/${contactId}`);
+  return axiosInstance.post(`v1/campaign/${campaignId}/add_contact/${contactId}`);
 };
 
 export const unassignContactFromCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`campaign/${campaignId}/remove_contact/${contactId}`);
+  return axiosInstance.post(`v1/campaign/${campaignId}/remove_contact/${contactId}`);
 };
 
 export const getCampaign = (id) => {
-  return axiosInstance.get('campaign/' + id);
+  return axiosInstance.get('v1/campaign/' + id);
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('campaigns', {
+  return axiosInstance.get('v1/campaigns', {
     params: { category: category },
   });
 };
