@@ -205,9 +205,9 @@ const index = () => {
             <Loader />
           </div>
         ) : (
-          <div className="px-6 py-[21px] flex">
-            <div className="w-[300px]">
-              <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+          <div className="px-3 md:px-6 py-[21px] flex flex-col md:flex-row">
+            <div className="w-full md:w-[300px]">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
                     <img
@@ -286,7 +286,7 @@ const index = () => {
                 </div>
               </div>
               {campaigns.length > 0 && (
-                <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
                   {campaigns.length > 1 ? (
@@ -356,8 +356,8 @@ const index = () => {
               )}
             </div>
 
-            <div className="flex-grow mx-3">
-              <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+            <div className="flex-grow md:mx-3 order-last md:order-2">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center">
                   <img src={communication.src} />
                   <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div>
@@ -365,8 +365,8 @@ const index = () => {
                 <Feeds contactId={id} activities={activities} setActivities={setActivities} />
                 <div className="mt-6">
                   <div className="text-gray8 text-sm font-semibold mb-2">Start to communicate via:</div>
-                  <div className="grid grid-cols-3">
-                    <div className="border-gray1 border mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
+                  <div className="grid md:grid-cols-3 grid-cols-1">
+                    <div className="border-gray1 border mb-[10px] md:mb-0 mr-0 md:mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
                       <div>
                         <img src={whatsapp.src} />
                         <div className="text-sm text-gray7 ml-1 font-semibold mt-1">Whatsapp</div>
@@ -375,7 +375,7 @@ const index = () => {
                         Start Chat
                       </Button>
                     </div>
-                    <div className="border-gray1 border mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
+                    <div className="border-gray1 border mb-[10px] md:mb-0 mr-0 md:mr-[10px] client-details-box-shadow rounded-lg px-4 py-3 flex justify-between">
                       <div>
                         <img src={sms.src} />
                         <div className="text-sm text-gray7 ml-1 font-semibold mt-1">SMS</div>
@@ -397,12 +397,12 @@ const index = () => {
                 </div>
               </div>
 
-              <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
                 <PropertiesSection contactId={id} category={'buyer'} />
               </div>
             </div>
-            <div className="w-[270px]">
-              <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+            <div className="w-full md:w-[270px] order-1 md:order-3">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-start justify-between">
                   <div className="text-gray8 font-semibold text-sm mb-5">Notes</div>
                   {notes.length > 0 && (
@@ -431,7 +431,7 @@ const index = () => {
                 )}
               </div>
               {documents.length > 0 && (
-                <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                   <div className="text-gray8 font-semibold text-sm mb-5">Documents</div>
                   {documents.map((document, index) => (
                     <Item
@@ -443,7 +443,7 @@ const index = () => {
                 </div>
               )}
               {applications.length > 0 && (
-                <div className="bg-white px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm mb-5">Applications</div>
                   {applications.map((application, index) => (
                     <Item

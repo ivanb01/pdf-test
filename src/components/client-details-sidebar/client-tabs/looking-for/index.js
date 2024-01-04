@@ -337,7 +337,7 @@ export default function LookingFor({ contactId, category }) {
           action={getLookingAction()}
           data={lookingForData[0]}
           title="Edit Property Interests"
-          className="w-[670px]"
+          className="w-full md:w-[670px]"
           handleClose={() => setShowEditPopup(false)}
         />
       )}

@@ -498,9 +498,12 @@ const ReviewContact = ({
   };
 
   return (
-    <Overlay handleCloseOverlay={!hideCloseButton && handleClose} title={title} className={`${className} w-[1150px]`}>
-      <div className="flex min-h-[500px]">
-        <div className={`w-1/2 border-r border-borderColor`}>
+    <Overlay
+      handleCloseOverlay={!hideCloseButton && handleClose}
+      title={title}
+      className={`${className} w-full md:w-[1150px]`}>
+      <div className="flex min-h-[500px] flex-col md:flex-row">
+        <div className={`w-full md:w-1/2 border-r border-borderColor`}>
           <SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>
             <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
               {client.campaign_name && (
@@ -624,7 +627,7 @@ const ReviewContact = ({
             </form>
           </SimpleBar>
         </div>
-        <div className="w-1/2 relative">
+        <div className="w-full md:w-1/2 relative">
           <SimpleBar autoHide={true} style={{ maxHeight: '510px', height: '100%' }}>
             <div className="p-6 pt-0">
               <Radio
