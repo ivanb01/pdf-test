@@ -280,7 +280,7 @@ const index = () => {
                   {contact.lead_source && (
                     <div className="w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium ">
                       <span className="text-gray6 mr-3">Lead Source:</span>
-                      <span className="text-gray4">Referral</span>
+                      <span className="text-gray4">{contact.lead_source}</span>
                     </div>
                   )}
                 </div>

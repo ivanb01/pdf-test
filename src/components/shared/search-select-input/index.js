@@ -69,6 +69,7 @@ const SearchSelectInput = ({
           }),
           menuList: (base) => ({
             ...base,
+            maxHeight: '200px',
             div: {
               backgroundColor: 'white',
             },

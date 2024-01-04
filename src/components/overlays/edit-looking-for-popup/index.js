@@ -35,8 +35,8 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     neighborhood_ids: Yup.array()
       .required('Neighborhood IDs are required')
       .min(1, 'Please select at least one neighborhood'),
-    bedrooms: Yup.string().notRequired(),
-    bathrooms: Yup.string().notRequired(),
+    bedrooms: Yup.string().notRequired().nullable(),
+    bathrooms: Yup.string().notRequired().nullable(),
     budget_min: Yup.number()
       .min(0, 'Budget Min should be greater than 0')
       .typeError('Budget Min should be an integer')
@@ -96,8 +96,8 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     },
   });
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    console.log(formik.errors);
+  }, [formik]);
 
   const { errors, touched } = formik;
 
