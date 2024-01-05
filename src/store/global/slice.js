@@ -4,7 +4,7 @@ const global = createSlice({
   name: 'global',
   initialState: {
     openedTab: 0,
-    openedSubtab: 0,
+    openedSubtab: -1,
     tabs: [],
     expandedMenu: true,
     count: null,

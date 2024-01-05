@@ -58,6 +58,13 @@ const Layout = ({ children }) => {
       count_key: 'clients_total',
       subtab: [
         {
+          id: -1,
+          name: 'All',
+          dot: <span className="h-2 w-2 rounded-full bg-purple-500" />,
+          count: 0,
+          count_key: 'clients_total',
+        },
+        {
           id: 0,
           name: 'In the Funnel',
           dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
@@ -96,6 +103,12 @@ const Layout = ({ children }) => {
       icon: <PermContactCalendar className="h-5 w-5" />,
       count_key: 'professionals_total',
       subtab: [
+        {
+          id: -1,
+          name: 'All',
+          count: 0,
+          count_key: 'professionals_total',
+        },
         {
           id: 0,
           name: 'Vendor',

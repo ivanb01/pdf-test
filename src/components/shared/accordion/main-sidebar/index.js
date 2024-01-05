@@ -388,15 +388,13 @@ const TabBar = ({ tab }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   useEffect(() => {
-    console.log(openedSubtab, 'openedSubtab');
-  }, [openedSubtab]);
-  useEffect(() => {
-    // dispatch(setOpenedSubtab(-1));
+    setOpenedTab(-1);
     if (openedSubtab !== -1) {
-      dispatch(setOpenedSubtab(-1));
+      setOpenedSubtab(-1);
     } else {
       setOpenedSubtab(openedSubtab);
     }
+
     dispatch(setExpandedTab({ id: 0, opened: true }));
   }, []);
 
@@ -416,18 +414,16 @@ const TabBar = ({ tab }) => {
       dispatch(setExpandedTab({ id: 1, opened: false }));
     }
   }, [openedTab]);
+  useEffect(() => {
+    console.log(openedSubtab, 'openedSubtab');
+  }, [openedSubtab]);
 
   const handleTabClick = () => {
     if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6) {
       router.push(tab.href);
-    } else {
-      router.push(tab.href);
-      dispatch(setOpenedTab(tab.id));
-      dispatch(setOpenedSubtab(-1));
-      dispatch(setExpandedTab({ id: tab.id, opened: true }));
     }
+    dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
   };
-
   const handleSubtabClick = (subtabId) => {
     dispatch(setOpenedTab(tab.id));
     dispatch(setOpenedSubtab(subtabId));
@@ -487,10 +483,6 @@ const TabBar = ({ tab }) => {
 
         {tab.subtab && (
           <ArrowDropDownIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
-            }}
             className={`text-gray3 h-5 w-5 transition-all duration-300 ${
               findOpenedId(tab.id).opened ? 'rotate-180' : ''
             }`}
