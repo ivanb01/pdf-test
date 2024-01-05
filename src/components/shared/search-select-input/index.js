@@ -26,6 +26,7 @@ const SearchSelectInput = ({
         value={value}
         options={options}
         onChange={onChange}
+        menuPosition="fixed"
         styles={{
           input: (base) => ({
             ...base,

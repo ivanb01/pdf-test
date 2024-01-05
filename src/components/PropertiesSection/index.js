@@ -20,7 +20,7 @@ import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
 
-export default function PropertiesSection({ contactId, category }) {
+export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -208,6 +208,7 @@ export default function PropertiesSection({ contactId, category }) {
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
     const options = {
       timeout: 30000,
     };
@@ -264,7 +265,7 @@ export default function PropertiesSection({ contactId, category }) {
 
   useEffect(() => {
     initializePropertyInterests();
-  }, []);
+  }, [category]);
 
   useEffect(() => {
     if (refetchPart == 'looking-for') {
@@ -407,7 +408,7 @@ export default function PropertiesSection({ contactId, category }) {
                       </div> */}
                       <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
-                          <PropertyCard key={index} property={property}></PropertyCard>
+                          <PropertyCard noSelect={noSelect} key={index} property={property}></PropertyCard>
                         ))}
                       </div>
                       {allPropertiesCount > 21 && (
@@ -440,11 +441,14 @@ export default function PropertiesSection({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page - 1, filterValue);
+                                  fetchProperties(lookingForData[0], page - 1, filterValue).then(() =>
+                                    setTimeout(() => {
+                                      document.querySelector('.scrollable-area').scrollIntoView({
+                                        behavior: 'smooth',
+                                      });
+                                    }, 200),
+                                  );
                                   setPage(page - 1);
-                                  document.querySelector('.scrollable-area').scrollIntoView({
-                                    behavior: 'smooth',
-                                  });
                                   setLoadingPropertyInterests(true);
                                 }}
                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
@@ -455,11 +459,14 @@ export default function PropertiesSection({ contactId, category }) {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  fetchProperties(lookingForData[0], page + 1, filterValue);
+                                  fetchProperties(lookingForData[0], page + 1, filterValue).then(() =>
+                                    setTimeout(() => {
+                                      document.querySelector('.scrollable-area').scrollIntoView({
+                                        behavior: 'smooth',
+                                      });
+                                    }, 200),
+                                  );
                                   setPage(page + 1);
-                                  document.querySelector('.scrollable-area').scrollIntoView({
-                                    behavior: 'smooth',
-                                  });
                                   setLoadingPropertyInterests(true);
                                 }}
                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">

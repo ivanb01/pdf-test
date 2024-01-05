@@ -3,6 +3,7 @@ import profile from '/public/images/Portrait_Placeholder.png';
 import noteIcon from '/public/images/note-icon.svg';
 import documentsIcon from '/public/images/documents-icon.svg';
 import communication from '/public/images/communication.svg';
+import SimpleBar from 'simplebar-react';
 import call from '/public/images/call-icon.svg';
 import edit from '/public/images/edit-icon.svg';
 import email from '/public/images/email-icon.svg';
@@ -53,11 +54,19 @@ const index = () => {
   const [loadingNotes, setLoadingNotes] = useState(true);
   const [editingContact, setEditingContact] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
+  const [showReviewOverlay, setShowReviewOverlay] = useState(false);
 
   useEffect(() => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
+      console.log(contactData);
+      if (
+        contactData.import_source === 'GmailAI' ||
+        (contactData.import_source === 'Gmail' && contactData.approved_ai !== true)
+      ) {
+        setShowReviewOverlay(true);
+      }
       getNotes();
       getActivityLog();
       if (contactData.campaign_name) {
@@ -200,6 +209,16 @@ const index = () => {
     <>
       <div>
         <MainMenu />
+        {showReviewOverlay && (
+          <ReviewContact
+            showToast
+            hideCloseButton
+            redirectAfterMoveToTrash
+            handleClose={() => setShowReviewOverlay(false)}
+            title="Review AI Imported Contact"
+            client={contact}
+          />
+        )}
         {!contact ? (
           <div className="relative h-full" style={{ height: 'calc(100vh - 68px) !important' }}>
             <Loader />
@@ -232,7 +251,9 @@ const index = () => {
                   <div className="text-[#101828] text-xl font-semibold">
                     {contact?.first_name + ' ' + contact?.last_name}
                   </div>
-                  <div className="text-[#475467] mt-1">{contact?.email}</div>
+                  <div className="text-[#475467] mt-1 ellipsis-email w-[230px]" title={contact.email}>
+                    {contact?.email}
+                  </div>
                 </div>
                 <div className="mt-[18px] flex items-center">
                   <Button
@@ -265,7 +286,7 @@ const index = () => {
                     <DateChip
                       lastCommunication={contact.last_communication_date}
                       contactStatus={'Appointment Set'}
-                      contactCategory={0}
+                      contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                     />
                   </div>
                   {contact.tags && (
@@ -398,7 +419,7 @@ const index = () => {
               </div>
 
               <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
-                <PropertiesSection contactId={id} category={'buyer'} />
+                <PropertiesSection noSelect contactId={id} category={contact.category_2} />
               </div>
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
@@ -420,14 +441,16 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  notes.map((note, index) => (
-                    <Item
-                      isEditable
-                      className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
-                      item={note}
-                      icon={noteIcon.src}
-                    />
-                  ))
+                  <SimpleBar style={{ maxHeight: '300px' }}>
+                    {notes.reverse().map((note, index) => (
+                      <Item
+                        isEditable
+                        className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
+                        item={note}
+                        icon={noteIcon.src}
+                      />
+                    ))}
+                  </SimpleBar>
                 )}
               </div>
               {documents.length > 0 && (
