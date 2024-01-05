@@ -12,25 +12,17 @@ import TableRows from '@mui/icons-material/TableRows';
 import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
-import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
-import GlobalAlert from 'components/shared/alert/global-alert';
+import { multiselectOptionsClients, statuses } from 'global/variables';
 import { useRouter } from 'next/router';
-import {
-  clientStatuses,
-  clientStatusMainTitlesUpdated,
-  allStatusesQuickEdit,
-  filtersForLastCommunicationDate,
-} from 'global/variables';
+import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
-import { ArrowRight } from '@mui/icons-material';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
-import Switch from '@components/Switch';
 import SwitchComponent from '@components/Switch';
 
 const buttons = [
@@ -67,7 +59,7 @@ const Clients = ({
 
   useEffect(() => {
     setFilteredContacts(contacts);
-  }, [contacts]);
+  }, [contacts, openedSubtab]);
 
   const tabs = [
     {
@@ -88,7 +80,10 @@ const Clients = ({
     },
     {
       title: 'CLIENT STATUS',
-      content: clientStatuses[openedSubtab].statuses.map((item) => item.name),
+      content:
+        openedSubtab === -1
+          ? clientStatuses.flatMap((i) => i.statuses.flatMap((s) => s.name))
+          : clientStatuses[openedSubtab].statuses.map((item) => item.name),
       value: 'status_2',
     },
     {
@@ -144,11 +139,14 @@ const Clients = ({
     //   setFiltersCleared(false);
     //   return;
     // }
-    let contactsState = contacts.filter(
-      (contact) =>
-        contact.category_1 == 'Client' &&
-        contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-    );
+    let contactsState =
+      openedSubtab !== -1
+        ? contacts.filter(
+            (contact) =>
+              contact.category_1 == 'Client' &&
+              contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+          )
+        : contacts.filter((contact) => contact.category_1 == 'Client');
     Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -233,6 +231,11 @@ const Clients = ({
   useEffect(() => {
     filterContacts();
   }, [clientsFilters, contacts, openedSubtab]);
+
+  useEffect(() => {
+    setFiltersCleared(true);
+    dispatch(setClientsFilters({}));
+  }, [openedSubtab]);
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
@@ -257,7 +260,7 @@ const Clients = ({
 
   useEffect(() => {
     const handleScroll = (event) => {
-      if (event.target.scrollLeft > 80) {
+      if (event.target.scrollLeft > 80 && document.querySelector('.arrow') !== null) {
         document.querySelector('.arrow').style.opacity = '0';
       }
     };
@@ -266,7 +269,7 @@ const Clients = ({
     scrollElement?.addEventListener('scroll', handleScroll);
 
     // return () => scrollElement?.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [openedSubtab]);
 
   return (
     <>
@@ -282,8 +285,9 @@ const Clients = ({
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
-                {clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
-                {/* {openedTab} - {openedSubtab} */}
+                {openedSubtab === -1
+                  ? 'Clients'
+                  : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               </Text>
               {contacts.filter(
                 (contact) =>
@@ -294,9 +298,11 @@ const Clients = ({
             </div>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder={
-                  `Search ` + clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle].toLowerCase()
-                }
+                placeholder={`Search ${
+                  openedSubtab !== -1
+                    ? clientStatusMainTitlesUpdated[clientStatuses[openedSubtab]?.statusMainTitle]?.toLowerCase()
+                    : 'Clients'
+                }`}
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
@@ -371,19 +377,33 @@ const Clients = ({
               background: '#f9fafb',
             }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
-              {clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                <>
-                  <Column
-                    handleFilteredContacts={handleFilteredContacts}
-                    contacts={filteredContacts}
-                    key={index}
-                    status={status}
-                    categoryType="clients"
-                    handleCardEdit={handleCardEdit}
-                    searchTerm={searchTerm}
-                  />
-                </>
-              ))}
+              {openedSubtab === -1
+                ? clientStatuses.map((item) => {
+                    return item.statuses.map((status, index) => {
+                      return (
+                        <Column
+                          handleFilteredContacts={handleFilteredContacts}
+                          contacts={filteredContacts}
+                          key={index}
+                          status={status}
+                          categoryType="clients"
+                          handleCardEdit={handleCardEdit}
+                          searchTerm={searchTerm}
+                        />
+                      );
+                    });
+                  })
+                : clientStatuses[openedSubtab]?.statuses.map((status, index) => (
+                    <Column
+                      handleFilteredContacts={handleFilteredContacts}
+                      contacts={filteredContacts}
+                      key={index}
+                      status={status}
+                      categoryType="clients"
+                      handleCardEdit={handleCardEdit}
+                      searchTerm={searchTerm}
+                    />
+                  ))}
             </div>
           </SimpleBar>
         ) : (

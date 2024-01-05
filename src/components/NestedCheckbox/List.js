@@ -10,19 +10,18 @@ export default function List(props) {
   const { items, compute, setOpenDropdown } = props;
 
   return (
-    <ul>
+    <ul onClick={() => setOpenDropdown(true)}>
       {items.map((item) => {
         let childList = null;
         if (Array.isArray(item.items)) {
           childList = <List items={item.items} compute={compute} setOpenDropdown={setOpenDropdown} />;
         }
         return (
-          <li key={item.id} className={'pb-1 px-3'} onClick={() => setOpenDropdown(true)}>
+          <li key={item.id} className={'pb-1 px-3'}>
             <div className={'pb-1'}>
               <Checkbox
                 id={item.id}
                 name={item.name}
-                onClick={() => console.log(item.status, item.name)}
                 checked={item.status === status.checked}
                 indeterminate={item.status === status.indeterminate}
                 compute={compute}

@@ -85,9 +85,6 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
   useEffect(() => {
-    console.log(filteredProfessionals, 'filteredProff');
-  }, [filteredProfessionals]);
-  useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
 
@@ -205,7 +202,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   useEffect(() => {
-    filterContacts();
+    // filterContacts();
   }, [professionalsFilters, contacts]);
   useEffect(() => {
     setSearchTerm('');
@@ -226,7 +223,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className="flex items-center justify-between w-full">
             <div className=" flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
-                {professionalsStatuses[openedSubtab]?.statusMainTitle}
+                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'Professionals'}
               </Text>
               {filteredProfessionals.filter(
                 (contact) =>
@@ -237,11 +234,16 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
             </div>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder={`Search ` + professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()}
+                placeholder={`Search ${
+                  openedSubtab !== -1
+                    ? professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()
+                    : 'professionals'
+                }`}
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
               />
+
               <Button
                 secondary
                 leftIcon={<FilterList className="w-5 h-5" />}

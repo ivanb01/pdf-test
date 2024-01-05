@@ -9,6 +9,7 @@ import { data, NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@g
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
+import Input from '@components/shared/input';
 import Button from '@components/shared/button';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
@@ -26,6 +27,7 @@ import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
+
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
   { label: 'Mango 🥭', value: 'mango' },
@@ -131,7 +133,6 @@ const index = () => {
 
     items.forEach((d) => {
       if (d.status === 1) {
-        console.log(d.status, 'd.status');
         newData.push(d.name);
         d.items.forEach((i) => {
           if (i.status === 1) {
@@ -274,9 +275,6 @@ const index = () => {
   ];
   const [ids, setIds] = useState();
 
-  useEffect(() => {
-    console.log(ids, 'ids');
-  }, [ids]);
   const fetchProperties = async (filterValue, page = 1) => {
     setLoading(true);
     let params = {
@@ -417,6 +415,7 @@ const index = () => {
     }
   }, [open]);
 
+  const [neighborhoodsSearch, setNeighborhoodsSearch] = useState('');
   useEffect(() => {
     if (document.querySelector('.side-overlay-wrapper')) {
       if (propertiesSent) {
@@ -471,6 +470,23 @@ const index = () => {
       </div>
     );
   };
+  const filterData = (data, searchTerm) => {
+    return data.reduce((result, item) => {
+      const isParentMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const filteredItems = item.items.filter((subItem) =>
+        subItem.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+
+      if (isParentMatch && filteredItems.length === 0) {
+        result.push(item);
+      } else if (filteredItems.length > 0) {
+        result.push({ ...item, items: filteredItems });
+      }
+
+      return result;
+    }, []);
+  };
 
   return (
     <>
@@ -516,7 +532,26 @@ const index = () => {
                 className={
                   'flex-1 left-0 py-3 px-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm'
                 }>
-                <List items={items} compute={compute} setOpenDropdown={setOpenDropdown} />
+                <input
+                  className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+                  type={'text'}
+                  placeholder={'Search'}
+                  onChange={(e) => setNeighborhoodsSearch(e.target.value)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setOpenDropdown(true);
+                  }}
+                />
+                {filterData(items, neighborhoodsSearch).length > 0 ? (
+                  <List
+                    items={filterData(items, neighborhoodsSearch)}
+                    compute={compute}
+                    setOpenDropdown={setOpenDropdown}
+                  />
+                ) : (
+                  <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
+                )}
               </div>
             )}
           </div>

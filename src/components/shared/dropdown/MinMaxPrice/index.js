@@ -30,7 +30,8 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
 
   const formatNumberToMillions = (n) => {
     if (n >= 1e6) {
-      return `$${(n / 1e6).toFixed(0)}m`;
+      const formattedValue = n % 1e6 === 0 ? (n / 1e6).toFixed(0) : (n / 1e6).toFixed(2).replace(/\.?0+$/, '');
+      return `$${formattedValue}m`;
     }
     return `$${n.toLocaleString('en-US')}`;
   };
