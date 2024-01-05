@@ -393,7 +393,6 @@ const TabBar = ({ tab }) => {
   useEffect(() => {
     // dispatch(setOpenedSubtab(-1));
     if (openedSubtab !== -1) {
-      console.log('Ereza');
       dispatch(setOpenedSubtab(-1));
     } else {
       setOpenedSubtab(openedSubtab);
