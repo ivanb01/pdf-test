@@ -1408,7 +1408,7 @@ const Table = ({
         ? agentTypes
         : openedSubtab === 3
         ? unspecifiedTypes
-        : [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
+        : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
     const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
