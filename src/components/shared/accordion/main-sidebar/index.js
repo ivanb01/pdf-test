@@ -424,6 +424,7 @@ const TabBar = ({ tab }) => {
       router.push(tab.href);
       dispatch(setOpenedTab(tab.id));
       dispatch(setOpenedSubtab(-1));
+      dispatch(setExpandedTab({ id: tab.id, opened: true }));
     }
   };
 

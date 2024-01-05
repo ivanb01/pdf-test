@@ -12,25 +12,17 @@ import TableRows from '@mui/icons-material/TableRows';
 import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
-import { multiselectOptionsClients, multiselectOptionsProfessionals, statuses } from 'global/variables';
-import GlobalAlert from 'components/shared/alert/global-alert';
+import { multiselectOptionsClients, statuses } from 'global/variables';
 import { useRouter } from 'next/router';
-import {
-  clientStatuses,
-  clientStatusMainTitlesUpdated,
-  allStatusesQuickEdit,
-  filtersForLastCommunicationDate,
-} from 'global/variables';
+import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from 'global/variables';
 import { filterLastCommuncationDate } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
-import { setClientsFilters, setOpenedSubtab } from '@store/global/slice';
-import { ArrowRight } from '@mui/icons-material';
+import { setClientsFilters } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
-import Switch from '@components/Switch';
 import SwitchComponent from '@components/Switch';
 
 const buttons = [
@@ -90,7 +82,7 @@ const Clients = ({
       title: 'CLIENT STATUS',
       content:
         openedSubtab === -1
-          ? clientStatuses.map((i) => i.statuses.map((s) => s.name))
+          ? clientStatuses.flatMap((i) => i.statuses.flatMap((s) => s.name))
           : clientStatuses[openedSubtab].statuses.map((item) => item.name),
       value: 'status_2',
     },
@@ -147,11 +139,14 @@ const Clients = ({
     //   setFiltersCleared(false);
     //   return;
     // }
-    let contactsState = contacts.filter(
-      (contact) =>
-        contact.category_1 == 'Client' &&
-        contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-    );
+    let contactsState =
+      openedSubtab !== -1
+        ? contacts.filter(
+            (contact) =>
+              contact.category_1 == 'Client' &&
+              contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+          )
+        : contacts.filter((contact) => contact.category_1 == 'Client');
     Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -234,8 +229,13 @@ const Clients = ({
   };
 
   useEffect(() => {
-    // filterContacts();
+    filterContacts();
   }, [clientsFilters, contacts, openedSubtab]);
+
+  useEffect(() => {
+    setFiltersCleared(true);
+    dispatch(setClientsFilters({}));
+  }, [openedSubtab]);
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
