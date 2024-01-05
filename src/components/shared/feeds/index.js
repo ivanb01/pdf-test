@@ -179,11 +179,11 @@ export default function Feeds({ contactId, activities, setActivities, height }) 
       <div className="bg-white pt-6">
         <SimpleBar
           style={{
-            maxHeight: '320px',
+            maxHeight: '280px',
             paddingRight: '-10px',
           }}
           autoHide>
-          <ul role="list" className="-mb-8">
+          <ul role="list" className="">
             {activities
               ?.slice()
               .sort((a, b) => b.id - a.id)
@@ -280,7 +280,7 @@ export default function Feeds({ contactId, activities, setActivities, height }) 
                           types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : [types[1]]}
                           icon={<More className="w-5" />}
                           data={activityItem}
-                          positionClass="right-0"
+                          positionClass="right-7 top-0"
                         />
                       </div>
                     )}
