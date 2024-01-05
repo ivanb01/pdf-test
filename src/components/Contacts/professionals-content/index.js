@@ -202,10 +202,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   useEffect(() => {
-    // filterContacts();
+    filterContacts();
   }, [professionalsFilters, contacts]);
   useEffect(() => {
     setSearchTerm('');
+    setFiltersCleared(true);
+    dispatch(setProfessionalsFilter({}));
   }, [openedSubtab]);
 
   return (
