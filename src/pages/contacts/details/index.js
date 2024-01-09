@@ -285,7 +285,7 @@ const index = () => {
                     <span className="text-gray6 mr-3">Health:</span>
                     <DateChip
                       lastCommunication={contact.last_communication_date}
-                      contactStatus={'Appointment Set'}
+                      contactStatus={contact.status_2}
                       contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                     />
                   </div>
