@@ -341,8 +341,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       {showEditPopup && (
         <EditLookingForPopup
           action={getLookingAction()}
+          contactId={contactId}
           data={lookingForData[0]}
-          title="Edit Property Interests"
+          title={lookingForData[0] ? 'Edit Property Interests' : 'Add Property Interests'}
           className="w-full md:w-[670px]"
           handleClose={() => setShowEditPopup(false)}
         />

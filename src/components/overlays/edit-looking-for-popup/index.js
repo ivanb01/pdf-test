@@ -27,7 +27,7 @@ import React from 'react';
 import Tag from '@components/Tag';
 import SimpleBar from 'simplebar-react';
 
-const EditLookingForPopup = ({ title, handleClose, className, data, action }) => {
+const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const reduxAmenities = useSelector((state) => state.global.amenities);
@@ -105,9 +105,9 @@ const EditLookingForPopup = ({ title, handleClose, className, data, action }) =>
     setLoadingButton(true);
     try {
       // console.log(values);
-      console.log('submitting');
+      console.log(values);
 
-      const res = await contactServices.addContactLookingProperty(data.contact_id, values);
+      const res = await contactServices.addContactLookingProperty(contactId, values);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
       setTimeout(() => {
