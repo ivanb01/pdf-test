@@ -108,6 +108,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     },
   });
   const { errors, touched } = formik;
+  const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   useEffect(() => {
     console.log(formik.values);
@@ -147,7 +148,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
 
       // dispatch(addContactLocally(contactToAdd));
       dispatch(setOpenedTab(globalTabs[title]));
-      if (formik.values.selectedContactType === 8 && formik.values.selectedContactType === 19) {
+      if (openedSubtab === -1) {
+        return;
+      } else if (formik.values.selectedContactType === 8 && formik.values.selectedContactType === 19) {
         setOpenedSubtab(0);
       } else if (formik.values.selectedContactType === 12) {
         dispatch(setOpenedSubtab(1));
