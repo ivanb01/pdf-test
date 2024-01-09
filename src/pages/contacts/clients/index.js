@@ -38,6 +38,9 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
+  useEffect(() => {
+    console.log(openedTab == 0, openedSubtab == -1, currentButton == 0);
+  }, [openedTab, openedSubtab, currentButton]);
   const fetchUnapproved = async () => {
     try {
       const response = await getUnapprovedContacts();
@@ -160,7 +163,7 @@ const index = () => {
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          {currentButton == 0 && openedTab == 0 && openedSubtab == 0 && (
+          {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
             <div class="arrow pointer-events-none">
               <span></span>
               <span></span>

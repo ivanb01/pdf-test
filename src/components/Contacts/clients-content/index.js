@@ -204,6 +204,9 @@ const Clients = ({
       setFiltersCleared(true);
     }
   };
+  useEffect(() => {
+    console.log(scrollRef, 'ScrollRef');
+  }, [scrollRef]);
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...clientsFilters };
@@ -268,7 +271,7 @@ const Clients = ({
     const scrollElement = scrollRef.current?.getScrollElement();
     scrollElement?.addEventListener('scroll', handleScroll);
 
-    // return () => scrollElement?.removeEventListener('scroll', handleScroll);
+    return () => scrollElement?.removeEventListener('scroll', handleScroll);
   }, [openedSubtab]);
 
   return (
