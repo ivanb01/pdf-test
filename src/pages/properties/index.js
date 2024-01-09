@@ -417,6 +417,11 @@ const index = () => {
 
   const [neighborhoodsSearch, setNeighborhoodsSearch] = useState('');
   useEffect(() => {
+    if (openDropdown === false) {
+      setNeighborhoodsSearch('');
+    }
+  }, [openDropdown]);
+  useEffect(() => {
     if (document.querySelector('.side-overlay-wrapper')) {
       if (propertiesSent) {
         document.querySelector('.side-overlay-wrapper').classList.add('justify-center');
@@ -503,7 +508,7 @@ const index = () => {
           />
           <div
             className={
-              'min-w-[170px] false cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
+              'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
             style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
             onClick={() => setOpenDropdown(!openDropdown)}>
@@ -530,45 +535,35 @@ const index = () => {
             {openDropdown && (
               <div
                 className={
-                  'flex-1 left-0 py-3 px-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm'
+                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
                 }>
-                <input
-                  className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
-                  type={'text'}
-                  placeholder={'Search'}
-                  onChange={(e) => setNeighborhoodsSearch(e.target.value)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setOpenDropdown(true);
-                  }}
-                />
-                {filterData(items, neighborhoodsSearch).length > 0 ? (
-                  <List
-                    items={filterData(items, neighborhoodsSearch)}
-                    compute={compute}
-                    setOpenDropdown={setOpenDropdown}
+                <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
+                  <input
+                    className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+                    type={'text'}
+                    placeholder={'Search'}
+                    onChange={(e) => setNeighborhoodsSearch(e.target.value)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setOpenDropdown(true);
+                    }}
                   />
-                ) : (
-                  <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
-                )}
+                  {filterData(items, neighborhoodsSearch).length > 0 ? (
+                    <div className={'mt-2'}>
+                      <List
+                        items={filterData(items, neighborhoodsSearch)}
+                        compute={compute}
+                        setOpenDropdown={setOpenDropdown}
+                      />
+                    </div>
+                  ) : (
+                    <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
+                  )}
+                </SimpleBar>
               </div>
             )}
           </div>
-          {/*<div style={{ flex: 1 }}>*/}
-          {/*  <MultiSelect*/}
-          {/*    options={sortedNeighborhoods}*/}
-          {/*    value={neighborhoods}*/}
-          {/*    onChange={(neighborhood) => {*/}
-          {/*      setNeighborhoods(neighborhood);*/}
-          {/*    }}*/}
-          {/*    labelledBy="Select Neighborhoods"*/}
-          {/*    overrideStrings={{*/}
-          {/*      selectSomeItems: 'Select Neighborhoods',*/}
-          {/*    }}*/}
-          {/*    className="multi-select "*/}
-          {/*  />*/}
-          {/*</div>*/}
           <Dropdown
             options={forOptions}
             className=" w-[130px]"
