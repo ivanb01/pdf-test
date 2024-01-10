@@ -19,7 +19,7 @@
     "@reduxjs/toolkit": "^1.8.0",
     "@tailwindcss/forms": "^0.4.0",
     "aws-amplify": "^5.0.4",
-    "axios": "^0.26.1",
+    "axios": "^1.6.0",
     "chart.js": "^3.8.0",
     "chartjs-plugin-datalabels": "^2.0.0",
     "clsx": "^2.0.0",
