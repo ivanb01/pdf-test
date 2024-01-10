@@ -61,10 +61,7 @@ const index = () => {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
       console.log(contactData);
-      if (
-        contactData.import_source === 'GmailAI' ||
-        (contactData.import_source === 'Gmail' && contactData.approved_ai !== true)
-      ) {
+      if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
       }
       getNotes();
