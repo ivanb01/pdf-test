@@ -82,6 +82,7 @@ import Mail from '@mui/icons-material/Mail';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 
 import CommunicationForm from '@components/overlays/communication-form';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -416,6 +417,11 @@ const Table = ({
                   className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
                   Contact summary
                 </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className=" bg-white">
@@ -462,6 +468,24 @@ const Table = ({
                         </div>
                       </TooltipComponent>
                     )}
+                  </td>
+                  <td className={'pl-5'}>
+                    <TooltipComponent
+                      side={'top'}
+                      align="center"
+                      triggerElement={
+                        <div
+                          role={'button'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAction(dataItem);
+                          }}
+                          className=" h-7 w-7  group bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7 cursor-pointer rounded-full bg-gray2 hover:bg-gray2 flex items-center justify-center relative">
+                          <Delete className="text-gray5 w-4 h-4 group-hover:text-white" />
+                        </div>
+                      }>
+                      <p className=" text-xs font-medium text-white"> Move to trash</p>
+                    </TooltipComponent>
                   </td>
                 </tr>
               ))}
