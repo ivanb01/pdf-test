@@ -69,7 +69,10 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id }) => {
   };
 
   return (
-    <Overlay className="w-[632px]" handleCloseOverlay={handleCloseModal} title={note ? `Edit Note` : `Add Note`}>
+    <Overlay
+      className="md:w-[632px] w-auto"
+      handleCloseOverlay={handleCloseModal}
+      title={note ? `Edit Note` : `Add Note`}>
       <div className="p-6 pt-0 bg-white">
         <form onSubmit={formik.handleSubmit}>
           <TextArea

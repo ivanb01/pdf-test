@@ -157,7 +157,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     <Overlay
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
-      height="max-h-[500px]"
+      height="md:max-h-[500px]"
       title={title}
       className={className}>
       <div className="relative">

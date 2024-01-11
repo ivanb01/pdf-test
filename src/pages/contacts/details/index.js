@@ -415,9 +415,11 @@ const index = () => {
                 </div>
               </div>
 
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
-                <PropertiesSection noSelect contactId={id} category={contact.category_2} />
-              </div>
+              {contact?.category_1 == 'Client' && (
+                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                  <PropertiesSection noSelect contactId={id} category={contact.category_2} />
+                </div>
+              )}
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
               <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
