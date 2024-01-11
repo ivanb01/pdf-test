@@ -299,7 +299,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           return neighborhood;
         });
 
-        return { ...city, items: updatedItems };
+        return { ...city, status: updatedItems.length > 0 ? -1 : 0, items: updatedItems };
       });
 
       return updatedMatchingNeighborhoods;
