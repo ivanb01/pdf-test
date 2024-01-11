@@ -435,7 +435,7 @@ const Table = ({
                       query: { id: dataItem?.id },
                     })
                   }>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center ">
                     <ContactInfo
                       data={{
                         name: dataItem?.first_name + ' ' + dataItem?.last_name,
@@ -444,7 +444,7 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left ">
                     <div className={'flex gap-1.5 items-center justify-start'}>
                       {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
@@ -469,7 +469,23 @@ const Table = ({
                       </TooltipComponent>
                     )}
                   </td>
-                  <td className={'pl-5'}>
+                  <td className={'flex pb-[19px] '}>
+                    <TooltipComponent
+                      side={'top'}
+                      align="center"
+                      triggerElement={
+                        <div
+                          role={'button'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCardEdit(dataItem);
+                          }}
+                          className="group cursor-pointer  h-7 w-7   relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center">
+                          <Edit className="text-lightBlue5 w-4 h-4 " />
+                        </div>
+                      }>
+                      <p className=" text-xs font-medium text-white"> Edit Contact</p>
+                    </TooltipComponent>
                     <TooltipComponent
                       side={'top'}
                       align="center"

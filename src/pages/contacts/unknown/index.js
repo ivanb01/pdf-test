@@ -18,6 +18,7 @@ import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ReviewContact from '@components/overlays/review-contact';
 
 const index = () => {
   const router = useRouter();
@@ -31,7 +32,8 @@ const index = () => {
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const [searchKey, setSearchKey] = useState('');
-
+  const [showEditContact, setShowEditContact] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState(null);
   const fetchOther = () => {
     let other = {
       ...allContacts,
@@ -110,6 +112,10 @@ const index = () => {
       updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
     } catch (error) {}
   };
+  const handleCardEdit = (contact) => {
+    setShowEditContact(true);
+    setContactToEdit(contact);
+  };
 
   return (
     <Layout>
@@ -147,7 +153,12 @@ const index = () => {
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%', height: '100%' }}>
-                  <Table tableFor="other" data={actualContact} handleAction={handleAction} />
+                  <Table
+                    tableFor="other"
+                    data={actualContact}
+                    handleAction={handleAction}
+                    handleCardEdit={handleCardEdit}
+                  />
                 </SimpleBar>
               </div>
             </div>
@@ -164,6 +175,15 @@ const index = () => {
             {'You have no contacts categorized as unknown.'}
           </Text>
         </div>
+      )}
+      {showEditContact && (
+        <ReviewContact
+          showToast
+          client={contactToEdit}
+          setClient={setContactToEdit}
+          handleClose={() => setShowEditContact(false)}
+          title="Edit Unknown"
+        />
       )}
     </Layout>
   );

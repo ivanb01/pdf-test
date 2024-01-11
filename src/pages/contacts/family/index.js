@@ -18,6 +18,8 @@ import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ReviewContact from '@components/overlays/review-contact';
+
 const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -110,6 +112,8 @@ const index = () => {
       updateContact(data.id, newData).then(() => dispatch(setRefetchData(true)));
     } catch (error) {}
   };
+  const [showEditContact, setShowEditContact] = useState(false);
+  const [contactToEdit, setContactToEdit] = useState(null);
 
   return (
     <Layout>
@@ -147,7 +151,15 @@ const index = () => {
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%', height: '100%' }}>
-                  <Table tableFor="other" data={actualContact} handleAction={handleAction} />
+                  <Table
+                    tableFor="other"
+                    data={actualContact}
+                    handleAction={handleAction}
+                    handleCardEdit={(contact) => {
+                      setShowEditContact(true);
+                      setContactToEdit(contact);
+                    }}
+                  />
                 </SimpleBar>
               </div>
             </div>
@@ -164,6 +176,15 @@ const index = () => {
             You have no contacts categorized as family and friends.
           </Text>
         </div>
+      )}
+      {showEditContact && (
+        <ReviewContact
+          showToast
+          client={contactToEdit}
+          setClient={setContactToEdit}
+          handleClose={() => setShowEditContact(false)}
+          title="Edit Family & Friends"
+        />
       )}
     </Layout>
   );
