@@ -368,7 +368,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <div
             onClick={() => dispatch(setExpandedMenu(!pinned))}
             className="absolute cursor-pointer"
-            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 1 }}>
+            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 100 }}>
             <div className="">
               <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>

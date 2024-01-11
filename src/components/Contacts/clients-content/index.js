@@ -412,16 +412,16 @@ const Clients = ({
         ) : (
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 170px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-              {/*<SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>*/}
-              <Table
-                handleFilteredContacts={handleFilteredContacts}
-                contacts={filteredContacts}
-                tableFor="contactsList"
-                categoryType="clients"
-                handleCardEdit={handleCardEdit}
-                searchTerm={searchTerm}
-              />
-              {/*</SimpleBar>*/}
+              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
+                <Table
+                  handleFilteredContacts={handleFilteredContacts}
+                  contacts={filteredContacts}
+                  tableFor="contactsList"
+                  categoryType="clients"
+                  handleCardEdit={handleCardEdit}
+                  searchTerm={searchTerm}
+                />
+              </SimpleBar>
             </div>
           </div>
         )}
