@@ -41,7 +41,7 @@ const activitiesTypes = {
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
-export default function Feeds({ contactId, activities, setActivities, height }) {
+export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
   const placeholderDescription = (activity_type) => {
     if (activity_type == 1) {
       return 'Email Sent to contact';
@@ -179,7 +179,7 @@ export default function Feeds({ contactId, activities, setActivities, height }) 
       <div className="bg-white">
         <SimpleBar
           style={{
-            maxHeight: '280px',
+            maxHeight: showFullHeight ? '100%' : '280px',
             paddingRight: '-10px',
           }}
           autoHide>

@@ -379,7 +379,12 @@ const index = () => {
                     <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communicate</span>
                   </button>
                 </div>
-                <Feeds contactId={id} activities={activities} setActivities={setActivities} />
+                <Feeds
+                  showFullHeight={contact?.category_1 != 'Client'}
+                  contactId={id}
+                  activities={activities}
+                  setActivities={setActivities}
+                />
               </div>
 
               {contact?.category_1 == 'Client' && (
