@@ -176,14 +176,14 @@ export default function Feeds({ contactId, activities, setActivities, height }) 
 
   return (
     <>
-      <div className="bg-white pt-6">
+      <div className="bg-white">
         <SimpleBar
           style={{
             maxHeight: '280px',
             paddingRight: '-10px',
           }}
           autoHide>
-          <ul role="list" className="">
+          <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
             {activities
               ?.slice()
               .sort((a, b) => b.id - a.id)

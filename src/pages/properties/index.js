@@ -151,7 +151,6 @@ const index = () => {
 
     console.log(newData, 'newData');
 
-    // Convert idsOfNeighboorhoods to a string if needed
     const idsString = idsOfNeighboorhoods.join(',');
     setIds(idsString);
 

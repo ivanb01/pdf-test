@@ -5,7 +5,7 @@ import SearchSelectInput from '@components/shared/search-select-input';
 import Overlay from '@components/shared/overlay';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { NYCneighborhoods, bathroomsOptions, roomsOptions } from '@global/variables';
+import { NYCneighborhoods, bathroomsOptions, roomsOptions, data as data1 } from '@global/variables';
 import bedroom from '/public/images/bedroom.svg';
 import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
@@ -26,6 +26,11 @@ import { amenities } from '@global/variables';
 import React from 'react';
 import Tag from '@components/Tag';
 import SimpleBar from 'simplebar-react';
+import Search from '@components/shared/input/search';
+import CloseIcon from '@mui/icons-material/Close';
+import { ChevronDownIcon } from '@heroicons/react/solid';
+import List from '@components/NestedCheckbox/List';
+import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 
 const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
   const dispatch = useDispatch();
@@ -73,7 +78,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
-      console.log(values.budget_min ? parseFloat(values.budget_min) : null);
       setFieldValue('budget_min', values.budget_min ? parseFloat(values.budget_min) : null);
       setFieldValue('budget_max', values.budget_max ? parseFloat(values.budget_max) : null);
 
@@ -81,7 +85,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
         let bathrooms = values.bathrooms && values.bathrooms != 'Any' ? parseFloat(values.bathrooms) : null;
 
         let bedrooms = values.bedrooms && values.bedrooms != 'Any' ? parseFloat(values.bedrooms) : null;
-
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
           looking_action: values.looking_action ? values.looking_action : null,
@@ -95,18 +98,12 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       }
     },
   });
-  useEffect(() => {
-    console.log(formik.errors);
-  }, [formik]);
 
   const { errors, touched } = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      // console.log(values);
-      console.log(values);
-
       const res = await contactServices.addContactLookingProperty(contactId, values);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
@@ -152,6 +149,178 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       dispatch(setAmenities([...reduxAmenities, amenity]));
     }
   };
+  const [datav2, setDatav2] = useState([]);
+  const [ids, setIds] = useState();
+  const statuss = Object.freeze({
+    unchecked: 0,
+    checked: 1,
+    indeterminate: -1,
+  });
+  const setStatuss = (root, status) => {
+    root.status = status;
+    if (Array.isArray(root.items)) {
+      return root.items.forEach((item) => {
+        setStatuss(item, status);
+      });
+    }
+  };
+
+  const computeStatus = (items) => {
+    let checked = 0;
+    let indeterminate = 0;
+
+    items.forEach((item) => {
+      if (item.status && item.status === statuss?.checked) checked++;
+      if (item.status && item.status === statuss?.indeterminate) indeterminate++;
+    });
+
+    if (checked === items.length) {
+      return statuss.checked;
+    } else if (checked > 0 || indeterminate > 0) {
+      return statuss.indeterminate;
+    }
+  };
+
+  const traverse = (root, needle, status) => {
+    let id;
+    let items;
+
+    if (Array.isArray(root)) {
+      items = root;
+    } else {
+      id = root.id;
+      items = root.items;
+    }
+
+    // return if needle is found
+    // we don't have to compute the status of the items if root.id === needle
+    if (id === needle) {
+      return setStatuss(root, status);
+    }
+
+    if (!items) {
+      return root;
+    } else {
+      items.forEach((item) => traverse(item, needle, status));
+      root.status = computeStatus(items);
+    }
+  };
+
+  const [items, setItems] = useState(data1);
+  const compute = (checkboxId, status) => {
+    traverse(items, checkboxId, status);
+    setItems(items.slice());
+  };
+  const initializeStatus = () => {
+    const updatedData = items.map((category) => ({
+      ...category,
+      status: 0,
+      items: category.items.map((item) => ({ ...item, status: 0 })),
+    }));
+
+    setItems(updatedData);
+  };
+  const [openDropdown, setOpenDropdown] = useState(false);
+  useEffect(() => {
+    initializeStatus();
+  }, []);
+  useEffect(() => {
+    const newData = [];
+    const idsOfNeighboorhoods = [];
+
+    items.forEach((d) => {
+      if (d.status === 1) {
+        newData.push(d.name);
+        d.items.forEach((i) => {
+          if (i.status === 1) {
+            idsOfNeighboorhoods.push(i.id);
+          }
+        });
+      } else {
+        d.items.forEach((i) => {
+          if (i.status === 1) {
+            newData.push(i.name);
+            idsOfNeighboorhoods.push(i.id);
+          }
+        });
+      }
+    });
+
+    const idsString = idsOfNeighboorhoods.join(',');
+    formik.setFieldValue('neighborhood_ids', idsString.split(',').map(Number));
+    setIds(idsString);
+
+    setDatav2(newData);
+  }, [items, contactId]);
+  const [neighborhoodsSearch, setNeighborhoodsSearch] = useState('');
+
+  const filterData = (data, searchTerm) => {
+    return data.reduce((result, item) => {
+      const isParentMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const filteredItems = item.items.filter((subItem) =>
+        subItem.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+
+      if (isParentMatch && filteredItems.length === 0) {
+        result.push(item);
+      } else if (filteredItems.length > 0) {
+        result.push({ ...item, items: filteredItems });
+      }
+
+      return result;
+    }, []);
+  };
+
+  useEffect(() => {
+    if (!data?.neighborhood_ids) {
+      return;
+    }
+    const matchingNames = [];
+    items.forEach((city) => {
+      city.items.forEach((neighborhood) => {
+        if (data?.neighborhood_ids.includes(neighborhood.id)) {
+          matchingNames.push(neighborhood.name);
+        }
+      });
+    });
+    setDatav2(matchingNames);
+  }, [contactId, data?.neighborhood_ids]);
+  useEffect(() => {
+    if (!data?.neighborhood_ids) {
+      return;
+    }
+    setItems((prevMatchingNeighborhoods) => {
+      const updatedMatchingNeighborhoods = prevMatchingNeighborhoods.map((city) => {
+        const updatedItems = city.items.map((neighborhood) => {
+          if (data?.neighborhood_ids.includes(neighborhood.id)) {
+            return { ...neighborhood, status: 1 };
+          }
+          return neighborhood;
+        });
+
+        const allItemsChecked = updatedItems.every((neighborhood) => neighborhood.status === 1);
+        const anyItemChecked = updatedItems.some((neighborhood) => neighborhood.status === 1);
+
+        let cityStatus;
+        if (allItemsChecked) {
+          cityStatus = 1;
+        } else if (anyItemChecked) {
+          cityStatus = -1;
+        } else {
+          cityStatus = 0;
+        }
+
+        return { ...city, status: cityStatus, items: updatedItems };
+      });
+
+      return updatedMatchingNeighborhoods;
+    });
+  }, [contactId, data?.neighborhood_ids]);
+
+  useEffect(() => {
+    setNeighborhoodsSearch('');
+  }, [openDropdown]);
 
   return (
     <Overlay
@@ -163,19 +332,75 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide style={{ maxHeight: '330px' }}>
-            <div className="mx-auto relative">
-              <SearchSelectInput
-                label="Neighborhood*"
-                options={NYCneighborhoods}
-                value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}
-                onChange={(choice) => {
-                  let choices = choice.map((el) => el.value);
-                  formik.setFieldValue('neighborhood_ids', choices);
-                }}
-                error={errors.neighborhood_ids && touched.neighborhood_ids}
-                errorText={errors.neighborhood_ids}
-              />
+            <div
+              className={
+                'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
+              }
+              style={{ flex: 1, position: 'relative' }}
+              onClick={() => setOpenDropdown(!openDropdown)}>
+              <div className={'overflow-hidden whitespace-nowrap overflow-ellipsis'}>
+                {datav2.length > 0 ? datav2.join(', ') : 'Select'}
+              </div>
+              <div className={'flex'}>
+                {datav2.length > 0 && (
+                  <CloseIcon
+                    className={`transition-all h-5 w-5 text-gray3`}
+                    aria-hidden="true"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      initializeStatus();
+                      setDatav2([]);
+                    }}
+                  />
+                )}
+                <ChevronDownIcon
+                  className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
+                  aria-hidden="true"
+                />
+              </div>
+              {openDropdown && (
+                <div
+                  className={
+                    'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg max-w-[598px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
+                  }>
+                  <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
+                    <input
+                      className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+                      type={'text'}
+                      placeholder={'Search'}
+                      onChange={(e) => setNeighborhoodsSearch(e.target.value)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setOpenDropdown(true);
+                      }}
+                    />
+                    {filterData(items, neighborhoodsSearch).length > 0 ? (
+                      <div className={'mt-2'}>
+                        <List
+                          items={filterData(items, neighborhoodsSearch)}
+                          compute={compute}
+                          setOpenDropdown={setOpenDropdown}
+                        />
+                      </div>
+                    ) : (
+                      <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
+                    )}
+                  </SimpleBar>
+                </div>
+              )}
             </div>
+            {/*<SearchSelectInput*/}
+            {/*  label="Neighborhood*"*/}
+            {/*  options={NYCneighborhoods}*/}
+            {/*  value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}*/}
+            {/*  onChange={(choice) => {*/}
+            {/*    let choices = choice.map((el) => el.value);*/}
+            {/*    formik.setFieldValue('neighborhood_ids', choices);*/}
+            {/*  }}*/}
+            {/*  error={errors.neighborhood_ids && touched.neighborhood_ids}*/}
+            {/*  errorText={errors.neighborhood_ids}*/}
+            {/*/>*/}
             <RadioChips
               options={roomsOptions}
               value={formik.values.bedrooms ? formik.values.bedrooms : null}
@@ -292,8 +517,11 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
             primary
             className=""
             loading={loadingButton}
-            disabled={!formik.isValid}
-            onClick={formik.handleSubmit}
+            disabled={!formik.isValid || ids?.length === 0}
+            onClick={() => {
+              setOpenDropdown(false);
+              formik.handleSubmit();
+            }}
           />
         </div>
       </div>

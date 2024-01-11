@@ -364,7 +364,7 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
   if (!selectedOptions) {
     return null;
   }
-  const options = selectedOptions.map((el) => {
+  const options = selectedOptions?.map((el) => {
     return multiselectOptions.find((option) => option.value === el);
   });
   return options;
