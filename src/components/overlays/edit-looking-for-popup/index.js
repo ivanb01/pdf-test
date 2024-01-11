@@ -299,7 +299,19 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           return neighborhood;
         });
 
-        return { ...city, status: updatedItems.length > 0 ? -1 : 0, items: updatedItems };
+        const allItemsChecked = updatedItems.every((neighborhood) => neighborhood.status === 1);
+        const anyItemChecked = updatedItems.some((neighborhood) => neighborhood.status === 1);
+
+        let cityStatus;
+        if (allItemsChecked) {
+          cityStatus = 1;
+        } else if (anyItemChecked) {
+          cityStatus = -1;
+        } else {
+          cityStatus = 0;
+        }
+
+        return { ...city, status: cityStatus, items: updatedItems };
       });
 
       return updatedMatchingNeighborhoods;
