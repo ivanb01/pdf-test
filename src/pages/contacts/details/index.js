@@ -376,7 +376,7 @@ const index = () => {
                     onClick={() => setOpenCommunicationPopup(true)}
                     className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
-                    <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communicate</span>
+                    <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communication</span>
                   </button>
                 </div>
                 <Feeds
