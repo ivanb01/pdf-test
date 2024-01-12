@@ -172,7 +172,7 @@ const Button = ({
           </div>
         )}
         {count && (
-          <div className="text-xs w-5 h-5 flex items-center justify-center absolute right-[-5px] top-[-5px] rounded-full bg-lightBlue3 text-white">
+          <div className="text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white">
             {count}
           </div>
         )}

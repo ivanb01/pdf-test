@@ -375,7 +375,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             ) : (
               <>
                 <div className="">
-                  <div className="flex justify-between items-center pt-[5px] pr-[5px]">
+                  <div className="flex justify-between items-center pt-[9px] pr-[9px]">
                     <div className="font-semibold">Properties</div>
                     <Button
                       count={filtersCount}
