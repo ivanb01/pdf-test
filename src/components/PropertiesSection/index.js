@@ -44,6 +44,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   });
 
   const [lookingForData, setLookingForData] = useState();
+  const [filtersCount, setFiltersCount] = useState(0);
 
   const getLookingFor = () => {
     return new Promise((resolve, reject) => {
@@ -52,6 +53,20 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         .then((propertiesResponse) => {
           const propertiesData = propertiesResponse.data;
           setLookingForData(propertiesData.data);
+          let newFiltersCount = 0;
+          if (propertiesData.data[0].bathrooms_min || propertiesData.data[0].bathrooms_max) {
+            newFiltersCount += 1;
+          }
+          if (propertiesData.data[0].bedrooms_min || propertiesData.data[0].bedrooms_max) {
+            newFiltersCount += 1;
+          }
+          if (propertiesData.data[0].budget_min || propertiesData.data[0].budget_max) {
+            newFiltersCount += 1;
+          }
+          if (propertiesData.data[0].neighborhood_ids && propertiesData.data[0].neighborhood_ids.length > 0) {
+            newFiltersCount += 1;
+          }
+          setFiltersCount(newFiltersCount);
           console.log('request done');
           resolve(propertiesData.data);
         })
@@ -360,9 +375,13 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             ) : (
               <>
                 <div className="">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center pt-[5px] pr-[5px]">
                     <div className="font-semibold">Properties</div>
-                    <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>
+                    <Button
+                      count={filtersCount}
+                      leftIcon={<img src={filter.src}></img>}
+                      white
+                      onClick={() => setShowEditPopup(true)}>
                       Client Preferences
                     </Button>
                   </div>

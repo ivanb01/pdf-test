@@ -41,6 +41,7 @@ const Button = ({
   color,
   transparent,
   success,
+  count,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
@@ -160,7 +161,7 @@ const Button = ({
         href={href}
         className={`${disabled && 'opacity-50'} ${loading && 'pointer-events-none'} h-[38px] inline-flex ${
           !inline && 'min-w-[100px]'
-        } justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+        } justify-center items-center ${padding} border ${borderColor} ${text} relative font-medium rounded-md shadow-sm ${
           color ? color : textColor
         } hover:${bgColor} ${bgColor} ${className}`}
         {...props}>
@@ -168,6 +169,11 @@ const Button = ({
         {leftIcon && !loading && (
           <div className={`-ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
             {leftIcon}
+          </div>
+        )}
+        {count && (
+          <div className="text-xs w-5 h-5 flex items-center justify-center absolute right-[-5px] top-[-5px] rounded-full bg-lightBlue3 text-white">
+            {count}
           </div>
         )}
         {!centerIcon && !loading && (children ? children : label)}
