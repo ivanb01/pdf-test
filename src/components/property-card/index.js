@@ -138,7 +138,7 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
               type="checkbox"
               id={`checkbox-${property.ID}`}
               class="hidden"
-              value={selected.length && selected.includes(property)}
+              value={selected?.length && selected?.includes(property)}
             />
             {!noSelect && (
               <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
