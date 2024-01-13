@@ -376,14 +376,32 @@ const index = () => {
   const [sendMethod, setSendMethod] = useState(1);
 
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const [filteredContacts, setFilteredContacts] = useState(null);
+  const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
   useEffect(() => {
     setFilteredContacts(
       sendMethod == 1
-        ? contacts?.filter((contact) => contact.email)
-        : contacts?.filter((contact) => contact.phone_number),
+        ? contacts
+            ?.filter((contact) => contact.email)
+            .map((contact) => ({
+              value: contact.id,
+              label: `${contact.first_name} ${contact.last_name}`,
+              first_name: contact.first_name,
+              last_name: contact.last_name,
+              email: contact.email,
+              profile_image_path: contact.profile_image_path,
+            }))
+        : contacts
+            ?.filter((contact) => contact.phone_number)
+            .map((contact) => ({
+              value: contact.id,
+              label: `${contact.first_name} ${contact.last_name}`,
+              first_name: contact.first_name,
+              last_name: contact.last_name,
+              email: contact.email,
+              profile_image_path: contact.profile_image_path,
+            })),
     );
   }, [contacts]);
 
@@ -433,12 +451,14 @@ const index = () => {
   const SelectedProperty = ({ property, setSelected, selected }) => {
     return (
       <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
-        <img
-          className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
-          src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
-        />
-        <div className="font-semibold text-black mb-[6px] mr-3">
-          {property.PROPERTY_TYPE} in {property.ADDRESS}
+        <div className="flex items-center">
+          <img
+            className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
+            src={property.PHOTOS.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+          />
+          <div className="font-semibold text-black mb-[6px] mr-3 text-sm">
+            {property.PROPERTY_TYPE} in {property.ADDRESS}
+          </div>
         </div>
         <div class="form-checkbox">
           <input
@@ -820,13 +840,26 @@ const index = () => {
         ) : (
           <div>
             <div className="font-semibold text-gray7">Select Clients</div>
-            <Search
+            {/* <Search
               placeholder={`Search for clients`}
               className="w-full text-sm mt-2"
               onInput={(event) => handleSearch(event.target.value)}
               // value={searchTerm}
               // onInput={(event) => setSearchTerm(event.target.value)}
-            />
+            /> */}
+            {filteredContacts && filteredContacts.length && (
+              <MultiSelect
+                options={filteredContacts}
+                value={selectedContacts}
+                onChange={(contacts) => {
+                  setSelectedContacts(contacts);
+                }}
+                labelledBy="Search for clients"
+                overrideStrings={{
+                  selectSomeItems: 'Selected clients will appear here',
+                }}
+              />
+            )}
             <div className="my-4">
               <span className="font-semibold text-gray7">{selectedContacts.length}</span>
               <span className="text-gray8 font-medium">
@@ -835,8 +868,8 @@ const index = () => {
               </span>
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
-              {filteredContacts &&
-                filteredContacts.map((contact) => (
+              {selectedContacts &&
+                selectedContacts.map((contact) => (
                   <div className={'flex justify-between items-center mb-5 mr-4'}>
                     <div className="flex gap-4">
                       <div>
@@ -868,21 +901,15 @@ const index = () => {
                       </div>
                     </div>
                     <div>
-                      {selectedContacts.includes(contact.id) ? (
-                        <button
-                          className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
-                          onClick={() =>
-                            setSelectedContacts((prevSelected) => prevSelected.filter((id) => id !== contact.id))
-                          }>
-                          Remove
-                        </button>
-                      ) : (
-                        <button
-                          className="bg-[#DBEAFE] text-lightBlue3 text-sm px-3 py-[6px] font-medium rounded-md"
-                          onClick={() => setSelectedContacts((prevSelected) => [...prevSelected, contact.id])}>
-                          Select
-                        </button>
-                      )}
+                      <button
+                        className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
+                        onClick={() =>
+                          setSelectedContacts((prevSelected) =>
+                            prevSelected.filter((prevContact) => prevContact.value !== contact.value),
+                          )
+                        }>
+                        Remove
+                      </button>
                     </div>
                   </div>
                 ))}
