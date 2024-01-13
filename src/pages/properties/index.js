@@ -864,7 +864,7 @@ const index = () => {
               <span className="font-semibold text-gray7">{selectedContacts.length}</span>
               <span className="text-gray8 font-medium">
                 {' '}
-                {selectedProperties.length == 1 ? 'Contact' : 'Contacts'} selected
+                {selectedContacts.length == 1 ? 'Contact' : 'Contacts'} selected
               </span>
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
