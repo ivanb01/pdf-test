@@ -510,7 +510,12 @@ const index = () => {
               'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
             style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
-            onClick={() => setOpenDropdown(!openDropdown)}>
+            onClick={() => {
+              setOpenDropdown(!openDropdown);
+              setTimeout(() => {
+                document.querySelector(`#custom-dropdown-search`)?.focus();
+              }, 200);
+            }}>
             <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>
               {datav2.length > 0 ? datav2.join(',') : 'Select'}
             </div>
@@ -534,11 +539,12 @@ const index = () => {
             {openDropdown && (
               <div
                 className={
-                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
+                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg w-[500px] bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
                 }>
                 <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
                   <input
                     className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+                    id={`custom-dropdown-search`}
                     type={'text'}
                     placeholder={'Search'}
                     onChange={(e) => setNeighborhoodsSearch(e.target.value)}
