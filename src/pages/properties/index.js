@@ -640,7 +640,8 @@ const index = () => {
                   {properties.LISTINGS.map((property, index) => (
                     <PropertyCard
                       setSelected={setSelectedProperties}
-                      selected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                      isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                      selected={selectedProperties}
                       key={index}
                       property={property}
                     />

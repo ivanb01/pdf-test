@@ -53,7 +53,7 @@ const ImageGallery = ({ images, property, url }) => {
   );
 };
 
-const PropertyCard = ({ property, selected, setSelected, noSelect }) => {
+const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected }) => {
   let status = '';
   if (property.STATUS == 'Rented') {
     status = '&status=22';
@@ -65,7 +65,7 @@ const PropertyCard = ({ property, selected, setSelected, noSelect }) => {
   return (
     <div
       className={`border transition-all border-gray-200 rounded-[4px] ${
-        selected && ' border border-lightBlue3 custom-box-shadow'
+        isSelected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
       <div className="h-[160px] relative">
         <ImageGallery images={property.PHOTOS} property={property} url={url} />
@@ -90,15 +90,24 @@ const PropertyCard = ({ property, selected, setSelected, noSelect }) => {
               <img className="h-7 w-7" src={link.src} alt="" />
             </a>
           }>
-          <p className={'text-[10px]  text-white font-medium'}>Copy Link</p>
+          <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
         </TooltipComponent>
       </div>
-      <div className="p-3 text-sm">
+      <div
+        className="p-3 text-sm"
+        onClick={() => {
+          const currentSelected = selected.includes(property);
+          if (currentSelected) {
+            setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
+          } else {
+            setSelected((prevSelected) => [...prevSelected, property]);
+          }
+        }}>
         <div className="mb-4">
           <div className="font-semibold text-black mb-[6px]">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
           </div>
-          <div className=" text-gray-600">
+          <div className="text-gray-600">
             {property.ADDRESS} <br />
             {property.NEIGHBORHOODS}, {property.CITY}, {property.STATE} {property.ZIP_CODE}
           </div>
@@ -129,21 +138,15 @@ const PropertyCard = ({ property, selected, setSelected, noSelect }) => {
               type="checkbox"
               id={`checkbox-${property.ID}`}
               class="hidden"
-              onChange={(event) => {
-                if (event.target.checked) {
-                  setSelected((prevSelected) => [...prevSelected, property]);
-                } else {
-                  setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
-                }
-              }}
+              value={selected.length && selected.includes(property)}
             />
             {!noSelect && (
               <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
                 <div
                   class={`${
-                    selected ? 'bg-lightBlue3' : 'border border-gray-300'
+                    isSelected ? 'bg-lightBlue3' : 'border border-gray-300'
                   } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
-                  {selected && (
+                  {isSelected && (
                     <svg
                       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                       version="1"
