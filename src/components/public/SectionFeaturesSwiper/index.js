@@ -119,7 +119,7 @@ export const SectionFeaturesSwiper = () => {
             style={{ backgroundImage: `url(${getPaginationImage(modifier)})` }}
             className={styles['pagination-element__image']}></div>
 
-          <span className="pagination-dots-custom">{sectionLabels[i]}</span>
+          <span className="hidden md:block pagination-dots-custom">{sectionLabels[i]}</span>
         </div>
       );
       paginationElements.push(element);
