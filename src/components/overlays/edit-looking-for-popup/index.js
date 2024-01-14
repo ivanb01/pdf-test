@@ -331,7 +331,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       className={className}>
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
-          <SimpleBar autoHide className="px-[2px]" style={{ maxHeight: '330px' }}>
+          <SimpleBar autoHide className="px-[2px] max-h-full md:max-h-[330px]">
             <div
               className={
                 'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
@@ -506,7 +506,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           </SimpleBar>
         </form>
         <div
-          className="text-right sticky left-0 right-0 bottom-0 bg-white p-5"
+          className="text-right block md:sticky left-0 right-0 bottom-0 bg-white p-5"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
           }}>
