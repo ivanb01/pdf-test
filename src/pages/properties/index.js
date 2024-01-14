@@ -639,8 +639,8 @@ const index = () => {
           <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
-          <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
-            Clear Filters
+          <Button white onClick={() => resetFilters()} className="min-w-[120px]">
+            Clear All
           </Button>
           {/* <Dropdown
             placeHolder="Choose Type*"
