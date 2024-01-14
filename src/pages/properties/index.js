@@ -5,7 +5,14 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
-import { data, NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
+import {
+  bathroomsOptions,
+  data,
+  NYCneighborhoods,
+  rentalPriceOptions,
+  roomsOptions,
+  salePriceOptions,
+} from '@global/variables';
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
@@ -171,96 +178,96 @@ const index = () => {
     setFilterValue(filter);
   };
 
-  const bathroomOptions = [
-    {
-      id: 0,
-      label: 1,
-    },
-    {
-      id: 1,
-      label: 2,
-    },
+  // const bathroomOptions = [
+  //   {
+  //     id: 0,
+  //     label: 1,
+  //   },
+  //   {
+  //     id: 1,
+  //     label: 2,
+  //   },
 
-    {
-      id: 2,
-      label: 3,
-    },
-    {
-      id: 3,
-      label: 4,
-    },
-    {
-      id: 4,
-      label: 5,
-    },
-    {
-      id: 5,
-      label: 6,
-    },
-    {
-      id: 6,
-      label: 7,
-    },
-    {
-      id: 7,
-      label: 8,
-    },
-    {
-      id: 8,
-      label: 9,
-    },
-    {
-      id: 9,
-      label: 10,
-    },
-    {
-      id: 10,
-      label: '10+',
-    },
-  ];
-  const bedroomsOptions = [
-    {
-      id: 0,
-      label: '1+',
-    },
-    {
-      id: 1,
-      label: '2+',
-    },
+  //   {
+  //     id: 2,
+  //     label: 3,
+  //   },
+  //   {
+  //     id: 3,
+  //     label: 4,
+  //   },
+  //   {
+  //     id: 4,
+  //     label: 5,
+  //   },
+  //   {
+  //     id: 5,
+  //     label: 6,
+  //   },
+  //   {
+  //     id: 6,
+  //     label: 7,
+  //   },
+  //   {
+  //     id: 7,
+  //     label: 8,
+  //   },
+  //   {
+  //     id: 8,
+  //     label: 9,
+  //   },
+  //   {
+  //     id: 9,
+  //     label: 10,
+  //   },
+  //   {
+  //     id: 10,
+  //     label: '10+',
+  //   },
+  // ];
+  // const bedroomsOptions = [
+  //   {
+  //     id: 0,
+  //     label: '1+',
+  //   },
+  //   {
+  //     id: 1,
+  //     label: '2+',
+  //   },
 
-    {
-      id: 2,
-      label: '3+',
-    },
-    {
-      id: 3,
-      label: '4+',
-    },
-    {
-      id: 4,
-      label: '5+',
-    },
-    {
-      id: 5,
-      label: '6+',
-    },
-    {
-      id: 6,
-      label: '7+',
-    },
-    {
-      id: 7,
-      label: '8+',
-    },
-    {
-      id: 8,
-      label: '9+',
-    },
-    {
-      id: 9,
-      label: '10+',
-    },
-  ];
+  //   {
+  //     id: 2,
+  //     label: '3+',
+  //   },
+  //   {
+  //     id: 3,
+  //     label: '4+',
+  //   },
+  //   {
+  //     id: 4,
+  //     label: '5+',
+  //   },
+  //   {
+  //     id: 5,
+  //     label: '6+',
+  //   },
+  //   {
+  //     id: 6,
+  //     label: '7+',
+  //   },
+  //   {
+  //     id: 7,
+  //     label: '8+',
+  //   },
+  //   {
+  //     id: 8,
+  //     label: '9+',
+  //   },
+  //   {
+  //     id: 9,
+  //     label: '10+',
+  //   },
+  // ];
 
   const forOptions = [
     {
@@ -305,10 +312,10 @@ const index = () => {
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (ids?.length) params['neighborhood_id'] = ids;
     if (bedrooms) {
-      params['bedsMin'] = bedrooms.id + 1;
+      params['bedsMin'] = bedrooms.value;
     }
     if (bathrooms) {
-      params['bathMin'] = bathrooms.label == '10+' ? 10 : bathrooms.label;
+      params['bathMin'] = bathrooms.value;
     }
     if (minPrice) {
       params['priceMin'] = minPrice;
@@ -600,7 +607,7 @@ const index = () => {
           />
 
           <Dropdown
-            options={bedroomsOptions}
+            options={roomsOptions}
             className=" min-w-[100px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
@@ -610,7 +617,7 @@ const index = () => {
             initialSelect={bedrooms?.label}
           />
           <Dropdown
-            options={bathroomOptions}
+            options={bathroomsOptions}
             className="w-[140px]"
             placeHolder="Bathrooms"
             afterLabel="Baths"
