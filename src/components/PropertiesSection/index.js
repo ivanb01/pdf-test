@@ -54,17 +54,19 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           const propertiesData = propertiesResponse.data;
           setLookingForData(propertiesData.data);
           let newFiltersCount = 0;
-          if (propertiesData.data[0].bathrooms_min || propertiesData.data[0].bathrooms_max) {
-            newFiltersCount += 1;
-          }
-          if (propertiesData.data[0].bedrooms_min || propertiesData.data[0].bedrooms_max) {
-            newFiltersCount += 1;
-          }
-          if (propertiesData.data[0].budget_min || propertiesData.data[0].budget_max) {
-            newFiltersCount += 1;
-          }
-          if (propertiesData.data[0].neighborhood_ids && propertiesData.data[0].neighborhood_ids.length > 0) {
-            newFiltersCount += 1;
+          if (propertiesData.data[0]) {
+            if (propertiesData.data[0].bathrooms_min || propertiesData.data[0].bathrooms_max) {
+              newFiltersCount += 1;
+            }
+            if (propertiesData.data[0].bedrooms_min || propertiesData.data[0].bedrooms_max) {
+              newFiltersCount += 1;
+            }
+            if (propertiesData.data[0].budget_min || propertiesData.data[0].budget_max) {
+              newFiltersCount += 1;
+            }
+            if (propertiesData.data[0].neighborhood_ids && propertiesData.data[0].neighborhood_ids.length > 0) {
+              newFiltersCount += 1;
+            }
           }
           setFiltersCount(newFiltersCount);
           console.log('request done');
