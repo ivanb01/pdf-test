@@ -68,7 +68,7 @@ const Card = ({ name, icon, color, disabled, client }) => {
         window.location.href = link;
         break;
       case 'SMS':
-        link = `sms:${client.phone_number}4&body=${message}`;
+        link = `sms:${client.phone_number}&body=${message}`;
         window.location.href = link;
         break;
     }

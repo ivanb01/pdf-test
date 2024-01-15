@@ -85,6 +85,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
   useEffect(() => {
+    console.log(filteredProfessionals);
+  }, [filteredProfessionals]);
+  useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
 
@@ -209,7 +212,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     setFiltersCleared(true);
     dispatch(setProfessionalsFilter({}));
   }, [openedSubtab]);
-
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -331,7 +334,15 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
               <Table
-                data={filteredProfessionals}
+                data={
+                  hideUnapproved === true
+                    ? filteredProfessionals.filter(
+                        (contact) =>
+                          !['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) ||
+                          contact.approved_ai,
+                      )
+                    : filteredProfessionals
+                }
                 tableFor="professionals"
                 categoryType="professionals"
                 handleCardEdit={handleCardEdit}
