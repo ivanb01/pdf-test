@@ -839,7 +839,7 @@ tbody > div {
 
 @media (max-width: 769px) {
   .pagination-dots-custom {
-    content-visibility: hidden;
+    content-visibility: hidden !important;
   }
 }
 
