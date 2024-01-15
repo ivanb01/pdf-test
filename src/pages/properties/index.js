@@ -5,7 +5,14 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
-import { data, NYCneighborhoods, rentalPriceOptions, salePriceOptions } from '@global/variables';
+import {
+  bathroomsOptions,
+  data,
+  NYCneighborhoods,
+  rentalPriceOptions,
+  roomsOptions,
+  salePriceOptions,
+} from '@global/variables';
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
@@ -171,96 +178,96 @@ const index = () => {
     setFilterValue(filter);
   };
 
-  const bathroomOptions = [
-    {
-      id: 0,
-      label: 1,
-    },
-    {
-      id: 1,
-      label: 2,
-    },
+  // const bathroomOptions = [
+  //   {
+  //     id: 0,
+  //     label: 1,
+  //   },
+  //   {
+  //     id: 1,
+  //     label: 2,
+  //   },
 
-    {
-      id: 2,
-      label: 3,
-    },
-    {
-      id: 3,
-      label: 4,
-    },
-    {
-      id: 4,
-      label: 5,
-    },
-    {
-      id: 5,
-      label: 6,
-    },
-    {
-      id: 6,
-      label: 7,
-    },
-    {
-      id: 7,
-      label: 8,
-    },
-    {
-      id: 8,
-      label: 9,
-    },
-    {
-      id: 9,
-      label: 10,
-    },
-    {
-      id: 10,
-      label: '10+',
-    },
-  ];
-  const bedroomsOptions = [
-    {
-      id: 0,
-      label: '1+',
-    },
-    {
-      id: 1,
-      label: '2+',
-    },
+  //   {
+  //     id: 2,
+  //     label: 3,
+  //   },
+  //   {
+  //     id: 3,
+  //     label: 4,
+  //   },
+  //   {
+  //     id: 4,
+  //     label: 5,
+  //   },
+  //   {
+  //     id: 5,
+  //     label: 6,
+  //   },
+  //   {
+  //     id: 6,
+  //     label: 7,
+  //   },
+  //   {
+  //     id: 7,
+  //     label: 8,
+  //   },
+  //   {
+  //     id: 8,
+  //     label: 9,
+  //   },
+  //   {
+  //     id: 9,
+  //     label: 10,
+  //   },
+  //   {
+  //     id: 10,
+  //     label: '10+',
+  //   },
+  // ];
+  // const bedroomsOptions = [
+  //   {
+  //     id: 0,
+  //     label: '1+',
+  //   },
+  //   {
+  //     id: 1,
+  //     label: '2+',
+  //   },
 
-    {
-      id: 2,
-      label: '3+',
-    },
-    {
-      id: 3,
-      label: '4+',
-    },
-    {
-      id: 4,
-      label: '5+',
-    },
-    {
-      id: 5,
-      label: '6+',
-    },
-    {
-      id: 6,
-      label: '7+',
-    },
-    {
-      id: 7,
-      label: '8+',
-    },
-    {
-      id: 8,
-      label: '9+',
-    },
-    {
-      id: 9,
-      label: '10+',
-    },
-  ];
+  //   {
+  //     id: 2,
+  //     label: '3+',
+  //   },
+  //   {
+  //     id: 3,
+  //     label: '4+',
+  //   },
+  //   {
+  //     id: 4,
+  //     label: '5+',
+  //   },
+  //   {
+  //     id: 5,
+  //     label: '6+',
+  //   },
+  //   {
+  //     id: 6,
+  //     label: '7+',
+  //   },
+  //   {
+  //     id: 7,
+  //     label: '8+',
+  //   },
+  //   {
+  //     id: 8,
+  //     label: '9+',
+  //   },
+  //   {
+  //     id: 9,
+  //     label: '10+',
+  //   },
+  // ];
 
   const forOptions = [
     {
@@ -305,10 +312,10 @@ const index = () => {
     if (status) params['status'] = status.id == 0 ? 1 : 2;
     if (ids?.length) params['neighborhood_id'] = ids;
     if (bedrooms) {
-      params['bedsMin'] = bedrooms.id + 1;
+      params['bedsMin'] = bedrooms.value;
     }
     if (bathrooms) {
-      params['bathMin'] = bathrooms.label == '10+' ? 10 : bathrooms.label;
+      params['bathMin'] = bathrooms.value;
     }
     if (minPrice) {
       params['priceMin'] = minPrice;
@@ -376,14 +383,32 @@ const index = () => {
   const [sendMethod, setSendMethod] = useState(1);
 
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const [filteredContacts, setFilteredContacts] = useState(null);
+  const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
   useEffect(() => {
     setFilteredContacts(
       sendMethod == 1
-        ? contacts?.filter((contact) => contact.email)
-        : contacts?.filter((contact) => contact.phone_number),
+        ? contacts
+            ?.filter((contact) => contact.email)
+            .map((contact) => ({
+              value: contact.id,
+              label: `${contact.first_name} ${contact.last_name}`,
+              first_name: contact.first_name,
+              last_name: contact.last_name,
+              email: contact.email,
+              profile_image_path: contact.profile_image_path,
+            }))
+        : contacts
+            ?.filter((contact) => contact.phone_number)
+            .map((contact) => ({
+              value: contact.id,
+              label: `${contact.first_name} ${contact.last_name}`,
+              first_name: contact.first_name,
+              last_name: contact.last_name,
+              email: contact.email,
+              profile_image_path: contact.profile_image_path,
+            })),
     );
   }, [contacts]);
 
@@ -433,12 +458,14 @@ const index = () => {
   const SelectedProperty = ({ property, setSelected, selected }) => {
     return (
       <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
-        <img
-          className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
-          src={property.PHOTOS[0] ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
-        />
-        <div className="font-semibold text-black mb-[6px] mr-3">
-          {property.PROPERTY_TYPE} in {property.ADDRESS}
+        <div className="flex items-center">
+          <img
+            className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
+            src={property.PHOTOS.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+          />
+          <div className="font-semibold text-black mb-[6px] mr-3 text-sm">
+            {property.PROPERTY_TYPE} in {property.ADDRESS}
+          </div>
         </div>
         <div class="form-checkbox">
           <input
@@ -510,7 +537,12 @@ const index = () => {
               'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
             style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
-            onClick={() => setOpenDropdown(!openDropdown)}>
+            onClick={() => {
+              setOpenDropdown(!openDropdown);
+              setTimeout(() => {
+                document.querySelector(`#custom-dropdown-search`)?.focus();
+              }, 200);
+            }}>
             <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>
               {datav2.length > 0 ? datav2.join(',') : 'Select'}
             </div>
@@ -534,11 +566,12 @@ const index = () => {
             {openDropdown && (
               <div
                 className={
-                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg max-w-[300px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
+                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg w-[500px] bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
                 }>
                 <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
                   <input
                     className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+                    id={`custom-dropdown-search`}
                     type={'text'}
                     placeholder={'Search'}
                     onChange={(e) => setNeighborhoodsSearch(e.target.value)}
@@ -574,7 +607,7 @@ const index = () => {
           />
 
           <Dropdown
-            options={bedroomsOptions}
+            options={roomsOptions}
             className=" min-w-[100px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
@@ -584,7 +617,7 @@ const index = () => {
             initialSelect={bedrooms?.label}
           />
           <Dropdown
-            options={bathroomOptions}
+            options={bathroomsOptions}
             className="w-[140px]"
             placeHolder="Bathrooms"
             afterLabel="Baths"
@@ -606,8 +639,8 @@ const index = () => {
           <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
-          <Button onClick={() => resetFilters()} className="min-w-[120px]" primary>
-            Clear Filters
+          <Button white onClick={() => resetFilters()} className="min-w-[120px]">
+            Clear All
           </Button>
           {/* <Dropdown
             placeHolder="Choose Type*"
@@ -640,7 +673,8 @@ const index = () => {
                   {properties.LISTINGS.map((property, index) => (
                     <PropertyCard
                       setSelected={setSelectedProperties}
-                      selected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                      isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                      selected={selectedProperties}
                       key={index}
                       property={property}
                     />
@@ -813,23 +847,36 @@ const index = () => {
         ) : (
           <div>
             <div className="font-semibold text-gray7">Select Clients</div>
-            <Search
+            {/* <Search
               placeholder={`Search for clients`}
               className="w-full text-sm mt-2"
               onInput={(event) => handleSearch(event.target.value)}
               // value={searchTerm}
               // onInput={(event) => setSearchTerm(event.target.value)}
-            />
+            /> */}
+            {filteredContacts && filteredContacts.length && (
+              <MultiSelect
+                options={filteredContacts}
+                value={selectedContacts}
+                onChange={(contacts) => {
+                  setSelectedContacts(contacts);
+                }}
+                labelledBy="Search for clients"
+                overrideStrings={{
+                  selectSomeItems: 'Selected clients will appear here',
+                }}
+              />
+            )}
             <div className="my-4">
               <span className="font-semibold text-gray7">{selectedContacts.length}</span>
               <span className="text-gray8 font-medium">
                 {' '}
-                {selectedProperties.length == 1 ? 'Contact' : 'Contacts'} selected
+                {selectedContacts.length == 1 ? 'Contact' : 'Contacts'} selected
               </span>
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
-              {filteredContacts &&
-                filteredContacts.map((contact) => (
+              {selectedContacts &&
+                selectedContacts.map((contact) => (
                   <div className={'flex justify-between items-center mb-5 mr-4'}>
                     <div className="flex gap-4">
                       <div>
@@ -861,21 +908,15 @@ const index = () => {
                       </div>
                     </div>
                     <div>
-                      {selectedContacts.includes(contact.id) ? (
-                        <button
-                          className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
-                          onClick={() =>
-                            setSelectedContacts((prevSelected) => prevSelected.filter((id) => id !== contact.id))
-                          }>
-                          Remove
-                        </button>
-                      ) : (
-                        <button
-                          className="bg-[#DBEAFE] text-lightBlue3 text-sm px-3 py-[6px] font-medium rounded-md"
-                          onClick={() => setSelectedContacts((prevSelected) => [...prevSelected, contact.id])}>
-                          Select
-                        </button>
-                      )}
+                      <button
+                        className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
+                        onClick={() =>
+                          setSelectedContacts((prevSelected) =>
+                            prevSelected.filter((prevContact) => prevContact.value !== contact.value),
+                          )
+                        }>
+                        Remove
+                      </button>
                     </div>
                   </div>
                 ))}

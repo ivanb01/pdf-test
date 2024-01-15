@@ -20,7 +20,7 @@ const StatusSelect = ({
           {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
-      <div className={`flex ${className}`}>
+      <div className={`flex-col md:flex-row flex ${className}`}>
         {statuses.map((status, index) => {
           const color = status.color;
           let mainStatusId = status.id;
@@ -36,7 +36,7 @@ const StatusSelect = ({
           }
 
           return (
-            <div key={status.statusMainTitle} style={{ width: `${width}%` }}>
+            <div key={status.statusMainTitle} className={`w-full md:width-[${width}%]`}>
               <Text
                 className={`text-gray3 pb-2 ${color} border-b-4`}
                 chipText
