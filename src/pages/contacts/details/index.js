@@ -269,14 +269,16 @@ const index = () => {
                 )}
                 <hr className="my-4" />
                 <div>
-                  <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium ">
-                    <span className="text-gray6 mr-3">Health:</span>
-                    <DateChip
-                      lastCommunication={contact.last_communication_date}
-                      contactStatus={contact.status_2}
-                      contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
-                    />
-                  </div>
+                  {contact.category_1 == 'Client' && contact.status_1 != 'Dropped' && (
+                    <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium ">
+                      <span className="text-gray6 mr-3">Health:</span>
+                      <DateChip
+                        lastCommunication={contact.last_communication_date}
+                        contactStatus={contact.status_2}
+                        contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
+                      />
+                    </div>
+                  )}
                   {contact.tags && (
                     <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium">
                       <span className="text-gray6 mr-3">Priority:</span>
