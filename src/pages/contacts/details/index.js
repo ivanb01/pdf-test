@@ -388,7 +388,7 @@ const index = () => {
                   />
                 ) : (
                   <div className="mt-5 text-center">
-                    <div className="text-gray7 font-semibold mb-2">No activites found</div>
+                    <div className="text-gray7 font-semibold mb-2">No activities found</div>
                     <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
                   </div>
                 )}
