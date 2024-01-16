@@ -113,7 +113,7 @@ const index = () => {
           </div>
           <div className="flex flex-col w-fit ml-2">
             <div className="text-gray6 text-sm font-medium mb-2">{item.description}</div>
-            <div className="text-gray3 text-sm">{formatDateLL(item.createdAt)}</div>
+            <div className="text-gray3 text-sm">{formatDateLL(item.created_at)}</div>
           </div>
         </div>
         {isEditable && (
