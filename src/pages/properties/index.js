@@ -387,10 +387,16 @@ const index = () => {
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
   useEffect(() => {
+    console.log(sendMethod);
     setFilteredContacts(
       sendMethod == 1
         ? contacts
-            ?.filter((contact) => contact.email)
+            ?.filter(
+              (contact) =>
+                contact.email &&
+                contact.category_1 == 'Client' &&
+                !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null),
+            )
             .map((contact) => ({
               value: contact.id,
               label: `${contact.first_name} ${contact.last_name}`,
@@ -400,7 +406,12 @@ const index = () => {
               profile_image_path: contact.profile_image_path,
             }))
         : contacts
-            ?.filter((contact) => contact.phone_number)
+            ?.filter(
+              (contact) =>
+                contact.phone_number &&
+                contact.category_1 == 'Client' &&
+                !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null),
+            )
             .map((contact) => ({
               value: contact.id,
               label: `${contact.first_name} ${contact.last_name}`,
@@ -410,7 +421,7 @@ const index = () => {
               profile_image_path: contact.profile_image_path,
             })),
     );
-  }, [contacts]);
+  }, [contacts, sendMethod]);
 
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
