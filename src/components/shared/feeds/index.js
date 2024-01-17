@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import {
-  formatDate,
-  formatDateAgo,
-  formatDateCalendar,
-  formatDateLL,
-  formatDateStringMDY,
-  formatDateLThour,
-  formatDateMDY,
-  daysBefore,
-} from 'global/functions';
+import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
+import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import More from '@mui/icons-material/MoreVert';
 import { useFormik } from 'formik';
@@ -23,15 +18,22 @@ import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
 import { activityTypes } from 'global/variables';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRefetchData, setRefetchPart } from 'store/global/slice';
+import { useDispatch } from 'react-redux';
+import { setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import Mail from '@mui/icons-material/Mail';
 import TooltipComponent from '@components/shared/tooltip';
+import Image from 'next/image';
+import SendIcon from '../../../../public/images/client-details/SendIcon.svg';
+import ContactImportedFromGmailIcon from '../../../../public/images/client-details/ContactImportedFromGmailIcon.svg';
+import ContactImportedFromGmailAIIcon from '../../../../public/images/client-details/ContactImportedFromGmailAIIcon.svg';
+import UpdateContact from '../../../../public/images/client-details/UpdatedClient.svg';
+import DeleteIcon from '../../../../public/images/client-details/DeleteIcon.svg';
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 
 const activitiesTypes = {
   1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -40,6 +42,25 @@ const activitiesTypes = {
   4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  7: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
+  9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
+  10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
+  11: <PersonAddAlt1OutlinedIcon className="h-[18px] w-[18px] text-gray-500" />,
+  12: <Image alt={''} src={UpdateContact} className="h-7 w-7 text-gray-500" />,
+  13: <Image alt={''} src={DeleteIcon} className="h-4 w-4 text-gray-500" />,
+  14: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  15: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  16: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  17: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  18: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  19: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  20: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  21: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  22: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  23: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
   const placeholderDescription = (activity_type) => {
