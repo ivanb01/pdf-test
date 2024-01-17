@@ -289,7 +289,7 @@ const Clients = ({
             <div className="flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
                 {openedSubtab === -1
-                  ? 'Clients'
+                  ? 'All Clients'
                   : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               </Text>
               {contacts.filter(

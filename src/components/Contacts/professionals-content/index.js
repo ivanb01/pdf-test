@@ -228,7 +228,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className="flex items-center justify-between w-full">
             <div className=" flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
-                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'Professionals'}
+                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'All Professionals'}
               </Text>
               {filteredProfessionals.filter(
                 (contact) =>
