@@ -1,5 +1,4 @@
 import React, { useRef, useLayoutEffect } from 'react';
-import Input from '@components/shared/input';
 
 export const status = Object.freeze({
   unchecked: 0,
@@ -22,6 +21,7 @@ export default function Checkbox(props) {
     <input
       className="cursor-pointer focus:ring-lightBlue3 h-4 w-4 text-lightBlue3 border-gray-300 rounded"
       {...rest}
+      id={id}
       ref={inputRef}
       type="checkbox"
       onChange={(e) => {

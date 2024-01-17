@@ -545,7 +545,7 @@ const index = () => {
           />
           <div
             className={
-              'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
+              'min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
             style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
             onClick={() => {
@@ -576,6 +576,10 @@ const index = () => {
             </div>
             {openDropdown && (
               <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenDropdown(true);
+                }}
                 className={
                   'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg w-[500px] bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
                 }>
