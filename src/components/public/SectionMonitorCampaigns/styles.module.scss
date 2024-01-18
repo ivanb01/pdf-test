@@ -81,6 +81,12 @@
     margin-top: 100px;
     margin-left: -150px;
 
+    &__titlee {
+      @media screen and (max-width: $screen-md) {
+        margin-right: 60px;
+      }
+    }
+
     @media screen and (max-width: $screen-md) {
       margin: 0 0 75px 0;
       align-items: flex-end;
