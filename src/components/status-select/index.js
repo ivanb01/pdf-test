@@ -51,9 +51,9 @@ const StatusSelect = ({
                       <Chip
                         label={status.name}
                         key={status.id}
-                        className={`mb-3 ${
-                          status.name === 'Attempted Contact' && 'border border-lightBlue3 lg:w-[140px] mr-1'
-                        } ${status.name === 'Contract Signed' && 'lg:w-[122px] mr-1'}`}
+                        className={`mb-3 ${status.name === 'Attempted Contact' && ' lg:w-[140px] mr-1'} ${
+                          status.name === 'Contract Signed' && 'lg:w-[122px] mr-1'
+                        }`}
                         selectedStatus={selectedStatus == status.id ? true : false}
                         onClick={() => {
                           setSelectedStatus(status.id);
