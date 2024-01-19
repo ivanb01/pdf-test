@@ -386,40 +386,34 @@ const index = () => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
+
+  function filterAndSortContacts(contacts, condition) {
+    return contacts
+      ?.filter(condition)
+      .sort((a, b) => a.first_name.localeCompare(b.first_name))
+      .map((contact) => ({
+        value: contact.id,
+        label: `${contact.first_name} ${contact.last_name}`,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        email: contact.email,
+        profile_image_path: contact.profile_image_path,
+      }));
+  }
+
+  function isClientContact(contact) {
+    return (
+      contact.category_1 == 'Client' &&
+      !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
+    );
+  }
+
   useEffect(() => {
     console.log(sendMethod);
     setFilteredContacts(
       sendMethod == 1
-        ? contacts
-            ?.filter(
-              (contact) =>
-                contact.email &&
-                contact.category_1 == 'Client' &&
-                !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null),
-            )
-            .map((contact) => ({
-              value: contact.id,
-              label: `${contact.first_name} ${contact.last_name}`,
-              first_name: contact.first_name,
-              last_name: contact.last_name,
-              email: contact.email,
-              profile_image_path: contact.profile_image_path,
-            }))
-        : contacts
-            ?.filter(
-              (contact) =>
-                contact.phone_number &&
-                contact.category_1 == 'Client' &&
-                !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null),
-            )
-            .map((contact) => ({
-              value: contact.id,
-              label: `${contact.first_name} ${contact.last_name}`,
-              first_name: contact.first_name,
-              last_name: contact.last_name,
-              email: contact.email,
-              profile_image_path: contact.profile_image_path,
-            })),
+        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
+        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
   }, [contacts, sendMethod]);
 
