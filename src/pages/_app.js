@@ -21,6 +21,14 @@ import {
   devRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+import PlusButton from '@components/PlusButton';
+import SlideOver from '@components/shared/slideOver';
+import Button from '@components/shared/button';
+import Input from '@components/shared/input';
+import { Textarea } from '@components/public/Textarea';
+import TextArea from '@components/shared/textarea';
+import { Editor } from 'react-draft-wysiwyg';
+import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // import { Head } from 'next/document';
 
 const isLocalhost =
@@ -40,6 +48,8 @@ const MyApp = ({ Component, pageProps }) => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [emailBody, setEmailBody] = useState();
 
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(() => {
@@ -140,6 +150,29 @@ const MyApp = ({ Component, pageProps }) => {
                 position="bottom-left"
               />
             )}
+            <PlusButton onClick={() => setOpen(true)} />
+            <SlideOver
+              open={open}
+              setOpen={setOpen}
+              title="Send New Email"
+              className="top-[70px]"
+              buttons={
+                <>
+                  <Button
+                    // disabled={!Object.values(clientsFilters).flat().length > 0}
+                    primary
+                    label="Send Email"
+                    onClick={() => {
+                      setFiltersCleared(true);
+                      dispatch(setClientsFilters({}));
+                    }}
+                  />
+                </>
+              }>
+              <Input label="To" className="mb-6" />
+              <Input label="Subject" className="mb-6" placeholder="Write here..." />
+              <Editor />
+            </SlideOver>
           </Provider>
         </div>
       </div>
