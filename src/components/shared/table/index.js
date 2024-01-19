@@ -1521,7 +1521,7 @@ const Table = ({
                         className={`${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
                         ${
                           isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
-                        } hover:bg-lightBlue1 cursor-pointer contact-row `}
+                        } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200`}
                         onClick={() =>
                           router.push({
                             pathname: '/contacts/details',

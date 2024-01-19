@@ -410,7 +410,7 @@ const Clients = ({
             </div>
           </SimpleBar>
         ) : (
-          <div className="w-auto relative flex" style={{ height: 'calc(100vh - 170px)' }}>
+          <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <Table
