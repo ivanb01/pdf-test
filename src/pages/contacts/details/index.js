@@ -404,13 +404,15 @@ const index = () => {
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
               <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="flex items-start justify-between">
-                  <div className="text-gray8 font-semibold text-sm mb-5">Notes</div>
-                  {notes.length > 0 && (
-                    <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
-                      <img src={addNote.src} />
-                    </a>
-                  )}
+                <div className="flex items-center justify-between pt-1">
+                  <div className="text-gray8 font-semibold text-sm">Notes</div>
+                  <div>
+                    {notes.length > 0 && (
+                      <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
+                        <img src={addNote.src} className={'h-7  w-7'} />
+                      </a>
+                    )}
+                  </div>
                 </div>
                 {!notes.length ? (
                   <div className="text-center mt-4">
@@ -421,7 +423,7 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  <SimpleBar style={{ maxHeight: '300px' }}>
+                  <SimpleBar style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes.reverse().map((note, index) => (
                       <Item
                         isEditable
