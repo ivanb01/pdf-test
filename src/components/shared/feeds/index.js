@@ -36,13 +36,13 @@ import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 
 const activitiesTypes = {
-  1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  1: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
   2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  7: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  6: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  7: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
   8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
   9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
   10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
