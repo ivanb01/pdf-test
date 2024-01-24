@@ -251,7 +251,7 @@ const index = () => {
                     label={contact.category_2}
                     className="mr-2 text-xs pointer-events-none"
                   />
-                  {contact.status_2 && contact.status_2 != 'Default' && (
+                  {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
                     <Button
                       size="small"
                       inline
