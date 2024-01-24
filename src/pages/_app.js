@@ -27,8 +27,6 @@ import Button from '@components/shared/button';
 import Input from '@components/shared/input';
 import { Textarea } from '@components/public/Textarea';
 import TextArea from '@components/shared/textarea';
-import { Editor } from 'react-draft-wysiwyg';
-import '../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // import { Head } from 'next/document';
 
 const isLocalhost =
@@ -171,7 +169,6 @@ const MyApp = ({ Component, pageProps }) => {
               }>
               <Input label="To" className="mb-6" />
               <Input label="Subject" className="mb-6" placeholder="Write here..." />
-              <Editor />
             </SlideOver>
           </Provider>
         </div>
