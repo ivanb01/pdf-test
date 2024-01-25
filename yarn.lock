@@ -7841,6 +7841,18 @@ react-hot-toast@^2.4.0:
   dependencies:
     goober "^2.1.10"
 
+react-infinite-scroll-hook@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/react-infinite-scroll-hook/-/react-infinite-scroll-hook-4.1.1.tgz"
+  integrity sha512-1bu2572rF3DtjFMhIOzoasLMdYW0vMWxROtl99M5FYGSxm84Ro4aNBZW6ivgE45ofus4Ymo7jIS0Be3zcuLk8g==
+  dependencies:
+    react-intersection-observer-hook "^2.1.1"
+
+react-intersection-observer-hook@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/react-intersection-observer-hook/-/react-intersection-observer-hook-2.1.1.tgz"
+  integrity sha512-MeFGpYtcfHB9v6oGqQuHAbSwaWBpd7yZ4wMIeVtboWRdGusAF4V+/8QQ0OKZ36Ez19grYnoDVhRUCjtwI2ZVaw==
+
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
