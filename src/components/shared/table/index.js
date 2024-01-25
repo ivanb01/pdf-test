@@ -2224,7 +2224,7 @@ const Table = ({
                 className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
               ${
                 isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
-              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group`}
+              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 `}
                 style={{ height: '84px' }}>
                 <td className="pl-6 py-3" style={{ width: '300px' }}>
                   <div className={'flex gap-4'}>
@@ -2281,7 +2281,7 @@ const Table = ({
                 </td>
                 <td>
                   <td>
-                    <div className="px-4 py-[10px] flex items-center justify-center">
+                    <div className=" py-[10px] flex items-center justify-start">
                       <div
                         className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                         onMouseEnter={() => {
@@ -2310,7 +2310,7 @@ const Table = ({
                         </div>
                       </div>
                       <div
-                        className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7]"
+                        className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
                         onMouseEnter={() => {
                           document
                             .querySelector('#tooltip-add-activity-' + person.id)
@@ -2351,11 +2351,10 @@ const Table = ({
                             fill="currentColor"
                           />
                         </svg>
-
                         <div
                           id={'tooltip-add-activity-' + person.id}
                           role="tooltip"
-                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
+                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white  rounded-lg shadow-sm opacity-0 tooltip bg-gray-700 ">
                           Add Communication
                         </div>
                       </div>
