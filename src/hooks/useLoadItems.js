@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '@api/axiosInstance';
 import { useDispatch } from 'react-redux';
-import { setAIUnApprovedContacts } from '@store/AIUnapproved/slice';
+import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
 
 function loadItems(offset) {
   return axiosInstance
     .get('v1/contacts?ai_approved=false', {
       params: {
-        limit: 10,
+        limit: 15,
         offset: offset,
       },
     })
@@ -45,6 +45,7 @@ export function useLoadItems() {
     try {
       const { data, count, total, hasNextPage: newHasNextPage } = await loadItems(offset);
       setTotalNumber(total);
+      dispatch(setTotal(total));
       setItems((current) => [...current, ...data]);
       setOffset((prevOffset) => prevOffset + count);
       setHasNextPage(newHasNextPage);

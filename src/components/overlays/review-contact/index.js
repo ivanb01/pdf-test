@@ -38,7 +38,7 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
-import { setAIUnApprovedContacts } from '@store/AIUnapproved/slice';
+import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
 
 const ReviewContact = ({
   className,
@@ -172,11 +172,12 @@ const ReviewContact = ({
         if (afterSubmit) afterSubmit(client?.id, newData);
       }
 
-      // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
 
       if (router.pathname.includes('ai-summary')) {
         const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        const totalContacts = ai_unapproved_contacts_redux.length;
+        dispatch(setTotal(totalContacts - 1));
         dispatch(setAIUnApprovedContacts(removeItemsFromTable));
       }
 
@@ -200,6 +201,7 @@ const ReviewContact = ({
                     approved_ai: false,
                   }).then(() => dispatch(setRefetchData(true)));
                   if (afterSubmit) {
+                    dispatch(setTotal(ai_unapproved_contacts_redux.length));
                     afterSubmit(client?.id, { ...newData, approved_ai: false });
                   }
                   toast.dismiss(t.id);
@@ -347,6 +349,8 @@ const ReviewContact = ({
 
       if (router.pathname.includes('ai-summary')) {
         const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        const totalContacts = ai_unapproved_contacts_redux.length;
+        dispatch(setTotal(totalContacts - 1));
         dispatch(setAIUnApprovedContacts(removeItemsFromTable));
       }
       if (shouldExecuteRemainingCode) {
@@ -375,6 +379,7 @@ const ReviewContact = ({
                         approved_ai: false,
                       }).then(() => dispatch(setRefetchData(true)));
                       if (afterSubmit) {
+                        dispatch(setTotal(ai_unapproved_contacts_redux.length));
                         afterSubmit(client.id, { ...newData, approved_ai: false });
                       }
                     }}

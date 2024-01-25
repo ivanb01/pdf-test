@@ -1,32 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import MainMenu from 'components/shared/menu';
-import Table from 'components/shared/table';
 import ReviewContact from '@components/overlays/review-contact';
 import Delete from '@mui/icons-material/Delete';
 import CheckCircle from '@mui/icons-material/CheckCircle';
-import SimpleBar from 'simplebar-react';
-import { getUnapprovedContacts } from 'api/aiSmartSync';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-import Loader from 'components/shared/loader';
-import { bulkUpdateContacts, getContacts, updateContact } from '@api/contacts';
+import { bulkUpdateContacts, updateContact } from '@api/contacts';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { setRefetchData } from '@store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import backBtn from '/public/images/back.svg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import clients from '../contacts/clients';
 import withAuth from '@components/withAuth';
-import { setAllContacts } from '@store/contacts/slice';
-import {
-  findTagsOption,
-  formatDateStringMDY,
-  getContactStatusByStatusId,
-  getContactStatusColorByStatusId,
-} from '@global/functions';
+import { formatDateStringMDY, getContactStatusByStatusId, getContactStatusColorByStatusId } from '@global/functions';
 import DropdownWithSearch from '@components/dropdownWithSearch';
 import useLoadItems from '../../hooks/useLoadItems';
-import AITable from '@components/Tables/ai-summaryTable';
 import ContactInfo from '@components/shared/table/contact-info';
 import Chip from '@components/shared/chip';
 import Launch from '@mui/icons-material/Launch';
@@ -38,7 +26,6 @@ import { setAIUnApprovedContacts } from '@store/AIUnapproved/slice';
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [data, setData] = useState();
   const checkbox = useRef();
   const [popupData, setPopupData] = useState();
   const [checked, setChecked] = useState(false);
@@ -50,29 +37,28 @@ const index = () => {
   const [totalContacts, setTotalContacts] = useState();
   const [ai_unapprovedContacts, setAIUnapprovedContacts] = useState([]);
   const ai_unapproved_contacts_redux = useSelector((state) => state.AIAUnapprovedContacts.ai_unapproved_contacts);
+  const total_redux = useSelector((state) => state.AIAUnapprovedContacts.total);
 
   useLayoutEffect(() => {
-    if (items) {
-      const isIndeterminate =
-        selectedPeople.length > 0 && ai_unapprovedContacts && selectedPeople.length < ai_unapprovedContacts.length;
-      if (ai_unapprovedContacts?.length > 0) {
-        setChecked(selectedPeople.length === ai_unapprovedContacts?.length);
-      } else {
-        setChecked(false);
-      }
-      setIndeterminate(isIndeterminate);
-      if (checkbox.current) {
-        checkbox.current.indeterminate = isIndeterminate;
-      }
+    const isIndeterminate =
+      selectedPeople.length > 0 && ai_unapprovedContacts && selectedPeople.length < ai_unapprovedContacts.length;
+    if (ai_unapprovedContacts?.length > 0) {
+      setChecked(selectedPeople.length === ai_unapprovedContacts?.length);
+    } else {
+      setChecked(false);
     }
-  }, [selectedPeople, checkbox, ai_unapprovedContacts]);
+    setIndeterminate(isIndeterminate);
+    if (checkbox.current) {
+      checkbox.current.indeterminate = isIndeterminate;
+    }
+  }, [selectedPeople, checkbox, ai_unapprovedContacts, checked]);
 
   useEffect(() => {
-    console.log(totalContacts);
-  }, [totalContacts]);
+    console.log(selectedPeople, 'selectedPeople');
+  }, [selectedPeople]);
   useEffect(() => {
-    setTotalContacts(totalNumber);
-  }, [totalNumber]);
+    setTotalContacts(total_redux);
+  }, [total_redux]);
   const toggleAll = () => {
     setSelectedPeople(checked || indeterminate ? [] : ai_unapprovedContacts);
     setChecked(!checked && !indeterminate);
@@ -233,7 +219,6 @@ const index = () => {
   useEffect(() => {
     const secondListValues = categories.map((item) => item.value);
 
-    console.log(ai_unapprovedContacts, 'ai_unapprovedContacts');
     const filtered =
       categories.length > 0
         ? ai_unapproved_contacts_redux.filter((item) => secondListValues.includes(item.category_1))

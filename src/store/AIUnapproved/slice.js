@@ -4,6 +4,7 @@ const AIAUnapprovedContacts = createSlice({
   name: 'AIAUnapprovedContacts',
   initialState: {
     ai_unapproved_contacts: undefined,
+    total: undefined,
   },
   reducers: {
     setAIUnApprovedContacts(state, action) {
@@ -12,8 +13,11 @@ const AIAUnapprovedContacts = createSlice({
     setApproveAIContacts(state, action) {
       state.ai_unapproved_contacts = action.payload;
     },
+    setTotal(state, action) {
+      state.total = action.payload;
+    },
   },
 });
 
-export const { setAIUnApprovedContacts, setApproveAIContacts } = AIAUnapprovedContacts.actions;
+export const { setAIUnApprovedContacts, setTotal, setApproveAIContacts } = AIAUnapprovedContacts.actions;
 export default AIAUnapprovedContacts.reducer;
