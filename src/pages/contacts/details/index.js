@@ -469,7 +469,11 @@ const index = () => {
       )}
       {openCommunicationPopup &&
         createPortal(
-          <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contact} />,
+          <CommunicationForm
+            handleCloseOverlay={() => setOpenCommunicationPopup(false)}
+            client={contact}
+            setActivities={setActivities}
+          />,
           document.getElementById('modal-portal'),
         )}
       {editingContact && (
