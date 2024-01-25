@@ -350,6 +350,8 @@ const index = () => {
     setBedrooms();
     setBathrooms();
     setSearchKey('');
+    setDatav2([]);
+    initializeStatus();
   };
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {
