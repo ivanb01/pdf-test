@@ -22,6 +22,7 @@ import SlideOver from '@components/shared/slideOver';
 import Chip from '@components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import Text from '@components/shared/text';
+import ReviewContact from '@components/overlays/review-contact';
 
 const index = () => {
   const router = useRouter();
@@ -278,12 +279,12 @@ const index = () => {
             </div>
           </div>
           {addActivityPopup && (
-            <AddActivity
-              clientId={showEditContact.id}
-              className="min-w-[550px]"
-              title={`Add Activity`}
-              setAddActivityPopup={setAddActivityPopup}
+            <ReviewContact
+              showToast
+              client={showEditContact}
+              setClient={setShowEditContact}
               handleClose={() => setAddActivityPopup(false)}
+              title="Edit Client"
             />
           )}
           <SlideOver

@@ -2173,7 +2173,9 @@ const Table = ({
 
   const needToContactTable = () => {
     const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+    const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
 
+    const [contactToModify, setContactToModify] = useState(null);
     const isUnapprovedAIContact = (contact) => {
       if (
         contact.import_source_text === 'GmailAI' ||
@@ -2278,24 +2280,98 @@ const Table = ({
                   />
                 </td>
                 <td>
-                  <TooltipComponent
-                    side={'bottom'}
-                    align={'center'}
-                    triggerElement={
+                  <td>
+                    <div className="px-4 py-[10px] flex items-center justify-center">
                       <div
-                        className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
+                        className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
+                        onMouseEnter={() => {
+                          document
+                            .querySelector('#tooltip-edit-contact-' + person.id)
+                            .classList.remove('invisible', 'opacity-0');
+                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray4');
+                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray3');
+                        }}
+                        onMouseLeave={() => {
+                          document
+                            .querySelector('#tooltip-edit-contact-' + person.id)
+                            .classList.add('invisible', 'opacity-0');
+                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray3');
+                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray4');
+                        }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleCardEdit(person);
                         }}>
-                        <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                        <Edit id={'edit-contact-icon-' + person.id} className="text-lightBlue5 w-4 h-4" />
+                        <div
+                          id={'tooltip-edit-contact-' + person.id}
+                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
+                          Edit Contact
+                        </div>
                       </div>
-                    }>
-                    <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
-                  </TooltipComponent>
+                      <div
+                        className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7]"
+                        onMouseEnter={() => {
+                          document
+                            .querySelector('#tooltip-add-activity-' + person.id)
+                            .classList.remove('invisible', 'opacity-0');
+                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray4');
+                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray3');
+                        }}
+                        onMouseLeave={() => {
+                          document
+                            .querySelector('#tooltip-add-activity-' + person.id)
+                            .classList.add('invisible', 'opacity-0');
+                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray3');
+                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray4');
+                        }}
+                        // onClick={(e) => {
+                        //   e.stopPropagation();
+                        //   router.push({
+                        //     pathname: '/contacts/details',
+                        //     query: { id: contact.id, campaigns: true },
+                        //   });
+                        // }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setContactToModify(person);
+                          // handleAddActivity(contact);
+                          setOpenCommunicationPopup(true);
+                        }}>
+                        <svg
+                          id={'add-activity-icon-' + person.id}
+                          className="text-gray5 w-4 h-4 group-hover:text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="currentColor">
+                          <path
+                            d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+
+                        <div
+                          id={'tooltip-add-activity-' + person.id}
+                          role="tooltip"
+                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
+                          Add Communication
+                        </div>
+                      </div>
+                    </div>
+                  </td>
                 </td>
               </tr>
             ))}
+          {openCommuncationPopup &&
+            createPortal(
+              <CommunicationForm
+                handleCloseOverlay={() => setOpenCommunicationPopup(false)}
+                client={contactToModify}
+              />,
+              document.getElementById('modal-portal'),
+            )}
         </tbody>
       </>
     );
