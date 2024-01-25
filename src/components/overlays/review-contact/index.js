@@ -38,6 +38,7 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
+import { setAIUnApprovedContacts } from '@store/AIUnapproved/slice';
 
 const ReviewContact = ({
   className,
@@ -149,6 +150,7 @@ const ReviewContact = ({
       }
     },
   });
+  const ai_unapproved_contacts_redux = useSelector((state) => state.AIAUnapprovedContacts.ai_unapproved_contacts);
 
   const { errors, touched, submitForm, isSubmitting } = formik;
 
@@ -164,11 +166,19 @@ const ReviewContact = ({
 
       // make api call in the background to update contact
       updateContact(client.id, newData).then(() => dispatch(setRefetchData(true)));
+      console.log(router.pathname, 'pathname');
       // if aftersubmit prop is given, call the function
-      if (afterSubmit) afterSubmit(client?.id, newData);
+      if (!router.pathname.includes('ai-summary')) {
+        if (afterSubmit) afterSubmit(client?.id, newData);
+      }
 
       // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
+
+      if (router.pathname.includes('ai-summary')) {
+        const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        dispatch(setAIUnApprovedContacts(removeItemsFromTable));
+      }
 
       toast.custom(
         (t) => (
@@ -274,7 +284,6 @@ const ReviewContact = ({
 
     try {
       let shouldExecuteRemainingCode = true;
-      let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
       if (router.pathname.includes('trash')) {
         if (newData.category_id !== 3) {
           shouldExecuteRemainingCode = false;
@@ -311,7 +320,6 @@ const ReviewContact = ({
           unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
-      console.log(newData);
       if (newData.category_id === 3 && router.pathname.includes('details')) {
         // const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
         // const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
@@ -337,10 +345,15 @@ const ReviewContact = ({
         dispatch(setOpenedSubtab(0));
       }
 
+      if (router.pathname.includes('ai-summary')) {
+        const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        dispatch(setAIUnApprovedContacts(removeItemsFromTable));
+      }
       if (shouldExecuteRemainingCode) {
         if (isUnapprovedAI) {
           toast.success('Changes have been saved successfully!');
         } else if (!isUnapprovedAI) {
+          console.log('erzaaaa');
           toast.custom(
             (t) => (
               <div
