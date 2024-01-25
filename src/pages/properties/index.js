@@ -34,6 +34,8 @@ import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
+import { setAmenities } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -48,6 +50,8 @@ const statuss = Object.freeze({
 });
 
 const index = () => {
+  const dispatch = useDispatch();
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
@@ -338,6 +342,7 @@ const index = () => {
   };
 
   const resetFilters = () => {
+    console.log(status);
     setMinPrice();
     setMaxPrice();
     setNeighborhoods([]);
@@ -612,7 +617,7 @@ const index = () => {
             handleSelect={(choice) => {
               setStatus(choice);
             }}
-            initialSelect={status?.label}
+            initialSelect={status}
           />
 
           <Dropdown
@@ -623,7 +628,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
-            initialSelect={bedrooms?.label}
+            initialSelect={bedrooms}
           />
           <Dropdown
             options={bathroomsOptions}
@@ -633,7 +638,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
-            initialSelect={bathrooms?.label}
+            initialSelect={bathrooms}
           />
           <MinMaxPrice
             // options={bathroomOptions}

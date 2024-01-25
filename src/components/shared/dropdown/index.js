@@ -37,10 +37,15 @@ const Dropdown = ({
     ? options?.find((item) => item.label === String(initialSelect) || item.value == initialSelect)
     : null;
   const [selected, setSelected] = useState(
-    initialSelect ? options?.find((item) => item.label === String(initialSelect) || item.value == initialSelect) : null,
+    initialSelect != undefined && initialSelect != null
+      ? options?.find((item) => item.label === String(initialSelect) || item.value == initialSelect)
+      : null,
   );
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
 
+  useEffect(() => {
+    setSelected(initialSelect);
+  }, [initialSelect]);
   // useEffect(() => {
   //   setSelected(firstSelect);
   // }, [initialSelect]);
