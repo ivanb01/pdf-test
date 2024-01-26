@@ -28,6 +28,7 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
+import { allStatusesQuickEdit, othersOptions } from '@global/variables';
 
 const index = () => {
   const router = useRouter();
@@ -248,7 +249,11 @@ const index = () => {
                     size="small"
                     inline
                     white
-                    label={contact.category_2}
+                    label={
+                      contact.category_1 === 'Other'
+                        ? othersOptions.find((c) => c.id === contact.category_id)?.name
+                        : contact.category_2
+                    }
                     className="mr-2 text-xs pointer-events-none"
                   />
                   {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
@@ -256,7 +261,7 @@ const index = () => {
                       size="small"
                       inline
                       white
-                      label={contact.status_2}
+                      label={allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
                       className="pointer-events-none text-xs"
                     />
                   )}

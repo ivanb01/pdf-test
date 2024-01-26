@@ -166,7 +166,6 @@ const ReviewContact = ({
 
       // make api call in the background to update contact
       updateContact(client.id, newData).then(() => dispatch(setRefetchData(true)));
-      console.log(router.pathname, 'pathname');
       // if aftersubmit prop is given, call the function
       if (!router.pathname.includes('ai-summary')) {
         if (afterSubmit) afterSubmit(client?.id, newData);
@@ -232,14 +231,18 @@ const ReviewContact = ({
     }
     // Rest of your handleSubmit logic goes here
   }, [existingContactEmailError]);
+  useEffect(() => {
+    console.log(formik.values, 'values');
+  }, [formik.values]);
 
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
   const handleSubmit = async (values) => {
-    console.log(existingContactEmailError, 'existingContactEmailError');
     if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
       return;
     }
     setUpdating(true);
-
     let category_id;
     if (values.selectedContactCategory === 3) {
       category_id = 1;
@@ -251,13 +254,21 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = category_id == 3 ? 1 : values.selectedStatus;
+    console.log(category_id, 'category_id');
+    console.log(
+      '    let status_id = category_id == 3 ? 1 : values.selectedStatus;',
+      category_id == 3 ? 1 : values.selectedStatus,
+    );
 
+    console.log(vendorSubtypesFormatted, 'vendorSubtypesFormatted');
     const category =
       values.selectedContactCategory === 0
         ? clientOptions.find((client) => client.id === category_id).name
+        : values.selectedContactCategory === 1 && values.selectedContactType === 8
+        ? vendorSubtypesFormatted?.find((vendor) => vendor.value == formik.values.selectedContactSubtype).label
         : client.category_2;
 
+    let status_id = category_id == 3 ? 1 : values.selectedStatus;
     const baseData = {
       ...client,
       first_name: values.first_name,
@@ -270,6 +281,8 @@ const ReviewContact = ({
       summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
+    console.log(status_id == '' ? 1 : status_id, 'status_id');
+    console.log(baseData, 'baseData');
 
     const newData = !isUnapprovedAI
       ? {
@@ -319,7 +332,7 @@ const ReviewContact = ({
       if (client.category_id != category_id || client.status_id != status_id) {
         // remove from campaign if changing category or status or if changed to TRASH
         if (client.campaign_id) {
-          unassignContactFromCampaign(client.campaign_id, client.id);
+          // unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
       if (newData.category_id === 3 && router.pathname.includes('details')) {
@@ -330,6 +343,7 @@ const ReviewContact = ({
       }
 
       // make changes to global state
+      console.log(newData, 'newData');
       dispatch(updateContactLocally(newData));
       setUpdating(false);
       handleClose();
