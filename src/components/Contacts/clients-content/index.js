@@ -312,7 +312,17 @@ const Clients = ({
               />
               <Button
                 secondary
-                leftIcon={<FilterList className="w-5 h-5" />}
+                leftIcon={
+                  <div className={'relative'}>
+                    {Object.keys(clientsFilters).length > 0 && (
+                      <div
+                        className={
+                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
+                        }></div>
+                    )}
+                    <FilterList className="w-5 h-5" />
+                  </div>
+                }
                 label="Filter"
                 className="mr-4"
                 onClick={() => setOpen(true)}
