@@ -170,7 +170,6 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                           onClick={() => {
                             dispatch(setAmenities([]));
                             selectAmenities([]);
-                            setOpen(false);
                           }}>
                           Clear Advanced Filters
                         </Button>
