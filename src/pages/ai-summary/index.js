@@ -14,14 +14,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import withAuth from '@components/withAuth';
 import { formatDateStringMDY, getContactStatusByStatusId, getContactStatusColorByStatusId } from '@global/functions';
 import DropdownWithSearch from '@components/dropdownWithSearch';
-import useLoadItems from '../../hooks/useLoadItems';
 import ContactInfo from '@components/shared/table/contact-info';
 import Chip from '@components/shared/chip';
 import Launch from '@mui/icons-material/Launch';
 import TooltipComponent from '@components/shared/tooltip';
 import Edit from '@mui/icons-material/Edit';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
-import { setAIUnApprovedContacts } from '@store/AIUnapproved/slice';
+import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
+import Loader from '@components/shared/loader';
+import { getUnapprovedAI } from '@api/aiSmartSync';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -33,17 +34,21 @@ const index = () => {
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [categories, setCategories] = useState([]);
-  const { loading, items, hasNextPage, error, loadMore, totalNumber, isInitiallyLoaded } = useLoadItems();
   const [totalContacts, setTotalContacts] = useState();
   const [ai_unapprovedContacts, setAIUnapprovedContacts] = useState([]);
   const ai_unapproved_contacts_redux = useSelector((state) => state.AIAUnapprovedContacts.ai_unapproved_contacts);
   const total_redux = useSelector((state) => state.AIAUnapprovedContacts.total);
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [error, setError] = useState();
+  const [offset, setOffset] = useState(0);
+  const [globalLoading, setGlobalLoading] = useState(false);
 
   useLayoutEffect(() => {
-    const isIndeterminate =
-      selectedPeople.length > 0 && ai_unapprovedContacts && selectedPeople.length < ai_unapprovedContacts.length;
-    if (ai_unapprovedContacts?.length > 0) {
-      setChecked(selectedPeople.length === ai_unapprovedContacts?.length);
+    const isIndeterminate = selectedPeople?.length > 0 && items && selectedPeople?.length < items.length;
+    if (items?.length > 0) {
+      setChecked(selectedPeople?.length === items?.length);
     } else {
       setChecked(false);
     }
@@ -60,14 +65,51 @@ const index = () => {
     setTotalContacts(total_redux);
   }, [total_redux]);
   const toggleAll = () => {
-    setSelectedPeople(checked || indeterminate ? [] : ai_unapprovedContacts);
+    setSelectedPeople(checked || indeterminate ? [] : items);
     setChecked(!checked && !indeterminate);
     setIndeterminate(false);
   };
-  useEffect(() => {
-    console.log(totalContacts);
-  }, [totalContacts]);
+  const loadItems = (offset) => {
+    return getUnapprovedAI(15, offset)
+      .then((response) => {
+        return {
+          hasNextPage: true,
+          data: response.data.data,
+          count: response.data.count,
+          total: response.data.total,
+          fistTimeLoad: true,
+        };
+      })
+      .catch((error) => {
+        toast.error('Error while loading items');
+        throw error;
+      });
+  };
 
+  async function loadMore() {
+    try {
+      const { data, count, total, hasNextPage: newHasNextPage } = await loadItems(offset);
+      setGlobalLoading(false);
+      dispatch(setTotal(total));
+      setItems((current) => {
+        const currentSet = new Set(current.map((item) => item.id));
+        const newData = data.filter((item) => !currentSet.has(item.id));
+        return [...current, ...newData];
+      });
+
+      setOffset(offset + count);
+      setHasNextPage(newHasNextPage);
+      if (offset + count === total) {
+        setHasNextPage(false);
+        return;
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setGlobalLoading(true);
+      setLoading(false);
+    }
+  }
   const updateContactsLocally = (action, newData) => {
     let updatedData = [...ai_unapproved_contacts_redux];
 
@@ -235,42 +277,21 @@ const index = () => {
   useEffect(() => {
     setAIUnapprovedContacts(ai_unapproved_contacts_redux);
   }, [ai_unapproved_contacts_redux]);
-  const [initLoading, setInit] = useState(true);
 
   useEffect(() => {
-    setInit(false);
-  }, [isInitiallyLoaded]);
+    dispatch(setAIUnApprovedContacts([...items]));
+  }, [items]);
+  useEffect(() => {
+    loadMore();
+  }, []);
   return (
-    <div className="">
+    <div>
       <MainMenu />
-      {!initLoading && totalContacts === 0 ? (
-        <div className="flex items-center justify-center relative">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-            <lottie-player
-              src="/animations/aisummary1.json"
-              background="transparent"
-              speed="1"
-              style={{ height: '300px' }}
-              autoplay></lottie-player>
-            <div className="-mt-10 text-gray-900 text-center">
-              <div className="font-semibold text-lg">Well Done!</div>
-              <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
-            </div>
-            <div
-              onClick={() => router.push('/contacts/clients')}
-              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
-              <img className="mr-2" src={backBtn.src} alt="" />
-              Back to Contacts
-            </div>
-          </div>
-          <lottie-player
-            src="/animations/aisummary2.json"
-            background="transparent"
-            speed="1"
-            style={{ width: '100%', height: 'calc(100vh - 68px)' }}
-            autoplay></lottie-player>
+      {globalLoading === false && offset === 0 ? (
+        <div style={{ height: 'calc(100vh - 68px)' }} className="relative">
+          <Loader />
         </div>
-      ) : (
+      ) : ai_unapproved_contacts_redux.length > 0 ? (
         <>
           <div className="p-6 text-gray-900 font-medium text-base flex justify-between">
             <div>
@@ -343,7 +364,7 @@ const index = () => {
                 </tr>
               </thead>
               <tbody className=" bg-white">
-                {ai_unapprovedContacts?.map((dataItem, index) => (
+                {ai_unapproved_contacts_redux?.map((dataItem, index) => (
                   <tr
                     key={dataItem.index}
                     className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
@@ -352,7 +373,7 @@ const index = () => {
                       if (e.target.type === 'checkbox') return;
                       handleCardEdit(dataItem);
                     }}>
-                    {/* onClick={(event) => handleClickRow(dataItem, event)}> */}
+                    {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
                     <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
                       <input
                         type="checkbox"
@@ -383,7 +404,6 @@ const index = () => {
                         // handleAction={(id, action) => handleAction(id, action)}
                       />
                     </td>
-
                     <td className="max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                       <Chip className="break-words" typeStyle>
                         {dataItem?.category_2}
@@ -413,7 +433,6 @@ const index = () => {
                     <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                       {formatDateStringMDY(dataItem.created_at)}
                     </td>
-
                     <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                       <div className="flex items-center justify-center gap-6">
                         <TooltipComponent
@@ -481,6 +500,33 @@ const index = () => {
             )}
           </div>
         </>
+      ) : (
+        <div className="flex items-center justify-center relative">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+            <lottie-player
+              src="/animations/aisummary1.json"
+              background="transparent"
+              speed="1"
+              style={{ height: '300px' }}
+              autoplay></lottie-player>
+            <div className="-mt-10 text-gray-900 text-center">
+              <div className="font-semibold text-lg">Well Done!</div>
+              <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
+            </div>
+            <div
+              onClick={() => router.push('/contacts/clients')}
+              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
+              <img className="mr-2" src={backBtn.src} alt="" />
+              Back to Contacts
+            </div>
+          </div>
+          <lottie-player
+            src="/animations/aisummary2.json"
+            background="transparent"
+            speed="1"
+            style={{ width: '100%', height: 'calc(100vh - 68px)' }}
+            autoplay></lottie-player>
+        </div>
       )}
       {showReviewOverlay && popupData && (
         <ReviewContact
@@ -494,7 +540,7 @@ const index = () => {
           }}
         />
       )}
-      {selectedPeople.length > 1 && (
+      {selectedPeople?.length > 1 && (
         <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
           <div className="flex items-center text-sm text-gray-900">
             Selected: <span className="font-bold ml-1">{selectedPeople.length} contacts</span>
