@@ -251,7 +251,17 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
               <Button
                 secondary
-                leftIcon={<FilterList className="w-5 h-5" />}
+                leftIcon={
+                  <div className={'relative'}>
+                    {Object.keys(professionalsFilters).length > 0 && (
+                      <div
+                        className={
+                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
+                        }></div>
+                    )}
+                    <FilterList className="w-5 h-5" />
+                  </div>
+                }
                 iconSize="w-5 h-5"
                 label="Filter"
                 className="mr-4"
