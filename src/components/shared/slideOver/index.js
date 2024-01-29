@@ -3,7 +3,17 @@ import { Dialog, Transition } from '@headlessui/react';
 import Close from '@mui/icons-material/Close';
 import SimpleBar from 'simplebar-react';
 
-export default function SlideOver({ noHeader, open, setOpen, title, buttons, children, className, withBackdrop }) {
+export default function SlideOver({
+  noHeader,
+  open,
+  setOpen,
+  title,
+  buttons,
+  children,
+  className,
+  withBackdrop,
+  width,
+}) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -20,7 +30,7 @@ export default function SlideOver({ noHeader, open, setOpen, title, buttons, chi
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     {!noHeader && (
                       <div

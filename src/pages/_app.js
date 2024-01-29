@@ -22,12 +22,8 @@ import {
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
 import PlusButton from '@components/PlusButton';
-import SlideOver from '@components/shared/slideOver';
-import Button from '@components/shared/button';
-import Input from '@components/shared/input';
-import { Textarea } from '@components/public/Textarea';
-import TextArea from '@components/shared/textarea';
 // import { Head } from 'next/document';
+import SendEmailOverlay from '@components/SendEmailSidebar';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -149,27 +145,7 @@ const MyApp = ({ Component, pageProps }) => {
               />
             )}
             <PlusButton onClick={() => setOpen(true)} />
-            <SlideOver
-              open={open}
-              setOpen={setOpen}
-              title="Send New Email"
-              className="top-[70px]"
-              buttons={
-                <>
-                  <Button
-                    // disabled={!Object.values(clientsFilters).flat().length > 0}
-                    primary
-                    label="Send Email"
-                    onClick={() => {
-                      setFiltersCleared(true);
-                      dispatch(setClientsFilters({}));
-                    }}
-                  />
-                </>
-              }>
-              <Input label="To" className="mb-6" />
-              <Input label="Subject" className="mb-6" placeholder="Write here..." />
-            </SlideOver>
+            <SendEmailOverlay open={open} setOpen={setOpen} />
           </Provider>
         </div>
       </div>
