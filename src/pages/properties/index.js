@@ -352,6 +352,7 @@ const index = () => {
     setSearchKey('');
     setDatav2([]);
     initializeStatus();
+    dispatch(setAmenities([]));
   };
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {
