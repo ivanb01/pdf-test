@@ -531,7 +531,21 @@ const index = () => {
       return result;
     }, []);
   };
+  const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside);
+    };
+  }, [setOpenDropdown]);
   return (
     <>
       <MainMenu />
@@ -546,6 +560,7 @@ const index = () => {
             value={searchKey}
           />
           <div
+            ref={dropdownRef}
             className={
               'min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
@@ -562,7 +577,7 @@ const index = () => {
             <div className={'flex'}>
               {datav2.length > 0 && (
                 <CloseIcon
-                  className={`transition-all h-5 w-5 text-gray3`}
+                  className={`transition-all h-5 w-5 text-gray3 cursor-pointer`}
                   aria-hidden="true"
                   onClick={(e) => {
                     e.stopPropagation();
