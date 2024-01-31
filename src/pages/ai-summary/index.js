@@ -70,7 +70,7 @@ const index = () => {
     setIndeterminate(false);
   };
   const loadItems = (offset) => {
-    return getUnapprovedAI(1, offset)
+    return getUnapprovedAI(15, offset)
       .then((response) => {
         return {
           hasNextPage: true,
