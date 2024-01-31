@@ -36,6 +36,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
+import CreateCampaignSidebar from '@components/CreateCampaignSidebar';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -546,9 +547,13 @@ const index = () => {
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [setOpenDropdown]);
+
+  const [openSidebar, setOpenSidebar] = useState(true);
+
   return (
     <>
       <MainMenu />
+      <CreateCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search
