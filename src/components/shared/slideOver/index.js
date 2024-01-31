@@ -3,7 +3,18 @@ import { Dialog, Transition } from '@headlessui/react';
 import Close from '@mui/icons-material/Close';
 import SimpleBar from 'simplebar-react';
 
-export default function SlideOver({ noHeader, open, setOpen, title, buttons, children, className, withBackdrop }) {
+export default function SlideOver({
+  noHeader,
+  open,
+  setOpen,
+  title,
+  buttons,
+  children,
+  className,
+  withBackdrop,
+  width,
+  rounded,
+}) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={setOpen}>
@@ -20,14 +31,15 @@ export default function SlideOver({ noHeader, open, setOpen, title, buttons, chi
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     {!noHeader && (
                       <div
-                        className="flex flex-shrink-0 justify-between px-6 py-5"
-                        style={{
-                          boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
-                        }}>
+                        className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1"
+                        // style={{
+                        //   boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
+                        // }}
+                      >
                         <h6 className="text-md font-medium text-gray-900">{title}</h6>
                         <div className="ml-3 flex h-7 items-center">
                           <button

@@ -553,7 +553,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <CreateCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} />
+      <CreateCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} rounded />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search
