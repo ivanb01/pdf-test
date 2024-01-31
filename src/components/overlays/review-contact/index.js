@@ -55,11 +55,6 @@ const ReviewContact = ({
 }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
-  // useEffect(() => updateContact(client.id, { import_source: 'GmailAI', approved_ai: false }), []);
-
-  useEffect(() => {
-    updateContact(client.id, { import_source: 'GmailAI', approved_ai: false });
-  }, [client]);
   const dispatch = useDispatch();
   const router = useRouter();
 
