@@ -85,21 +85,26 @@ const index = () => {
         throw error;
       });
   };
-
+  const [count, setCount] = useState(0);
   async function loadMore() {
     try {
-      const { data, count, total, hasNextPage: newHasNextPage } = await loadItems(offset);
+      const { data, count: newCount, total, hasNextPage: newHasNextPage } = await loadItems(offset);
       setGlobalLoading(false);
-      dispatch(setTotal(total));
+      if (newCount !== 0) {
+        const updatedCount = count + newCount;
+
+        setCount(updatedCount);
+        dispatch(setTotal(updatedCount));
+      }
       setItems((current) => {
         const currentSet = new Set(current.map((item) => item.id));
         const newData = data.filter((item) => !currentSet.has(item.id));
         return [...current, ...newData];
       });
 
-      setOffset(offset + count);
+      setOffset(offset + newCount);
       setHasNextPage(newHasNextPage);
-      if (offset + count === total) {
+      if (newCount === 0) {
         setHasNextPage(false);
         return;
       }
