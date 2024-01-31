@@ -70,7 +70,7 @@ const index = () => {
     setIndeterminate(false);
   };
   const loadItems = (offset) => {
-    return getUnapprovedAI(15, offset)
+    return getUnapprovedAI(1, offset)
       .then((response) => {
         return {
           hasNextPage: true,
@@ -85,26 +85,20 @@ const index = () => {
         throw error;
       });
   };
-  const [count, setCount] = useState(0);
   async function loadMore() {
     try {
-      const { data, count: newCount, total, hasNextPage: newHasNextPage } = await loadItems(offset);
+      const { data, count, total, hasNextPage: newHasNextPage } = await loadItems(offset);
       setGlobalLoading(false);
-      if (newCount !== 0) {
-        const updatedCount = count + newCount;
-
-        setCount(updatedCount);
-        dispatch(setTotal(updatedCount));
-      }
+      dispatch(setTotal(total));
       setItems((current) => {
         const currentSet = new Set(current.map((item) => item.id));
         const newData = data.filter((item) => !currentSet.has(item.id));
         return [...current, ...newData];
       });
 
-      setOffset(offset + newCount);
+      setOffset(offset + count);
       setHasNextPage(newHasNextPage);
-      if (newCount === 0) {
+      if (offset + count === total) {
         setHasNextPage(false);
         return;
       }
@@ -252,15 +246,6 @@ const index = () => {
     setPopupData(item);
     setShowReviewOverlay(true);
   };
-
-  useEffect(() => {
-    console.log(
-      ai_unapprovedContacts,
-      'ai_unapprovedContacts',
-      'ai_unapproved_contacts_redux',
-      ai_unapproved_contacts_redux,
-    );
-  }, [ai_unapprovedContacts, ai_unapproved_contacts_redux]);
 
   useEffect(() => {
     const secondListValues = categories.map((item) => item.value);
