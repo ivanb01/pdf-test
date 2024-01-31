@@ -205,7 +205,6 @@ const index = () => {
 
     bulkUpdateContacts({ contacts: transformedData }).then(() => dispatch(setRefetchData(true)));
     const secondListValues = selectedPeople.map((item) => item.id);
-    console.log(ai_unapprovedContacts, 'ai_unapprovedContacts');
     const filtered = ai_unapproved_contacts_redux.filter((item) => !secondListValues.includes(item.id));
     dispatch(setAIUnApprovedContacts(filtered));
     setTotalContacts(filtered.length);
@@ -271,7 +270,7 @@ const index = () => {
         ? ai_unapproved_contacts_redux.filter((item) => secondListValues.includes(item.category_1))
         : ai_unapproved_contacts_redux ?? [];
     setAIUnapprovedContacts([...filtered]);
-  }, [categories]);
+  }, [categories, ai_unapproved_contacts_redux]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading,
@@ -369,7 +368,7 @@ const index = () => {
                 </tr>
               </thead>
               <tbody className=" bg-white">
-                {ai_unapproved_contacts_redux?.map((dataItem, index) => (
+                {ai_unapprovedContacts?.map((dataItem, index) => (
                   <tr
                     key={dataItem.index}
                     className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
