@@ -11,3 +11,17 @@ export const sendMarketingEmail = (body) => {
     },
   );
 };
+
+export const sendEmailFromContactForm = (body) => {
+  return axiosInstance.post(
+    'v1/email/send/contact',
+    {
+      ...body,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/mixed',
+      },
+    },
+  );
+};
