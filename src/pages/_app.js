@@ -21,7 +21,9 @@ import {
   devRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
+import SendEmailOverlay from '@components/SendEmailSidebar';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -40,6 +42,8 @@ const MyApp = ({ Component, pageProps }) => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [emailBody, setEmailBody] = useState();
 
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(() => {
@@ -140,6 +144,8 @@ const MyApp = ({ Component, pageProps }) => {
                 position="bottom-left"
               />
             )}
+            <PlusButton onClick={() => setOpen(true)} />
+            <SendEmailOverlay open={open} setOpen={setOpen} />
           </Provider>
         </div>
       </div>
