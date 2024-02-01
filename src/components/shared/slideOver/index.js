@@ -54,7 +54,7 @@ export default function SlideOver({
                     )}
                     <div className="side-overlay-wrapper flex min-h-0 flex-1 flex-col">
                       <SimpleBar autoHide style={{ maxHeight: '100%' }}>
-                        <div className="relative mt-[30px] mb-[30px] flex-1 px-4 sm:px-6">{children}</div>
+                        <div className="relative mt-[30px] flex-1 px-4 sm:px-6">{children}</div>
                       </SimpleBar>
                     </div>
                     {buttons && (
