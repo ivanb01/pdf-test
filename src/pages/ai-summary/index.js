@@ -59,9 +59,6 @@ const index = () => {
   }, [selectedPeople, checkbox, ai_unapprovedContacts, checked]);
 
   useEffect(() => {
-    console.log(selectedPeople, 'selectedPeople');
-  }, [selectedPeople]);
-  useEffect(() => {
     setTotalContacts(total_redux);
   }, [total_redux]);
   const toggleAll = () => {
