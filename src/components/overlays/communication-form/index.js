@@ -84,17 +84,17 @@ const Card = ({ name, icon, color, disabled, client, setActivities }) => {
       case 'Whatsapp':
         return {
           type_of_activity_id: 26,
-          description: 'Attempted to communicate using Whatsapp!',
+          description: 'Attempted to communicate using Whatsapp.',
         };
       case 'Email':
         return {
           type_of_activity_id: 1,
-          description: 'Attempted to communicate using Email!',
+          description: 'Attempted to communicate using Email.',
         };
       case 'SMS':
         return {
           type_of_activity_id: 2,
-          description: 'Attempted to communicate using SMS!',
+          description: 'Attempted to communicate using SMS.',
         };
       default:
         return {};

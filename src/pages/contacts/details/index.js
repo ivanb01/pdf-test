@@ -230,14 +230,14 @@ const index = () => {
                           setActivities([
                             {
                               type_of_activity_id: 27,
-                              description: 'Attempted to communicate using Facetime!',
+                              description: 'Attempted to communicate using Facetime.',
                               created_at: new Date().toISOString(),
                             },
                             ...activities,
                           ]);
                           addContactActivity(contact.id, {
                             type_of_activity_id: 27,
-                            description: 'Attempted to communicate using Facetime!',
+                            description: 'Attempted to communicate using Facetime.',
                             created_at: new Date().toISOString(),
                           }).then(() => {
                             getContactActivities(contact.id).then((response) => setActivities(response.data.data));
