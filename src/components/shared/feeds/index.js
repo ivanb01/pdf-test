@@ -7,6 +7,7 @@ import Delete from '@mui/icons-material/Delete';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
+import CallIcon from '@mui/icons-material/Call';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import More from '@mui/icons-material/MoreVert';
@@ -62,6 +63,7 @@ const activitiesTypes = {
   24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  27: <CallIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
   const placeholderDescription = (activity_type) => {

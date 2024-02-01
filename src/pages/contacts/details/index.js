@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
 import Loader from '@components/shared/loader';
-import { deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
+import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
@@ -226,7 +226,24 @@ const index = () => {
                   <div>
                     {contact.phone_number && (
                       <Button
-                        onClick={() => window.open(`tel:${contact.phone_number}`)}
+                        onClick={() => {
+                          setActivities([
+                            {
+                              type_of_activity_id: 27,
+                              description: 'Attempted to communicate using Facetime!',
+                              created_at: new Date().toISOString(),
+                            },
+                            ...activities,
+                          ]);
+                          addContactActivity(contact.id, {
+                            type_of_activity_id: 27,
+                            description: 'Attempted to communicate using Facetime!',
+                            created_at: new Date().toISOString(),
+                          }).then(() => {
+                            getContactActivities(contact.id).then((response) => setActivities(response.data.data));
+                          });
+                          window.open(`tel:${contact.phone_number}`);
+                        }}
                         className="mr-2"
                         white
                         inline
