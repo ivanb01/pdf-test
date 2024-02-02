@@ -10,8 +10,11 @@ import Editor from '@components/Editor';
 import { formatDateLL, formatDateLThour } from '@global/functions';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Dropdown from '@components/shared/dropdown';
-import { clientStatuses, timeOptions, waitingDays } from '@global/variables';
+import { clientOptions, clientStatuses, timeOptions, types, waitingDays } from '@global/variables';
 import StatusSelect from '@components/status-select';
+import ContactTypeSelect from '@components/contact/contact-type-select';
+import Text from '@components/shared/text';
+import Radio from '@components/shared/radio';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
@@ -28,8 +31,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     return (
       <div
         onClick={onClick}
-        className={`relative cursor-pointer rounded-lg border-2 ${
-          active && 'border-lightBlue3 bg-lightBlue1'
+        className={`relative cursor-pointer rounded-lg border-2 ${active && 'border-lightBlue3'} ${
+          active && !expandable && 'bg-lightBlue1'
         } ${padding} flex ${className} ${!description && 'items-center'}`}>
         <img src={icon} />
         <div className="ml-4 text-sm">
@@ -40,17 +43,38 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           <div
             className={`${
               active
-                ? 'h-auto border-l-2 border-r-2 border-b-2 pointer-events-auto border-lightBlue3'
+                ? 'h-auto border-l-2 border-r-2 border-b-2 pointer-events-auto border-lightBlue3 px-[18px] py-6'
                 : 'border-none pointer-events-none'
             } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}>
             {active && (
-              <StatusSelect
-                className="pl-9"
-                statuses={clientStatuses}
-                // selectedStatus={selectedUncategorizedContactStatus}
+              <>
+                <Radio
+                  options={clientOptions}
+                  required
+                  label="What type?"
+                  // selectedOption={
+                  //   formik.values.selectedContactCategory == 1 &&
+                  //   vendorSubtypes?.map((item) => item.id).includes(formik.values.selectedContactType)
+                  //     ? 8
+                  //     : formik.values.selectedContactType
+                  // }
+                  // setSelectedOption={(e) => {
+                  //   formik.setFieldValue('selectedContactType', e);
+                  //   formik.setFieldValue('selectedContactSubtype', '');
+                  // }}
+                  className="mb-6"
+                  name="type-of-contact"
+                  // error={errors.selectedContactType && touched.selectedContactType}
+                  // errorText={errors.selectedContactType}
+                />
+                <StatusSelect
+                  className="bg-lightBlue50 bg"
+                  statuses={clientStatuses}
+                  // selectedStatus={selectedUncategorizedContactStatus}
 
-                // setSelectedStatus={handleSelectUncategorizedStatus}
-              />
+                  // setSelectedStatus={handleSelectUncategorizedStatus}
+                />
+              </>
             )}
           </div>
         )}
@@ -88,7 +112,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   return (
     <SlideOver
-      width="w-[1080px]"
+      width="w-[1200px]"
       open={open}
       setOpen={setOpen}
       title="Buyers, Settling in & Referrals"
@@ -100,7 +124,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         </div>
         <div className="flex">
           <Card
-            className="mr-3"
+            className="mr-3 w-1/2"
             title={'All Clients'}
             description={'Each client, regardless the status they’re in, will be part of this campaign'}
             icon={specificClients.src}
@@ -109,6 +133,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           />
           <Card
             expandable
+            className="w-1/2"
             title={'Specific Clients'}
             description={'Only clients who I choose by the status, will be part of this campaign'}
             icon={specificClients.src}
