@@ -1,4 +1,5 @@
 import axiosInstance from '@api/axiosInstance';
+import axios from 'axios';
 
 export const sendMarketingEmail = (body) => {
   return axiosInstance.post(
@@ -13,8 +14,8 @@ export const sendMarketingEmail = (body) => {
 };
 
 export const sendEmailFromContactForm = (body) => {
-  return axiosInstance.post(
-    'v1/email/send/contact',
+  return axios.post(
+    'https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod/v1/email/send/contact',
     {
       ...body,
     },
