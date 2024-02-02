@@ -22,34 +22,40 @@ import AutoLinkPlugin from 'plugins/AutoLinkPlugin';
 
 import Text from '@components/shared/text';
 
-function Placeholder() {
-  return <div className="editor-placeholder text-sm text-gray4">Enter the email content...</div>;
-}
-
-const editorConfig = {
-  // The editor theme
-  theme: exampleTheme,
-  // Handling of errors during update
-  onError(error) {
-    throw error;
-  },
-  // Any custom nodes go here
-  nodes: [
-    HeadingNode,
-    ListNode,
-    ListItemNode,
-    QuoteNode,
-    CodeNode,
-    CodeHighlightNode,
-    TableNode,
-    TableCellNode,
-    TableRowNode,
-    AutoLinkNode,
-    LinkNode,
-  ],
-};
-
-export default function Editor({ label, message }) {
+export default function Editor({ label, value }) {
+  function Placeholder() {
+    return <div className="editor-placeholder text-sm text-gray4">Enter the email content...</div>;
+  }
+  const initialValue = {
+    root: {
+      children: [
+        {
+          type: 'paragraph',
+          children: [{ text: value }],
+        },
+      ],
+    },
+  };
+  const editorConfig = {
+    theme: exampleTheme,
+    onError(error) {
+      throw error;
+    },
+    // editorState: JSON.stringify(initialValue).length ? JSON.stringify(initialValue) : null,
+    nodes: [
+      HeadingNode,
+      ListNode,
+      ListItemNode,
+      QuoteNode,
+      CodeNode,
+      CodeHighlightNode,
+      TableNode,
+      TableCellNode,
+      TableRowNode,
+      AutoLinkNode,
+      LinkNode,
+    ],
+  };
   return (
     <>
       {label && (
