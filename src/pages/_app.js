@@ -144,7 +144,7 @@ const MyApp = ({ Component, pageProps }) => {
                 position="bottom-left"
               />
             )}
-            <PlusButton onClick={() => setOpen(true)} />
+            {/* <PlusButton onClick={() => setOpen(true)} /> */}
             <SendEmailOverlay open={open} setOpen={setOpen} />
           </Provider>
         </div>
