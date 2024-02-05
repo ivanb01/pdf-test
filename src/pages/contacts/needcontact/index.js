@@ -33,7 +33,6 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const [open, setOpen] = useState(false);
   const [clientsFilters, setClientsFilters] = useState({});
   const [filteredContacts, setFilteredContacts] = useState();
@@ -175,9 +174,17 @@ const index = () => {
     setClientsFilters(filtersCopy);
   };
 
-  const unapprovedContactsLength = unapprovedContacts?.data
-    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-    : 0;
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null) &&
+        client.category_1 !== 'Uncategorized',
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
 
   return (
     <Layout>
@@ -186,11 +193,11 @@ const index = () => {
       ) : (
         <>
           <FloatingAlert
-            inProp={unapprovedContactsLength > 0}
+            inProp={unapprovedContacts?.length > 0}
             onClick={() => router.push('/ai-summary')}
             buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            message={`${unapprovedContacts?.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
           <div className={'flex justify-between items-center p-6 py-4'}>
@@ -267,9 +274,9 @@ const index = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContactsLength > 0 || Object.keys(clientsFilters).length > 0
+                unapprovedContacts.length > 0 || Object.keys(clientsFilters).length > 0
                   ? '300px'
-                  : unapprovedContactsLength > 0 && Object.keys(clientsFilters).length > 0
+                  : unapprovedContacts.length > 0 && Object.keys(clientsFilters).length > 0
                   ? '210px'
                   : '160px'
               })`,

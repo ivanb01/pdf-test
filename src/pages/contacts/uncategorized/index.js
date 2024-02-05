@@ -30,7 +30,6 @@ const index = () => {
   const [selectedUncategorized, setSelectedUncategorized] = useState([]);
   const [selectedUncategorizedContactType, setSelectedUncategorizedContactType] = useState(null);
   const [selectedUncategorizedContactStatus, setSelectedUncategorizedContactStatus] = useState(null);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
 
   const handleSelectUncategorized = (contact, event) => {
     let row = document.querySelector('#row_' + event?.target.id.split('_')[1]);
@@ -124,9 +123,17 @@ const index = () => {
     };
   }, [dispatch]);
 
-  const unapprovedContactsLength = unapprovedContacts?.data
-    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-    : 0;
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null) &&
+        client.category_1 !== 'Uncategorized',
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
 
   return (
     <Layout>
@@ -140,7 +147,7 @@ const index = () => {
             categorizing={categorizing}
             setCategorizing={setCategorizing}
             types={types}
-            unapprovedContacts={unapprovedContactsLength}
+            unapprovedContacts={unapprovedContacts?.length}
             uncategorizedContacts={uncategorizedContacts}
             setUncategorizedContacts={setUncategorizedContacts}
             selectedUncategorized={selectedUncategorized}
