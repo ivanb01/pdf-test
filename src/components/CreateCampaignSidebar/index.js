@@ -20,6 +20,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
   const [typeOfEvent, setTypeOfEvent] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState({});
+  const [selectedType, setSelectedType] = useState();
+  const [selectedStatus, setSelectedStatus] = useState();
 
   const [events, setEvents] = useState([
     { id: 0, title: 'Very grateful for this business.', message: 'Wow this is coool', eventDate: new Date(), type: 0 },
@@ -52,16 +54,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   options={clientOptions}
                   required
                   label="What type?"
-                  // selectedOption={
-                  //   formik.values.selectedContactCategory == 1 &&
-                  //   vendorSubtypes?.map((item) => item.id).includes(formik.values.selectedContactType)
-                  //     ? 8
-                  //     : formik.values.selectedContactType
-                  // }
-                  // setSelectedOption={(e) => {
-                  //   formik.setFieldValue('selectedContactType', e);
-                  //   formik.setFieldValue('selectedContactSubtype', '');
-                  // }}
+                  selectedOption={selectedType}
+                  setSelectedOption={setSelectedType}
                   className="mb-6"
                   name="type-of-contact"
                   // error={errors.selectedContactType && touched.selectedContactType}
@@ -70,9 +64,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 <StatusSelect
                   className="bg-lightBlue50 bg"
                   statuses={clientStatuses}
-                  // selectedStatus={selectedUncategorizedContactStatus}
-
-                  // setSelectedStatus={handleSelectUncategorizedStatus}
+                  selectedStatus={selectedStatus}
+                  setSelectedStatus={setSelectedStatus}
                 />
               </>
             )}
