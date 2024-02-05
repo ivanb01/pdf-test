@@ -34,6 +34,7 @@ import DeleteIcon from '../../../../public/images/client-details/DeleteIcon.svg'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 const activitiesTypes = {
   1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
   2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
@@ -61,7 +62,7 @@ const activitiesTypes = {
   24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  27: <VideocamOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
 };
 export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
   const placeholderDescription = (activity_type) => {
