@@ -11,3 +11,11 @@ export const sendMarketingEmail = (body) => {
     },
   );
 };
+
+export const sendEmail = (to, subject, body) => {
+  return axiosInstance.post(`v1/email/send`, {
+    to: to,
+    subject: subject,
+    body: body,
+  });
+};

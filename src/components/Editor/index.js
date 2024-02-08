@@ -15,12 +15,14 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
-
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import ListMaxIndentLevelPlugin from 'plugins/ListMaxIndentLevelPlugin';
 import CodeHighlightPlugin from 'plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from 'plugins/AutoLinkPlugin';
+import { $generateHtmlFromNodes } from '@lexical/html';
 
 import Text from '@components/shared/text';
+import { useEffect } from 'react';
 
 function Placeholder() {
   return <div className="editor-placeholder text-sm text-gray4">Enter the email content...</div>;
@@ -49,7 +51,25 @@ const editorConfig = {
   ],
 };
 
-export default function Editor({ label, message }) {
+export default function Editor({ label, message, setValue }) {
+  function ContinuousSaveComponent() {
+    const [editor] = useLexicalComposerContext();
+
+    useEffect(() => {
+      const removeListener = editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          const htmlString = $generateHtmlFromNodes(editor, null);
+          setValue(htmlString);
+        });
+      });
+
+      return () => removeListener();
+    }, [editor]);
+
+    // This component doesn't render anything itself
+    return null;
+  }
+
   return (
     <>
       {label && (
@@ -66,6 +86,7 @@ export default function Editor({ label, message }) {
               placeholder={<Placeholder />}
               ErrorBoundary={LexicalErrorBoundary}
             />
+            <ContinuousSaveComponent />
             <HistoryPlugin />
             <AutoFocusPlugin />
             <CodeHighlightPlugin />
