@@ -217,11 +217,11 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         <FloatingAlert
-          inProp={unapprovedContacts > 0}
+          inProp={unapprovedContacts.length > 0}
           onClick={() => router.push('/ai-summary')}
           buttonText={'Review Now'}
           className="mx-[21px] mt-[14px]"
-          message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+          message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           type="smart-sync"
         />
         <div className="p-6 py-4 flex items-center justify-between">
@@ -251,7 +251,17 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
               <Button
                 secondary
-                leftIcon={<FilterList className="w-5 h-5" />}
+                leftIcon={
+                  <div className={'relative'}>
+                    {Object.keys(professionalsFilters).length > 0 && (
+                      <div
+                        className={
+                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
+                        }></div>
+                    )}
+                    <FilterList className="w-5 h-5" />
+                  </div>
+                }
                 iconSize="w-5 h-5"
                 label="Filter"
                 className="mr-4"

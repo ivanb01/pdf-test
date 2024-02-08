@@ -11,7 +11,7 @@ import bathroom from '/public/images/bathroom.svg';
 import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
 import { valueOptions } from '@global/functions';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
@@ -322,6 +322,21 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     setNeighborhoodsSearch('');
   }, [openDropdown]);
 
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside);
+    };
+  }, [setOpenDropdown]);
   return (
     <Overlay
       // className="w-[632px]"
@@ -331,8 +346,9 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       className={className}>
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
-          <SimpleBar autoHide className="px-[2px] max-h-full md:max-h-[330px]">
+          <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
             <div
+              ref={dropdownRef}
               className={
                 'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
               }

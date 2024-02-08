@@ -34,6 +34,8 @@ import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
+import { setAmenities } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -48,6 +50,8 @@ const statuss = Object.freeze({
 });
 
 const index = () => {
+  const dispatch = useDispatch();
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
   });
@@ -338,6 +342,7 @@ const index = () => {
   };
 
   const resetFilters = () => {
+    console.log(status);
     setMinPrice();
     setMaxPrice();
     setNeighborhoods([]);
@@ -345,6 +350,9 @@ const index = () => {
     setBedrooms();
     setBathrooms();
     setSearchKey('');
+    setDatav2([]);
+    initializeStatus();
+    dispatch(setAmenities([]));
   };
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {
@@ -523,7 +531,21 @@ const index = () => {
       return result;
     }, []);
   };
+  const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside);
+    };
+  }, [setOpenDropdown]);
   return (
     <>
       <MainMenu />
@@ -538,6 +560,7 @@ const index = () => {
             value={searchKey}
           />
           <div
+            ref={dropdownRef}
             className={
               'min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
             }
@@ -554,7 +577,7 @@ const index = () => {
             <div className={'flex'}>
               {datav2.length > 0 && (
                 <CloseIcon
-                  className={`transition-all h-5 w-5 text-gray3`}
+                  className={`transition-all h-5 w-5 text-gray3 cursor-pointer`}
                   aria-hidden="true"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -612,7 +635,7 @@ const index = () => {
             handleSelect={(choice) => {
               setStatus(choice);
             }}
-            initialSelect={status?.label}
+            initialSelect={status}
           />
 
           <Dropdown
@@ -623,7 +646,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
-            initialSelect={bedrooms?.label}
+            initialSelect={bedrooms}
           />
           <Dropdown
             options={bathroomsOptions}
@@ -633,7 +656,7 @@ const index = () => {
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
-            initialSelect={bathrooms?.label}
+            initialSelect={bathrooms}
           />
           <MinMaxPrice
             // options={bathroomOptions}

@@ -24,7 +24,6 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const refetchData = useSelector((state) => state.global.refetchData);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const searchProfessionals = (term) => {
     let filteredArray = searchContacts(professionalsCopy.data, term);
     dispatch(setProfessionals(filteredArray.data));
@@ -65,6 +64,18 @@ const index = () => {
     }
   }, [refetchData]);
 
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null) &&
+        client.category_1 !== 'Uncategorized',
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
+
   return (
     <Layout>
       {loading ? (
@@ -74,11 +85,7 @@ const index = () => {
           <Professionals
             setShowAddContactOverlay={setShowAddContactOverlay}
             onSearch={searchProfessionals}
-            unapprovedContacts={
-              unapprovedContacts?.data
-                ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-                : 0
-            }
+            unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             handleCardEdit={(contact) => {
               setShowEditContact(true);
               setContactToEdit(contact);

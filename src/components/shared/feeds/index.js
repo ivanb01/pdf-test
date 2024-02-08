@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
+import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
 import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
-import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import More from '@mui/icons-material/MoreVert';
@@ -23,7 +23,6 @@ import { setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
-
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TooltipComponent from '@components/shared/tooltip';
 import Image from 'next/image';
@@ -34,15 +33,16 @@ import UpdateContact from '../../../../public/images/client-details/UpdatedClien
 import DeleteIcon from '../../../../public/images/client-details/DeleteIcon.svg';
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 const activitiesTypes = {
-  1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
   2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  7: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  6: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  7: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
   8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
   9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
   10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
@@ -61,6 +61,8 @@ const activitiesTypes = {
   23: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
 };
 export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
   const placeholderDescription = (activity_type) => {
@@ -298,7 +300,7 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                     {activityItem.contact_id && (
                       <div className="flex mr-3">
                         <FilterDropdown
-                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : [types[1]]}
+                          types={[types[1]]}
                           icon={<More className="w-5" />}
                           data={activityItem}
                           positionClass="right-7 top-0"

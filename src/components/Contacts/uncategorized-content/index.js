@@ -122,8 +122,8 @@ const Uncategorized = ({
     );
   };
   useEffect(() => {
-    console.log(uncategorizedCopy, 'uncategorizedCopy');
-  }, [uncategorizedCopy]);
+    console.log(unapprovedContacts, 'unapprovedContacts');
+  }, [unapprovedContacts]);
 
   return (
     <>

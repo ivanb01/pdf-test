@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
 import Loader from '@components/shared/loader';
-import { deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
+import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
@@ -28,6 +28,7 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
+import { allStatusesQuickEdit, othersOptions } from '@global/variables';
 
 const index = () => {
   const router = useRouter();
@@ -225,7 +226,24 @@ const index = () => {
                   <div>
                     {contact.phone_number && (
                       <Button
-                        onClick={() => window.open(`tel:${contact.phone_number}`)}
+                        onClick={() => {
+                          setActivities([
+                            {
+                              type_of_activity_id: 27,
+                              description: 'Attempted to make a phone call.',
+                              created_at: new Date().toISOString(),
+                            },
+                            ...activities,
+                          ]);
+                          addContactActivity(contact.id, {
+                            type_of_activity_id: 27,
+                            description: 'Attempted to make a phone call.',
+                            created_at: new Date().toISOString(),
+                          }).then(() => {
+                            getContactActivities(contact.id).then((response) => setActivities(response.data.data));
+                          });
+                          window.open(`tel:${contact.phone_number}`);
+                        }}
                         className="mr-2"
                         white
                         inline
@@ -248,15 +266,19 @@ const index = () => {
                     size="small"
                     inline
                     white
-                    label={contact.category_2}
+                    label={
+                      contact.category_1 === 'Other'
+                        ? othersOptions.find((c) => c.id === contact.category_id)?.name
+                        : contact.category_2
+                    }
                     className="mr-2 text-xs pointer-events-none"
                   />
-                  {contact.status_2 && contact.status_2 != 'Default' && (
+                  {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
                     <Button
                       size="small"
                       inline
                       white
-                      label={contact.status_2}
+                      label={allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
                       className="pointer-events-none text-xs"
                     />
                   )}
@@ -404,13 +426,15 @@ const index = () => {
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
               <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="flex items-start justify-between">
-                  <div className="text-gray8 font-semibold text-sm mb-5">Notes</div>
-                  {notes.length > 0 && (
-                    <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
-                      <img src={addNote.src} />
-                    </a>
-                  )}
+                <div className="flex items-center justify-between pt-1">
+                  <div className="text-gray8 font-semibold text-sm">Notes</div>
+                  <div>
+                    {notes.length > 0 && (
+                      <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
+                        <img src={addNote.src} className={'h-7  w-7'} />
+                      </a>
+                    )}
+                  </div>
                 </div>
                 {!notes.length ? (
                   <div className="text-center mt-4">
@@ -421,7 +445,7 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  <SimpleBar style={{ maxHeight: '300px' }}>
+                  <SimpleBar style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes.reverse().map((note, index) => (
                       <Item
                         isEditable
@@ -467,7 +491,11 @@ const index = () => {
       )}
       {openCommunicationPopup &&
         createPortal(
-          <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contact} />,
+          <CommunicationForm
+            handleCloseOverlay={() => setOpenCommunicationPopup(false)}
+            client={contact}
+            setActivities={setActivities}
+          />,
           document.getElementById('modal-portal'),
         )}
       {editingContact && (

@@ -22,6 +22,7 @@ import SlideOver from '@components/shared/slideOver';
 import Chip from '@components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import Text from '@components/shared/text';
+import ReviewContact from '@components/overlays/review-contact';
 
 const index = () => {
   const router = useRouter();
@@ -32,7 +33,6 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const [open, setOpen] = useState(false);
   const [clientsFilters, setClientsFilters] = useState({});
   const [filteredContacts, setFilteredContacts] = useState();
@@ -174,9 +174,17 @@ const index = () => {
     setClientsFilters(filtersCopy);
   };
 
-  const unapprovedContactsLength = unapprovedContacts?.data
-    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-    : 0;
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null) &&
+        client.category_1 !== 'Uncategorized',
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
 
   return (
     <Layout>
@@ -185,11 +193,11 @@ const index = () => {
       ) : (
         <>
           <FloatingAlert
-            inProp={unapprovedContactsLength > 0}
+            inProp={unapprovedContacts?.length > 0}
             onClick={() => router.push('/ai-summary')}
             buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            message={`${unapprovedContacts?.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
           <div className={'flex justify-between items-center p-6 py-4'}>
@@ -203,7 +211,17 @@ const index = () => {
             <div className={'flex gap-2'}>
               <Button
                 secondary
-                leftIcon={<FilterList className="w-5 h-5" />}
+                leftIcon={
+                  <div className={'relative'}>
+                    {Object.keys(clientsFilters).length > 0 && (
+                      <div
+                        className={
+                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
+                        }></div>
+                    )}
+                    <FilterList className="w-5 h-5" />
+                  </div>
+                }
                 label="Filter"
                 className="mr-4"
                 onClick={() => setOpen(true)}
@@ -256,9 +274,9 @@ const index = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContactsLength > 0 || Object.keys(clientsFilters).length > 0
+                unapprovedContacts.length > 0 || Object.keys(clientsFilters).length > 0
                   ? '300px'
-                  : unapprovedContactsLength > 0 && Object.keys(clientsFilters).length > 0
+                  : unapprovedContacts.length > 0 && Object.keys(clientsFilters).length > 0
                   ? '210px'
                   : '160px'
               })`,
@@ -278,12 +296,12 @@ const index = () => {
             </div>
           </div>
           {addActivityPopup && (
-            <AddActivity
-              clientId={showEditContact.id}
-              className="min-w-[550px]"
-              title={`Add Activity`}
-              setAddActivityPopup={setAddActivityPopup}
+            <ReviewContact
+              showToast
+              client={showEditContact}
+              setClient={setShowEditContact}
               handleClose={() => setAddActivityPopup(false)}
+              title="Edit Client"
             />
           )}
           <SlideOver

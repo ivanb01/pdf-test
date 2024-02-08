@@ -170,9 +170,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                           onClick={() => {
                             dispatch(setAmenities([]));
                             selectAmenities([]);
-                            setOpen(false);
                           }}>
-                          Clear All Filters
+                          Clear Advanced Filters
                         </Button>
                         <Button
                           disabled={reduxAmenities.length === 0}
