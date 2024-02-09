@@ -16,8 +16,20 @@ const SendEmailOverlay = ({ open, setOpen }) => {
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
+
   useEffect(() => {
-    console.log(contacts);
+    if (!open) {
+      resetSendEmailForm();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (selectedContacts.length && subject.length) setFormIsValid(true);
+    else setFormIsValid(false);
+  }, [selectedContacts, subject, message]);
+
+  useEffect(() => {
     if (contacts) {
       setContactsCopy(
         contacts?.map((contact) => ({
@@ -35,7 +47,6 @@ const SendEmailOverlay = ({ open, setOpen }) => {
   const handleSendEmail = () => {
     setLoading(true);
     let contacts = selectedContacts.map((contact) => contact.email);
-    console.log(contacts, subject, message);
 
     sendEmail(contacts, subject, message).then(() => {
       setLoading(false);
@@ -56,7 +67,7 @@ const SendEmailOverlay = ({ open, setOpen }) => {
       open={open}
       setOpen={setOpen}
       title="Send New Email"
-      className="top-[70px]"
+      className=""
       buttons={
         !emailSent && (
           <>
@@ -64,6 +75,7 @@ const SendEmailOverlay = ({ open, setOpen }) => {
               // disabled={!Object.values(clientsFilters).flat().length > 0}
               primary
               label="Send Email"
+              disabled={!formIsValid}
               loading={loading}
               onClick={() => handleSendEmail()}
             />
@@ -87,17 +99,19 @@ const SendEmailOverlay = ({ open, setOpen }) => {
         <>
           <div className="mb-6">
             <div className="text-gray6 text-sm font-medium mb-1">To</div>
-            <MultiSelect
-              options={contactsCopy}
-              value={selectedContacts}
-              onChange={(contacts) => {
-                setSelectedContacts(contacts);
-              }}
-              labelledBy="Search for clients"
-              overrideStrings={{
-                selectSomeItems: 'Selected clients will appear here',
-              }}
-            />
+            {contactsCopy && contactsCopy.length && (
+              <MultiSelect
+                options={contactsCopy}
+                value={selectedContacts}
+                onChange={(contacts) => {
+                  setSelectedContacts(contacts);
+                }}
+                labelledBy="Search for clients"
+                overrideStrings={{
+                  selectSomeItems: 'Selected clients will appear here',
+                }}
+              />
+            )}
           </div>
           <Input
             label="Subject"

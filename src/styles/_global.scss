@@ -1642,6 +1642,12 @@ i.justify-align {
   margin: 0;
   list-style-type: none;
 }
+.editor-input ol{
+  list-style: auto !important;
+}
+.editor-input ul{
+  list-style: inherit !important;
+}
 .loader {
   width: 32px;
   height: 32px;
