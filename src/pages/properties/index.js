@@ -284,7 +284,15 @@ const index = () => {
     },
   ];
   const [ids, setIds] = useState();
-
+  const removeNullUndefined = (obj) => {
+    const cleanedObj = {};
+    for (const key in obj) {
+      if (obj[key] !== null && obj[key] !== undefined) {
+        cleanedObj[key] = obj[key];
+      }
+    }
+    return cleanedObj;
+  };
   const fetchProperties = async (filterValue, page = 1) => {
     setLoading(true);
     let params = {
@@ -327,9 +335,9 @@ const index = () => {
     if (maxPrice) {
       params['priceMax'] = maxPrice;
     }
-    const urlParams = new URLSearchParams({
-      ...params,
-    });
+    params = removeNullUndefined(params);
+
+    const urlParams = new URLSearchParams(params);
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 

@@ -31,6 +31,7 @@ const Dropdown = ({
   openClassName,
   afterLabel,
   menuHeight,
+  minMaxUsed,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -42,6 +43,14 @@ const Dropdown = ({
       : null,
   );
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
+  const formatNumberToMillions = (n) => {
+    console.log('Test');
+    if (n >= 1e6) {
+      const formattedValue = n % 1e6 === 0 ? (n / 1e6).toFixed(0) : (n / 1e6).toFixed(2).replace(/\.?0+$/, '');
+      return `$${formattedValue}m`;
+    }
+    return `$${n.toLocaleString('en-US')}`;
+  };
 
   useEffect(() => {
     setSelected(initialSelect);
@@ -79,12 +88,14 @@ const Dropdown = ({
                   {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
                   <span
                     className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-[#808080]'} ${
-                      selected && selected.label && 'text-gray8'
+                      selected && selected?.label && 'text-gray8'
                     } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}
-                    {selected && afterLabel
+                    {selected && minMaxUsed
+                      ? formatNumberToMillions(selected)
+                      : selected && afterLabel
                       ? selected.label + ` ${afterLabel}`
-                      : typeof selected === 'number'
+                      : typeof selected === 'number' || typeof selected === 'string'
                       ? selected
                       : selected?.label}
                   </span>
