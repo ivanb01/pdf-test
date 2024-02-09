@@ -106,9 +106,9 @@ const SendEmailOverlay = ({ open, setOpen }) => {
                 onChange={(contacts) => {
                   setSelectedContacts(contacts);
                 }}
-                labelledBy="Search for clients"
+                labelledBy="Search for contacts"
                 overrideStrings={{
-                  selectSomeItems: 'Selected clients will appear here',
+                  selectSomeItems: 'Selected contacts will appear here',
                 }}
               />
             )}
