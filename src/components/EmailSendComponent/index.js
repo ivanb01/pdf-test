@@ -7,7 +7,7 @@ const EmailSendComponent = () => {
 
   return (
     <>
-      <PlusButton onClick={() => dispatch(setOpenEmailContactOverlay(true))} />
+      {/* <PlusButton onClick={() => dispatch(setOpenEmailContactOverlay(true))} /> */}
       <SendEmailOverlay />
     </>
   );

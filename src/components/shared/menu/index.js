@@ -16,7 +16,14 @@ import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
 import { getCount } from 'api/contacts';
-import { setCount, setOpenedTab, setRefetchData, setSkippedEmptyState, setUserGaveConsent } from '@store/global/slice';
+import {
+  setCount,
+  setOpenEmailContactOverlay,
+  setOpenedTab,
+  setRefetchData,
+  setSkippedEmptyState,
+  setUserGaveConsent,
+} from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
 import { getUserConsentStatus } from '@api/google';
@@ -24,6 +31,7 @@ import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { isHealthyCommuncationDate } from '@global/functions';
+import ForwardToInbox from '@mui/icons-material/ForwardToInbox';
 
 const MainMenu = ({ className, fixed }) => {
   const [originalMenuItems, setOriginalMenuItems] = useState([
@@ -236,8 +244,15 @@ const MainMenu = ({ className, fixed }) => {
       <div className="flex items-center">
         {!router.pathname.includes('campaign') && (
           <>
+            <a
+              onClick={() => dispatch(setOpenEmailContactOverlay(true))}
+              className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
+              <ForwardToInbox className="h-[16px] w-[16px]" />
+              {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
+              <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
+            </a>
             {allContacts && allContacts.length > 0 && (
-              <div className={'h-[30px] w-[30px] flex items-center justify-center  rounded-full bg-lightBlue5'}>
+              <div className={'h-[30px] w-[30px] flex items-center justify-center rounded-full bg-lightBlue5 mr-2'}>
                 <SearchIcon
                   className={`text-bold h-[14px] w-[14px] text-white box-content p-2 rounded-full  ${
                     !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
