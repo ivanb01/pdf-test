@@ -2632,10 +2632,6 @@ export const activityTypesDropdown = [
     id: 5,
     label: 'In Person',
   },
-  {
-    id: 6,
-    label: 'Other',
-  },
 ];
 export const activityTypeIcons = {
   1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
