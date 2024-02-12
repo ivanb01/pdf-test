@@ -28,7 +28,8 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
-import { allStatusesQuickEdit, othersOptions } from '@global/variables';
+import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
+import Dropdown from '@components/shared/dropdown';
 
 const index = () => {
   const router = useRouter();
@@ -394,7 +395,13 @@ const index = () => {
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
                     <img src={communication.src} />
-                    <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div>
+                    <Dropdown
+                      initialSelect={activityTypesDropdown[0]}
+                      options={activityTypesDropdown}
+                      className="w-[180px] ml-3"
+                      handleSelect={(choice) => console.log(choice)}
+                    />
+                    {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}

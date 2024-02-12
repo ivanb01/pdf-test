@@ -17,6 +17,8 @@ const global = createSlice({
     professionalsFilters: {},
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
+    contactToBeEmailed: null,
+    openEmailContactOverlay: false,
     sorted: [
       { name: 'New Lead', sorted: 'asc' },
       { name: 'Attempted Contact', sorted: 'asc' },
@@ -38,6 +40,12 @@ const global = createSlice({
     amenities: [],
   },
   reducers: {
+    setOpenEmailContactOverlay(state, action) {
+      state.openEmailContactOverlay = action.payload;
+    },
+    setContactToBeEmailed(state, action) {
+      state.contactToBeEmailed = action.payload;
+    },
     setVendorSubtypes(state, action) {
       state.vendorSubtypes = action.payload;
     },
@@ -143,5 +151,7 @@ export const {
   setSorted,
   setHideUnapproved,
   setAmenities,
+  setContactToBeEmailed,
+  setOpenEmailContactOverlay,
 } = global.actions;
 export default global.reducer;

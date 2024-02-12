@@ -24,6 +24,8 @@ import GetSubtype from '@components/GetSubtype';
 import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
 import SendEmailOverlay from '@components/SendEmailSidebar';
+import { setOpenEmailContactOverlay } from '@store/global/slice';
+import EmailSendComponent from '@components/EmailSendComponent';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -42,10 +44,10 @@ const MyApp = ({ Component, pageProps }) => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
-  const [open, setOpen] = useState(false);
   const [emailBody, setEmailBody] = useState();
 
   const [domLoaded, setDomLoaded] = useState(false);
+
   useEffect(() => {
     setDomLoaded(true);
   }, []);
@@ -144,8 +146,7 @@ const MyApp = ({ Component, pageProps }) => {
                 position="bottom-left"
               />
             )}
-            <PlusButton onClick={() => setOpen(true)} />
-            <SendEmailOverlay open={open} setOpen={setOpen} />
+            <EmailSendComponent />
           </Provider>
         </div>
       </div>

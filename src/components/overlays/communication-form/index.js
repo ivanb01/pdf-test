@@ -6,8 +6,10 @@ import { addContactActivity, getContactActivities } from '@api/contacts';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateContactLocally } from '@store/contacts/slice';
 import { useEffect } from 'react';
+import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 
 const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
+  const dispatch = useDispatch();
   const cards = [
     {
       name: 'Whatsapp',
@@ -32,13 +34,19 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
     <Overlay handleCloseOverlay={handleCloseOverlay} title={'How do you want to communicate?'} className={'w-[630px]'}>
       <div className={'pt-6 mx-[22px] mb-[62px] flex gap-[18px]'}>
         {cards.map((c, index) => (
-          <Card {...c} key={index} client={client} setActivities={setActivities} />
+          <Card
+            {...c}
+            key={index}
+            client={client}
+            setActivities={setActivities}
+            handleCloseOverlay={handleCloseOverlay}
+          />
         ))}
       </div>
     </Overlay>
   );
 };
-const Card = ({ name, icon, color, disabled, client, setActivities }) => {
+const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseOverlay }) => {
   const dispatch = useDispatch();
   let message = '';
   switch (client.category_2) {
@@ -67,10 +75,22 @@ const Card = ({ name, icon, color, disabled, client, setActivities }) => {
         window.open(link, '_blank');
         break;
       case 'Email':
-        link = `mailto:${client.email}?subject=${encodeURIComponent(
-          "Connecting with You: Let's Discuss Your Needs",
-        )}&body=${encodeURIComponent(message)}`;
-        window.location.href = link;
+        // modify client object
+        let clientToBeEmailed = {
+          value: client.id,
+          label: `${client.first_name} ${client.last_name}`,
+          first_name: client.first_name,
+          last_name: client.last_name,
+          email: client.email,
+          profile_image_path: client.profile_image_path,
+        };
+        dispatch(setContactToBeEmailed(clientToBeEmailed));
+        dispatch(setOpenEmailContactOverlay(true));
+        handleCloseOverlay();
+        // link = `mailto:${client.email}?subject=${encodeURIComponent(
+        //   "Connecting with You: Let's Discuss Your Needs",
+        // )}&body=${encodeURIComponent(message)}`;
+        // window.location.href = link;
         break;
       case 'SMS':
         link = `sms:${client.phone_number}&body=${message}`;

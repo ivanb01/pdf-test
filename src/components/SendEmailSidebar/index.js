@@ -7,10 +7,15 @@ import { useSelector } from 'react-redux';
 import { MultiSelect } from 'react-multi-select-component';
 import { useEffect, useState } from 'react';
 import { sendEmail } from '@api/marketing';
+import { setOpenEmailContactOverlay } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
-const SendEmailOverlay = ({ open, setOpen }) => {
+const SendEmailOverlay = () => {
+  const dispatch = useDispatch();
   const [selectedContacts, setSelectedContacts] = useState([]);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const contactToBeEmailed = useSelector((state) => state.global.contactToBeEmailed);
+  const open = useSelector((state) => state.global.openEmailContactOverlay);
   const [contactsCopy, setContactsCopy] = useState();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState();
@@ -23,6 +28,12 @@ const SendEmailOverlay = ({ open, setOpen }) => {
       resetSendEmailForm();
     }
   }, [open]);
+
+  useEffect(() => {
+    if (contactToBeEmailed) {
+      setSelectedContacts([contactToBeEmailed]);
+    }
+  }, [contactToBeEmailed]);
 
   useEffect(() => {
     if (selectedContacts.length && subject.length) setFormIsValid(true);
@@ -65,7 +76,7 @@ const SendEmailOverlay = ({ open, setOpen }) => {
     <SlideOver
       width="w-[540px]"
       open={open}
-      setOpen={setOpen}
+      setOpen={(state) => dispatch(setOpenEmailContactOverlay(state))}
       title="Send New Email"
       className=""
       buttons={
