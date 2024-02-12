@@ -94,9 +94,9 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
         </TooltipComponent>
       </div>
       <div
-        className="p-3 text-sm"
+        className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}
         onClick={() => {
-          const currentSelected = selected.includes(property);
+          const currentSelected = selected?.includes(property);
           if (currentSelected) {
             setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
           } else {
@@ -141,7 +141,10 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
               value={selected?.length && selected?.includes(property)}
             />
             {!noSelect && (
-              <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
+              <label
+                htmlFor={`checkbox-${property.ID}`}
+                class="flex items-center cursor-pointer"
+                onClick={(e) => e.preventDefault()}>
                 <div
                   class={`${
                     isSelected ? 'bg-lightBlue3' : 'border border-gray-300'

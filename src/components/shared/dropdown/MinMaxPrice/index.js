@@ -95,12 +95,14 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
           initialSelect={minPrice}
           options={options}
           label="Min. Price"
+          minMaxUsed
           className="w-full mr-4"
           handleSelect={(option) => setMinPrice(option.value)}></Dropdown>
         <Dropdown
           initialSelect={maxPrice}
           options={minPrice ? options.filter((option) => option.value > minPrice) : options}
           label="Max. Price"
+          minMaxUsed
           handleSelect={(option) => setMaxPrice(option.value)}
           className="w-full"></Dropdown>
       </div>
