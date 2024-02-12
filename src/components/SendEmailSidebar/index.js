@@ -45,7 +45,7 @@ const SendEmailOverlay = () => {
       setContactsCopy(
         contacts?.map((contact) => ({
           value: contact.id,
-          label: `${contact.first_name} ${contact.last_name}`,
+          label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
           first_name: contact.first_name,
           last_name: contact.last_name,
           email: contact.email,

@@ -78,7 +78,7 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
         // modify client object
         let clientToBeEmailed = {
           value: client.id,
-          label: `${client.first_name} ${client.last_name}`,
+          label: `${client.first_name} ${client.last_name} - ${client.email}`,
           first_name: client.first_name,
           last_name: client.last_name,
           email: client.email,
