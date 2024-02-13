@@ -371,7 +371,6 @@ const ReviewContact = ({
         if (isUnapprovedAI) {
           toast.success('Changes have been saved successfully!');
         } else if (!isUnapprovedAI) {
-          console.log('erzaaaa');
           toast.custom(
             (t) => (
               <div

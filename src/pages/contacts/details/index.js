@@ -120,7 +120,12 @@ const index = () => {
           </div>
         </div>
         {isEditable && (
-          <FilterDropdown types={noteTypes} icon={<MoreVert className="w-5" />} data={item} positionClass="right-0" />
+          <FilterDropdown
+            types={noteTypes}
+            icon={<MoreVert className="w-5 text-gray4 cursor-pointer" />}
+            data={item}
+            positionClass="right-0"
+          />
         )}
       </div>
     );

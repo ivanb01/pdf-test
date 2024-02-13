@@ -259,8 +259,10 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                       <div className="flex mr-3">
                         <FilterDropdown
                           types={[types[1]]}
-                          icon={<More className="w-5" />}
+                          icon={<More className="w-5 text-gray4 cursor-pointer" />}
                           data={activityItem}
+                          side={'left'}
+                          align={'center'}
                           positionClass="right-7 top-0"
                         />
                       </div>
