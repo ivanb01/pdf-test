@@ -47,6 +47,7 @@ const index = () => {
   const [editingContact, setEditingContact] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
+  const [activityFilter, setActivityFilter] = useState(false);
 
   useEffect(() => {
     if (id && contacts?.length) {
@@ -399,7 +400,7 @@ const index = () => {
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
                       className="w-[180px] ml-3"
-                      handleSelect={(choice) => console.log(choice)}
+                      handleSelect={(choice) => setActivityFilter(choice)}
                     />
                     {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
@@ -414,7 +415,11 @@ const index = () => {
                   <Feeds
                     showFullHeight={contact?.category_1 != 'Client'}
                     contactId={id}
-                    activities={activities}
+                    activities={
+                      activityFilter.id == 0 || !activityFilter
+                        ? activities
+                        : activities.filter((activity) => activity.type_of_activity_id == activityFilter.id)
+                    }
                     setActivities={setActivities}
                   />
                 ) : (

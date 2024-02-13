@@ -22,7 +22,7 @@ import SimpleBar from 'simplebar-react';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TooltipComponent from '@components/shared/tooltip';
 
-export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
+export default function Feeds({ showFullHeight, contactId, activities, setActivities, height, filter }) {
   const placeholderDescription = (activity_type) => {
     if (activity_type == 1) {
       return 'Email Sent to contact';
