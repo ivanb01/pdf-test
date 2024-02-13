@@ -286,23 +286,23 @@ const index = () => {
               </div>
               from Smart Synced Contacts need to be reviewed
             </div>
-            <div className={'max-w-[500px] min-w-[200px]'}>
-              <DropdownWithSearch
-                placeholder={'Filter...'}
-                maxMenuHeight={200}
-                isMulti
-                options={[
-                  { value: 'Client', label: 'Clients' },
-                  { value: 'Professional', label: 'Professionals' },
-                  { value: 'Other', label: 'Other' },
-                  { value: 'Uncategorized', label: 'Uncategorized' },
-                  { value: 'Trash', label: 'Trash' },
-                ]}
-                onChange={(choice) => {
-                  setCategories(choice);
-                }}
-              />
-            </div>
+            {/*<div className={'max-w-[500px] min-w-[200px]'}>*/}
+            {/*  <DropdownWithSearch*/}
+            {/*    placeholder={'Filter...'}*/}
+            {/*    maxMenuHeight={200}*/}
+            {/*    isMulti*/}
+            {/*    options={[*/}
+            {/*      { value: 'Client', label: 'Clients' },*/}
+            {/*      { value: 'Professional', label: 'Professionals' },*/}
+            {/*      { value: 'Other', label: 'Other' },*/}
+            {/*      { value: 'Uncategorized', label: 'Uncategorized' },*/}
+            {/*      { value: 'Trash', label: 'Trash' },*/}
+            {/*    ]}*/}
+            {/*    onChange={(choice) => {*/}
+            {/*      setCategories(choice);*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*</div>*/}
           </div>
           <div style={{ overflow: 'auto', height: '79vh', width: '100vw' }} ref={rootRef}>
             <table className={'w-full'}>
