@@ -70,8 +70,7 @@ const index = () => {
     const ai_unapproved = allContacts?.data?.filter(
       (client) =>
         ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
-        (client.approved_ai === false || client.approved_ai === null) &&
-        client.category_1 !== 'Uncategorized',
+        (client.approved_ai === false || client.approved_ai === null),
     );
     setUnapprovedContacts(ai_unapproved);
   }, [allContacts]);

@@ -295,6 +295,7 @@ const index = () => {
                   { value: 'Client', label: 'Clients' },
                   { value: 'Professional', label: 'Professionals' },
                   { value: 'Other', label: 'Other' },
+                  { value: 'Uncategorized', label: 'Uncategorized' },
                   { value: 'Trash', label: 'Trash' },
                 ]}
                 onChange={(choice) => {
