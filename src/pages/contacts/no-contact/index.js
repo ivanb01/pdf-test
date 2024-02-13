@@ -143,6 +143,9 @@ const NoContactPage = () => {
       state: 'not_finished',
     },
   ];
+  useEffect(() => {
+    console.log('testDeploy');
+  }, []);
 
   return (
     <>
