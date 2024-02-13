@@ -8,7 +8,7 @@ const FilterDropdown = ({ types, icon, data, align = 'end', side = 'bottom' }) =
         <DropdownMenu.Content
           side={side}
           align={align}
-          sideOffset={10}
+          sideOffset={8}
           onClick={(e) => e.stopPropagation()}
           className={
             ' w-56 z-50 shadow-lg bg-white rounded-md  ring-1 ring-black ring-opacity-5 focus:outline-none py-1'
