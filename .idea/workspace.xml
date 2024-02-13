@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change icons for activities">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next-env.d.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
-    </list>
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add uncategorized in ai-summary filter" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +13,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="development" />
+        <entry key="$PROJECT_DIR$" value="f/erza/StoreAIcontactsInRedux" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -41,7 +37,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "f/erza/testPaginationBranch",
+    "git-widget-placeholder": "development",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -112,22 +108,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00009" summary="add coma to result">
-      <option name="closed" value="true" />
-      <created>1695714763780</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1695714763780</updated>
-    </task>
-    <task id="LOCAL-00010" summary="change icons of floorplan and vtour">
-      <option name="closed" value="true" />
-      <created>1695719252123</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1695719252123</updated>
-    </task>
     <task id="LOCAL-00011" summary="add coma in pagination">
       <option name="closed" value="true" />
       <created>1695721422095</created>
@@ -513,7 +493,23 @@
       <option name="project" value="LOCAL" />
       <updated>1703853070610</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="store AI in redux">
+      <option name="closed" value="true" />
+      <created>1707816775749</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1707816775749</updated>
+    </task>
+    <task id="LOCAL-00059" summary="add uncategorized in ai-summary filter">
+      <option name="closed" value="true" />
+      <created>1707818464239</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1707818464239</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -521,8 +517,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="improve lead source" />
-    <MESSAGE value="fix ui of add manually client" />
     <MESSAGE value="control tags on add client manually" />
     <MESSAGE value="differentiate unknown from uncategorized" />
     <MESSAGE value="change campaign style" />
@@ -546,6 +540,8 @@
     <MESSAGE value="hide price overflow in properties page" />
     <MESSAGE value="fix slideover issues" />
     <MESSAGE value="add checkboxes" />
-    <option name="LAST_COMMIT_MESSAGE" value="add checkboxes" />
+    <MESSAGE value="store AI in redux" />
+    <MESSAGE value="add uncategorized in ai-summary filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="add uncategorized in ai-summary filter" />
   </component>
 </project>
