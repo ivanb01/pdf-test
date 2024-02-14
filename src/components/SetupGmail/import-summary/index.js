@@ -190,7 +190,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               }
             />
             {importedContacts.length > 0 && (
-              <Button label="Start categorization" className="" onClick={() => handleButtonClick()} />
+              <Button label="Start categorizationn" className="" onClick={() => handleButtonClick()} />
             )}
           </div>
         </div>
