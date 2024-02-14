@@ -24,6 +24,9 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import Mail from '@mui/icons-material/Mail';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
+import Email from '@mui/icons-material/Email';
+import { Sms } from '@mui/icons-material';
+import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -102,6 +105,19 @@ export default function ContactCard({
 
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
+  };
 
   // const [dropdownVal, setDropdownVal] = useState(
   //   allStatusesQuickEdit[categoryType][0]
@@ -283,11 +299,48 @@ export default function ContactCard({
                 <div
                   role={'button'}
                   onClick={() => handleCardEdit(contact)}
-                  className="cursor-pointer rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
-                  <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
+                  className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                  <Edit
+                    id={'edit-contact-icon-' + contact.id}
+                    className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                  />
                 </div>
               }>
               <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+            </TooltipComponent>
+            <TooltipComponent
+              side={'top'}
+              align="center"
+              style={{ marginBottom: '7px' }}
+              triggerElement={
+                <div
+                  role={'button'}
+                  onClick={() => handleSendEmail(contact)}
+                  className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                  <Email
+                    id={'edit-contact-icon-' + contact.id}
+                    className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                  />
+                </div>
+              }>
+              <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+            </TooltipComponent>
+            <TooltipComponent
+              side={'top'}
+              align="center"
+              style={{ marginBottom: '7px' }}
+              triggerElement={
+                <div
+                  role={'button'}
+                  // onClick={() => handleCardEdit(contact)}
+                  className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                  <Sms
+                    id={'edit-contact-icon-' + contact.id}
+                    className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                  />
+                </div>
+              }>
+              <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
             </TooltipComponent>
             {
               // temporarily removing send email and send sms buttons
@@ -318,7 +371,7 @@ export default function ContactCard({
               Send SMS
             </div>
           </div> */}
-            <TooltipComponent
+            {/* <TooltipComponent
               side={'top'}
               align="center"
               style={{ marginBottom: '7px' }}
@@ -345,7 +398,7 @@ export default function ContactCard({
                 </div>
               }>
               <div className={'text-xs leading-4 font-medium'}>Add Communication</div>
-            </TooltipComponent>
+            </TooltipComponent> */}
             {/*<div*/}
             {/*  className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"*/}
             {/*  ref={dropdownRef}*/}
