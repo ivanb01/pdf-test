@@ -15,7 +15,7 @@ import Table from 'components/shared/table';
 import { multiselectOptionsClients, statuses } from 'global/variables';
 import { useRouter } from 'next/router';
 import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from 'global/variables';
-import { filterLastCommuncationDate } from 'global/functions';
+import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
@@ -317,8 +317,10 @@ const Clients = ({
                     {Object.keys(clientsFilters).length > 0 && (
                       <div
                         className={
-                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
-                        }></div>
+                          'absolute flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[20px] w-[20px] rounded-xl text-xs text-white'
+                        }>
+                        {getTotalCountOfAllValues(clientsFilters)}
+                      </div>
                     )}
                     <FilterList className="w-5 h-5" />
                   </div>
@@ -348,7 +350,7 @@ const Clients = ({
         {Object.keys(clientsFilters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
             <div className="flex justify-between">
-              <div className="flex flex-wrap items-center w-[100%]">
+              <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {filteredContacts.length}
                   {filteredContacts.length == 1 ? ' result' : ' results'} for:

@@ -16,7 +16,7 @@ import {
   allStatusesQuickEdit,
   filtersForLastCommunicationDate,
 } from 'global/variables';
-import { filterLastCommuncationDate } from 'global/functions';
+import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
@@ -256,8 +256,10 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                     {Object.keys(professionalsFilters).length > 0 && (
                       <div
                         className={
-                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
-                        }></div>
+                          'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
+                        }>
+                        {getTotalCountOfAllValues(professionalsFilters)}
+                      </div>
                     )}
                     <FilterList className="w-5 h-5" />
                   </div>
@@ -287,7 +289,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         {Object.keys(professionalsFilters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
             <div className="flex justify-between">
-              <div className="flex flex-wrap items-center w-[100%]">
+              <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {getFilterCount()}
                   {getFilterCount() == 1 ? ' result' : ' results'} for:
