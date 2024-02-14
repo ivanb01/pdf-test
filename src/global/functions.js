@@ -373,3 +373,16 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
 export const getBaseUrl = () => {
   if (typeof window !== 'undefined') return window.location.origin;
 };
+
+export const getTotalCountOfAllValues = (data) => {
+  let totalCount = 0;
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const values = data[key];
+      totalCount += values.length;
+    }
+  }
+
+  return totalCount;
+};
