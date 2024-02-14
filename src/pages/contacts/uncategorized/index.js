@@ -101,6 +101,8 @@ const index = () => {
     if (!hasRun.current && allContacts.data) {
       handleFetchUncategorized();
       hasRun.current = true;
+    } else {
+      hasRun.current = false;
     }
   }, [allContacts, uncategorizedContactsOriginal, hasRun.current]);
 

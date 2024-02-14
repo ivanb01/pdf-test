@@ -7,13 +7,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from 'components/shared/button';
 import { setRefetchData } from '@store/global/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllContacts } from '@store/contacts/slice';
 
 const GoogleContactsImportSummary = ({ data }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [allContacts, setAllContacts] = useState([]);
+  const [allContacts, setAllContactsLocally] = useState([]);
   const [searchTermImported, setSearchTermImported] = useState('');
   const [searchTermNotImported, setSearchTermNotImported] = useState('');
   const [importedContacts, setImportedContacts] = useState([]);
@@ -48,7 +49,7 @@ const GoogleContactsImportSummary = ({ data }) => {
 
   useEffect(() => {
     dispatch(setRefetchData(true));
-    setAllContacts(data);
+    setAllContactsLocally(data);
     setImportedContacts(data?.importable_new_contacts);
     setNotImportedContacts([...data?.invalid_contacts]);
   }, [data]);
@@ -57,13 +58,20 @@ const GoogleContactsImportSummary = ({ data }) => {
     console.log(importedContacts);
   }, [importedContacts]);
   const [loading, setLoading] = useState(false);
+  const allContactsRedux = useSelector((state) => state.contacts.allContacts);
+
   const handleButtonClick = () => {
-    setLoading(true);
-    setTimeout(() => {
-      router.push({
-        pathname: '/contacts/uncategorized',
-      });
-    }, 4000);
+    dispatch(
+      setAllContacts({
+        ...allContactsRedux,
+        data: [...allContactsRedux.data, ...allContacts.map((item) => ({ ...item, category_id: 1 }))],
+      }),
+    );
+    // setTimeout(() => {
+    router.push({
+      pathname: '/contacts/uncategorized',
+    });
+    // }, 1000);
   };
   return (
     <>
@@ -182,7 +190,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               }
             />
             {importedContacts.length > 0 && (
-              <Button label="Start categorization" loading={loading} className="" onClick={() => handleButtonClick()} />
+              <Button label="Start categorization" className="" onClick={() => handleButtonClick()} />
             )}
           </div>
         </div>
