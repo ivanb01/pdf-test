@@ -886,7 +886,7 @@ const index = () => {
           </div>
         ) : (
           <div>
-            <div className="font-semibold text-gray7">Select Clients</div>
+            <div className="font-semibold text-gray7 mb-2">Select Clients</div>
             {/* <Search
               placeholder={`Search for clients`}
               className="w-full text-sm mt-2"
