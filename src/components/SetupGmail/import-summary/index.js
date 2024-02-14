@@ -64,7 +64,10 @@ const GoogleContactsImportSummary = ({ data }) => {
     dispatch(
       setAllContacts({
         ...allContactsRedux,
-        data: [...allContactsRedux.data, ...allContacts.map((item) => ({ ...item, category_id: 1 }))],
+        data: [
+          ...allContactsRedux.data,
+          ...allContacts?.importable_contacts?.map((item) => ({ ...item, category_id: 1 })),
+        ],
       }),
     );
     // setTimeout(() => {
