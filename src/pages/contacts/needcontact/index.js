@@ -275,11 +275,7 @@ const index = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContacts.length > 0 || Object.keys(clientsFilters).length > 0
-                  ? '300px'
-                  : unapprovedContacts.length > 0 && Object.keys(clientsFilters).length > 0
-                  ? '210px'
-                  : '160px'
+                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '210px' : '160px'
               })`,
               overflow: 'hidden',
             }}>
