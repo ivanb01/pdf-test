@@ -59,11 +59,11 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
-import { Delete, Email } from '@mui/icons-material';
+import { Delete, Email, Sms } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount, setSorted } from '@store/global/slice';
+import { setContactToBeEmailed, setOpenEmailContactOverlay, setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -83,6 +83,7 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 
 import CommunicationForm from '@components/overlays/communication-form';
 import DeleteIcon from '@mui/icons-material/Delete';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -815,6 +816,19 @@ const Table = ({
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
     const sorted = useSelector((state) => state.global.sorted);
 
+    const handleSendEmail = (contact) => {
+      let clientToBeEmailed = {
+        value: contact.id,
+        label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        email: contact.email,
+        profile_image_path: contact.profile_image_path,
+      };
+      dispatch(setContactToBeEmailed(clientToBeEmailed));
+      dispatch(setOpenEmailContactOverlay(true));
+    };
+
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
     const [isExpanded, setIsExpanded] = useState([]);
     useEffect(() => {
@@ -1007,7 +1021,7 @@ const Table = ({
             ) : null}
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
               ACTIONS
             </th>
           </tr>
@@ -1205,8 +1219,115 @@ const Table = ({
                         </td>
                       )}
                       <td>
-                        <div className="px-4 py-[10px] flex items-center justify-center">
-                          <div
+                        <div className="px-4 py-[10px] flex items-center justify-start">
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCardEdit(contact);
+                                }}
+                                className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Edit
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                          </TooltipComponent>
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendEmail(contact);
+                                }}
+                                className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Email
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                          </TooltipComponent>
+                          {contact.phone_number && (
+                            <>
+                              {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                                <TooltipComponent
+                                  side={'top'}
+                                  align="center"
+                                  style={{ marginBottom: '7px' }}
+                                  triggerElement={
+                                    <div
+                                      role={'button'}
+                                      // onClick={() => handleCardEdit(contact)}
+                                      className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                      <Sms
+                                        id={'edit-contact-icon-' + contact.id}
+                                        className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                      />
+                                    </div>
+                                  }>
+                                  <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                                </TooltipComponent>
+                              )}
+                              <TooltipComponent
+                                side={'top'}
+                                align="center"
+                                style={{ marginBottom: '7px' }}
+                                triggerElement={
+                                  <div
+                                    role={'button'}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      let message = '';
+                                      switch (contact.category_2) {
+                                        case 'Renter':
+                                          message =
+                                            "Hey, wanted to check in and see if you're still looking for a rental?";
+                                          break;
+                                        case 'Buyer':
+                                          message =
+                                            'Hey, wanted to see if we could help with anything related to your purchase.';
+                                          break;
+                                        case 'Landlord':
+                                          message = 'Hey just checking in on your property.';
+                                          break;
+                                        case 'Seller':
+                                          message =
+                                            'Hey, just wanted to check in and see if we could talk about your property.';
+                                          break;
+                                        default:
+                                          message = 'Hey, just checking in.';
+                                          break;
+                                      }
+                                      let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(
+                                        message,
+                                      )}`;
+                                      window.open(link, '_blank');
+                                    }}
+                                    className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                    <WhatsApp
+                                      id={'edit-contact-icon-' + contact.id}
+                                      className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                    />
+                                  </div>
+                                }>
+                                <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                              </TooltipComponent>
+                            </>
+                          )}
+                          {/* <div
                             className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
@@ -1282,7 +1403,7 @@ const Table = ({
                               className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
                               Add Communication
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>

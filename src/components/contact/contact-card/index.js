@@ -27,6 +27,7 @@ import CommunicationForm from '@components/overlays/communication-form';
 import Email from '@mui/icons-material/Email';
 import { Sms } from '@mui/icons-material';
 import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -325,23 +326,67 @@ export default function ContactCard({
               }>
               <div className={'text-xs leading-4 font-medium'}>Send Email</div>
             </TooltipComponent>
-            <TooltipComponent
-              side={'top'}
-              align="center"
-              style={{ marginBottom: '7px' }}
-              triggerElement={
-                <div
-                  role={'button'}
-                  // onClick={() => handleCardEdit(contact)}
-                  className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
-                  <Sms
-                    id={'edit-contact-icon-' + contact.id}
-                    className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
-                  />
-                </div>
-              }>
-              <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
-            </TooltipComponent>
+            {contact.phone_number && (
+              <>
+                {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                  <TooltipComponent
+                    side={'top'}
+                    align="center"
+                    style={{ marginBottom: '7px' }}
+                    triggerElement={
+                      <div
+                        role={'button'}
+                        // onClick={() => handleCardEdit(contact)}
+                        className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                        <Sms
+                          id={'edit-contact-icon-' + contact.id}
+                          className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                        />
+                      </div>
+                    }>
+                    <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                  </TooltipComponent>
+                )}
+                <TooltipComponent
+                  side={'top'}
+                  align="center"
+                  style={{ marginBottom: '7px' }}
+                  triggerElement={
+                    <div
+                      role={'button'}
+                      onClick={() => {
+                        let message = '';
+                        switch (contact.category_2) {
+                          case 'Renter':
+                            message = "Hey, wanted to check in and see if you're still looking for a rental?";
+                            break;
+                          case 'Buyer':
+                            message = 'Hey, wanted to see if we could help with anything related to your purchase.';
+                            break;
+                          case 'Landlord':
+                            message = 'Hey just checking in on your property.';
+                            break;
+                          case 'Seller':
+                            message = 'Hey, just wanted to check in and see if we could talk about your property.';
+                            break;
+                          default:
+                            message = 'Hey, just checking in.';
+                            break;
+                        }
+                        let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(message)}`;
+                        window.open(link, '_blank');
+                      }}
+                      className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                      <WhatsApp
+                        id={'edit-contact-icon-' + contact.id}
+                        className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                      />
+                    </div>
+                  }>
+                  <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                </TooltipComponent>
+              </>
+            )}
             {
               // temporarily removing send email and send sms buttons
             }
