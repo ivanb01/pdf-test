@@ -61,6 +61,7 @@ const GoogleContactsImportSummary = ({ data }) => {
   const allContactsRedux = useSelector((state) => state.contacts.allContacts);
 
   const handleButtonClick = () => {
+    setLoading(true);
     dispatch(
       setAllContacts({
         ...allContactsRedux,
@@ -70,11 +71,12 @@ const GoogleContactsImportSummary = ({ data }) => {
         ],
       }),
     );
-    // setTimeout(() => {
-    router.push({
-      pathname: '/contacts/uncategorized',
-    });
-    // }, 1000);
+    setTimeout(() => {
+      router.push({
+        pathname: '/contacts/uncategorized',
+      });
+    }, 1000);
+    setLoading(false);
   };
   return (
     <>
@@ -193,7 +195,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               }
             />
             {importedContacts.length > 0 && (
-              <Button label="Start categorizationn" className="" onClick={() => handleButtonClick()} />
+              <Button label="Start categorization" loading={loading} className="" onClick={() => handleButtonClick()} />
             )}
           </div>
         </div>
