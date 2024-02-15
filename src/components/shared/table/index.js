@@ -1270,7 +1270,20 @@ const Table = ({
                                   triggerElement={
                                     <div
                                       role={'button'}
-                                      // onClick={() => handleCardEdit(contact)}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        let activity = {
+                                          type_of_activity_id: 2,
+                                          description: 'Attempted to communicate using SMS.',
+                                        };
+
+                                        dispatch(
+                                          updateContactLocally({ ...contact, last_communication_date: new Date() }),
+                                        );
+                                        addContactActivity(contact.id, activity);
+                                        let link = `sms:${client.phone_number}&body=${message}`;
+                                        window.location.href = link;
+                                      }}
                                       className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                                       <Sms
                                         id={'edit-contact-icon-' + contact.id}
