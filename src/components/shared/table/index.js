@@ -119,6 +119,21 @@ const Table = ({
   status,
   contacts,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
+  };
+
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const types = [
@@ -816,19 +831,6 @@ const Table = ({
     const openedSubtab = useSelector((state) => state.global.openedSubtab);
     const sorted = useSelector((state) => state.global.sorted);
 
-    const handleSendEmail = (contact) => {
-      let clientToBeEmailed = {
-        value: contact.id,
-        label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
-        first_name: contact.first_name,
-        last_name: contact.last_name,
-        email: contact.email,
-        profile_image_path: contact.profile_image_path,
-      };
-      dispatch(setContactToBeEmailed(clientToBeEmailed));
-      dispatch(setOpenEmailContactOverlay(true));
-    };
-
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
     const [isExpanded, setIsExpanded] = useState([]);
     useEffect(() => {
@@ -874,8 +876,6 @@ const Table = ({
         dispatch(setSorted({ name, order: newOrder }));
       }
     };
-
-    const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
@@ -1583,8 +1583,6 @@ const Table = ({
         setContacts(contactsOriginal.filter((contact) => contact.category_id === 9));
       }
     }, [openedSubtab, contactsOriginal]);
-
-    const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
@@ -2437,82 +2435,142 @@ const Table = ({
                 <td>
                   <td>
                     <div className=" py-[10px] flex items-center justify-start">
-                      <div
-                        className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
-                        onMouseEnter={() => {
-                          document
-                            .querySelector('#tooltip-edit-contact-' + person.id)
-                            .classList.remove('invisible', 'opacity-0');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray4');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray3');
-                        }}
-                        onMouseLeave={() => {
-                          document
-                            .querySelector('#tooltip-edit-contact-' + person.id)
-                            .classList.add('invisible', 'opacity-0');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray3');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray4');
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCardEdit(person);
-                        }}>
-                        <Edit id={'edit-contact-icon-' + person.id} className="text-lightBlue5 w-4 h-4" />
-                        <div
-                          id={'tooltip-edit-contact-' + person.id}
-                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
-                          Edit Contact
-                        </div>
-                      </div>
-                      <div
-                        className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
-                        onMouseEnter={() => {
-                          document
-                            .querySelector('#tooltip-add-activity-' + person.id)
-                            .classList.remove('invisible', 'opacity-0');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray4');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray3');
-                        }}
-                        onMouseLeave={() => {
-                          document
-                            .querySelector('#tooltip-add-activity-' + person.id)
-                            .classList.add('invisible', 'opacity-0');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray3');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray4');
-                        }}
-                        // onClick={(e) => {
-                        //   e.stopPropagation();
-                        //   router.push({
-                        //     pathname: '/contacts/details',
-                        //     query: { id: contact.id, campaigns: true },
-                        //   });
-                        // }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setContactToModify(person);
-                          // handleAddActivity(contact);
-                          setOpenCommunicationPopup(true);
-                        }}>
-                        <svg
-                          id={'add-activity-icon-' + person.id}
-                          className="text-gray5 w-4 h-4 group-hover:text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="currentColor">
-                          <path
-                            d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        <div
-                          id={'tooltip-add-activity-' + person.id}
-                          role="tooltip"
-                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white  rounded-lg shadow-sm opacity-0 tooltip bg-gray-700 ">
-                          Add Communication
-                        </div>
-                      </div>
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardEdit(person);
+                            }}
+                            className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Edit
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                      </TooltipComponent>
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendEmail(person);
+                            }}
+                            className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Email
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                      </TooltipComponent>
+                      {person.phone_number && (
+                        <>
+                          {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                            <TooltipComponent
+                              side={'top'}
+                              align="center"
+                              style={{ marginBottom: '7px' }}
+                              triggerElement={
+                                <div
+                                  role={'button'}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    let message = '';
+                                    switch (person.category_2) {
+                                      case 'Renter':
+                                        message =
+                                          "Hey, wanted to check in and see if you're still looking for a rental?";
+                                        break;
+                                      case 'Buyer':
+                                        message =
+                                          'Hey, wanted to see if we could help with anything related to your purchase.';
+                                        break;
+                                      case 'Landlord':
+                                        message = 'Hey just checking in on your property.';
+                                        break;
+                                      case 'Seller':
+                                        message =
+                                          'Hey, just wanted to check in and see if we could talk about your property.';
+                                        break;
+                                      default:
+                                        message = 'Hey, just checking in.';
+                                        break;
+                                    }
+                                    let activity = {
+                                      type_of_activity_id: 2,
+                                      description: 'Attempted to communicate using SMS.',
+                                    };
+
+                                    dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
+                                    contactServices.addContactActivity(person.id, activity);
+                                    let link = `sms:${person.phone_number}&body=${message}`;
+                                    window.location.href = link;
+                                  }}
+                                  className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                  <Sms
+                                    id={'edit-contact-icon-' + person.id}
+                                    className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                  />
+                                </div>
+                              }>
+                              <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                            </TooltipComponent>
+                          )}
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  let message = '';
+                                  switch (person.category_2) {
+                                    case 'Renter':
+                                      message = "Hey, wanted to check in and see if you're still looking for a rental?";
+                                      break;
+                                    case 'Buyer':
+                                      message =
+                                        'Hey, wanted to see if we could help with anything related to your purchase.';
+                                      break;
+                                    case 'Landlord':
+                                      message = 'Hey just checking in on your property.';
+                                      break;
+                                    case 'Seller':
+                                      message =
+                                        'Hey, just wanted to check in and see if we could talk about your property.';
+                                      break;
+                                    default:
+                                      message = 'Hey, just checking in.';
+                                      break;
+                                  }
+                                  let link = `https://wa.me/${person.phone_number}?text=${encodeURIComponent(message)}`;
+                                  window.open(link, '_blank');
+                                }}
+                                className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <WhatsApp
+                                  id={'edit-contact-icon-' + person.id}
+                                  className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                          </TooltipComponent>
+                        </>
+                      )}
                     </div>
                   </td>
                 </td>
