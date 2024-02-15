@@ -619,6 +619,13 @@ export const waitingDays = [
   },
 ];
 
+export const emailTemplates = [
+  { id: 0, label: 'Create New Template' },
+  { id: 1, label: 'Happy Holidays!' },
+  { id: 2, label: 'Congratulations on your new purchase' },
+  { id: 3, label: 'Looking to rent?' },
+];
+
 export const timeOptions = [
   { id: 0, label: '06:00' },
   { id: 1, label: '06:30' },

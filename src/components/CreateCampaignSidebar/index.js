@@ -10,11 +10,12 @@ import Editor from '@components/Editor';
 import { formatDateLL, formatDateLThour } from '@global/functions';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Dropdown from '@components/shared/dropdown';
-import { clientOptions, clientStatuses, timeOptions, types, waitingDays } from '@global/variables';
+import { clientOptions, clientStatuses, emailTemplates, timeOptions, types, waitingDays } from '@global/variables';
 import StatusSelect from '@components/status-select';
 import ContactTypeSelect from '@components/contact/contact-type-select';
 import Text from '@components/shared/text';
 import Radio from '@components/shared/radio';
+import Delete from '@mui/icons-material/Delete';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
@@ -26,6 +27,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [events, setEvents] = useState([
     { id: 0, title: 'Very grateful for this business.', message: 'Wow this is coool', eventDate: new Date(), type: 0 },
     { id: 1, title: 'Thank you for working with us.', eventDate: new Date(), type: 1 },
+  ]);
+
+  const [typeOfEvents, setTypeOfEvents] = useState([
+    { id: 0, title: 'Email', icon: call.src },
+    { id: 1, title: 'SMS', icon: call.src },
   ]);
 
   const Card = ({ title, description, icon, className, active, onClick, narrow, expandable }) => {
@@ -85,7 +91,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           onClick={onClick}
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
-          } p-3 flex ${className} justify-between items-center`}>
+          } p-3 flex ${className} justify-between items-center group`}>
           <div className="flex">
             <img src={call.src} />
             <div className="ml-4 text-sm">
@@ -95,7 +101,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               </div>
             </div>
           </div>
-          <KeyboardArrowRight className="text-gray7" />
+          <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
+          <div className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
+            <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
+          </div>
         </div>
       </div>
     );
@@ -159,7 +168,17 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             <div>
               <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
               <div className="flex mb-6">
-                <Card
+                {typeOfEvents.map((type) => (
+                  <Card
+                    narrow
+                    className="mr-2 bg-white"
+                    title={type.title}
+                    icon={type.icon}
+                    active={type.id == typeOfEvent}
+                    onClick={() => setTypeOfEvent(type.id)}
+                  />
+                ))}
+                {/* <Card
                   narrow
                   className="mr-2 bg-white"
                   title={'Email'}
@@ -174,7 +193,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   icon={call.src}
                   active={selectedEvent.type == 1}
                   onClick={() => setTypeOfEvent(1)}
-                />
+                /> */}
               </div>
             </div>
             <div className="mb-6">
@@ -184,6 +203,14 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} />
               </div>
             </div>
+            {typeOfEvent != null && (
+              <div className="mb-6">
+                <div className="mb-4 text-gray8 text-sm font-medium">
+                  Select from one of the templates, or create a new template:
+                </div>
+                <Dropdown options={emailTemplates} placeHolder="Select Template" />
+              </div>
+            )}
             <div className="mb-6">
               <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
               <Input placeholder="Subject" value={selectedEvent?.title} />

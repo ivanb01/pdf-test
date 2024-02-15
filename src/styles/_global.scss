@@ -708,6 +708,14 @@ tbody > div {
   }
 }
 
+.custom-richtext-select .dropdown-heading-value {
+  font-size: 12px;
+
+  span {
+    color: black !important;
+  }
+}
+
 .dropdown-heading-value span:not(.gray) {
   color: #1f2937 !important;
 }

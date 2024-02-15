@@ -51,6 +51,7 @@ const SendEmailOverlay = ({ open, setOpen }) => {
       <div className="mb-6">
         <div className="text-gray6 text-sm font-medium mb-1">To</div>
         <MultiSelect
+          className="custom-richtext-select"
           options={contactsCopy}
           value={selectedContacts}
           onChange={(contacts) => {
