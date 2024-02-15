@@ -1271,7 +1271,28 @@ const Table = ({
                                     <div
                                       role={'button'}
                                       onClick={(e) => {
-                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        let message = '';
+                                        switch (contact.category_2) {
+                                          case 'Renter':
+                                            message =
+                                              "Hey, wanted to check in and see if you're still looking for a rental?";
+                                            break;
+                                          case 'Buyer':
+                                            message =
+                                              'Hey, wanted to see if we could help with anything related to your purchase.';
+                                            break;
+                                          case 'Landlord':
+                                            message = 'Hey just checking in on your property.';
+                                            break;
+                                          case 'Seller':
+                                            message =
+                                              'Hey, just wanted to check in and see if we could talk about your property.';
+                                            break;
+                                          default:
+                                            message = 'Hey, just checking in.';
+                                            break;
+                                        }
                                         let activity = {
                                           type_of_activity_id: 2,
                                           description: 'Attempted to communicate using SMS.',
@@ -1280,8 +1301,8 @@ const Table = ({
                                         dispatch(
                                           updateContactLocally({ ...contact, last_communication_date: new Date() }),
                                         );
-                                        addContactActivity(contact.id, activity);
-                                        let link = `sms:${client.phone_number}&body=${message}`;
+                                        contactServices.addContactActivity(contact.id, activity);
+                                        let link = `sms:${contact.phone_number}&body=${message}`;
                                         window.location.href = link;
                                       }}
                                       className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
