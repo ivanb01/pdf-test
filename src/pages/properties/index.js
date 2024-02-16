@@ -340,6 +340,7 @@ const index = () => {
     const urlParams = new URLSearchParams(params);
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
 
     await fetchJsonp(url)
       .then((res) => res.json())
@@ -350,7 +351,8 @@ const index = () => {
   };
 
   const resetFilters = () => {
-    console.log(status);
+    setSelectedAmenities('');
+    setSelectedProperties([]);
     setMinPrice();
     setMaxPrice();
     setNeighborhoods([]);

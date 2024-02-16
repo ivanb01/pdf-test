@@ -33,11 +33,7 @@ export default function SlideOver({
                 <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     {!noHeader && (
-                      <div
-                        className="flex flex-shrink-0 justify-between px-6 py-5"
-                        style={{
-                          boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
-                        }}>
+                      <div className="flex flex-shrink-0 justify-between px-6 py-5">
                         <h6 className="text-md font-medium text-gray-900">{title}</h6>
                         <div className="ml-3 flex h-7 items-center">
                           <button
@@ -56,11 +52,7 @@ export default function SlideOver({
                       </SimpleBar>
                     </div>
                     {buttons && (
-                      <div
-                        className="flex flex-shrink-0 justify-between px-4 py-4"
-                        style={{
-                          boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-                        }}>
+                      <div className="flex flex-shrink-0 justify-between px-4 py-4 border-t border-gray-2">
                         {buttons}
                       </div>
                     )}
