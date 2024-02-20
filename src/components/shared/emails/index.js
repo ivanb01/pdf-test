@@ -286,7 +286,7 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                       </tr>
                     </table>
 
-                    <p style={{ color: '#344054', marginTop: '32px', fontFamily: 'Inter' }}>
+                    <p style={{ color: '#344054', marginTop: '32px' }}>
                       This email was sent to {email}. If you'd rather not receive this kind of email, you can
                       unsubscribe or manage your email preferences.
                     </p>
