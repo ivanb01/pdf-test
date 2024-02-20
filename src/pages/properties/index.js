@@ -462,7 +462,7 @@ const index = () => {
   const [loadingEmails, setLoadingEmails] = useState(false);
 
   const _sendEmail = () => {
-    const propertyIds = selectedProperties.map((property) => property.ID);
+    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
     setLoadingEmails(true);
     selectedContacts.map((c) => {
       addContactActivity(c.value, {
