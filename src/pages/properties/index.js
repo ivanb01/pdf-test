@@ -5,6 +5,7 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
+import { render } from '@react-email/components';
 import {
   bathroomsOptions,
   data,
@@ -35,6 +36,10 @@ import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
+import { sendEmail } from '@api/marketing';
+import { Tailwind, Button as Btn } from '@react-email/components';
+import { Html } from '@react-email/html';
+import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
 
 const options = [
@@ -70,6 +75,7 @@ const index = () => {
   const [selectedProperties, setSelectedProperties] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
+
   const setStatuss = (root, status) => {
     root.status = status;
     if (Array.isArray(root.items)) {
@@ -401,6 +407,8 @@ const index = () => {
   const [sendMethod, setSendMethod] = useState(1);
 
   const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const user = useSelector((state) => state.global.user);
+
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
@@ -440,10 +448,32 @@ const index = () => {
     setFilteredContacts(filteredArray.data);
   };
 
-  const sendEmail = () => {
-    setPropertiesSent(true);
-    console.log(selectedContacts, selectedProperties, 'email');
-    resetPropertySelection();
+  const [chunkedArray, setChunkedArray] = useState([]);
+
+  useEffect(() => {
+    const chunkedArray = [];
+    for (let i = 0; i < selectedProperties.length; i += 2) {
+      chunkedArray.push(selectedProperties.slice(i, i + 2));
+    }
+
+    setChunkedArray(chunkedArray);
+  }, [selectedProperties]);
+  const [loadingEmails, setLoadingEmails] = useState(false);
+  const _sendEmail = () => {
+    setLoadingEmails(true);
+    selectedContacts.map((c) => {
+      sendEmail(
+        [c.email],
+        `Hi ${c.first_name}, I have a property for you `,
+        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} email={c.email} />, {
+          pretty: true,
+        })}`,
+      ).then((res) => {
+        setLoadingEmails(false);
+        setPropertiesSent(true);
+        resetPropertySelection();
+      });
+    });
   };
 
   const sendSMS = () => {
@@ -458,7 +488,10 @@ const index = () => {
   };
   useEffect(() => {
     if (!open) {
-      setSelectedContacts([]);
+      setTimeout(() => {
+        setPropertiesSent(false);
+        setSelectedContacts([]);
+      }, 500);
     }
   }, [open]);
 
@@ -484,7 +517,7 @@ const index = () => {
         <div className="flex items-center">
           <img
             className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
-            src={property.PHOTOS.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+            src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
           />
           <div className="font-semibold text-black mb-[6px] mr-3 text-sm">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
@@ -794,15 +827,15 @@ const index = () => {
                       setOpen(true);
                     }}
                   />
-                  <Button
-                    primary
-                    leftIcon={<AtSymbolIcon />}
-                    label="Send via SMS"
-                    onClick={() => {
-                      setSendMethod(2);
-                      setOpen(true);
-                    }}
-                  />
+                  {/*<Button*/}
+                  {/*  primary*/}
+                  {/*  leftIcon={<AtSymbolIcon />}*/}
+                  {/*  label="Send via SMS"*/}
+                  {/*  onClick={() => {*/}
+                  {/*    setSendMethod(2);*/}
+                  {/*    setOpen(true);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
               </div>
             )}
@@ -855,8 +888,9 @@ const index = () => {
                 <Button
                   primary
                   leftIcon={<MailIcon />}
+                  loading={loadingEmails}
                   label="Send via Email"
-                  onClick={() => sendEmail()}
+                  onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
               ) : (
@@ -884,7 +918,18 @@ const index = () => {
               All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
               <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
             </div>
-            <Button primary label="Back to Properties" onClick={() => setOpen(false)} className="mt-6" />
+            <Button
+              primary
+              label="Back to Properties"
+              onClick={() => {
+                setTimeout(() => {
+                  setPropertiesSent(false);
+                  setSelectedContacts([]);
+                }, 500);
+                setOpen(false);
+              }}
+              className="mt-6"
+            />
           </div>
         ) : (
           <div>
