@@ -598,6 +598,21 @@ const index = () => {
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [setOpenDropdown]);
+
+  const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+
+  const sortedOptions = filteredContacts?.sort((a, b) => {
+    const aIsSelected = isSelected(a);
+    const bIsSelected = isSelected(b);
+
+    if (aIsSelected && !bIsSelected) {
+      return -1;
+    } else if (!aIsSelected && bIsSelected) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <>
       <MainMenu />
@@ -952,7 +967,7 @@ const index = () => {
             /> */}
             {filteredContacts && filteredContacts.length && (
               <MultiSelect
-                options={filteredContacts}
+                options={sortedOptions}
                 value={selectedContacts}
                 onChange={(contacts) => {
                   setSelectedContacts(contacts);

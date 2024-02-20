@@ -59,9 +59,11 @@ const SendEmailOverlay = () => {
     setLoading(true);
     let contacts = selectedContacts.map((contact) => contact.email);
 
-    sendEmail(contacts, subject, message).then(() => {
-      setLoading(false);
-      setEmailSent(true);
+    contacts.map((contact) => {
+      sendEmail([contact], subject, message).then(() => {
+        setLoading(false);
+        setEmailSent(true);
+      });
     });
   };
 
@@ -71,6 +73,20 @@ const SendEmailOverlay = () => {
     setSelectedContacts([]);
     setEmailSent(false);
   };
+
+  const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+
+  const sortedOptions = contactsCopy?.sort((a, b) => {
+    const aIsSelected = isSelected(a);
+    const bIsSelected = isSelected(b);
+
+    if (aIsSelected && !bIsSelected) {
+      return -1;
+    } else if (!aIsSelected && bIsSelected) {
+      return 1;
+    }
+    return 0;
+  });
 
   return (
     <SlideOver
@@ -112,7 +128,7 @@ const SendEmailOverlay = () => {
             <div className="text-gray6 text-sm font-medium mb-1">To</div>
             {contactsCopy && contactsCopy.length && (
               <MultiSelect
-                options={contactsCopy}
+                options={sortedOptions}
                 value={selectedContacts}
                 onChange={(contacts) => {
                   setSelectedContacts(contacts);
