@@ -468,7 +468,7 @@ const index = () => {
       addContactActivity(c.value, {
         type_of_activity_id: 28,
         description: `These properties were sent to this user on ${formatDateStringMDY(new Date())}: ${propertyIds.join(
-          ', ',
+          ',  ',
         )} `,
       });
       sendEmail(
