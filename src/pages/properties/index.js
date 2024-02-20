@@ -29,7 +29,7 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { getInitials, searchContacts } from '@global/functions';
+import { formatDateCalendar, formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
@@ -41,6 +41,7 @@ import { Tailwind, Button as Btn } from '@react-email/components';
 import { Html } from '@react-email/html';
 import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
+import { addContactActivity } from '@api/contacts';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -459,9 +460,17 @@ const index = () => {
     setChunkedArray(chunkedArray);
   }, [selectedProperties]);
   const [loadingEmails, setLoadingEmails] = useState(false);
+
   const _sendEmail = () => {
+    const propertyIds = selectedProperties.map((property) => property.ID);
     setLoadingEmails(true);
     selectedContacts.map((c) => {
+      addContactActivity(c.value, {
+        type_of_activity_id: 28,
+        description: `These properties were sent to this user on ${formatDateStringMDY(new Date())}: ${propertyIds.join(
+          ', ',
+        )} `,
+      });
       sendEmail(
         [c.email],
         `Hi ${c.first_name}, I have a property for you `,

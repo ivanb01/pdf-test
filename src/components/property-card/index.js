@@ -8,7 +8,6 @@ import link from '/public/images/link-2.svg';
 import { useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import TooltipComponent from '@components/shared/tooltip';
 
 const ImageGallery = ({ images, property, url }) => {
