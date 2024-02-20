@@ -28,18 +28,17 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
           <td
             style={{
               margin: '0 auto !important',
-              maxWidth: '600px',
+              maxWidth: '800px',
               padding: '0',
               paddingTop: '24px',
-              paddingRight: '130px',
-              width: '600px',
+              width: '800px',
             }}>
             <div
               style={{
                 boxSizing: 'border-box',
                 display: 'block',
                 margin: '0 auto',
-                maxWidth: '600px',
+                maxWidth: '800px',
                 padding: '0',
               }}>
               <table
@@ -81,7 +80,7 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                     <table width="100%" cellSpacing="0" cellPadding="0">
                       <tr>
                         <td align="center">
-                          <table style={{ width: '600px' }} cellSpacing="0" cellPadding="5">
+                          <table cellSpacing="0" cellPadding="5">
                             {chunkedArray.length > 0 &&
                               chunkedArray.map((chunk, index) => (
                                 <tr key={index}>
