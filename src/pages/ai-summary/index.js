@@ -23,6 +23,8 @@ import SpinnerLoader from '@components/shared/SpinnerLoader';
 import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
 import Loader from '@components/shared/loader';
 import { getUnapprovedAI } from '@api/aiSmartSync';
+import Close from '@mui/icons-material/Close';
+import { CloseRounded } from '@mui/icons-material';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -279,12 +281,15 @@ const index = () => {
         </div>
       ) : ai_unapproved_contacts_redux.length > 0 ? (
         <>
-          <div className="p-6 text-gray-900 font-medium text-base flex justify-between">
+          <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
             <div>
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
                 {totalContacts ? totalContacts : 0} contacts
               </div>
               from Smart Synced Contacts need to be reviewed
+            </div>
+            <div>
+              <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
             </div>
             {/*<div className={'max-w-[500px] min-w-[200px]'}>*/}
             {/*  <DropdownWithSearch*/}
