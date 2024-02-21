@@ -119,11 +119,11 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                                                   <img
                                                     src={property.PHOTOS && property.PHOTOS[0].PHOTO_URL}
                                                     width="350"
-                                                    height="115"
+                                                    height="160"
                                                     style={{
                                                       display: 'block',
                                                       width: '100%',
-                                                      height: '115px',
+                                                      height: '160px',
                                                       objectFit: 'cover',
                                                     }}
                                                     alt="Property Image"
@@ -263,7 +263,7 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                                                               borderRadius: '12px',
                                                               width: '60px',
                                                               textAlign: 'center',
-                                                              marginTop: '10px',
+                                                              marginTop: '15px',
                                                             }}>
                                                             {property.STATUS}
                                                           </div>
@@ -285,11 +285,6 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                         </td>
                       </tr>
                     </table>
-
-                    <p style={{ color: '#344054', marginTop: '32px' }}>
-                      This email was sent to {email}. If you'd rather not receive this kind of email, you can
-                      unsubscribe or manage your email preferences.
-                    </p>
                   </td>
                 </tr>
               </table>
