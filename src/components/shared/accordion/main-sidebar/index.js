@@ -178,8 +178,10 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
                   {tab.subtab.map((t) => (
                     <div
-                      className={` rounded-md ${
-                        isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                      className={`hover:bg-gray1 rounded-md ${
+                        isSubtabActive(t.id, tab.id)
+                          ? 'text-lightBlue3 bg-lightBlue1 font-semibold'
+                          : 'text-gray4 font-medium'
                       }`}>
                       <div
                         role={'button'}
@@ -188,7 +190,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           dispatch(setOpenedSubtab(t.id));
                           router.push(tab.href);
                         }}
-                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
+                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm relative flex items-center`}>
                         {t?.dot}
                         <div className={'w-max'}>{t.name}</div>
                         <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
