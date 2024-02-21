@@ -150,7 +150,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <div>
                   <Link
                     href="#"
-                    className={`relative flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                    className={`hover:bg-gray1 relative flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
                       openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                     }`}
                     onClick={() => {
@@ -452,13 +452,13 @@ const TabBar = ({ tab }) => {
   };
 
   return (
-    <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
+    <div className={`accordion w-inherit  ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
         href="#"
         onClick={() => {
           handleTabClick();
         }}
-        className={`flex items-center h-8 justify-between pl-2 pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
+        className={`flex items-center h-8 justify-between w-inherit ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||
@@ -467,29 +467,31 @@ const TabBar = ({ tab }) => {
             ? 'bg-lightBlue1'
             : ''
         }`}>
-        <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
-          {tab.icon}
-          <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-            {tab.name}
-          </Text>
-          <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-            {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
-          </Text>
-          {showPulse(tab) && (
-            <span class="relative flex h-2 w-2 ml-4">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-            </span>
+        <div className={'flex items-center h-8 justify-between pl-2 pr-3 hover:bg-gray1 w-[241px]'}>
+          <div className={` flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
+            {tab.icon}
+            <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+              {tab.name}
+            </Text>
+            <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+              {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
+            </Text>
+            {showPulse(tab) && (
+              <span class="relative flex h-2 w-2 ml-4">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+              </span>
+            )}
+          </div>
+
+          {tab.subtab && (
+            <ArrowDropDownIcon
+              className={`text-gray3 h-5 w-5 transition-all duration-300 ${
+                findOpenedId(tab.id).opened ? 'rotate-180' : ''
+              }`}
+            />
           )}
         </div>
-
-        {tab.subtab && (
-          <ArrowDropDownIcon
-            className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-              findOpenedId(tab.id).opened ? 'rotate-180' : ''
-            }`}
-          />
-        )}
       </Link>
       {tab.subtab && (
         <div className={findOpenedId(tab.id).opened ? `` : `hidden`}>
@@ -498,7 +500,7 @@ const TabBar = ({ tab }) => {
               <a
                 key={`${subtab.id}`}
                 href="#"
-                className={`h-8 px-10 transition-all duration-200 flex items-center ${
+                className={`h-8 hover:bg-gray1 px-10 transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
