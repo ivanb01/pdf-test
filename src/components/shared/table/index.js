@@ -1012,13 +1012,13 @@ const Table = ({
               className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]">
               Contact summary
             </th>
-            {openedTab !== 1 && openedSubtab !== 3 ? (
-              <th
-                scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
-                LAST COMMUNICATION
-              </th>
-            ) : null}
+
+            <th
+              scope="col"
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
+              {openedTab !== 1 && openedSubtab !== 3 ? 'LAST COMMUNICATION ' : ''}
+            </th>
+
             <th
               scope="col"
               className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
@@ -1201,25 +1201,29 @@ const Table = ({
                           </TooltipComponent>
                         )}
                       </td>
-                      {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
-                          <div className="text-gray7 font-medium">
+
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
+                        <div className="text-gray7 font-medium">
+                          {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' ? (
                             <DateChip
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
                               contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                             />
-                            {/* <Chip
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
                           /> */}
-                          </div>
-                          {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
-                        </td>
-                      )}
+                        </div>
+                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                      </td>
                       <td>
-                        <div className="px-4 py-[10px] flex items-center justify-start">
+                        <div className="px-4 py-[9px] flex items-center justify-start">
                           <TooltipComponent
                             side={'top'}
                             align="center"
