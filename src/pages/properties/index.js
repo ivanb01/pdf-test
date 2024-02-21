@@ -29,13 +29,7 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import {
-  formatDateCalendar,
-  formatDateStringMDY,
-  getInitials,
-  getTotalCountOfAllValues,
-  searchContacts,
-} from '@global/functions';
+import { formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
