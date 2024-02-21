@@ -29,7 +29,13 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { formatDateCalendar, formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
+import {
+  formatDateCalendar,
+  formatDateStringMDY,
+  getInitials,
+  getTotalCountOfAllValues,
+  searchContacts,
+} from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
@@ -42,6 +48,7 @@ import { Html } from '@react-email/html';
 import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
+import FilterList from '@mui/icons-material/FilterList';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -179,6 +186,9 @@ const index = () => {
   const selectAmenities = (a) => {
     setSelectedAmenities(a);
   };
+  useEffect(() => {
+    console.log(selectedAmenities, 'selectedAmenities');
+  }, [selectedAmenities]);
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -735,7 +745,23 @@ const index = () => {
             setMaxPrice={setMaxPrice}
             options={options}
           />
-          <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
+          <Button
+            className="min-w-[120px]"
+            leftIcon={
+              <div className={'relative'}>
+                {selectedAmenities.length > 0 && selectedAmenities.split(',').length > 0 && (
+                  <div
+                    className={
+                      'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
+                    }>
+                    {selectedAmenities.split(',').length}
+                  </div>
+                )}
+                <FilterList className="w-5 h-5 mt-[-2px]" />
+              </div>
+            }
+            primary
+            onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
           <Button white onClick={() => resetFilters()} className="min-w-[120px]">
@@ -891,9 +917,7 @@ const index = () => {
           </div>
         </div>
       )}
-      {openFilters && (
-        <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
-      )}
+      <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
       <SlideOver
         open={open}
         noHeader

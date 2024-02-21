@@ -9,6 +9,8 @@ import { setAmenities } from '@store/global/slice';
 import React from 'react';
 import { amenities } from '@global/variables';
 import Tag from '@components/Tag';
+import SimpleBar from 'simplebar-react';
+
 const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
   const amenities = [
     'Diplomats OK',
@@ -113,7 +115,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
-                  <div className={`flex flex-col bg-white shadow-xl overflow-y-auto h-full `}>
+                  <div className={`flex flex-col bg-white shadow-xl overflow-y-auto h-full overflow-hidden`}>
                     <div className="flex flex-shrink-0 justify-between items-center p-[20px] pr-6 pl-4 w-[100%]">
                       <div className={'flex justify-between items-center  w-[100%]'}>
                         <Dialog.Title className="text-base font-medium text-gray-900">Filters</Dialog.Title>
@@ -121,46 +123,48 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                       </div>
                     </div>
                     <div className={'flex justify-between flex-col h-[100%]'}>
-                      <div className={'px-4 py-6 pr-6 pl-4 w-[100%]'}>
-                        {sections.map((s) => (
-                          <React.Fragment key={s.name}>
-                            <div
-                              className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
-                              role={'button'}
-                              onClick={() =>
-                                setSections((prev) => {
-                                  const updatedSections = prev.map((section) => {
-                                    if (section.id === s.id) {
-                                      return { ...section, expanded: !section.expanded };
-                                    }
-                                    return section;
-                                  });
-                                  return updatedSections;
-                                })
-                              }>
-                              <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>
-                                {s.name}
-                              </p>
-                              {!s.expanded ? (
-                                <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
-                              ) : (
-                                <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
-                              )}
-                            </div>
-                            {s.expanded && (
-                              <div className={'flex flex-wrap gap-x-2 '}>
-                                {s.value.map((a) => (
-                                  <Tag
-                                    key={a}
-                                    onClick={() => toggleAmenitySelection(a)}
-                                    selected={reduxAmenities.includes(a)}>
-                                    <span>{a}</span>
-                                  </Tag>
-                                ))}
+                      <div className={' py-6  w-[100%]'}>
+                        <SimpleBar style={{ maxHeight: 'calc(100vh - 200px)', padding: '0px 16px' }}>
+                          {sections.map((s) => (
+                            <React.Fragment key={s.name}>
+                              <div
+                                className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                                role={'button'}
+                                onClick={() =>
+                                  setSections((prev) => {
+                                    const updatedSections = prev.map((section) => {
+                                      if (section.id === s.id) {
+                                        return { ...section, expanded: !section.expanded };
+                                      }
+                                      return section;
+                                    });
+                                    return updatedSections;
+                                  })
+                                }>
+                                <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>
+                                  {s.name}
+                                </p>
+                                {!s.expanded ? (
+                                  <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
+                                ) : (
+                                  <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
+                                )}
                               </div>
-                            )}
-                          </React.Fragment>
-                        ))}
+                              {s.expanded && (
+                                <div className={'flex flex-wrap gap-x-2 '}>
+                                  {s.value.map((a) => (
+                                    <Tag
+                                      key={a}
+                                      onClick={() => toggleAmenitySelection(a)}
+                                      selected={reduxAmenities.includes(a)}>
+                                      <span>{a}</span>
+                                    </Tag>
+                                  ))}
+                                </div>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </SimpleBar>
                       </div>
                       <div className={'flex items-center justify-between px-6 py-4 fixed-categorize-menu'}>
                         <Button
@@ -171,7 +175,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                             dispatch(setAmenities([]));
                             selectAmenities([]);
                           }}>
-                          Clear Advanced Filters
+                          Clear Filters
                         </Button>
                         <Button
                           disabled={reduxAmenities.length === 0}
