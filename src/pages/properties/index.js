@@ -617,6 +617,10 @@ const index = () => {
     return 0;
   });
 
+  useEffect(() => {
+    console.log(selectedProperties);
+  }, [selectedProperties]);
+
   return (
     <>
       <MainMenu />
@@ -642,8 +646,8 @@ const index = () => {
                 document.querySelector(`#custom-dropdown-search`)?.focus();
               }, 200);
             }}>
-            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>
-              {datav2.length > 0 ? datav2.join(',') : 'Select'}
+            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis font-normal'}>
+              {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
             </div>
             <div className={'flex'}>
               {datav2.length > 0 && (
@@ -676,7 +680,7 @@ const index = () => {
                     className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
                     id={`custom-dropdown-search`}
                     type={'text'}
-                    placeholder={'Search'}
+                    placeholder={'Select'}
                     onChange={(e) => setNeighborhoodsSearch(e.target.value)}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -777,7 +781,7 @@ const index = () => {
         <div className="flex items-center justify-between">
           <div className="w-full">
             <SimpleBar style={{ maxHeight: 'calc(100vh - 156px)' }}>
-              <div className="p-6">
+              <div className={`p-6 ${selectedProperties.length > 0 && 'pb-[100px]'}`}>
                 <div className={'flex items-center justify-between mb-6'}>
                   <div className="text-gray-900 text-sm font-normal">
                     {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from REBNY

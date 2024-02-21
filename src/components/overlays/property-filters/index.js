@@ -180,7 +180,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                         <Button
                           disabled={reduxAmenities.length === 0}
                           darkBlue
-                          className={'bg-[#3B82F6]'}
+                          className={'bg-lightBlue3'}
                           onClick={() => {
                             if (reduxAmenities.length > 0) {
                               selectAmenities(reduxAmenities.join(','));
