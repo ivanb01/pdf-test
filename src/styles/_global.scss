@@ -692,15 +692,15 @@ tbody > div {
   margin-top: -30px;
   color: white !important;
 }
-
 .dropdown-container {
-  border-radius: 6px !important;
+  border-radius: 0.5rem !important;
   height: 38px !important;
   width: 300px !important;
+  // border: 1px solid #D1D5DB;
 }
 
 .dropdown-heading-value {
-  font-size: 14px;
+  font-size: 0.8rem !important;
 
   span {
     color: #808080 !important;
@@ -716,7 +716,7 @@ tbody > div {
 }
 
 .item-renderer input {
-  border-color: #808080 !important;
+  border-color: #bebebe !important;
   border-radius: 4px !important;
   color: #0ea5e9;
 }
