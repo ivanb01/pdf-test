@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatPrice, getBaseUrl } from '@global/functions';
 
-export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
+export const Emails = ({ chunkedArray, firstName, agentName }) => {
   return (
     <div
       style={{
@@ -147,7 +147,7 @@ export const Emails = ({ chunkedArray, firstName, agentName, email }) => {
                                                         : ''
                                                     }`}>
                                                     <table width="100%" border="0" cellSpacing="0" cellPadding="0">
-                                                      <tr>
+                                                      <tr style={{ height: '65px' }}>
                                                         <td
                                                           style={{
                                                             fontSize: '14px',

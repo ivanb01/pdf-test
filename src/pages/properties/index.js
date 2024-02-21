@@ -478,7 +478,7 @@ const index = () => {
       sendEmail(
         [c.email],
         `Hi ${c.first_name}, Check out these new properties.`,
-        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} email={c.email} />, {
+        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} />, {
           pretty: true,
         })}`,
       ).then((res) => {
