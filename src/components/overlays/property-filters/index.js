@@ -1,17 +1,14 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Button from '@components/shared/button';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAmenities } from '@store/global/slice';
 import React from 'react';
-import { amenities } from '@global/variables';
 import Tag from '@components/Tag';
 import SimpleBar from 'simplebar-react';
 
-const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
+const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAmenities }) => {
   const amenities = [
     'Diplomats OK',
     'Furnished',
@@ -60,9 +57,16 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
     'Skyline View',
   ];
 
-  const dispatch = useDispatch();
-  const reduxAmenities = useSelector((state) => state.global.amenities);
+  const [internalAmenities, setInternalAmenities] = useState([]);
+  useEffect(() => {
+    console.log(internalAmenities, 'internalAmenities', selectedAmenities, 'selectedAmenities');
+  }, [internalAmenities, selectedAmenities]);
 
+  useEffect(() => {
+    if (open) {
+      setInternalAmenities(selectedAmenities.length > 0 ? selectedAmenities.split(',') : []);
+    }
+  }, [open]);
   const [sections, setSections] = useState([
     {
       id: 1,
@@ -91,10 +95,10 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
   ]);
 
   const toggleAmenitySelection = (amenity) => {
-    if (reduxAmenities.includes(amenity)) {
-      dispatch(setAmenities(reduxAmenities.filter((selected) => selected !== amenity)));
+    if (internalAmenities.includes(amenity)) {
+      setInternalAmenities(internalAmenities.filter((selected) => selected !== amenity));
     } else {
-      dispatch(setAmenities([...reduxAmenities, amenity]));
+      setInternalAmenities([...internalAmenities, amenity]);
     }
   };
 
@@ -134,7 +138,10 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                                   setSections((prev) => {
                                     const updatedSections = prev.map((section) => {
                                       if (section.id === s.id) {
-                                        return { ...section, expanded: !section.expanded };
+                                        return {
+                                          ...section,
+                                          expanded: !section.expanded,
+                                        };
                                       }
                                       return section;
                                     });
@@ -156,7 +163,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                                     <Tag
                                       key={a}
                                       onClick={() => toggleAmenitySelection(a)}
-                                      selected={reduxAmenities.includes(a)}>
+                                      selected={internalAmenities?.includes(a)}>
                                       <span>{a}</span>
                                     </Tag>
                                   ))}
@@ -170,20 +177,20 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities }) => {
                         <Button
                           white
                           label="Cancel"
-                          disabled={reduxAmenities.length === 0}
+                          disabled={internalAmenities.length === 0}
                           onClick={() => {
-                            dispatch(setAmenities([]));
+                            setInternalAmenities([]);
                             selectAmenities([]);
                           }}>
                           Clear Filters
                         </Button>
                         <Button
-                          disabled={reduxAmenities.length === 0}
+                          disabled={internalAmenities.length === 0}
                           darkBlue
                           className={'bg-lightBlue3'}
                           onClick={() => {
-                            if (reduxAmenities.length > 0) {
-                              selectAmenities(reduxAmenities.join(','));
+                            if (internalAmenities.length > 0) {
+                              selectAmenities(internalAmenities.join(','));
                             }
                             setOpen(false);
                           }}>

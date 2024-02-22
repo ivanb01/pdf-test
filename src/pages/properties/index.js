@@ -915,7 +915,12 @@ const index = () => {
           </div>
         </div>
       )}
-      <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
+      <PropertyFilters
+        selectAmenities={selectAmenities}
+        open={openFilters}
+        setOpen={() => setOpenFilters(false)}
+        selectedAmenities={selectedAmenities}
+      />
       <SlideOver
         open={open}
         noHeader

@@ -109,9 +109,6 @@ const global = createSlice({
       const createArrayOfObjects = (length) => Array.from({ length }, (_, id) => ({ id, opened: false }));
       state.tabs = createArrayOfObjects(action.payload);
     },
-    setAmenities(state, action) {
-      state.amenities = action.payload;
-    },
     setSorted(state, action) {
       const { name, order } = action.payload;
 
@@ -126,6 +123,9 @@ const global = createSlice({
       } else {
         state.sorted.push({ name, sorted: order });
       }
+    },
+    setAmenities(state, action) {
+      state.amenities = action.payload;
     },
   },
 });
@@ -142,6 +142,7 @@ export const {
   setSkippedEmptyState,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setAmenities,
   setExpandedTab,
   setInitializeTabs,
   setActiveFilterOfProperties,
@@ -150,7 +151,6 @@ export const {
   setProfessionalsFilter,
   setSorted,
   setHideUnapproved,
-  setAmenities,
   setContactToBeEmailed,
   setOpenEmailContactOverlay,
 } = global.actions;
