@@ -657,11 +657,11 @@ const index = () => {
           <div>
             <div className="md:flex hidden mt-0 clipPath min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
             </div>
             <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
             </div>
           </div>
         </div>

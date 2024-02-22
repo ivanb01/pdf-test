@@ -736,7 +736,7 @@ const index = () => {
           <MinMaxPrice
             // options={bathroomOptions}
             label={'Min/Max Price'}
-            className="min-w-[170px]"
+            className="min-w-[170px] font-normal"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
