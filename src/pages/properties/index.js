@@ -960,10 +960,10 @@ const index = () => {
               style={{ height: '200px' }}
               autoplay></lottie-player>
             <div className="text-gray7 font-medium text-lg -mt-4">Properties have been sent successfully</div>
-            <div className=" mt-2">
-              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
-              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
-            </div>
+            {/*<div className=" mt-2">*/}
+            {/*  All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}*/}
+            {/*  <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.*/}
+            {/*</div>*/}
             <Button
               primary
               label="Back to Properties"
