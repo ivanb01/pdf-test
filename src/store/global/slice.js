@@ -37,7 +37,6 @@ const global = createSlice({
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')
         : false,
-    amenities: [],
   },
   reducers: {
     setOpenEmailContactOverlay(state, action) {
@@ -109,9 +108,6 @@ const global = createSlice({
       const createArrayOfObjects = (length) => Array.from({ length }, (_, id) => ({ id, opened: false }));
       state.tabs = createArrayOfObjects(action.payload);
     },
-    setAmenities(state, action) {
-      state.amenities = action.payload;
-    },
     setSorted(state, action) {
       const { name, order } = action.payload;
 
@@ -150,7 +146,6 @@ export const {
   setProfessionalsFilter,
   setSorted,
   setHideUnapproved,
-  setAmenities,
   setContactToBeEmailed,
   setOpenEmailContactOverlay,
 } = global.actions;
