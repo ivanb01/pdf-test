@@ -2621,12 +2621,12 @@ export const activityTypesDropdown = [
     label: 'SMS',
   },
   {
-    id: 27,
+    id: 3,
     label: 'Phone Call',
   },
   {
-    id:14,
-    label: 'Notes'
+    id: 14,
+    label: 'Notes',
   },
 ];
 export const activityTypeIcons = {

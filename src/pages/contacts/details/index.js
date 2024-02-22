@@ -423,7 +423,15 @@ const index = () => {
                     activities={
                       activityFilter.id == 0 || !activityFilter
                         ? activities
-                        : activities.filter((activity) => activity.type_of_activity_id == activityFilter.id)
+                        : activities.filter((activity) => {
+                            console.log(activityFilter, activity.type_of_activity_id);
+                            if (activityFilter.id == 14) {
+                              return [14, 15, 16].includes(activity.type_of_activity_id);
+                            } else if (activityFilter.id == 3) {
+                              return [3, 26, 27].includes(activity.type_of_activity_id);
+                            }
+                            return activity.type_of_activity_id == activityFilter.id;
+                          })
                     }
                     setActivities={setActivities}
                   />
