@@ -2621,7 +2621,7 @@ export const activityTypesDropdown = [
     label: 'SMS',
   },
   {
-    id: 3,
+    id: 27,
     label: 'Phone Call',
   },
   {
