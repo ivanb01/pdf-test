@@ -2625,12 +2625,8 @@ export const activityTypesDropdown = [
     label: 'Phone Call',
   },
   {
-    id: 4,
-    label: 'Social Media',
-  },
-  {
-    id: 5,
-    label: 'In Person',
+    id:14,
+    label: 'Notes'
   },
 ];
 export const activityTypeIcons = {
