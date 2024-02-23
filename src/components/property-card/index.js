@@ -70,10 +70,10 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
         <ImageGallery images={property.PHOTOS} property={property} url={url} />
         <div
           className={`absolute bottom-2 left-2 flex items-center justify-center border ${
-            property.STATUS.toLowerCase() === 'sold'
+            property.STATUS.toLowerCase() === 'sold' || property.STATUS.toLowerCase() === 'for sale'
               ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-              : 'border-cyan-800 bg-cyan-50'
-          } rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium`}>
+              : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+          } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
           {property.STATUS}
         </div>
         <TooltipComponent
@@ -96,12 +96,9 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
         className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}
         onClick={() => {
           const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
-          console.log(selected, property);
           if (currentSelected) {
-            console.log('remove');
             setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
           } else {
-            console.log('add');
             setSelected((prevSelected) => [...prevSelected, property]);
           }
         }}>
