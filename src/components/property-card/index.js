@@ -95,10 +95,13 @@ const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected })
       <div
         className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}
         onClick={() => {
-          const currentSelected = selected?.includes(property);
+          const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
+          console.log(selected, property);
           if (currentSelected) {
-            setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
+            console.log('remove');
+            setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
           } else {
+            console.log('add');
             setSelected((prevSelected) => [...prevSelected, property]);
           }
         }}>

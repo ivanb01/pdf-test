@@ -543,9 +543,9 @@ const index = () => {
             class="hidden"
             onChange={(event) => {
               if (event.target.checked) {
-                setSelected((prevSelected) => [...prevSelected, property]);
+                setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
               } else {
-                setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
+                setSelected((prevSelected) => [...prevSelected, property]);
               }
             }}
           />
