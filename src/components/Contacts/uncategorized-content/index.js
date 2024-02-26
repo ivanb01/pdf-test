@@ -63,10 +63,8 @@ const Uncategorized = ({
     });
     uncategorizedInitialState.contacts = contactsArray;
     setUncategorizedCopy(uncategorizedContacts);
-  }, []);
-  const selectAll = (event) => {
-    console.log('test');
-  };
+  }, [uncategorizedInitialState]);
+
   const uncategorizedMainPage = () => {
     return (
       <>
@@ -124,8 +122,8 @@ const Uncategorized = ({
     );
   };
   useEffect(() => {
-    console.log(uncategorizedCopy, 'uncategorizedCopy');
-  }, [uncategorizedCopy]);
+    console.log(unapprovedContacts, 'unapprovedContacts');
+  }, [unapprovedContacts]);
 
   return (
     <>

@@ -30,7 +30,8 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
 
   const formatNumberToMillions = (n) => {
     if (n >= 1e6) {
-      return `$${(n / 1e6).toFixed(0)}m`;
+      const formattedValue = n % 1e6 === 0 ? (n / 1e6).toFixed(0) : (n / 1e6).toFixed(2).replace(/\.?0+$/, '');
+      return `$${formattedValue}m`;
     }
     return `$${n.toLocaleString('en-US')}`;
   };
@@ -80,7 +81,7 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
       onClick={handleDivClick}
       className={`${className} ${
         touched && 'text-gray8 font-normal'
-      } cursor-pointer flex justify-between h-[38px] px-3 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
+      } cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md`}>
       {intialLabel}
       <ChevronDownIcon
         className={`chevron-custom-icon transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`}
@@ -94,12 +95,14 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
           initialSelect={minPrice}
           options={options}
           label="Min. Price"
+          minMaxUsed
           className="w-full mr-4"
           handleSelect={(option) => setMinPrice(option.value)}></Dropdown>
         <Dropdown
           initialSelect={maxPrice}
           options={minPrice ? options.filter((option) => option.value > minPrice) : options}
           label="Max. Price"
+          minMaxUsed
           handleSelect={(option) => setMaxPrice(option.value)}
           className="w-full"></Dropdown>
       </div>

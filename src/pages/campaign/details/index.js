@@ -32,9 +32,14 @@ const index = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getAllEvents(id).then((res) => {
-      setCampaignEvents(res.data);
-    });
+    if (id) {
+      getAllEvents(id).then((res) => {
+        setCampaignEvents(res.data);
+      });
+      getCampaignsUsers(id).then((res) => {
+        dispatch(setUsersInCampaignGlobally(res.data));
+      });
+    }
   }, [id]);
 
   useEffect(() => {
@@ -48,11 +53,6 @@ const index = () => {
       setCampaignDetails(campaigns);
     }
   }, [CRMCampaigns, id]);
-  useEffect(() => {
-    getCampaignsUsers(id).then((res) => {
-      dispatch(setUsersInCampaignGlobally(res.data));
-    });
-  }, [id]);
 
   const totalContacts = usersInCampaignGlobally?.contacts.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -246,10 +246,10 @@ const index = () => {
 
 export default index;
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      requiresAuth: true,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       requiresAuth: true,
+//     },
+//   };
+// }

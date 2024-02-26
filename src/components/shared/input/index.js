@@ -55,7 +55,7 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+          className={` text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
         />

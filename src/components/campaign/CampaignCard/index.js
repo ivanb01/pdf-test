@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import CampaignPreview from '@components/campaign/CampaignPreview';
 import { useState } from 'react';
 import TooltipComponent from '@components/shared/tooltip';
-import { ExclamationCircleIcon } from '@heroicons/react/solid';
+import Link from 'next/link';
 
 const CampaignCard = ({
   campaign_name,
@@ -30,18 +30,20 @@ const CampaignCard = ({
     <div className={'flex flex-col rounded-lg campaigns-box-shadow justify-between'}>
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
-          <div
-            className={'flex justify-between items-center cursor-pointer'}
-            role={'button'}
-            onClick={() => {
-              router.push({
-                pathname: '/campaign/details',
-                query: { id: campaign_id, category: category },
-              });
-            }}>
-            <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
-            <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
-          </div>
+          <Link href={{ pathname: '/campaign/details', query: { id: campaign_id, category: category } }} passHref>
+            <div
+              className={'flex justify-between items-center cursor-pointer'}
+              role={'button'}
+              onClick={() => {
+                router.push({
+                  pathname: '/campaign/details',
+                  query: { id: campaign_id, category: category },
+                });
+              }}>
+              <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
+              <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
+            </div>
+          </Link>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
             <span className={'mr-1'}>{`${Number(events.sms + events.email)}  Events: `}</span>
             <span className={'mr-2'}>

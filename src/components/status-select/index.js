@@ -20,7 +20,7 @@ const StatusSelect = ({
           {required && <span className="text-gray-500 ml-1">*</span>}
         </Text>
       )}
-      <div className={`flex ${className}`}>
+      <div className={`flex-col md:flex-row flex ${className}`}>
         {statuses.map((status, index) => {
           const color = status.color;
           let mainStatusId = status.id;
@@ -36,7 +36,7 @@ const StatusSelect = ({
           }
 
           return (
-            <div key={status.statusMainTitle} style={{ width: `${width}%` }}>
+            <div key={status.statusMainTitle} className={`w-full md:width-[${width}%]`}>
               <Text
                 className={`text-gray3 pb-2 ${color} border-b-4`}
                 chipText
@@ -51,7 +51,9 @@ const StatusSelect = ({
                       <Chip
                         label={status.name}
                         key={status.id}
-                        className="mb-3"
+                        className={`mb-3 ${status.name === 'Attempted Contact' && ' lg:w-[140px] mr-1'} ${
+                          status.name === 'Contract Signed' && 'lg:w-[122px] mr-1'
+                        }`}
                         selectedStatus={selectedStatus == status.id ? true : false}
                         onClick={() => {
                           setSelectedStatus(status.id);

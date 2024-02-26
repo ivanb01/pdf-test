@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import bedroomBlack from '/public/images/bedroom-black.svg';
 import bathroomBlack from '/public/images/bathroom-black.svg';
 import room from '/public/images/room-black.svg';
+import filter from '/public/images/filter.svg';
 import bedroom from '/public/images/bedroom.svg';
 import bathroom from '/public/images/bathroom.svg';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
@@ -21,7 +22,7 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import { getProperties } from '@api/realtyMX';
-import { formatPrice, valueOptions } from '@global/functions';
+import { valueOptions } from '@global/functions';
 import { useSelector } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
@@ -37,6 +38,7 @@ import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import properties from 'pages/properties';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import TabsWithPills from '@components/shared/tabs/tabsWithPills';
 
 export default function LookingFor({ contactId, category }) {
   const router = useRouter();
@@ -224,9 +226,20 @@ export default function LookingFor({ contactId, category }) {
       });
   };
 
+  const getNeighborhoodShortVersion = () => {
+    const { neighborhood_ids } = formik.values;
+    if (!neighborhood_ids.length) return null;
+
+    const neighborhoods = neighborhood_ids.map((id) => NYCneighborhoods.find((n) => n.value === id)?.label);
+
+    if (neighborhoods.length > 2) {
+      return `${neighborhoods[0]}, ${neighborhoods[1]}, +${neighborhoods.length - 2} more`;
+    }
+    return neighborhoods.join(', ');
+  };
+
   const getNeighborhoodValue = () => {
     let neighborhoods = [];
-
     if (formik.values.neighborhood_ids.length) {
       formik.values.neighborhood_ids.forEach((element) => {
         const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
@@ -266,11 +279,11 @@ export default function LookingFor({ contactId, category }) {
     setFilterValue(filter);
   };
 
-  const PropertyDetail = ({ className, label, value, iconAfter, textAfter }) => {
+  const PropertyDetail = ({ className, label, value, iconAfter, textAfter, title }) => {
     return (
       <div className={`${className} text-sm`}>
         <div className="mb-1 text-gray-500 font-medium">{label}</div>
-        <div className="text-gray-900 flex items-center">
+        <div className="text-gray-900 flex items-center flex-nowrap sm:flex-wrap" title={title}>
           <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
           {textAfter && <span className="text-gray-500">{textAfter}</span>}
         </div>
@@ -278,13 +291,43 @@ export default function LookingFor({ contactId, category }) {
     );
   };
 
+  const tabs = [
+    { name: 'All', href: '#' },
+    { name: 'Saved', href: '#', count: 4 },
+    { name: 'Sent', href: '#' },
+    { name: 'Liked', href: '#' },
+    { name: 'Applied', href: '#' },
+    { name: 'Sold', href: '#' },
+  ];
+
+  const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);
+
+  function formatPrice(value) {
+    if (!isNaN(value)) {
+      const num = parseFloat(value);
+
+      if (num >= 1000) {
+        if (num % 1000 !== 0 && num % 100 === 0) {
+          return `$${(num / 1000).toFixed(1)}k`;
+        } else if (num % 1000 === 0) {
+          return `$${(num / 1000).toFixed(0)}k`;
+        }
+        return `$${num.toLocaleString()}`;
+      } else {
+        return `$${num}`;
+      }
+    } else {
+      return `$${value}`;
+    }
+  }
+
   return (
     <>
       {showAddPopup && (
         <AddLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
-          title="Edit Property Interests"
+          title="Add Property Interests"
           className="w-[580px]"
           handleClose={() => setShowAddPopup(false)}
         />
@@ -292,9 +335,10 @@ export default function LookingFor({ contactId, category }) {
       {showEditPopup && (
         <EditLookingForPopup
           action={getLookingAction()}
+          contactId={contactId}
           data={lookingForData[0]}
-          title="Edit Property Interests"
-          className="w-[580px]"
+          title={lookingForData[0] ? 'Edit Property Interests' : 'Add Property Interests'}
+          className="w-full md:w-[670px]"
           handleClose={() => setShowEditPopup(false)}
         />
       )}
@@ -309,66 +353,22 @@ export default function LookingFor({ contactId, category }) {
               <Loader message="Please wait we're searching for matched properties"></Loader>
             ) : (
               <>
-                {!lookingForData?.length ? (
-                  <div className="px-6">
-                    <FloatingAlert
-                      message={
-                        category === 'Landlord' || category === 'Seller'
-                          ? 'For precise property recommendations, include specific details for accurate comparisons.'
-                          : 'Please specify property interests for tailored client recommendations'
-                      }
-                      buttonText={'Edit'}
-                      onClick={() => setShowAddPopup(true)}
-                    />
+                <div className="p-6 pt-0">
+                  <div className="flex justify-between items-center">
+                    <div className="font-semibold">Properties</div>
+                    <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>
+                      Client Preferences
+                    </Button>
                   </div>
-                ) : (
-                  <div className="px-6">
-                    <header className={`transition-all bg-teal-50 p-3 rounded-lg border border-gray2`}>
-                      <div className="flex justify-between">
-                        <div className="grid grid-cols-5 gap-14 items-center">
-                          <PropertyDetail label="Neighborhood" value={getNeighborhoodValue()} />
-                          <PropertyDetail
-                            label="Rooms"
-                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                            iconAfter={<Image src={room} height={20} />}
-                          />
-                          <PropertyDetail
-                            label="Bedrooms"
-                            value={formik.values.bedrooms ? formik.values.bedrooms : 'Any'}
-                            iconAfter={<Image src={bedroomBlack} height={20} />}
-                          />
-                          <PropertyDetail
-                            label="Bathrooms"
-                            value={formik.values.bathrooms ? formik.values.bathrooms : 'Any'}
-                            iconAfter={<Image src={bathroomBlack} height={20} />}
-                          />
-                          <PropertyDetail
-                            label="Price Min / Max"
-                            value={`${formik.values.budget_min ? formatPrice(formik.values.budget_min) : 'Any'} - ${
-                              formik.values.budget_max ? formatPrice(formik.values.budget_max) : 'Any'
-                            }`}
-                            {...(getLookingAction() == 2 && {
-                              textAfter: 'monthly',
-                            })}
-                          />
-                        </div>
-                        <div className="flex items-center">
-                          <Button
-                            className="min-w-fit mr-4"
-                            onClick={() => setShowEditPopup(true)}
-                            white
-                            leftIcon={<PencilIcon height={17} className="text-gray6 mr-3" />}>
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </header>
-                  </div>
-                )}
-                <div className="p-6">
+                  <TabsWithPills
+                    propertiesCurrentTab={propertiesCurrentTab}
+                    setPropertiesCurrentTab={setPropertiesCurrentTab}
+                    className="py-4"
+                    tabs={tabs}
+                  />
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
+                      {/* <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
                         <div>
                           {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
                             <>
@@ -400,7 +400,7 @@ export default function LookingFor({ contactId, category }) {
                           </p>
                           <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="grid grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
                           <PropertyCard key={index} property={property}></PropertyCard>

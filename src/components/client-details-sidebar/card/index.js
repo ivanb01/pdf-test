@@ -51,7 +51,6 @@ export default function ClientCard({ client }) {
           src={client?.profile_image_path}
           // src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
         />
-
         {/* profile_image_path */}
         <div className="flex flex-col ml-[18px] max-w-[230px]">
           <h1 className={'text-2xl font-bold relative flex items-center'} style={{ wordBreak: 'break-word' }}>
@@ -97,10 +96,10 @@ export default function ClientCard({ client }) {
           </span>
         </div>
         <div className="ml-auto mr-4">
-          <FilterDropdown
-            types={client && client.category_id === 3 ? [types[0]] : types}
-            icon={<DotsVerticalIcon height={20} />}
-          />
+          {/*<FilterDropdown*/}
+          {/*  types={client && client.category_id === 3 ? [types[0]] : types}*/}
+          {/*  icon={<DotsVerticalIcon height={20} />}*/}
+          {/*/>*/}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ export const getCount = () => {
 };
 export const getContacts = (category, searchterm) => {
   return axiosInstance.get('v1/contacts', {
-    params: { category_ids: category, search_term: searchterm, limit:100 },
+    params: { category_ids: category, search_term: searchterm, limit: 2000 },
   });
 };
 

@@ -31,7 +31,7 @@ export default function DateChip({
       side={'left'}
       align="center"
       triggerElement={
-        <div className={`${className} inline-flex rounded-full px-2 text-xs font-medium items-center ${styling}`}>
+        <div className={`inline-flex rounded-full px-2 text-xs font-medium items-center  ${styling}  ${className}  `}>
           <Mail className="w-4 mr-1" />
           <span>{lastCommunicationLabel} </span>
         </div>

@@ -34,6 +34,7 @@ import Onboarding from '@components/overlays/onboarding';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import GoogleContact from '../../../../../public/images/GoogleContact.png';
+
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
@@ -43,10 +44,39 @@ import SubMenuContent from '@components/shared/SubMenuCard';
 import AIChip from '@components/shared/chip/ai-chip';
 import { isHealthyCommuncationDate } from '@global/functions';
 
+const getNeedToCommunicateContacts = (allContacts) => {
+  if (!allContacts) {
+    return;
+  }
+  return (
+    allContacts &&
+    allContacts.filter((contact) => {
+      const categoryType = contact?.category_1?.toLowerCase() + 's';
+      if (categoryType !== 'clients') {
+        return false;
+      }
+      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+      return !isHealthyCommunication;
+    }).length
+  );
+};
+const getCountForTabOrSubtab = (count_key, count, allContacts) => {
+  if (!count || !allContacts) {
+    return;
+  }
+  if (count_key === 'need_to_contact' && allContacts) {
+    return '(' + getNeedToCommunicateContacts(allContacts) + ')';
+  } else if (count_key === 'other_total') {
+    return '(' + (count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0) + ')';
+  } else {
+    return '(' + (count && count[count_key] ? count[count_key] : 0) + ')';
+  }
+};
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const count = useSelector((state) => state.global.count);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const pinned = useSelector((state) => state.global.expandedMenu);
   const [loadingActivateSS, setLoadingActivateSS] = useState(false);
@@ -55,7 +85,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const [finishedOnboarding, setFinishedOnboarding] = useState(false);
   const [startedOnboarding, setStartedOnboarding] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
     try {
@@ -90,6 +119,24 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     const isSubtabActive = (currentSubtab, tabId) => {
       return openedSubtab == currentSubtab && openedTab == tabId;
     };
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
+    const showPulse = (tab) => {
+      if (allContacts) {
+        if (tab.href == 'needcontact') {
+          return (
+            allContacts.filter((contact) => {
+              const categoryType = contact?.category_1?.toLowerCase() + 's';
+              if (categoryType !== 'clients') {
+                return false;
+              }
+              let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
+              return !isHealthyCommunication;
+            }).length > 0
+          );
+        }
+      }
+    };
 
     return (
       <div className="accordion w-inherit cursor-pointer">
@@ -103,7 +150,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <div>
                   <Link
                     href="#"
-                    className={`  flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
+                    className={`hover:bg-gray1 relative flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
                       openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                     }`}
                     onClick={() => {
@@ -116,17 +163,25 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                       }`}
                       title={tab.name}>
-                      <div>{tab.icon}</div>
+                      <div title={''}>{tab.icon}</div>
+                      {showPulse(tab) && (
+                        <span class="absolute right-0 top-2 flex h-2 w-2 ml-4">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                        </span>
+                      )}
                     </div>
                   </Link>
                 </div>
               }>
-              {tab.subtab && (
+              {tab.subtab ? (
                 <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
                   {tab.subtab.map((t) => (
                     <div
-                      className={` rounded-md ${
-                        isSubtabActive(t.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
+                      className={`hover:bg-gray1 rounded-md ${
+                        isSubtabActive(t.id, tab.id)
+                          ? 'text-lightBlue3 bg-lightBlue1 font-semibold'
+                          : 'text-gray4 font-medium'
                       }`}>
                       <div
                         role={'button'}
@@ -135,11 +190,21 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           dispatch(setOpenedSubtab(t.id));
                           router.push(tab.href);
                         }}
-                        className={`px-5 py-3  gap-[10px] transition-all duration-200 text-gray4 text-sm font-medium relative flex items-center`}>
-                        {t?.dot} <span className={'w-[100px]'}>{t.name}</span>
+                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm relative flex items-center`}>
+                        {t?.dot}
+                        <div className={'w-max'}>{t.name}</div>
+                        <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
                   ))}
+                </div>
+              ) : (
+                <div className={`absolute flex mt-1 shadowCustom`}>
+                  <div className={'bg-gray8 h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
+                  <div
+                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-gray8 ml-[-10px] rounded-md z-10 text-white`}>
+                    {tab.name}
+                  </div>
                 </div>
               )}
             </SubMenuContent>
@@ -160,6 +225,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   };
 
   const expandedMenu = () => {
+    const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
     return (
       <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
         <div className={'mx-3'}>
@@ -266,18 +333,19 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     </>
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
-                    <div className={`transition-all w-auto bg-purple1 pb-0 text-xs m-3 setup-smart-sync`}>
-                      <div className="p-3">
-                        Setup <span className="font-bold">“Gmail Smart Sync Contacts by AI”</span> and{' '}
-                        <span className="font-bold">“Import Google Contacts”</span> in order to import contacts from
-                        Gmail.
+                    <div
+                      className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}>
+                      <div className="text-xs font-semibold text-gray6">
+                        Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{' '}
+                        <span className="font-bold text-gray-900">“Import Google Contacts”</span> in order to import
+                        contacts from Gmail.
                       </div>
-                      <a
-                        className="px-3 bg-purple-100 text-[14px] group cursor-pointer py-3 flex items-center justify-end font-medium text-purple6"
-                        onClick={() => setShowSSOverlay(true)}>
-                        Setup
-                        <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
-                      </a>
+                      <button
+                        onClick={() => setShowSSOverlay(true)}
+                        type="button"
+                        className="flex mt-2 bg-[#EDDDFD] rounded-md px-2 py-1.5 text-sm items-center font-medium text-gray7 ml-auto hover:bg-purple-200 focus:outline-none">
+                        Setup <ArrowForward className="ml-2 h-4 group-hover:translate-x-1 transition-all" />
+                      </button>
                     </div>
                   )}
                 </>
@@ -302,7 +370,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <div
             onClick={() => dispatch(setExpandedMenu(!pinned))}
             className="absolute cursor-pointer"
-            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 1 }}>
+            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 100 }}>
             <div className="">
               <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
@@ -322,13 +390,10 @@ const TabBar = ({ tab }) => {
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
   useEffect(() => {
-    setOpenedTab(0);
-    if (openedSubtab !== 0) {
-      console.log('test');
-      setOpenedSubtab(0);
+    setOpenedTab(-1);
+    if (openedSubtab !== -1) {
+      setOpenedSubtab(-1);
     } else {
-      console.log('test2');
-
       setOpenedSubtab(openedSubtab);
     }
 
@@ -341,13 +406,6 @@ const TabBar = ({ tab }) => {
   const router = useRouter();
   const count = useSelector((state) => state.global.count);
 
-  const getCountForTabOrSubtab = (count_key) => {
-    if (count_key === 'other_total') {
-      return count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0;
-    }
-    return count && count[count_key] ? count[count_key] : 0;
-  };
-
   const findOpenedId = (tabId) => {
     return tabs.length > 0 && tabs.find((tab) => tab.id === tabId);
   };
@@ -358,6 +416,9 @@ const TabBar = ({ tab }) => {
       dispatch(setExpandedTab({ id: 1, opened: false }));
     }
   }, [openedTab]);
+  useEffect(() => {
+    console.log(openedSubtab, 'openedSubtab');
+  }, [openedSubtab]);
 
   const handleTabClick = () => {
     if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6) {
@@ -365,7 +426,6 @@ const TabBar = ({ tab }) => {
     }
     dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
   };
-
   const handleSubtabClick = (subtabId) => {
     dispatch(setOpenedTab(tab.id));
     dispatch(setOpenedSubtab(subtabId));
@@ -392,10 +452,13 @@ const TabBar = ({ tab }) => {
   };
 
   return (
-    <div className={`accordion w-inherit ${tab.name.toLowerCase()}`} key={tab.id}>
+    <div className={`accordion w-inherit  ${tab.name.toLowerCase()}`} key={tab.id}>
       <Link
         href="#"
-        className={`flex items-center h-8 justify-between pl-2 pr-3 ${openedTab === tab.id && ' text-lightBlue3'} ${
+        onClick={() => {
+          handleTabClick();
+        }}
+        className={`flex items-center h-8 justify-between w-inherit ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||
@@ -403,28 +466,32 @@ const TabBar = ({ tab }) => {
           (openedTab === 6 && tab.id === 6)
             ? 'bg-lightBlue1'
             : ''
-        }`}
-        onClick={handleTabClick}>
-        <div className={`flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
-          {tab.icon}
-          <Text h4 className={`px-3 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
-            {tab.name}
-          </Text>
-          {showPulse(tab) && (
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-            </span>
+        }`}>
+        <div className={'flex items-center h-8 justify-between pl-2 pr-3 hover:bg-gray1 w-[241px]'}>
+          <div className={` flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
+            {tab.icon}
+            <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+              {tab.name}
+            </Text>
+            <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
+              {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
+            </Text>
+            {showPulse(tab) && (
+              <span class="relative flex h-2 w-2 ml-4">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+              </span>
+            )}
+          </div>
+
+          {tab.subtab && (
+            <ArrowDropDownIcon
+              className={`text-gray3 h-5 w-5 transition-all duration-300 ${
+                findOpenedId(tab.id).opened ? 'rotate-180' : ''
+              }`}
+            />
           )}
         </div>
-
-        {tab.subtab && (
-          <ArrowDropDownIcon
-            className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-              findOpenedId(tab.id).opened ? 'rotate-180' : ''
-            }`}
-          />
-        )}
       </Link>
       {tab.subtab && (
         <div className={findOpenedId(tab.id).opened ? `` : `hidden`}>
@@ -433,7 +500,7 @@ const TabBar = ({ tab }) => {
               <a
                 key={`${subtab.id}`}
                 href="#"
-                className={`h-8 px-10 transition-all duration-200 flex items-center ${
+                className={`h-8 hover:bg-gray1 px-10 transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
@@ -444,6 +511,13 @@ const TabBar = ({ tab }) => {
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {subtab.name}
+                </Text>
+                <Text
+                  h4
+                  className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[5px]')}  py-[10px]  ${
+                    isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
+                  }`}>
+                  {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
                 </Text>
               </a>
             );

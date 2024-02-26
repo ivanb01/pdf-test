@@ -38,6 +38,7 @@ import { updateContactLocally } from '@store/contacts/slice';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
+import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
 
 const ReviewContact = ({
   className,
@@ -68,6 +69,12 @@ const ReviewContact = ({
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialClientCategoryId = useRef(client.category_1);
   const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
+  const [newLeadSource, setNewLeadSource] = useState(
+    leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
 
   const isUnapprovedAI = !(
     ['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(client.import_source) &&
@@ -143,6 +150,7 @@ const ReviewContact = ({
       }
     },
   });
+  const ai_unapproved_contacts_redux = useSelector((state) => state.AIAUnapprovedContacts.ai_unapproved_contacts);
 
   const { errors, touched, submitForm, isSubmitting } = formik;
 
@@ -159,10 +167,18 @@ const ReviewContact = ({
       // make api call in the background to update contact
       updateContact(client.id, newData).then(() => dispatch(setRefetchData(true)));
       // if aftersubmit prop is given, call the function
-      if (afterSubmit) afterSubmit(client?.id, newData);
+      if (!router.pathname.includes('ai-summary')) {
+        if (afterSubmit) afterSubmit(client?.id, newData);
+      }
 
-      // if redirectAfterMoveToTrash prop is given redirect
       if (redirectAfterMoveToTrash) router.push('/contacts/clients');
+
+      if (router.pathname.includes('ai-summary')) {
+        const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        const totalContacts = ai_unapproved_contacts_redux.length;
+        dispatch(setTotal(totalContacts - 1));
+        dispatch(setAIUnApprovedContacts(removeItemsFromTable));
+      }
 
       toast.custom(
         (t) => (
@@ -184,6 +200,7 @@ const ReviewContact = ({
                     approved_ai: false,
                   }).then(() => dispatch(setRefetchData(true)));
                   if (afterSubmit) {
+                    dispatch(setTotal(ai_unapproved_contacts_redux.length));
                     afterSubmit(client?.id, { ...newData, approved_ai: false });
                   }
                   toast.dismiss(t.id);
@@ -214,14 +231,18 @@ const ReviewContact = ({
     }
     // Rest of your handleSubmit logic goes here
   }, [existingContactEmailError]);
+  useEffect(() => {
+    console.log(formik.values, 'values');
+  }, [formik.values]);
 
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
   const handleSubmit = async (values) => {
-    console.log(existingContactEmailError, 'existingContactEmailError');
     if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
       return;
     }
     setUpdating(true);
-
     let category_id;
     if (values.selectedContactCategory === 3) {
       category_id = 1;
@@ -233,13 +254,21 @@ const ReviewContact = ({
       category_id = values.selectedContactType;
     }
 
-    const status_id = category_id == 3 ? 1 : values.selectedStatus;
+    console.log(category_id, 'category_id');
+    console.log(
+      '    let status_id = category_id == 3 ? 1 : values.selectedStatus;',
+      category_id == 3 ? 1 : values.selectedStatus,
+    );
 
+    console.log(vendorSubtypesFormatted, 'vendorSubtypesFormatted');
     const category =
       values.selectedContactCategory === 0
         ? clientOptions.find((client) => client.id === category_id).name
+        : values.selectedContactCategory === 1 && values.selectedContactType === 8
+        ? vendorSubtypesFormatted?.find((vendor) => vendor.value == formik.values.selectedContactSubtype).label
         : client.category_2;
 
+    let status_id = category_id == 3 ? 1 : values.selectedStatus;
     const baseData = {
       ...client,
       first_name: values.first_name,
@@ -252,6 +281,8 @@ const ReviewContact = ({
       summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
+    console.log(status_id == '' ? 1 : status_id, 'status_id');
+    console.log(baseData, 'baseData');
 
     const newData = !isUnapprovedAI
       ? {
@@ -268,7 +299,6 @@ const ReviewContact = ({
 
     try {
       let shouldExecuteRemainingCode = true;
-      let action = isUnapprovedAI ? 'marked as correct' : 'updated successfully';
       if (router.pathname.includes('trash')) {
         if (newData.category_id !== 3) {
           shouldExecuteRemainingCode = false;
@@ -302,10 +332,9 @@ const ReviewContact = ({
       if (client.category_id != category_id || client.status_id != status_id) {
         // remove from campaign if changing category or status or if changed to TRASH
         if (client.campaign_id) {
-          unassignContactFromCampaign(client.campaign_id, client.id);
+          // unassignContactFromCampaign(client.campaign_id, client.id);
         }
       }
-      console.log(newData);
       if (newData.category_id === 3 && router.pathname.includes('details')) {
         // const lowercaseCategory = initialClientCategoryId.current.toLowerCase();
         // const targetCategory = ['trash', 'uncategorized'].includes(lowercaseCategory) && lowercaseCategory;
@@ -314,6 +343,7 @@ const ReviewContact = ({
       }
 
       // make changes to global state
+      console.log(newData, 'newData');
       dispatch(updateContactLocally(newData));
       setUpdating(false);
       handleClose();
@@ -331,6 +361,12 @@ const ReviewContact = ({
         dispatch(setOpenedSubtab(0));
       }
 
+      if (router.pathname.includes('ai-summary')) {
+        const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
+        const totalContacts = ai_unapproved_contacts_redux.length;
+        dispatch(setTotal(totalContacts - 1));
+        dispatch(setAIUnApprovedContacts(removeItemsFromTable));
+      }
       if (shouldExecuteRemainingCode) {
         if (isUnapprovedAI) {
           toast.success('Changes have been saved successfully!');
@@ -356,6 +392,7 @@ const ReviewContact = ({
                         approved_ai: false,
                       }).then(() => dispatch(setRefetchData(true)));
                       if (afterSubmit) {
+                        dispatch(setTotal(ai_unapproved_contacts_redux.length));
                         afterSubmit(client.id, { ...newData, approved_ai: false });
                       }
                     }}
@@ -492,137 +529,137 @@ const ReviewContact = ({
   };
 
   return (
-    <Overlay handleCloseOverlay={!hideCloseButton && handleClose} title={title} className={`${className} w-[1150px]`}>
-      <div className="flex min-h-[500px]">
-        <div className={`w-1/2 border-r border-borderColor`}>
-          <SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>
-            <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
-              {client.campaign_name && (
-                <GlobalAlert
-                  smallText
-                  noBorder
-                  rounded
-                  type="warning"
-                  className="mb-4"
-                  message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
-                />
-              )}
-              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
-                <Input
-                  type="text"
-                  required
-                  label="First Name"
-                  id="first_name"
-                  className=""
-                  onChange={formik.handleChange}
-                  value={formik.values.first_name}
-                  error={errors.first_name && touched.first_name}
-                  errorText={errors.first_name}
-                />
-                <Input
-                  required
-                  type="text"
-                  label="Last Name"
-                  id="last_name"
-                  className=""
-                  onChange={formik.handleChange}
-                  value={formik.values.last_name}
-                  error={errors.last_name && touched.last_name}
-                  errorText={errors.last_name}
-                />
-                <Input
-                  required
-                  type="email"
-                  label="Email"
-                  id="email"
-                  className=""
-                  // readonly={isUnapprovedAI}
-                  // onChange={formik.handleChange}
-                  onChange={(e) => {
-                    if (existingContactEmail !== e.target.value) {
-                      setExistingContactEmailError('');
-                    }
-                    formik.setFieldValue('email', e.target.value);
-                  }}
-                  value={formik.values.email}
-                  error={(errors.email && touched.email) || existingContactEmailError}
-                  errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
-                />
-                <Input
-                  type="phone_number"
-                  label="Phone"
-                  id="phone_number"
-                  onChange={(val) => formik.setFieldValue('phone_number', val)}
-                  value={formik.values.phone_number}
-                  error={errors.phone_number && touched.phone_number}
-                  errorText={errors.phone_number}
-                />
-              </div>
-              <TextArea
-                className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
-                id="summary"
-                label="Summary"
-                name={'summary'}
-                link={client.email_link}
-                handleChange={formik.handleChange}
-                value={formik.values.summary}
+    <Overlay
+      handleCloseOverlay={!hideCloseButton && handleClose}
+      title={title}
+      className={`${className} w-full lg:w-[1150px]`}>
+      <div className="flex min-h-[500px] flex-col lg:flex-row">
+        <div className={`w-full lg:w-1/2 border-r border-borderColor`}>
+          {/*<SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>*/}
+          <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
+            {client.campaign_name && (
+              <GlobalAlert
+                smallText
+                noBorder
+                rounded
+                type="warning"
+                className="mb-4"
+                message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
               />
-              <div className="text-xs mb-6 text-gray6">
-                {client.created_at && (
-                  <div className="mt-2">
-                    <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+            )}
+            <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
+              <Input
+                type="text"
+                required
+                label="First Name"
+                id="first_name"
+                className=""
+                onChange={formik.handleChange}
+                value={formik.values.first_name}
+                error={errors.first_name && touched.first_name}
+                errorText={errors.first_name}
+              />
+              <Input
+                required
+                type="text"
+                label="Last Name"
+                id="last_name"
+                className=""
+                onChange={formik.handleChange}
+                value={formik.values.last_name}
+                error={errors.last_name && touched.last_name}
+                errorText={errors.last_name}
+              />
+              <Input
+                required
+                type="email"
+                label="Email"
+                id="email"
+                className=""
+                // readonly={isUnapprovedAI}
+                // onChange={formik.handleChange}
+                onChange={(e) => {
+                  if (existingContactEmail !== e.target.value) {
+                    setExistingContactEmailError('');
+                  }
+                  formik.setFieldValue('email', e.target.value);
+                }}
+                value={formik.values.email}
+                error={(errors.email && touched.email) || existingContactEmailError}
+                errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
+              />
+              <Input
+                type="phone_number"
+                label="Phone"
+                id="phone_number"
+                onChange={(val) => formik.setFieldValue('phone_number', val)}
+                value={formik.values.phone_number}
+                error={errors.phone_number && touched.phone_number}
+                errorText={errors.phone_number}
+              />
+            </div>
+            <TextArea
+              className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+              id="summary"
+              label="Summary"
+              name={'summary'}
+              link={client.email_link}
+              handleChange={formik.handleChange}
+              value={formik.values.summary}
+            />
+            <div className="text-xs mb-6 text-gray6">
+              {client.created_at && (
+                <div className="mt-2">
+                  <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+                </div>
+              )}
+              <div className="flex items-center">
+                {client.email_subject && (
+                  <div className="mt-0.5">
+                    <span className="font-medium">Subject: </span>
+                    {client.email_subject}
+                    <span />
                   </div>
                 )}
-                <div className="flex items-center">
-                  {client.email_subject && (
-                    <div className="mt-0.5">
-                      <span className="font-medium">Subject: </span>
-                      {client.email_subject}
-                      <span />
-                    </div>
-                  )}
-                </div>
               </div>
-              <div className={'grid grid-cols-2 gap-4 col-span-full'}>
-                <div>
-                  <Dropdown
-                    openClassName={'mb-2'}
-                    className="col-span-2"
-                    top={'top-[-260px]'}
-                    white
-                    label="Lead Source"
-                    activeIcon={false}
-                    options={leadSourceOptions}
-                    handleSelect={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
-                    initialSelect={formik.values.lead_source}
-                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                  />
-                </div>
-                <div>
-                  <DropdownWithSearch
-                    isMulti
-                    options={multiselectOptionsClients}
-                    onMenuOpen={() => setIsMenuOpen(true)}
-                    onMenuClose={() => setIsMenuOpen(false)}
-                    typeOfContact={openedTab}
-                    top={'-130px'}
-                    maxMenuHeight={200}
-                    value={findTagsOption(formik.values.tags)}
-                    label="Priority"
-                    onChange={(choice) => {
-                      formik.setFieldValue(
-                        'tags',
-                        choice.map((el) => el.label),
-                      );
-                    }}
-                  />
-                </div>
+            </div>
+            <div className={'grid grid-cols-2 gap-4 col-span-full'}>
+              <div>
+                <DropdownWithSearch
+                  bottom={'-58px'}
+                  options={newLeadSource}
+                  label="Lead Source"
+                  value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
+                  onChange={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
+                  placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                  maxMenuHeight={200}
+                />
               </div>
-            </form>
-          </SimpleBar>
+              <div>
+                <DropdownWithSearch
+                  isMulti
+                  options={multiselectOptionsClients}
+                  onMenuOpen={() => setIsMenuOpen(true)}
+                  onMenuClose={() => setIsMenuOpen(false)}
+                  typeOfContact={openedTab}
+                  bottom={'-59px'}
+                  maxMenuHeight={200}
+                  value={findTagsOption(formik.values.tags)}
+                  label="Priority"
+                  onChange={(choice) => {
+                    formik.setFieldValue(
+                      'tags',
+                      choice.map((el) => el.label),
+                    );
+                  }}
+                />
+              </div>
+            </div>
+          </form>
+          {/*</SimpleBar>*/}
         </div>
-        <div className="w-1/2 relative">
-          <SimpleBar autoHide={true} style={{ maxHeight: '510px', height: '100%' }}>
+        <div className="w-full lg:w-1/2 relative">
+          <SimpleBar className="max-h-full md:max-h-[510px]" autoHide={true} style={{ height: '100%' }}>
             <div className="p-6 pt-0">
               <Radio
                 options={contactTypes}

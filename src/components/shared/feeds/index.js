@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import {
-  formatDate,
-  formatDateAgo,
-  formatDateCalendar,
-  formatDateLL,
-  formatDateStringMDY,
-  formatDateLThour,
-  formatDateMDY,
-} from 'global/functions';
+import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
+import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -21,26 +13,16 @@ import Dropdown from 'components/shared/dropdown';
 import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
-import { activityTypes } from 'global/variables';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRefetchData, setRefetchPart } from 'store/global/slice';
+import { activityTypeIcons, activityTypes } from 'global/variables';
+import { useDispatch } from 'react-redux';
+import { setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
-
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import Mail from '@mui/icons-material/Mail';
 import TooltipComponent from '@components/shared/tooltip';
 
-const activitiesTypes = {
-  1: <MailIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  6: <TagIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-};
-export default function Feeds({ contactId, activities, setActivities }) {
+export default function Feeds({ showFullHeight, contactId, activities, setActivities, height, filter }) {
   const placeholderDescription = (activity_type) => {
     if (activity_type == 1) {
       return 'Email Sent to contact';
@@ -130,21 +112,21 @@ export default function Feeds({ contactId, activities, setActivities }) {
   const handleDeleteActivity = async (activity) => {
     try {
       const filteredActivities = activities.filter((item) => item.id !== activity.id);
-      dispatch(setActivityLogData(filteredActivities));
+      setActivities(filteredActivities);
       toast.success('Activity was deleted successfully!');
-      contactServices
-        .deleteContactActivity(contactId, activity.id)
-        .then(() => dispatch(setRefetchPart('activity-log')));
+      contactServices.deleteContactActivity(contactId, activity.id);
     } catch (error) {
       toast.error('There was a problem deleting the activity!');
     }
   };
 
   useEffect(() => {
-    if (activityModal) {
-      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
-    } else {
-      document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
+    if (document.querySelector('.client-details-wrapper')) {
+      if (activityModal) {
+        document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
+      } else {
+        document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
+      }
     }
   }, [activityModal]);
 
@@ -175,14 +157,14 @@ export default function Feeds({ contactId, activities, setActivities }) {
 
   return (
     <>
-      <div className="bg-white pt-6">
+      <div className="bg-white">
         <SimpleBar
           style={{
-            height: '52vh',
+            maxHeight: showFullHeight ? '100%' : '280px',
             paddingRight: '-10px',
           }}
           autoHide>
-          <ul role="list" className="-mb-8">
+          <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
             {activities
               ?.slice()
               .sort((a, b) => b.id - a.id)
@@ -200,7 +182,7 @@ export default function Feeds({ contactId, activities, setActivities }) {
                       <>
                         <div className="relative">
                           <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                            {activitiesTypes[activityItem.type_of_activity_id] ?? (
+                            {activityTypeIcons[activityItem.type_of_activity_id] ?? (
                               <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
                             )}
                           </div>
@@ -215,14 +197,22 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                   <div className={'mr-3'}>
                                     Created:{' '}
                                     {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.created_at).includes('PM')
+                                    formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                    formatDateCalendar(activityItem.created_at).includes('Today')
                                       ? formatDateCalendar(activityItem.created_at)
-                                      : formatDateCalendar(activityItem.created_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.created_at)}
+                                      : daysBefore(activityItem.created_at)}
                                   </div>
                                 }>
-                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.created_at)}</h1>
+                                <h1 className={'text-sm'}>
+                                  {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.created_at).includes('PM')
+                                    ? formatDateStringMDY(activityItem.created_at)
+                                    : formatDateCalendar(activityItem.created_at) +
+                                      ' - ' +
+                                      formatDateLThour(activityItem.created_at)}
+                                </h1>
                               </TooltipComponent>
                             </p>
                           )}
@@ -235,14 +225,22 @@ export default function Feeds({ contactId, activities, setActivities }) {
                                   <div>
                                     Updated:{' '}
                                     {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('PM')
+                                    formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('Today')
                                       ? formatDateCalendar(activityItem.updated_at)
-                                      : formatDateCalendar(activityItem.updated_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.updated_at)}
+                                      : daysBefore(activityItem.updated_at)}
                                   </div>
                                 }>
-                                <h1 className={'text-sm'}>{formatDateStringMDY(activityItem.updated_at)}</h1>
+                                <h1 className={'text-sm'}>
+                                  {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                  formatDateCalendar(activityItem.updated_at).includes('PM')
+                                    ? formatDateStringMDY(activityItem.updated_at)
+                                    : formatDateCalendar(activityItem.updated_at) +
+                                      ' - ' +
+                                      formatDateLThour(activityItem.updated_at)}
+                                </h1>
                               </TooltipComponent>
                               {/* Commented 6d ago */}
                             </p>
@@ -260,10 +258,12 @@ export default function Feeds({ contactId, activities, setActivities }) {
                     {activityItem.contact_id && (
                       <div className="flex mr-3">
                         <FilterDropdown
-                          types={[1, 2, 3, 4, 5, 6].includes(activityItem.type_of_activity_id) ? types : [types[1]]}
-                          icon={<More className="w-5" />}
+                          types={[types[1]]}
+                          icon={<More className="w-5 text-gray4 cursor-pointer" />}
                           data={activityItem}
-                          positionClass="right-0"
+                          side={'left'}
+                          align={'center'}
+                          positionClass="right-7 top-0"
                         />
                       </div>
                     )}

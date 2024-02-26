@@ -7,13 +7,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Button from 'components/shared/button';
 import { setRefetchData } from '@store/global/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllContacts } from '@store/contacts/slice';
 
 const GoogleContactsImportSummary = ({ data }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [allContacts, setAllContacts] = useState([]);
+  const [allContacts, setAllContactsLocally] = useState([]);
   const [searchTermImported, setSearchTermImported] = useState('');
   const [searchTermNotImported, setSearchTermNotImported] = useState('');
   const [importedContacts, setImportedContacts] = useState([]);
@@ -48,11 +49,35 @@ const GoogleContactsImportSummary = ({ data }) => {
 
   useEffect(() => {
     dispatch(setRefetchData(true));
-    setAllContacts(data);
+    setAllContactsLocally(data);
     setImportedContacts(data?.importable_new_contacts);
     setNotImportedContacts([...data?.invalid_contacts]);
   }, [data]);
 
+  useEffect(() => {
+    console.log(importedContacts);
+  }, [importedContacts]);
+  const [loading, setLoading] = useState(false);
+  const allContactsRedux = useSelector((state) => state.contacts.allContacts);
+
+  const handleButtonClick = () => {
+    setLoading(true);
+    dispatch(
+      setAllContacts({
+        ...allContactsRedux,
+        data: [
+          ...allContactsRedux.data,
+          ...allContacts?.importable_contacts?.map((item) => ({ ...item, category_id: 1 })),
+        ],
+      }),
+    );
+    setTimeout(() => {
+      router.push({
+        pathname: '/contacts/uncategorized',
+      });
+    }, 1000);
+    setLoading(false);
+  };
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -103,13 +128,13 @@ const GoogleContactsImportSummary = ({ data }) => {
               value={searchTermImported}
             />
             <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
-              <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>
-                <Table
-                  tableFor="import-google-contacts-successful"
-                  data={importedContacts}
-                  // allContacts={imports1}
-                ></Table>
-              </SimpleBar>
+              {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
+              <Table
+                tableFor="import-google-contacts-successful"
+                data={importedContacts}
+                // allContacts={imports1}
+              ></Table>
+              {/*</SimpleBar>*/}
             </div>
           </div>
           {allContacts?.invalid_contacts && (
@@ -152,9 +177,9 @@ const GoogleContactsImportSummary = ({ data }) => {
                 value={searchTermNotImported}
               />
               <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
-                <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>
-                  <Table tableFor="import-google-contacts-failed" data={notImportedContacts}></Table>
-                </SimpleBar>
+                {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
+                <Table tableFor="import-google-contacts-failed" data={notImportedContacts}></Table>
+                {/*</SimpleBar>*/}
               </div>
             </div>
           )}
@@ -170,16 +195,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               }
             />
             {importedContacts.length > 0 && (
-              <Button
-                label="Start categorization"
-                className=""
-                onClick={() =>
-                  router.push({
-                    pathname: '/contacts/uncategorized',
-                    // query: { categorize: true },
-                  })
-                }
-              />
+              <Button label="Start categorization" loading={loading} className="" onClick={() => handleButtonClick()} />
             )}
           </div>
         </div>

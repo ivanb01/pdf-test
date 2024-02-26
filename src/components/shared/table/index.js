@@ -59,11 +59,11 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
-import { Delete, Email } from '@mui/icons-material';
+import { Delete, Email, Sms } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount, setSorted } from '@store/global/slice';
+import { setContactToBeEmailed, setOpenEmailContactOverlay, setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -79,6 +79,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Toggle from '@components/shared/Toggle';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import Mail from '@mui/icons-material/Mail';
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+
+import CommunicationForm from '@components/overlays/communication-form';
+import DeleteIcon from '@mui/icons-material/Delete';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -114,6 +119,21 @@ const Table = ({
   status,
   contacts,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
+  };
+
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const types = [
@@ -413,6 +433,11 @@ const Table = ({
                   className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
                   Contact summary
                 </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className=" bg-white">
@@ -426,7 +451,7 @@ const Table = ({
                       query: { id: dataItem?.id },
                     })
                   }>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center ">
                     <ContactInfo
                       data={{
                         name: dataItem?.first_name + ' ' + dataItem?.last_name,
@@ -435,7 +460,7 @@ const Table = ({
                       }}
                     />
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left">
+                  <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left ">
                     <div className={'flex gap-1.5 items-center justify-start'}>
                       {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
                       <p className={'text-xs leading-4 font-medium text-gray8'}>
@@ -460,6 +485,40 @@ const Table = ({
                       </TooltipComponent>
                     )}
                   </td>
+                  <td className={'flex pb-[19px] '}>
+                    <TooltipComponent
+                      side={'top'}
+                      align="center"
+                      triggerElement={
+                        <div
+                          role={'button'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCardEdit(dataItem);
+                          }}
+                          className="group cursor-pointer  h-7 w-7   relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center">
+                          <Edit className="text-lightBlue5 w-4 h-4 " />
+                        </div>
+                      }>
+                      <p className=" text-xs font-medium text-white"> Edit Contact</p>
+                    </TooltipComponent>
+                    <TooltipComponent
+                      side={'top'}
+                      align="center"
+                      triggerElement={
+                        <div
+                          role={'button'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAction(dataItem);
+                          }}
+                          className=" h-7 w-7  group bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7 cursor-pointer rounded-full bg-gray2 hover:bg-gray2 flex items-center justify-center relative">
+                          <Delete className="text-gray5 w-4 h-4 group-hover:text-white" />
+                        </div>
+                      }>
+                      <p className=" text-xs font-medium text-white"> Move to trash</p>
+                    </TooltipComponent>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -479,7 +538,7 @@ const Table = ({
       <>
         {data?.length ? (
           <>
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky z-10 top-0">
               <tr>
                 <th
                   scope="col"
@@ -498,7 +557,7 @@ const Table = ({
                 )}
               </tr>
             </thead>
-            <TransitionGroup component="tbody" className=" bg-white">
+            <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
               {data.map((dataItem, index) => (
                 <CSSTransition key={dataItem.id} timeout={500} classNames="item">
                   <tr
@@ -524,7 +583,7 @@ const Table = ({
                       )}
                       <ContactInfo
                         inCategorization={tableFor === 'in-categorization'}
-                        emailsLength={19}
+                        emailsLength={15}
                         data={{
                           name: dataItem.first_name + ' ' + dataItem.last_name,
                           email: dataItem.email,
@@ -599,7 +658,7 @@ const Table = ({
   const categorizedTable = () => {
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th
               scope="col"
@@ -635,7 +694,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <TransitionGroup component="tbody" className=" bg-white">
+        <TransitionGroup component="tbody" className=" bg-white overflow-y-auto">
           {data.map((dataItem, index) => (
             <CSSTransition key={dataItem.id} timeout={500} classNames="item-reverse">
               <tr key={dataItem.email} id={'row_' + index} className={`contact-row border-b border-gray-200`}>
@@ -773,6 +832,42 @@ const Table = ({
     const sorted = useSelector((state) => state.global.sorted);
 
     let contactsStatuses = openedTab == 0 ? clientStatuses : professionalsStatuses;
+    const [isExpanded, setIsExpanded] = useState([]);
+    useEffect(() => {
+      const initializeState = () => {
+        if (openedSubtab !== -1) {
+          setIsExpanded(
+            contactsStatuses[openedSubtab].statuses.map((category) => ({
+              categoryId: category.id,
+              expanded: true,
+            })),
+          );
+        } else {
+          setIsExpanded(
+            contactsStatuses.flatMap((item) =>
+              item.statuses.map((category) => ({
+                categoryId: category.name,
+                expanded: true,
+              })),
+            ),
+          );
+        }
+      };
+
+      initializeState();
+    }, [openedSubtab]);
+
+    useEffect(() => {
+      if (contactsStatuses[openedSubtab]) {
+        setIsExpanded((prevExpanded) =>
+          contactsStatuses[openedSubtab].statuses.map((category) => ({
+            categoryId: category.name,
+            expanded: true,
+          })),
+        );
+      }
+    }, [openedSubtab, contactsStatuses[openedSubtab]]);
+
     const handleToggleSorting = (name) => {
       const currentItem = sorted.find((item) => item.name === name);
       if (currentItem) {
@@ -781,8 +876,6 @@ const Table = ({
         dispatch(setSorted({ name, order: newOrder }));
       }
     };
-
-    const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
@@ -883,21 +976,6 @@ const Table = ({
       return filteredContacts;
     }
 
-    const [isExpanded, setIsExpanded] = useState(
-      contactsStatuses[openedSubtab].statuses.map((category) => ({
-        categoryId: category.id,
-        expanded: true,
-      })),
-    );
-
-    React.useEffect(() => {
-      setIsExpanded(
-        contactsStatuses[openedSubtab].statuses.map((category) => ({
-          categoryId: category.id,
-          expanded: true,
-        })),
-      );
-    }, [openedSubtab, contactsStatuses]);
     const toggleExpanded = (categoryId) => {
       setIsExpanded((prevState) => {
         return prevState.map((item) => {
@@ -908,14 +986,16 @@ const Table = ({
         });
       });
     };
-
+    let contactsToBeRendered =
+      openedSubtab !== -1 ? contactsStatuses[openedSubtab].statuses : contactsStatuses.flatMap((c) => c.statuses);
+    const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky z-[10] top-0">
           <tr>
             <th
               scope="col"
-              className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[200px] xl:w-[100px]">
+              className=" px-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 lg:w-[300px] xl:w-[300px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -924,30 +1004,30 @@ const Table = ({
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[500px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[200px]">
               Type
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[265px] xl:w-[400px]">
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]">
               Contact summary
             </th>
-            {openedTab !== 1 && openedSubtab !== 3 ? (
-              <th
-                scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
-                LAST COMMUNICATION
-              </th>
-            ) : null}
+
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
+              {openedTab !== 1 && openedSubtab !== 3 ? 'LAST COMMUNICATION ' : ''}
+            </th>
+
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
               ACTIONS
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white">
-          {contactsStatuses[openedSubtab].statuses.map((category, index) =>
+        <tbody className="bg-white" style={{ overflowY: 'auto' }}>
+          {contactsToBeRendered.map((category) =>
             contacts?.filter(
               (contact) =>
                 searchTerm.split(' ').every((word) => {
@@ -959,17 +1039,19 @@ const Table = ({
                 }) && contact.category_1 == contactTypes.find((type) => type.id == openedTab).name,
             ).length > 0 ? (
               <div>
-                <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
+                <tr
+                  key={category.id}
+                  className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[40px]`}>
                   <td colSpan="10">
                     <div
                       className="flex items-center px-6 py-2"
                       role={'button'}
-                      onClick={() => toggleExpanded(category.id)}>
-                      {filterContacts(category, contactTypes).length > 0 &&
+                      onClick={() => toggleExpanded(category.name)}>
+                      {isExpanded &&
                         isExpanded
-                          .filter((item) => item.categoryId === category.id)
+                          .filter((item) => item.categoryId === category.name)
                           .map((item) =>
-                            item.expanded ? (
+                            item.expanded === true ? (
                               <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
                             ) : (
                               <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
@@ -1065,7 +1147,7 @@ const Table = ({
                       ${
                         isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
                       } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
-                        isExpanded.find((expanded) => expanded.categoryId === category.id)?.expanded !== true
+                        isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
                           ? 'hidden'
                           : ''
                       }`}
@@ -1119,27 +1201,172 @@ const Table = ({
                           </TooltipComponent>
                         )}
                       </td>
-                      {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
-                          <div className="text-gray7 font-medium">
+
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
+                        <div className="text-gray7 font-medium">
+                          {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' ? (
                             <DateChip
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
                               contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                             />
-                            {/* <Chip
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
                           /> */}
-                          </div>
-                          {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
-                        </td>
-                      )}
+                        </div>
+                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                      </td>
                       <td>
-                        <div className="px-4 py-[10px] flex items-center justify-center">
-                          <div
-                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                        <div className="px-4 py-[9px] flex items-center justify-start">
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCardEdit(contact);
+                                }}
+                                className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Edit
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                          </TooltipComponent>
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendEmail(contact);
+                                }}
+                                className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Email
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                          </TooltipComponent>
+                          {contact.phone_number && (
+                            <>
+                              {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                                <TooltipComponent
+                                  side={'top'}
+                                  align="center"
+                                  style={{ marginBottom: '7px' }}
+                                  triggerElement={
+                                    <div
+                                      role={'button'}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        let message = '';
+                                        switch (contact.category_2) {
+                                          case 'Renter':
+                                            message =
+                                              "Hey, wanted to check in and see if you're still looking for a rental?";
+                                            break;
+                                          case 'Buyer':
+                                            message =
+                                              'Hey, wanted to see if we could help with anything related to your purchase.';
+                                            break;
+                                          case 'Landlord':
+                                            message = 'Hey just checking in on your property.';
+                                            break;
+                                          case 'Seller':
+                                            message =
+                                              'Hey, just wanted to check in and see if we could talk about your property.';
+                                            break;
+                                          default:
+                                            message = 'Hey, just checking in.';
+                                            break;
+                                        }
+                                        let activity = {
+                                          type_of_activity_id: 2,
+                                          description: 'Attempted to communicate using SMS.',
+                                        };
+
+                                        dispatch(
+                                          updateContactLocally({ ...contact, last_communication_date: new Date() }),
+                                        );
+                                        contactServices.addContactActivity(contact.id, activity);
+                                        let link = `sms:${contact.phone_number}&body=${message}`;
+                                        window.location.href = link;
+                                      }}
+                                      className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                      <Sms
+                                        id={'edit-contact-icon-' + contact.id}
+                                        className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                      />
+                                    </div>
+                                  }>
+                                  <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                                </TooltipComponent>
+                              )}
+                              <TooltipComponent
+                                side={'top'}
+                                align="center"
+                                style={{ marginBottom: '7px' }}
+                                triggerElement={
+                                  <div
+                                    role={'button'}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      let message = '';
+                                      switch (contact.category_2) {
+                                        case 'Renter':
+                                          message =
+                                            "Hey, wanted to check in and see if you're still looking for a rental?";
+                                          break;
+                                        case 'Buyer':
+                                          message =
+                                            'Hey, wanted to see if we could help with anything related to your purchase.';
+                                          break;
+                                        case 'Landlord':
+                                          message = 'Hey just checking in on your property.';
+                                          break;
+                                        case 'Seller':
+                                          message =
+                                            'Hey, just wanted to check in and see if we could talk about your property.';
+                                          break;
+                                        default:
+                                          message = 'Hey, just checking in.';
+                                          break;
+                                      }
+                                      let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(
+                                        message,
+                                      )}`;
+                                      window.open(link, '_blank');
+                                    }}
+                                    className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                    <WhatsApp
+                                      id={'edit-contact-icon-' + contact.id}
+                                      className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                    />
+                                  </div>
+                                }>
+                                <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                              </TooltipComponent>
+                            </>
+                          )}
+                          {/* <div
+                            className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
                                 .querySelector('#tooltip-edit-contact-' + contact.id)
@@ -1158,7 +1385,7 @@ const Table = ({
                               e.stopPropagation();
                               handleCardEdit(contact);
                             }}>
-                            <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                            <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
                               className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
@@ -1166,7 +1393,7 @@ const Table = ({
                             </div>
                           </div>
                           <div
-                            className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                            className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
                             onMouseEnter={() => {
                               document
                                 .querySelector('#tooltip-add-activity-' + contact.id)
@@ -1190,65 +1417,42 @@ const Table = ({
                             // }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleAddActivity(contact);
+                              setContactToModify(contact);
+                              // handleAddActivity(contact);
+                              setOpenCommunicationPopup(true);
                             }}>
-                            <List id={'add-activity-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                            <svg
+                              id={'add-activity-icon-' + contact.id}
+                              className="text-gray5 w-4 h-4 group-hover:text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 12 12"
+                              fill="currentColor">
+                              <path
+                                d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+
                             <div
                               id={'tooltip-add-activity-' + contact.id}
                               role="tooltip"
-                              className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                              Add Activity
+                              className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
+                              Add Communication
                             </div>
-                          </div>
-                          <div
-                            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-                            onMouseEnter={() => {
-                              document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.remove('invisible', 'opacity-0');
-                              document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
-                              document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray3');
-                            }}
-                            onMouseLeave={() => {
-                              document
-                                .querySelector('#tooltip-change-status-' + contact.id)
-                                .classList.add('invisible', 'opacity-0');
-                              document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
-                              document
-                                .querySelector('#change-status-icon-' + contact.id)
-                                .classList.remove('text-gray4');
-                            }}
-                            // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                            onClick={(e) => e.stopPropagation()}>
-                            {/* <Category className="text-gray3 w-4 h-4" /> */}
-                            <SimpleBarDropdown
-                              options={allStatusesQuickEdit[categoryType]}
-                              activeIcon={false}
-                              activeClasses="bg-lightBlue1"
-                              handleSelect={(item) => {
-                                // setDropdownVal(item)
-                                handleChangeStatus(item.id, contact);
-                              }}
-                              iconLabel={
-                                <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-                              }
-                              dropdownValue={contact?.status_2}
-                              handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
-                            <div
-                              id={'tooltip-change-status-' + contact.id}
-                              role="tooltip"
-                              className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                              Change Status
-                            </div>
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                  <tr
+                    className={`text-gray4 h-[76px] text-sm leading-5 font-medium ${
+                      isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
+                        ? 'hidden'
+                        : ''
+                    } `}>
                     <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>
@@ -1260,7 +1464,20 @@ const Table = ({
                 <div key={category.id}>
                   <tr key={category.id} className={`${category.color} contact-row border-b border-gray-200`}>
                     <td colSpan="10">
-                      <div className="flex items-center px-6 py-2">
+                      <div
+                        className="flex items-center px-6 py-2"
+                        role={'button'}
+                        onClick={() => toggleExpanded(category.name)}>
+                        {isExpanded &&
+                          isExpanded
+                            .filter((item) => item.categoryId === category.name)
+                            .map((item) =>
+                              item.expanded === true ? (
+                                <ArrowDropUpTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                              ) : (
+                                <ArrowDropDownTwoToneIcon className={'h-5 w-5 text-gray4 mr-1 cursor-pointer'} />
+                              ),
+                            )}
                         <Text chipText className="text-gray4 mr-1">
                           {category.name == 'Vendor' ? 'Other Vendors' : category.name}
                         </Text>
@@ -1310,8 +1527,14 @@ const Table = ({
                       </div>
                     </td>
                   </tr>
-
-                  <tr className={'text-gray4 h-[76px] text-sm leading-5 font-medium'}>
+                  <tr
+                    className={`text-gray4 h-[76px] text-sm leading-5 font-medium  ${
+                      isExpanded
+                        .flatMap((item) => item.subcategories || [item])
+                        .find((expanded) => expanded.categoryId === category.name)?.expanded !== true
+                        ? 'hidden'
+                        : ''
+                    } `}>
                     <td colSpan={6} className={'text-center pt-[30px]'}>
                       No Contacts
                     </td>
@@ -1338,6 +1561,11 @@ const Table = ({
             onSubmit={handleChangeStatusAndCampaign}
           />
         )}
+        {openCommuncationPopup &&
+          createPortal(
+            <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contactToModify} />,
+            document.getElementById('modal-portal'),
+          )}
       </>
     );
   };
@@ -1349,7 +1577,9 @@ const Table = ({
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
-      if (openedSubtab === 0) {
+      if (openedSubtab === -1) {
+        setContacts(contactsOriginal.filter((contact) => contact.category_1 === 'Professional'));
+      } else if (openedSubtab === 0) {
         setContacts(contactsOriginal.filter((contact) => contact.category_id !== 12));
       } else if (openedSubtab === 1) {
         setContacts(contactsOriginal.filter((contact) => contact.category_id === 12));
@@ -1357,8 +1587,6 @@ const Table = ({
         setContacts(contactsOriginal.filter((contact) => contact.category_id === 9));
       }
     }, [openedSubtab, contactsOriginal]);
-
-    const dispatch = useDispatch();
 
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
@@ -1370,8 +1598,15 @@ const Table = ({
     const [statusIdToUpdate, setStatusIdToUpdate] = useState(null);
     const [contactToModify, setContactToModify] = useState(null);
 
-    let professionalTypes = openedSubtab == 0 ? vendorSubtypes : openedSubtab == 1 ? agentTypes : unspecifiedTypes;
-
+    let professionalTypes =
+      openedSubtab === 0
+        ? vendorSubtypes
+        : openedSubtab === 1
+        ? agentTypes
+        : openedSubtab === 3
+        ? unspecifiedTypes
+        : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
+    const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
     const isUnapprovedAIContact = (contact) => {
@@ -1387,7 +1622,7 @@ const Table = ({
 
     return (
       <>
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50 sticky z-[10] top-0">
           <tr>
             <th
               scope="col"
@@ -1417,9 +1652,9 @@ const Table = ({
             professionalTypes.map((type, index) =>
               contacts.filter((contact) => contact.category_id == type.id).length ? (
                 <>
-                  <tr key={type.id} className={`contact-row border-b border-gray-200`}>
+                  <tr key={type.id} className={` bg-white sticky top-[40px] z-10 `}>
                     <td colSpan="10">
-                      <div className="flex items-center px-6 py-2">
+                      <div className="flex items-center px-6 py-2 border-b border-gray-200">
                         <Text chipText className="text-gray4">
                           {type.name == 'Vendor' ? 'Other Vendors' : type.name}
                         </Text>
@@ -1492,7 +1727,7 @@ const Table = ({
                         <td>
                           <div className="px-4 py-[10px] flex items-center justify-center">
                             <div
-                              className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                              className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                               onMouseEnter={() => {
                                 document
                                   .querySelector('#tooltip-edit-contact-' + contact.id)
@@ -1515,99 +1750,56 @@ const Table = ({
                                 e.stopPropagation();
                                 handleCardEdit(contact);
                               }}>
-                              <Edit id={'edit-contact-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                              <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
                               <div
                                 id={'tooltip-edit-contact-' + contact.id}
-                                className="inline-block absolute bottom-[34px] whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
+                                className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
                                 Edit Contact
                               </div>
                             </div>
                             <div
-                              className="cursor-pointer relative rounded-full p-1.5 bg-gray1 hover:bg-gray2 mr-2 flex items-center justify-center"
+                              className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
                               onMouseEnter={() => {
                                 document
-                                  .querySelector('#tooltip-add-activity-' + contact.id)
+                                  .querySelector('#tooltip-change-status-' + contact.id)
                                   .classList.remove('invisible', 'opacity-0');
-                                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray4');
+                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
                                 document
-                                  .querySelector('#add-activity-icon-' + contact.id)
+                                  .querySelector('#change-status-icon-' + contact.id)
                                   .classList.remove('text-gray3');
                               }}
                               onMouseLeave={() => {
                                 document
-                                  .querySelector('#tooltip-add-activity-' + contact.id)
+                                  .querySelector('#tooltip-change-status-' + contact.id)
                                   .classList.add('invisible', 'opacity-0');
-                                document.querySelector('#add-activity-icon-' + contact.id).classList.add('text-gray3');
+                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
                                 document
-                                  .querySelector('#add-activity-icon-' + contact.id)
+                                  .querySelector('#change-status-icon-' + contact.id)
                                   .classList.remove('text-gray4');
                               }}
-                              // onClick={(e) => {
-                              //   e.stopPropagation();
-                              //   router.push({
-                              //     pathname: '/contacts/details',
-                              //     query: { id: contact.id, campaigns: true },
-                              //   });
-                              // }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleAddActivity(contact);
-                              }}>
-                              <List id={'add-activity-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                              // onClick={(event) => handleDropdown(event, !dropdownOpened)}
+                              onClick={(e) => e.stopPropagation()}>
+                              {/* <Category className="text-gray3 w-4 h-4" /> */}
+                              <SimpleBarDropdown
+                                options={allStatusesQuickEdit[categoryType]}
+                                activeIcon={false}
+                                activeClasses="bg-lightBlue1"
+                                handleSelect={(item) => {
+                                  // setDropdownVal(item)
+                                  handleChangeStatus(item.id, contact);
+                                }}
+                                iconLabel={
+                                  <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
+                                }
+                                dropdownValue={contact?.status_2}
+                                handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
                               <div
-                                id={'tooltip-add-activity-' + contact.id}
+                                id={'tooltip-change-status-' + contact.id}
                                 role="tooltip"
-                                className="inline-block absolute bottom-[34px] whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                Add Activity
+                                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Change Status
                               </div>
                             </div>
-                            {/* <div
-                            className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-                            onMouseEnter={() => {
-                              document
-                                .querySelector(
-                                  '#tooltip-change-status-' + contact.id
-                                )
-                                .classList.remove('invisible', 'opacity-0');
-                              document
-                                .querySelector(
-                                  '#change-status-icon-' + contact.id
-                                )
-                                .classList.add('text-gray4');
-                              document
-                                .querySelector(
-                                  '#change-status-icon-' + contact.id
-                                )
-                                .classList.remove('text-gray3');
-                            }}
-                            onMouseLeave={() => {
-                              document
-                                .querySelector(
-                                  '#tooltip-change-status-' + contact.id
-                                )
-                                .classList.add('invisible', 'opacity-0');
-                              document
-                                .querySelector(
-                                  '#change-status-icon-' + contact.id
-                                )
-                                .classList.add('text-gray3');
-                              document
-                                .querySelector(
-                                  '#change-status-icon-' + contact.id
-                                )
-                                .classList.remove('text-gray4');
-                            }}
-                            // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <div
-                              id={'tooltip-change-status-' + contact.id}
-                              role="tooltip"
-                              className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-                            >
-                              Change Status
-                            </div>
-                          </div> */}
                           </div>
                         </td>
                       </tr>
@@ -1618,6 +1810,11 @@ const Table = ({
               ),
             )}
         </tbody>
+        {openCommuncationPopup &&
+          createPortal(
+            <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contactToModify} />,
+            document.getElementById('modal-portal'),
+          )}
         {addActivityPopup &&
           createPortal(
             <AddActivity
@@ -1636,7 +1833,7 @@ const Table = ({
     const [hovered, setHovered] = useState(false);
     return (
       <>
-        <thead className="bg-gray-50 overflow-x-hidden">
+        <thead className="bg-gray-50 overflow-x-hidden sticky z-10 top-0">
           <tr>
             <th
               // scope="col"
@@ -1645,7 +1842,7 @@ const Table = ({
             </th>
           </tr>
         </thead>
-        <tbody className=" bg-white">
+        <tbody className=" bg-white overflow-y-auto">
           {console.log(data, 'data')}
           {!data.length ? (
             <tr className="h-[233px] text-center align-middle">
@@ -1874,6 +2071,11 @@ const Table = ({
             <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
               Email Summary
             </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]">
+              Imported Date
+            </th>
             <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
               Actions
             </th>
@@ -1934,18 +2136,18 @@ const Table = ({
               </td>
               <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
                 <div className=" flex items-center break-all">
-                  {dataItem.ai_email_summary && (
+                  {dataItem.summary && (
                     <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
                       <Launch className="h-5 w-5 text-blue-500 mr-2" />
                     </a>
                   )}
-                  {dataItem.ai_email_summary ? (
-                    <div className="email-summary-styling">{dataItem.ai_email_summary}</div>
-                  ) : (
-                    '-'
-                  )}
+                  {dataItem.summary ? <div className="email-summary-styling">{dataItem.summary}</div> : '-'}
                 </div>
               </td>
+              <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                {formatDateStringMDY(dataItem.created_at)}
+              </td>
+
               <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                 <div className="flex items-center justify-center gap-6">
                   <TooltipComponent
@@ -2128,7 +2330,9 @@ const Table = ({
 
   const needToContactTable = () => {
     const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+    const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
 
+    const [contactToModify, setContactToModify] = useState(null);
     const isUnapprovedAIContact = (contact) => {
       if (
         contact.import_source_text === 'GmailAI' ||
@@ -2164,92 +2368,226 @@ const Table = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((person) => (
-            <tr
-              key={person.id}
-              onClick={() =>
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: person?.id },
-                })
-              }
-              className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
+          {data &&
+            data.map((person) => (
+              <tr
+                key={person.id}
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.id },
+                  })
+                }
+                className={`${isUnapprovedAIContact(person) && hideUnapproved && 'hidden'}
               ${
                 isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
-              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group`}
-              style={{ height: '84px' }}>
-              <td className="pl-6 py-3" style={{ width: '300px' }}>
-                <div className={'flex gap-4'}>
-                  <div>
-                    {person.profile_image_path ? (
-                      <img
-                        className="inline-block h-10 w-10 rounded-full"
-                        src={person.profile_image_path}
-                        alt={person.first_name}
-                      />
-                    ) : (
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                        <span className="text-sm font-medium leading-none text-white">
-                          {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+              } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 `}
+                style={{ height: '84px' }}>
+                <td className="pl-6 py-3" style={{ width: '300px' }}>
+                  <div className={'flex gap-4'}>
+                    <div>
+                      {person.profile_image_path ? (
+                        <img
+                          className="inline-block h-10 w-10 rounded-full"
+                          src={person.profile_image_path}
+                          alt={person.first_name}
+                        />
+                      ) : (
+                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                          <span className="text-sm font-medium leading-none text-white">
+                            {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                          </span>
                         </span>
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                      {person.first_name} {person.last_name}
-                    </h6>
-                    <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
-                  </div>
-                </div>
-              </td>
-
-              <td>
-                <Chip label={person.category_2} typeStyle />
-                <Chip
-                  label={person.status_2}
-                  statusStyle
-                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
-                  {getContactStatusByStatusId(person.category_id, person.status_id)}
-                </Chip>
-              </td>
-              <td>
-                <div className={'flex gap-1.5 items-center'}>
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
-                    }`}></div>
-                  <p className={'text-sm leading-5 font-normal'}>
-                    {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
-                  </p>
-                </div>
-              </td>
-              <td>
-                <DateChip
-                  lastCommunication={person.last_communication_date}
-                  contactStatus={person.status_2}
-                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
-                />
-              </td>
-              <td>
-                <TooltipComponent
-                  side={'bottom'}
-                  align={'center'}
-                  triggerElement={
-                    <div
-                      className={'h-8 w-8 flex items-center justify-center bg-gray1 rounded-full hover:bg-gray2'}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCardEdit(person);
-                      }}>
-                      <ListIcon className={'h-4 w-4 text-gray3 hover:text-gray-4'} />
+                      )}
                     </div>
-                  }>
-                  <p className={'text-xs leading-4 font-medium'}>Add Activity</p>
-                </TooltipComponent>
-              </td>
-            </tr>
-          ))}
+                    <div>
+                      <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                        {person.first_name} {person.last_name}
+                      </h6>
+                      <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <Chip label={person.category_2} typeStyle />
+                  <Chip
+                    label={person.status_2}
+                    statusStyle
+                    className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
+                    {getContactStatusByStatusId(person.category_id, person.status_id)}
+                  </Chip>
+                </td>
+                <td>
+                  <div className={'flex gap-1.5 items-center'}>
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
+                      }`}></div>
+                    <p className={'text-sm leading-5 font-normal'}>
+                      {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
+                    </p>
+                  </div>
+                </td>
+                <td>
+                  <DateChip
+                    lastCommunication={person.last_communication_date}
+                    contactStatus={person.status_2}
+                    contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  />
+                </td>
+                <td>
+                  <td>
+                    <div className=" py-[10px] flex items-center justify-start">
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardEdit(person);
+                            }}
+                            className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Edit
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                      </TooltipComponent>
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendEmail(person);
+                            }}
+                            className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Email
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                      </TooltipComponent>
+                      {person.phone_number && (
+                        <>
+                          {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                            <TooltipComponent
+                              side={'top'}
+                              align="center"
+                              style={{ marginBottom: '7px' }}
+                              triggerElement={
+                                <div
+                                  role={'button'}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    let message = '';
+                                    switch (person.category_2) {
+                                      case 'Renter':
+                                        message =
+                                          "Hey, wanted to check in and see if you're still looking for a rental?";
+                                        break;
+                                      case 'Buyer':
+                                        message =
+                                          'Hey, wanted to see if we could help with anything related to your purchase.';
+                                        break;
+                                      case 'Landlord':
+                                        message = 'Hey just checking in on your property.';
+                                        break;
+                                      case 'Seller':
+                                        message =
+                                          'Hey, just wanted to check in and see if we could talk about your property.';
+                                        break;
+                                      default:
+                                        message = 'Hey, just checking in.';
+                                        break;
+                                    }
+                                    let activity = {
+                                      type_of_activity_id: 2,
+                                      description: 'Attempted to communicate using SMS.',
+                                    };
+
+                                    dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
+                                    contactServices.addContactActivity(person.id, activity);
+                                    let link = `sms:${person.phone_number}&body=${message}`;
+                                    window.location.href = link;
+                                  }}
+                                  className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                  <Sms
+                                    id={'edit-contact-icon-' + person.id}
+                                    className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                  />
+                                </div>
+                              }>
+                              <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                            </TooltipComponent>
+                          )}
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  let message = '';
+                                  switch (person.category_2) {
+                                    case 'Renter':
+                                      message = "Hey, wanted to check in and see if you're still looking for a rental?";
+                                      break;
+                                    case 'Buyer':
+                                      message =
+                                        'Hey, wanted to see if we could help with anything related to your purchase.';
+                                      break;
+                                    case 'Landlord':
+                                      message = 'Hey just checking in on your property.';
+                                      break;
+                                    case 'Seller':
+                                      message =
+                                        'Hey, just wanted to check in and see if we could talk about your property.';
+                                      break;
+                                    default:
+                                      message = 'Hey, just checking in.';
+                                      break;
+                                  }
+                                  let link = `https://wa.me/${person.phone_number}?text=${encodeURIComponent(message)}`;
+                                  window.open(link, '_blank');
+                                }}
+                                className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <WhatsApp
+                                  id={'edit-contact-icon-' + person.id}
+                                  className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                          </TooltipComponent>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </td>
+              </tr>
+            ))}
+          {openCommuncationPopup &&
+            createPortal(
+              <CommunicationForm
+                handleCloseOverlay={() => setOpenCommunicationPopup(false)}
+                client={contactToModify}
+              />,
+              document.getElementById('modal-portal'),
+            )}
         </tbody>
       </>
     );
@@ -2638,24 +2976,24 @@ const Table = ({
                       <div className={'flex gap-1.5 items-center'}>
                         <div
                           className={`h-2 w-2 rounded-xl ${
-                            e?.event_status === 'scheduled'
+                            e?.event_status?.toLowerCase() === 'scheduled'
                               ? 'bg-yellow2'
-                              : e?.event_status === 'sent'
-                              ? 'bg-green5'
+                              : e?.event_status?.toLowerCase() === 'sent'
+                              ? 'bg-[#10B981]'
                               : 'bg-red-500'
                           }`}></div>
                         <p
                           className={`text-sm leading-5 font-medium
                            ${
-                             e?.event_status === 'scheduled'
+                             e?.event_status?.toLowerCase() === 'scheduled'
                                ? 'text-yellow3'
-                               : e?.event_status === 'sent'
-                               ? 'text-yellow3'
+                               : e?.event_status?.toLowerCase() === 'sent'
+                               ? 'text-green7'
                                : 'text-red5'
                            }`}>
-                          {e?.event_status === 'scheduled'
+                          {e?.event_status?.toLowerCase() === 'scheduled'
                             ? 'To be sent'
-                            : e?.event_stautus === 'sent'
+                            : e?.event_status?.toLowerCase() === 'sent'
                             ? 'Sent'
                             : 'Canceled'}
                         </p>

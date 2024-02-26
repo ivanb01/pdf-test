@@ -8,7 +8,6 @@ import link from '/public/images/link-2.svg';
 import { useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import TooltipComponent from '@components/shared/tooltip';
 
 const ImageGallery = ({ images, property, url }) => {
@@ -53,7 +52,7 @@ const ImageGallery = ({ images, property, url }) => {
   );
 };
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected }) => {
   let status = '';
   if (property.STATUS == 'Rented') {
     status = '&status=22';
@@ -63,15 +62,18 @@ const PropertyCard = ({ property }) => {
   let url = `${getBaseUrl()}/property?id=${property.ID}` + status;
 
   return (
-    <div className="border border-gray-200 rounded-[4px]">
+    <div
+      className={`border transition-all border-gray-200 rounded-[4px] ${
+        isSelected && ' border border-lightBlue3 custom-box-shadow'
+      }`}>
       <div className="h-[160px] relative">
         <ImageGallery images={property.PHOTOS} property={property} url={url} />
         <div
           className={`absolute bottom-2 left-2 flex items-center justify-center border ${
-            property.STATUS.toLowerCase() === 'sold'
+            property.STATUS.toLowerCase() === 'sold' || property.STATUS.toLowerCase() === 'for sale'
               ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-              : 'border-cyan-800 bg-cyan-50'
-          } rounded-full text-cyan-800 h-fit px-2 py-1 text-[10px] font-medium`}>
+              : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+          } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
           {property.STATUS}
         </div>
         <TooltipComponent
@@ -87,38 +89,79 @@ const PropertyCard = ({ property }) => {
               <img className="h-7 w-7" src={link.src} alt="" />
             </a>
           }>
-          <p className={'text-[10px]  text-white font-medium'}>Copy Link</p>
+          <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
         </TooltipComponent>
       </div>
-      <div className="p-3 text-sm">
+      <div
+        className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}
+        onClick={() => {
+          const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
+          if (currentSelected) {
+            setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
+          } else {
+            setSelected((prevSelected) => [...prevSelected, property]);
+          }
+        }}>
         <div className="mb-4">
           <div className="font-semibold text-black mb-[6px]">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
           </div>
-          <div className=" text-gray-600">
+          <div className="text-gray-600">
             {property.ADDRESS} <br />
             {property.NEIGHBORHOODS}, {property.CITY}, {property.STATE} {property.ZIP_CODE}
           </div>
         </div>
         <div className="mb-3 flex font-medium">
-          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={room.src} alt="" />
             {property.BEDROOMS}
           </div>
-          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+          <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={bathroom.src} alt="" />
             {property.BATHROOMS}
           </div>
           {property.SQUARE_FOOTAGE != 0 && (
-            <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[4px]">
+            <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
               <img className="mr-1" src={sqft.src} alt="" />
               {property.SQUARE_FOOTAGE} sqft
             </div>
           )}
         </div>
-        <div className="font-semibold text-gray-900 text-base">
-          {formatPrice(property.PRICE)}
-          {property.STATUS.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
+        <div className="flex items-center justify-between">
+          <div className="font-semibold text-gray-900 text-base">
+            {formatPrice(property.PRICE)}
+            {property.STATUS.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
+          </div>
+          <div class="form-checkbox">
+            <input
+              type="checkbox"
+              id={`checkbox-${property.ID}`}
+              class="hidden"
+              value={selected?.length && selected?.includes(property)}
+            />
+            {!noSelect && (
+              <label
+                htmlFor={`checkbox-${property.ID}`}
+                class="flex items-center cursor-pointer"
+                onClick={(e) => e.preventDefault()}>
+                <div
+                  class={`${
+                    isSelected ? 'bg-lightBlue3' : 'border border-gray-300'
+                  } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+                  {isSelected && (
+                    <svg
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                      version="1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      enable-background="new 0 0 48 48">
+                      <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
+                    </svg>
+                  )}
+                </div>
+              </label>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ const global = createSlice({
   name: 'global',
   initialState: {
     openedTab: 0,
-    openedSubtab: 0,
+    openedSubtab: -1,
     tabs: [],
     expandedMenu: true,
     count: null,
@@ -17,6 +17,8 @@ const global = createSlice({
     professionalsFilters: {},
     activeFilterOfProperties: 1,
     vendorSubtypes: null,
+    contactToBeEmailed: null,
+    openEmailContactOverlay: false,
     sorted: [
       { name: 'New Lead', sorted: 'asc' },
       { name: 'Attempted Contact', sorted: 'asc' },
@@ -35,8 +37,15 @@ const global = createSlice({
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')
         : false,
+    amenities: [],
   },
   reducers: {
+    setOpenEmailContactOverlay(state, action) {
+      state.openEmailContactOverlay = action.payload;
+    },
+    setContactToBeEmailed(state, action) {
+      state.contactToBeEmailed = action.payload;
+    },
     setVendorSubtypes(state, action) {
       state.vendorSubtypes = action.payload;
     },
@@ -115,6 +124,9 @@ const global = createSlice({
         state.sorted.push({ name, sorted: order });
       }
     },
+    setAmenities(state, action) {
+      state.amenities = action.payload;
+    },
   },
 });
 
@@ -130,6 +142,7 @@ export const {
   setSkippedEmptyState,
   setUnapprovedContacts,
   setUserGaveConsent,
+  setAmenities,
   setExpandedTab,
   setInitializeTabs,
   setActiveFilterOfProperties,
@@ -138,5 +151,7 @@ export const {
   setProfessionalsFilter,
   setSorted,
   setHideUnapproved,
+  setContactToBeEmailed,
+  setOpenEmailContactOverlay,
 } = global.actions;
 export default global.reducer;

@@ -8,6 +8,7 @@ import checkMenu from '/public/images/check-menu.svg';
 
 const Button = ({
   title,
+  inline,
   children,
   coloredButton,
   label,
@@ -31,6 +32,7 @@ const Button = ({
   googleButton,
   googleActivated,
   secondaryDanger,
+  darkBlue,
   rounded,
   special,
   loading,
@@ -39,12 +41,13 @@ const Button = ({
   color,
   transparent,
   success,
+  count,
   ...props
 }) => {
   let bgColor = 'bg-lightBlue3';
   let textColor = 'text-white';
   let text = 'text-sm leading-none';
-  let padding = 'px-4 py-3';
+  let padding = label || children ? 'px-4 py-3' : ' p-2 w-[38px]';
   let borderColor = 'border-transparent';
 
   if (secondary) {
@@ -54,6 +57,9 @@ const Button = ({
   if (danger) {
     bgColor = 'bg-red3';
     borderColor = 'border-red4';
+  }
+  if (darkBlue) {
+    bgColor = 'bg-[#3B82F6]';
   }
   if (secondaryDanger) {
     textColor = 'text-red5';
@@ -152,14 +158,24 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
         type="button"
-        className={`${disabled && 'opacity-50'} ${
-          loading && 'pointer-events-none'
-        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+        href={href}
+        className={`${disabled && 'opacity-50'} ${loading && 'pointer-events-none'} h-[38px] inline-flex ${
+          !inline && 'min-w-[100px]'
+        } justify-center items-center ${padding} border ${borderColor} ${text} relative font-medium rounded-md shadow-sm ${
           color ? color : textColor
-        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        } hover:${bgColor} ${bgColor} ${className}`}
         {...props}>
         {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
-        {leftIcon && !loading && <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>}
+        {leftIcon && !loading && (
+          <div className={`mr-1 -ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
+            {leftIcon}
+          </div>
+        )}
+        {count > 0 && (
+          <div className="text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white">
+            {count}
+          </div>
+        )}
         {!centerIcon && !loading && (children ? children : label)}
         {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
         {rightIcon && !loading && <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>}
@@ -193,6 +209,26 @@ const Button = ({
         } uppercase text-center rounded text-xs font-medium  hover:text-lightBlue5 hover:bg-lightBlue1 ${className}`}
         onClick={onClick}>
         {children ? children : label}
+      </button>
+    );
+  };
+  const darkBlueBtn = () => {
+    return (
+      <button
+        disabled={disabled}
+        onClick={onClick}
+        type="button"
+        className={`${disabled && 'opacity-50'} ${
+          loading && 'pointer-events-none'
+        } h-[38px] inline-flex min-w-[100px] justify-center items-center ${padding} border ${borderColor} ${text} font-medium rounded-md shadow-sm ${
+          color ? color : textColor
+        } hover:${bgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 ${bgColor} ${className}`}
+        {...props}>
+        {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
+        {leftIcon && !loading && <div className={`-ml-0.5 mr-2 ${iconSize ? iconSize : 'h-4 w-4'}`}>{leftIcon}</div>}
+        {!centerIcon && !loading && (children ? children : label)}
+        {centerIcon && !loading && <div className={`${iconSize ? iconSize : 'h-5 w-5'}`}>{centerIcon}</div>}
+        {rightIcon && !loading && <div className={`ml-2 -mr-0.5 ${iconSize ? iconSize : 'h-4 w-4'}`}>{rightIcon}</div>}
       </button>
     );
   };
@@ -246,6 +282,7 @@ const Button = ({
   else if (narrow) return narrowButton();
   else if (closeButton) return closeBtn();
   else if (ternary) return ternaryBtn();
+  else if (darkBlue) return darkBlueBtn();
   else if (bigButton) return bigBtn();
   else if (rounded) return roundedBtn();
   else if (googleButton) return googleBtn();

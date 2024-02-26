@@ -16,9 +16,9 @@ import {
   allStatusesQuickEdit,
   filtersForLastCommunicationDate,
 } from 'global/variables';
-import { filterLastCommuncationDate } from 'global/functions';
+import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProfessionals, updateContacts } from 'store/contacts/slice';
+import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
 import Table from 'components/shared/table';
 import Chip from 'components/shared/chip';
@@ -85,6 +85,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
   useEffect(() => {
+    console.log(filteredProfessionals);
+  }, [filteredProfessionals]);
+  useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
 
@@ -96,11 +99,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     }
     return false;
   }
-  useEffect(() => {
-    if (contacts.length && !hasAnyProperties(professionalsFilters)) {
-      setFilteredProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional'));
-    }
-  }, [openedSubtab, professionalsFilters]);
+
+  // useEffect(() => {
+  //   if (contacts.length && !hasAnyProperties(professionalsFilters)) {
+  //     setFilteredProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional'));
+  //   }
+  // }, [professionalsFilters]);
 
   const filterContacts = () => {
     // if (filtersCleared) {
@@ -202,27 +206,29 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
   useEffect(() => {
     filterContacts();
-  }, [professionalsFilters, openedSubtab]);
+  }, [professionalsFilters, contacts]);
   useEffect(() => {
     setSearchTerm('');
+    setFiltersCleared(true);
+    dispatch(setProfessionalsFilter({}));
   }, [openedSubtab]);
-
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         <FloatingAlert
-          inProp={unapprovedContacts > 0}
+          inProp={unapprovedContacts.length > 0}
           onClick={() => router.push('/ai-summary')}
           buttonText={'Review Now'}
           className="mx-[21px] mt-[14px]"
-          message={`${unapprovedContacts} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+          message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           type="smart-sync"
         />
         <div className="p-6 py-4 flex items-center justify-between">
           <div className="flex items-center justify-between w-full">
             <div className=" flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
-                {professionalsStatuses[openedSubtab]?.statusMainTitle}
+                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'All Professionals'}
               </Text>
               {filteredProfessionals.filter(
                 (contact) =>
@@ -233,14 +239,31 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
             </div>
             <div className="flex items-center justify-self-end">
               <Search
-                placeholder={`Search ` + professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()}
+                placeholder={`Search ${
+                  openedSubtab !== -1
+                    ? professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()
+                    : 'professionals'
+                }`}
                 className="mr-4 text-sm"
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
               />
+
               <Button
                 secondary
-                leftIcon={<FilterList className="w-5 h-5" />}
+                leftIcon={
+                  <div className={'relative'}>
+                    {Object.keys(professionalsFilters).length > 0 && (
+                      <div
+                        className={
+                          'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
+                        }>
+                        {getTotalCountOfAllValues(professionalsFilters)}
+                      </div>
+                    )}
+                    <FilterList className="w-5 h-5" />
+                  </div>
+                }
                 iconSize="w-5 h-5"
                 label="Filter"
                 className="mr-4"
@@ -266,7 +289,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         {Object.keys(professionalsFilters).length > 0 && (
           <div className="w-full border-t border-gray2 px-6 py-3">
             <div className="flex justify-between">
-              <div className="flex flex-wrap items-center w-[100%]">
+              <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {getFilterCount()}
                   {getFilterCount() == 1 ? ' result' : ' results'} for:
@@ -319,11 +342,19 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           //     )}
           //   </div>
           // </SimpleBar> */}
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 159px)' }}>
+        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
               <Table
-                data={filteredProfessionals}
+                data={
+                  hideUnapproved === true
+                    ? filteredProfessionals.filter(
+                        (contact) =>
+                          !['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) ||
+                          contact.approved_ai,
+                      )
+                    : filteredProfessionals
+                }
                 tableFor="professionals"
                 categoryType="professionals"
                 handleCardEdit={handleCardEdit}

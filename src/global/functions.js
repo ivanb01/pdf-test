@@ -159,6 +159,18 @@ export const formatDateCalendar = (date) => {
   let resultString = calendarDateArray.join(' ');
   return resultString;
 };
+export function daysBefore(dateString) {
+  // Parse the input date string using Moment.js
+  const inputDate = moment(dateString, 'YYYY-MM-DD');
+
+  // Get the current date
+  const currentDate = moment();
+
+  // Calculate the difference in days
+  const daysDifference = currentDate.diff(inputDate, 'days');
+
+  return daysDifference + ' days ago';
+}
 
 export const formatDateAgo = (date, param) => {
   return moment(date).startOf(param).fromNow();
@@ -352,7 +364,7 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
   if (!selectedOptions) {
     return null;
   }
-  const options = selectedOptions.map((el) => {
+  const options = selectedOptions?.map((el) => {
     return multiselectOptions.find((option) => option.value === el);
   });
   return options;
@@ -360,4 +372,17 @@ export const valueOptions = (selectedOptions, multiselectOptions) => {
 
 export const getBaseUrl = () => {
   if (typeof window !== 'undefined') return window.location.origin;
+};
+
+export const getTotalCountOfAllValues = (data) => {
+  let totalCount = 0;
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const values = data[key];
+      totalCount += values.length;
+    }
+  }
+
+  return totalCount;
 };

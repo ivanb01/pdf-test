@@ -17,7 +17,7 @@
   &__content {
     display: flex;
     justify-content: space-between;
-    padding: 24px 100px;
+    padding: 24px 80px;
     position: relative;
     z-index: 1;
 
@@ -32,12 +32,12 @@
       z-index: -1;
       box-shadow: 0 2px 5px 2px rgb(209, 209, 209);
 
-      @media screen and (max-width: $screen-xl) {
+      @media screen and (max-width: $screen-lg) {
         display: block;
       }
     }
 
-    @media screen and (max-width: $screen-xl) {
+    @media screen and (max-width: $screen-lg) {
       padding: 0 16px;
       height: 56px;
       align-items: center;
@@ -116,13 +116,13 @@
 }
 
 .hide-on-smaller-screens {
-  @media screen and (max-width: $screen-xl) {
+  @media screen and (max-width: $screen-lg) {
     display: none;
   }
 }
 
 .hide-on-bigger-screens {
-  @media screen and (min-width: $screen-xl) {
+  @media screen and (min-width: $screen-lg) {
     display: none;
   }
 }

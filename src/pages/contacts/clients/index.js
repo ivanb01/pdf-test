@@ -1,15 +1,7 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import {
-  setExpandedTab,
-  setOpenedSubtab,
-  setOpenedTab,
-  setRefetchData,
-  setUnapprovedContacts,
-  setUserGaveConsent,
-  setVendorSubtypes,
-} from 'store/global/slice';
+import { setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -21,7 +13,6 @@ import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
 import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
-import { getContactCategories } from '@api/contacts';
 import withAuth from '@components/withAuth';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
@@ -40,27 +31,37 @@ const index = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
-  const allContacts = useSelector((state) => state.contacts.allContacts);
+  // const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchData = useSelector((state) => state.global.refetchData);
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
 
-  const fetchUnapproved = async () => {
-    try {
-      const response = await getUnapprovedContacts();
-      console.log(response.data);
-      dispatch(setUnapprovedContacts(response.data));
-    } catch (error) {
-      dispatch(setUnapprovedContacts([]));
-      console.log('error msg', error.message);
-    }
-  };
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
 
   useEffect(() => {
-    fetchUnapproved();
-  }, []);
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null),
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
+  // const fetchUnapproved = async () => {
+  //   try {
+  //     const response = await getUnapprovedContacts();
+  //     console.log(response.data);
+  //     dispatch(setUnapprovedContacts(response.data));
+  //   } catch (error) {
+  //     dispatch(setUnapprovedContacts([]));
+  //     console.log('error msg', error.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUnapproved();
+  // }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -86,7 +87,6 @@ const index = () => {
     if (refetchData) {
       fetchClients();
       dispatch(setOpenedTab(0));
-      // dispatch(setOpenedSubtab(0));
       dispatch(setRefetchData(false));
     }
   }, [refetchData]);
@@ -162,15 +162,11 @@ const index = () => {
               setShowEditContact(true);
               setContactToEdit(contact);
             }}
-            unapprovedContacts={
-              unapprovedContacts?.data
-                ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-                : 0
-            }
+            unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
           {/* <Tour for={'clients'} /> */}
-          {currentButton == 0 && openedTab == 0 && openedSubtab == 0 && (
+          {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
             <div class="arrow pointer-events-none">
               <span></span>
               <span></span>

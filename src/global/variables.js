@@ -1,6 +1,21 @@
 import { UsersIcon } from '@heroicons/react/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/solid';
 import { CheckIcon } from '@heroicons/react/solid';
+import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+import Image from 'next/image';
+import SendIcon from '/public/images/client-details/SendIcon.svg';
+import ContactImportedFromGmailIcon from '/public/images/client-details/ContactImportedFromGmailIcon.svg';
+import ContactImportedFromGmailAIIcon from '/public/images/client-details/ContactImportedFromGmailAIIcon.svg';
+import UpdateContact from '/public/images/client-details/UpdatedClient.svg';
+import DeleteIcon from '/public/images/client-details/DeleteIcon.svg';
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
 // export const Types = [
 //   { id: 0, name: 'Renter' },
@@ -689,47 +704,97 @@ export const globalTabsStates = {
 
 export const roomsOptions = [
   {
+    id: 999,
+    label: 'Any',
+    value: null,
+  },
+  {
     id: 1,
     label: '1+',
+    value: 1,
   },
   {
     id: 2,
     label: '2+',
+    value: 2,
   },
   {
     id: 3,
     label: '3+',
+    value: 3,
   },
   {
     id: 4,
     label: '4+',
+    value: 4,
   },
   {
     id: 5,
     label: '5+',
+    value: 5,
+  },
+  {
+    id: 6,
+    label: '6+',
+    value: 6,
+  },
+  {
+    id: 7,
+    label: '7+',
+    value: 7,
+  },
+  {
+    id: 8,
+    label: '8+',
+    value: 8,
   },
 ];
 
 export const bathroomsOptions = [
   {
+    id: 999,
+    label: 'Any',
+    value: null,
+  },
+  {
     id: 1,
     label: '1+',
+    value: 1,
   },
   {
     id: 2,
     label: '1.5+',
+    value: 1.5,
   },
   {
     id: 3,
     label: '2+',
+    value: 2,
   },
   {
     id: 4,
     label: '3+',
+    value: 3,
   },
   {
     id: 5,
     label: '4+',
+    value: 4,
+  },
+  {
+    id: 6,
+    label: '5+',
+    value: 5,
+  },
+  {
+    id: 7,
+    label: '6+',
+    value: 6,
+  },
+  {
+    id: 8,
+    label: '7+',
+    value: 7,
   },
 ];
 
@@ -797,7 +862,7 @@ export const leadSourceOptions = [
 ];
 
 // export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
-export const phoneNumberRules = /^[+]{1}[1]{1}(\d{10})$/;
+export const phoneNumberRules = /^[+](\d{1,3})(\d{9,12})$/;
 
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
@@ -1941,6 +2006,580 @@ export const NYCneighborhoods = [
   },
 ];
 
+export const data = [
+  {
+    id: '05',
+    name: 'Brooklyn',
+    items: [
+      {
+        id: 54,
+        name: 'Bath Beach',
+      },
+      {
+        id: 55,
+        name: 'Bay Ridge',
+      },
+      {
+        id: 56,
+        name: 'Bedford Stuyvesant',
+      },
+      {
+        id: 57,
+        name: 'Bensonhurst',
+      },
+      {
+        id: 58,
+        name: 'Bergen Beach',
+      },
+      {
+        id: 59,
+        name: 'Boerum Hill',
+      },
+      {
+        id: 60,
+        name: 'Borough Park',
+      },
+      {
+        id: 61,
+        name: 'Brighton Beach',
+      },
+      {
+        id: 62,
+        name: 'Brooklyn Heights',
+      },
+      {
+        id: 63,
+        name: 'Brownsville',
+      },
+      {
+        id: 64,
+        name: 'Bushwick',
+      },
+      {
+        id: 65,
+        name: 'Canarsie',
+      },
+      {
+        id: 66,
+        name: 'Carroll Gardens',
+      },
+      {
+        id: 67,
+        name: 'Clinton Hill',
+      },
+      {
+        id: 68,
+        name: 'Cobble Hill',
+      },
+      {
+        id: 69,
+        name: 'Columbia St Waterfront District',
+      },
+      {
+        id: 70,
+        name: 'Coney Island',
+      },
+      {
+        id: 71,
+        name: 'Crown Heights',
+      },
+      {
+        id: 72,
+        name: 'Ditmas Park',
+      },
+      {
+        id: 73,
+        name: 'Downtown Brooklyn',
+      },
+      {
+        id: 74,
+        name: 'Dumbo',
+      },
+      {
+        id: 75,
+        name: 'Dyker Heights',
+      },
+      {
+        id: 77,
+        name: 'East New York',
+      },
+      {
+        id: 79,
+        name: 'Flatbush',
+      },
+      {
+        id: 80,
+        name: 'Flatlands',
+      },
+      {
+        id: 81,
+        name: 'Fort Greene',
+      },
+      {
+        id: 82,
+        name: 'Gerritsen Beach',
+      },
+      {
+        id: 83,
+        name: 'Gowanus',
+      },
+      {
+        id: 84,
+        name: 'Gravesend',
+      },
+      {
+        id: 85,
+        name: 'Greenpoint',
+      },
+      {
+        id: 86,
+        name: 'Greenwood',
+      },
+      {
+        id: 88,
+        name: 'Kensington',
+      },
+      {
+        id: 89,
+        name: 'Manhattan Beach',
+      },
+      {
+        id: 90,
+        name: 'Mapleton',
+      },
+      {
+        id: 91,
+        name: 'Marine Park',
+      },
+      {
+        id: 92,
+        name: 'Midwood',
+      },
+      {
+        id: 93,
+        name: 'Mill Basin',
+      },
+      {
+        id: 94,
+        name: 'Park Slope',
+      },
+      {
+        id: 95,
+        name: 'Prospect Heights',
+      },
+      {
+        id: 97,
+        name: 'Prospect Park South',
+      },
+      {
+        id: 98,
+        name: 'Prospect Lefferts Gardens',
+      },
+      {
+        id: 99,
+        name: 'Red Hook',
+      },
+      {
+        id: 100,
+        name: 'Seagate',
+      },
+      {
+        id: 101,
+        name: 'Sheepshead Bay',
+      },
+      {
+        id: 102,
+        name: 'Sunset Park',
+      },
+      {
+        id: 106,
+        name: 'Williamsburg',
+      },
+      {
+        id: 107,
+        name: 'Windsor Terrace',
+      },
+      {
+        id: 326,
+        name: 'Starrett City',
+      },
+      {
+        id: 367,
+        name: 'Ocean Parkway',
+      },
+      {
+        id: 368,
+        name: 'Northeast Flatbush',
+      },
+      {
+        id: 369,
+        name: 'Old Mill Basin',
+      },
+      {
+        id: 370,
+        name: 'Ocean Hill',
+      },
+    ],
+  },
+  {
+    id: '024',
+    name: 'Bronx',
+    items: [
+      { id: 197, name: 'Baychester' },
+      { id: 198, name: 'Bedford Park' },
+      { id: 199, name: 'Belmont' },
+      { id: 201, name: 'Castle Hill' },
+      { id: 202, name: 'City Island' },
+      { id: 205, name: 'Co-op City' },
+      { id: 206, name: 'Concourse' },
+      { id: 208, name: 'Country Club' },
+      { id: 209, name: 'East Tremont' },
+      { id: 210, name: 'Eastchester' },
+      { id: 213, name: 'Fordham' },
+      { id: 215, name: 'Hunts Point' },
+      { id: 216, name: 'Kingsbridge' },
+      { id: 217, name: 'Longwood' },
+      { id: 219, name: 'Melrose' },
+      { id: 220, name: 'Morris Heights' },
+      { id: 221, name: 'Morris Park' },
+      { id: 222, name: 'Morrisania' },
+      { id: 223, name: 'Mott Haven' },
+      { id: 227, name: 'Norwood' },
+      { id: 229, name: 'Parkchester' },
+      { id: 230, name: 'Pelham Bay' },
+      { id: 231, name: 'Pelham Gardens' },
+      { id: 232, name: 'Pelham Parkway' },
+      { id: 234, name: 'Riverdale' },
+      { id: 235, name: 'Schuylerville' },
+      { id: 236, name: 'Soundview' },
+      { id: 238, name: 'Throgs Neck' },
+      { id: 240, name: 'University Heights' },
+      { id: 241, name: 'Van Nest' },
+      { id: 242, name: 'Wakefield' },
+      { id: 244, name: 'Westchester Village' },
+      { id: 245, name: 'Williamsbridge' },
+      { id: 246, name: 'Woodlawn' },
+      { id: 317, name: 'Bronxwood' },
+      { id: 331, name: 'Woodstock' },
+      { id: 337, name: 'Laconia' },
+      { id: 341, name: 'North New York' },
+      { id: 363, name: 'Crotona Park East' },
+      { id: 364, name: 'Highbridge' },
+      { id: 365, name: 'Tremont' },
+      { id: 366, name: 'Edenwald' },
+    ],
+  },
+  {
+    id: '021',
+    name: 'Downtown',
+    items: [
+      {
+        id: 354,
+        name: 'Civic Center',
+      },
+      {
+        id: 19,
+        name: 'Battery Park City',
+      },
+      {
+        id: 7,
+        name: 'Chelsea',
+      },
+      {
+        id: 15,
+        name: 'Chinatown Little Italy',
+      },
+      {
+        id: 17,
+        name: 'East Village',
+      },
+      {
+        id: 247,
+        name: 'Financial District',
+      },
+      {
+        id: 10,
+        name: 'Flatiron',
+      },
+      {
+        id: 13,
+        name: 'Gramercy Park',
+      },
+      {
+        id: 248,
+        name: 'Greenwich Village',
+      },
+      {
+        id: 249,
+        name: 'Little Italy',
+      },
+      {
+        id: 18,
+        name: 'Lower East Side',
+      },
+      {
+        id: 252,
+        name: 'Nolita',
+      },
+      {
+        id: 388,
+        name: 'Hudson Square',
+      },
+      {
+        id: 12,
+        name: 'Soho',
+      },
+      {
+        id: 16,
+        name: 'Stuyvesant',
+      },
+
+      {
+        id: 9,
+        name: 'Tribeca',
+      },
+      {
+        id: 8,
+        name: 'West Village',
+      },
+    ],
+  },
+  {
+    id: '03',
+    name: 'Midtown East',
+    items: [
+      {
+        id: 335,
+        name: 'Kips Bay',
+      },
+      {
+        id: 350,
+        name: 'Sutton Place',
+      },
+      {
+        id: 362,
+        name: 'Turtle Bay',
+      },
+      {
+        id: 251,
+        name: 'Murray Hill',
+      },
+    ],
+  },
+  {
+    id: '04',
+    name: 'Midtown West',
+    items: [
+      {
+        id: 387,
+        name: 'Hudson Yards',
+      },
+    ],
+  },
+  {
+    id: '01',
+    name: 'Upper West Side',
+    items: [
+      { id: 46, name: 'Manhattan Valley' },
+      {
+        id: 47,
+        name: 'Morningside Heights',
+      },
+      {
+        id: 338,
+        name: 'Lincoln Square',
+      },
+    ],
+  },
+  {
+    id: '02',
+    name: 'Upper East Side',
+    items: [
+      {
+        id: 319,
+        name: 'Carnegie Hill',
+      },
+      {
+        id: 356,
+        name: 'Lenox Hill',
+      },
+      {
+        id: 357,
+        name: 'Yorkville',
+      },
+      {
+        id: 359,
+        name: 'Upper Carnegie Hill',
+      },
+    ],
+  },
+  {
+    id: '29',
+    name: 'Upper Manhattan',
+    items: [
+      { id: 30, name: 'Inwood' },
+      { id: 38, name: 'Central Harlem' },
+      { id: 40, name: 'East Harlem' },
+      { id: 43, name: 'Hamilton Heights' },
+      { id: 52, name: 'Washington Heights' },
+      { id: 53, name: 'West Harlem' },
+      { id: 358, name: 'Manhattanville' },
+      { id: 360, name: 'Marble Hill' },
+    ],
+  },
+  {
+    id: '023',
+    name: 'Queens',
+    items: [
+      { id: 108, name: 'Alley Park' },
+      { id: 110, name: 'Astoria' },
+      { id: 112, name: 'Auburndale' },
+      { id: 113, name: 'Bay Terrace' },
+      { id: 114, name: 'Bayside' },
+      { id: 118, name: 'Bellerose' },
+      { id: 122, name: 'Briarwood' },
+      { id: 124, name: 'Brookville' },
+      { id: 125, name: 'Cambria Heights' },
+      { id: 126, name: 'Clearview' },
+      { id: 127, name: 'College Point' },
+      { id: 128, name: 'Corona' },
+      { id: 129, name: 'Douglaston' },
+      { id: 130, name: 'East Elmhurst' },
+      { id: 132, name: 'Elmhurst' },
+      { id: 134, name: 'Floral Park' },
+      { id: 135, name: 'Flushing' },
+      { id: 137, name: 'Forest Hills' },
+      { id: 140, name: 'Fresh Meadows' },
+      { id: 141, name: 'Glen Oaks Village' },
+      { id: 142, name: 'Glendale' },
+      { id: 144, name: 'Hillcrest' },
+      { id: 145, name: 'Hollis' },
+      { id: 147, name: 'Howard Beach' },
+      { id: 149, name: 'Jackson Heights' },
+      { id: 150, name: 'Jamaica' },
+      { id: 152, name: 'Jamaica Estates' },
+      { id: 153, name: 'Jamaica Hills' },
+      { id: 154, name: 'Kew Gardens' },
+      { id: 155, name: 'Kew Gardens Hills' },
+      { id: 156, name: 'Laurelton' },
+      { id: 159, name: 'Little Neck' },
+      { id: 160, name: 'Long Island City' },
+      { id: 162, name: 'Maspeth' },
+      { id: 163, name: 'Middle Village' },
+      { id: 166, name: 'North Corona' },
+      { id: 167, name: 'Oakland Gardens' },
+      { id: 169, name: 'Ozone Park' },
+      { id: 170, name: 'Pomonok' },
+      { id: 172, name: 'Queens Village' },
+      { id: 175, name: 'Rego Park' },
+      { id: 176, name: 'Richmond Hill' },
+      { id: 177, name: 'Ridgewood' },
+      { id: 180, name: 'Rosedale' },
+      { id: 182, name: 'St. Albans' },
+      { id: 186, name: 'South Jamaica' },
+      { id: 187, name: 'South Ozone Park' },
+      { id: 188, name: 'Springfield Gardens' },
+      { id: 191, name: 'Sunnyside' },
+      { id: 193, name: 'Utopia' },
+      { id: 194, name: 'Whitestone' },
+      { id: 195, name: 'Woodhaven' },
+      { id: 196, name: 'Woodside' },
+      { id: 327, name: 'The Rockaways' },
+      { id: 345, name: 'Ditmars-Steinway' },
+      { id: 371, name: 'New Hyde Park' },
+      { id: 372, name: 'South Richmond Hill' },
+      { id: 373, name: 'Rockaway All' },
+    ],
+  },
+  {
+    id: '025',
+    name: 'Staten Island',
+    items: [
+      { id: 256, name: 'Annadale' },
+      { id: 257, name: 'Arden Heights' },
+      { id: 258, name: 'Arlington' },
+      { id: 259, name: 'Arrochar' },
+      { id: 260, name: 'Bay Terrace' },
+      { id: 261, name: 'Bloomfield' },
+      { id: 262, name: 'Bulls Head' },
+      { id: 264, name: 'Castleton Corners' },
+      { id: 265, name: 'Charleston' },
+      { id: 266, name: 'Chelsea (Staten Island)' },
+      { id: 267, name: 'Clifton' },
+      { id: 269, name: 'Dongan Hills' },
+      { id: 270, name: 'Elm Park' },
+      { id: 271, name: 'Eltingville' },
+      { id: 272, name: 'Emerson Hill' },
+      { id: 273, name: 'Graniteville' },
+      { id: 274, name: 'Grant City' },
+      { id: 275, name: 'Grasmere' },
+      { id: 276, name: 'Great Kills' },
+      { id: 277, name: 'Greenridge' },
+      { id: 278, name: 'Grymes Hill' },
+      { id: 280, name: 'Howland Hook' },
+      { id: 281, name: 'Huguenot' },
+      { id: 282, name: 'Lighthouse Hill' },
+      { id: 284, name: 'Midland Beach' },
+      { id: 285, name: 'New Brighton' },
+      { id: 286, name: 'New Dorp' },
+      { id: 287, name: 'New Dorp Beach' },
+      { id: 288, name: 'New Springville' },
+      { id: 289, name: 'Oakwood' },
+      { id: 291, name: 'Park Hill' },
+      { id: 292, name: 'Pleasant Plains' },
+      { id: 294, name: 'Port Richmond' },
+      { id: 298, name: 'Richmond Valley' },
+      { id: 299, name: 'Rosebank' },
+      { id: 300, name: 'Rossville' },
+      { id: 301, name: 'Shore Acres' },
+      { id: 302, name: 'Silver Lake' },
+      { id: 303, name: 'South Beach' },
+      { id: 305, name: 'Stapleton' },
+      { id: 309, name: 'Todt Hill' },
+      { id: 310, name: 'Tompkinsville' },
+      { id: 311, name: 'Tottenville' },
+      { id: 312, name: 'Travis' },
+      { id: 313, name: 'West Brighton' },
+      { id: 314, name: 'Westerleigh' },
+      { id: 315, name: 'Woodrow' },
+      { id: 375, name: 'Egbertville' },
+      { id: 376, name: 'Fort Wadsworth' },
+      { id: 377, name: 'Manor Heights' },
+      { id: 378, name: 'Mariners Harbor' },
+      { id: 379, name: 'Meiers Corners' },
+      { id: 380, name: 'Ocean Breeze' },
+      { id: 381, name: 'Princes Bay' },
+      { id: 382, name: 'Richmondtown' },
+      { id: 383, name: 'Saint George' },
+      { id: 384, name: 'Sunnyside (Staten Island)' },
+      { id: 385, name: 'Willowbrook' },
+      { id: 386, name: 'Oakwood Beach' },
+    ],
+  },
+  {
+    id: '00',
+    name: 'Other',
+    items: [
+      { id: 352, name: 'Midtown' },
+      { id: 353, name: 'Midtown South' },
+      { id: 1, name: 'Upper West Side' },
+      { id: 2, name: 'Upper East Side' },
+      { id: 3, name: 'Midtown Eas' },
+      { id: 4, name: 'Midtown West' },
+      { id: 21, name: 'Downtown' },
+      { id: 29, name: 'Upper Manhattan' },
+      { id: 23, name: 'Queens' },
+      { id: 24, name: 'Bronx' },
+      { id: 22, name: 'Westchester' },
+      { id: 6, name: 'Other' },
+      { id: 26, name: 'New Jersey' },
+      { id: 25, name: 'Staten Island' },
+      { id: 27, name: 'Nassau' },
+      { id: 28, name: 'Suffolk' },
+      { id: 34, name: 'Roosevelt Island' },
+    ],
+  },
+];
 export const activityTypes = [
   {
     id: 1,
@@ -1968,6 +2607,58 @@ export const activityTypes = [
   },
 ];
 
+export const activityTypesDropdown = [
+  {
+    id: 0,
+    label: 'All Activity',
+  },
+  {
+    id: 1,
+    label: 'Email',
+  },
+  {
+    id: 2,
+    label: 'SMS',
+  },
+  {
+    id: 3,
+    label: 'Phone Call',
+  },
+  {
+    id: 14,
+    label: 'Notes',
+  },
+];
+export const activityTypeIcons = {
+  1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  6: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  7: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
+  8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
+  9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
+  10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
+  11: <PersonAddAlt1OutlinedIcon className="h-[18px] w-[18px] text-gray-500" />,
+  12: <Image alt={''} src={UpdateContact} className="h-7 w-7 text-gray-500" />,
+  13: <Image alt={''} src={DeleteIcon} className="h-4 w-4 text-gray-500" />,
+  14: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  15: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  16: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  17: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  18: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  19: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  20: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  21: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  22: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  23: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  28: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+};
 export const rentalPriceOptions = [
   { id: 1, value: 500, label: '$500' },
   { id: 2, value: 750, label: '$750' },
@@ -2027,4 +2718,51 @@ export const salePriceOptions = [
   { id: 53, value: 20000000, label: '$20,000,000' },
   { id: 54, value: 25000000, label: '$25,000,000' },
   { id: 55, value: 30000000, label: '$30,000,000' },
+];
+export const amenities = [
+  'Diplomats OK',
+  'Furnished',
+  'Live Work',
+  'No Fee',
+  'Pied a Terre',
+  'Vacation Rental',
+  'Doorman',
+  'Elevator',
+  'Brownstone',
+  'Health Club',
+  'Pool',
+  'Garage',
+  'Recreational Room',
+  'Concierge',
+  'Senior Housing',
+  'High-Speed Internet',
+  'Live In Super',
+  'Children Playroom',
+  'Virtual Doorman',
+  'Business Center',
+  'Bicycle Room',
+  'Storage',
+  'Nursery',
+  'Lounge',
+  'Valet',
+  'Roof Deck',
+  'Maid Service',
+  'Courtyard',
+  'Dishwasher',
+  'Driveway',
+  'Fireplace',
+  'High Ceilings',
+  'Laundry',
+  'Laundry In Unit',
+  'Laundry Services',
+  'Open Kitchen',
+  'Common Outdoor Space',
+  'Subway',
+  'Washer',
+  'City View',
+  'Lake View',
+  'Open View',
+  'Park View',
+  'River View',
+  'Skyline View',
 ];

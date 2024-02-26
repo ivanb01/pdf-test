@@ -21,7 +21,11 @@ import {
   devRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
+import SendEmailOverlay from '@components/SendEmailSidebar';
+import { setOpenEmailContactOverlay } from '@store/global/slice';
+import EmailSendComponent from '@components/EmailSendComponent';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -40,8 +44,10 @@ const MyApp = ({ Component, pageProps }) => {
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
+  const [emailBody, setEmailBody] = useState();
 
   const [domLoaded, setDomLoaded] = useState(false);
+
   useEffect(() => {
     setDomLoaded(true);
   }, []);
@@ -59,7 +65,7 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public')) {
+        if (!router.asPath.includes('public') && !router.asPath.includes('property')) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
@@ -140,6 +146,7 @@ const MyApp = ({ Component, pageProps }) => {
                 position="bottom-left"
               />
             )}
+            <EmailSendComponent />
           </Provider>
         </div>
       </div>
