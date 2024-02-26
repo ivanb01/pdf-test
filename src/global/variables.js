@@ -862,7 +862,7 @@ export const leadSourceOptions = [
 ];
 
 // export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
-export const phoneNumberRules = /^[+]{1}[1]{1}(\d{10})$/;
+export const phoneNumberRules = /^[+](\d{1,3})(\d{9,12})$/;
 
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
