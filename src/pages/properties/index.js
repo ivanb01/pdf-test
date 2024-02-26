@@ -43,6 +43,8 @@ import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
+import Close from '@mui/icons-material/Close';
+import chevronDown from '/public/images/ch-down.svg';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -77,6 +79,7 @@ const index = () => {
   const [selectedProperties, setSelectedProperties] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
+  const [showProperties, setShowProperties] = useState(true);
 
   const setStatuss = (root, status) => {
     root.status = status;
@@ -532,7 +535,7 @@ const index = () => {
             className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
             src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
           />
-          <div className="font-semibold text-black mb-[6px] mr-3 text-sm">
+          <div className="font-semibold text-gray7 mr-3 text-[14px]">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
           </div>
         </div>
@@ -923,10 +926,9 @@ const index = () => {
       />
       <SlideOver
         open={open}
-        noHeader
         setOpen={setOpen}
-        title={sendMethod == 1 ? 'Send via Email' : 'Send via SMS'}
         withBackdrop
+        noHeader={!propertiesSent}
         buttons={
           propertiesSent ? null : (
             <>
@@ -964,7 +966,9 @@ const index = () => {
               speed="1"
               style={{ height: '200px' }}
               autoplay></lottie-player>
-            <div className="text-gray7 font-medium text-lg -mt-4">Properties have been sent successfully</div>
+            <div className="text-gray7 font-semibold text-[18px] -mt-7">
+              Properties have been successfully sent to your clients!
+            </div>
             {/*<div className=" mt-2">*/}
             {/*  All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}*/}
             {/*  <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.*/}
@@ -983,8 +987,17 @@ const index = () => {
             />
           </div>
         ) : (
-          <div>
-            <div className="font-semibold text-gray7 mb-2">Select Clients</div>
+          <div className="">
+            <div className="flex items-center justify-between  mb-2">
+              <div className="font-semibold text-gray7 text-[20px]">Select clients</div>
+              <button
+                type="button"
+                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                onClick={() => setOpen(false)}>
+                <span className="sr-only">Close panel</span>
+                <Close className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
             {/* <Search
               placeholder={`Search for clients`}
               className="w-full text-sm mt-2"
@@ -1006,10 +1019,10 @@ const index = () => {
               />
             )}
             <div className="my-4">
-              <span className="font-semibold text-gray7">{selectedContacts.length}</span>
-              <span className="text-gray8 font-medium">
+              <span className="font-semibold text-gray7 text-[18px]">{selectedContacts.length}</span>
+              <span className="text-gray8 text-[14px] font-medium">
                 {' '}
-                {selectedContacts.length == 1 ? 'Contact' : 'Contacts'} selected
+                {selectedContacts.length == 1 ? 'Client' : 'Clients'} selected
               </span>
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
@@ -1060,17 +1073,28 @@ const index = () => {
                 ))}
             </SimpleBar>
             <hr className="my-3" />
-            <div className="font-semibold text-gray7">Properties</div>
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-gray7 text-[20px]">Properties</div>
+              <a
+                className={`cursor-pointer transition-all ${showProperties ? '' : 'rotate-180'}`}
+                onClick={() => setShowProperties(!showProperties)}>
+                <img src={chevronDown.src} />
+              </a>
+            </div>
             <div className="my-4">
-              <span className="font-semibold text-gray7">{selectedProperties.length}</span>
-              <span className="text-gray8 font-medium">
+              <span className="font-semibold text-gray7 text-[18px]">{selectedProperties.length}</span>
+              <span className="text-gray8 font-medium text-[14px]">
                 {' '}
                 {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
               </span>
             </div>
-            {selectedProperties.map((property) => (
-              <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
-            ))}
+            {showProperties && (
+              <>
+                {selectedProperties.map((property) => (
+                  <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
+                ))}
+              </>
+            )}
           </div>
         )}
       </SlideOver>

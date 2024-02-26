@@ -13,6 +13,7 @@ export default function SlideOver({
   className,
   withBackdrop,
   width,
+  specialTitle,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -31,10 +32,10 @@ export default function SlideOver({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
-                  <div className="flex h-full flex-col bg-white shadow-xl">
+                  <div className="flex h-full flex-col bg-white shadow-xl relative">
                     {!noHeader && (
                       <div className="flex flex-shrink-0 justify-between px-6 py-5">
-                        <h6 className="text-md font-medium text-gray-900">{title}</h6>
+                        <div>{title && <h6 className="text-md font-medium text-gray-900">{title}</h6>}</div>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
