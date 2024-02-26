@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { sendEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
+import { addContactActivity } from '@api/contacts';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
@@ -57,10 +58,15 @@ const SendEmailOverlay = () => {
 
   const handleSendEmail = () => {
     setLoading(true);
-    let contacts = selectedContacts.map((contact) => contact.email);
+    console.log(selectedContacts);
+    let contacts = selectedContacts.map((contact) => ({ email: contact.email, id: contact.value }));
 
     contacts.map((contact) => {
-      sendEmail([contact], subject, message).then(() => {
+      addContactActivity(contact.id, {
+        type_of_activity_id: 1,
+        description: `Subject: ${subject} | Message: ${message.replace(/<[^>]*>/g, '')}`,
+      });
+      sendEmail([contact.email], subject, message).then(() => {
         setLoading(false);
         setEmailSent(true);
       });
