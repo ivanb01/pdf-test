@@ -136,7 +136,7 @@ const MyApp = ({ Component, pageProps }) => {
           className={`main-page overflow-y-auto overflow-x-hidden`}
           style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
-            <GetSubtype />
+            {isUserAuthenticated && <GetSubtype />}
             <Component {...pageProps} />
             {domLoaded && (
               <Toaster

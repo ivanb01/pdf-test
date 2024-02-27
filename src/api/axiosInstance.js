@@ -17,28 +17,45 @@ const getLocalStorageValue = () => {
     }, 1000);
   });
 };
+axiosInstance.interceptors.request.use(function (config) {
+  const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
 
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
-    let token = null;
-    const localStorageValue = await getLocalStorageValue();
-    if (localStorageValue) {
-      token = localStorageValue;
-    } else {
-      let tokenSession = await Auth.currentSession();
-      token = tokenSession.idToken.jwtToken;
-    }
-
-    config.baseURL = apiGatewayUrl;
-    config.headers.common['Accept'] = 'application/json';
-    config.headers.common['Authorization'] = `Bearer ${token}`;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+  return new Promise((resolve, reject) => {
+    Auth.currentSession()
+      .then((session) => {
+        let idTokenExpire = session.getIdToken().getExpiration();
+        let refreshToken = session.getRefreshToken();
+        let currentTimeSeconds = Math.round(+new Date() / 1000);
+        if (idTokenExpire < currentTimeSeconds) {
+          Auth.currentAuthenticatedUser()
+            .then((res) => {
+              res.refreshSession(refreshToken, (err, data) => {
+                if (err) {
+                  Auth.signOut();
+                  reject(err);
+                } else {
+                  config.headers.Authorization = 'Bearer ' + data.getIdToken().getJwtToken();
+                  config.baseURL = apiGatewayUrl;
+                  config.headers.common['Accept'] = 'application/json';
+                  resolve(config);
+                }
+              });
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } else {
+          config.headers.Authorization = 'Bearer ' + session.getIdToken().getJwtToken();
+          config.baseURL = apiGatewayUrl;
+          config.headers.common['Accept'] = 'application/json';
+          resolve(config);
+        }
+      })
+      .catch((error) => {
+        resolve(config);
+      });
+  });
+});
 
 axiosInstance.interceptors.response.use(
   (response) => {
