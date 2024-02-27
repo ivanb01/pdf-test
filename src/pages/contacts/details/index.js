@@ -40,7 +40,7 @@ const index = () => {
   const [editNoteModal, setEditNoteModal] = useState(false);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contact, setContact] = useState(null);
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loadingActivities, setLoadingActivities] = useState(true);
   const [loadingNotes, setLoadingNotes] = useState(true);
@@ -423,7 +423,15 @@ const index = () => {
                     activities={
                       activityFilter.id == 0 || !activityFilter
                         ? activities
-                        : activities.filter((activity) => activity.type_of_activity_id == activityFilter.id)
+                        : activities.filter((activity) => {
+                            console.log(activityFilter, activity.type_of_activity_id);
+                            if (activityFilter.id == 14) {
+                              return [14, 15, 16].includes(activity.type_of_activity_id);
+                            } else if (activityFilter.id == 3) {
+                              return [3, 26, 27].includes(activity.type_of_activity_id);
+                            }
+                            return activity.type_of_activity_id == activityFilter.id;
+                          })
                     }
                     setActivities={setActivities}
                   />
@@ -442,18 +450,20 @@ const index = () => {
               )}
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
-                    {notes.length > 0 && (
+                    {notes && notes.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                         <img src={addNote.src} className={'h-7  w-7'} />
                       </a>
                     )}
                   </div>
                 </div>
-                {!notes.length ? (
+                {notes === null ? (
+                  <Loader />
+                ) : !notes.length > 0 ? (
                   <div className="text-center mt-4">
                     <div className="text-gray7 font-semibold mb-2">No notes found</div>
                     <div className="text-gray5 text-sm mb-6">

@@ -641,7 +641,12 @@ const index = () => {
               <div className="order-2 md:order-1 text-[#111827] font-semibold md:mr-2 text-xl md:text-2xl">
                 {data.PROPERTY_TYPE} in {data.ADDRESS}
               </div>
-              <div className="order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border border-[#0891B2] bg-[#ECFEFF] rounded-full text-[#155E75] h-fit px-2 py-1 text-xs font-medium">
+              <div
+                className={`order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border ${
+                  data.STATUS.toLowerCase() === 'sold' || data.STATUS.toLowerCase() === 'for sale'
+                    ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
+                    : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+                } rounded-full h-fit px-2 py-1 text-xs font-medium`}>
                 {data.STATUS}
               </div>
             </div>
