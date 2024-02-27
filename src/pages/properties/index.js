@@ -715,7 +715,7 @@ const index = () => {
 
           <Dropdown
             options={roomsOptions}
-            className=" min-w-[100px]"
+            className=" min-w-[120px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
             handleSelect={(choice) => {
