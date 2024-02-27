@@ -1757,49 +1757,6 @@ const Table = ({
                                 Edit Contact
                               </div>
                             </div>
-                            <div
-                              className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-                              onMouseEnter={() => {
-                                document
-                                  .querySelector('#tooltip-change-status-' + contact.id)
-                                  .classList.remove('invisible', 'opacity-0');
-                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
-                                document
-                                  .querySelector('#change-status-icon-' + contact.id)
-                                  .classList.remove('text-gray3');
-                              }}
-                              onMouseLeave={() => {
-                                document
-                                  .querySelector('#tooltip-change-status-' + contact.id)
-                                  .classList.add('invisible', 'opacity-0');
-                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
-                                document
-                                  .querySelector('#change-status-icon-' + contact.id)
-                                  .classList.remove('text-gray4');
-                              }}
-                              // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                              onClick={(e) => e.stopPropagation()}>
-                              {/* <Category className="text-gray3 w-4 h-4" /> */}
-                              <SimpleBarDropdown
-                                options={allStatusesQuickEdit[categoryType]}
-                                activeIcon={false}
-                                activeClasses="bg-lightBlue1"
-                                handleSelect={(item) => {
-                                  // setDropdownVal(item)
-                                  handleChangeStatus(item.id, contact);
-                                }}
-                                iconLabel={
-                                  <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-                                }
-                                dropdownValue={contact?.status_2}
-                                handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
-                              <div
-                                id={'tooltip-change-status-' + contact.id}
-                                role="tooltip"
-                                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                Change Status
-                              </div>
-                            </div>
                           </div>
                         </td>
                       </tr>
