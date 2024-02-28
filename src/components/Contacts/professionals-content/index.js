@@ -67,13 +67,20 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
   const [searchTerm, setSearchTerm] = useState(' ');
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
+
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+  const renamedArray = vendorSubtypes.map((item) => {
+    const { id, name } = item;
+    return { label: name, value: name };
+  });
+
   const tabs = [
     {
       title: 'PROFESSIONAL TYPES',
       content:
         openedSubtab === 0
-          ? multiselectOptionsProfessionals.map((option) => option.label).filter((label) => label !== 'Agent')
-          : multiselectOptionsProfessionals.map((option) => option.label),
+          ? renamedArray.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
+          : renamedArray.map((option) => option.label),
       value: 'category_2',
     },
     // {
