@@ -81,8 +81,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       title: 'PROFESSIONAL TYPES',
       content:
         openedSubtab === 0
-          ? renamedArray.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
-          : renamedArray.map((option) => option.label),
+          ? renamedArray?.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
+          : renamedArray?.map((option) => option.label),
       value: 'category_2',
     },
     // {
