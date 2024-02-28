@@ -1,88 +1,48 @@
-import exampleTheme from 'themes/ExampleTheme';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-import ToolbarPlugin from 'plugins/ToolbarPlugin';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
-import { ListItemNode, ListNode } from '@lexical/list';
-import { CodeHighlightNode, CodeNode } from '@lexical/code';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
-import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { TRANSFORMERS } from '@lexical/markdown';
+import React, { useRef } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 
-import ListMaxIndentLevelPlugin from 'plugins/ListMaxIndentLevelPlugin';
-import CodeHighlightPlugin from 'plugins/CodeHighlightPlugin';
-import AutoLinkPlugin from 'plugins/AutoLinkPlugin';
-
-import Text from '@components/shared/text';
-
-export default function Editor({ label, value }) {
-  function Placeholder() {
-    return <div className="editor-placeholder text-sm text-gray4">Enter the email content...</div>;
-  }
-  const initialValue = {
-    root: {
-      children: [
-        {
-          type: 'paragraph',
-          children: [{ text: value }],
-        },
-      ],
-    },
-  };
-  const editorConfig = {
-    theme: exampleTheme,
-    onError(error) {
-      throw error;
-    },
-    // editorState: JSON.stringify(initialValue).length ? JSON.stringify(initialValue) : null,
-    nodes: [
-      HeadingNode,
-      ListNode,
-      ListItemNode,
-      QuoteNode,
-      CodeNode,
-      CodeHighlightNode,
-      TableNode,
-      TableCellNode,
-      TableRowNode,
-      AutoLinkNode,
-      LinkNode,
-    ],
+export default function RichtextEditor({ label, value }) {
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
   };
   return (
     <>
-      {label && (
-        <Text h4 className={'text-gray6 mb-1'}>
-          {label}
-        </Text>
-      )}
-      <LexicalComposer initialConfig={editorConfig}>
-        <div className="editor-container rounded-lg border border-borderColor overflow-hidden">
-          <ToolbarPlugin />
-          <div className="editor-inner">
-            <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
-              placeholder={<Placeholder />}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
-            <CodeHighlightPlugin />
-            <ListPlugin />
-            <LinkPlugin />
-            <AutoLinkPlugin />
-            <ListMaxIndentLevelPlugin maxDepth={7} />
-            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-          </div>
-        </div>
-      </LexicalComposer>
+      <Editor
+        apiKey="6fbb5ydazy62w7lpag3txdszeyvqys6288392vd1e6acpxs7"
+        onInit={(evt, editor) => (editorRef.current = editor)}
+        initialValue={value}
+        init={{
+          height: 350,
+          menubar: false,
+          plugins: [
+            'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'preview',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'code',
+            'help',
+            'wordcount',
+          ],
+          toolbar:
+            'undo redo  blocks  bold italic forecolor  alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+        }}
+      />
+      {/* <button onClick={log}>Log editor content</button> */}
     </>
   );
 }

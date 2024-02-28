@@ -16,6 +16,7 @@ import ContactTypeSelect from '@components/contact/contact-type-select';
 import Text from '@components/shared/text';
 import Radio from '@components/shared/radio';
 import Delete from '@mui/icons-material/Delete';
+import RichtextEditor from '@components/Editor';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
@@ -25,14 +26,43 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [selectedStatus, setSelectedStatus] = useState();
 
   const [events, setEvents] = useState([
-    { id: 0, title: 'Very grateful for this business.', message: 'Wow this is coool', eventDate: new Date(), type: 0 },
-    { id: 1, title: 'Thank you for working with us.', eventDate: new Date(), type: 1 },
+    {
+      id: 0,
+      action: 'Send',
+      title: 'Thank you for working with us.',
+      body_html: '<a>Test</a> <stronger>Test Body</stronger> <br/> </br> <h5>Test h5</h5>',
+      wait: new Date(),
+      type: 'SMS',
+    },
+    {
+      id: 1,
+      action: 'Send',
+      title: 'Thank you for working with us.',
+      body_html: '<h1>Test h1</h1> <stronger>Test Body</stronger> <br/> </br> <h5>Test h5</h5>',
+      wait: new Date(),
+      type: 'Email',
+    },
   ]);
 
   const [typeOfEvents, setTypeOfEvents] = useState([
     { id: 0, title: 'Email', icon: call.src },
     { id: 1, title: 'SMS', icon: call.src },
   ]);
+
+  const addNewEvent = () => {
+    let newEvent = {
+      title: '',
+      body_html: '',
+      wait: null,
+      type: null,
+    };
+    setEvents((prevState) => [...prevState, newEvent]);
+  };
+
+  const removeEvent = (index) => {
+    let modifiedEvents = events.filter((event, key) => key != index);
+    setEvents(modifiedEvents);
+  };
 
   const Card = ({ title, description, icon, className, active, onClick, narrow, expandable }) => {
     let padding = narrow ? 'py-[8px] px-[15px] min-w-[170px]' : 'px-[18px] py-4';
@@ -81,7 +111,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     );
   };
 
-  const Event = ({ title, className, type, active, onClick, eventDate }) => {
+  const Event = ({ index, title, className, type, active, onClick, eventDate }) => {
     let isSms = type == 0 ? true : false;
     return (
       <div className="mb-3 last:mb-0">
@@ -102,7 +132,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             </div>
           </div>
           <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
-          <div className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
+          <div
+            onClick={() => removeEvent(index)}
+            className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
             <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
           </div>
         </div>
@@ -148,17 +180,18 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       <div className="flex -mx-6">
         <div className="w-1/2 px-[22px] py-[26px] border-r border-gray1">
           <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
-          {events.map((event) => (
+          {events.map((event, index) => (
             <Event
+              index={index}
               title={event.title}
               eventDate={event.eventDate}
-              active={selectedEvent.id == event.id}
+              active={selectedEvent == event.id}
               onClick={() => setSelectedEvent(event)}
             />
           ))}
           <img src={divider.src} className="my-2 pl-2 mb-3" />
           <a
-            onClick={() => resetCreateCampaign()}
+            onClick={() => addNewEvent()}
             className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
             + Add New Event
           </a>
@@ -168,7 +201,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             <div>
               <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
               <div className="flex mb-6">
-                {typeOfEvents.map((type) => (
+                {typeOfEvents.map((type, index) => (
                   <Card
                     narrow
                     className="mr-2 bg-white"
@@ -217,10 +250,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             </div>
             <div className="">
               <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
-              <Editor placeholder="Write message here..." value={selectedEvent?.message} />
+              <RichtextEditor placeholder="Write message here..." value={selectedEvent?.body_html} />
             </div>
           </div>
-          <div className="sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
+          <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
             <Button label="Cancel" white className="mr-3" />
             <Button primary label="Save Campaign Template" />
           </div>
