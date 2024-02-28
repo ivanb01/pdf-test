@@ -69,10 +69,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
-  const renamedArray = vendorSubtypes.map((item) => {
-    const { id, name } = item;
-    return { label: name, value: name };
-  });
+  const renamedArray =
+    vendorSubtypes &&
+    vendorSubtypes?.map((item) => {
+      const { id, name } = item;
+      return { label: name, value: name };
+    });
 
   const tabs = [
     {
