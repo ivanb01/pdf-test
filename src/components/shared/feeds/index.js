@@ -246,11 +246,7 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                             </p>
                           )}
                           <div className="mt-2 text-sm text-gray6">
-                            <p>
-                              {activityItem.description
-                                ? activityItem.description
-                                : placeholderDescription(activityItem.type_of_activity_id)}
-                            </p>
+                            <ActivityDescription activityItem={activityItem} />
                           </div>
                         </div>
                       </>
@@ -308,3 +304,39 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
     </>
   );
 }
+
+const ActivityDescription = ({ activityItem }) => {
+  const [showMore, setShowMore] = useState(false);
+
+  const activityItemLength = activityItem.description?.replace(/\|/g, '<br>')?.split('Message: ')[1]?.length;
+  const activityItemEmailBreak = activityItem.description.replace(/\|/g, '<br>');
+  return (
+    activityItem && (
+      <>
+        <p
+          dangerouslySetInnerHTML={{
+            __html:
+              activityItem.type_of_activity_id === 1
+                ? `${
+                    showMore && activityItemLength > 280
+                      ? activityItemEmailBreak
+                      : !showMore && activityItemLength > 280
+                      ? activityItemEmailBreak.slice(0, 280) + '...'
+                      : activityItemEmailBreak
+                  }`
+                : activityItem.description || placeholderDescription(activityItem.type_of_activity_id),
+          }}
+        />
+
+        <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowMore(!showMore)}>
+          {activityItem.type_of_activity_id === 1 &&
+            (showMore && activityItemLength > 280
+              ? 'See Less'
+              : !showMore && activityItemLength > 280
+              ? 'See More...'
+              : '')}
+        </span>
+      </>
+    )
+  );
+};
