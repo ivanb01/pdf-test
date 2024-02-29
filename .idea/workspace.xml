@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add uncategorized in ai-summary filter" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change text" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,38 +13,19 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/StoreAIcontactsInRedux" />
+        <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: -1
-}</component>
-  <component name="ProjectId" id="2bLvsRamJdSskOvyFOTYMQXBXZ7" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "development",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
-    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -59,18 +40,7 @@
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <package-manager value="npm" />
-      <envs />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -78,26 +48,14 @@
         <script value="dev" />
       </scripts>
       <node-interpreter value="project" />
-      <package-manager value="npm" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="start" />
-      </scripts>
-      <node-interpreter value="project" />
-      <package-manager value="npm" />
       <envs />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.build" />
-        <item itemvalue="npm.start" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
       </list>
@@ -108,6 +66,78 @@
     <configuration />
   </component>
   <component name="TaskManager">
+    <task id="LOCAL-00002" summary="add gradient">
+      <option name="closed" value="true" />
+      <created>1693217871179</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1693217871179</updated>
+    </task>
+    <task id="LOCAL-00003" summary="improve others sum and uncategorized sum">
+      <option name="closed" value="true" />
+      <created>1693218293738</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1693218293738</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix button issues">
+      <option name="closed" value="true" />
+      <created>1695666365885</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666365885</updated>
+    </task>
+    <task id="LOCAL-00005" summary="change popup when ai contact">
+      <option name="closed" value="true" />
+      <created>1695666505165</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666505165</updated>
+    </task>
+    <task id="LOCAL-00006" summary="change on focus summary textarea">
+      <option name="closed" value="true" />
+      <created>1695666602788</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1695666602788</updated>
+    </task>
+    <task id="LOCAL-00007" summary="remove unused code">
+      <option name="closed" value="true" />
+      <created>1695669034927</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1695669034927</updated>
+    </task>
+    <task id="LOCAL-00008" summary="remove 0 values">
+      <option name="closed" value="true" />
+      <created>1695670024707</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1695670024707</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add coma to result">
+      <option name="closed" value="true" />
+      <created>1695714763780</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1695714763780</updated>
+    </task>
+    <task id="LOCAL-00010" summary="change icons of floorplan and vtour">
+      <option name="closed" value="true" />
+      <created>1695719252123</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1695719252123</updated>
+    </task>
     <task id="LOCAL-00011" summary="add coma in pagination">
       <option name="closed" value="true" />
       <created>1695721422095</created>
@@ -203,7 +233,6 @@
       <option name="presentableId" value="Default" />
       <updated>1696601536995</updated>
       <workItem from="1696601538276" duration="59065000" />
-      <workItem from="1706007381336" duration="482000" />
     </task>
     <task id="LOCAL-00022" summary="add info icon on cards">
       <option name="closed" value="true" />
@@ -437,86 +466,22 @@
       <option name="project" value="LOCAL" />
       <updated>1701339286104</updated>
     </task>
-    <task id="LOCAL-00051" summary="add need to communicate popup">
-      <option name="closed" value="true" />
-      <created>1702418715150</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1702418715150</updated>
-    </task>
-    <task id="LOCAL-00052" summary="make table header sticky">
-      <option name="closed" value="true" />
-      <created>1703713366190</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1703713366190</updated>
-    </task>
-    <task id="LOCAL-00053" summary="fix images in marketing">
-      <option name="closed" value="true" />
-      <created>1703715024970</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1703715024970</updated>
-    </task>
-    <task id="LOCAL-00054" summary="make header responsive">
-      <option name="closed" value="true" />
-      <created>1703756737098</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1703756737098</updated>
-    </task>
-    <task id="LOCAL-00055" summary="hide price overflow in properties page">
-      <option name="closed" value="true" />
-      <created>1703758530491</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1703758530491</updated>
-    </task>
-    <task id="LOCAL-00056" summary="fix slideover issues">
-      <option name="closed" value="true" />
-      <created>1703765805054</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1703765805054</updated>
-    </task>
-    <task id="LOCAL-00057" summary="add checkboxes">
-      <option name="closed" value="true" />
-      <created>1703853070610</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1703853070610</updated>
-    </task>
-    <task id="LOCAL-00058" summary="store AI in redux">
-      <option name="closed" value="true" />
-      <created>1707816775749</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1707816775749</updated>
-    </task>
-    <task id="LOCAL-00059" summary="add uncategorized in ai-summary filter">
-      <option name="closed" value="true" />
-      <created>1707818464239</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1707818464239</updated>
-    </task>
-    <option name="localTasksCounter" value="60" />
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="add info icon on cards" />
+    <MESSAGE value="add zoom on preview marketing" />
+    <MESSAGE value="make size of main sidebar smaller and do refactoring at ai-summary" />
+    <MESSAGE value="do refactoring at ai-summary" />
+    <MESSAGE value="change direction of Tooltip" />
+    <MESSAGE value="change ai-summary table" />
+    <MESSAGE value="enable scrolling when in need to contacgt page" />
+    <MESSAGE value="improve lead source" />
+    <MESSAGE value="fix ui of add manually client" />
     <MESSAGE value="control tags on add client manually" />
     <MESSAGE value="differentiate unknown from uncategorized" />
     <MESSAGE value="change campaign style" />
@@ -533,15 +498,6 @@
     <MESSAGE value="fix width in importing contact table" />
     <MESSAGE value="add descriptive message on marketing page" />
     <MESSAGE value="change text" />
-    <MESSAGE value="add need to communicate popup" />
-    <MESSAGE value="make table header sticky" />
-    <MESSAGE value="fix images in marketing" />
-    <MESSAGE value="make header responsive" />
-    <MESSAGE value="hide price overflow in properties page" />
-    <MESSAGE value="fix slideover issues" />
-    <MESSAGE value="add checkboxes" />
-    <MESSAGE value="store AI in redux" />
-    <MESSAGE value="add uncategorized in ai-summary filter" />
-    <option name="LAST_COMMIT_MESSAGE" value="add uncategorized in ai-summary filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="change text" />
   </component>
 </project>

@@ -34,8 +34,11 @@ import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { isHealthyCommuncationDate } from '@global/functions';
 import ForwardToInbox from '@mui/icons-material/ForwardToInbox';
+import { loadAfterSignInRedirect } from '@helpers/auth';
 
 const MainMenu = ({ className, fixed }) => {
+  const willRedirectAfterSignIn = loadAfterSignInRedirect(true);
+
   const [originalMenuItems, setOriginalMenuItems] = useState([
     {
       id: 0,
@@ -134,9 +137,12 @@ const MainMenu = ({ className, fixed }) => {
       if (data.data.count === 0 && !skippedEmptyState) {
         localStorage.setItem('skippedEmptyState', true);
         dispatch(setSkippedEmptyState(true));
-        router.push({
-          pathname: '/contacts/clients',
-        });
+
+        if (!willRedirectAfterSignIn) {
+          router.push({
+            pathname: '/contacts/clients',
+          }); 
+        }
       }
     } catch (error) {
       console.error(error);

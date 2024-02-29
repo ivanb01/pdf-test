@@ -14,13 +14,15 @@ import 'shepherd.js/dist/css/shepherd.css';
 import '../styles/_global.scss';
 import {
   localRedirectSignIn,
+  localRedirectSignOut,
   productionRedirectSignIn,
+  productionRedirectSignOut,
   devRedirectSignIn,
   devRedirectSignOut,
   documentsRedirectSignIn,
   documentsRedirectSignOut,
-  localRedirectSignOut,
-  productionRedirectSignOut,
+  subscriptionsRedirectSignIn,
+  subscriptionsRedirectSignOut
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -30,18 +32,12 @@ import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
-const isLocalhost =
-  typeof window !== 'undefined' &&
-  Boolean(
-    window.location.hostname.includes('localhost') ||
-      // [::1] is the IPv6 localhost address.
-      window.location.hostname === '[::1]' ||
-      // 127.0.0.1/8 is considered localhost for IPv4.
-      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
-  );
-
-const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
-const isDocuments = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('documents'));
+import {
+  isLocalhost,
+  isDev,
+  isSubscriptions,
+  isDocuments
+} from 'helpers/env';
 
 const queryClient = new QueryClient();
 
@@ -71,7 +67,7 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('property')) {
+        if (!router.asPath.includes('public') && !router.asPath.includes('sign-up') && !router.asPath.includes('property')) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
@@ -105,28 +101,31 @@ const MyApp = ({ Component, pageProps }) => {
           userPoolWebClientId: appClientId,
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
-            // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost
-              ? localRedirectSignIn
-              : isDev
-                ? devRedirectSignIn
-                : isDocuments
-                  ? documentsRedirectSignIn
-                  : productionRedirectSignIn,
-            redirectSignOut: isLocalhost
+            redirectSignIn: isLocalhost() 
+              ? localRedirectSignIn 
+              : isDev() 
+              ? devRedirectSignIn
+              : isSubscriptions() 
+              ? subscriptionsRedirectSignIn
+              : isDocuments()
+              ? documentsRedirectSignIn
+              : productionRedirectSignIn,
+            redirectSignOut: isLocalhost()
               ? localRedirectSignOut
-              : isDev
-                ? devRedirectSignOut
-                : isDocuments
-                  ? documentsRedirectSignOut
-                  : productionRedirectSignOut,
+              : isDev()
+              ? devRedirectSignOut
+              : isSubscriptions()
+              ? subscriptionsRedirectSignOut
+              : isDocuments()
+              ? documentsRedirectSignOut
+              : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
 
-      Amplify.configure(awsmobile);
+      Amplify.configure({...awsmobile, ssr: true});
       console.log('configured amplify');
       return true;
     } catch (err) {

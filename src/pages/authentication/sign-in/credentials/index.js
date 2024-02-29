@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Text from 'components/shared/text';
 import Input from 'components/shared/input';
 import Link from 'components/Link';
@@ -6,35 +5,20 @@ import Button from 'components/shared/button';
 import GoogleButton from 'components/shared/button/google-button';
 import Authentication from 'components/Authentication';
 import { useRouter } from 'next/router';
-import facebookIcon from '/public/images/facebook.svg';
-import gmailIcon from '/public/images/gmail.svg';
-import twitterIcon from '/public/images/twitter.svg';
 import { useFormik } from 'formik';
 import { Auth } from 'aws-amplify';
 import { useState } from 'react';
-import { accordionClasses } from '@mui/material';
-import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'store/global/slice';
 
-const brokerageEmails = {
-  'Oxford Property Group': '@opgny.com',
-  'Level Group': '@levelgroupny.com',
-  'Spire Group': '@spiregroupny.com',
-};
-
 const SignIn = () => {
   const dispatch = useDispatch();
   const signInWithGoogle = async () => {
     try {
       await Auth.federatedSignIn({ provider: 'Google' });
-      let user = await Auth.currentAuthenticatedUser();
-      const days = 7;
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + days);
       localStorage.setItem('isAuthenticated', true);
     } catch (error) {
       console.log('fail', error);
@@ -109,27 +93,9 @@ const SignIn = () => {
       setLoadingButton(false);
       displayAlert('error', error.message, 4000);
     }
-
-    // Auth.completeNewPassword(cognitoUser, values.password)
-    //   .then((user) => {
-    //     Auth.currentSession().then((data) => {
-    //       // toast.success('New password has been saved');
-    //       // router.push('../../my-profile');
-    //       displayAlert('success', 'Password has been changed successfully!', 2000)
-    //       setTimeout(() => {
-    //         router.push('/contacts/clients');
-    //       }, 2000);
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     setLoadingButton(false);
-    //     displayAlert('error', error.message, 4000)
-    //     // toast.error(error?.message);
-    //   });
   };
 
-  //* FORMIK *//
+  //* SIGN IN *//
   const SignInSchema = Yup.object().shape({
     userName: Yup.string().required('Field can not be empty'),
     password: Yup.string().required('Field can not be empty'),
@@ -142,25 +108,22 @@ const SignIn = () => {
     },
     validationSchema: SignInSchema,
     onSubmit: (values, { setFieldError }) => {
-      handleSubmit(values, setFieldError);
+      handleLogin(values, setFieldError);
     },
   });
 
   const { errors, touched } = formik;
 
-  const handleSubmit = async (values, setFieldError) => {
+  const handleLogin = async (values, setFieldError) => {
     setLoadingButton(true);
     try {
-      console.log('what is this');
       const user = await Auth.signIn(values.userName.toLowerCase(), values.password);
       if (user?.challengeName !== 'NEW_PASSWORD_REQUIRED') {
-        // displayAlert('success', 'Login successfully', 2000);
-        // setTimeout(() => {
         dispatch(setUser(user.attributes.email));
         localStorage.setItem('user', JSON.stringify(user.attributes.email));
+        localStorage.setItem('isAuthenticated', true);
         console.log('set user');
         router.push('/contacts/clients');
-        // }, 2000);
       } else {
         setCognitoUser(user);
         setNewPasswordRequired(true);
@@ -168,6 +131,7 @@ const SignIn = () => {
       }
       console.log('response from signin', user);
     } catch (error) {
+      console.log(error);
       setLoadingButton(false);
       setFieldError('password', 'Invalid email or password. Please try again!');
     }
@@ -250,7 +214,7 @@ const SignIn = () => {
             onBackClick={() => router.push('/authentication/sign-in')}>
             Sign In
           </Text>
-          {/* <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit}>
             <Input
               type="text"
               label="Email"
@@ -259,8 +223,7 @@ const SignIn = () => {
               onChange={formik.handleChange}
               error={
                 (errors.userName && touched.userName) ||
-                errors.password ==
-                  'Invalid email or password. Please try again!'
+                errors.password == 'Invalid email or password. Please try again!'
               }
               errorText={errors.userName}
             />
@@ -281,37 +244,23 @@ const SignIn = () => {
               label="Sign in"
               className="bg-blue2 w-full justify-center"
             />
-            </form>*/}
+          </form>
 
           {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
-          {/* <div className="flex items-center justify-between my-6">
-            <Link
-              href="#"
-              className="font-medium text-sm"
-              onClick={() => router.push('forgot-password')}
-            >
+          <div className="flex items-center justify-between my-6">
+            <Link href="#" className="font-medium text-sm" onClick={() => router.push('forgot-password')}>
               Forgot Password?
             </Link>
-          </div>  */}
+          </div>
 
-          {/* <Text
+          <Text
             p
-            className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2"
-          >
+            className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2">
             Or continue with
           </Text>
           <div className="flex items-center justify-between mb-6">
-            <Button
-              social={facebookIcon}
-              className="pointer-events-none mr-2 opacity-0"
-            />
-            <Button social={gmailIcon} onClick={signInWithGoogle} />
-            <Button
-              social={twitterIcon}
-              className="pointer-events-none mr-2 opacity-0"
-            />
-          </div> */}
-          <GoogleButton onClick={signInWithGoogle} label="Sign in with Google" />
+            <GoogleButton onClick={signInWithGoogle} label="Sign in with Google" />
+          </div>
         </div>
       )}
     </Authentication>
@@ -319,11 +268,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
-
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       requiresAuth: false,
-//     },
-//   };
-// }
