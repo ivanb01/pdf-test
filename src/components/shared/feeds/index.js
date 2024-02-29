@@ -246,6 +246,7 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                             </p>
                           )}
                           <div className="mt-2 text-sm text-gray6">
+                            <code></code>
                             <ActivityDescription activityItem={activityItem} />
                           </div>
                         </div>
@@ -306,37 +307,35 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
 }
 
 const ActivityDescription = ({ activityItem }) => {
-  const [showMore, setShowMore] = useState(false);
+  const htmlString = `${activityItem?.description}`;
 
-  const activityItemLength = activityItem.description?.replace(/\|/g, '<br>')?.split('Message: ')[1]?.length;
-  const activityItemEmailBreak = activityItem.description.replace(/\|/g, '<br>');
-  return (
-    activityItem && (
-      <>
-        <p
-          dangerouslySetInnerHTML={{
-            __html:
-              activityItem.type_of_activity_id === 1
-                ? `${
-                    showMore && activityItemLength > 280
-                      ? activityItemEmailBreak
-                      : !showMore && activityItemLength > 280
-                      ? activityItemEmailBreak.slice(0, 280) + '...'
-                      : activityItemEmailBreak
-                  }`
-                : activityItem.description || placeholderDescription(activityItem.type_of_activity_id),
-          }}
-        />
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const h6Content = doc.querySelector('h6')?.textContent;
+  const subjectContent = doc.querySelector('p')?.textContent;
 
-        <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowMore(!showMore)}>
-          {activityItem.type_of_activity_id === 1 &&
-            (showMore && activityItemLength > 280
-              ? 'See Less'
-              : !showMore && activityItemLength > 280
-              ? 'See More...'
-              : '')}
-        </span>
-      </>
-    )
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const isContentLong = h6Content && h6Content.length > 210;
+
+  return activityItem?.type_of_activity_id === 1 ? (
+    <div>
+      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
+        <p>[Email Send] </p>
+        <p className={'font-bold'}>{subjectContent}</p>
+      </div>
+      {h6Content && (
+        <h6>
+          {isContentLong && !showFullContent ? `${h6Content.slice(0, 210)}... ` : h6Content}
+          {isContentLong && (
+            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
+              {showFullContent ? ' See less' : ' See more'}
+            </span>
+          )}
+        </h6>
+      )}
+    </div>
+  ) : (
+    activityItem.description
   );
 };

@@ -64,7 +64,10 @@ const SendEmailOverlay = () => {
     contacts.map((contact) => {
       addContactActivity(contact.id, {
         type_of_activity_id: 1,
-        description: `[Email Sent] Subject: ${subject} | Message: ${message.replace(/<[^>]*>/g, '')}`,
+        description: `<span>[Email Send] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
+          /<[^>]*>/g,
+          '',
+        )} </h6>`,
       });
       sendEmail([contact.email], subject, message).then(() => {
         setLoading(false);
