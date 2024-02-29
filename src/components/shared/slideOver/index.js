@@ -2,10 +2,12 @@ import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Close from '@mui/icons-material/Close';
 import SimpleBar from 'simplebar-react';
+import Input from '../input';
 
 export default function SlideOver({
   noHeader,
   open,
+  editableTitle,
   setOpen,
   title,
   buttons,
@@ -14,6 +16,7 @@ export default function SlideOver({
   withBackdrop,
   width,
   rounded,
+  handleTitleChange,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -40,7 +43,16 @@ export default function SlideOver({
                         //   boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
                         // }}
                       >
-                        <h6 className="text-md font-medium text-gray-900">{title}</h6>
+                        {editableTitle ? (
+                          <Input
+                            placeholder="Write campaign title here"
+                            className=" w-[400px] text-xl font-medium text-gray-900"
+                            value={title}
+                            onChange={handleTitleChange}
+                          />
+                        ) : (
+                          <h6 className="text-xl font-medium text-gray-900">{title}</h6>
+                        )}
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"

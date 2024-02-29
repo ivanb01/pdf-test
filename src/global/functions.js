@@ -147,6 +147,13 @@ export const formatDateLThour = (date) => {
   return moment(date).format('LT');
 };
 
+export const getDateAfterDays = (days) => {
+  const currentDate = new Date();
+  const resultDate = new Date(currentDate);
+  resultDate.setDate(currentDate.getDate() + days);
+  return resultDate;
+};
+
 export const formatDateCalendar = (date) => {
   const calendarDate = moment(date).calendar();
   const calendarDateArray = calendarDate.split(' ');
