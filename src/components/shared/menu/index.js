@@ -141,7 +141,7 @@ const MainMenu = ({ className, fixed }) => {
         if (!willRedirectAfterSignIn) {
           router.push({
             pathname: '/contacts/clients',
-          }); 
+          });
         }
       }
     } catch (error) {
@@ -225,7 +225,7 @@ const MainMenu = ({ className, fixed }) => {
       } z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
-          {/* <Image
+          <Image
             src={oneLineLogo}
             alt=""
             onClick={() => {
@@ -233,7 +233,7 @@ const MainMenu = ({ className, fixed }) => {
               router.push('/contacts/clients');
             }}
             className="cursor-pointer"
-          /> */}
+          />
         </div>
         <div className="menu-links">
           <ul className="flex items-center">
