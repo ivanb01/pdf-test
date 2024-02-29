@@ -17,32 +17,19 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
-// export const Types = [
-//   { id: 0, name: 'Renter' },
-//   { id: 1, name: 'Buyer' },
-//   { id: 2, name: 'Seller' },
-//   { id: 3, name: 'Landlord' },
-//   { id: 4, name: 'Uncategorized' },
-//   { id: 5, name: 'Trash' },
-// ];
-
-// export const clientStatuses = [
-//   { id: 0, name: 'Uncategorized', colorClass: '--danger' },
-//   { id: 1, name: 'On Hold', colorClass: '--warning' },
-//   { id: 2, name: 'New Lead', colorClass: '--success' },
-//   { id: 3, name: 'In Communication', colorClass: '--success-v2' },
-//   { id: 4, name: 'Appointment Set', colorClass: '--success-v3' },
-//   { id: 5, name: 'Attempted Contact', colorClass: '--success-v4' },
-//   { id: 6, name: 'Showing Properties', colorClass: '--success-v5' },
-//   { id: 7, name: 'Submitting Offer', colorClass: '--success-v6' },
-// ];
 
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
-export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
-export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
 export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
+export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
+export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
+export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
+
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
+
+export const documentsRedirectSignOut = 'https://documents.onelinecrm.com/authentication/sign-in';
+export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/contacts/clients';
 
 export const menuItems = [
   {
@@ -57,13 +44,13 @@ export const menuItems = [
   },
   {
     id: 2,
-    name: 'Deals',
-    url: '/deals',
+    name: 'Reports',
+    url: '/reports',
   },
   {
     id: 3,
-    name: 'Applications',
-    url: '/applications',
+    name: 'Online Forms',
+    url: '/online-forms',
   },
 ];
 

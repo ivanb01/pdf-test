@@ -31,25 +31,6 @@ import FloatingAlert from '@components/shared/alert/floating-alert';
 import SwitchComponent from '@components/Switch';
 import { useRouter } from 'next/router';
 
-const tabs = [
-  {
-    title: 'PROFESSIONAL TYPES',
-    content: multiselectOptionsProfessionals.map((option) => option.label),
-    value: 'category_2',
-  },
-  {
-    title: 'LAST COMMUNICATION',
-    content: Object.keys(filtersForLastCommunicationDate),
-    value: 'last_communication_date',
-    onlyOneValue: true,
-  },
-  {
-    title: 'ADDED SOURCE',
-    content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
-    value: 'import_source_text',
-  },
-];
-
 const campaignFilterMeaning = {
   'In Campaign': 'assigned',
   'Not In Campaign': null,
@@ -69,6 +50,9 @@ const buttons = [
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
   const router = useRouter();
 
+  useEffect(() => {
+    console.log(openedSubtab, 'opened');
+  }, [openedSubtab]);
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
@@ -84,6 +68,35 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const [searchTerm, setSearchTerm] = useState(' ');
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
+  const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
+  const renamedArray =
+    vendorSubtypes &&
+    vendorSubtypes?.map((item) => {
+      const { id, name } = item;
+      return { label: name, value: name };
+    });
+
+  const tabs = [
+    {
+      title: 'PROFESSIONAL TYPES',
+      content:
+        openedSubtab === 0
+          ? renamedArray?.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
+          : renamedArray?.map((option) => option.label),
+      value: 'category_2',
+    },
+    // {
+    //   title: 'LAST COMMUNICATION',
+    //   content: Object.keys(filtersForLastCommunicationDate),
+    //   value: 'last_communication_date',
+    //   onlyOneValue: true,
+    // },
+    {
+      title: 'ADDED SOURCE',
+      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
+      value: 'import_source_text',
+    },
+  ];
   useEffect(() => {
     console.log(filteredProfessionals);
   }, [filteredProfessionals]);
@@ -391,7 +404,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
               /> */}
           </>
         }>
-        <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={professionalsFilters} defaultOpen />
+        <Accordion
+          tabs={openedSubtab === 1 || openedSubtab === 2 ? tabs.slice(1) : tabs}
+          handleClick={handleFilterClick}
+          activeSelections={professionalsFilters}
+          defaultOpen
+        />
       </SlideOver>
     </>
   );

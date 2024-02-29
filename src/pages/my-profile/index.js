@@ -7,6 +7,7 @@ import { PencilIcon } from '@heroicons/react/solid';
 import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
 import { ShieldCheckIcon } from '@heroicons/react/solid';
+import { CreditCardIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
 import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
@@ -20,6 +21,7 @@ import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail }
 import { clearData } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
+import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
 
 const index = () => {
@@ -188,6 +190,18 @@ const index = () => {
       </>
     );
   };
+
+  const billingTab = () => {
+    return (
+      <>
+        <TopBar text="Billing" />
+        <div className="p-6">
+          <PlanOptions />
+        </div>
+      </>
+    );
+  };
+
   const importsSummaryTab = () => {
     return (
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -221,6 +235,12 @@ const index = () => {
       name: 'Account Management',
       icon: <Security height={20} className="mr-3" />,
       tabContent: accountManagementTab(),
+    },
+    {
+      id: 2,
+      name: 'Billing',
+      icon: <CreditCardIcon height={20} className="mr-3" />,
+      tabContent: billingTab()
     },
     // {
     //   id: 2,

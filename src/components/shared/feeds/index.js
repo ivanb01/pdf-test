@@ -246,11 +246,8 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                             </p>
                           )}
                           <div className="mt-2 text-sm text-gray6">
-                            <p>
-                              {activityItem.description
-                                ? activityItem.description
-                                : placeholderDescription(activityItem.type_of_activity_id)}
-                            </p>
+                            <code></code>
+                            <ActivityDescription activityItem={activityItem} />
                           </div>
                         </div>
                       </>
@@ -308,3 +305,37 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
     </>
   );
 }
+
+const ActivityDescription = ({ activityItem }) => {
+  const htmlString = `${activityItem?.description}`;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const h6Content = doc.querySelector('h6')?.textContent;
+  const subjectContent = doc.querySelector('p')?.textContent;
+
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const isContentLong = h6Content && h6Content.length > 210;
+
+  return activityItem?.type_of_activity_id === 1 ? (
+    <div>
+      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
+        <p>[Email Send] </p>
+        <p className={'font-bold'}>{subjectContent}</p>
+      </div>
+      {h6Content && (
+        <h6>
+          {isContentLong && !showFullContent ? `${h6Content.slice(0, 210)}... ` : h6Content}
+          {isContentLong && (
+            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
+              {showFullContent ? ' See less' : ' See more'}
+            </span>
+          )}
+        </h6>
+      )}
+    </div>
+  ) : (
+    activityItem.description
+  );
+};
