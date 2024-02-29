@@ -8,6 +8,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SignaturePad from 'react-signature-canvas';
+import DeleteIcon from '@mui/icons-material/Delete';
+import clsx from 'clsx';
 
 const Input = ({
   className,
@@ -34,6 +37,8 @@ const Input = ({
   errorText,
   showForgotPassword,
   secondaryLabel,
+  onSignatureEnd,
+  onSignatureClear,
   ...props
 }) => {
   let errorClasses = '';
@@ -368,6 +373,38 @@ const Input = ({
       </>
     );
   };
+  const signatureInput = () => {
+    const sigCanvas = useRef({});
+
+    const className = clsx('border	w-full max-h-[170px] rounded-md', error && errorClasses, className);
+    const onEnd = () => {
+      onSignatureEnd({
+        imageData: sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'),
+        height: sigCanvas.current.getTrimmedCanvas().height,
+        width: sigCanvas.current.getTrimmedCanvas().width,
+      });
+    };
+    const clear = () => {
+      onSignatureClear();
+      sigCanvas.current.clear();
+    };
+    return (
+      <div className="relative">
+        <SignaturePad
+          ref={sigCanvas}
+          canvasProps={{
+            className: className,
+          }}
+          onEnd={onEnd}
+          clearOnResize={false}
+        />
+        <button onClick={clear} className="flex items-center gap-[2px] text-[10px] absolute top-[12px] right-[12px]">
+          <DeleteIcon className="text-gray4 h-[16px] w-[11px]" />
+          <span className="text-gray7 leading-4">remove</span>
+        </button>
+      </div>
+    );
+  };
   return (
     <div className={`checkbox-wrapper ${className}`}>
       {label && (
@@ -394,6 +431,8 @@ const Input = ({
           ? moneyInput()
           : type === 'date'
           ? dateInput()
+          : type === 'signature'
+          ? signatureInput()
           : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}

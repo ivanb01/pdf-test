@@ -16,11 +16,14 @@ import {
   localRedirectSignIn,
   productionRedirectSignIn,
   devRedirectSignIn,
+  devRedirectSignOut,
+  documentsRedirectSignIn,
+  documentsRedirectSignOut,
   localRedirectSignOut,
   productionRedirectSignOut,
-  devRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
 import SendEmailOverlay from '@components/SendEmailSidebar';
@@ -38,6 +41,9 @@ const isLocalhost =
   );
 
 const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
+const isDocuments = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('documents'));
+
+const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -72,16 +78,16 @@ const MyApp = ({ Component, pageProps }) => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   if (helpEffect) {
-  //     if (pageProps.requiresAuth && !isUserAuthenticated) {
-  //       router.push('/authentication/sign-in');
-  //     }
-  //     if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-  //       router.push('/contacts/clients');
-  //     }
-  //   }
-  // }, [helpEffect, isUserAuthenticated]);
+  useEffect(() => {
+    if (helpEffect) {
+      if (pageProps.requiresAuth && !isUserAuthenticated) {
+        router.push('/authentication/sign-in');
+      }
+      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+        router.push('/contacts/clients');
+      }
+    }
+  }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
@@ -101,12 +107,20 @@ const MyApp = ({ Component, pageProps }) => {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
+            redirectSignIn: isLocalhost
+              ? localRedirectSignIn
+              : isDev
+                ? devRedirectSignIn
+                : isDocuments
+                  ? documentsRedirectSignIn
+                  : productionRedirectSignIn,
             redirectSignOut: isLocalhost
               ? localRedirectSignOut
               : isDev
-              ? devRedirectSignOut
-              : productionRedirectSignOut,
+                ? devRedirectSignOut
+                : isDocuments
+                  ? documentsRedirectSignOut
+                  : productionRedirectSignOut,
             responseType: 'code',
           },
         },
@@ -136,17 +150,19 @@ const MyApp = ({ Component, pageProps }) => {
           className={`main-page overflow-y-auto overflow-x-hidden`}
           style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
-            {isUserAuthenticated && <GetSubtype />}
-            <Component {...pageProps} />
-            {domLoaded && (
-              <Toaster
-                toastOptions={{
-                  className: 'bg-gray6 text-white text-sm',
-                }}
-                position="bottom-left"
-              />
-            )}
-            <EmailSendComponent />
+            <QueryClientProvider client={queryClient}>
+              {isUserAuthenticated && <GetSubtype />}
+              <Component {...pageProps} />
+              {domLoaded && (
+                <Toaster
+                  toastOptions={{
+                    className: 'bg-gray6 text-white text-sm',
+                  }}
+                  position="bottom-left"
+                />
+              )}
+              <EmailSendComponent />
+            </QueryClientProvider>
           </Provider>
         </div>
       </div>
