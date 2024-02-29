@@ -316,17 +316,17 @@ const ActivityDescription = ({ activityItem }) => {
 
   const [showFullContent, setShowFullContent] = useState(false);
 
-  const isContentLong = h6Content && h6Content.length > 210;
+  const isContentLong = h6Content && h6Content.length > 88;
 
   return activityItem?.type_of_activity_id === 1 ? (
     <div>
       <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
-        <p>[Email Send] </p>
+        <p>[Email Sent] </p>
         <p className={'font-bold'}>{subjectContent}</p>
       </div>
       {h6Content && (
         <h6>
-          {isContentLong && !showFullContent ? `${h6Content.slice(0, 210)}... ` : h6Content}
+          {isContentLong && !showFullContent ? `${h6Content.slice(0, 88)}... ` : h6Content}
           {isContentLong && (
             <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
               {showFullContent ? ' See less' : ' See more'}
