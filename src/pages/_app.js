@@ -14,32 +14,30 @@ import 'shepherd.js/dist/css/shepherd.css';
 import '../styles/_global.scss';
 import {
   localRedirectSignIn,
-  localRedirectSignOut,
   productionRedirectSignIn,
-  productionRedirectSignOut,
   devRedirectSignIn,
+  localRedirectSignOut,
+  productionRedirectSignOut,
   devRedirectSignOut,
-  documentsRedirectSignIn,
-  documentsRedirectSignOut,
-  subscriptionsRedirectSignIn,
-  subscriptionsRedirectSignOut
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
 import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
-import {
-  isLocalhost,
-  isDev,
-  isSubscriptions,
-  isDocuments
-} from 'helpers/env';
+const isLocalhost =
+  typeof window !== 'undefined' &&
+  Boolean(
+    window.location.hostname.includes('localhost') ||
+      // [::1] is the IPv6 localhost address.
+      window.location.hostname === '[::1]' ||
+      // 127.0.0.1/8 is considered localhost for IPv4.
+      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
+  );
 
-const queryClient = new QueryClient();
+const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -67,23 +65,23 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('sign-up') && !router.asPath.includes('property')) {
+        if (!router.asPath.includes('public') && !router.asPath.includes('property')) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
       });
   }, []);
 
-  useEffect(() => {
-    if (helpEffect) {
-      if (pageProps.requiresAuth && !isUserAuthenticated) {
-        router.push('/authentication/sign-in');
-      }
-      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-        router.push('/contacts/clients');
-      }
-    }
-  }, [helpEffect, isUserAuthenticated]);
+  // useEffect(() => {
+  //   if (helpEffect) {
+  //     if (pageProps.requiresAuth && !isUserAuthenticated) {
+  //       router.push('/authentication/sign-in');
+  //     }
+  //     if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+  //       router.push('/contacts/clients');
+  //     }
+  //   }
+  // }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
@@ -101,31 +99,20 @@ const MyApp = ({ Component, pageProps }) => {
           userPoolWebClientId: appClientId,
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
+            // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost() 
-              ? localRedirectSignIn 
-              : isDev() 
-              ? devRedirectSignIn
-              : isSubscriptions() 
-              ? subscriptionsRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn
-              : productionRedirectSignIn,
-            redirectSignOut: isLocalhost()
+            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
+            redirectSignOut: isLocalhost
               ? localRedirectSignOut
-              : isDev()
+              : isDev
               ? devRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
               : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
 
-      Amplify.configure({...awsmobile, ssr: true});
+      Amplify.configure(awsmobile);
       console.log('configured amplify');
       return true;
     } catch (err) {
@@ -149,19 +136,17 @@ const MyApp = ({ Component, pageProps }) => {
           className={`main-page overflow-y-auto overflow-x-hidden`}
           style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              {isUserAuthenticated && <GetSubtype />}
-              <Component {...pageProps} />
-              {domLoaded && (
-                <Toaster
-                  toastOptions={{
-                    className: 'bg-gray6 text-white text-sm',
-                  }}
-                  position="bottom-left"
-                />
-              )}
-              <EmailSendComponent />
-            </QueryClientProvider>
+            <GetSubtype />
+            <Component {...pageProps} />
+            {domLoaded && (
+              <Toaster
+                toastOptions={{
+                  className: 'bg-gray6 text-white text-sm',
+                }}
+                position="bottom-left"
+              />
+            )}
+            <EmailSendComponent />
           </Provider>
         </div>
       </div>

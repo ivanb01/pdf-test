@@ -374,16 +374,6 @@ export const getBaseUrl = () => {
   if (typeof window !== 'undefined') return window.location.origin;
 };
 
-export const deepObjectsEqual = (x, y) => {
-  // console.log('deepObjectsEqual', x, y);
-  const ok = Object.keys,
-    tx = typeof x,
-    ty = typeof y;
-  return x && y && tx === 'object' && tx === ty
-    ? ok(x).length === ok(y).length && ok(x).every((key) => deepObjectsEqual(x[key], y[key]))
-    : x === y;
-  }
-  
 export const getTotalCountOfAllValues = (data) => {
   let totalCount = 0;
 

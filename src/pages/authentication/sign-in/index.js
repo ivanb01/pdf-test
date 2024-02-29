@@ -4,29 +4,30 @@ import Button from 'components/shared/button';
 import Authentication from 'components/Authentication';
 import Router from 'next/router';
 import { useFormik } from 'formik';
-import { Amplify } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import Dropdown from 'components/shared/dropdown';
 import { useState } from 'react';
-import Link from 'components/Link';
+import toast from 'react-hot-toast';
 import {
   localRedirectSignIn,
-  localRedirectSignOut,
   devRedirectSignIn,
-  devRedirectSignOut,
   productionRedirectSignIn,
+  localRedirectSignOut,
   productionRedirectSignOut,
-  subscriptionsRedirectSignIn,
-  subscriptionsRedirectSignOut,
-  documentsRedirectSignIn,
-  documentsRedirectSignOut
+  devRedirectSignOut,
 } from 'global/variables';
 
-import {
-  isLocalhost,
-  isDev,
-  isSubscriptions,
-  isDocuments
-} from 'helpers/env';
+const isLocalhost =
+  typeof window !== 'undefined' &&
+  Boolean(
+    window.location.hostname === 'localhost' ||
+      // [::1] is the IPv6 localhost address.
+      window.location.hostname === '[::1]' ||
+      // 127.0.0.1/8 is considered localhost for IPv4.
+      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
+  );
+
+const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
 
 const SignIn = () => {
   //* FORMIK *//
@@ -43,6 +44,10 @@ const SignIn = () => {
   const handleSubmit = async (values) => {
     setLoadingButton(true);
     try {
+      // Todo: change it later for dynamic if needed
+      // const { data } = await axios.get(
+      //   `https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod//tenant/init/${values.tenantName}`
+      // );
       const data = {
         apiGatewayUrl: 'https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod/',
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
@@ -53,44 +58,34 @@ const SignIn = () => {
       localStorage.setItem('appClientId', data.appClientId);
       localStorage.setItem('userPoolId', data.userPoolId);
 
-      if (!data.userPoolId || !data.appClientId) {
+      const userPoolId = localStorage.getItem('userPoolId');
+      const appClientId = localStorage.getItem('appClientId');
+
+      if (!userPoolId || !appClientId) {
         return false;
       }
-
-      process.env.OAUTH_DOMAIN;
-      const region = data.userPoolId?.split('_')[0];
+      const region = userPoolId?.split('_')[0];
       const awsmobile = {
         Auth: {
-          //identityPoolId: 'us-east-1:eefc880f-9315-43f4-ab15-2d995127f5d8',
+          // identityPoolId: 'us-east-1:eefc880f-9315-43f4-ab15-2d995127f5d8',
           region: region,
-          userPoolId: data.userPoolId,
-          userPoolWebClientId: data.appClientId,
+          userPoolId: userPoolId,
+          userPoolWebClientId: appClientId,
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
+            // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost() 
-              ? localRedirectSignIn 
-              : isDev() 
-              ? devRedirectSignIn
-              : isSubscriptions() 
-              ? subscriptionsRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn
-              : productionRedirectSignIn,
-            redirectSignOut: isLocalhost()
+            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
+            redirectSignOut: isLocalhost
               ? localRedirectSignOut
-              : isDev()
+              : isDev
               ? devRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
               : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
-      Amplify.configure({...awsmobile, ssr: true});
+      Amplify.configure(awsmobile);
 
       console.log('aws config input', awsmobile);
       // toast.success('You gave the Brokerage name successfully');
@@ -130,8 +125,8 @@ const SignIn = () => {
         <div className="text-onelineMainColor md:mb-[50px] mb-8 text-lg md:text-3xl font-extrabold">
           Choose your brokerage
         </div>
-        <Text p className="text-gray4 mb-[50px]">
-          Don't have an account?&nbsp;
+        {/* <Text p className="text-gray4 mb-[50px]">
+          Don't have an account?{' '}
           <Link
             href="#"
             className="underline"
@@ -139,7 +134,7 @@ const SignIn = () => {
           >
             Sign Up
           </Link>
-        </Text>
+        </Text> */}
         <form onSubmit={formik.handleSubmit}>
           <Dropdown
             className="mb-6 w-full text-sm"
@@ -155,6 +150,16 @@ const SignIn = () => {
               formik.values.tenantName = item.label;
             }}
           />
+          {/* {showOther && (
+            <Input
+              type="text"
+              className="mb-6"
+              placeholder="Type in custom brokerage name"
+              onInput={(event) =>
+                (formik.values.tenantName = event.target.value)
+              }
+            />
+          )} */}
 
           <Button
             loading={loadingButton}

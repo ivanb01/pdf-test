@@ -1,3 +1,4 @@
+import axios from 'axios';
 import axiosInstance from 'api/axiosInstance';
 
 export const clearData = () => {

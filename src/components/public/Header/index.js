@@ -103,22 +103,20 @@ export const Header = () => {
           <div className={styles['header__content-right']}>
             <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
               {!isAuthenticated ? (
-                <>
-                  <Button
-                    type="secondary"
-                    onClick={() => router.push('/authentication/sign-in')}
-                    style={{ color: '#6B7280' }}>
-                    Log In
-                  </Button>
-                  <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
-                    Register for Free
-                  </Button>
-                </>
+                <Button
+                  type="secondary"
+                  onClick={() => router.push('/authentication/sign-in')}
+                  style={{ color: '#6B7280' }}>
+                  Log In
+                </Button>
               ) : (
                 <Button type="secondary" onClick={() => router.push('/contacts/clients')} style={{ color: '#6B7280' }}>
                   Go to CRM {'->'}
                 </Button>
               )}
+              {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+                Register for Free
+              </Button> */}
             </div>
             <div className={styles['hide-on-bigger-screens']}>
               <div onClick={() => setIsMenuOpen(!isMenuOpen)}>

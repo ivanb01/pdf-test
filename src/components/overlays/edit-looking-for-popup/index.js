@@ -98,9 +98,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       }
     },
   });
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const { errors, touched } = formik;
 

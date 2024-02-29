@@ -13,10 +13,9 @@ const FilterDropdown = ({ types, icon, data, align = 'end', side = 'bottom' }) =
           className={
             ' w-56 z-50 shadow-lg bg-white rounded-md  ring-1 ring-black ring-opacity-5 focus:outline-none py-1'
           }>
-          {types.map((type, index) => {
+          {types.map((type) => {
             return (
               <DropdownMenu.Item
-                key={index}
                 className="text-gray6 block px-4 py-2 text-sm hover:bg-gray1 focus:outline-none"
                 onClick={() => type.handleClick(data)}>
                 {type.name}
