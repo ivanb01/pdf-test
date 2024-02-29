@@ -10,11 +10,13 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   localRedirectSignIn,
-  devRedirectSignIn,
   productionRedirectSignIn,
   localRedirectSignOut,
   productionRedirectSignOut,
+  devRedirectSignIn,
   devRedirectSignOut,
+  documentsRedirectSignIn,
+  documentsRedirectSignOut,
 } from 'global/variables';
 
 const isLocalhost =
@@ -28,6 +30,7 @@ const isLocalhost =
   );
 
 const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
+const isDocuments = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('documents'));
 
 const SignIn = () => {
   //* FORMIK *//
@@ -44,10 +47,6 @@ const SignIn = () => {
   const handleSubmit = async (values) => {
     setLoadingButton(true);
     try {
-      // Todo: change it later for dynamic if needed
-      // const { data } = await axios.get(
-      //   `https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod//tenant/init/${values.tenantName}`
-      // );
       const data = {
         apiGatewayUrl: 'https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod/',
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
@@ -75,11 +74,19 @@ const SignIn = () => {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
+            redirectSignIn: isLocalhost
+              ? localRedirectSignIn
+              : isDev
+              ? devRedirectSignIn
+              : isDocuments
+              ? documentsRedirectSignIn
+              : productionRedirectSignIn,
             redirectSignOut: isLocalhost
               ? localRedirectSignOut
               : isDev
               ? devRedirectSignOut
+              : isDocuments
+              ? documentsRedirectSignOut
               : productionRedirectSignOut,
             responseType: 'code',
           },
