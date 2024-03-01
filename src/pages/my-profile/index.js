@@ -19,6 +19,7 @@ import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
 import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
 import { clearData } from '@api/contacts';
+import { fetchCurrentUserInfo, updateUserInfo } from '@helpers/auth';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
 import PlanOptions from '@components/PlanOptions';
@@ -32,6 +33,16 @@ const index = () => {
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const getInfo = async () => {
+      const info = await fetchCurrentUserInfo();
+      setUserInfo(info);
+    };
+
+    getInfo();
+  }, []);
 
   useEffect(() => {
     const hostname = window.location.hostname;
@@ -69,7 +80,27 @@ const index = () => {
 
   const importsSummary = [];
 
-  const myProfileTab = () => {
+  const myProfileTab = ({ userInfo }) => {
+    const [changedUserInfo, setChangedUserInfo] = useState(userInfo);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setChangedUserInfo((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async () => {
+        try {
+            await updateUserInfo(changedUserInfo);
+            alert('Changes saved successfully.');
+        } catch (error) {
+            console.error('Failed to save user info', error);
+            alert('Failed to save the information.');
+        }
+    };
+
     return (
       <>
         <TopBar text="My profile" />
@@ -94,20 +125,23 @@ const index = () => {
           </div>
           <div className="w-[40%]">
             <div className="flex mb-6">
-              <Input type="text" label="First Name" className="mr-6" />
-              <Input type="text" label="Last Name" />
+              <Input type="text" label="First Name" name="first_name" className="mr-6" value={changedUserInfo?.first_name || ''} onChange={handleChange} />
+              <Input type="text" label="Last Name" name="last_name" value={changedUserInfo?.last_name || ''} onChange={handleChange} />
             </div>
-            <Input type="email" label="Email" className="mb-6" />
+            <Input type="email" label="Email" name="email" className="mb-6" value={changedUserInfo?.email || ''} onChange={handleChange} />
             <Input
               type="phone"
               label="Phone Number"
+              name="phone_number"
+              value={changedUserInfo?.phone_number}
+              onChange={handleChange}
               secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information"
             />
           </div>
           <hr className="my-5" />
           <div className="flex items-center">
             <Button label="Cancel" white className="mr-3" />
-            <Button label="Save Changes" />
+            <Button label="Save Changes" onClick={handleSubmit} />
           </div>
         </div>
       </>
@@ -196,7 +230,7 @@ const index = () => {
       <>
         <TopBar text="Billing" />
         <div className="p-6">
-          <PlanOptions />
+          <PlanOptions userInfo={userInfo} />
         </div>
       </>
     );
@@ -224,12 +258,12 @@ const index = () => {
   };
 
   const tabs = [
-    // {
-    //   id: 0,
-    //   name: 'My Profile',
-    //   icon: <UserIcon height={20} className="mr-3" />,
-    //   tabContent: myProfileTab(),
-    // },
+    {
+      id: 0,
+      name: 'My Profile',
+      icon: <UserIcon height={20} className="mr-3" />,
+      tabContent: myProfileTab({ userInfo }),
+    },
     {
       id: 1,
       name: 'Account Management',

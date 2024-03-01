@@ -74,7 +74,7 @@ const SignIn = () => {
               ? devRedirectSignIn
               : isSubscriptions() 
               ? subscriptionsRedirectSignIn
-              : isDocuments()
+              : isDocuments() 
               ? documentsRedirectSignIn
               : productionRedirectSignIn,
             redirectSignOut: isLocalhost()

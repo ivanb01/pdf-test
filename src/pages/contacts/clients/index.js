@@ -1,15 +1,7 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import {
-  setExpandedTab, 
-  setOpenedSubtab,
-  setOpenedTab,
-  setRefetchData,
-  setUnapprovedContacts,
-  setUserGaveConsent,
-  setVendorSubtypes,
-} from 'store/global/slice';
+import { setExpandedTab, setOpenedSubtab, setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent, setVendorSubtypes } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -175,7 +167,7 @@ const index = () => {
           />
           {/* <Tour for={'clients'} /> */}
           {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
-            <div class="arrow pointer-events-none">
+            <div className="arrow pointer-events-none">
               <span></span>
               <span></span>
               <span></span>

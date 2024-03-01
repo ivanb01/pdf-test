@@ -7,24 +7,16 @@ const DOMAIN = 'https://subscriptions.onelinecrm.com';
 import { getCurrentUser } from '@helpers/amplifySSR';
 
 export default async function handler(req, res) {
-  const { priceId } = req.body;
+  const { customerId } = req.body;
 
   const userData = await getCurrentUser(req);
   let user;
 
-  if (userData.error) {
+  if (userData.error || !customerId) {
     return res.status(404).json({ status: 404, error: 'Customer not found' });
   }
 
-  user = userData.user;
-
-  // This should be done by retrieving customer id instead fetched from the backend, to support multisubs
-  // Also good to add tenantId/tenantName
-  const customers = await stripe.customers.search({
-    query: `email: "${user.username}"`,
-  });
-
-  const customer = customers?.data[0];
+  const customer = await stripe.customers.retrieve(customerId);
 
   if (!customer) res.status(500).json({ statusCode: 500, message: "Email not found." });
 

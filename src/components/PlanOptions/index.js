@@ -83,7 +83,7 @@ const pricingModels = [
   },
 ];
 
-const PlanOptions = () => {
+const PlanOptions = ({ userInfo }) => {
   const [currentPlan, setCurrentPlan] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const otherInterval = currentPlan?.interval ? (currentPlan?.interval === 'month' ? 'year' : 'month') : null;
@@ -105,11 +105,8 @@ const PlanOptions = () => {
 
   const openPortal = async () => {
     setIsLoading(true);
-    const customerEmail = JSON.parse(localStorage.getItem('user'));
-    const tenantName = localStorage.getItem('tenantName');
-    const email = customerEmail || '';
-
-    if (!email) return;
+    
+    if (!userInfo || !userInfo.customer_id) return;
 
     fetch('/api/create-billing-session', {
       method: 'POST',
@@ -117,7 +114,7 @@ const PlanOptions = () => {
         'Content-Type': 'application/json',
       },
       // Better to pass in customer id instead, once available from backend
-      body: JSON.stringify({ email, tenantName })
+      body: JSON.stringify({ customerId: userInfo.customer_id })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -129,22 +126,44 @@ const PlanOptions = () => {
       })
   }
 
-  useEffect(() => fetchCurrentPlan(), []);
+  const fetchCurrentUserInfo = async () => {
+    const data = fetch(`/api/get-current-plan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userInfo }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentPlan(data);
+        setIsLoading(false);
+      });
+
+      setCurrentPlan(data);
+      setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCurrentUserInfo()
+    fetchCurrentPlan()
+  }, []);
 
   const handlePlanChange = async (newPlanType, newInterval = null) => {
     setIsLoading(true);
     const newPlanId = plans?.[newPlanType]?.[newInterval || currentPlan.interval]?.priceId;
-    if (!newPlanId) return setIsLoading(false);
+    if (!newPlanId || !userInfo) return setIsLoading(false);
 
     const response = await fetch('/api/change-plan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ newPlanId }),
+      body: JSON.stringify({ newPlanId, userInfo }),
     });
     const data = await response.json();
     if (data.success) {
+      fetchCurrentUserInfo();
       fetchCurrentPlan();
     } else {
       // Handle error
@@ -157,6 +176,11 @@ const PlanOptions = () => {
         <Button loading={true}></Button>
       </div>
     );
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    return new Date(parseInt(timestamp) * 1000).toLocaleDateString("en-US");
+  };
 
   return (
     <>
@@ -212,8 +236,20 @@ const PlanOptions = () => {
             </p>
           </>
         )}
-        {currentPlan.productName && (
+        {currentPlan.productName && userInfo?.email && (
           <>
+
+            {
+              userInfo && userInfo?.email && (
+                <>
+                  <p className="mb-5">Email: {userInfo?.email}</p>
+                  <p className="mb-5">Subscription Status: {userInfo?.subscriptionStatus}</p>
+                  <p className="mb-5">Subscription Start: {formatDate(userInfo?.subscriptionStartDate)}</p>
+                  <p className="mb-5">Current Period Start: {formatDate(userInfo?.subscriptionCurrentPeriodStart)}</p>
+                  <p className="mb-5">Current Period End: {formatDate(userInfo?.subscriptionCurrentPeriodEnd)}</p>
+                </>
+              )
+            }
             <p className="mb-5">
               Current Plan: <strong>{currentPlan.description}</strong>
             </p>
@@ -256,7 +292,7 @@ const PlanOptions = () => {
           </>
         )}
       </div>
-      { !currentPlan.error && (
+      { !currentPlan.error && userInfo.customer_id && (
         <>
           <div className="font-medium">Manage your subscription</div>
           <div className="text-sm text-gray-700 mb-6">

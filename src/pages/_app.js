@@ -32,14 +32,15 @@ import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
+const queryClient = new QueryClient();
 import {
   isLocalhost,
   isDev,
   isSubscriptions,
-  isDocuments
-} from 'helpers/env';
+  isDocuments,
+} from '@helpers/env';
 
-const queryClient = new QueryClient();
+import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -57,17 +58,19 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     configureAmplifyAuth();
     Auth.currentSession()
-      .then((item) => {
+      .then(async (item) => {
         localStorage.setItem('currentSession ', JSON.stringify(item));
         console.log('logged in');
         setIsUserAuthenticated(true);
         setHelpEffect(true);
+        const info = await fetchCurrentUserInfo();
+        saveUserInfo(info);
       })
       .catch((e) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('sign-up') && !router.asPath.includes('property')) {
+        if (!router.asPath.includes('public') && !router.asPath.includes('property') && !router.asPath.includes('sign-up')) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
@@ -102,23 +105,24 @@ const MyApp = ({ Component, pageProps }) => {
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost() 
-              ? localRedirectSignIn 
+            redirectSignIn: isLocalhost
+             () 
+              ? localRedirectSignIn
               : isDev() 
               ? devRedirectSignIn
+              : isDocuments()
+              ? documentsRedirectSignIn   
               : isSubscriptions() 
               ? subscriptionsRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn
               : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
               ? devRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
               : isDocuments()
               ? documentsRedirectSignOut
+              : isSubscriptions()
+              ? subscriptionsRedirectSignOut
               : productionRedirectSignOut,
             responseType: 'code',
           },

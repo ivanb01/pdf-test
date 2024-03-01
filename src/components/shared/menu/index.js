@@ -32,9 +32,9 @@ import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
+import { loadAfterSignInRedirect } from '@helpers/auth';
 import { isHealthyCommuncationDate } from '@global/functions';
 import ForwardToInbox from '@mui/icons-material/ForwardToInbox';
-import { loadAfterSignInRedirect } from '@helpers/auth';
 
 const MainMenu = ({ className, fixed }) => {
   const willRedirectAfterSignIn = loadAfterSignInRedirect(true);
@@ -141,7 +141,7 @@ const MainMenu = ({ className, fixed }) => {
         if (!willRedirectAfterSignIn) {
           router.push({
             pathname: '/contacts/clients',
-          });
+          }); 
         }
       }
     } catch (error) {
