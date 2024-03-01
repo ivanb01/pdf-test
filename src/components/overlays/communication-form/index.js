@@ -6,8 +6,10 @@ import { addContactActivity, getContactActivities } from '@api/contacts';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateContactLocally } from '@store/contacts/slice';
 import { useEffect } from 'react';
+import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 
 const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
+  const dispatch = useDispatch();
   const cards = [
     {
       name: 'Whatsapp',
@@ -32,13 +34,19 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
     <Overlay handleCloseOverlay={handleCloseOverlay} title={'How do you want to communicate?'} className={'w-[630px]'}>
       <div className={'pt-6 mx-[22px] mb-[62px] flex gap-[18px]'}>
         {cards.map((c, index) => (
-          <Card {...c} key={index} client={client} setActivities={setActivities} />
+          <Card
+            {...c}
+            key={index}
+            client={client}
+            setActivities={setActivities}
+            handleCloseOverlay={handleCloseOverlay}
+          />
         ))}
       </div>
     </Overlay>
   );
 };
-const Card = ({ name, icon, color, disabled, client, setActivities }) => {
+const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseOverlay }) => {
   const dispatch = useDispatch();
   let message = '';
   switch (client.category_2) {
@@ -67,10 +75,22 @@ const Card = ({ name, icon, color, disabled, client, setActivities }) => {
         window.open(link, '_blank');
         break;
       case 'Email':
-        link = `mailto:${client.email}?subject=${encodeURIComponent(
-          "Connecting with You: Let's Discuss Your Needs",
-        )}&body=${encodeURIComponent(message)}`;
-        window.location.href = link;
+        // modify client object
+        let clientToBeEmailed = {
+          value: client.id,
+          label: `${client.first_name} ${client.last_name} - ${client.email}`,
+          first_name: client.first_name,
+          last_name: client.last_name,
+          email: client.email,
+          profile_image_path: client.profile_image_path,
+        };
+        dispatch(setContactToBeEmailed(clientToBeEmailed));
+        dispatch(setOpenEmailContactOverlay(true));
+        handleCloseOverlay();
+        // link = `mailto:${client.email}?subject=${encodeURIComponent(
+        //   "Connecting with You: Let's Discuss Your Needs",
+        // )}&body=${encodeURIComponent(message)}`;
+        // window.location.href = link;
         break;
       case 'SMS':
         link = `sms:${client.phone_number}&body=${message}`;
@@ -80,32 +100,26 @@ const Card = ({ name, icon, color, disabled, client, setActivities }) => {
   };
 
   const _addActivity = () => {
+    let activityToBeLogged = null;
     switch (name) {
       case 'Whatsapp':
-        return {
+        activityToBeLogged = {
           type_of_activity_id: 26,
-          description: 'Attempted to communicate using Whatsapp!',
+          description: 'Attempted to communicate using Whatsapp.',
         };
-      case 'Email':
-        return {
-          type_of_activity_id: 1,
-          description: 'Attempted to communicate using Email!',
-        };
+        break;
       case 'SMS':
-        return {
+        activityToBeLogged = {
           type_of_activity_id: 2,
-          description: 'Attempted to communicate using SMS!',
+          description: 'Attempted to communicate using SMS.',
         };
-      default:
-        return {};
+        break;
     }
+    return activityToBeLogged;
   };
 
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
-  useEffect(() => {
-    console.log(allContacts, 'allContacts');
-  }, [allContacts]);
   return (
     <div
       className={'w-full relative max-w-[270px] communication-box-shadow group'}
@@ -132,11 +146,13 @@ const Card = ({ name, icon, color, disabled, client, setActivities }) => {
             disabled={disabled}
             onClick={() => {
               dispatch(updateContactLocally({ ...client, last_communication_date: new Date() }));
-              addContactActivity(client.id, _addActivity()).then(() => {
-                if (setActivities) {
-                  getContactActivities(client.id).then((response) => setActivities(response.data.data));
-                }
-              });
+              if (_addActivity() !== null) {
+                addContactActivity(client.id, _addActivity()).then(() => {
+                  if (setActivities) {
+                    getContactActivities(client.id).then((response) => setActivities(response.data.data));
+                  }
+                });
+              }
               sendCommunication();
             }}
             className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 bg-white`}>

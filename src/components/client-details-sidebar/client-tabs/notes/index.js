@@ -237,12 +237,12 @@ export default function Notes({ contactId }) {
                             </div>
                             {note.agent_id && (
                               <div className="flex">
-                                <FilterDropdown
-                                  types={types}
-                                  icon={<More className="w-5" />}
-                                  data={note}
-                                  positionClass="right-0"
-                                />
+                                {/*<FilterDropdown*/}
+                                {/*  types={types}*/}
+                                {/*  icon={<More className="w-5 text-gray4" />}*/}
+                                {/*  data={note}*/}
+                                {/*  positionClass="right-0"*/}
+                                {/*/>*/}
                               </div>
                             )}
                           </div>

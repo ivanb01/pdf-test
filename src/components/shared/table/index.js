@@ -59,11 +59,11 @@ import ClientHealth from 'components/clientHealth';
 import React from 'react';
 import CheckCircleIcon from '@heroicons/react/solid/CheckCircleIcon';
 import { getEmailParts } from 'global/functions';
-import { Delete, Email } from '@mui/icons-material';
+import { Delete, Email, Sms } from '@mui/icons-material';
 import { CheckCircle } from '@mui/icons-material';
 import AIChip from '../chip/ai-chip';
 import RedoIcon from '@mui/icons-material/Redo';
-import { setRefetchCount, setSorted } from '@store/global/slice';
+import { setContactToBeEmailed, setOpenEmailContactOverlay, setRefetchCount, setSorted } from '@store/global/slice';
 import TooltipComponent from '../tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import ListIcon from '@mui/icons-material/List';
@@ -83,6 +83,7 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 
 import CommunicationForm from '@components/overlays/communication-form';
 import DeleteIcon from '@mui/icons-material/Delete';
+import WhatsApp from '@mui/icons-material/WhatsApp';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -118,6 +119,21 @@ const Table = ({
   status,
   contacts,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
+  };
+
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const types = [
@@ -350,52 +366,52 @@ const Table = ({
           {!data?.length && searchTerm
             ? noResults()
             : !data?.length && !searchTerm
-            ? noData()
-            : data.map((dataItem, index) => {
-                return (
-                  <tr
-                    key={index}
-                    className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
-                    // onClick={(event) => handleClickRow(contact, event)}
-                  >
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
-                      <ContactInfo
-                        data={{
-                          name: `${dataItem.contact_name}`,
-                          id: dataItem.contact_id,
-                          email: dataItem.contact_email,
-                          image: dataItem.profile_image_path,
-                          assigned:
-                            dataItem.contact_campaign_status === 'unassigned'
-                              ? 2
-                              : dataItem.contact_campaign_status === 'assigned'
-                              ? 1
-                              : 0,
-                        }}
-                        // handleSelect={(e, dataItem) =>
-                        //   handleSelectContact(e, dataItem)
-                        // }
-                        handleAction={(id, action) => handleAction(id, action)}
-                      />
-                    </td>
-                    {dataItem &&
-                      dataItem?.events.map((event, index) => (
-                        <td
-                          key={`event-${index}`}
-                          className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          <EventStatus status={event.event_status} />
-                          <div className="text-gray7">{formatDateMDY(event?.event_updated_at)}</div>
-                        </td>
-                      ))}
-                    {dataItem.events.length === 0 &&
-                      [1, 2, 3, 4, 5].map((event, index) => (
-                        <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-                          <div className="text-gray7">-</div>
-                        </td>
-                      ))}
-                  </tr>
-                );
-              })}
+              ? noData()
+              : data.map((dataItem, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+                      // onClick={(event) => handleClickRow(contact, event)}
+                    >
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 border-r border-gray-200">
+                        <ContactInfo
+                          data={{
+                            name: `${dataItem.contact_name}`,
+                            id: dataItem.contact_id,
+                            email: dataItem.contact_email,
+                            image: dataItem.profile_image_path,
+                            assigned:
+                              dataItem.contact_campaign_status === 'unassigned'
+                                ? 2
+                                : dataItem.contact_campaign_status === 'assigned'
+                                  ? 1
+                                  : 0,
+                          }}
+                          // handleSelect={(e, dataItem) =>
+                          //   handleSelectContact(e, dataItem)
+                          // }
+                          handleAction={(id, action) => handleAction(id, action)}
+                        />
+                      </td>
+                      {dataItem &&
+                        dataItem?.events.map((event, index) => (
+                          <td
+                            key={`event-${index}`}
+                            className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                            <EventStatus status={event.event_status} />
+                            <div className="text-gray7">{formatDateMDY(event?.event_updated_at)}</div>
+                          </td>
+                        ))}
+                      {dataItem.events.length === 0 &&
+                        [1, 2, 3, 4, 5].map((event, index) => (
+                          <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                            <div className="text-gray7">-</div>
+                          </td>
+                        ))}
+                    </tr>
+                  );
+                })}
         </tbody>
       </>
     );
@@ -861,8 +877,6 @@ const Table = ({
       }
     };
 
-    const dispatch = useDispatch();
-
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
       setContactToModify(client);
@@ -981,7 +995,7 @@ const Table = ({
           <tr>
             <th
               scope="col"
-              className=" py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center lg:w-[300px] xl:w-[300px]">
+              className=" px-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 lg:w-[300px] xl:w-[300px]">
               {/* <Input
                 type="checkbox"
                 onChange={(event) => handleSelectContact(event, contact)}
@@ -998,16 +1012,16 @@ const Table = ({
               className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]">
               Contact summary
             </th>
-            {openedTab !== 1 && openedSubtab !== 3 ? (
-              <th
-                scope="col"
-                className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
-                LAST COMMUNICATION
-              </th>
-            ) : null}
+
             <th
               scope="col"
-              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
+              className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
+              {openedTab !== 1 && openedSubtab !== 3 ? 'LAST COMMUNICATION ' : ''}
+            </th>
+
+            <th
+              scope="col"
+              className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
               ACTIONS
             </th>
           </tr>
@@ -1187,26 +1201,171 @@ const Table = ({
                           </TooltipComponent>
                         )}
                       </td>
-                      {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' && (
-                        <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
-                          <div className="text-gray7 font-medium">
+
+                      <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
+                        <div className="text-gray7 font-medium">
+                          {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' ? (
                             <DateChip
                               lastCommunication={contact.last_communication_date}
                               contactStatus={contact.status_2}
                               contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
                             />
-                            {/* <Chip
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* <Chip
                             lastCommunication={formatDateAgo(
                               contact?.last_communication_date
                             )}
                           /> */}
-                          </div>
-                          {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
-                        </td>
-                      )}
+                        </div>
+                        {/* <div className="text-gray4">{contact.uploadedTime}</div> */}
+                      </td>
                       <td>
-                        <div className="px-4 py-[10px] flex items-center justify-center">
-                          <div
+                        <div className="px-4 py-[9px] flex items-center justify-start">
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCardEdit(contact);
+                                }}
+                                className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Edit
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                          </TooltipComponent>
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendEmail(contact);
+                                }}
+                                className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <Email
+                                  id={'edit-contact-icon-' + contact.id}
+                                  className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                          </TooltipComponent>
+                          {contact.phone_number && (
+                            <>
+                              {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                                <TooltipComponent
+                                  side={'top'}
+                                  align="center"
+                                  style={{ marginBottom: '7px' }}
+                                  triggerElement={
+                                    <div
+                                      role={'button'}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        let message = '';
+                                        switch (contact.category_2) {
+                                          case 'Renter':
+                                            message =
+                                              "Hey, wanted to check in and see if you're still looking for a rental?";
+                                            break;
+                                          case 'Buyer':
+                                            message =
+                                              'Hey, wanted to see if we could help with anything related to your purchase.';
+                                            break;
+                                          case 'Landlord':
+                                            message = 'Hey just checking in on your property.';
+                                            break;
+                                          case 'Seller':
+                                            message =
+                                              'Hey, just wanted to check in and see if we could talk about your property.';
+                                            break;
+                                          default:
+                                            message = 'Hey, just checking in.';
+                                            break;
+                                        }
+                                        let activity = {
+                                          type_of_activity_id: 2,
+                                          description: 'Attempted to communicate using SMS.',
+                                        };
+
+                                        dispatch(
+                                          updateContactLocally({ ...contact, last_communication_date: new Date() }),
+                                        );
+                                        contactServices.addContactActivity(contact.id, activity);
+                                        let link = `sms:${contact.phone_number}&body=${message}`;
+                                        window.location.href = link;
+                                      }}
+                                      className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                      <Sms
+                                        id={'edit-contact-icon-' + contact.id}
+                                        className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                      />
+                                    </div>
+                                  }>
+                                  <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                                </TooltipComponent>
+                              )}
+                              <TooltipComponent
+                                side={'top'}
+                                align="center"
+                                style={{ marginBottom: '7px' }}
+                                triggerElement={
+                                  <div
+                                    role={'button'}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      let message = '';
+                                      switch (contact.category_2) {
+                                        case 'Renter':
+                                          message =
+                                            "Hey, wanted to check in and see if you're still looking for a rental?";
+                                          break;
+                                        case 'Buyer':
+                                          message =
+                                            'Hey, wanted to see if we could help with anything related to your purchase.';
+                                          break;
+                                        case 'Landlord':
+                                          message = 'Hey just checking in on your property.';
+                                          break;
+                                        case 'Seller':
+                                          message =
+                                            'Hey, just wanted to check in and see if we could talk about your property.';
+                                          break;
+                                        default:
+                                          message = 'Hey, just checking in.';
+                                          break;
+                                      }
+                                      let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(
+                                        message,
+                                      )}`;
+                                      window.open(link, '_blank');
+                                    }}
+                                    className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                    <WhatsApp
+                                      id={'edit-contact-icon-' + contact.id}
+                                      className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                    />
+                                  </div>
+                                }>
+                                <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                              </TooltipComponent>
+                            </>
+                          )}
+                          {/* <div
                             className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
                             onMouseEnter={() => {
                               document
@@ -1282,7 +1441,7 @@ const Table = ({
                               className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-gray2 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 ">
                               Add Communication
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>
@@ -1429,8 +1588,6 @@ const Table = ({
       }
     }, [openedSubtab, contactsOriginal]);
 
-    const dispatch = useDispatch();
-
     const [addActivityPopup, setAddActivityPopup] = useState(false);
     const handleAddActivity = (client) => {
       setContactToModify(client);
@@ -1445,10 +1602,10 @@ const Table = ({
       openedSubtab === 0
         ? vendorSubtypes
         : openedSubtab === 1
-        ? agentTypes
-        : openedSubtab === 3
-        ? unspecifiedTypes
-        : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
+          ? agentTypes
+          : openedSubtab === 3
+            ? unspecifiedTypes
+            : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
     const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
     const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
@@ -1598,49 +1755,6 @@ const Table = ({
                                 id={'tooltip-edit-contact-' + contact.id}
                                 className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
                                 Edit Contact
-                              </div>
-                            </div>
-                            <div
-                              className="change-status relative cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-gray2 flex items-center justify-center group-hover"
-                              onMouseEnter={() => {
-                                document
-                                  .querySelector('#tooltip-change-status-' + contact.id)
-                                  .classList.remove('invisible', 'opacity-0');
-                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray4');
-                                document
-                                  .querySelector('#change-status-icon-' + contact.id)
-                                  .classList.remove('text-gray3');
-                              }}
-                              onMouseLeave={() => {
-                                document
-                                  .querySelector('#tooltip-change-status-' + contact.id)
-                                  .classList.add('invisible', 'opacity-0');
-                                document.querySelector('#change-status-icon-' + contact.id).classList.add('text-gray3');
-                                document
-                                  .querySelector('#change-status-icon-' + contact.id)
-                                  .classList.remove('text-gray4');
-                              }}
-                              // onClick={(event) => handleDropdown(event, !dropdownOpened)}
-                              onClick={(e) => e.stopPropagation()}>
-                              {/* <Category className="text-gray3 w-4 h-4" /> */}
-                              <SimpleBarDropdown
-                                options={allStatusesQuickEdit[categoryType]}
-                                activeIcon={false}
-                                activeClasses="bg-lightBlue1"
-                                handleSelect={(item) => {
-                                  // setDropdownVal(item)
-                                  handleChangeStatus(item.id, contact);
-                                }}
-                                iconLabel={
-                                  <Category id={'change-status-icon-' + contact.id} className="text-gray3 w-4 h-4" />
-                                }
-                                dropdownValue={contact?.status_2}
-                                handleDropdownClosed={(item) => console.log(item)}></SimpleBarDropdown>
-                              <div
-                                id={'tooltip-change-status-' + contact.id}
-                                role="tooltip"
-                                className="inline-block absolute bottom-[34px] right-0 whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                Change Status
                               </div>
                             </div>
                           </div>
@@ -2282,82 +2396,142 @@ const Table = ({
                 <td>
                   <td>
                     <div className=" py-[10px] flex items-center justify-start">
-                      <div
-                        className="group cursor-pointer relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
-                        onMouseEnter={() => {
-                          document
-                            .querySelector('#tooltip-edit-contact-' + person.id)
-                            .classList.remove('invisible', 'opacity-0');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray4');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray3');
-                        }}
-                        onMouseLeave={() => {
-                          document
-                            .querySelector('#tooltip-edit-contact-' + person.id)
-                            .classList.add('invisible', 'opacity-0');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.add('text-gray3');
-                          document.querySelector('#edit-contact-icon-' + person.id).classList.remove('text-gray4');
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCardEdit(person);
-                        }}>
-                        <Edit id={'edit-contact-icon-' + person.id} className="text-lightBlue5 w-4 h-4" />
-                        <div
-                          id={'tooltip-edit-contact-' + person.id}
-                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
-                          Edit Contact
-                        </div>
-                      </div>
-                      <div
-                        className="group cursor-pointer relative rounded-full p-1.5  bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7"
-                        onMouseEnter={() => {
-                          document
-                            .querySelector('#tooltip-add-activity-' + person.id)
-                            .classList.remove('invisible', 'opacity-0');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray4');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray3');
-                        }}
-                        onMouseLeave={() => {
-                          document
-                            .querySelector('#tooltip-add-activity-' + person.id)
-                            .classList.add('invisible', 'opacity-0');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.add('text-gray3');
-                          document.querySelector('#add-activity-icon-' + person.id).classList.remove('text-gray4');
-                        }}
-                        // onClick={(e) => {
-                        //   e.stopPropagation();
-                        //   router.push({
-                        //     pathname: '/contacts/details',
-                        //     query: { id: contact.id, campaigns: true },
-                        //   });
-                        // }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setContactToModify(person);
-                          // handleAddActivity(contact);
-                          setOpenCommunicationPopup(true);
-                        }}>
-                        <svg
-                          id={'add-activity-icon-' + person.id}
-                          className="text-gray5 w-4 h-4 group-hover:text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="currentColor">
-                          <path
-                            d="M1.00991 11V11.3621L1.26598 11.1061L3.22204 9.15H10.1599C10.475 9.15 10.7485 9.03606 10.9722 8.81232C11.196 8.58858 11.3099 8.3151 11.3099 8V2C11.3099 1.6849 11.196 1.41142 10.9722 1.18768C10.7485 0.963945 10.475 0.85 10.1599 0.85H2.15991C1.84481 0.85 1.57134 0.963945 1.3476 1.18768C1.12386 1.41142 1.00991 1.6849 1.00991 2V11ZM2.73491 7.85H2.67374L2.63002 7.89278L2.30991 8.20592V2.15H10.0099V7.85H2.73491Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        <div
-                          id={'tooltip-add-activity-' + person.id}
-                          role="tooltip"
-                          className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible z-10 py-2 px-3 text-xs font-medium text-white  rounded-lg shadow-sm opacity-0 tooltip bg-gray-700 ">
-                          Add Communication
-                        </div>
-                      </div>
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardEdit(person);
+                            }}
+                            className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Edit
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
+                      </TooltipComponent>
+                      <TooltipComponent
+                        side={'top'}
+                        align="center"
+                        style={{ marginBottom: '7px' }}
+                        triggerElement={
+                          <div
+                            role={'button'}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendEmail(person);
+                            }}
+                            className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                            <Email
+                              id={'edit-contact-icon-' + person.id}
+                              className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
+                            />
+                          </div>
+                        }>
+                        <div className={'text-xs leading-4 font-medium'}>Send Email</div>
+                      </TooltipComponent>
+                      {person.phone_number && (
+                        <>
+                          {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                            <TooltipComponent
+                              side={'top'}
+                              align="center"
+                              style={{ marginBottom: '7px' }}
+                              triggerElement={
+                                <div
+                                  role={'button'}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    let message = '';
+                                    switch (person.category_2) {
+                                      case 'Renter':
+                                        message =
+                                          "Hey, wanted to check in and see if you're still looking for a rental?";
+                                        break;
+                                      case 'Buyer':
+                                        message =
+                                          'Hey, wanted to see if we could help with anything related to your purchase.';
+                                        break;
+                                      case 'Landlord':
+                                        message = 'Hey just checking in on your property.';
+                                        break;
+                                      case 'Seller':
+                                        message =
+                                          'Hey, just wanted to check in and see if we could talk about your property.';
+                                        break;
+                                      default:
+                                        message = 'Hey, just checking in.';
+                                        break;
+                                    }
+                                    let activity = {
+                                      type_of_activity_id: 2,
+                                      description: 'Attempted to communicate using SMS.',
+                                    };
+
+                                    dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
+                                    contactServices.addContactActivity(person.id, activity);
+                                    let link = `sms:${person.phone_number}&body=${message}`;
+                                    window.location.href = link;
+                                  }}
+                                  className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                  <Sms
+                                    id={'edit-contact-icon-' + person.id}
+                                    className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
+                                  />
+                                </div>
+                              }>
+                              <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
+                            </TooltipComponent>
+                          )}
+                          <TooltipComponent
+                            side={'top'}
+                            align="center"
+                            style={{ marginBottom: '7px' }}
+                            triggerElement={
+                              <div
+                                role={'button'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  let message = '';
+                                  switch (person.category_2) {
+                                    case 'Renter':
+                                      message = "Hey, wanted to check in and see if you're still looking for a rental?";
+                                      break;
+                                    case 'Buyer':
+                                      message =
+                                        'Hey, wanted to see if we could help with anything related to your purchase.';
+                                      break;
+                                    case 'Landlord':
+                                      message = 'Hey just checking in on your property.';
+                                      break;
+                                    case 'Seller':
+                                      message =
+                                        'Hey, just wanted to check in and see if we could talk about your property.';
+                                      break;
+                                    default:
+                                      message = 'Hey, just checking in.';
+                                      break;
+                                  }
+                                  let link = `https://wa.me/${person.phone_number}?text=${encodeURIComponent(message)}`;
+                                  window.open(link, '_blank');
+                                }}
+                                className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
+                                <WhatsApp
+                                  id={'edit-contact-icon-' + person.id}
+                                  className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
+                                />
+                              </div>
+                            }>
+                            <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
+                          </TooltipComponent>
+                        </>
+                      )}
                     </div>
                   </td>
                 </td>
@@ -2516,8 +2690,8 @@ const Table = ({
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                        ? 'Deactivated'
-                        : 'Inactive'}
+                          ? 'Deactivated'
+                          : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -2533,8 +2707,8 @@ const Table = ({
                       {person.contact_campaign_status === 'assigned'
                         ? 'Campaign is Running'
                         : person.contact_campaign_status === 'unassigned'
-                        ? 'Campaign Deactivated'
-                        : 'Never In Campaign'}
+                          ? 'Campaign Deactivated'
+                          : 'Never In Campaign'}
                     </p>
                   </div>
                   {person.contact_campaign_status !== null && (
@@ -2542,8 +2716,8 @@ const Table = ({
                       {person.contact_campaign_status === 'assigned'
                         ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
                         : person.contact_campaign_status === 'unassigned'
-                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
-                        : ''}
+                          ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                          : ''}
                     </div>
                   )}
                 </div>
@@ -2705,8 +2879,8 @@ const Table = ({
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                        ? 'Deactivated'
-                        : 'Inactive'}
+                          ? 'Deactivated'
+                          : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -2762,8 +2936,8 @@ const Table = ({
                             e?.event_status?.toLowerCase() === 'scheduled'
                               ? 'bg-yellow2'
                               : e?.event_status?.toLowerCase() === 'sent'
-                              ? 'bg-[#10B981]'
-                              : 'bg-red-500'
+                                ? 'bg-[#10B981]'
+                                : 'bg-red-500'
                           }`}></div>
                         <p
                           className={`text-sm leading-5 font-medium
@@ -2771,14 +2945,14 @@ const Table = ({
                              e?.event_status?.toLowerCase() === 'scheduled'
                                ? 'text-yellow3'
                                : e?.event_status?.toLowerCase() === 'sent'
-                               ? 'text-green7'
-                               : 'text-red5'
+                                 ? 'text-green7'
+                                 : 'text-red5'
                            }`}>
                           {e?.event_status?.toLowerCase() === 'scheduled'
                             ? 'To be sent'
                             : e?.event_status?.toLowerCase() === 'sent'
-                            ? 'Sent'
-                            : 'Canceled'}
+                              ? 'Sent'
+                              : 'Canceled'}
                         </p>
                       </div>
                       {e.date !== null && (
@@ -2879,8 +3053,8 @@ const Table = ({
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                        ? 'Disabled'
-                        : 'Active'}
+                          ? 'Disabled'
+                          : 'Active'}
                     </span>
                   </div>
                 </div>
@@ -2946,36 +3120,37 @@ const Table = ({
                 {tableFor == 'uncategorized' || tableFor == 'in-categorization'
                   ? uncategorizedTable()
                   : tableFor == 'contact-campaigns'
-                  ? contactCampaignsTable()
-                  : tableFor == 'professionals'
-                  ? professionalsTable()
-                  : tableFor == 'reports'
-                  ? reportsTable()
-                  : tableFor == 'imports-summary'
-                  ? importsSummaryTable()
-                  : tableFor === 'needToContact'
-                  ? needToContactTable()
-                  : tableFor === 'trash'
-                  ? trashTable()
-                  : tableFor == 'contactsList'
-                  ? contactsListTable()
-                  : tableFor == 'categorized'
-                  ? categorizedTable()
-                  : tableFor == 'other'
-                  ? otherTable()
-                  : tableFor == 'ai-summary'
-                  ? aiSummaryTable()
-                  : tableFor == 'allCampaignContacts'
-                  ? allCampaignContacts()
-                  : tableFor === 'notInCampaignContacts'
-                  ? notInCampaignContacts()
-                  : tableFor === 'inCampaignContacts'
-                  ? inCampaignContacts()
-                  : tableFor == 'needToContact'
-                  ? needToContactTable()
-                  : tableFor == 'import-google-contacts-successful' || tableFor == 'import-google-contacts-failed'
-                  ? importGoogleContactsDetails()
-                  : campaignsTable()}
+                    ? contactCampaignsTable()
+                    : tableFor == 'professionals'
+                      ? professionalsTable()
+                      : tableFor == 'reports'
+                        ? reportsTable()
+                        : tableFor == 'imports-summary'
+                          ? importsSummaryTable()
+                          : tableFor === 'needToContact'
+                            ? needToContactTable()
+                            : tableFor === 'trash'
+                              ? trashTable()
+                              : tableFor == 'contactsList'
+                                ? contactsListTable()
+                                : tableFor == 'categorized'
+                                  ? categorizedTable()
+                                  : tableFor == 'other'
+                                    ? otherTable()
+                                    : tableFor == 'ai-summary'
+                                      ? aiSummaryTable()
+                                      : tableFor == 'allCampaignContacts'
+                                        ? allCampaignContacts()
+                                        : tableFor === 'notInCampaignContacts'
+                                          ? notInCampaignContacts()
+                                          : tableFor === 'inCampaignContacts'
+                                            ? inCampaignContacts()
+                                            : tableFor == 'needToContact'
+                                              ? needToContactTable()
+                                              : tableFor == 'import-google-contacts-successful' ||
+                                                  tableFor == 'import-google-contacts-failed'
+                                                ? importGoogleContactsDetails()
+                                                : campaignsTable()}
               </table>
             </div>
           </div>

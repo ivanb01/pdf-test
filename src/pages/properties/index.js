@@ -5,6 +5,7 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
+import { render } from '@react-email/components';
 import {
   bathroomsOptions,
   data,
@@ -28,15 +29,23 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { getInitials, searchContacts } from '@global/functions';
+import { formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
+import { sendEmail } from '@api/marketing';
+import { Tailwind, Button as Btn } from '@react-email/components';
+import { Html } from '@react-email/html';
+import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
 import CreateCampaignSidebar from '@components/CreateCampaignSidebar';
+import { addContactActivity } from '@api/contacts';
+import FilterList from '@mui/icons-material/FilterList';
+import Close from '@mui/icons-material/Close';
+import chevronDown from '/public/images/ch-down.svg';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -71,6 +80,8 @@ const index = () => {
   const [selectedProperties, setSelectedProperties] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
+  const [showProperties, setShowProperties] = useState(true);
+
   const setStatuss = (root, status) => {
     root.status = status;
     if (Array.isArray(root.items)) {
@@ -173,6 +184,9 @@ const index = () => {
   const selectAmenities = (a) => {
     setSelectedAmenities(a);
   };
+  useEffect(() => {
+    console.log(selectedAmenities, 'selectedAmenities');
+  }, [selectedAmenities]);
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -285,7 +299,15 @@ const index = () => {
     },
   ];
   const [ids, setIds] = useState();
-
+  const removeNullUndefined = (obj) => {
+    const cleanedObj = {};
+    for (const key in obj) {
+      if (obj[key] !== null && obj[key] !== undefined) {
+        cleanedObj[key] = obj[key];
+      }
+    }
+    return cleanedObj;
+  };
   const fetchProperties = async (filterValue, page = 1) => {
     setLoading(true);
     let params = {
@@ -328,11 +350,12 @@ const index = () => {
     if (maxPrice) {
       params['priceMax'] = maxPrice;
     }
-    const urlParams = new URLSearchParams({
-      ...params,
-    });
+    params = removeNullUndefined(params);
+
+    const urlParams = new URLSearchParams(params);
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url);
 
     await fetchJsonp(url)
       .then((res) => res.json())
@@ -343,7 +366,8 @@ const index = () => {
   };
 
   const resetFilters = () => {
-    console.log(status);
+    setSelectedAmenities('');
+    setSelectedProperties([]);
     setMinPrice();
     setMaxPrice();
     setNeighborhoods([]);
@@ -392,6 +416,8 @@ const index = () => {
   const [sendMethod, setSendMethod] = useState(1);
 
   const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const user = useSelector((state) => state.global.user);
+
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [propertiesSent, setPropertiesSent] = useState(false);
@@ -431,10 +457,40 @@ const index = () => {
     setFilteredContacts(filteredArray.data);
   };
 
-  const sendEmail = () => {
-    setPropertiesSent(true);
-    console.log(selectedContacts, selectedProperties, 'email');
-    resetPropertySelection();
+  const [chunkedArray, setChunkedArray] = useState([]);
+
+  useEffect(() => {
+    const chunkedArray = [];
+    for (let i = 0; i < selectedProperties.length; i += 2) {
+      chunkedArray.push(selectedProperties.slice(i, i + 2));
+    }
+
+    setChunkedArray(chunkedArray);
+  }, [selectedProperties]);
+  const [loadingEmails, setLoadingEmails] = useState(false);
+
+  const _sendEmail = () => {
+    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
+    setLoadingEmails(true);
+    selectedContacts.map((c) => {
+      addContactActivity(c.value, {
+        type_of_activity_id: 28,
+        description: `These properties were sent to this user on ${formatDateStringMDY(new Date())}: ${propertyIds.join(
+          ',  ',
+        )} `,
+      });
+      sendEmail(
+        [c.email],
+        `Hi ${c.first_name}, Check out these new properties.`,
+        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} />, {
+          pretty: true,
+        })}`,
+      ).then((res) => {
+        setLoadingEmails(false);
+        setPropertiesSent(true);
+        resetPropertySelection();
+      });
+    });
   };
 
   const sendSMS = () => {
@@ -449,7 +505,10 @@ const index = () => {
   };
   useEffect(() => {
     if (!open) {
-      setSelectedContacts([]);
+      setTimeout(() => {
+        setPropertiesSent(false);
+        setSelectedContacts([]);
+      }, 500);
     }
   }, [open]);
 
@@ -475,9 +534,9 @@ const index = () => {
         <div className="flex items-center">
           <img
             className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
-            src={property.PHOTOS.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+            src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
           />
-          <div className="font-semibold text-black mb-[6px] mr-3 text-sm">
+          <div className="font-semibold text-gray7 mr-3 text-[14px]">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
           </div>
         </div>
@@ -488,9 +547,9 @@ const index = () => {
             class="hidden"
             onChange={(event) => {
               if (event.target.checked) {
-                setSelected((prevSelected) => [...prevSelected, property]);
+                setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
               } else {
-                setSelected((prevSelected) => prevSelected.filter((item) => item !== property));
+                setSelected((prevSelected) => [...prevSelected, property]);
               }
             }}
           />
@@ -549,6 +608,23 @@ const index = () => {
   }, [setOpenDropdown]);
 
   const [openSidebar, setOpenSidebar] = useState(true);
+  const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+
+  const sortedOptions = filteredContacts?.sort((a, b) => {
+    const aIsSelected = isSelected(a);
+    const bIsSelected = isSelected(b);
+
+    if (aIsSelected && !bIsSelected) {
+      return -1;
+    } else if (!aIsSelected && bIsSelected) {
+      return 1;
+    }
+    return 0;
+  });
+
+  useEffect(() => {
+    console.log(selectedProperties);
+  }, [selectedProperties]);
 
   return (
     <>
@@ -576,8 +652,8 @@ const index = () => {
                 document.querySelector(`#custom-dropdown-search`)?.focus();
               }, 200);
             }}>
-            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis'}>
-              {datav2.length > 0 ? datav2.join(',') : 'Select'}
+            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis font-normal'}>
+              {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
             </div>
             <div className={'flex'}>
               {datav2.length > 0 && (
@@ -610,7 +686,7 @@ const index = () => {
                     className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
                     id={`custom-dropdown-search`}
                     type={'text'}
-                    placeholder={'Search'}
+                    placeholder={'Select'}
                     onChange={(e) => setNeighborhoodsSearch(e.target.value)}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -645,7 +721,7 @@ const index = () => {
 
           <Dropdown
             options={roomsOptions}
-            className=" min-w-[100px]"
+            className=" min-w-[120px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
             handleSelect={(choice) => {
@@ -666,14 +742,30 @@ const index = () => {
           <MinMaxPrice
             // options={bathroomOptions}
             label={'Min/Max Price'}
-            className="min-w-[170px]"
+            className="min-w-[170px] font-normal"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
             setMaxPrice={setMaxPrice}
             options={options}
           />
-          <Button className="min-w-[120px]" primary onClick={() => setOpenFilters(true)}>
+          <Button
+            className="min-w-[120px]"
+            leftIcon={
+              <div className={'relative'}>
+                {selectedAmenities.length > 0 && selectedAmenities.split(',').length > 0 && (
+                  <div
+                    className={
+                      'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
+                    }>
+                    {selectedAmenities.split(',').length}
+                  </div>
+                )}
+                <FilterList className="w-5 h-5 mt-[-2px]" />
+              </div>
+            }
+            primary
+            onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
           <Button white onClick={() => resetFilters()} className="min-w-[120px]">
@@ -695,7 +787,7 @@ const index = () => {
         <div className="flex items-center justify-between">
           <div className="w-full">
             <SimpleBar style={{ maxHeight: 'calc(100vh - 156px)' }}>
-              <div className="p-6">
+              <div className={`p-6 ${selectedProperties.length > 0 && 'pb-[100px]'}`}>
                 <div className={'flex items-center justify-between mb-6'}>
                   <div className="text-gray-900 text-sm font-normal">
                     {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from REBNY
@@ -789,15 +881,15 @@ const index = () => {
                       setOpen(true);
                     }}
                   />
-                  <Button
-                    primary
-                    leftIcon={<AtSymbolIcon />}
-                    label="Send via SMS"
-                    onClick={() => {
-                      setSendMethod(2);
-                      setOpen(true);
-                    }}
-                  />
+                  {/*<Button*/}
+                  {/*  primary*/}
+                  {/*  leftIcon={<AtSymbolIcon />}*/}
+                  {/*  label="Send via SMS"*/}
+                  {/*  onClick={() => {*/}
+                  {/*    setSendMethod(2);*/}
+                  {/*    setOpen(true);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
               </div>
             )}
@@ -829,15 +921,17 @@ const index = () => {
           </div>
         </div>
       )}
-      {openFilters && (
-        <PropertyFilters selectAmenities={selectAmenities} open={openFilters} setOpen={() => setOpenFilters(false)} />
-      )}
+      <PropertyFilters
+        selectAmenities={selectAmenities}
+        open={openFilters}
+        setOpen={() => setOpenFilters(false)}
+        selectedAmenities={selectedAmenities}
+      />
       <SlideOver
         open={open}
-        noHeader
         setOpen={setOpen}
-        title={sendMethod == 1 ? 'Send via Email' : 'Send via SMS'}
         withBackdrop
+        noHeader={!propertiesSent}
         buttons={
           propertiesSent ? null : (
             <>
@@ -850,8 +944,9 @@ const index = () => {
                 <Button
                   primary
                   leftIcon={<MailIcon />}
+                  loading={loadingEmails}
                   label="Send via Email"
-                  onClick={() => sendEmail()}
+                  onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
               ) : (
@@ -874,16 +969,38 @@ const index = () => {
               speed="1"
               style={{ height: '200px' }}
               autoplay></lottie-player>
-            <div className="text-gray7 font-medium text-lg -mt-4">Properties have been sent successfully</div>
-            <div className=" mt-2">
-              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
-              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
+            <div className="text-gray7 font-semibold text-[18px] -mt-7">
+              Properties have been successfully sent to your clients!
             </div>
-            <Button primary label="Back to Properties" onClick={() => setOpen(false)} className="mt-6" />
+            {/*<div className=" mt-2">*/}
+            {/*  All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}*/}
+            {/*  <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.*/}
+            {/*</div>*/}
+            <Button
+              primary
+              label="Back to Properties"
+              onClick={() => {
+                setTimeout(() => {
+                  setPropertiesSent(false);
+                  setSelectedContacts([]);
+                }, 500);
+                setOpen(false);
+              }}
+              className="mt-6"
+            />
           </div>
         ) : (
-          <div>
-            <div className="font-semibold text-gray7">Select Clients</div>
+          <div className="">
+            <div className="flex items-center justify-between  mb-2">
+              <div className="font-semibold text-gray7 text-[20px]">Select clients</div>
+              <button
+                type="button"
+                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                onClick={() => setOpen(false)}>
+                <span className="sr-only">Close panel</span>
+                <Close className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
             {/* <Search
               placeholder={`Search for clients`}
               className="w-full text-sm mt-2"
@@ -893,7 +1010,7 @@ const index = () => {
             /> */}
             {filteredContacts && filteredContacts.length && (
               <MultiSelect
-                options={filteredContacts}
+                options={sortedOptions}
                 value={selectedContacts}
                 onChange={(contacts) => {
                   setSelectedContacts(contacts);
@@ -905,10 +1022,10 @@ const index = () => {
               />
             )}
             <div className="my-4">
-              <span className="font-semibold text-gray7">{selectedContacts.length}</span>
-              <span className="text-gray8 font-medium">
+              <span className="font-semibold text-gray7 text-[18px]">{selectedContacts.length}</span>
+              <span className="text-gray8 text-[14px] font-medium">
                 {' '}
-                {selectedContacts.length == 1 ? 'Contact' : 'Contacts'} selected
+                {selectedContacts.length == 1 ? 'Client' : 'Clients'} selected
               </span>
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
@@ -959,17 +1076,28 @@ const index = () => {
                 ))}
             </SimpleBar>
             <hr className="my-3" />
-            <div className="font-semibold text-gray7">Properties</div>
+            <div className="flex items-center justify-between">
+              <div className="font-semibold text-gray7 text-[20px]">Properties</div>
+              <a
+                className={`cursor-pointer transition-all ${showProperties ? '' : 'rotate-180'}`}
+                onClick={() => setShowProperties(!showProperties)}>
+                <img src={chevronDown.src} />
+              </a>
+            </div>
             <div className="my-4">
-              <span className="font-semibold text-gray7">{selectedProperties.length}</span>
-              <span className="text-gray8 font-medium">
+              <span className="font-semibold text-gray7 text-[18px]">{selectedProperties.length}</span>
+              <span className="text-gray8 font-medium text-[14px]">
                 {' '}
                 {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
               </span>
             </div>
-            {selectedProperties.map((property) => (
-              <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
-            ))}
+            {showProperties && (
+              <>
+                {selectedProperties.map((property) => (
+                  <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
+                ))}
+              </>
+            )}
           </div>
         )}
       </SlideOver>

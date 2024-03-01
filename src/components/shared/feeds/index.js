@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ChatAltIcon, TagIcon, UserCircleIcon, PhoneIcon, MailIcon, ChatAlt2Icon } from '@heroicons/react/solid';
+import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
 import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
-import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
-import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import More from '@mui/icons-material/MoreVert';
 import { useFormik } from 'formik';
@@ -17,53 +13,16 @@ import Dropdown from 'components/shared/dropdown';
 import Overlay from 'components/shared/overlay';
 import Button from 'components/shared/button';
 import * as Yup from 'yup';
-import { activityTypes } from 'global/variables';
+import { activityTypeIcons, activityTypes } from 'global/variables';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from 'store/global/slice';
 import { toast } from 'react-hot-toast';
 import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
-
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TooltipComponent from '@components/shared/tooltip';
-import Image from 'next/image';
-import SendIcon from '../../../../public/images/client-details/SendIcon.svg';
-import ContactImportedFromGmailIcon from '../../../../public/images/client-details/ContactImportedFromGmailIcon.svg';
-import ContactImportedFromGmailAIIcon from '../../../../public/images/client-details/ContactImportedFromGmailAIIcon.svg';
-import UpdateContact from '../../../../public/images/client-details/UpdatedClient.svg';
-import DeleteIcon from '../../../../public/images/client-details/DeleteIcon.svg';
-import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-const activitiesTypes = {
-  1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
-  2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  6: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
-  7: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
-  8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
-  9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
-  10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
-  11: <PersonAddAlt1OutlinedIcon className="h-[18px] w-[18px] text-gray-500" />,
-  12: <Image alt={''} src={UpdateContact} className="h-7 w-7 text-gray-500" />,
-  13: <Image alt={''} src={DeleteIcon} className="h-4 w-4 text-gray-500" />,
-  14: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  15: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  16: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  17: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  18: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  19: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  20: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  21: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  22: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  23: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-  26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
-};
-export default function Feeds({ showFullHeight, contactId, activities, setActivities, height }) {
+
+export default function Feeds({ showFullHeight, contactId, activities, setActivities, height, filter }) {
   const placeholderDescription = (activity_type) => {
     if (activity_type == 1) {
       return 'Email Sent to contact';
@@ -223,7 +182,7 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                       <>
                         <div className="relative">
                           <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                            {activitiesTypes[activityItem.type_of_activity_id] ?? (
+                            {activityTypeIcons[activityItem.type_of_activity_id] ?? (
                               <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
                             )}
                           </div>
@@ -287,11 +246,8 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                             </p>
                           )}
                           <div className="mt-2 text-sm text-gray6">
-                            <p>
-                              {activityItem.description
-                                ? activityItem.description
-                                : placeholderDescription(activityItem.type_of_activity_id)}
-                            </p>
+                            <code></code>
+                            <ActivityDescription activityItem={activityItem} />
                           </div>
                         </div>
                       </>
@@ -300,8 +256,10 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                       <div className="flex mr-3">
                         <FilterDropdown
                           types={[types[1]]}
-                          icon={<More className="w-5" />}
+                          icon={<More className="w-5 text-gray4 cursor-pointer" />}
                           data={activityItem}
+                          side={'left'}
+                          align={'center'}
                           positionClass="right-7 top-0"
                         />
                       </div>
@@ -347,3 +305,37 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
     </>
   );
 }
+
+const ActivityDescription = ({ activityItem }) => {
+  const htmlString = `${activityItem?.description}`;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const h6Content = doc.querySelector('h6')?.textContent;
+  const subjectContent = doc.querySelector('p')?.textContent;
+
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const isContentLong = h6Content && h6Content.length > 88;
+
+  return activityItem?.type_of_activity_id === 1 ? (
+    <div>
+      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
+        <p>[Email Sent] </p>
+        <p className={'font-bold'}>{subjectContent}</p>
+      </div>
+      {h6Content && (
+        <h6>
+          {isContentLong && !showFullContent ? `${h6Content.slice(0, 88)}... ` : h6Content}
+          {isContentLong && (
+            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
+              {showFullContent ? ' See less' : ' See more'}
+            </span>
+          )}
+        </h6>
+      )}
+    </div>
+  ) : (
+    activityItem.description
+  );
+};

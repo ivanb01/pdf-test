@@ -1,9 +1,9 @@
 import styles from './styles.module.scss';
-import {Button} from '../Button';
+import StripeEmbeddedCheckout from '@components/public/StripeEmbeddedCheckout';
 import iconCheck from '/public/images/public/icon-check.svg';
 import Image from 'next/image';
 
-export const PriceCard = ({item}) => {
+export const PriceCard = ({ item, plan }) => {
   return (
     <div className={styles.card}>
       <div className={styles['card__top']}>
@@ -12,12 +12,12 @@ export const PriceCard = ({item}) => {
           <span>Plan description</span>
         </div>
         <div className={styles['card__top-price']}>
-          <span>${item.price}</span>
-          <span>/{item.isMonthly ? 'mo' : 'year'}</span>
+          <span>${item[plan].price}</span>
+          <span>/{plan === "monthly" ? 'mo' : 'year'}</span>
         </div>
-        <Button type="primary">
+        <StripeEmbeddedCheckout priceId={item[plan].priceId}>
           Subscribe
-        </Button>
+        </StripeEmbeddedCheckout>
       </div>
       <div className={styles['card__bottom']}>
         <span className={styles['card__bottom-description']}>WHAT’S INCLUDED</span>

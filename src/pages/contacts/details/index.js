@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
 import Loader from '@components/shared/loader';
-import { deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
+import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
 import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
@@ -28,7 +28,8 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
-import { allStatusesQuickEdit, othersOptions } from '@global/variables';
+import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
+import Dropdown from '@components/shared/dropdown';
 
 const index = () => {
   const router = useRouter();
@@ -39,13 +40,14 @@ const index = () => {
   const [editNoteModal, setEditNoteModal] = useState(false);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const [contact, setContact] = useState(null);
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loadingActivities, setLoadingActivities] = useState(true);
   const [loadingNotes, setLoadingNotes] = useState(true);
   const [editingContact, setEditingContact] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
+  const [activityFilter, setActivityFilter] = useState(false);
 
   useEffect(() => {
     if (id && contacts?.length) {
@@ -118,7 +120,12 @@ const index = () => {
           </div>
         </div>
         {isEditable && (
-          <FilterDropdown types={noteTypes} icon={<MoreVert className="w-5" />} data={item} positionClass="right-0" />
+          <FilterDropdown
+            types={noteTypes}
+            icon={<MoreVert className="w-5 text-gray4 cursor-pointer" />}
+            data={item}
+            positionClass="right-0"
+          />
         )}
       </div>
     );
@@ -226,7 +233,24 @@ const index = () => {
                   <div>
                     {contact.phone_number && (
                       <Button
-                        onClick={() => window.open(`tel:${contact.phone_number}`)}
+                        onClick={() => {
+                          setActivities([
+                            {
+                              type_of_activity_id: 27,
+                              description: 'Attempted to make a phone call.',
+                              created_at: new Date().toISOString(),
+                            },
+                            ...activities,
+                          ]);
+                          addContactActivity(contact.id, {
+                            type_of_activity_id: 27,
+                            description: 'Attempted to make a phone call.',
+                            created_at: new Date().toISOString(),
+                          }).then(() => {
+                            getContactActivities(contact.id).then((response) => setActivities(response.data.data));
+                          });
+                          window.open(`tel:${contact.phone_number}`);
+                        }}
                         className="mr-2"
                         white
                         inline
@@ -377,7 +401,13 @@ const index = () => {
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
                     <img src={communication.src} />
-                    <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div>
+                    <Dropdown
+                      initialSelect={activityTypesDropdown[0]}
+                      options={activityTypesDropdown}
+                      className="w-[180px] ml-3"
+                      handleSelect={(choice) => setActivityFilter(choice)}
+                    />
+                    {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
@@ -390,7 +420,19 @@ const index = () => {
                   <Feeds
                     showFullHeight={contact?.category_1 != 'Client'}
                     contactId={id}
-                    activities={activities}
+                    activities={
+                      activityFilter.id == 0 || !activityFilter
+                        ? activities
+                        : activities.filter((activity) => {
+                            console.log(activityFilter, activity.type_of_activity_id);
+                            if (activityFilter.id == 14) {
+                              return [14, 15, 16].includes(activity.type_of_activity_id);
+                            } else if (activityFilter.id == 3) {
+                              return [3, 26, 27].includes(activity.type_of_activity_id);
+                            }
+                            return activity.type_of_activity_id == activityFilter.id;
+                          })
+                    }
                     setActivities={setActivities}
                   />
                 ) : (
@@ -408,18 +450,20 @@ const index = () => {
               )}
             </div>
             <div className="w-full md:w-[270px] order-1 md:order-3">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
-                    {notes.length > 0 && (
+                    {notes && notes.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                         <img src={addNote.src} className={'h-7  w-7'} />
                       </a>
                     )}
                   </div>
                 </div>
-                {!notes.length ? (
+                {notes === null ? (
+                  <Loader />
+                ) : !notes.length > 0 ? (
                   <div className="text-center mt-4">
                     <div className="text-gray7 font-semibold mb-2">No notes found</div>
                     <div className="text-gray5 text-sm mb-6">

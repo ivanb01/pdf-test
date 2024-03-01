@@ -1,4 +1,3 @@
-
 // @use './_variables.scss';
 @tailwind base;
 @tailwind components;
@@ -237,7 +236,7 @@ h5 {
 }
 
 .custom-menu-item.active-campaign {
-  background-color: #FFFFFF40;
+  background-color: #ffffff40;
 }
 
 .absolute {
@@ -693,15 +692,15 @@ tbody > div {
   margin-top: -30px;
   color: white !important;
 }
-
 .dropdown-container {
-  border-radius: 6px !important;
+  border-radius: 0.5rem !important;
   height: 38px !important;
   width: 300px !important;
+  // border: 1px solid #D1D5DB;
 }
 
 .dropdown-heading-value {
-  font-size: 14px;
+  font-size: 0.8rem !important;
 
   span {
     color: #808080 !important;
@@ -725,7 +724,7 @@ tbody > div {
 }
 
 .item-renderer input {
-  border-color: #808080 !important;
+  border-color: #bebebe !important;
   border-radius: 4px !important;
   color: #0ea5e9;
 }
@@ -832,7 +831,9 @@ tbody > div {
 .floatingAlert-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+  transition:
+    opacity 500ms ease-in-out,
+    transform 500ms ease-in-out;
 }
 
 .floatingAlert-exit {
@@ -843,7 +844,9 @@ tbody > div {
 .floatingAlert-exit-active {
   opacity: 0;
   transform: translateX(100%);
-  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+  transition:
+    opacity 500ms ease-in-out,
+    transform 500ms ease-in-out;
 }
 
 @media (max-width: 769px) {
@@ -851,7 +854,6 @@ tbody > div {
     content-visibility: hidden !important;
   }
 }
-
 
 ::-webkit-scrollbar-thumb {
   background: rgba(185, 185, 185, 0.9);
@@ -864,15 +866,15 @@ tbody > div {
 }
 
 .campaigns-box-shadow {
-  box-shadow: 0px 0px 20px 0px #E1E2E3;
+  box-shadow: 0px 0px 20px 0px #e1e2e3;
 }
 
 .custom-box-shadow {
-  box-shadow: 0px 4px 6px -2px #0000000D;
+  box-shadow: 0px 4px 6px -2px #0000000d;
 }
 
 .custom-box-shadow-2 {
-  box-shadow: 0px -4px 31px 0px #BDBDBD40
+  box-shadow: 0px -4px 31px 0px #bdbdbd40;
 }
 
 .communication-box-shadow {
@@ -884,34 +886,31 @@ tbody > div {
 }
 
 .client-details-box-shadow {
-  box-shadow: 0px 5px 18px 0px #F4F4F4;
+  box-shadow: 0px 5px 18px 0px #f4f4f4;
 }
 
 .client-details-info-shadow {
-  box-shadow: 0px 1px 2px 0px #1018280D;
+  box-shadow: 0px 1px 2px 0px #1018280d;
 }
 
 .rmsc .dropdown-container {
   max-width: 300px !important;
   min-width: 70px !important;
-
 }
 
 @media (max-width: 1200px) {
   .rmsc .dropdown-container {
     max-width: 100px !important;
-
   }
 }
 
-.rmsc .dropdown-container{
+.rmsc .dropdown-container {
   width: 100% !important;
   max-width: 100% !important;
 }
 
-.panel-content{
+.panel-content {
   max-height: 250px !important;
-
 }
 .loader {
   width: 32px;
@@ -944,7 +943,6 @@ tbody > div {
   50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
   75%, 100%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
 }
-
 
 .ltr {
   text-align: left;
@@ -1074,6 +1072,7 @@ tbody > div {
   text-align: right;
   min-width: 25px;
 }
+
 .editor-code:after {
   content: attr(data-highlight-language);
   top: 0;
@@ -1434,7 +1433,9 @@ i.chevron-down {
   z-index: 5;
   display: block;
   position: absolute;
-  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 12px 28px 0 rgba(0, 0, 0, 0.2),
+    0 2px 4px 0 rgba(0, 0, 0, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   min-width: 100px;
@@ -1668,14 +1669,154 @@ i.justify-align {
   margin-bottom: 7px;
 }
 
-.other a {
-  color: #777;
-  text-decoration: underline;
-  font-size: 14px;
-}
-
 .other ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
+}
+
+.editor-input ol {
+  list-style: auto !important;
+}
+
+.editor-input ul {
+  list-style: inherit !important;
+}
+
+.loader {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.loader::before,
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 3px solid #0057ff;
+  animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+  transform: rotate3d(90, 90, 0, 180deg);
+  border-color: #efeeee;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  75%,
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+}
+
+//online forms templates editor styles
+.templates-editor-heading-h2 {
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.templates-editor-list-ol {
+  padding: 0;
+  margin: 0;
+  margin-left: 16px;
+  list-style-type: decimal;
+}
+
+.templates-editor-list-ul {
+  padding: 0;
+  margin: 0;
+  margin-left: 16px;
+  list-style-type: initial;
+}
+
+.editor-form-element {
+  border-bottom: 1px solid black;
+  width: 200px;
+  display: inline-block;
+  justify-content: center;
+  text-align: center;
+}
+
+.editor-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  table-layout: fixed;
+  width: max-content;
+  margin: 0px 0px 30px 0;
+  outline: none;
+  width: 100%;
+  min-height: 40px;
+}
+
+.editor-table-cell {
+  border: 1px solid #bbb;
+  width: 75px;
+  min-width: 75px;
+  vertical-align: top;
+  text-align: start;
+  padding: 0px 8px;
+  position: relative;
+  outline: none;
+}
+
+.editor-table-cell:first-of-type {
+  padding: 0px;
+  padding-right: 8px;
+}
+.editor-table-cell:last-of-type {
+  padding: 0px;
+  padding-left: 8px;
+}
+
+.editor-table-cell-header {
+  text-align: start;
+  font-weight: 400;
+  background-color: #fff;
+}
+
+.editor-table-cell-action-button-container {
+  display: block;
+  right: 5px;
+  top: 6px;
+  position: absolute;
+  z-index: 4;
+  width: 20px;
+  height: 20px;
+}
+.editor-table-cell-action-button {
+  background-color: #eee;
+  display: block;
+  border: 0;
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  color: #222;
+  cursor: pointer;
+}
+.editor-table-cell-action-button:hover {
+  background-color: #ddd;
 }

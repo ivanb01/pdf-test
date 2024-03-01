@@ -31,6 +31,7 @@ const Dropdown = ({
   openClassName,
   afterLabel,
   menuHeight,
+  minMaxUsed,
   ...props
 }) => {
   const firstSelect = initialSelect
@@ -42,6 +43,14 @@ const Dropdown = ({
       : null,
   );
   const activeClasse = activeClasses ? activeClasses : 'text-white bg-blue2';
+  const formatNumberToMillions = (n) => {
+    console.log('Test');
+    if (n >= 1e6) {
+      const formattedValue = n % 1e6 === 0 ? (n / 1e6).toFixed(0) : (n / 1e6).toFixed(2).replace(/\.?0+$/, '');
+      return `$${formattedValue}m`;
+    }
+    return `$${n.toLocaleString('en-US')}`;
+  };
 
   useEffect(() => {
     setSelected(initialSelect);
@@ -79,10 +88,16 @@ const Dropdown = ({
                   {/* <span className={`flex items-center truncate capitalize ${selectedOption === 'statusColor' &&  `before:${selected.color} before:content-[''] before:w-2 before:h-2 before:mr-2 before:rounded-full`}` }> */}
                   <span
                     className={`flex items-center truncate capitalize ${!selected && placeHolder && 'text-[#808080]'} ${
-                      selected && selected.label && 'text-gray8'
+                      selected && selected?.label && 'text-gray8'
                     } ${selectedOption === 'statusColor' && selected && 'pl-4'}`}>
                     {!selected && placeHolder && placeHolder}
-                    {selected && afterLabel ? selected.label + ` ${afterLabel}` : selected?.label}
+                    {selected && minMaxUsed
+                      ? formatNumberToMillions(selected)
+                      : selected && afterLabel
+                      ? selected.label + ` ${afterLabel}`
+                      : typeof selected === 'number' || typeof selected === 'string'
+                      ? selected
+                      : selected?.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <ChevronDownIcon
@@ -108,7 +123,7 @@ const Dropdown = ({
                         className={({ active }) =>
                           classNames(
                             active ? activeClasse : 'text-gray7',
-                            'cursor-pointer select-none relative py-2 pl-3 pr-9',
+                            'cursor-pointer select-none relative py-2 pl-3 pr-7',
                           )
                         }
                         value={option}>

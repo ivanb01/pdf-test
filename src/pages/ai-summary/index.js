@@ -23,6 +23,8 @@ import SpinnerLoader from '@components/shared/SpinnerLoader';
 import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
 import Loader from '@components/shared/loader';
 import { getUnapprovedAI } from '@api/aiSmartSync';
+import Close from '@mui/icons-material/Close';
+import { CloseRounded } from '@mui/icons-material';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -59,9 +61,6 @@ const index = () => {
   }, [selectedPeople, checkbox, ai_unapprovedContacts, checked]);
 
   useEffect(() => {
-    console.log(selectedPeople, 'selectedPeople');
-  }, [selectedPeople]);
-  useEffect(() => {
     setTotalContacts(total_redux);
   }, [total_redux]);
   const toggleAll = () => {
@@ -85,7 +84,6 @@ const index = () => {
         throw error;
       });
   };
-
   async function loadMore() {
     try {
       const { data, count, total, hasNextPage: newHasNextPage } = await loadItems(offset);
@@ -200,7 +198,6 @@ const index = () => {
 
     bulkUpdateContacts({ contacts: transformedData }).then(() => dispatch(setRefetchData(true)));
     const secondListValues = selectedPeople.map((item) => item.id);
-    console.log(ai_unapprovedContacts, 'ai_unapprovedContacts');
     const filtered = ai_unapproved_contacts_redux.filter((item) => !secondListValues.includes(item.id));
     dispatch(setAIUnApprovedContacts(filtered));
     setTotalContacts(filtered.length);
@@ -250,15 +247,6 @@ const index = () => {
   };
 
   useEffect(() => {
-    console.log(
-      ai_unapprovedContacts,
-      'ai_unapprovedContacts',
-      'ai_unapproved_contacts_redux',
-      ai_unapproved_contacts_redux,
-    );
-  }, [ai_unapprovedContacts, ai_unapproved_contacts_redux]);
-
-  useEffect(() => {
     const secondListValues = categories.map((item) => item.value);
 
     const filtered =
@@ -266,7 +254,7 @@ const index = () => {
         ? ai_unapproved_contacts_redux.filter((item) => secondListValues.includes(item.category_1))
         : ai_unapproved_contacts_redux ?? [];
     setAIUnapprovedContacts([...filtered]);
-  }, [categories]);
+  }, [categories, ai_unapproved_contacts_redux]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading,
@@ -293,29 +281,33 @@ const index = () => {
         </div>
       ) : ai_unapproved_contacts_redux.length > 0 ? (
         <>
-          <div className="p-6 text-gray-900 font-medium text-base flex justify-between">
+          <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
             <div>
               <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
                 {totalContacts ? totalContacts : 0} contacts
               </div>
               from Smart Synced Contacts need to be reviewed
             </div>
-            <div className={'max-w-[500px] min-w-[200px]'}>
-              <DropdownWithSearch
-                placeholder={'Filter...'}
-                maxMenuHeight={200}
-                isMulti
-                options={[
-                  { value: 'Client', label: 'Clients' },
-                  { value: 'Professional', label: 'Professionals' },
-                  { value: 'Other', label: 'Other' },
-                  { value: 'Trash', label: 'Trash' },
-                ]}
-                onChange={(choice) => {
-                  setCategories(choice);
-                }}
-              />
+            <div>
+              <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
             </div>
+            {/*<div className={'max-w-[500px] min-w-[200px]'}>*/}
+            {/*  <DropdownWithSearch*/}
+            {/*    placeholder={'Filter...'}*/}
+            {/*    maxMenuHeight={200}*/}
+            {/*    isMulti*/}
+            {/*    options={[*/}
+            {/*      { value: 'Client', label: 'Clients' },*/}
+            {/*      { value: 'Professional', label: 'Professionals' },*/}
+            {/*      { value: 'Other', label: 'Other' },*/}
+            {/*      { value: 'Uncategorized', label: 'Uncategorized' },*/}
+            {/*      { value: 'Trash', label: 'Trash' },*/}
+            {/*    ]}*/}
+            {/*    onChange={(choice) => {*/}
+            {/*      setCategories(choice);*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*</div>*/}
           </div>
           <div style={{ overflow: 'auto', height: '79vh', width: '100vw' }} ref={rootRef}>
             <table className={'w-full'}>
@@ -364,7 +356,7 @@ const index = () => {
                 </tr>
               </thead>
               <tbody className=" bg-white">
-                {ai_unapproved_contacts_redux?.map((dataItem, index) => (
+                {ai_unapprovedContacts?.map((dataItem, index) => (
                   <tr
                     key={dataItem.index}
                     className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"

@@ -9,7 +9,7 @@ import SimpleBar from 'simplebar-react';
 import Table from '@components/shared/table';
 import { setClientsFilters, setOpenedTab } from 'store/global/slice';
 import { allStatusesQuickEdit, multiselectOptionsClients } from '@global/variables';
-import { filterLastCommuncationDate, isHealthyCommuncationDate } from '@global/functions';
+import { filterLastCommuncationDate, getTotalCountOfAllValues, isHealthyCommuncationDate } from '@global/functions';
 import AddActivity from '@components/overlays/add-activity';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
@@ -33,7 +33,6 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const [open, setOpen] = useState(false);
   const [clientsFilters, setClientsFilters] = useState({});
   const [filteredContacts, setFilteredContacts] = useState();
@@ -175,9 +174,16 @@ const index = () => {
     setClientsFilters(filtersCopy);
   };
 
-  const unapprovedContactsLength = unapprovedContacts?.data
-    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-    : 0;
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null),
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
 
   return (
     <Layout>
@@ -186,11 +192,11 @@ const index = () => {
       ) : (
         <>
           <FloatingAlert
-            inProp={unapprovedContactsLength > 0}
+            inProp={unapprovedContacts?.length > 0}
             onClick={() => router.push('/ai-summary')}
             buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            message={`${unapprovedContacts?.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
           <div className={'flex justify-between items-center p-6 py-4'}>
@@ -209,8 +215,10 @@ const index = () => {
                     {Object.keys(clientsFilters).length > 0 && (
                       <div
                         className={
-                          'absolute top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[14px] w-[14px] rounded-xl'
-                        }></div>
+                          'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
+                        }>
+                        {getTotalCountOfAllValues(clientsFilters)}
+                      </div>
                     )}
                     <FilterList className="w-5 h-5" />
                   </div>
@@ -232,7 +240,7 @@ const index = () => {
           {Object.keys(clientsFilters).length > 0 && (
             <div className="w-full border-t border-gray2 px-6 py-3">
               <div className="flex justify-between">
-                <div className="flex flex-wrap items-center w-[100%]">
+                <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                   <div className="mr-2 text-gray5 text-sm ">
                     {filteredContacts.length}
                     {filteredContacts.length == 1 ? ' result' : ' results'} for:
@@ -267,11 +275,7 @@ const index = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContactsLength > 0 || Object.keys(clientsFilters).length > 0
-                  ? '300px'
-                  : unapprovedContactsLength > 0 && Object.keys(clientsFilters).length > 0
-                  ? '210px'
-                  : '160px'
+                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '210px' : '160px'
               })`,
               overflow: 'hidden',
             }}>

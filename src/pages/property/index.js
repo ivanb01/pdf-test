@@ -641,7 +641,12 @@ const index = () => {
               <div className="order-2 md:order-1 text-[#111827] font-semibold md:mr-2 text-xl md:text-2xl">
                 {data.PROPERTY_TYPE} in {data.ADDRESS}
               </div>
-              <div className="order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border border-[#0891B2] bg-[#ECFEFF] rounded-full text-[#155E75] h-fit px-2 py-1 text-xs font-medium">
+              <div
+                className={`order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border ${
+                  data.STATUS.toLowerCase() === 'sold' || data.STATUS.toLowerCase() === 'for sale'
+                    ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
+                    : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+                } rounded-full h-fit px-2 py-1 text-xs font-medium`}>
                 {data.STATUS}
               </div>
             </div>
@@ -657,11 +662,11 @@ const index = () => {
           <div>
             <div className="md:flex hidden mt-0 clipPath min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
             </div>
             <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
               {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;month</span>}
+              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
             </div>
           </div>
         </div>
@@ -876,24 +881,22 @@ const index = () => {
             </div>
           )}
         </div>
-        {filteredArray.length > 0 && (
-          <>
-            <FsLightbox
-              types={[...new Array(filteredArray.length).fill('image')]}
-              toggler={toggler}
-              zoomIncrement={0.5}
-              sources={filteredArray.map((item) => item.ORIGINAL_URL)}
-            />
+        <>
+          <FsLightbox
+            types={[...new Array(filteredArray?.length).fill('image')]}
+            toggler={toggler}
+            zoomIncrement={0.5}
+            sources={filteredArray?.map((item) => item.ORIGINAL_URL)}
+          />
 
-            <FsLightbox
-              types={[...new Array(data?.PHOTOS?.length).fill('image')]}
-              toggler={lightboxController.toggler}
-              zoomIncrement={0.5}
-              sourceIndex={lightboxController.slide}
-              sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
-            />
-          </>
-        )}
+          <FsLightbox
+            types={[...new Array(data?.PHOTOS?.length).fill('image')]}
+            toggler={lightboxController.toggler}
+            zoomIncrement={0.5}
+            sourceIndex={lightboxController.slide}
+            sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
+          />
+        </>
       </div>
     </>
   );

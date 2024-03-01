@@ -371,7 +371,6 @@ const ReviewContact = ({
         if (isUnapprovedAI) {
           toast.success('Changes have been saved successfully!');
         } else if (!isUnapprovedAI) {
-          console.log('erzaaaa');
           toast.custom(
             (t) => (
               <div
@@ -536,128 +535,128 @@ const ReviewContact = ({
       className={`${className} w-full lg:w-[1150px]`}>
       <div className="flex min-h-[500px] flex-col lg:flex-row">
         <div className={`w-full lg:w-1/2 border-r border-borderColor`}>
-          <SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>
-            <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
-              {client.campaign_name && (
-                <GlobalAlert
-                  smallText
-                  noBorder
-                  rounded
-                  type="warning"
-                  className="mb-4"
-                  message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
-                />
-              )}
-              <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
-                <Input
-                  type="text"
-                  required
-                  label="First Name"
-                  id="first_name"
-                  className=""
-                  onChange={formik.handleChange}
-                  value={formik.values.first_name}
-                  error={errors.first_name && touched.first_name}
-                  errorText={errors.first_name}
-                />
-                <Input
-                  required
-                  type="text"
-                  label="Last Name"
-                  id="last_name"
-                  className=""
-                  onChange={formik.handleChange}
-                  value={formik.values.last_name}
-                  error={errors.last_name && touched.last_name}
-                  errorText={errors.last_name}
-                />
-                <Input
-                  required
-                  type="email"
-                  label="Email"
-                  id="email"
-                  className=""
-                  // readonly={isUnapprovedAI}
-                  // onChange={formik.handleChange}
-                  onChange={(e) => {
-                    if (existingContactEmail !== e.target.value) {
-                      setExistingContactEmailError('');
-                    }
-                    formik.setFieldValue('email', e.target.value);
-                  }}
-                  value={formik.values.email}
-                  error={(errors.email && touched.email) || existingContactEmailError}
-                  errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
-                />
-                <Input
-                  type="phone_number"
-                  label="Phone"
-                  id="phone_number"
-                  onChange={(val) => formik.setFieldValue('phone_number', val)}
-                  value={formik.values.phone_number}
-                  error={errors.phone_number && touched.phone_number}
-                  errorText={errors.phone_number}
-                />
-              </div>
-              <TextArea
-                className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
-                id="summary"
-                label="Summary"
-                name={'summary'}
-                link={client.email_link}
-                handleChange={formik.handleChange}
-                value={formik.values.summary}
+          {/*<SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>*/}
+          <form className="p-6 pt-0" onSubmit={formik.handleSubmit}>
+            {client.campaign_name && (
+              <GlobalAlert
+                smallText
+                noBorder
+                rounded
+                type="warning"
+                className="mb-4"
+                message={`This contact is already in "${client.campaign_name}" campaign. Changing type or status will remove it from the campaign. However, you can always assign it to another campaign inside of the client details page.`}
               />
-              <div className="text-xs mb-6 text-gray6">
-                {client.created_at && (
-                  <div className="mt-2">
-                    <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+            )}
+            <div className="grid grid-cols-2 gap-4 gap-y-4 mb-6">
+              <Input
+                type="text"
+                required
+                label="First Name"
+                id="first_name"
+                className=""
+                onChange={formik.handleChange}
+                value={formik.values.first_name}
+                error={errors.first_name && touched.first_name}
+                errorText={errors.first_name}
+              />
+              <Input
+                required
+                type="text"
+                label="Last Name"
+                id="last_name"
+                className=""
+                onChange={formik.handleChange}
+                value={formik.values.last_name}
+                error={errors.last_name && touched.last_name}
+                errorText={errors.last_name}
+              />
+              <Input
+                required
+                type="email"
+                label="Email"
+                id="email"
+                className=""
+                // readonly={isUnapprovedAI}
+                // onChange={formik.handleChange}
+                onChange={(e) => {
+                  if (existingContactEmail !== e.target.value) {
+                    setExistingContactEmailError('');
+                  }
+                  formik.setFieldValue('email', e.target.value);
+                }}
+                value={formik.values.email}
+                error={(errors.email && touched.email) || existingContactEmailError}
+                errorText={errors.email ? errors.email : existingContactEmailError ? existingContactEmailError : null}
+              />
+              <Input
+                type="phone_number"
+                label="Phone"
+                id="phone_number"
+                onChange={(val) => formik.setFieldValue('phone_number', val)}
+                value={formik.values.phone_number}
+                error={errors.phone_number && touched.phone_number}
+                errorText={errors.phone_number}
+              />
+            </div>
+            <TextArea
+              className="min-h-[100px] z-10  focus:ring-1 focus:ring-blue1 focus:border-blue1"
+              id="summary"
+              label="Summary"
+              name={'summary'}
+              link={client.email_link}
+              handleChange={formik.handleChange}
+              value={formik.values.summary}
+            />
+            <div className="text-xs mb-6 text-gray6">
+              {client.created_at && (
+                <div className="mt-2">
+                  <span className="font-medium">Date imported:</span> {formatDateLL(client.created_at)}
+                </div>
+              )}
+              <div className="flex items-center">
+                {client.email_subject && (
+                  <div className="mt-0.5">
+                    <span className="font-medium">Subject: </span>
+                    {client.email_subject}
+                    <span />
                   </div>
                 )}
-                <div className="flex items-center">
-                  {client.email_subject && (
-                    <div className="mt-0.5">
-                      <span className="font-medium">Subject: </span>
-                      {client.email_subject}
-                      <span />
-                    </div>
-                  )}
-                </div>
               </div>
-              <div className={'grid grid-cols-2 gap-4 col-span-full'}>
-                <div>
-                  <DropdownWithSearch
-                    bottom={'-58px'}
-                    options={newLeadSource}
-                    label="Lead Source"
-                    value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
-                    onChange={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
-                    placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
-                    maxMenuHeight={200}
-                  />
-                </div>
-                <div>
-                  <DropdownWithSearch
-                    isMulti
-                    options={multiselectOptionsClients}
-                    onMenuOpen={() => setIsMenuOpen(true)}
-                    onMenuClose={() => setIsMenuOpen(false)}
-                    typeOfContact={openedTab}
-                    bottom={'-59px'}
-                    maxMenuHeight={200}
-                    value={findTagsOption(formik.values.tags)}
-                    label="Priority"
-                    onChange={(choice) => {
-                      formik.setFieldValue(
-                        'tags',
-                        choice.map((el) => el.label),
-                      );
-                    }}
-                  />
-                </div>
+            </div>
+            <div className={'grid grid-cols-2 gap-4 col-span-full'}>
+              <div>
+                <DropdownWithSearch
+                  bottom={'-58px'}
+                  options={newLeadSource}
+                  label="Lead Source"
+                  value={newLeadSource?.find((vendor) => vendor.value == formik.values.lead_source)}
+                  onChange={(source) => formik.setValues({ ...formik.values, lead_source: source.label })}
+                  placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
+                  maxMenuHeight={200}
+                />
               </div>
-            </form>
-          </SimpleBar>
+              <div>
+                <DropdownWithSearch
+                  isMulti
+                  options={multiselectOptionsClients}
+                  onMenuOpen={() => setIsMenuOpen(true)}
+                  onMenuClose={() => setIsMenuOpen(false)}
+                  typeOfContact={openedTab}
+                  bottom={'-59px'}
+                  maxMenuHeight={200}
+                  value={findTagsOption(formik.values.tags)}
+                  label="Priority"
+                  onChange={(choice) => {
+                    formik.setFieldValue(
+                      'tags',
+                      choice.map((el) => el.label),
+                    );
+                  }}
+                />
+              </div>
+            </div>
+          </form>
+          {/*</SimpleBar>*/}
         </div>
         <div className="w-full lg:w-1/2 relative">
           <SimpleBar className="max-h-full md:max-h-[510px]" autoHide={true} style={{ height: '100%' }}>

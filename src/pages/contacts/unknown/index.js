@@ -30,7 +30,6 @@ const index = () => {
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const allContacts = useSelector((state) => state.contacts.allContacts);
-  const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
   const [searchKey, setSearchKey] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
@@ -73,10 +72,16 @@ const index = () => {
     const filteredArray = searchContacts(contactsCopy, term);
     setActualContact(filteredArray?.data);
   };
-  const unapprovedContactsLength = unapprovedContacts?.data
-    ? unapprovedContacts?.data.filter((contact) => contact.category_1 != 'Uncategorized').length
-    : 0;
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
 
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null),
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
   const handleAction = async (data) => {
     try {
       let newData = {};
@@ -125,11 +130,11 @@ const index = () => {
         <>
           <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
             <FloatingAlert
-              inProp={unapprovedContactsLength > 0}
+              inProp={unapprovedContacts?.length > 0}
               onClick={() => router.push('/ai-summary')}
               buttonText={'Review Now'}
               className="mx-[21px] mt-[14px]"
-              message={`${unapprovedContactsLength} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+              message={`${unapprovedContacts?.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
               type="smart-sync"
             />
             <div className="p-6 py-4 flex items-center justify-between">

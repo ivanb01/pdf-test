@@ -1,91 +1,92 @@
 .section {
-    padding: 90px 100px 0 100px;
+  padding: 60px 100px 0 100px;
 
-    @media screen and (max-width: $screen-lg) {
-        padding: 90px 24px 0 24px;
-    }
+  @media screen and (max-width: $screen-lg) {
+    padding: 90px 24px 0 24px;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    padding: 40px 24px 0 24px;
+  }
+
+  &__wrapper {
+    display: flex;
+    //min-height: 800px;
 
     @media screen and (max-width: $screen-md) {
-        padding: 40px 24px 0 24px;
+      flex-direction: column;
     }
+  }
 
-    &__wrapper {
-        display: flex;
-        min-height: 800px;
+  &__left {
+    width: 50%;
+    height: 100%;
+    position: relative;
 
-        @media screen and (max-width: $screen-md) {
-           flex-direction: column;
-        }
+    @media screen and (max-width: $screen-md) {
+      width: 100%;
+      overflow: hidden;
+      margin: 0 -24px;
+      min-height: 350px;
     }
+  }
 
-    &__left {
-        width: 50%;
-        height: 100%;
-        position: relative;
+  &__right {
+    width: 50%;
+    padding-top: 100px;
 
-        @media screen and (max-width: $screen-md) {
-            width: 100%;
-            overflow: hidden;
-            margin: 0 -24px;
-            min-height: 350px;
-        }
+
+    @media screen and (max-width: $screen-md) {
+      width: 100%;
+      padding-top: 10px;
     }
+  }
 
-    &__right {
-        width: 50%;
-        padding-top: 100px;
+  &__left-content {
+    z-index: 2;
+    position: relative;
+    padding-top: 100px;
 
-        @media screen and (max-width: $screen-md) {
-            width: 100%;
-            padding-top: 10px;
-        }
+    @media screen and (max-width: $screen-md) {
+      padding: 50px 24px 0 24px;
     }
+  }
 
-    &__left-content {
-        z-index: 2;
-        position: relative;
-        padding-top: 100px;
+  &__left-content-text {
+    margin: 40px 0;
+  }
 
-        @media screen and (max-width: $screen-md) {
-            padding: 50px 24px 0 24px;
-        }
+  &__bg {
+    position: absolute;
+    left: -150px;
+    top: 0;
+    width: 130%;
+    z-index: 1;
+
+    @media screen and (max-width: $screen-md) {
+      width: 90%;
+      top: 15px;
+      left: -90px;
     }
+  }
 
-    &__left-content-text {
-        margin: 40px 0;
+  &__form {
+    margin-top: 40px;
+  }
+
+  &__form-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 40px;
+
+    @media screen and (max-width: $screen-md) {
+      flex-direction: column;
+      gap: 40px;
     }
+  }
 
-    &__bg {
-        position: absolute;
-        left: -300px;
-        top: 20px;
-        width: 130%;
-        z-index: 1;
-
-        @media screen and (max-width: $screen-md) {
-            width: 90%;
-            top: 15px;
-            left: -90px;
-        }
-    }
-
-    &__form {
-        margin-top: 40px;
-    }
-
-    &__form-row {
-        display: flex;
-        gap: 25px;
-        margin-bottom: 40px;
-
-        @media screen and (max-width: $screen-md) {
-            flex-direction: column;
-            gap: 40px;
-        }
-    }
-
-    &__actions {
-        display: flex;
-        justify-content: flex-end;
-    }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
 }

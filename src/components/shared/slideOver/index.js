@@ -17,6 +17,7 @@ export default function SlideOver({
   width,
   rounded,
   handleTitleChange,
+  specialTitle,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -35,7 +36,7 @@ export default function SlideOver({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
                 <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
-                  <div className="flex h-full flex-col bg-white shadow-xl">
+                  <div className="flex h-full flex-col bg-white shadow-xl relative">
                     {!noHeader && (
                       <div
                         className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1"
@@ -70,11 +71,7 @@ export default function SlideOver({
                       </SimpleBar>
                     </div>
                     {buttons && (
-                      <div
-                        className="flex flex-shrink-0 justify-between px-4 py-4"
-                        style={{
-                          boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-                        }}>
+                      <div className="flex flex-shrink-0 justify-between px-4 py-4 border-t border-gray-2">
                         {buttons}
                       </div>
                     )}

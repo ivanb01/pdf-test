@@ -1,33 +1,35 @@
 import { UsersIcon } from '@heroicons/react/solid';
 import { QuestionMarkCircleIcon } from '@heroicons/react/solid';
 import { CheckIcon } from '@heroicons/react/solid';
+import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+import Image from 'next/image';
+import SendIcon from '/public/images/client-details/SendIcon.svg';
+import ContactImportedFromGmailIcon from '/public/images/client-details/ContactImportedFromGmailIcon.svg';
+import ContactImportedFromGmailAIIcon from '/public/images/client-details/ContactImportedFromGmailAIIcon.svg';
+import UpdateContact from '/public/images/client-details/UpdatedClient.svg';
+import DeleteIcon from '/public/images/client-details/DeleteIcon.svg';
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
-// export const Types = [
-//   { id: 0, name: 'Renter' },
-//   { id: 1, name: 'Buyer' },
-//   { id: 2, name: 'Seller' },
-//   { id: 3, name: 'Landlord' },
-//   { id: 4, name: 'Uncategorized' },
-//   { id: 5, name: 'Trash' },
-// ];
-
-// export const clientStatuses = [
-//   { id: 0, name: 'Uncategorized', colorClass: '--danger' },
-//   { id: 1, name: 'On Hold', colorClass: '--warning' },
-//   { id: 2, name: 'New Lead', colorClass: '--success' },
-//   { id: 3, name: 'In Communication', colorClass: '--success-v2' },
-//   { id: 4, name: 'Appointment Set', colorClass: '--success-v3' },
-//   { id: 5, name: 'Attempted Contact', colorClass: '--success-v4' },
-//   { id: 6, name: 'Showing Properties', colorClass: '--success-v5' },
-//   { id: 7, name: 'Submitting Offer', colorClass: '--success-v6' },
-// ];
 
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
-export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
-export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
 export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
+export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
+export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
+export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
+
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
+
+export const documentsRedirectSignOut = 'https://documents.onelinecrm.com/authentication/sign-in';
+export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/contacts/clients';
 
 export const menuItems = [
   {
@@ -42,13 +44,13 @@ export const menuItems = [
   },
   {
     id: 2,
-    name: 'Deals',
-    url: '/deals',
+    name: 'Reports',
+    url: '/reports',
   },
   {
     id: 3,
-    name: 'Applications',
-    url: '/applications',
+    name: 'Online Forms',
+    url: '/online-forms',
   },
 ];
 
@@ -960,7 +962,7 @@ export const leadSourceOptions = [
 ];
 
 // export const phoneNumberRules = /^\s*[(]?(\d{3})[\s)]*(\d{3})[\s-]*(\d{4})$/;
-export const phoneNumberRules = /^[+]{1}[1]{1}(\d{10})$/;
+export const phoneNumberRules = /^[+](\d{1,3})(\d{9,12})$/;
 
 export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
@@ -2705,6 +2707,58 @@ export const activityTypes = [
   },
 ];
 
+export const activityTypesDropdown = [
+  {
+    id: 0,
+    label: 'All Activity',
+  },
+  {
+    id: 1,
+    label: 'Email',
+  },
+  {
+    id: 2,
+    label: 'SMS',
+  },
+  {
+    id: 3,
+    label: 'Phone Call',
+  },
+  {
+    id: 14,
+    label: 'Notes',
+  },
+];
+export const activityTypeIcons = {
+  1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  2: <ChatAltIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  3: <PhoneIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  4: <ChatAlt2Icon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  5: <UserCircleIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  6: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  7: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
+  8: <Image src={SendIcon} alt={''} className="h-[18px] w-[18px] text-gray-500" />,
+  9: <Image src={ContactImportedFromGmailIcon} alt={''} className="h-5 w-5 ml-1 mb-[4px] text-gray-500" />,
+  10: <Image src={ContactImportedFromGmailAIIcon} alt={''} className="h-7 w-7 text-gray-500" />,
+  11: <PersonAddAlt1OutlinedIcon className="h-[18px] w-[18px] text-gray-500" />,
+  12: <Image alt={''} src={UpdateContact} className="h-7 w-7 text-gray-500" />,
+  13: <Image alt={''} src={DeleteIcon} className="h-4 w-4 text-gray-500" />,
+  14: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  15: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  16: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  17: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  18: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  19: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  20: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  21: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  22: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  23: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  24: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  25: <CampaignOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
+  28: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+};
 export const rentalPriceOptions = [
   { id: 1, value: 500, label: '$500' },
   { id: 2, value: 750, label: '$750' },

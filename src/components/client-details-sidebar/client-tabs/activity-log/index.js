@@ -214,12 +214,12 @@ export default function ActivityLog({ contactId, source, contact }) {
         <>
           <div className={'flex justify-between items-center mb-4'}>
             <h5 className={'text-sm leading-5 font-medium text-gray7'}>Contact summary</h5>
-            <FilterDropdown
-              buttonClassName={'px-0'}
-              types={contact.summary !== null ? types : []}
-              icon={<MoreVertIcon className={'h-5 w-5 text-gray3'} />}
-              positionClass={'transformDropdown w-[175px]'}
-            />
+            {/*<FilterDropdown*/}
+            {/*  buttonClassName={'px-0'}*/}
+            {/*  types={contact.summary !== null ? types : []}*/}
+            {/*  icon={<MoreVertIcon className={'h-5 w-5 text-gray3'} />}*/}
+            {/*  positionClass={'transformDropdown w-[175px]'}*/}
+            {/*/>*/}
           </div>
           {(getSource(source).name === 'AI Smart Synced Contact.' || getSource(source).name === 'GmailAI') && (
             <div className="text-xs mb-2 text-gray4 font-medium">Date Imported: {formatDateLL(contact.created_at)}</div>
