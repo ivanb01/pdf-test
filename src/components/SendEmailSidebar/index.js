@@ -10,6 +10,7 @@ import { sendEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
+import { setGlobalEmail } from '@store/clientDetails/slice';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
@@ -57,10 +58,16 @@ const SendEmailOverlay = () => {
   }, [contacts]);
 
   const handleSendEmail = () => {
+    dispatch(
+      setGlobalEmail(
+        `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
+          /<[^>]*>/g,
+          '',
+        )} </h6>`,
+      ),
+    );
     setLoading(true);
-    console.log(selectedContacts);
     let contacts = selectedContacts.map((contact) => ({ email: contact.email, id: contact.value }));
-
     contacts.map((contact) => {
       addContactActivity(contact.id, {
         type_of_activity_id: 1,

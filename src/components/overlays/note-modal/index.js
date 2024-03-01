@@ -7,7 +7,7 @@ import Button from '@components/shared/button';
 import toast from 'react-hot-toast';
 import { addContactNote, updateContactNote } from '@api/contacts';
 
-const NoteModal = ({ note, handleCloseModal, action, setNotes, id }) => {
+const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateActivityLogsInNotes }) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
   const AddNoteSchema = Yup.object().shape({
@@ -45,7 +45,8 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id }) => {
       // setNotes([...(notesData || []), newNote]);
       console.log(newNote);
       toast.success('Note added successfully');
-      addContactNote(id, values);
+      await addContactNote(id, values);
+      handleUpdateActivityLogsInNotes();
     } catch (error) {
       toast.error(error);
       setLoadingButton(false);
@@ -61,7 +62,8 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id }) => {
         prevNotes.map((existingNote) => (existingNote.id === note.id ? { ...existingNote, ...values } : existingNote)),
       );
       toast.success('Note edited successfully');
-      updateContactNote(id, note.id, values);
+      await updateContactNote(id, note.id, values);
+      handleUpdateActivityLogsInNotes();
     } catch (error) {
       toast.error(error);
       setLoadingButton(false);

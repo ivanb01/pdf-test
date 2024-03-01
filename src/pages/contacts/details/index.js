@@ -30,11 +30,12 @@ import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
 import Dropdown from '@components/shared/dropdown';
+import { setGlobalEmail } from '@store/clientDetails/slice';
 
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
-
+  const dispatch = useDispatch();
   const [noteId, setNoteId] = useState(0);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(false);
@@ -49,6 +50,8 @@ const index = () => {
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [activityFilter, setActivityFilter] = useState(false);
 
+  const globalEmailActivityData = useSelector((state) => state.clientDetails.globalEmailActivity);
+
   useEffect(() => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
@@ -57,8 +60,8 @@ const index = () => {
       if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
       }
-      getNotes();
       getActivityLog();
+      getNotes();
       if (contactData.campaign_name) {
         setCampaigns([
           {
@@ -94,6 +97,17 @@ const index = () => {
         toast.error('Error fetching activity');
       });
   };
+
+  useEffect(() => {
+    if (globalEmailActivityData) {
+      setActivities((prev) => [{ type_of_activity_id: 1, description: globalEmailActivityData }, ...prev]);
+      setTimeout(() => {
+        getActivityLog().then();
+      }, [2000]);
+    } else {
+      dispatch(setGlobalEmail(undefined));
+    }
+  }, [globalEmailActivityData]);
 
   const handleCloseModal = () => {
     setAddNoteModal(false);
@@ -140,6 +154,9 @@ const index = () => {
     console.log('delete activity');
   };
 
+  const handleUpdateActivityLogsInNotes = () => {
+    getActivityLog().then();
+  };
   const handleEditNote = (note) => {
     setNoteToEdit(note);
     setEditNoteModal(true);
@@ -148,7 +165,9 @@ const index = () => {
   const handleDeleteNote = (note) => {
     setNoteToEdit(note);
     setNotes((prevNotes) => prevNotes.filter((noteItem) => noteItem.id !== note.id));
-    deleteContactNote(note.contact_id, note.id);
+    deleteContactNote(note.contact_id, note.id).then(() => {
+      handleUpdateActivityLogsInNotes();
+    });
   };
 
   const types = [
@@ -512,9 +531,22 @@ const index = () => {
           </div>
         )}
       </div>
-      {addNoteModal && <NoteModal id={id} handleCloseModal={() => setAddNoteModal(false)} setNotes={setNotes} />}
+      {addNoteModal && (
+        <NoteModal
+          handleUpdateActivityLogsInNotes={handleUpdateActivityLogsInNotes}
+          id={id}
+          handleCloseModal={() => setAddNoteModal(false)}
+          setNotes={setNotes}
+        />
+      )}
       {editNoteModal && (
-        <NoteModal setNotes={setNotes} note={noteToEdit} id={id} handleCloseModal={() => setEditNoteModal(false)} />
+        <NoteModal
+          handleUpdateActivityLogsInNotes={handleUpdateActivityLogsInNotes}
+          setNotes={setNotes}
+          note={noteToEdit}
+          id={id}
+          handleCloseModal={() => setEditNoteModal(false)}
+        />
       )}
       {openCommunicationPopup &&
         createPortal(

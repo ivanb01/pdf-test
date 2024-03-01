@@ -7,6 +7,7 @@ const clientDetails = createSlice({
     notesData: null,
     campaignsData: null,
     lookingForData: null,
+    globalEmailActivity: null,
   },
   reducers: {
     setActivityLogData(state, action) {
@@ -21,8 +22,12 @@ const clientDetails = createSlice({
     setLookingForData(state, action) {
       state.lookingForData = action.payload;
     },
+    setGlobalEmail(state, action) {
+      state.globalEmailActivity = action.payload;
+    },
   },
 });
 
-export const { setActivityLogData, setNotesData, setCampaignsData, setLookingForData } = clientDetails.actions;
+export const { setActivityLogData, setNotesData, setCampaignsData, setLookingForData, setGlobalEmail } =
+  clientDetails.actions;
 export default clientDetails.reducer;
