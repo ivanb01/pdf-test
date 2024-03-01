@@ -100,7 +100,10 @@ const index = () => {
 
   useEffect(() => {
     if (globalEmailActivityData) {
-      setActivities((prev) => [{ type_of_activity_id: 1, description: globalEmailActivityData }, ...prev]);
+      setActivities((prev) => [
+        { type_of_activity_id: 1, description: globalEmailActivityData, created_at: new Date().toISOString() },
+        ...prev,
+      ]);
       setTimeout(() => {
         getActivityLog().then();
       }, [2000]);
