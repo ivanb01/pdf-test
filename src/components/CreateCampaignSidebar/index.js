@@ -17,9 +17,16 @@ import Text from '@components/shared/text';
 import Radio from '@components/shared/radio';
 import Delete from '@mui/icons-material/Delete';
 import RichtextEditor from '@components/Editor';
+import CircleIcon from '@components/CircleIcon';
+import SpecificClientsIcon from 'icons/SpecificClientsIcon';
+import AllClientsIcon from 'icons/AllClientsIcon';
+import MailIcon from 'icons/MailIcon';
+import CallIcon from 'icons/CallIcon';
+import Divider from 'icons/Divider';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
+  const [showExpanded, setShowExpanded] = useState(false);
   const [typeOfEvent, setTypeOfEvent] = useState(null);
   const [selectedType, setSelectedType] = useState();
   const [selectedStatus, setSelectedStatus] = useState();
@@ -28,17 +35,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     {
       id: 0,
       action: 'Send',
-      title: 'Thank you for working with us.',
-      body_html: '<a>Test</a> <stronger>Test Body</stronger> <br/> </br> <h5>Test h5</h5>',
+      title: 'New Event',
+      body_html: '',
       wait: '2d',
-      type: 'SMS',
-    },
-    {
-      id: 1,
-      action: 'Send',
-      title: 'Thank you for working with us.',
-      body_html: '<h1>Test h1</h1> <stronger>Test Body</stronger> <br/> </br> <h5>Test h5</h5>',
-      wait: '4d',
       type: 'Email',
     },
   ]);
@@ -54,8 +53,14 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   });
 
   const [typeOfEvents, setTypeOfEvents] = useState([
-    { id: 0, title: 'Email', icon: call.src },
-    { id: 1, title: 'SMS', icon: call.src },
+    {
+      id: 0,
+      title: 'Email',
+    },
+    {
+      id: 1,
+      title: 'SMS',
+    },
   ]);
 
   const addNewEvent = () => {
@@ -82,15 +87,31 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     console.log(newCampaign);
   };
 
-  const Card = ({ title, description, icon, className, active, onClick, narrow, expandable }) => {
+  useEffect(() => {
+    setShowExpanded(campaign.contact_category_id && campaign.contact_status_id ? false : true);
+  }, [campaign]);
+
+  const Card = ({
+    title,
+    description,
+    icon,
+    className,
+    active,
+    expanded,
+    onClick,
+    narrow,
+    expandable,
+    setType,
+    setStatus,
+  }) => {
     let padding = narrow ? 'py-[8px] px-[15px] min-w-[170px]' : 'px-[18px] py-4';
     return (
       <div
         onClick={onClick}
-        className={`relative cursor-pointer rounded-lg border-2 ${active && 'border-lightBlue3'} ${
-          active && !expandable && 'bg-lightBlue1'
+        className={`relative ${!expanded && 'cursor-pointer'} rounded-lg border-2 ${active && 'border-lightBlue3'} ${
+          !expanded && active && 'bg-lightBlue1'
         } ${padding} flex ${className} ${!description && 'items-center'}`}>
-        <img src={icon} />
+        {icon}
         <div className="ml-4 text-sm">
           <div className="text-gray7 font-semibold">{title}</div>
           {description && <div className="text-gray5 mt-1">{description}</div>}
@@ -98,18 +119,18 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         {expandable && (
           <div
             className={`${
-              active
+              expanded
                 ? 'h-auto border-l-2 border-r-2 border-b-2 pointer-events-auto border-lightBlue3 px-[18px] py-6'
                 : 'border-none pointer-events-none'
             } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}>
-            {active && (
+            {expanded && (
               <>
                 <Radio
                   options={clientOptions}
                   required
                   label="What type?"
-                  selectedOption={selectedType}
-                  setSelectedOption={setSelectedType}
+                  selectedOption={campaign.contact_category_id}
+                  setSelectedOption={setType}
                   className="mb-6"
                   name="type-of-contact"
                   // error={errors.selectedContactType && touched.selectedContactType}
@@ -118,8 +139,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 <StatusSelect
                   className="bg-lightBlue50 bg"
                   statuses={clientStatuses}
-                  selectedStatus={selectedStatus}
-                  setSelectedStatus={setSelectedStatus}
+                  selectedStatus={campaign.contact_status_id}
+                  setSelectedStatus={setStatus}
                 />
               </>
             )}
@@ -129,7 +150,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     );
   };
 
-  const Event = ({ index, title, className, type, active, onClick, wait }) => {
+  const Event = ({ index, title, className, type, active, onClick, wait, icon }) => {
     let isSms = type == 0 ? true : false;
 
     let days = wait.split('d')[0];
@@ -140,14 +161,16 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
           Waiting: {days} days
         </div>
-        <img src={divider.src} className="my-2 pl-2" />
+        <div className="my-2 pl-2">
+          <Divider />
+        </div>
         <div
           onClick={onClick}
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
           } p-3 flex ${className} justify-between items-center group`}>
           <div className="flex">
-            <img src={call.src} />
+            <div className="w-">{icon}</div>
             <div className="ml-4 text-sm">
               <div className="text-gray7 font-semibold">{title}</div>
               <div className="text-gray5 mt-1">
@@ -187,20 +210,40 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             className="mr-3 w-1/2"
             title={'All Clients'}
             description={'Each client, regardless the status they’re in, will be part of this campaign'}
-            icon={specificClients.src}
-            active={eligibleClients == 0}
-            onClick={() =>
-              setCampaign((prevState) => ({ ...prevState, contact_category_id: null, contact_status_id: null }))
+            icon={
+              <CircleIcon active={eligibleClients == 0}>
+                <AllClientsIcon fill={eligibleClients == 0 ? '#0284C7' : '#4B5563'} />
+              </CircleIcon>
             }
+            active={eligibleClients == 0}
+            onClick={() => {
+              setEligibleClients(0);
+              setCampaign((prevState) => ({ ...prevState, contact_category_id: null, contact_status_id: null }));
+            }}
           />
           <Card
             expandable
             className="w-1/2"
             title={'Specific Clients'}
             description={'Only clients who I choose by the status, will be part of this campaign'}
-            icon={specificClients.src}
-            active={eligibleClients == 1}
-            onClick={() => setEligibleClients(1)}
+            icon={
+              <CircleIcon active={eligibleClients == 1}>
+                <SpecificClientsIcon fill={eligibleClients == 1 ? '#0284C7' : '#4B5563'} />
+              </CircleIcon>
+            }
+            expanded={eligibleClients === 1 && showExpanded}
+            // prettier-ignore
+            active={eligibleClients === 1}
+            onClick={() => {
+              setEligibleClients(1);
+              setShowExpanded(true);
+            }}
+            setType={(choice) => {
+              setCampaign((prevState) => ({ ...prevState, contact_category_id: choice }));
+            }}
+            setStatus={(choice) => {
+              setCampaign((prevState) => ({ ...prevState, contact_status_id: choice }));
+            }}
           />
         </div>
       </div>
@@ -211,6 +254,17 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           {events.map((event, index) => (
             <Event
               key={index}
+              icon={
+                event.type == 'Email' ? (
+                  <CircleIcon small active={selectedEvent == index}>
+                    <MailIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                  </CircleIcon>
+                ) : (
+                  <CircleIcon small active={selectedEvent == index}>
+                    <CallIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                  </CircleIcon>
+                )
+              }
               index={index}
               title={event.title}
               wait={event.wait}
@@ -218,7 +272,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               onClick={() => setSelectedEvent(index)}
             />
           ))}
-          <img src={divider.src} className="my-2 pl-2 mb-3" />
+          <div className="my-2 pl-2 mb-3">
+            <Divider />
+          </div>
           <a
             onClick={() => addNewEvent()}
             className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
@@ -236,7 +292,17 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     narrow
                     className="mr-2 bg-white"
                     title={type.title}
-                    icon={type.icon}
+                    icon={
+                      type.title == 'Email' ? (
+                        <CircleIcon small active={events[selectedEvent].type == 'Email'}>
+                          <MailIcon fill={events[selectedEvent].type == 'Email' ? '#0284C7' : '#4B5563'} />
+                        </CircleIcon>
+                      ) : (
+                        <CircleIcon small active={events[selectedEvent].type == 'SMS'}>
+                          <CallIcon fill={events[selectedEvent].type == 'SMS' ? '#0284C7' : '#4B5563'} />
+                        </CircleIcon>
+                      )
+                    }
                     active={type.title == events[selectedEvent].type}
                     onClick={() => {
                       setEvents((currentEvents) =>

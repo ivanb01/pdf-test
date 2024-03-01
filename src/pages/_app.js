@@ -22,7 +22,7 @@ import {
   documentsRedirectSignIn,
   documentsRedirectSignOut,
   subscriptionsRedirectSignIn,
-  subscriptionsRedirectSignOut
+  subscriptionsRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -32,12 +32,7 @@ import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
-import {
-  isLocalhost,
-  isDev,
-  isSubscriptions,
-  isDocuments
-} from 'helpers/env';
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from 'helpers/env';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +42,7 @@ const MyApp = ({ Component, pageProps }) => {
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
   const [emailBody, setEmailBody] = useState();
+  const [open, setOpen] = useState(false);
 
   const [domLoaded, setDomLoaded] = useState(false);
 
@@ -67,7 +63,11 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('sign-up') && !router.asPath.includes('property')) {
+        if (
+          !router.asPath.includes('public') &&
+          !router.asPath.includes('sign-up') &&
+          !router.asPath.includes('property')
+        ) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
@@ -102,11 +102,11 @@ const MyApp = ({ Component, pageProps }) => {
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost() 
-              ? localRedirectSignIn 
-              : isDev() 
+            redirectSignIn: isLocalhost()
+              ? localRedirectSignIn
+              : isDev()
               ? devRedirectSignIn
-              : isSubscriptions() 
+              : isSubscriptions()
               ? subscriptionsRedirectSignIn
               : isDocuments()
               ? documentsRedirectSignIn
@@ -125,7 +125,7 @@ const MyApp = ({ Component, pageProps }) => {
         },
       };
 
-      Amplify.configure({...awsmobile, ssr: true});
+      Amplify.configure({ ...awsmobile, ssr: true });
       console.log('configured amplify');
       return true;
     } catch (err) {
