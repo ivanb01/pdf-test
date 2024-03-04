@@ -25,36 +25,10 @@ import CallIcon from 'icons/CallIcon';
 import Divider from 'icons/Divider';
 import { addCampaign } from '@api/campaign';
 import toast from 'react-hot-toast';
+import { useCampaignForm } from 'hooks/useCampaignForm';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
-  const [eligibleClients, setEligibleClients] = useState(0);
-  const [showExpanded, setShowExpanded] = useState(false);
-  const [typeOfEvent, setTypeOfEvent] = useState(null);
-  const [selectedType, setSelectedType] = useState();
-  const [selectedStatus, setSelectedStatus] = useState();
-  const [creatingCampaignLoader, setCreatingCampaignLoader] = useState();
-  const [isValid, setIsValid] = useState(false);
-
-  const validateForm = () => {
-    if (!campaign.name) {
-      return false;
-    }
-
-    //ignore-prettier
-    if (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id)) {
-      return false;
-    }
-
-    for (const event of events) {
-      if (!event.type || !event.title || !event.body_html) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  const [events, setEvents] = useState([
+  const [defaultEvents, setDefaultEvents] = useState([
     {
       id: 0,
       action: 'Send',
@@ -65,9 +39,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     },
   ]);
 
-  const [selectedEvent, setSelectedEvent] = useState(0);
-
-  const [campaign, setCampaign] = useState({
+  const [defaultCampaign, setDefaultCampaign] = useState({
     name: null,
     description: 'Campaign Description',
     status: 'Active',
@@ -75,32 +47,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     contact_status_id: null,
   });
 
-  const [typeOfEvents, setTypeOfEvents] = useState([
-    {
-      id: 0,
-      title: 'Email',
-    },
-    {
-      id: 1,
-      title: 'SMS',
-    },
-  ]);
-
-  const addNewEvent = () => {
-    let newEvent = {
-      id: events.length,
-      title: 'New Event',
-      body_html: '',
-      wait: '3d',
-      type: 'Email',
-    };
-    setEvents((prevState) => [...prevState, newEvent]);
-  };
-
-  const removeEvent = (index) => {
-    let modifiedEvents = events.filter((event, key) => key != index);
-    setEvents(modifiedEvents);
-  };
+  const [creatingCampaignLoader, setCreatingCampaignLoader] = useState();
 
   const createCampaign = () => {
     setCreatingCampaignLoader(true);
@@ -114,14 +61,6 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       toast.success('Campaign created successfully!');
     });
   };
-
-  useEffect(() => {
-    setShowExpanded(campaign.contact_category_id && campaign.contact_status_id ? false : true);
-  }, [campaign]);
-
-  useEffect(() => {
-    setIsValid(validateForm());
-  }, [campaign, events, eligibleClients]);
 
   const Card = ({
     title,
@@ -222,6 +161,25 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   };
 
   const resetCreateCampaign = () => {};
+
+  const {
+    campaign,
+    setCampaign,
+    events,
+    setEvents,
+    validateForm,
+    addNewEvent,
+    removeEvent,
+    typeOfEvents,
+    eligibleClients,
+    setEligibleClients,
+    showExpanded,
+    setShowExpanded,
+    isValid,
+    setIsValid,
+    selectedEvent,
+    setSelectedEvent,
+  } = useCampaignForm(defaultCampaign, defaultEvents);
 
   return (
     <SlideOver
@@ -383,14 +341,14 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
               </div>
             </div>
-            {typeOfEvent != null && (
+            {/* {events[selectedEvent].type == 'Email' && (
               <div className="mb-6">
                 <div className="mb-4 text-gray8 text-sm font-medium">
                   Select from one of the templates, or create a new template:
                 </div>
                 <Dropdown options={emailTemplates} placeHolder="Select Template" />
               </div>
-            )}
+            )} */}
             <div className="mb-6">
               <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
               <Input
@@ -424,7 +382,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             <Button label="Cancel" white className="mr-3" />
             <Button
               primary
-              label="Save Campaign Template"
+              label="Create Campaign"
               disabled={!isValid}
               loading={creatingCampaignLoader}
               onClick={() => createCampaign()}

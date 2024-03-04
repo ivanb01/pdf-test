@@ -41,11 +41,12 @@ import { Tailwind, Button as Btn } from '@react-email/components';
 import { Html } from '@react-email/html';
 import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
-import CreateCampaignSidebar from '@components/CreateCampaignSidebar';
+import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
 import Close from '@mui/icons-material/Close';
 import chevronDown from '/public/images/ch-down.svg';
+import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -629,7 +630,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <CreateCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} rounded />
+      <EditCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} rounded />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search
