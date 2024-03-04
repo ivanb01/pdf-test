@@ -23,6 +23,8 @@ import AllClientsIcon from 'icons/AllClientsIcon';
 import MailIcon from 'icons/MailIcon';
 import CallIcon from 'icons/CallIcon';
 import Divider from 'icons/Divider';
+import { addCampaign } from '@api/campaign';
+import toast from 'react-hot-toast';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [eligibleClients, setEligibleClients] = useState(0);
@@ -30,6 +32,27 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   const [typeOfEvent, setTypeOfEvent] = useState(null);
   const [selectedType, setSelectedType] = useState();
   const [selectedStatus, setSelectedStatus] = useState();
+  const [creatingCampaignLoader, setCreatingCampaignLoader] = useState();
+  const [isValid, setIsValid] = useState(false);
+
+  const validateForm = () => {
+    if (!campaign.name) {
+      return false;
+    }
+
+    //ignore-prettier
+    if (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id)) {
+      return false;
+    }
+
+    for (const event of events) {
+      if (!event.type || !event.title || !event.body_html) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const [events, setEvents] = useState([
     {
@@ -80,16 +103,25 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   };
 
   const createCampaign = () => {
+    setCreatingCampaignLoader(true);
     let newCampaign = {
       campaign: campaign,
       actions: events,
     };
-    console.log(newCampaign);
+    addCampaign(newCampaign).then(() => {
+      setCreatingCampaignLoader(false);
+      setOpen(false);
+      toast.success('Campaign created successfully!');
+    });
   };
 
   useEffect(() => {
     setShowExpanded(campaign.contact_category_id && campaign.contact_status_id ? false : true);
   }, [campaign]);
+
+  useEffect(() => {
+    setIsValid(validateForm());
+  }, [campaign, events, eligibleClients]);
 
   const Card = ({
     title,
@@ -390,7 +422,13 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           </div>
           <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
             <Button label="Cancel" white className="mr-3" />
-            <Button primary label="Save Campaign Template" onClick={() => createCampaign()} />
+            <Button
+              primary
+              label="Save Campaign Template"
+              disabled={!isValid}
+              loading={creatingCampaignLoader}
+              onClick={() => createCampaign()}
+            />
           </div>
         </div>
       </div>

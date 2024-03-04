@@ -49,8 +49,7 @@ export const getCampaignsByCategory = (category) => {
   });
 };
 
-export const addCampaign = (campaign) =>
-  axios.post(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`, campaign);
+export const addCampaign = (campaign) => axiosInstance.post(`v2/cmps`, campaign);
 
 export const updateCampaign = (campaign) =>
   axios.put(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`, campaign);
