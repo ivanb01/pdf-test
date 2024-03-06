@@ -41,6 +41,7 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
       body_html: '',
       wait_interval: '2d',
       type: 'Email',
+      affect_events: false,
     },
   ];
 
@@ -76,8 +77,9 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
       let fetchedCampaign = await getCampaign(campaignId);
       fetchedCampaign = fetchedCampaign.data;
       setLoadingData(false);
-      setCampaign({ name: fetchedCampaign.campaign_name, description: 'NULL' });
-      setEvents(fetchedCampaign.actions);
+      setCampaign({ ...campaign, name: fetchedCampaign.campaign_name, description: 'NULL' });
+      let events = fetchedCampaign.actions.map((event) => ({ ...event, affect_events: false }));
+      setEvents(events);
     };
     fetchCampaignData();
   }, [campaignId]);
@@ -157,7 +159,7 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
   const Event = ({ index, title, className, type, active, onClick, wait, icon }) => {
     let isSms = type == 0 ? true : false;
 
-    let days = wait.split('d')[0];
+    let days = 2 || wait.split('d')[0];
     let date = getDateAfterDays(days);
 
     return (
@@ -346,9 +348,7 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
                     )
                   }
                   inputWidth={'w-[220px]'}
-                  initialSelect={waitingDays.find(
-                    (option) => option.id == events[selectedEvent].wait_interval.split('d')[0],
-                  )}
+                  initialSelect={waitingDays[0]}
                   className="mr-3"
                   placeHolder="Waiting Days"
                   options={waitingDays}

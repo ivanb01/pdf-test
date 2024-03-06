@@ -34,8 +34,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       action: 'Send',
       title: 'New Event',
       body_html: '',
-      wait: '2d',
+      wait_interval: '2d',
       type: 'Email',
+      affect_events: false,
     },
   ]);
 
@@ -257,7 +258,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               }
               index={index}
               title={event.title}
-              wait={event.wait}
+              wait={event.wait_interval}
               active={selectedEvent == index}
               onClick={() => setSelectedEvent(index)}
             />
@@ -328,12 +329,14 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   handleSelect={(option) =>
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
-                        index === selectedEvent ? { ...item, wait: `${option.id}d` } : item,
+                        index === selectedEvent ? { ...item, wait_interval: `${option.id}d` } : item,
                       ),
                     )
                   }
                   inputWidth={'w-[220px]'}
-                  initialSelect={waitingDays.find((option) => option.id == events[selectedEvent].wait.split('d')[0])}
+                  initialSelect={waitingDays.find(
+                    (option) => option.id == events[selectedEvent].wait_interval.split('d')[0],
+                  )}
                   className="mr-3"
                   placeHolder="Waiting Days"
                   options={waitingDays}
