@@ -3,21 +3,17 @@ import MainMenu from 'components/shared/menu';
 import Text from 'components/shared/text';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
-import { PencilIcon } from '@heroicons/react/solid';
-import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
-import { ShieldCheckIcon } from '@heroicons/react/solid';
 import { CreditCardIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
 import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
-import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 import aiIcon from '/public/animations/gmailsync.gif';
 import googleIcon from '/public/images/google-icon.svg';
 import { useSelector } from 'react-redux';
-import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
+import { getUserConsentForGoogleContactsAndEmail } from '@api/google';
 import { clearData } from '@api/contacts';
 import { fetchCurrentUserInfo, updateUserInfo } from '@helpers/auth';
 import toast from 'react-hot-toast';
@@ -27,28 +23,20 @@ import withAuth from '@components/withAuth';
 
 const index = () => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
-  const [currentTab, setCurrentTab] = useState(1);
-  const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
-  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
-  const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [changedUserInfo, setChangedUserInfo] = useState({});
 
   useEffect(() => {
     const getInfo = async () => {
       const info = await fetchCurrentUserInfo();
       setUserInfo(info);
+      setChangedUserInfo(info);
     };
 
     getInfo();
-  }, []);
-
-  useEffect(() => {
-    const hostname = window.location.hostname;
-    if (hostname.includes('dev') || hostname === 'localhost') {
-      setShowDeleteFunctionality(true);
-    }
   }, []);
 
   const consentGiven = () => {
@@ -80,25 +68,25 @@ const index = () => {
 
   const importsSummary = [];
 
-  const myProfileTab = ({ userInfo }) => {
-    const [changedUserInfo, setChangedUserInfo] = useState(userInfo);
-
+  const myProfileTab = () => {
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setChangedUserInfo((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+      const { name, value } = e.target;
+      setChangedUserInfo((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     };
 
     const handleSubmit = async () => {
-        try {
-            await updateUserInfo(changedUserInfo);
-            alert('Changes saved successfully.');
-        } catch (error) {
-            console.error('Failed to save user info', error);
-            alert('Failed to save the information.');
-        }
+      setLoadingActivate(true);
+      try {
+        await updateUserInfo(changedUserInfo);
+        toast.success('Changes saved successfully.');
+      } catch (error) {
+        console.error('Failed to save user info', error);
+        toast.error('Failed to save the information.');
+      }
+      setLoadingActivate(false);
     };
 
     return (
@@ -112,23 +100,24 @@ const index = () => {
             Profile information that you will be presented to your contacts.
           </Text>
           <hr className="my-5" />
-          <div className="mt-1 sm:mt-0 sm:col-span-2 mb-6">
-            <div className="flex items-center">
-              <span className="h-[100px] w-[100px] rounded-full overflow-hidden bg-gray-100 mr-2">
-                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </span>
-              <Button leftIcon={<PencilIcon className="h-[16px]" />} white label="Change" className="mr-2" />
-              <Button leftIcon={<TrashIcon className="h-[16px]" />} white label="Remove" />
-            </div>
-          </div>
           <div className="w-[40%]">
             <div className="flex mb-6">
-              <Input type="text" label="First Name" name="first_name" className="mr-6" value={changedUserInfo?.first_name || ''} onChange={handleChange} />
-              <Input type="text" label="Last Name" name="last_name" value={changedUserInfo?.last_name || ''} onChange={handleChange} />
+              <Input
+                type="text"
+                label="First Name"
+                name="first_name"
+                className="mr-6"
+                value={changedUserInfo?.first_name || ''}
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                label="Last Name"
+                name="last_name"
+                value={changedUserInfo?.last_name || ''}
+                onChange={handleChange}
+              />
             </div>
-            <Input type="email" label="Email" name="email" className="mb-6" value={changedUserInfo?.email || ''} onChange={handleChange} />
             <Input
               type="phone"
               label="Phone Number"
@@ -141,7 +130,7 @@ const index = () => {
           <hr className="my-5" />
           <div className="flex items-center">
             <Button label="Cancel" white className="mr-3" />
-            <Button label="Save Changes" onClick={handleSubmit} />
+            <Button loading={loadingActivate} label="Save Changes" onClick={handleSubmit} />
           </div>
         </div>
       </>
@@ -262,7 +251,7 @@ const index = () => {
       id: 0,
       name: 'My Profile',
       icon: <UserIcon height={20} className="mr-3" />,
-      tabContent: myProfileTab({ userInfo }),
+      tabContent: myProfileTab(),
     },
     {
       id: 1,
@@ -274,7 +263,7 @@ const index = () => {
       id: 2,
       name: 'Billing',
       icon: <CreditCardIcon height={20} className="mr-3" />,
-      tabContent: billingTab()
+      tabContent: billingTab(),
     },
     // {
     //   id: 2,

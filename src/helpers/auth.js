@@ -82,34 +82,31 @@ const getCurrentUser = async () => {
 const getUserInfo = () => JSON.parse(localStorage.getItem('userInfo') || '{}') || {};
 
 const fetchCurrentUserInfo = async () => {
-  const response = await getUser()
-  .then(r => r.json())
+  const response = getUser()
+  .then(r => r.data)
   .catch(err => console.error(err));
 
-  return response?.message;
+  return response;
 }
 
 const saveUserInfo = async (info) => info && localStorage.setItem('userInfo', JSON.stringify(info))
 
 const updateUserInfo = async (userInfo) => {
-  const { first_name, last_name, phone_number, email, tenantId } = userInfo;
+  const { first_name, last_name, phone_number } = userInfo;
 
   try {
     const userData = JSON.stringify({
       first_name,
       last_name,
-      phone_number,
-      email,
-      tenantId
+      phone_number
     });
 
     const response = await updateUser(userData);
-
-    if (!response.ok) {
+    if (response.status != 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data = response.data;
     console.log('User info updated successfully:', data);
     return data;
   } catch (error) {
