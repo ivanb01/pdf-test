@@ -20,13 +20,13 @@ export const getContactCampaignEventPreview = (id) => {
 };
 
 export const getAllEvents = (id) => {
-  return axiosInstance.get(`v1/campaign/${id}/preview`);
+  return axiosInstance.get(`v2/cmps/${id}/preview`);
 };
 export const getCampaignsUsers = (id) => {
-  return axiosInstance.get(`v1/campaign/${id}`);
+  return axiosInstance.get(`v2/cmps/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get('v1/campaigns', {
+  return axiosInstance.get('v2/cmps', {
     params: { search_term: searchterm },
   });
 };
@@ -40,7 +40,7 @@ export const unassignContactFromCampaign = (campaignId, contactId) => {
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('v1/campaigns', {
+  return axiosInstance.get('v2/cmps', {
     params: { category: category },
   });
 };

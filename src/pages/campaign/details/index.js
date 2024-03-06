@@ -19,6 +19,8 @@ import CampaignPreview from '@components/campaign/CampaignPreview';
 import { getAllEvents, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
 import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
+import { PencilIcon } from '@heroicons/react/solid';
+import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
 
 const index = () => {
   const router = useRouter();
@@ -29,6 +31,7 @@ const index = () => {
   const [campaignEvents, setCampaignEvents] = useState();
   const [searchTerm, setSearchTerm] = useState('');
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
+  const [showEditCampaign, setShowEditCampaign] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -180,7 +183,8 @@ const index = () => {
         </div>
       ) : (
         <>
-          <div className={'p-6 flex items-center justify-between'}>
+          <EditCampaignSidebar open={showEditCampaign} setOpen={setShowEditCampaign} id={id} />
+          <div className={'p-6 flex justify-between'}>
             <div className={'flex gap-4 items-start'}>
               <ArrowBackIosIcon
                 className={'text-lightBlue3 h-4 w-4 mt-2 cursor-pointer'}
@@ -195,12 +199,21 @@ const index = () => {
                 </div>
               </div>
             </div>
-            <Button
-              primary
-              leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
-              onClick={() => setOpenCampaignPreview(true)}>
-              Campaign Preview
-            </Button>
+            <div className="flex items-center">
+              <Button
+                secondary
+                leftIcon={<PencilIcon className={'h-4 w-4'} />}
+                className="mr-4"
+                onClick={() => setShowEditCampaign(true)}>
+                Edit Campaign
+              </Button>
+              <Button
+                primary
+                leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
+                onClick={() => setOpenCampaignPreview(true)}>
+                Campaign Preview
+              </Button>
+            </div>
           </div>
           <div className={'p-6 grid grid-cols-6 gap-2.5 border-y border-gray2'}>
             {eventTypes.map((event, index) => (

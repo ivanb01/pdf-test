@@ -189,7 +189,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       setOpen={setOpen}
       editableTitle
       title={campaign.name}
-      className="top-[70px]"
+      className=""
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
       rounded>
       <div className="-mt-3 mb-5">

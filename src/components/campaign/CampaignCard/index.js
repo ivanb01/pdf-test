@@ -62,7 +62,7 @@ const CampaignCard = ({
             }>
             <div className={'m-auto'}>{contact_status_2}:</div>
             <div className={'flex'}>
-              {contact_never_assigned_count + contact_assigned_count + contact_unassigned_count}
+              {contact_assigned_count + contact_unassigned_count}
               <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
             </div>
           </div>

@@ -28,10 +28,10 @@ import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
 import Loader from '@components/shared/loader';
 
-const EditCampaignSidebar = ({ open, setOpen }) => {
+const EditCampaignSidebar = ({ open, setOpen, id }) => {
   const [loadingData, setLoadingData] = useState(true);
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
-  const [campaignId, setCampaignId] = useState(27);
+  const [campaignId, setCampaignId] = useState(id);
 
   const defaultEvents = [
     {
@@ -299,16 +299,16 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
                     title={type.title}
                     icon={
                       type.title == 'Email' ? (
-                        <CircleIcon small active={events[selectedEvent].type == 'Email'}>
-                          <MailIcon fill={events[selectedEvent].type == 'Email' ? '#0284C7' : '#4B5563'} />
+                        <CircleIcon small active={events[selectedEvent]?.type == 'Email'}>
+                          <MailIcon fill={events[selectedEvent]?.type == 'Email' ? '#0284C7' : '#4B5563'} />
                         </CircleIcon>
                       ) : (
-                        <CircleIcon small active={events[selectedEvent].type == 'SMS'}>
-                          <CallIcon fill={events[selectedEvent].type == 'SMS' ? '#0284C7' : '#4B5563'} />
+                        <CircleIcon small active={events[selectedEvent]?.type == 'SMS'}>
+                          <CallIcon fill={events[selectedEvent]?.type == 'SMS' ? '#0284C7' : '#4B5563'} />
                         </CircleIcon>
                       )
                     }
-                    active={type.title == events[selectedEvent].type}
+                    active={type.title == events[selectedEvent]?.type}
                     onClick={() => {
                       setEvents((currentEvents) =>
                         currentEvents.map((item, index) =>
@@ -382,7 +382,7 @@ const EditCampaignSidebar = ({ open, setOpen }) => {
               <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
               <RichtextEditor
                 placeholder="Write message here..."
-                value={events[selectedEvent].body_html}
+                value={events[selectedEvent]?.body_html}
                 onContentChange={(value) => {
                   setEvents((currentEvents) =>
                     currentEvents.map((item, index) =>
