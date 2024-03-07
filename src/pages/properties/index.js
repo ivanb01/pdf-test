@@ -955,22 +955,22 @@ const index = () => {
                   <Button
                     primary
                     leftIcon={<MailIcon />}
-                    label="Notify by Email"
+                    label="Notify by Email & SMS"
                     className="mr-3"
                     onClick={() => {
                       setSendMethod(1);
                       setOpen(true);
                     }}
                   />
-                  <Button
-                    primary
-                    leftIcon={<AtSymbolIcon />}
-                    label="Notify by SMS"
-                    onClick={() => {
-                      setSendMethod(2);
-                      setOpen(true);
-                    }}
-                  />
+                  {/*<Button*/}
+                  {/*  primary*/}
+                  {/*  leftIcon={<AtSymbolIcon />}*/}
+                  {/*  label="Notify by SMS"*/}
+                  {/*  onClick={() => {*/}
+                  {/*    setSendMethod(2);*/}
+                  {/*    setOpen(true);*/}
+                  {/*  }}*/}
+                  {/*/>*/}
                 </div>
               </div>
             )}
@@ -1021,24 +1021,24 @@ const index = () => {
                 transparent
                 label="Preview"
               />
-              {sendMethod == 1 ? (
-                <Button
-                  primary
-                  leftIcon={<MailIcon />}
-                  loading={loadingEmails}
-                  label="Notify by Email"
-                  onClick={() => _sendEmail()}
-                  disabled={!selectedContacts.length || !selectedProperties.length}
-                />
-              ) : (
-                <Button
-                  primary
-                  leftIcon={<AtSymbolIcon />}
-                  label="Notify by SMS"
-                  onClick={() => _sendSMS()}
-                  disabled={!selectedContacts.length || !selectedProperties.length}
-                />
-              )}
+              {/*{sendMethod == 1 ? (*/}
+              <Button
+                primary
+                leftIcon={<MailIcon />}
+                loading={loadingEmails}
+                label="Notify by Email & SMS"
+                onClick={() => _sendEmail()}
+                disabled={!selectedContacts.length || !selectedProperties.length}
+              />
+              {/*) : (*/}
+              {/*  <Button*/}
+              {/*    primary*/}
+              {/*    leftIcon={<AtSymbolIcon />}*/}
+              {/*    label="Notify by SMS"*/}
+              {/*    onClick={() => _sendSMS()}*/}
+              {/*    disabled={!selectedContacts.length || !selectedProperties.length}*/}
+              {/*  />*/}
+              {/*)}*/}
             </>
           )
         }>
