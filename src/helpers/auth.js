@@ -105,6 +105,7 @@ const updateUserInfo = async (userInfo) => {
     if (response.status != 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    saveUserInfo(userInfo);
 
     const data = response.data;
     console.log('User info updated successfully:', data);
