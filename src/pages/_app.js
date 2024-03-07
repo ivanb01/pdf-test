@@ -33,6 +33,7 @@ import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
 const queryClient = new QueryClient();
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
 
 import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
 
