@@ -5,7 +5,12 @@ import saved from '/public/images/saved.svg';
 import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import { render } from '@react-email/components';
+import SendIcon from '@mui/icons-material/Send';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import {
   bathroomsOptions,
   data,
@@ -413,8 +418,9 @@ const index = () => {
 
     return [...selectedOptions, ...unselectedOptions];
   };
-
   const sortedNeighborhoods = sortOptionsByChecked(NYCneighborhoods, neighborhoods);
+
+  const [previewMode, setPreviewMode] = useState(false);
   const [openFilters, setOpenFilters] = useState(false);
   const [sendMethod, setSendMethod] = useState(1);
 
@@ -448,17 +454,13 @@ const index = () => {
   }
 
   useEffect(() => {
-    console.log(sendMethod);
     setFilteredContacts(
-      sendMethod == 1
+      sendMethod !== 2
         ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
   }, [contacts, sendMethod]);
 
-  useEffect(() => {
-    console.log(selectedContacts.map((c) => c.value));
-  }, [selectedContacts]);
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
@@ -502,7 +504,10 @@ const index = () => {
 
       uniqueArray.forEach((item) => {
         selectedContacts.forEach((c) => {
-          if (c.value === parseInt(item.contact_id) && !c.phone_number) {
+          if (
+            c.value === parseInt(item.contact_id) &&
+            (sendMethod === 1 || !c.phone_number || (sendMethod === 3 && !c.phone_number))
+          ) {
             sendEmail(
               [c.email],
               `Hi ${c.first_name}, Check out these new properties.`,
@@ -532,7 +537,10 @@ const index = () => {
               setPropertiesSent(true);
               resetPropertySelection();
             });
-          } else if (parseInt(c.value) === parseInt(item.contact_id) && c.phone_number) {
+          } else if (
+            parseInt(c.value) === parseInt(item.contact_id) &&
+            ((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))
+          ) {
             sendSMS(
               [c.phone_number],
               `Hey ${c.first_name}, new properties have been added in your portfolio. Click to see them: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
@@ -707,6 +715,13 @@ const index = () => {
   const [openSidebar, setOpenSidebar] = useState(true);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
+  useEffect(() => {
+    if (open === false) {
+      setTimeout(() => {
+        setPreviewMode(false);
+      }, [1000]);
+    }
+  }, [open]);
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
     const bIsSelected = isSelected(b);
@@ -969,23 +984,33 @@ const index = () => {
                   {/*<Button white label="Save" className="mr-3" />*/}
                   <Button
                     primary
-                    leftIcon={<MailIcon />}
+                    leftIcon={<SendIcon className={'h-4 w-4'} />}
                     label="Notify by Email & SMS"
                     className="mr-3"
+                    onClick={() => {
+                      setSendMethod(3);
+                      setOpen(true);
+                    }}
+                  />
+                  <Button
+                    primary
+                    leftIcon={<AtSymbolIcon />}
+                    label="Send via SMS"
+                    className="mr-3"
+                    onClick={() => {
+                      setSendMethod(2);
+                      setOpen(true);
+                    }}
+                  />
+                  <Button
+                    primary
+                    leftIcon={<MailIcon />}
+                    label="Send via Email"
                     onClick={() => {
                       setSendMethod(1);
                       setOpen(true);
                     }}
                   />
-                  {/*<Button*/}
-                  {/*  primary*/}
-                  {/*  leftIcon={<AtSymbolIcon />}*/}
-                  {/*  label="Notify by SMS"*/}
-                  {/*  onClick={() => {*/}
-                  {/*    setSendMethod(2);*/}
-                  {/*    setOpen(true);*/}
-                  {/*  }}*/}
-                  {/*/>*/}
                 </div>
               </div>
             )}
@@ -1030,31 +1055,44 @@ const index = () => {
         noHeader={!propertiesSent}
         buttons={
           propertiesSent ? null : (
-            <>
-              <Button
-                // disabled={!Object.values(clientsFilters).flat().length > 0}
-                transparent
-                label="Preview"
-              />
-              {/*{sendMethod == 1 ? (*/}
-              <Button
-                primary
-                leftIcon={<MailIcon />}
-                loading={loadingEmails}
-                label="Notify by Email & SMS"
-                onClick={() => _sendEmail()}
-                disabled={!selectedContacts.length || !selectedProperties.length}
-              />
-              {/*) : (*/}
-              {/*  <Button*/}
-              {/*    primary*/}
-              {/*    leftIcon={<AtSymbolIcon />}*/}
-              {/*    label="Notify by SMS"*/}
-              {/*    onClick={() => _sendSMS()}*/}
-              {/*    disabled={!selectedContacts.length || !selectedProperties.length}*/}
-              {/*  />*/}
-              {/*)}*/}
-            </>
+            <div className={`flex items-center ${previewMode ? 'justify-end' : 'justify-between'}  w-[100%]`}>
+              {!previewMode && (
+                <div
+                  className={'flex gap-[6px] items-center justify-center text-gray8 cursor-pointer'}
+                  role={'button'}
+                  onClick={() => setPreviewMode(true)}>
+                  <RemoveRedEyeOutlinedIcon className={'h-[18px] w-[18px]'} />
+                  <p className={'text-sm leading-5 font-semibold'}>Preview</p>
+                </div>
+              )}
+              {sendMethod == 1 ? (
+                <Button
+                  primary
+                  leftIcon={<MailIcon />}
+                  loading={loadingEmails}
+                  label="Send via Email"
+                  onClick={() => _sendEmail()}
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              ) : sendMethod == 2 ? (
+                <Button
+                  primary
+                  leftIcon={<AtSymbolIcon />}
+                  label="Send via SMS"
+                  onClick={() => _sendSMS()}
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              ) : (
+                <Button
+                  primary
+                  leftIcon={<SendIcon className={'h-3 w-3'} />}
+                  loading={loadingEmails}
+                  label="Notify by Email & SMS"
+                  onClick={() => _sendEmail()}
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              )}
+            </div>
           )
         }>
         {propertiesSent ? (
@@ -1068,10 +1106,10 @@ const index = () => {
             <div className="text-gray7 font-semibold text-[18px] -mt-7">
               Properties have been successfully sent to your clients!
             </div>
-            {/*<div className=" mt-2">*/}
-            {/*  All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}*/}
-            {/*  <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.*/}
-            {/*</div>*/}
+            <div className=" mt-2">
+              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
+              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
+            </div>
             <Button
               primary
               label="Back to Properties"
@@ -1085,7 +1123,7 @@ const index = () => {
               className="mt-6"
             />
           </div>
-        ) : (
+        ) : !previewMode ? (
           <div className="">
             <div className="flex items-center justify-between  mb-2">
               <div className="font-semibold text-gray7 text-[20px]">Select clients</div>
@@ -1194,6 +1232,82 @@ const index = () => {
                 ))}
               </>
             )}
+          </div>
+        ) : (
+          <div>
+            <div className={'flex items-center justify-between mb-[20px]'}>
+              <div className={'flex items-center justify-between text-[#111827] gap-[14px]'}>
+                <ArrowBackOutlinedIcon
+                  className={'h-[22px] w-[22px] cursor-pointer'}
+                  onClick={() => setPreviewMode(false)}
+                />
+                <p className={'text-xl leading-8 font-semibold'}>Preview</p>
+              </div>
+              <button
+                type="button"
+                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+                onClick={() => setOpen(false)}>
+                <span className="sr-only">Close panel</span>
+                <Close className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+            <p className={'text-sm leading-5 font-semibold text-gray7'}>Message for our Valued Clients</p>
+            <div className={'bg-[#F9FAFB] p-3 border border-gray2 rounded-[8px] mt-[14px] text-gray7'}>
+              {sendMethod !== 2 ? (
+                <div>
+                  <p>Hi [client name], Check out these new properties</p>
+                  <p style={{ color: '#344054', marginBottom: '32px' }}>
+                    Hey [client name],
+                    <br /> New properties have been added in your portfolio. Click here to see them:{' '}
+                    <a style={{ color: 'blue' }} role={'button'} href={`${getBaseUrl()}/portfolio?share_id=1234567`}>
+                      Portfolio Link
+                    </a>
+                  </p>
+                  <p style={{ color: '#344054' }}>
+                    Best Regards,
+                    <br />
+                    {user?.email ? user?.email : user}
+                  </p>
+                </div>
+              ) : (
+                <p>
+                  Hey [client name], new properties have been added in your portfolio. Click to see them:
+                  https://dev.onelinecrm.com/portfolio?share_id=12345678
+                </p>
+              )}
+            </div>
+            <div className={'h-[1px] border border-gray1 my-[26px]'}></div>
+            <p className={'text-sm leading-5 font-bold text-gray7 mb-[14px]'}>Client & Property Selection Update</p>
+            <div className={'flex gap-[20px] items-center justify-center pb-[70px]'}>
+              <div
+                className={
+                  'p-4 flex items-start gap-[44px] shadow-lg flex-col border border-gray1 bg-white flex-1 rounded-[8px] '
+                }>
+                <div className={'h-[58px] w-[58px] rounded-full bg-gray1 flex items-center justify-center'}>
+                  <PersonOutlineOutlinedIcon className={'h-6 w-6 text-[#0D9488]'} />
+                </div>
+                <div>
+                  <p className={'text-3xl leading-9 font-bold text-black mb-[6px]'}>{selectedContacts.length ?? 0}</p>
+                  <p className={'text-lg leading-8 font-medium text-gray5 '}>
+                    {selectedContacts.length === 1 ? 'Client' : 'Clients'}
+                  </p>
+                </div>
+              </div>
+              <div
+                className={
+                  'p-4 flex items-start gap-[44px] shadow-lg flex-col flex-1  border border-gray1 bg-white rounded-[8px]'
+                }>
+                <div className={'h-[58px] w-[58px] rounded-full bg-gray1 flex items-center justify-center'}>
+                  <CorporateFareOutlinedIcon className={'h-6 w-6 text-[#2563EB]'} />
+                </div>
+                <div>
+                  <p className={'text-3xl leading-9 font-bold text-black mb-[6px]'}>{selectedProperties.length ?? 0}</p>
+                  <p className={'text-lg leading-8 font-medium text-gray5 '}>
+                    {selectedProperties.length === 1 ? 'Property' : 'Properties'}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </SlideOver>
