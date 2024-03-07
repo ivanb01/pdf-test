@@ -726,7 +726,6 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <EditCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} rounded />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search
