@@ -474,7 +474,6 @@ const index = () => {
   }, [selectedProperties]);
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
-    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
     setLoadingEmails(true);
     addPropertiesInPortfolio(
       selectedContacts.map((contact) => contact.value),
@@ -501,7 +500,7 @@ const index = () => {
 
       uniqueArray.forEach((item) => {
         selectedContacts.forEach((c) => {
-          if (c.value === parseInt(item.contact_id)) {
+          if (c.value === parseInt(item.contact_id) && !c.phone_number) {
             sendEmail(
               [c.email],
               `Hi ${c.first_name}, Check out these new properties.`,
@@ -531,6 +530,19 @@ const index = () => {
               setPropertiesSent(true);
               resetPropertySelection();
             });
+          } else if (parseInt(c.value) === parseInt(item.contact_id) && c.phone_number) {
+            sendSMS(
+              [c.phone_number],
+              `Hey ${c.first_name}, new properties have been added in your portfolio. Click to see them: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+            )
+              .then((res) => {
+                setPropertiesSent(true);
+                resetPropertySelection();
+              })
+              .catch((error) => {
+                console.error('Error sending SMS:', error);
+                // Handle the error if needed
+              });
           }
         });
       });
