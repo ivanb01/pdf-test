@@ -10,12 +10,14 @@ import Loader from '@components/shared/loader';
 import useElementInView from '../../hooks/useElementInScreen';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { useDispatch, useSelector } from 'react-redux';
+import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
   const [loading, setLoading] = useState(false);
+  const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const elementRef = useRef(null);
   let isVisible = useElementInView(elementRef);
   const dispatch = useDispatch();
@@ -144,6 +146,7 @@ const index = () => {
 
   return (
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+      <CreateCampaignSidebar open={showCreateCampaign} setOpen={setShowCreateCampaign} />
       <div ref={elementRef}>
         <MainMenu />
       </div>
@@ -170,7 +173,7 @@ const index = () => {
           navClassName={'justify-center'}
         />
       </div>
-      <CustomCampaign />
+      <CustomCampaign onClick={() => setShowCreateCampaign(true)} />
     </div>
   );
 };

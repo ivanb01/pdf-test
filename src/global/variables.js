@@ -566,6 +566,119 @@ export const uncategorizedStatuses = [
   },
 ];
 
+export const waitingDays = [
+  {
+    id: 0,
+    label: '0 days',
+  },
+  {
+    id: 1,
+    label: '1 day',
+  },
+  {
+    id: 2,
+    label: '2 days',
+  },
+  {
+    id: 3,
+    label: '3 days',
+  },
+  {
+    id: 4,
+    label: '4 days',
+  },
+  {
+    id: 5,
+    label: '5 days',
+  },
+  {
+    id: 6,
+    label: '6 days',
+  },
+  {
+    id: 7,
+    label: '7 days',
+  },
+  {
+    id: 8,
+    label: '8 days',
+  },
+  {
+    id: 9,
+    label: '9 days',
+  },
+  {
+    id: 10,
+    label: '10 days',
+  },
+  {
+    id: 11,
+    label: '11 days',
+  },
+  {
+    id: 12,
+    label: '12 days',
+  },
+];
+
+export const emailTemplates = [
+  { id: 0, label: 'Create New Template' },
+  { id: 1, label: 'Happy Holidays!' },
+  { id: 2, label: 'Congratulations on your new purchase' },
+  { id: 3, label: 'Looking to rent?' },
+];
+
+export const timeOptions = [
+  { id: 0, label: '06:00' },
+  { id: 1, label: '06:30' },
+  { id: 2, label: '07:00' },
+  { id: 3, label: '07:30' },
+  { id: 4, label: '08:00' },
+  { id: 5, label: '08:30' },
+  { id: 6, label: '09:00' },
+  { id: 7, label: '09:30' },
+  { id: 8, label: '10:00' },
+  { id: 9, label: '10:30' },
+  { id: 10, label: '11:00' },
+  { id: 11, label: '11:30' },
+  { id: 12, label: '12:00' },
+  { id: 13, label: '12:30' },
+  { id: 14, label: '13:00' },
+  { id: 15, label: '13:30' },
+  { id: 16, label: '14:00' },
+  { id: 17, label: '14:30' },
+  { id: 18, label: '15:00' },
+  { id: 19, label: '15:30' },
+  { id: 20, label: '16:00' },
+  { id: 21, label: '16:30' },
+  { id: 22, label: '17:00' },
+  { id: 23, label: '17:30' },
+  { id: 24, label: '18:00' },
+  { id: 25, label: '18:30' },
+  { id: 26, label: '19:00' },
+  { id: 27, label: '19:30' },
+  { id: 28, label: '20:00' },
+  { id: 29, label: '20:30' },
+  { id: 30, label: '21:00' },
+  { id: 31, label: '21:30' },
+  { id: 32, label: '22:00' },
+  { id: 33, label: '22:30' },
+  { id: 34, label: '23:00' },
+  { id: 35, label: '23:30' },
+  { id: 36, label: '00:00' },
+  { id: 37, label: '00:30' },
+  { id: 38, label: '01:00' },
+  { id: 39, label: '01:30' },
+  { id: 40, label: '02:00' },
+  { id: 41, label: '02:30' },
+  { id: 42, label: '03:00' },
+  { id: 43, label: '03:30' },
+  { id: 44, label: '04:00' },
+  { id: 45, label: '04:30' },
+  { id: 46, label: '05:00' },
+  { id: 47, label: '05:30' },
+];
+
 export const relationshipsTypes = [
   {
     id: 0,

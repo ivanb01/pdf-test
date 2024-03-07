@@ -24,6 +24,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [activeEvent, setActiveEvent] = useState();
   useEffect(() => {
     if (campaignData) {
+      console.log(campaignData);
       setActiveEvent(campaignData?.events[0]);
     }
   }, [campaignData]);

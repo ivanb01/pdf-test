@@ -50,11 +50,11 @@ const MainMenu = ({ className, fixed }) => {
     //   name: 'Campaigns',
     //   url: '/campaigns/client-campaigns',
     // },
-    // {
-    //   id: 1,
-    //   name: 'Campaigns',
-    //   url: '/campaign',
-    // },
+    {
+      id: 1,
+      name: 'Campaigns',
+      url: '/campaign',
+    },
     {
       id: 2,
       name: 'Reports',

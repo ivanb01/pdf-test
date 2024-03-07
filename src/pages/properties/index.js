@@ -41,12 +41,14 @@ import { Tailwind, Button as Btn } from '@react-email/components';
 import { Html } from '@react-email/html';
 import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
+import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
 import Close from '@mui/icons-material/Close';
 import chevronDown from '/public/images/ch-down.svg';
 import { addPropertiesInPortfolio } from '@api/portfolio';
 import { sendSMS } from '@api/email';
+import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -702,6 +704,7 @@ const index = () => {
     };
   }, [setOpenDropdown]);
 
+  const [openSidebar, setOpenSidebar] = useState(true);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
   const sortedOptions = filteredContacts?.sort((a, b) => {
@@ -723,6 +726,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
+      <EditCampaignSidebar open={openSidebar} setOpen={setOpenSidebar} rounded />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search

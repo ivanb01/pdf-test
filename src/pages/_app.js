@@ -32,6 +32,8 @@ import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from 'helpers/env';
+
 const queryClient = new QueryClient();
 import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
 
@@ -43,6 +45,7 @@ const MyApp = ({ Component, pageProps }) => {
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
   const [emailBody, setEmailBody] = useState();
+  const [open, setOpen] = useState(false);
 
   const [domLoaded, setDomLoaded] = useState(false);
 
@@ -163,6 +166,7 @@ const MyApp = ({ Component, pageProps }) => {
                   position="bottom-left"
                 />
               )}
+              <SendEmailOverlay open={open} setOpen={setOpen} />
               <EmailSendComponent />
             </QueryClientProvider>
           </Provider>

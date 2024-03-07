@@ -1,7 +1,7 @@
 import Button from '@components/shared/button';
 import CustomCampaignImage from '../../../../public/images/campaign/customCampaign.png';
 
-const CustomCampaign = () => {
+const CustomCampaign = ({ onClick }) => {
   return (
     <div className={'mx-[50px] mb-12 mt-[50px] py-10 px-16 bg-[#C5EBF8] h-[300px] flex gap-8 rounded-lg'}>
       <div className={' flex flex-col justify-center content-between'}>
@@ -11,7 +11,9 @@ const CustomCampaign = () => {
             Craft a personalized campaign that fits your brand's vision and goals. Stand out and engage your audience
             with a custom campaign designed by you for your clients.
           </p>
-          <Button primary>Create Custom Campaign</Button>
+          <Button onClick={onClick} primary>
+            Create Custom Campaign
+          </Button>
         </div>
       </div>
       <img src={CustomCampaignImage.src} style={{ height: '220px', width: '330px' }} alt={''} />

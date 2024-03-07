@@ -20,13 +20,13 @@ export const getContactCampaignEventPreview = (id) => {
 };
 
 export const getAllEvents = (id) => {
-  return axiosInstance.get(`v1/campaign/${id}/preview`);
+  return axiosInstance.get(`v2/cmps/${id}/preview`);
 };
 export const getCampaignsUsers = (id) => {
-  return axiosInstance.get(`v1/campaign/${id}`);
+  return axiosInstance.get(`v2/cmps/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get('v1/campaigns', {
+  return axiosInstance.get('v2/cmps', {
     params: { search_term: searchterm },
   });
 };
@@ -39,21 +39,20 @@ export const unassignContactFromCampaign = (campaignId, contactId) => {
   return axiosInstance.post(`v1/campaign/${campaignId}/remove_contact/${contactId}`);
 };
 
-export const getCampaign = (id) => {
-  return axiosInstance.get('v1/campaign/' + id);
-};
-
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('v1/campaigns', {
+  return axiosInstance.get('v2/cmps', {
     params: { category: category },
   });
 };
 
-export const addCampaign = (campaign) =>
-  axios.post(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`, campaign);
+export const getCampaign = (id) => {
+  return axiosInstance.get(`v2/cmps/${id}`);
+};
+export const addCampaign = (campaign) => axiosInstance.post(`v2/cmps`, campaign);
+export const updateCampaign = (campaign, id) => axiosInstance.put(`v2/cmps/${id}`, campaign);
 
-export const updateCampaign = (campaign) =>
-  axios.put(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`, campaign);
+// export const updateCampaign = (campaign) =>
+//   axios.put(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign`, campaign);
 
 export const deleteCampaign = (id) =>
   axios.delete(`${process.env.NEXT_PUBLIC_CAMPAIGN_API_BASE_URL}/v1/campaign/oxford/${id}`);
