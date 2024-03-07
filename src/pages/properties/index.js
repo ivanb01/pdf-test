@@ -29,7 +29,7 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
+import { formatDateStringMDY, getBaseUrl, getInitials, searchContacts } from '@global/functions';
 import { ImageGallery } from '@components/overlays/order-template';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
@@ -45,6 +45,8 @@ import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
 import Close from '@mui/icons-material/Close';
 import chevronDown from '/public/images/ch-down.svg';
+import { addPropertiesInPortfolio } from '@api/portfolio';
+import { sendSMS } from '@api/email';
 
 const options = [
   { label: 'Grapes 🍇', value: 'grapes' },
@@ -431,6 +433,7 @@ const index = () => {
         first_name: contact.first_name,
         last_name: contact.last_name,
         email: contact.email,
+        phone_number: contact.phone_number,
         profile_image_path: contact.profile_image_path,
       }));
   }
@@ -451,6 +454,9 @@ const index = () => {
     );
   }, [contacts, sendMethod]);
 
+  useEffect(() => {
+    console.log(selectedContacts.map((c) => c.value));
+  }, [selectedContacts]);
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
@@ -467,37 +473,115 @@ const index = () => {
     setChunkedArray(chunkedArray);
   }, [selectedProperties]);
   const [loadingEmails, setLoadingEmails] = useState(false);
-
   const _sendEmail = () => {
     const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
     setLoadingEmails(true);
-    selectedContacts.map((c) => {
-      addContactActivity(c.value, {
-        type_of_activity_id: 28,
-        description: `These properties were sent to this user on ${formatDateStringMDY(new Date())}: ${propertyIds.join(
-          ',  ',
-        )} `,
-      });
-      sendEmail(
-        [c.email],
-        `Hi ${c.first_name}, Check out these new properties.`,
-        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} />, {
-          pretty: true,
-        })}`,
-      ).then((res) => {
-        setLoadingEmails(false);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then((res) => {
+      setLoadingEmails(false);
+
+      if (res?.data.length === 0) {
         setPropertiesSent(true);
         resetPropertySelection();
+        return;
+      }
+      const newArray = res.data.map((item) => ({
+        portfolio_sharable_id: item.portfolio_sharable_id,
+        contact_id: item.contact_id,
+      }));
+      const uniqueArray = newArray.filter(
+        (item, index, array) =>
+          index ===
+          array.findIndex(
+            (obj) => obj.portfolio_sharable_id === item.portfolio_sharable_id && obj.contact_id === item.contact_id,
+          ),
+      );
+
+      uniqueArray.forEach((item) => {
+        selectedContacts.forEach((c) => {
+          if (c.value === parseInt(item.contact_id)) {
+            sendEmail(
+              [c.email],
+              `Hi ${c.first_name}, Check out these new properties.`,
+              render(
+                <>
+                  <p style={{ color: '#344054', marginBottom: '32px' }}>
+                    Hey {c.first_name},
+                    <br /> New properties have been added in your portfolio. Click here to see them:{' '}
+                    <a
+                      style={{ color: 'blue' }}
+                      role={'button'}
+                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
+                      Portfolio Link
+                    </a>
+                  </p>
+                  <p style={{ color: '#344054' }}>
+                    Best Regards,
+                    <br />
+                    {user?.email ? user?.email : user}
+                  </p>
+                </>,
+                {
+                  pretty: true,
+                },
+              ),
+            ).then((res) => {
+              setPropertiesSent(true);
+              resetPropertySelection();
+            });
+          }
+        });
       });
     });
   };
 
-  const sendSMS = () => {
-    setPropertiesSent(true);
-    console.log(selectedContacts, selectedProperties, 'sms');
-    resetPropertySelection();
-  };
+  const _sendSMS = () => {
+    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
+    setLoadingEmails(true);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then((res) => {
+      setLoadingEmails(false);
+      if (res?.data.length === 0) {
+        setPropertiesSent(true);
+        resetPropertySelection();
+        return;
+      }
+      const newArray = res.data.map((item) => ({
+        portfolio_sharable_id: item.portfolio_sharable_id,
+        contact_id: item.contact_id,
+      }));
+      const uniqueArray = newArray.filter(
+        (item, index, array) =>
+          index ===
+          array.findIndex(
+            (obj) => obj.portfolio_sharable_id === item.portfolio_sharable_id && obj.contact_id === item.contact_id,
+          ),
+      );
 
+      uniqueArray.forEach((item) => {
+        selectedContacts.forEach((c) => {
+          if (parseInt(c.value) === parseInt(item.contact_id)) {
+            sendSMS(
+              [c.phone_number],
+              `Hey ${c.first_name}, new properties have been added in your portfolio. Click to see them: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+            )
+              .then((res) => {
+                setPropertiesSent(true);
+                resetPropertySelection();
+              })
+              .catch((error) => {
+                console.error('Error sending SMS:', error);
+                // Handle the error if needed
+              });
+          }
+        });
+      });
+    });
+  };
   const resetPropertySelection = () => {
     setSelectedContacts([]);
     setSelectedProperties([]);
@@ -867,26 +951,26 @@ const index = () => {
                   </span>
                 </div>
                 <div className="flex">
-                  <Button white label="Save" className="mr-3" />
+                  {/*<Button white label="Save" className="mr-3" />*/}
                   <Button
                     primary
                     leftIcon={<MailIcon />}
-                    label="Send via Email"
+                    label="Notify by Email"
                     className="mr-3"
                     onClick={() => {
                       setSendMethod(1);
                       setOpen(true);
                     }}
                   />
-                  {/*<Button*/}
-                  {/*  primary*/}
-                  {/*  leftIcon={<AtSymbolIcon />}*/}
-                  {/*  label="Send via SMS"*/}
-                  {/*  onClick={() => {*/}
-                  {/*    setSendMethod(2);*/}
-                  {/*    setOpen(true);*/}
-                  {/*  }}*/}
-                  {/*/>*/}
+                  <Button
+                    primary
+                    leftIcon={<AtSymbolIcon />}
+                    label="Notify by SMS"
+                    onClick={() => {
+                      setSendMethod(2);
+                      setOpen(true);
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -942,7 +1026,7 @@ const index = () => {
                   primary
                   leftIcon={<MailIcon />}
                   loading={loadingEmails}
-                  label="Send via Email"
+                  label="Notify by Email"
                   onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
@@ -950,8 +1034,8 @@ const index = () => {
                 <Button
                   primary
                   leftIcon={<AtSymbolIcon />}
-                  label="Send via SMS"
-                  onClick={() => sendSMS()}
+                  label="Notify by SMS"
+                  onClick={() => _sendSMS()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
               )}

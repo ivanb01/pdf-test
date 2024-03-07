@@ -22,7 +22,7 @@ import {
   documentsRedirectSignIn,
   documentsRedirectSignOut,
   subscriptionsRedirectSignIn,
-  subscriptionsRedirectSignOut
+  subscriptionsRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -33,12 +33,7 @@ import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
 const queryClient = new QueryClient();
-import {
-  isLocalhost,
-  isDev,
-  isSubscriptions,
-  isDocuments,
-} from '@helpers/env';
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
 
 import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
 
@@ -70,7 +65,12 @@ const MyApp = ({ Component, pageProps }) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('property') && !router.asPath.includes('sign-up')) {
+        if (
+          !router.asPath.includes('public') &&
+          !router.asPath.includes('property') &&
+          !router.asPath.includes('sign-up') &&
+          !router.asPath.includes('portfolio')
+        ) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
@@ -105,31 +105,30 @@ const MyApp = ({ Component, pageProps }) => {
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost
-             () 
+            redirectSignIn: isLocalhost()
               ? localRedirectSignIn
-              : isDev() 
-              ? devRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn   
-              : isSubscriptions() 
-              ? subscriptionsRedirectSignIn
-              : productionRedirectSignIn,
+              : isDev()
+                ? devRedirectSignIn
+                : isDocuments()
+                  ? documentsRedirectSignIn
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignIn
+                    : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-              ? devRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : productionRedirectSignOut,
+                ? devRedirectSignOut
+                : isDocuments()
+                  ? documentsRedirectSignOut
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignOut
+                    : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
 
-      Amplify.configure({...awsmobile, ssr: true});
+      Amplify.configure({ ...awsmobile, ssr: true });
       console.log('configured amplify');
       return true;
     } catch (err) {

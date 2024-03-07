@@ -11,3 +11,18 @@ export const sendEmail = (body) => {
     },
   );
 };
+
+export const sendSMS = (to, message) => {
+  return axiosInstance.post(
+    'v1/sms/send',
+    {
+      to,
+      message,
+    },
+    {
+      headers: {
+        'Content-Type': 'multipart/mixed',
+      },
+    },
+  );
+};
