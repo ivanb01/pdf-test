@@ -113,9 +113,6 @@ const MainMenu = ({ className, fixed }) => {
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
-  const getUserInfo = () => JSON.parse(localStorage.getItem('userInfo') || '{}') || {};
-  const userInfo = getUserInfo();
-  
   const dispatch = useDispatch();
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
@@ -132,6 +129,23 @@ const MainMenu = ({ className, fixed }) => {
     router.push('/authentication/sign-in');
   };
 
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}') || {})
+  }, []);
+
+  useEffect(() => {
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus()
+        .then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        })
+        .catch((error) => {
+          console.log(error, 'error');
+        });
+    }
+  }, []);
+
   const fetchContacts = async () => {
     try {
       const data = await getContacts();
@@ -143,7 +157,7 @@ const MainMenu = ({ className, fixed }) => {
         if (!willRedirectAfterSignIn) {
           router.push({
             pathname: '/contacts/clients',
-          }); 
+          });
         }
       }
     } catch (error) {

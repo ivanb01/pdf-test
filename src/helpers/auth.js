@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import Router, { useRouter } from 'next/router'
+import { useEffect, useState } from 'react';
+import Router, { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { Auth } from 'aws-amplify';
 import { getUser, updateUser } from 'api/user';
@@ -7,7 +7,7 @@ import { getUser, updateUser } from 'api/user';
 const setAfterSignInRedirect = (redirectionPath, message = '') => {
   sessionStorage.setItem('after-auth-redirect', redirectionPath);
   sessionStorage.setItem('redirection-message', message);
-}
+};
 
 const loadAfterSignInRedirect = async (clear = false) => {
   const router = useRouter();
@@ -31,29 +31,28 @@ const loadAfterSignInRedirect = async (clear = false) => {
       }
 
       Router.push(redirectionPath);
-      
-      if (redirectionMessage)
-        toast(redirectionMessage, { icon: 'ℹ️' });
+
+      if (redirectionMessage) toast(redirectionMessage, { icon: 'ℹ️' });
     };
 
     redirectIfSet();
-  },[]);
+  }, []);
 
   return shouldRedirect;
-}
+};
 
 const isAuthValidRedirect = async (subscriptionPlan = null) => {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    setAfterSignInRedirect(window.location.pathname, "Now that you signed in, you can pick a plan!");
+    setAfterSignInRedirect(window.location.pathname, 'Now that you signed in, you can pick a plan!');
     Router.push(`/authentication/sign-in`);
     toast('Please sign up before subscribing!', { icon: 'ℹ️' });
     return false;
   }
 
   return true;
-}
+};
 
 const getCurrentUser = async () => {
   let currentUser;
@@ -77,19 +76,19 @@ const getCurrentUser = async () => {
     userInfo: currentUser,
     info,
   };
-}
+};
 
 const getUserInfo = () => JSON.parse(localStorage.getItem('userInfo') || '{}') || {};
 
 const fetchCurrentUserInfo = async () => {
   const response = getUser()
-  .then(r => r.data)
-  .catch(err => console.error(err));
+    .then((r) => r.data)
+    .catch((err) => console.error(err));
 
   return response;
-}
+};
 
-const saveUserInfo = async (info) => info && localStorage.setItem('userInfo', JSON.stringify(info))
+const saveUserInfo = async (info) => info && localStorage.setItem('userInfo', JSON.stringify(info));
 
 const updateUserInfo = async (userInfo) => {
   const { first_name, last_name, phone_number } = userInfo;
@@ -98,7 +97,7 @@ const updateUserInfo = async (userInfo) => {
     const userData = JSON.stringify({
       first_name,
       last_name,
-      phone_number
+      phone_number,
     });
 
     const response = await updateUser(userData);
@@ -124,4 +123,4 @@ export {
   fetchCurrentUserInfo,
   saveUserInfo,
   updateUserInfo,
-}
+};
