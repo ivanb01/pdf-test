@@ -32,8 +32,6 @@ import SendEmailOverlay from '@components/SendEmailSidebar';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
-import { isLocalhost, isDev, isSubscriptions, isDocuments } from 'helpers/env';
-
 const queryClient = new QueryClient();
 import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
 
