@@ -113,11 +113,6 @@ const MainMenu = ({ className, fixed }) => {
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
-
-  const user = useSelector((state) => state.global.user);
-  // const getUserInfo = () => JSON.parse(localStorage.getItem('userInfo') || '{}') || {};
-  // const userInfo = getUserInfo();
-
   const dispatch = useDispatch();
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
@@ -133,6 +128,23 @@ const MainMenu = ({ className, fixed }) => {
     await Auth.signOut();
     router.push('/authentication/sign-in');
   };
+
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}') || {})
+  }, []);
+
+  useEffect(() => {
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus()
+        .then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        })
+        .catch((error) => {
+          console.log(error, 'error');
+        });
+    }
+  }, []);
 
   const fetchContacts = async () => {
     try {
@@ -342,7 +354,7 @@ const MainMenu = ({ className, fixed }) => {
                   <Image width={40} height={40} className="inline-block rounded-full" src={placeholder} alt="" />
                 </div>
                 <div className="max-w-[165px] w-full">
-                  <p className="truncate text-sm font-medium text-gray4">{user?.email ? user?.email : user}</p>
+                  <p className="truncate text-sm font-medium text-gray4">{userInfo.first_name ? userInfo.first_name + " " + userInfo.last_name : userInfo.email}</p>
                 </div>
               </div>
               <div className="py-1">
