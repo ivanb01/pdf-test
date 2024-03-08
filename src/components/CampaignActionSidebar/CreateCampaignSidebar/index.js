@@ -34,9 +34,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       action: 'Send',
       title: 'New Event',
       body_html: '',
+      body: '',
       wait_interval: '2d',
       type: 'Email',
-      affect_events: false,
     },
   ]);
 
@@ -374,7 +374,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 onContentChange={(value) => {
                   setEvents((currentEvents) =>
                     currentEvents.map((item, index) =>
-                      index === selectedEvent ? { ...item, body_html: value } : item,
+                      index === selectedEvent
+                        ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)/g, '') }
+                        : item,
                     ),
                   );
                 }}

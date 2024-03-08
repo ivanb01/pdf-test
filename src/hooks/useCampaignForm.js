@@ -42,9 +42,9 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       id: events.length,
       title: 'New Event',
       body_html: '',
+      body: '',
       wait_interval: '3d',
       type: 'Email',
-      affect_events: false,
     };
     setEvents((prevState) => [...prevState, newEvent]);
   };

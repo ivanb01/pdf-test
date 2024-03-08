@@ -39,9 +39,9 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
       action: 'Send',
       title: 'New Event',
       body_html: '',
+      body: '',
       wait_interval: '2d',
       type: 'Email',
-      affect_events: false,
     },
   ];
 
@@ -78,7 +78,7 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
       fetchedCampaign = fetchedCampaign.data;
       setLoadingData(false);
       setCampaign({ ...campaign, name: fetchedCampaign.campaign_name, description: 'NULL' });
-      let events = fetchedCampaign.actions.map((event) => ({ ...event, affect_events: false }));
+      let events = fetchedCampaign.actions.map((event) => ({ ...event }));
       setEvents(events);
     };
     fetchCampaignData();
@@ -89,6 +89,7 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
     let editCampaignObject = {
       campaign: campaign,
       actions: events,
+      affect_events: false,
     };
     updateCampaign(editCampaignObject, campaignId).then(() => {
       setEditingCampaignLoader(false);
@@ -386,7 +387,9 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
                 onContentChange={(value) => {
                   setEvents((currentEvents) =>
                     currentEvents.map((item, index) =>
-                      index === selectedEvent ? { ...item, body_html: value } : item,
+                      index === selectedEvent
+                        ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)/g, '') }
+                        : item,
                     ),
                   );
                 }}

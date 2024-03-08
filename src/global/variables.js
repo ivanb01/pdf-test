@@ -17,7 +17,6 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
-
 export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
 export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
 
