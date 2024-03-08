@@ -1259,7 +1259,7 @@ const index = () => {
                   <p style={{ color: '#344054', marginBottom: '32px' }}>
                     Hey [client name],
                     <br /> New properties have been added in your portfolio. Click here to see them:{' '}
-                    <a style={{ color: 'blue' }} role={'button'} href={`${getBaseUrl()}/portfolio?share_id=1234567`}>
+                    <a style={{ color: 'blue' }} role={'button'}>
                       Portfolio Link
                     </a>
                   </p>
