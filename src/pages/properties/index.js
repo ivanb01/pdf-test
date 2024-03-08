@@ -22,9 +22,8 @@ import {
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
-import Input from '@components/shared/input';
 import Button from '@components/shared/button';
-import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+import { useLoadScript } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import { MultiSelect } from 'react-multi-select-component';
@@ -34,32 +33,20 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
 import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { formatDateStringMDY, getBaseUrl, getInitials, searchContacts } from '@global/functions';
-import { ImageGallery } from '@components/overlays/order-template';
+import { getBaseUrl, getInitials, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
-import { Tailwind, Button as Btn } from '@react-email/components';
-import { Html } from '@react-email/html';
-import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
-import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
-import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
 import Close from '@mui/icons-material/Close';
 import chevronDown from '/public/images/ch-down.svg';
 import { addPropertiesInPortfolio } from '@api/portfolio';
 import { sendSMS } from '@api/email';
-import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-
-const options = [
-  { label: 'Grapes 🍇', value: 'grapes' },
-  { label: 'Mango 🥭', value: 'mango' },
-  { label: 'Strawberry 🍓', value: 'strawberry', disabled: true },
-];
+import { fetchCurrentUserInfo } from '@helpers/auth';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -460,22 +447,26 @@ const index = () => {
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
   }, [contacts, sendMethod]);
+  const [userData, setUserData] = useState('');
 
+  useEffect(() => {
+    fetchCurrentUserInfo()
+      .then((res) => {
+        const fullName =
+          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
+            ? `${res?.first_name} ${res?.last_name}`
+            : `${res?.email}`;
+        setUserData(fullName);
+      })
+      .catch(() => {
+        setUserData(user?.email ? user?.email : user);
+      });
+  }, []);
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
   };
 
-  const [chunkedArray, setChunkedArray] = useState([]);
-
-  useEffect(() => {
-    const chunkedArray = [];
-    for (let i = 0; i < selectedProperties.length; i += 2) {
-      chunkedArray.push(selectedProperties.slice(i, i + 2));
-    }
-
-    setChunkedArray(chunkedArray);
-  }, [selectedProperties]);
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
     setLoadingEmails(true);
@@ -504,18 +495,16 @@ const index = () => {
 
       uniqueArray.forEach((item) => {
         selectedContacts.forEach((c) => {
-          if (
-            c.value === parseInt(item.contact_id) &&
-            (sendMethod === 1 || !c.phone_number || (sendMethod === 3 && !c.phone_number))
-          ) {
+          if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
               [c.email],
-              `Hi ${c.first_name}, Check out these new properties.`,
+              `Hi ${c.first_name}, check out these new properties.`,
               render(
                 <>
                   <p style={{ color: '#344054', marginBottom: '32px' }}>
                     Hey {c.first_name},
-                    <br /> New properties have been added in your portfolio. Click here to see them:{' '}
+                    <br />
+                    <br /> New properties have been added in your portfolio. View here:{' '}
                     <a
                       style={{ color: 'blue' }}
                       role={'button'}
@@ -526,84 +515,38 @@ const index = () => {
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {user?.email ? user?.email : user}
+                    {userData}
                   </p>
                 </>,
                 {
                   pretty: true,
                 },
               ),
-            ).then((res) => {
-              setPropertiesSent(true);
-              resetPropertySelection();
-            });
-          } else if (
+            ).then((res) => {});
+            setPropertiesSent(true);
+            resetPropertySelection();
+          }
+          if (
             parseInt(c.value) === parseInt(item.contact_id) &&
             ((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. Click to see them: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
             )
-              .then((res) => {
-                setPropertiesSent(true);
-                resetPropertySelection();
-              })
+              .then((res) => {})
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
               });
+            setPropertiesSent(true);
+            resetPropertySelection();
           }
         });
       });
     });
   };
 
-  const _sendSMS = () => {
-    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
-    setLoadingEmails(true);
-    addPropertiesInPortfolio(
-      selectedContacts.map((contact) => contact.value),
-      selectedProperties.map((property) => property.ID),
-    ).then((res) => {
-      setLoadingEmails(false);
-      if (res?.data.length === 0) {
-        setPropertiesSent(true);
-        resetPropertySelection();
-        return;
-      }
-      const newArray = res.data.map((item) => ({
-        portfolio_sharable_id: item.portfolio_sharable_id,
-        contact_id: item.contact_id,
-      }));
-      const uniqueArray = newArray.filter(
-        (item, index, array) =>
-          index ===
-          array.findIndex(
-            (obj) => obj.portfolio_sharable_id === item.portfolio_sharable_id && obj.contact_id === item.contact_id,
-          ),
-      );
-
-      uniqueArray.forEach((item) => {
-        selectedContacts.forEach((c) => {
-          if (parseInt(c.value) === parseInt(item.contact_id)) {
-            sendSMS(
-              [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. Click to see them: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
-            )
-              .then((res) => {
-                setPropertiesSent(true);
-                resetPropertySelection();
-              })
-              .catch((error) => {
-                console.error('Error sending SMS:', error);
-                // Handle the error if needed
-              });
-          }
-        });
-      });
-    });
-  };
   const resetPropertySelection = () => {
     setSelectedContacts([]);
     setSelectedProperties([]);
@@ -1077,9 +1020,10 @@ const index = () => {
               ) : sendMethod == 2 ? (
                 <Button
                   primary
+                  loading={loadingEmails}
                   leftIcon={<AtSymbolIcon />}
                   label="Send via SMS"
-                  onClick={() => _sendSMS()}
+                  onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
               ) : (
@@ -1255,25 +1199,22 @@ const index = () => {
             <div className={'bg-[#F9FAFB] p-3 border border-gray2 rounded-[8px] mt-[14px] text-gray7'}>
               {sendMethod !== 2 ? (
                 <div>
-                  <p>Hi [client name], Check out these new properties</p>
                   <p style={{ color: '#344054', marginBottom: '32px' }}>
                     Hey [client name],
-                    <br /> New properties have been added in your portfolio. Click here to see them:{' '}
+                    <br />
+                    <br /> New properties have been added in your portfolio. View here:{' '}
                     <a style={{ color: 'blue' }} role={'button'}>
-                      Portfolio Link
+                      [portfolio link]
                     </a>
                   </p>
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {user?.email ? user?.email : user}
+                    {userData}
                   </p>
                 </div>
               ) : (
-                <p>
-                  Hey [client name], new properties have been added in your portfolio. Click to see them:
-                  https://dev.onelinecrm.com/portfolio?share_id=12345678
-                </p>
+                <p>Hey [client name], new properties have been added in your portfolio. View here: [portfolio link]</p>
               )}
             </div>
             <div className={'h-[1px] border border-gray1 my-[26px]'}></div>
