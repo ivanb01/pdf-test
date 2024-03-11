@@ -406,7 +406,7 @@ const Input = ({
     );
   };
   return (
-    <div className={`checkbox-wrapper ${className}`}>
+    <div className={`${className}`}>
       {label && (
         <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
           {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
@@ -422,18 +422,18 @@ const Input = ({
         {type == 'phone'
           ? phoneInput()
           : type == 'phone_number'
-          ? InputPhone()
-          : type == 'checkbox'
-          ? checkboxInput()
-          : type == 'password'
-          ? passwordInput()
-          : type == 'money'
-          ? moneyInput()
-          : type === 'date'
-          ? dateInput()
-          : type === 'signature'
-          ? signatureInput()
-          : textInput()}
+            ? InputPhone()
+            : type == 'checkbox'
+              ? checkboxInput()
+              : type == 'password'
+                ? passwordInput()
+                : type == 'money'
+                  ? moneyInput()
+                  : type === 'date'
+                    ? dateInput()
+                    : type === 'signature'
+                      ? signatureInput()
+                      : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
       {error && errorText && (

@@ -46,6 +46,26 @@ export const formatNumber = (number) => {
   return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
 };
 
+export const countActionTypes = (actions) => {
+  const counts = {
+    sms: 0,
+    email: 0,
+    total: 0,
+  };
+
+  actions.forEach((action) => {
+    counts.total += 1;
+
+    if (action.type === 'Email') {
+      counts.email += 1;
+    } else if (action.type === 'SMS') {
+      counts.sms += 1;
+    }
+  });
+
+  return counts;
+};
+
 export const formatDate = (eventDate, hideTime) => {
   let dateObj = new Date(eventDate * 1000);
   const year = dateObj.getFullYear();
@@ -389,8 +409,8 @@ export const deepObjectsEqual = (x, y) => {
   return x && y && tx === 'object' && tx === ty
     ? ok(x).length === ok(y).length && ok(x).every((key) => deepObjectsEqual(x[key], y[key]))
     : x === y;
-  }
-  
+};
+
 export const getTotalCountOfAllValues = (data) => {
   let totalCount = 0;
 

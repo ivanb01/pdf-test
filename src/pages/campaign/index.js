@@ -11,6 +11,7 @@ import useElementInView from '../../hooks/useElementInScreen';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
+import { clientOptions } from '@global/variables';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -40,7 +41,7 @@ const index = () => {
           (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
             campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          campaign.contact_category_2 === category,
+          clientOptions.find((option) => option.id == campaign.contact_category_id).name === category,
       );
     }
 
@@ -145,7 +146,7 @@ const index = () => {
 
   useEffect(() => {
     if (contacts === undefined) {
-      getCampaignsByCategory('Client')
+      getCampaignsByCategory('null')
         .then((res) => {
           setLoading(true);
           dispatch(setCRMCampaigns(res.data));

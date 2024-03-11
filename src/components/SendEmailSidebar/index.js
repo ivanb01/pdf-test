@@ -11,9 +11,11 @@ import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
 import { setGlobalEmail } from '@store/clientDetails/slice';
+import RichtextEditor from '@components/Editor';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
+  const [flag, setFlag] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const contactToBeEmailed = useSelector((state) => state.global.contactToBeEmailed);
@@ -24,6 +26,11 @@ const SendEmailOverlay = () => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
+
+  useEffect(() => {
+    setFlag(open);
+    dispatch(setOpenEmailContactOverlay(flag));
+  }, [open, flag]);
 
   useEffect(() => {
     if (!open) {
@@ -107,8 +114,11 @@ const SendEmailOverlay = () => {
   return (
     <SlideOver
       width="w-[540px]"
-      open={open}
-      setOpen={(state) => dispatch(setOpenEmailContactOverlay(state))}
+      open={flag}
+      setOpen={(state) => {
+        console.log(state);
+        setFlag(true);
+      }}
       title="Send New Email"
       className=""
       buttons={
@@ -139,7 +149,7 @@ const SendEmailOverlay = () => {
           <Button primary label="Send Another Email" onClick={() => resetSendEmailForm()} className="mt-6" />
         </div>
       ) : (
-        <>
+        <div>
           <div className="mb-6">
             <div className="text-gray6 text-sm font-medium mb-1">To</div>
             {contactsCopy && contactsCopy.length && (
@@ -163,8 +173,14 @@ const SendEmailOverlay = () => {
             value={subject}
             onChange={(event) => setSubject(event.target.value)}
           />
-          <Editor label="Message" placeholder="Write message here..." setValue={setMessage} />
-        </>
+          <div className="text-gray6 text-sm font-medium mb-1">Message</div>
+          <RichtextEditor
+            label="Message"
+            value={message}
+            placeholder="Write message here..."
+            onContentChange={setMessage}
+          />
+        </div>
       )}
     </SlideOver>
   );

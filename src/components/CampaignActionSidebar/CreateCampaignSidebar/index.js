@@ -61,7 +61,13 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     addCampaign(newCampaign).then((res) => {
       setCreatingCampaignLoader(false);
       setOpen(false);
-      dispatch(addCRMCampaigns(res));
+      dispatch(
+        addCRMCampaigns({
+          ...res.data.campaign,
+          actions: res.data.actions,
+          campaign_id: res.data.campaign.id,
+        }),
+      );
       toast.success('Campaign created successfully!');
     });
   };
@@ -189,7 +195,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     <SlideOver
       width="w-[1200px]"
       open={open}
-      setOpen={setOpen}
+      setOpen={(state) => {
+        console.log(state);
+        setOpen(state);
+      }}
       editableTitle
       title={campaign.name}
       className=""
