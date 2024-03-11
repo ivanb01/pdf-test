@@ -9,8 +9,13 @@ import { useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import TooltipComponent from '@components/shared/tooltip';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import ThumbUp from '../../../public/images/icons/thumbUp.svg';
+import ThumbDown from '../../../public/images/icons/thumbDown.svg';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
-const ImageGallery = ({ images, property, url }) => {
+const ImageGallery = ({ images, url }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
   const showPrevButton = showButtons && currentIndex > 0;
@@ -25,7 +30,11 @@ const ImageGallery = ({ images, property, url }) => {
 
   return (
     <>
-      <a href={url} target="_blank" rel="noreferrer">
+      <a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        className={`${!url ? 'pointer-events-none' : 'pointer-events-auto'}`}>
         <img
           className="object-cover h-full w-full"
           src={images?.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
@@ -37,7 +46,12 @@ const ImageGallery = ({ images, property, url }) => {
           className={
             'absolute top-[65px] left-3 h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
           }>
-          <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
+          <KeyboardArrowLeftIcon
+            onClick={(e) => {
+              e.stopPropagation();
+              showPrevImage();
+            }}
+          />
         </div>
       )}
       {showNextButton && (
@@ -45,103 +59,162 @@ const ImageGallery = ({ images, property, url }) => {
           className={
             'absolute right-3 top-[65px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
           }>
-          <KeyboardArrowRightIcon onClick={() => showNextImage()} />
+          <KeyboardArrowRightIcon
+            onClick={(e) => {
+              e.stopPropagation();
+              showNextImage();
+            }}
+          />
         </div>
       )}
     </>
   );
 };
 
-const PropertyCard = ({ property, selected, setSelected, noSelect, isSelected }) => {
+const PropertyCard = ({
+  property,
+  selected,
+  setSelected,
+  noSelect,
+  isSelected,
+  putFeedback,
+  openPropertyModal,
+  deletePropertyFromPortfolio,
+}) => {
+  const [liked, setLiked] = useState(true);
+  const [disliked, setDisliked] = useState(true);
   let status = '';
-  if (property.STATUS == 'Rented') {
+  if (property?.STATUS == 'Rented') {
     status = '&status=22';
-  } else if (property.STATUS == 'Sold') {
+  } else if (property?.STATUS == 'Sold') {
     status = '&status=19';
   }
-  let url = `${getBaseUrl()}/property?id=${property.ID}` + status;
+  let url = `${getBaseUrl()}/property?id=${property?.ID}` + status;
 
   return (
     <div
-      className={`border transition-all border-gray-200 rounded-[4px] ${
+      onClick={() => {
+        if (putFeedback) {
+          openPropertyModal(property);
+        }
+      }}
+      className={`border transition-all border-gray-200 rounded-[4px] ${putFeedback && 'cursor-pointer'} ${
         isSelected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
       <div className="h-[160px] relative">
-        <ImageGallery images={property.PHOTOS} property={property} url={url} />
+        <ImageGallery images={property?.PHOTOS} property={property} url={!putFeedback ? url : undefined} />
         <div
-          className={`absolute bottom-2 left-2 flex items-center justify-center border ${
-            property.STATUS.toLowerCase() === 'sold' || property.STATUS.toLowerCase() === 'for sale'
+          className={`absolute ${putFeedback ? 'top-2' : 'bottom-2'} left-2 flex items-center justify-center border ${
+            property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
               ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
               : 'border-cyan-800 bg-cyan-50 text-cyan-800'
           } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
-          {property.STATUS}
+          {property?.STATUS}
         </div>
-        <TooltipComponent
-          side={'bottom'}
-          align={'center'}
-          triggerElement={
-            <a
-              className="cursor-pointer absolute bottom-2 right-2"
-              onClick={() => {
-                navigator.clipboard.writeText(url);
-                toast.success('Link copied to clipboard');
-              }}>
-              <img className="h-7 w-7" src={link.src} alt="" />
-            </a>
-          }>
-          <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
-        </TooltipComponent>
+        {/*<div*/}
+        {/*  role={'button'}*/}
+        {/*  onClick={() => deletePropertyFromPortfolio(String(property?.ID))}*/}
+        {/*  className={`absolute top-2 right-3 h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>*/}
+        {/*  <DeleteOutlineOutlinedIcon className={'h-5 w-5 text-red3'} />*/}
+        {/*</div>*/}
+        {!putFeedback && (
+          <TooltipComponent
+            side={'bottom'}
+            align={'center'}
+            triggerElement={
+              <a
+                className="cursor-pointer absolute bottom-2 right-2"
+                onClick={() => {
+                  navigator.clipboard.writeText(url);
+                  toast.success('Link copied to clipboard');
+                }}>
+                <img className="h-7 w-7" src={link.src} alt="" />
+              </a>
+            }>
+            <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
+          </TooltipComponent>
+        )}
       </div>
       <div
         className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}
         onClick={() => {
-          const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
-          if (currentSelected) {
-            setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
-          } else {
-            setSelected((prevSelected) => [...prevSelected, property]);
+          if (!putFeedback) {
+            const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
+            if (currentSelected) {
+              setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
+            } else {
+              setSelected((prevSelected) => [...prevSelected, property]);
+            }
           }
         }}>
         <div className="mb-4">
           <div className="font-semibold text-black mb-[6px]">
-            {property.PROPERTY_TYPE} in {property.ADDRESS}
+            {property?.PROPERTY_TYPE} in {property?.ADDRESS}
           </div>
           <div className="text-gray-600">
-            {property.ADDRESS} <br />
-            {property.NEIGHBORHOODS}, {property.CITY}, {property.STATE} {property.ZIP_CODE}
+            {property?.ADDRESS} <br />
+            {property?.NEIGHBORHOODS}, {property?.CITY}, {property?.STATE} {property?.ZIP_CODE}
           </div>
         </div>
         <div className="mb-3 flex font-medium">
           <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={room.src} alt="" />
-            {property.BEDROOMS}
+            {property?.BEDROOMS}
           </div>
           <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
             <img className="mr-2" src={bathroom.src} alt="" />
-            {property.BATHROOMS}
+            {property?.BATHROOMS}
           </div>
-          {property.SQUARE_FOOTAGE != 0 && (
+          {property?.SQUARE_FOOTAGE != 0 && (
             <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
               <img className="mr-1" src={sqft.src} alt="" />
-              {property.SQUARE_FOOTAGE} sqft
+              {property?.SQUARE_FOOTAGE} sqft
             </div>
           )}
         </div>
         <div className="flex items-center justify-between">
           <div className="font-semibold text-gray-900 text-base">
-            {formatPrice(property.PRICE)}
-            {property.STATUS.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
+            {formatPrice(property?.PRICE)}
+            {property?.STATUS?.toLowerCase() == 'for rent' && <span className="text-gray-500 font-normal">/month</span>}
           </div>
-          <div class="form-checkbox">
+          <div className="form-checkbox">
+            {putFeedback && (
+              <div className={'flex gap-[6px] pointer-events-auto'}>
+                <div
+                  className={'cursor-pointer'}
+                  role={'button'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!disliked) {
+                      setDisliked(true);
+                    }
+                    setLiked(!liked);
+                  }}>
+                  {liked ? <img src={ThumbUp.src} /> : <ThumbUpIcon className={'text-lightBlue5 h-5 w-5'} />}
+                </div>
+                <div
+                  role={'button'}
+                  className={'cursor-pointer'}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!liked) {
+                      setLiked(true);
+                    }
+                    setDisliked(!disliked);
+                  }}>
+                  {disliked ? <img src={ThumbDown.src} /> : <ThumbDownIcon className={'text-lightBlue5 h-5 w-5'} />}
+                </div>
+              </div>
+            )}
             <input
               type="checkbox"
-              id={`checkbox-${property.ID}`}
+              id={`checkbox-${property?.ID}`}
               class="hidden"
               value={selected?.length && selected?.includes(property)}
             />
             {!noSelect && (
               <label
-                htmlFor={`checkbox-${property.ID}`}
+                htmlFor={`checkbox-${property?.ID}`}
                 class="flex items-center cursor-pointer"
                 onClick={(e) => e.preventDefault()}>
                 <div

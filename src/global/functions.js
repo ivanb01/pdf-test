@@ -220,7 +220,7 @@ export const formatDateTo = (date, param) => {
 };
 
 export const formatPrice = (price) => {
-  return price.toLocaleString('en-US', {
+  return price?.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   });

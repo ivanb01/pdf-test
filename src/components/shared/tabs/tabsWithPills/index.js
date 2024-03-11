@@ -47,7 +47,7 @@ export default function TabsWithPills({ propertiesCurrentTab, setPropertiesCurre
               )}
               aria-current={propertiesCurrentTab == index ? 'page' : undefined}>
               {tab.name}
-              {tab.count ? <span> ({tab.count})</span> : null}
+              {tab.count !== undefined ? <span> ({tab.count})</span> : null}
             </a>
           ))}
         </nav>
