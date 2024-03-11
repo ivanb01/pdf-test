@@ -1,6 +1,6 @@
 import Button from '@components/shared/button';
 import SlideOver from '@components/shared/slideOver';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import specificClients from '/public/images/specific-clients.svg';
 import call from '/public/images/call.svg';
@@ -26,17 +26,19 @@ import Divider from 'icons/Divider';
 import { addCampaign } from '@api/campaign';
 import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
+import { addCRMCampaigns } from '@store/campaigns/slice';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
+  const dispatch = useDispatch();
   const [defaultEvents, setDefaultEvents] = useState([
     {
-      id: 0,
       action: 'Send',
       title: 'New Event',
       body_html: '',
       body: '',
       wait_interval: '2d',
       type: 'Email',
+      charset: 'A',
     },
   ]);
 
@@ -56,9 +58,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       campaign: campaign,
       actions: events,
     };
-    addCampaign(newCampaign).then(() => {
+    addCampaign(newCampaign).then((res) => {
       setCreatingCampaignLoader(false);
       setOpen(false);
+      dispatch(addCRMCampaigns(res));
       toast.success('Campaign created successfully!');
     });
   };
@@ -334,9 +337,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     )
                   }
                   inputWidth={'w-[220px]'}
-                  initialSelect={waitingDays.find(
-                    (option) => option.id == events[selectedEvent].wait_interval.split('d')[0],
-                  )}
+                  initialSelect={
+                    events[selectedEvent]
+                      ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
+                      : null
+                  }
                   className="mr-3"
                   placeHolder="Waiting Days"
                   options={waitingDays}

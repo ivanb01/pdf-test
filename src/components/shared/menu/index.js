@@ -131,7 +131,7 @@ const MainMenu = ({ className, fixed }) => {
 
   const [userInfo, setUserInfo] = useState({});
   useEffect(() => {
-    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}') || {})
+    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}') || {});
   }, []);
 
   useEffect(() => {
@@ -354,7 +354,9 @@ const MainMenu = ({ className, fixed }) => {
                   <Image width={40} height={40} className="inline-block rounded-full" src={placeholder} alt="" />
                 </div>
                 <div className="max-w-[165px] w-full">
-                  <p className="truncate text-sm font-medium text-gray4">{userInfo.first_name ? userInfo.first_name + " " + userInfo.last_name : userInfo.email}</p>
+                  <p className="truncate text-sm font-medium text-gray4">
+                    {userInfo.first_name ? userInfo.first_name + ' ' + userInfo.last_name : userInfo.email}
+                  </p>
                 </div>
               </div>
               <div className="py-1">

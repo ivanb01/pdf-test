@@ -13,7 +13,7 @@ import TooltipComponent from '@components/shared/tooltip';
 import Link from 'next/link';
 
 const CampaignCard = ({
-  campaign_name,
+  name,
   events,
   category,
   campaign_id,
@@ -40,7 +40,7 @@ const CampaignCard = ({
                   query: { id: campaign_id, category: category },
                 });
               }}>
-              <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
+              <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{name}</h6>
               <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
             </div>
           </Link>

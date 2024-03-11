@@ -82,7 +82,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                     <div className="flex flex-shrink-0 justify-between items-center p-6 border-b border-gray2">
                       <div className={'flex flex-col gap-1'}>
                         <Dialog.Title className="text-base font-medium text-gray-900">
-                          {campaignData?.campaign_name}
+                          {campaignData?.name}
                         </Dialog.Title>
                         {campaignData === undefined ? (
                           <div className="animate-pulse  bg-gray-300 w-[120px] h-4"></div>

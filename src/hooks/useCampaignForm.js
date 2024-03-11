@@ -39,12 +39,13 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
   };
   const addNewEvent = () => {
     let newEvent = {
-      id: events.length,
       title: 'New Event',
       body_html: '',
       body: '',
       wait_interval: '3d',
       type: 'Email',
+      charset: 'A',
+      action: 'Send',
     };
     setEvents((prevState) => [...prevState, newEvent]);
   };

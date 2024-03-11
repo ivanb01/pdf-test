@@ -15,7 +15,7 @@ import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampa
 const index = () => {
   const [current, setCurrent] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
+  const uniqueCategories = ['All Client', 'Renter', 'Buyer', 'Seller', 'Landlord'];
   const [loading, setLoading] = useState(false);
   const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const elementRef = useRef(null);
@@ -24,13 +24,25 @@ const index = () => {
   const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
 
   const renderCampaignWrapper = (category) => {
-    const filteredCampaigns = CRMCampaigns?.campaigns?.filter(
-      (campaign) =>
-        (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    let filteredCampaigns;
+    if (category == 'All Client') {
+      filteredCampaigns = CRMCampaigns?.campaigns?.filter(
+        (campaign) =>
+          campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        campaign.contact_category_2 === category,
-    );
+          (campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            campaign.contact_category_id === null &&
+            campaign.contact_status_id === null),
+      );
+    } else {
+      filteredCampaigns = CRMCampaigns?.campaigns?.filter(
+        (campaign) =>
+          (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          campaign.contact_category_2 === category,
+      );
+    }
 
     return (
       <CampaignWrapper
