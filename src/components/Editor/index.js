@@ -12,6 +12,7 @@ export default function RichtextEditor({ label, value, onContentChange }) {
         value={value}
         init={{
           height: 350,
+          branding: false,
           menubar: false,
           plugins: [
             'advlist',
