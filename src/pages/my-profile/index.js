@@ -124,12 +124,11 @@ const index = () => {
               name="phone_number"
               value={changedUserInfo?.phone_number}
               onChange={handleChange}
-              secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information"
+              secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information."
             />
           </div>
           <hr className="my-5" />
           <div className="flex items-center">
-            <Button label="Cancel" white className="mr-3" />
             <Button loading={loadingActivate} label="Save Changes" onClick={handleSubmit} />
           </div>
         </div>
