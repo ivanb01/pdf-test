@@ -16,15 +16,16 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
+import { getAllEvents, getCampaign, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
 import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
+import { getContactTypeByTypeId } from '@global/functions';
 
 const index = () => {
   const router = useRouter();
-  const { id, category } = router.query;
+  const { id } = router.query;
   const [currentButton, setCurrentButton] = useState(0);
   const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
   const [campaignDetails, setCampaignDetails] = useState();
@@ -32,6 +33,8 @@ const index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
   const [showEditCampaign, setShowEditCampaign] = useState(false);
+  const [category, setCategory] = useState('');
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,21 +42,32 @@ const index = () => {
       getAllEvents(id).then((res) => {
         setCampaignEvents(res.data);
       });
-      getCampaignsUsers(id).then((res) => {
+      getCampaign(id).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
       });
     }
   }, [id]);
 
   useEffect(() => {
+    if (usersInCampaignGlobally?.contact_category_id) {
+      setCategory(getContactTypeByTypeId(null, usersInCampaignGlobally.contact_category_id));
+    }
+  }, [usersInCampaignGlobally]);
+
+  useEffect(() => {
     if (CRMCampaigns === undefined) {
       getCampaignsByCategory('Client').then((res) => {
         dispatch(setCRMCampaigns(res.data));
-        setCampaignDetails(res.data.campaigns.find((c) => c.campaign_id == id));
+        let foundCampaign = res.data.campaigns.find((c) => c.campaign_id == id);
+        if (foundCampaign?.contact_category_id) {
+          setCategory(getContactTypeByTypeId(null, foundCampaign.contact_category_id));
+        }
+        setCampaignDetails(foundCampaign);
       });
     } else if (CRMCampaigns !== undefined) {
-      const campaigns = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
-      setCampaignDetails(campaigns);
+      const campaign = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
+      setCategory(getContactTypeByTypeId(null, campaign.contact_category_id));
+      setCampaignDetails(campaign);
     }
   }, [CRMCampaigns, id]);
 
@@ -183,7 +197,13 @@ const index = () => {
         </div>
       ) : (
         <>
-          <EditCampaignSidebar open={showEditCampaign} setOpen={setShowEditCampaign} id={id} />
+          <EditCampaignSidebar
+            setCampaignDetails={setCampaignDetails}
+            campaignData={campaignDetails}
+            open={showEditCampaign}
+            setOpen={setShowEditCampaign}
+            id={id}
+          />
           <div className={'p-6 flex justify-between'}>
             <div className={'flex gap-4 items-start'}>
               <ArrowBackIosIcon

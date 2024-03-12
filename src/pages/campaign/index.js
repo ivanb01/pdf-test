@@ -26,14 +26,15 @@ const index = () => {
 
   const renderCampaignWrapper = (category) => {
     let filteredCampaigns;
+    console.log(category);
     if (category == 'All Client') {
       filteredCampaigns = CRMCampaigns?.campaigns?.filter(
         (campaign) =>
-          campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            campaign.contact_category_id === null &&
-            campaign.contact_status_id === null),
+          (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          campaign.contact_category_id === null &&
+          campaign.contact_status_id === null,
       );
     } else {
       filteredCampaigns = CRMCampaigns?.campaigns?.filter(
@@ -41,7 +42,7 @@ const index = () => {
           (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
             campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          clientOptions.find((option) => option.id == campaign.contact_category_id).name === category,
+          clientOptions.find((option) => option.id == campaign.contact_category_id)?.name === category,
       );
     }
 
@@ -145,8 +146,8 @@ const index = () => {
   const contacts = useSelector((state) => state.contacts.data.data);
 
   useEffect(() => {
-    if (contacts === undefined) {
-      getCampaignsByCategory('null')
+    if (contacts === undefined && CRMCampaigns === undefined) {
+      getCampaignsByCategory('Clients')
         .then((res) => {
           setLoading(true);
           dispatch(setCRMCampaigns(res.data));
@@ -154,6 +155,8 @@ const index = () => {
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [contacts]);
 

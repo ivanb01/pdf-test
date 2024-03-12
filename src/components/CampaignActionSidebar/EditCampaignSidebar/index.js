@@ -1,6 +1,6 @@
 import Button from '@components/shared/button';
 import SlideOver from '@components/shared/slideOver';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import specificClients from '/public/images/specific-clients.svg';
 import call from '/public/images/call.svg';
@@ -23,12 +23,14 @@ import AllClientsIcon from 'icons/AllClientsIcon';
 import MailIcon from 'icons/MailIcon';
 import CallIcon from 'icons/CallIcon';
 import Divider from 'icons/Divider';
-import { addCampaign, getCampaign, updateCampaign } from '@api/campaign';
+import { addCampaign, getCampaign, getCampaignsByCategory, updateCampaign } from '@api/campaign';
 import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
 import Loader from '@components/shared/loader';
+import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 
-const EditCampaignSidebar = ({ open, setOpen, id }) => {
+const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
+  const dispatch = useDispatch();
   const [loadingData, setLoadingData] = useState(true);
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
@@ -72,6 +74,13 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
     setSelectedEvent,
   } = useCampaignForm(defaultCampaign, defaultEvents);
 
+  const setEligibleData = (campaign) => {
+    if (campaign.contact_category_id == null && campaign.contact_status_id == null) {
+      setEligibleClients(0);
+    } else {
+      setEligibleClients(1);
+    }
+  };
   useEffect(() => {
     const fetchCampaignData = async () => {
       let fetchedCampaign = await getCampaign(campaignId);
@@ -80,21 +89,45 @@ const EditCampaignSidebar = ({ open, setOpen, id }) => {
       setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
       let events = fetchedCampaign.actions.map((event) => ({ ...event }));
       setEvents(events);
+      setEligibleData(fetchedCampaign);
     };
-    fetchCampaignData();
+    if (!campaignData) {
+      fetchCampaignData();
+    } else {
+      setLoadingData(false);
+      console.log(campaignData);
+      setCampaign(campaignData);
+      setEvents(campaignData.actions);
+      setEligibleData(campaignData);
+    }
   }, [campaignId]);
 
   const editCampaign = () => {
     setEditingCampaignLoader(true);
     let editCampaignObject = {
-      campaign: campaign,
-      actions: events,
+      campaign: {
+        contact_category_id: campaign.contact_category_id,
+        contact_status_id: campaign.contact_status_id,
+        name: campaign.name,
+        status: 'Active',
+      },
+      actions: events.map((event) => ({
+        type: event.type,
+        action: event.action,
+        wait_interval: event.wait_interval,
+        title: event.title,
+        body: event.body,
+        body_html: event.body_html,
+        charset: 'A',
+      })),
       affect_events: false,
     };
-    updateCampaign(editCampaignObject, campaignId).then(() => {
+    updateCampaign(editCampaignObject, campaignId).then((res) => {
+      setCampaignDetails({ ...campaign, actions: editCampaignObject.actions });
       setEditingCampaignLoader(false);
       setOpen(false);
       toast.success('Campaign edited successfully!');
+      getCampaign(campaignId).then((res) => dispatch(setUsersInCampaignGlobally(res.data)));
     });
   };
 

@@ -106,7 +106,7 @@ export const getContactTypeByTypeId = (subtypes, typeId) => {
     });
   });
 
-  if (!foundType) {
+  if (!foundType && subtypes) {
     foundType = subtypes.find((subtype) => subtype.id == typeId).name;
   }
   return foundType ? foundType : 'Unknown';

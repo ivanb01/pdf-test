@@ -40,9 +40,7 @@ export const unassignContactFromCampaign = (campaignId, contactId) => {
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('v2/cmps', {
-    params: { category: category },
-  });
+  return axiosInstance.get('v2/cmps');
 };
 
 export const getCampaign = (id) => {

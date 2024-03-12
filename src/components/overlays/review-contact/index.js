@@ -116,10 +116,10 @@ const ReviewContact = ({
         client?.category_1 == 'Client'
           ? 0
           : client?.category_1 == 'Professional'
-          ? 1
-          : client?.category_1 === 'Trash'
-          ? 4
-          : 2,
+            ? 1
+            : client?.category_1 === 'Trash'
+              ? 4
+              : 2,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
@@ -263,10 +263,10 @@ const ReviewContact = ({
     console.log(vendorSubtypesFormatted, 'vendorSubtypesFormatted');
     const category =
       values.selectedContactCategory === 0
-        ? clientOptions.find((client) => client.id === category_id).name
+        ? clientOptions.find((client) => client.id === category_id)?.name
         : values.selectedContactCategory === 1 && values.selectedContactType === 8
-        ? vendorSubtypesFormatted?.find((vendor) => vendor.value == formik.values.selectedContactSubtype).label
-        : client.category_2;
+          ? vendorSubtypesFormatted?.find((vendor) => vendor.value == formik.values.selectedContactSubtype).label
+          : client.category_2;
 
     let status_id = category_id == 3 ? 1 : values.selectedStatus;
     const baseData = {
@@ -688,8 +688,8 @@ const ReviewContact = ({
                     formik.values.selectedContactCategory == 0
                       ? clientOptions
                       : formik.values.selectedContactCategory == 1
-                      ? professionalsOptions
-                      : othersOptions
+                        ? professionalsOptions
+                        : othersOptions
                   }
                   required
                   label="What type?"
