@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change text" />
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="make changes in buttons for preview and notify">
+      <change afterPath="$PROJECT_DIR$/public/images/icons/thumbDown.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/icons/thumbUp.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/PropertyDetailsModal/property-details-modal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/property-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/property-card/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/global/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/portfolio/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/portfolio/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +26,9 @@
         <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -66,30 +79,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00002" summary="add gradient">
-      <option name="closed" value="true" />
-      <created>1693217871179</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1693217871179</updated>
-    </task>
-    <task id="LOCAL-00003" summary="improve others sum and uncategorized sum">
-      <option name="closed" value="true" />
-      <created>1693218293738</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1693218293738</updated>
-    </task>
-    <task id="LOCAL-00004" summary="fix button issues">
-      <option name="closed" value="true" />
-      <created>1695666365885</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1695666365885</updated>
-    </task>
     <task id="LOCAL-00005" summary="change popup when ai contact">
       <option name="closed" value="true" />
       <created>1695666505165</created>
@@ -466,15 +455,37 @@
       <option name="project" value="LOCAL" />
       <updated>1701339286104</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="add portfolio preview">
+      <option name="closed" value="true" />
+      <created>1709850957200</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1709850957200</updated>
+    </task>
+    <task id="LOCAL-00052" summary="add portfolio preview">
+      <option name="closed" value="true" />
+      <created>1709884486795</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1709884486795</updated>
+    </task>
+    <task id="LOCAL-00053" summary="make changes in buttons for preview and notify">
+      <option name="closed" value="true" />
+      <created>1709894123799</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1709894123799</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add info icon on cards" />
-    <MESSAGE value="add zoom on preview marketing" />
     <MESSAGE value="make size of main sidebar smaller and do refactoring at ai-summary" />
     <MESSAGE value="do refactoring at ai-summary" />
     <MESSAGE value="change direction of Tooltip" />
@@ -498,6 +509,8 @@
     <MESSAGE value="fix width in importing contact table" />
     <MESSAGE value="add descriptive message on marketing page" />
     <MESSAGE value="change text" />
-    <option name="LAST_COMMIT_MESSAGE" value="change text" />
+    <MESSAGE value="add portfolio preview" />
+    <MESSAGE value="make changes in buttons for preview and notify" />
+    <option name="LAST_COMMIT_MESSAGE" value="make changes in buttons for preview and notify" />
   </component>
 </project>

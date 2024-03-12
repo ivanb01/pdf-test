@@ -1,57 +1,29 @@
 import oneLineLogo from '/public/images/oneline-logo.svg';
 import one from '/public/images/property/1.png';
-import two from '/public/images/property/2.png';
-import three from '/public/images/property/3.png';
-import four from '/public/images/property/4.png';
-import five from '/public/images/property/5.png';
 import FsLightbox from 'fslightbox-react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import Image from 'next/image';
-import location from '/public/images/location.png';
 import { useState } from 'react';
 import rooms from '/public/images/property/rooms.svg';
 import beds from '/public/images/property/beds.svg';
 import bathrooms from '/public/images/property/bathrooms.svg';
-import balcony from '/public/images/property/balcony.svg';
-import fireplace from '/public/images/property/fireplace.svg';
-import childrenPlayroom from '/public/images/property/childrenPlayroom.svg';
-import furnished from '/public/images/property/funished.svg';
-import healthClub from '/public/images/property/healthClub.svg';
-import wifi from '/public/images/property/wifi.svg';
-import nursey from '/public/images/property/nursey.svg';
-import concierge from '/public/images/property/concierge.svg';
-import garage from '/public/images/property/garage.svg';
-import laundry from '/public/images/property/laundry.svg';
-import pool from '/public/images/property/pool.svg';
-import lounge from '/public/images/property/lounge.svg';
-import bicycleRoom from '/public/images/property/bicycleroom.svg';
-import doorman from '/public/images/property/doorman.svg';
-import garden from '/public/images/property/garden.svg';
-import microwave from '/public/images/property/microwave.svg';
-import storage from '/public/images/property/storage.svg';
-import elevator from '/public/images/property/elevator.svg';
-import SimpleBar from 'simplebar-react';
-import ArrowForward from '@mui/icons-material/ArrowForward';
-import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useRef, useMemo } from 'react';
-import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { formatPrice } from '@global/functions';
 import fetchJsonp from 'fetch-jsonp';
 import Loader from '@components/shared/loader';
 import placeholder from '/public/images/placeholder.png';
-import { EmailOutlined, EmailRounded, Phone } from '@mui/icons-material';
 import { Auth } from 'aws-amplify';
 import Button from '@components/shared/button';
 import GlobalAlert from '@components/shared/alert/global-alert';
-import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
+import PropertiesCarousel from '@components/property-details/properties-carousel';
+import PropertyMainDetails from '@components/property-details/property-main-details';
+import PropertyAmenities from '@components/property-details/property-amenities';
+import PropertyLocation from '@components/property-details/property-location';
 
 const index = () => {
   const router = useRouter();
@@ -308,72 +280,6 @@ const index = () => {
     },
   ];
 
-  const propertyAmenities = [
-    {
-      name: 'Fireplace',
-      icon: fireplace,
-    },
-    {
-      name: 'Children Playroom',
-      icon: childrenPlayroom,
-    },
-    {
-      name: 'Furnished',
-      icon: furnished,
-    },
-    {
-      name: 'Health Club',
-      icon: healthClub,
-    },
-    {
-      name: 'Nursery',
-      icon: nursey,
-    },
-    {
-      name: 'WiFi',
-      icon: wifi,
-    },
-    {
-      name: 'Balcony',
-      icon: balcony,
-    },
-    {
-      name: 'Concierge',
-      icon: concierge,
-    },
-    { name: 'Garage', icon: garage },
-    {
-      name: 'Laundry',
-      icon: laundry,
-    },
-    {
-      name: 'Pool',
-      icon: pool,
-    },
-    {
-      name: 'Lounge',
-      icon: lounge,
-    },
-    {
-      name: 'Bicycle Room',
-      icon: bicycleRoom,
-    },
-    {
-      name: 'Doorman',
-      icon: doorman,
-    },
-    {
-      name: 'Garden',
-      icon: garden,
-    },
-    {
-      name: 'Microwave',
-      icon: microwave,
-    },
-    { name: 'Storage', icon: storage },
-    { name: 'Elevator', icon: elevator },
-  ];
-
   const otherPropertyDetails = [
     {
       id: 0,
@@ -476,15 +382,7 @@ const index = () => {
         (typeof detail.value === 'string' && detail?.value.slice(-1) === '%' && detail.value.slice(0, -1) === '0'),
     );
   };
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyDANJRHsYVmytQVpYGdPYsEKAivfzIHlwo',
-  });
-  const center = useMemo(() => ({ lat: data.LATITUDE, lng: data.LONGITUDE }), [data.LATITUDE, data.LONGITUDE]);
 
-  const scrollToMap = () => {
-    var element = document.querySelector('#map-section');
-    element.scrollIntoView({ behavior: 'smooth' });
-  };
   const fetchProperty = async () => {
     let params = {
       apikey: '4d7139716e6b4a72',
@@ -516,47 +414,6 @@ const index = () => {
     }
   }, [id]);
 
-  const differentiateAmenities = (amenities) => {
-    const mainAmenities = [
-      'Fireplace',
-      'Children Playroom',
-      'Furnished',
-      'Health Club',
-      'Nursery',
-      'WiFi',
-      'Balcony',
-      'Concierge',
-      'Garage',
-      'Laundry',
-      'Pool',
-      'Lounge',
-      'Bicycle Room',
-      'Doorman',
-      'Garden',
-      'Microwave',
-      'Storage',
-      'Elevator',
-    ];
-
-    const allAmenities = amenities.split(',').map((item) => item.trim().toLowerCase());
-
-    const mainAmenitiesPerProperty = mainAmenities.filter((mainAmenity) =>
-      allAmenities.some((amenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
-    );
-
-    const remainingAmenities = allAmenities.filter(
-      (amenity) =>
-        !mainAmenitiesPerProperty.some((mainAmenity) => amenity.toLowerCase().includes(mainAmenity.toLowerCase())),
-    );
-
-    const capitalizeFirstLetterOfEachWord = (str) =>
-      str.toLowerCase().replace(/(^|\s)\S/g, (match) => match.toUpperCase());
-
-    const capitalizedRemainingAmenities = remainingAmenities.map(capitalizeFirstLetterOfEachWord);
-
-    return { mainAmenitiesPerProperty, capitalizedRemainingAmenities };
-  };
-
   useEffect(() => {
     Auth.currentAuthenticatedUser().then((res) => {
       if (res) {
@@ -585,91 +442,9 @@ const index = () => {
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
-      <div className="flex md:h-[500px] h-[300px] relative">
-        {data.PHOTOS.length == 1 ? (
-          <div className="w-full h-full">
-            <img
-              src={data.PHOTOS[0].PHOTO_URL}
-              onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
-              className="object-cover w-full  h-[500px] object-center"
-            />
-          </div>
-        ) : data.PHOTOS.length == 2 ? (
-          <>
-            <div className="md:w-1/2 w-full h-full pr-3">
-              <img
-                src={data.PHOTOS[0].PHOTO_URL}
-                className="object-cover w-full object-center"
-                onClick={() => setLightboxController((prev) => ({ slide: 0, toggler: !prev.toggler }))}
-              />
-            </div>
-            <div className="md:w-1/2 w-full h-full min-h-[500px]">
-              <img
-                src={data.PHOTOS[1].PHOTO_URL}
-                className="object-cover w-full  object-center  h-[500px]"
-                onClick={() => setLightboxController((prev) => ({ slide: 1, toggler: !prev.toggler }))}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <Swiper
-              scrollbar={{ draggable: true }}
-              slidesPerView={3}
-              loop
-              spaceBetween={12}
-              navigation
-              modules={[Pagination, Navigation, Scrollbar]}>
-              {data.PHOTOS.map((picture, index) => (
-                <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
-                  <img
-                    src={picture.PHOTO_URL}
-                    alt={`Image ${index + 1}`}
-                    className="object-cover w-full  object-center h-[500px] cursor-pointer"
-                    onClick={() => setLightboxController((prev) => ({ slide: index, toggler: !prev.toggler }))}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </>
-        )}
-      </div>
+      <PropertiesCarousel data={data} />
       <div className="properties-container">
-        <div className="flex md:flex-row flex-col justify-between border-gray2 border-b md:pb-0 pb-[20px]">
-          <div className="md:py-5 pt-5">
-            <div className="flex md:flex-row flex-col md:items-center items-start">
-              <div className="order-2 md:order-1 text-[#111827] font-semibold md:mr-2 text-xl md:text-2xl">
-                {data.PROPERTY_TYPE} in {data.ADDRESS}
-              </div>
-              <div
-                className={`order-1 md:order-2 md:mb-0 mb-3 min-w-[90px] flex items-center justify-center border ${
-                  data.STATUS.toLowerCase() === 'sold' || data.STATUS.toLowerCase() === 'for sale'
-                    ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-                    : 'border-cyan-800 bg-cyan-50 text-cyan-800'
-                } rounded-full h-fit px-2 py-1 text-xs font-medium`}>
-                {data.STATUS}
-              </div>
-            </div>
-            <div className="flex items-center mt-3">
-              <Image src={location} alt="" />
-              <div
-                className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
-                onClick={() => scrollToMap()}>
-                {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="md:flex hidden mt-0 clipPath min-w-[285px] bg-[#EFF7FA] h-full px-4 items-center justify-end text-gray7 font-semibold text-xl">
-              {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
-            </div>
-            <div className="md:hidden mt-3 min-w-[205px] h-full md:px-4 flex items-center md:justify-end text-gray7 font-semibold text-lg">
-              {formatPrice(data.PRICE)}
-              {data.STATUS.toLowerCase() == 'for rent' && <span className="font-normal">&nbsp;monthly</span>}
-            </div>
-          </div>
-        </div>
+        <PropertyMainDetails data={data} />
         <div className="md:mt-10 mt-5 pb-10 flex justify-between">
           <div className="w-[700px] mr-20">
             <div className="property-details">
@@ -732,47 +507,7 @@ const index = () => {
               </div>
               <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
             </div>
-            {(differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 ||
-              differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0) && (
-              <div className="mt-10">
-                <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
-                <div className={'w-[700px]'}>
-                  {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 && (
-                    <div className="grid grid-cols-3 gap-6 items-center mb-6">
-                      {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
-                        differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
-                          const matchedAmenity = propertyAmenities.find(
-                            (item) => item.name.toLowerCase() === amenity.toLowerCase(),
-                          );
-                          return (
-                            <div className="flex-1 flex items-center gap-1.5 text-[#111827]" key={index}>
-                              {matchedAmenity && <Image src={matchedAmenity.icon} />}
-                              {matchedAmenity && <span>{matchedAmenity.name}</span>}
-                            </div>
-                          );
-                        })}
-                    </div>
-                  )}
-                  <div className={'flex flex-wrap'} style={{ gap: '5px' }}>
-                    {differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0 &&
-                      differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.map(
-                        (remaining, index) =>
-                          remaining.length > 0 && (
-                            <div
-                              key={index}
-                              style={{ borderRadius: '20px' }}
-                              className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
-                              <p className={'text-sm leading-4 font-medium px-[10px] py-1.5 text-gray-6'}>
-                                {' '}
-                                {remaining}
-                              </p>
-                            </div>
-                          ),
-                      )}
-                  </div>
-                </div>
-              </div>
-            )}
+            <PropertyAmenities data={data} />
             {!checkAllItems(getOtherDetails()) && (
               <div className="mt-[50px] mb-[50px]">
                 <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
@@ -801,21 +536,7 @@ const index = () => {
               </div>
             )}
             <div className="mt-10 mb-[100px]">
-              <div className="text-gray7 text-xl font-medium">Property Location</div>
-              <div className="text-gray5 my-2">{data.ADDRESS}</div>
-              <div className="" id="map-section">
-                {isLoaded && (
-                  <GoogleMap mapContainerClassName="map-container" center={center} zoom={15}>
-                    <MarkerF
-                      key="marker_1"
-                      position={{
-                        lat: data.LATITUDE,
-                        lng: data.LONGITUDE,
-                      }}
-                    />
-                  </GoogleMap>
-                )}
-              </div>
+              <PropertyLocation data={data} />
             </div>
           </div>
           {isAuthenticated && (
