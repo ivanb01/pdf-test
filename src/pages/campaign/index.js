@@ -26,7 +26,6 @@ const index = () => {
 
   const renderCampaignWrapper = (category) => {
     let filteredCampaigns;
-    console.log(category);
     if (category == 'All Client') {
       filteredCampaigns = CRMCampaigns?.campaigns?.filter(
         (campaign) =>

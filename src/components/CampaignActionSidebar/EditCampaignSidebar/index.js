@@ -34,6 +34,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   const [loadingData, setLoadingData] = useState(true);
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
+  const [eventsToDelete, setEventsToDelete] = useState([]);
 
   const defaultEvents = [
     {
@@ -112,6 +113,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         status: 'Active',
       },
       actions: events.map((event) => ({
+        id: event.id ? event.id : [],
         type: event.type,
         action: event.action,
         wait_interval: event.wait_interval,
@@ -121,6 +123,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         charset: 'A',
       })),
       affect_events: false,
+      actions_to_remove: eventsToDelete,
     };
     updateCampaign(editCampaignObject, campaignId).then((res) => {
       setCampaignDetails({ ...campaign, actions: editCampaignObject.actions });
@@ -190,7 +193,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     );
   };
 
-  const Event = ({ index, title, className, type, active, onClick, wait, icon }) => {
+  const Event = ({ id, index, title, className, type, active, onClick, wait, icon }) => {
     let isSms = type == 0 ? true : false;
 
     let days = wait.split('d')[0];
@@ -220,7 +223,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           </div>
           <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
           <div
-            onClick={() => removeEvent(index)}
+            onClick={() => {
+              removeEvent(index);
+              setEventsToDelete((prevState) => [...prevState, id]);
+            }}
             className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
             <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
           </div>
@@ -304,6 +310,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                   </CircleIcon>
                 )
               }
+              id={event.id}
               index={index}
               title={event.title}
               wait={event.wait_interval}

@@ -33,14 +33,14 @@ const CampaignCard = ({
     <div className={'flex flex-col rounded-lg campaigns-box-shadow justify-between'}>
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
-          <Link href={{ pathname: '/campaign/details', query: { id: campaign_id, category: category } }} passHref>
+          <Link href={{ pathname: '/campaign/details', query: { id: campaign_id } }} passHref>
             <div
               className={'flex justify-between items-center cursor-pointer'}
               role={'button'}
               onClick={() => {
                 router.push({
                   pathname: '/campaign/details',
-                  query: { id: campaign_id, category: category },
+                  query: { id: campaign_id },
                 });
               }}>
               <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{name}</h6>
@@ -64,7 +64,9 @@ const CampaignCard = ({
               'bg-gray1 text-xs mt-[14px] leading-5 font-medium text-gray6 px-1.5 py-0.5 flex gap-1 items-center-center'
             }>
             <div className={'m-auto'}>
-              {getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:
+              {props.contact_category_id != null && props.contact_status_id != null
+                ? getContactStatusByStatusId(props.contact_category_id, props.contact_status_id) + ':'
+                : 'All Clients:'}
             </div>
             <div className={'flex'}>
               {contact_assigned_count + contact_unassigned_count

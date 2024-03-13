@@ -21,7 +21,7 @@ import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/sl
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-import { getContactTypeByTypeId } from '@global/functions';
+import { capitalize, getContactTypeByTypeId } from '@global/functions';
 
 const index = () => {
   const router = useRouter();
@@ -214,7 +214,9 @@ const index = () => {
                 <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.name}</h4>
                 <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
                   <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {`${category}s`}: {usersInCampaignGlobally?.contact_status_2}
+                    {category == 'Unknown'
+                      ? 'All Clients'
+                      : `${capitalize(category)}s : ${usersInCampaignGlobally?.contact_status_2}`}
                   </span>
                 </div>
               </div>

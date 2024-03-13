@@ -95,7 +95,9 @@ export const removeClientFromArray = (clientList, clientEmail) => {
     return el.email != clientEmail;
   });
 };
-
+export const capitalize = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
 export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
