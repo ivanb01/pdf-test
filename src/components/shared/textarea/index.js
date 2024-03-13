@@ -15,6 +15,7 @@ const TextArea = ({
   error,
   errorText,
   link,
+  onClick,
   ...props
 }) => {
   return (
@@ -52,6 +53,7 @@ const TextArea = ({
           rows={rows}
           name={name}
           id={id}
+          onClick={onClick}
           value={value}
           onChange={handleChange}
           className={`resize-none ${className} max-h-[65px] text-gray8 shadow-sm focus:ring-primaryOxford focus:border-primaryOxford block w-full sm:text-sm border-gray-300 rounded-md`}
