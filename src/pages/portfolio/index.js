@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getPortfolioByShareId } from '@api/portfolio';
+import { getPortfolioByShareId, putClientFeedback } from '@api/portfolio';
 import Loader from '@components/shared/loader';
 import { Header } from '@components/public/Header';
 import SimpleBar from 'simplebar-react';
@@ -32,28 +32,52 @@ const Portfolio = () => {
   }, [share_id]);
 
   const tabs = [
-    { name: 'All', href: '#' },
+    {
+      name: 'To review',
+      href: '#',
+      count: userProperties?.properties?.filter(
+        (property) => property.property_details !== undefined && property.status === 'saved',
+      ).length,
+    },
     {
       name: 'Liked',
       href: '#',
-      count: userProperties?.properties?.filter((property) => property.status === 'liked').length,
+      count: userProperties?.properties?.filter(
+        (property) => property.property_details !== undefined && property.status === 'liked',
+      ).length,
     },
     {
       name: 'Disliked',
       href: '#',
-      count: userProperties?.properties?.filter((property) => property.status === 'disliked').length,
+      count: userProperties?.properties?.filter(
+        (property) => (property.property_details !== undefined && property.status) === 'disliked',
+      ).length,
     },
   ];
   const updateUserProperties = () => {
     let properties = [];
     if (propertiesCurrentTab === 1) {
-      properties = userProperties?.properties?.filter((p) => p.status === 'liked');
+      properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'liked');
     } else if (propertiesCurrentTab === 2) {
-      properties = userProperties?.properties?.filter((p) => p.status === 'disliked');
+      properties = userProperties?.properties?.filter(
+        (p) => p?.property_details !== undefined && p.status === 'disliked',
+      );
     } else {
-      properties = userProperties?.properties?.filter((p) => p.status === 'saved');
+      properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'saved');
     }
     return properties;
+  };
+  const addClientFeedback = (share_id, id, status, note) => {
+    putClientFeedback(share_id, status, note).catch((e) => toast.error('Something went wrong, please refresh'));
+    const index = userProperties.properties.findIndex((element) => element?.property_details?.ID === id);
+    setUserProperties((prev) => {
+      prev.properties[index].status = status;
+      prev.properties[index].agent_notes = note;
+      return {
+        ...prev,
+        properties: [...prev.properties],
+      };
+    });
   };
   useEffect(() => {
     updateUserProperties();
@@ -64,20 +88,22 @@ const Portfolio = () => {
     setSelectedProperty(property);
   };
   const getNextItem = (property) => {
-    const index = userProperties?.properties.findIndex((element) => element?.property_details?.ID === property?.ID);
-    if (index < 0 || index >= userProperties?.properties.length - 1) {
-      setSelectedProperty(userProperties?.properties[0]?.property_details);
+    const index = updateUserProperties()?.findIndex((element) => element?.property_details?.ID === property?.ID);
+    if (index < 0 || index >= updateUserProperties().length - 1) {
+      setSelectedProperty(updateUserProperties()[0]);
       return;
     }
-    setSelectedProperty(userProperties?.properties[index + 1]?.property_details);
+    setSelectedProperty(updateUserProperties()[index + 1]);
   };
   const getPrevItem = (property) => {
-    const index = userProperties?.properties.findIndex((element) => element?.property_details?.ID === property?.ID);
-    if (index <= 0 || index >= userProperties?.properties.length) {
-      setSelectedProperty(userProperties?.properties[userProperties?.properties.length - 1]?.property_details);
+    const index = updateUserProperties().findIndex(
+      (element) => element?.property_details?.ID === property?.property_details.ID,
+    );
+    if (index <= 0 || index >= updateUserProperties().length) {
+      setSelectedProperty(updateUserProperties()[updateUserProperties().length - 1]);
       return;
     }
-    setSelectedProperty(userProperties?.properties[index - 1]?.property_details);
+    setSelectedProperty(updateUserProperties()[index - 1]);
   };
 
   return loading ? (
@@ -97,33 +123,61 @@ const Portfolio = () => {
             tabs={tabs}
           />
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {updateUserProperties().map((property, index) => (
-            <PropertyCard
-              putFeedback
-              noSelect
-              key={index}
-              openPropertyModal={(property) => {
-                openPropertyModal(property);
-              }}
-              property={property.property_details && property.property_details}
-            />
-          ))}
-        </div>
+
+        {updateUserProperties().length === 0 ? (
+          <EmptyPortfolioState status={propertiesCurrentTab} />
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
+            {updateUserProperties().map((property, index) => (
+              <PropertyCard
+                putFeedback
+                noSelect
+                key={index}
+                openPropertyModal={() => {
+                  openPropertyModal(property);
+                }}
+                addClientFeedback={(id, status, note) =>
+                  addClientFeedback(property?.property_sharable_id, id, status, note)
+                }
+                propertyStatus={property?.status}
+                property={property.property_details && property.property_details}
+              />
+            ))}
+          </div>
+        )}
       </SimpleBar>
       {openViewPropertyModal && (
         <PortfolioPopup
-          propertyIndex={userProperties?.properties.findIndex(
-            (element) => element?.property_details?.ID === selectedProperty?.ID,
+          propertyIndex={updateUserProperties()?.findIndex(
+            (element) => element?.property_details?.ID === selectedProperty?.property_details?.ID,
           )}
-          onNextClick={(property) => getNextItem(property)}
-          onPrevClick={(property) => getPrevItem(property)}
-          totalNumberOfProperties={userProperties?.count}
-          property={selectedProperty}
+          note={selectedProperty?.agent_notes}
+          status={selectedProperty?.status}
+          onNextClick={(property) => getNextItem(property && property)}
+          onPrevClick={(property) => getPrevItem(property && property)}
+          totalNumberOfProperties={updateUserProperties().map((p) => p.property_details !== undefined).length}
+          property={selectedProperty?.property_details}
+          addClientFeedback={(id, status, note) =>
+            addClientFeedback(selectedProperty.property_sharable_id, id, status, note)
+          }
           handleCloseOverlay={() => setOpenViewPropertyModal(false)}
         />
       )}
     </>
+  );
+};
+const EmptyPortfolioState = ({ status }) => {
+  return (
+    <div className={'h-[80%] flex items-center justify-center text-center w-full flex-col gap-3'}>
+      <h4 className={'text-xl leading-7 font-semibold text-gray7'}>
+        {status === 0 ? 'No Properties In Portfolio Yet' : `No ${status === 1 ? 'Liked' : 'Disliked'} Properties Yet`}
+      </h4>
+      <p className={'text-base leading-6 font-medium w-[352px] text-gray8'}>
+        {status === 0
+          ? "So far, there haven't been any properties that you've to review."
+          : `So far, there haven't been any properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
+      </p>
+    </div>
   );
 };
 export default Portfolio;

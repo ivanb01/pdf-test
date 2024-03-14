@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import Loader from '@components/shared/loader';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import Image from 'next/image';
 import rooms from '../../../public/images/property/rooms.svg';
 import beds from '../../../public/images/property/beds.svg';
@@ -16,6 +15,12 @@ import PropertiesCarousel from '@components/property-details/properties-carousel
 import PropertyMainDetails from '@components/property-details/property-main-details';
 import PropertyAmenities from '@components/property-details/property-amenities';
 import PropertyLocation from '@components/property-details/property-location';
+import Button from '@components/shared/button';
+import TextArea from '@components/shared/textarea';
+import PropertyOtherDetails from '@components/property-details/property-other-details';
+import PopoverComponent from '@components/shared/Popover';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+
 const PortfolioPopup = ({
   handleCloseOverlay,
   property,
@@ -23,6 +28,9 @@ const PortfolioPopup = ({
   onNextClick,
   onPrevClick,
   propertyIndex,
+  addClientFeedback,
+  status,
+  note,
 }) => {
   const [data, setData] = useState({
     MONTHSFREEREQMINLEASE: '',
@@ -245,7 +253,6 @@ const PortfolioPopup = ({
     DATE_UPDATE: '2023-06-20 08:44:00',
   });
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setData(property);
     setLoading(false);
@@ -271,95 +278,8 @@ const PortfolioPopup = ({
     },
   ];
 
-  const otherDetails = [
-    {
-      id: 0,
-      name: 'Common Charges',
-      value: data.COMMON_CHARGES
-        ? `$${data.COMMON_CHARGES.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-        : data.COMMON_CHARGES,
-    },
-    {
-      id: 1,
-      name: 'Maintenance',
-      value: data.MAINTENANCE
-        ? `$${data.MAINTENANCE.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-        : data.MAINTENANCE,
-    },
-    {
-      id: 2,
-      name: 'Taxes',
-      value: data.TAXES ? `$${data.TAXES.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : data.TAXES,
-    },
-    {
-      id: 3,
-      name: 'Deductible',
-      value: data.DEDUCTIBLE,
-    },
-    {
-      id: 4,
-      name: 'Down Payment',
-      value: data.DOWN_PAYMENT === '0%' ? undefined : data.DOWN_PAYMENT,
-    },
-    {
-      id: 5,
-      name: 'Available date',
-      value: data.DATE_AVAILABLE,
-    },
-    {
-      id: 6,
-      name: 'Property type',
-      value: data.PROPERTY_TYPE,
-    },
-    {
-      id: 7,
-      name: 'Approx SF',
-      value: data?.SQUARE_FOOTAGE?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-    },
-    {
-      id: 8,
-      name: 'Stories',
-      value: data?.STORIES,
-    },
-    {
-      id: 9,
-      name: 'Unit Number',
-      value: data.UNIT_NUMBER,
-    },
-    // {
-    //   id: 10,
-    //   name: 'Tour',
-    //   value: data.VTOUR ?? data.VTOUR2,
-    // },
-  ];
-
-  const getOtherDetails = () => {
-    if (data?.STATUS?.toLowerCase().includes('sale')) {
-      otherDetails.push(
-        {
-          id: 11,
-          name: 'Closing Date',
-          value: data.CLOSING_DATE,
-        },
-        {
-          id: 12,
-          name: 'Closing price',
-          value: data.CLOSING_PRICE,
-        },
-      );
-    }
-    return otherDetails;
-  };
-  const checkAllItems = (details) => {
-    return details?.every(
-      (detail) =>
-        detail.value === undefined ||
-        detail.value === 0 ||
-        detail.value.length === 0 ||
-        (typeof detail.value === 'string' && detail?.value.slice(-1) === '%' && detail.value.slice(0, -1) === '0'),
-    );
-  };
-
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [value, setValue] = useState('');
   return (
     <PropertyOverlay
       onNextClick={() => onNextClick(property)}
@@ -375,18 +295,67 @@ const PortfolioPopup = ({
               {propertyIndex + 1}/{totalNumberOfProperties} Properties to review
             </h4>
             <div className={'flex items-center gap-2 '}>
+              {status !== 'disliked' ? (
+                <PopoverComponent
+                  side={'bottom'}
+                  align={'center'}
+                  style={{ backgroundColor: 'white' }}
+                  triggerElement={
+                    <button
+                      className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
+                      <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
+                      <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
+                    </button>
+                  }>
+                  <div className="max-w-[252px] bg-white">
+                    <TextArea
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenFeedback(true);
+                      }}
+                      className={'min-h-[90px]'}
+                      handleChange={(e) => {
+                        setValue(e.target.value);
+                      }}
+                      value={
+                        !openFeedback
+                          ? 'Please give us your opinion about this property. It will help us improve for next time.'
+                          : value
+                      }
+                    />
+                    <Button
+                      primary
+                      disabled={value.length < 9}
+                      className={'min-w-[252px] mt-[14px]'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addClientFeedback(property.ID, 'disliked', value);
+                        setValue('');
+                      }}>
+                      Send your feedback
+                    </Button>
+                  </div>
+                </PopoverComponent>
+              ) : (
+                <button
+                  onClick={() => {
+                    addClientFeedback(property.ID, 'saved', value);
+                  }}
+                  className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
+                  <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
+                  <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
+                </button>
+              )}
               <button
-                className={
-                  'h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px]'
-                }>
-                <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
-                <span className={'text-sm leading-6 font-semibold '}>Dislike</span>
-              </button>
-              <button
-                className={
-                  'h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]'
-                }>
-                <ThumbUpOutlinedIcon className={'h-[17px] w-[17px]'} />
+                onClick={() => {
+                  if (status === 'liked') {
+                    addClientFeedback(property.ID, 'saved', '');
+                    return;
+                  }
+                  addClientFeedback(property.ID, 'liked', '');
+                }}
+                className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}>
+                <ThumbUpAltOutlinedIcon className={'h-[17px] w-[17px]'} />
                 <span className={'text-sm leading-6 font-semibold '}>Like</span>
               </button>
             </div>
@@ -396,6 +365,15 @@ const PortfolioPopup = ({
               <PropertiesCarousel data={data} />
               <div className="properties-container">
                 <PropertyMainDetails data={data} />
+                {status === 'disliked' && (
+                  <div className={'py-[16px] px-5 bg-gray1 flex gap-4  flex-col mt-6 mb-[-20px]'}>
+                    <div className={'flex gap-2 flex-col'}>
+                      <h6 className={'text-base  font-semibold text-gray7'}>Client’s thoughts</h6>
+                      <div className={'h-[2px] w-5 bg-lightBlue3'}></div>
+                    </div>
+                    <p className={'text-base  font-normal text-gray7'}>{value.length > 0 ? value : note}</p>
+                  </div>
+                )}
                 <div className="md:mt-10 mt-5 pb-4 flex justify-between">
                   <div className="w-[700px] mr-20">
                     <div className="property-details">
@@ -418,36 +396,10 @@ const PortfolioPopup = ({
                           </div>
                         </div>
                       </div>
-                      <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
+                      <div className="mt-6" dangerouslySetInnerHTML={{ __html: data?.DESCRIPTION }}></div>
                     </div>
                     <PropertyAmenities data={data} />
-                    {!checkAllItems(getOtherDetails()) && (
-                      <div className="mt-[50px] mb-[50px]">
-                        <div className="text-gray7 text-xl mb-6 font-medium">Other Details</div>
-                        <div className="flex flex-wrap">
-                          {getOtherDetails().map((detail, index) => {
-                            if (
-                              detail.value !== undefined &&
-                              detail.value !== '' &&
-                              detail.value != 0 &&
-                              !(
-                                typeof detail.value === 'string' &&
-                                detail?.value.slice(-1) === '%' &&
-                                detail.value.slice(0, -1) === '0'
-                              )
-                            ) {
-                              return (
-                                <div className="md:w-1/4 sm:w-1/3 w-1/2 mb-4" key={index}>
-                                  <div className="text-gray4 text-sm">{detail.name}</div>
-                                  <div className="text-sm text-gray7 mt-1">{detail.value}</div>
-                                </div>
-                              );
-                            }
-                            return null;
-                          })}
-                        </div>
-                      </div>
-                    )}
+                    <PropertyOtherDetails data={data} />
                     <div className="mt-10 mb-[20px]">
                       <PropertyLocation data={data} />
                     </div>

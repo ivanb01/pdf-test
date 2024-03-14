@@ -5,15 +5,17 @@ import sqft from '/public/images/sqft.svg';
 import placeholder from '/public/images/img-placeholder.png';
 import { toast } from 'react-hot-toast';
 import link from '/public/images/link-2.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import TooltipComponent from '@components/shared/tooltip';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ThumbUp from '../../../public/images/icons/thumbUp.svg';
 import ThumbDown from '../../../public/images/icons/thumbDown.svg';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import TextArea from '@components/shared/textarea';
+import Button from '@components/shared/button';
+import PopoverComponent from '@components/shared/Popover';
 
 const ImageGallery = ({ images, url }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -79,10 +81,18 @@ const PropertyCard = ({
   isSelected,
   putFeedback,
   openPropertyModal,
+  propertyStatus,
+  addClientFeedback,
   deletePropertyFromPortfolio,
 }) => {
-  const [liked, setLiked] = useState(true);
-  const [disliked, setDisliked] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  useEffect(() => {
+    setLiked(propertyStatus !== 'liked');
+    setDisliked(propertyStatus !== 'disliked');
+  }, [propertyStatus, property]);
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [value, setValue] = useState('');
   let status = '';
   if (property?.STATUS == 'Rented') {
     status = '&status=22';
@@ -95,7 +105,7 @@ const PropertyCard = ({
     <div
       onClick={() => {
         if (putFeedback) {
-          openPropertyModal(property);
+          openPropertyModal();
         }
       }}
       className={`border transition-all border-gray-200 rounded-[4px] ${putFeedback && 'cursor-pointer'} ${
@@ -190,20 +200,75 @@ const PropertyCard = ({
                     }
                     setLiked(!liked);
                   }}>
-                  {liked ? <img src={ThumbUp.src} /> : <ThumbUpIcon className={'text-lightBlue5 h-5 w-5'} />}
+                  {liked ? (
+                    <img src={ThumbUp.src} onClick={() => addClientFeedback(property.ID, 'liked', '')} />
+                  ) : (
+                    <ThumbUpIcon
+                      className={'text-lightBlue5 h-5 w-5'}
+                      onClick={() => addClientFeedback(property.ID, 'saved', '')}
+                    />
+                  )}
                 </div>
-                <div
-                  role={'button'}
-                  className={'cursor-pointer'}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!liked) {
+                {disliked ? (
+                  <PopoverComponent
+                    side={'bottom'}
+                    align={'center'}
+                    style={{ backgroundColor: 'white' }}
+                    triggerElement={<img src={ThumbDown.src} onClick={(e) => e.stopPropagation()} />}>
+                    <div className="max-w-[252px] bg-white">
+                      <TextArea
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenFeedback(true);
+                        }}
+                        className={'min-h-[90px]'}
+                        handleChange={(e) => {
+                          setValue(e.target.value);
+                        }}
+                        value={
+                          !openFeedback
+                            ? 'Please give us your opinion about this property. It will help us improve for next time.'
+                            : value
+                        }
+                      />
+                      <Button
+                        primary
+                        disabled={value.length < 9}
+                        className={'min-w-[252px] mt-[14px]'}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDisliked(false);
+                          addClientFeedback(property.ID, 'disliked', value);
+                          setOpenFeedback(false);
+                          setValue('');
+                        }}>
+                        Send your feedback
+                      </Button>
+                    </div>
+                  </PopoverComponent>
+                ) : (
+                  <ThumbDownIcon
+                    className={'text-lightBlue5 h-5 w-5'}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDisliked(true);
                       setLiked(true);
-                    }
-                    setDisliked(!disliked);
-                  }}>
-                  {disliked ? <img src={ThumbDown.src} /> : <ThumbDownIcon className={'text-lightBlue5 h-5 w-5'} />}
-                </div>
+                      addClientFeedback(property.ID, 'saved', value);
+                    }}
+                  />
+                )}
+                {/*<div*/}
+                {/*  role={'button'}*/}
+                {/*  className={'cursor-pointer'}*/}
+                {/*  onClick={(e) => {*/}
+                {/*    e.stopPropagation();*/}
+                {/*    if (!liked) {*/}
+                {/*      setLiked(true);*/}
+                {/*    }*/}
+                {/*    setDisliked(!disliked);*/}
+                {/*  }}>*/}
+                {/*  {disliked ? <img src={ThumbDown.src} /> : <ThumbDownIcon className={'text-lightBlue5 h-5 w-5'} />}*/}
+                {/*</div>*/}
               </div>
             )}
             <input
