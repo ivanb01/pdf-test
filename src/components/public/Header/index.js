@@ -79,11 +79,12 @@ export const Header = () => {
   useEffect(() => {
     isLoggedIn();
   }, []);
-
   return (
     <header className={styles.header}>
-      <div className="container-public">
-        <div className={styles['header__content']}>
+      <div className="container-public" style={{ maxWidth: router.pathname?.includes('portfolio') && '100%' }}>
+        <div
+          className={styles['header__content']}
+          style={{ paddingInline: router.pathname?.includes('portfolio') ? '24px' : '80px' }}>
           <div className={styles['header__content-left']}>
             <Link href="/public/home">
               <Image src={logo} alt="oneline-logo" />

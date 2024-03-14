@@ -32,7 +32,13 @@ const Portfolio = () => {
   }, [share_id]);
 
   const tabs = [
-    { name: 'To review', href: '#' },
+    {
+      name: 'To review',
+      href: '#',
+      count: userProperties?.properties?.filter(
+        (property) => property.property_details !== undefined && property.status === 'saved',
+      ).length,
+    },
     {
       name: 'Liked',
       href: '#',
@@ -57,12 +63,7 @@ const Portfolio = () => {
         (p) => p?.property_details !== undefined && p.status === 'disliked',
       );
     } else {
-      properties = userProperties?.properties?.filter(
-        (p) =>
-          (p?.property_details !== undefined && p.status === 'saved') ||
-          p.status === 'liked' ||
-          p.status === 'disliked',
-      );
+      properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'saved');
     }
     return properties;
   };
@@ -124,9 +125,7 @@ const Portfolio = () => {
         </div>
 
         {updateUserProperties().length === 0 ? (
-          <EmptyPortfolioState
-            status={propertiesCurrentTab === 1 ? 'Liked' : propertiesCurrentTab === 2 ? 'Disliked' : 'To Review'}
-          />
+          <EmptyPortfolioState status={propertiesCurrentTab} />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
             {updateUserProperties().map((property, index) => (
@@ -170,9 +169,13 @@ const Portfolio = () => {
 const EmptyPortfolioState = ({ status }) => {
   return (
     <div className={'h-[80%] flex items-center justify-center text-center w-full flex-col gap-3'}>
-      <h4 className={'text-xl leading-7 font-semibold text-gray7'}>No {status} Properties Yet</h4>
+      <h4 className={'text-xl leading-7 font-semibold text-gray7'}>
+        {status === 0 ? 'No Properties In Portfolio Yet' : `No ${status === 1 ? 'Liked' : 'Disliked'} Properties Yet`}
+      </h4>
       <p className={'text-base leading-6 font-medium w-[352px] text-gray8'}>
-        So far, there haven't been any properties that you've {status?.toString().toLowerCase()}.
+        {status === 0
+          ? "So far, there haven't been any properties that you've to review."
+          : `So far, there haven't been any properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
       </p>
     </div>
   );

@@ -316,11 +316,12 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
 
   const tabs = [
     { name: 'All', href: '#' },
-    { name: 'Saved', href: '#', count: 4 },
-    { name: 'Sent', href: '#' },
+    { name: 'Portfolio', href: '#', count: 4 },
+    // { name: 'Sent', href: '#' },
     { name: 'Liked', href: '#' },
-    { name: 'Applied', href: '#' },
-    { name: 'Sold', href: '#' },
+    { name: 'Disliked', href: '#' },
+    // { name: 'Applied', href: '#' },
+    // { name: 'Sold', href: '#' },
   ];
 
   const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);

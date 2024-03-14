@@ -85,12 +85,12 @@ const PropertyCard = ({
   addClientFeedback,
   deletePropertyFromPortfolio,
 }) => {
-  const [liked, setLiked] = useState();
-  const [disliked, setDisliked] = useState();
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   useEffect(() => {
     setLiked(propertyStatus !== 'liked');
     setDisliked(propertyStatus !== 'disliked');
-  }, [propertyStatus]);
+  }, [propertyStatus, property]);
   const [openFeedback, setOpenFeedback] = useState(false);
   const [value, setValue] = useState('');
   let status = '';
