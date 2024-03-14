@@ -28,7 +28,7 @@ const PropertyMainDetails = ({ data }) => {
           <div
             className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
             onClick={() => scrollToMap()}>
-            {data.ADDRESS}, {data.CITY}, {data.STATE} {data.ZIP_CODE}
+            {data?.ADDRESS}, {data?.CITY}, {data?.STATE} {data?.ZIP_CODE}
           </div>
         </div>
       </div>

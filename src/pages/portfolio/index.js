@@ -96,9 +96,7 @@ const Portfolio = () => {
     setSelectedProperty(updateUserProperties()[index + 1]);
   };
   const getPrevItem = (property) => {
-    const index = updateUserProperties().findIndex(
-      (element) => element?.property_details?.ID === property?.property_details.ID,
-    );
+    const index = updateUserProperties().findIndex((element) => element?.property_details?.ID === property?.ID);
     if (index <= 0 || index >= updateUserProperties().length) {
       setSelectedProperty(updateUserProperties()[updateUserProperties().length - 1]);
       return;

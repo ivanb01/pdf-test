@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 
-const PopoverComponent = ({ triggerElement, children, side, align, style }) => {
+const PopoverComponent = ({ triggerElement, children, side, align, style, close }) => {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>{triggerElement}</Popover.Trigger>
@@ -12,7 +12,14 @@ const PopoverComponent = ({ triggerElement, children, side, align, style }) => {
           className="TooltipContent text-white px-4 py-2"
           side={side}
           align={align}>
-          {children}
+          <>
+            {children}
+            {close && (
+              <Popover.Close aria-label="Close" asChild>
+                {close}
+              </Popover.Close>
+            )}
+          </>
           <Popover.Arrow className="TooltipArrow" />
         </Popover.Content>
       </Popover.Portal>

@@ -300,6 +300,25 @@ const PortfolioPopup = ({
                   side={'bottom'}
                   align={'center'}
                   style={{ backgroundColor: 'white' }}
+                  close={
+                    <Button
+                      primary
+                      disabled={value.length < 9}
+                      className={'min-w-[252px] mt-[14px]'}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addClientFeedback(property.ID, 'disliked', value);
+                        if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                          handleCloseOverlay();
+                        } else {
+                          onNextClick(property);
+                        }
+                        setValue('');
+                        setOpenFeedback(false);
+                      }}>
+                      Send your feedback
+                    </Button>
+                  }
                   triggerElement={
                     <button
                       className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
@@ -323,23 +342,17 @@ const PortfolioPopup = ({
                           : value
                       }
                     />
-                    <Button
-                      primary
-                      disabled={value.length < 9}
-                      className={'min-w-[252px] mt-[14px]'}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addClientFeedback(property.ID, 'disliked', value);
-                        setValue('');
-                      }}>
-                      Send your feedback
-                    </Button>
                   </div>
                 </PopoverComponent>
               ) : (
                 <button
                   onClick={() => {
                     addClientFeedback(property.ID, 'saved', value);
+                    if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                      handleCloseOverlay();
+                    } else {
+                      onNextClick(property);
+                    }
                   }}
                   className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
                   <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
@@ -350,9 +363,19 @@ const PortfolioPopup = ({
                 onClick={() => {
                   if (status === 'liked') {
                     addClientFeedback(property.ID, 'saved', '');
+                    if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                      handleCloseOverlay();
+                    } else {
+                      onNextClick(property);
+                    }
                     return;
                   }
                   addClientFeedback(property.ID, 'liked', '');
+                  if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                    handleCloseOverlay();
+                  } else {
+                    onNextClick(property);
+                  }
                 }}
                 className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}>
                 <ThumbUpAltOutlinedIcon className={'h-[17px] w-[17px]'} />
