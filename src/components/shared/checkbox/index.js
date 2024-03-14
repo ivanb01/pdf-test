@@ -13,7 +13,7 @@ export default function Checkbox({ id, name, setState, state, label }) {
           className="focus:ring-lightBlue3 h-4 w-4 text-lightBlue3 border-gray2 rounded"
         />
       </div>
-      <div className="ml-3 text-sm">
+      <div className="ml-2 text-sm">
         <label htmlFor={name} className="text-gray6">
           {label}
         </label>

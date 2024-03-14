@@ -8,6 +8,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import DOMPurify from 'dompurify';
 
 const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
@@ -225,9 +226,14 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                     }>
                                     MESSAGE
                                   </span>
-                                  <p className={'text-sm leading-5 font-normal text-gray5'}>
-                                    {activeEvent?.preview?.preview?.body_text ?? activeEvent?.preview?.preview?.message}
-                                  </p>
+                                  <div
+                                    className="richtext-styling text-sm leading-5 font-normal text-gray5"
+                                    dangerouslySetInnerHTML={{
+                                      __html: DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
+                                        ? DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
+                                        : DOMPurify.sanitize(activeEvent?.preview?.preview?.message),
+                                    }}
+                                  />
                                 </div>
                               </div>
                             </div>
