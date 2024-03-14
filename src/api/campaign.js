@@ -46,6 +46,20 @@ export const getCampaignsByCategory = (category) => {
 export const getCampaign = (id) => {
   return axiosInstance.get(`v2/cmps/${id}`);
 };
+export const getEmailTemplates = () => {
+  return axiosInstance.get(`v2/em-templates`);
+};
+export const getSMSTemplates = () => {
+  return axiosInstance.get(`v2/sm-templates`);
+};
+
+export const addEmailTemplate = (params) => {
+  return axiosInstance.post(`v2/em-templates`, params);
+};
+export const addSMSTemplate = (params) => {
+  return axiosInstance.post(`v2/sm-templates`, params);
+};
+
 export const addCampaign = (campaign) => axiosInstance.post(`v2/cmps`, campaign);
 export const updateCampaign = (campaign, id) => axiosInstance.put(`v2/cmps/${id}`, campaign);
 

@@ -23,10 +23,11 @@ import AllClientsIcon from 'icons/AllClientsIcon';
 import MailIcon from 'icons/MailIcon';
 import CallIcon from 'icons/CallIcon';
 import Divider from 'icons/Divider';
-import { addCampaign } from '@api/campaign';
+import { addCampaign, addEmailTemplate, addSMSTemplate, getEmailTemplates, getSMSTemplates } from '@api/campaign';
 import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
 import { addCRMCampaigns } from '@store/campaigns/slice';
+import Checkbox from '@components/shared/checkbox';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       wait_interval: '2d',
       type: 'Email',
       charset: 'A',
+      save_template: false,
     },
   ]);
 
@@ -51,13 +53,87 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   });
 
   const [creatingCampaignLoader, setCreatingCampaignLoader] = useState();
+  const [emailTemplates, setEmailTemplates] = useState(null);
+  const [smsTemplates, setSmsTemplates] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState();
+  const [initialOption, setInitialOption] = useState({
+    id: -1,
+    label: '',
+  });
+
+  useEffect(() => {
+    getTemplates();
+  }, []);
+
+  const getTemplates = async () => {
+    try {
+      const smsResponse = await getSMSTemplates();
+      const emailResponse = await getEmailTemplates();
+      const smsTemplates = smsResponse.data.data.map((template) => ({
+        id: template.id,
+        label: template.name,
+        message: template.message,
+      }));
+
+      const emailTemplates = emailResponse.data.data.map((template) => ({
+        id: template.id,
+        label: template.subject,
+        message: template.body_html,
+      }));
+
+      smsTemplates.unshift({ ...initialOption, label: 'Create Custom SMS' });
+      emailTemplates.unshift({ ...initialOption, label: 'Create Custom Email' });
+
+      setSmsTemplates(smsTemplates);
+      setEmailTemplates(emailTemplates);
+    } catch (error) {
+      console.error('Failed to get templates:', error);
+    }
+  };
 
   const createCampaign = () => {
     setCreatingCampaignLoader(true);
+
+    const modifiedEvents = events.map((event) => {
+      if (event.save_template) {
+        if (event.type == 'Email') {
+          console.log('create email template: ', {
+            subject: event.title,
+            body_text: event.body,
+            body_html: event.body_html,
+            status: 'active',
+          });
+          addEmailTemplate({
+            subject: event.title,
+            body_text: event.body,
+            body_html: event.body_html,
+            status: 'active',
+          });
+        } else {
+          console.log('create sms template: ', {
+            name: event.title,
+            message: event.body,
+            status: 'active',
+          });
+          addSMSTemplate({
+            name: event.title,
+            message: event.body,
+            status: 'active',
+          });
+        }
+      }
+      const { save_template, ...newAction } = event;
+      return newAction;
+    });
+
+    setEvents(modifiedEvents);
+
     let newCampaign = {
       campaign: campaign,
-      actions: events,
+      actions: modifiedEvents,
     };
+    console.log(newCampaign);
+
     addCampaign(newCampaign).then((res) => {
       setCreatingCampaignLoader(false);
       setOpen(false);
@@ -308,9 +384,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     }
                     active={type.title == events[selectedEvent].type}
                     onClick={() => {
+                      setSelectedTemplate(null);
                       setEvents((currentEvents) =>
                         currentEvents.map((item, index) =>
-                          index === selectedEvent ? { ...item, type: type.title } : item,
+                          index === selectedEvent ? { ...item, type: type.title, title: '', body_html: '' } : item,
                         ),
                       );
                     }}
@@ -358,14 +435,50 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
               </div>
             </div>
-            {/* {events[selectedEvent].type == 'Email' && (
-              <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">
-                  Select from one of the templates, or create a new template:
+            <div className="mb-6">
+              {(events[selectedEvent].type == 'Email' || events[selectedEvent].type == 'SMS') && (
+                <div className="max-w-[380px]">
+                  <div className="mb-4 text-gray8 text-sm font-medium">
+                    Select from one of the templates, or create a new template:
+                  </div>
+                  <Dropdown
+                    handleSelect={(option) => {
+                      setSelectedTemplate(option);
+                      setEvents((currentEvents) =>
+                        currentEvents.map((item, index) => {
+                          if (index === selectedEvent) {
+                            if (option.id == -1) {
+                              return { ...item, title: '', body_html: '', save_template: false };
+                            }
+                            return { ...item, title: option.label, body_html: option.message, save_template: false };
+                          }
+                          return item;
+                        }),
+                      );
+                    }}
+                    initialSelect={selectedTemplate}
+                    options={events[selectedEvent].type == 'Email' ? emailTemplates : smsTemplates}
+                    placeHolder="Select Template"
+                  />
                 </div>
-                <Dropdown options={emailTemplates} placeHolder="Select Template" />
-              </div>
-            )} */}
+              )}
+              {selectedTemplate?.id === -1 && (
+                <div className="mt-3">
+                  <Checkbox
+                    setState={(state) => {
+                      console.log(state);
+                      setEvents((currentEvents) =>
+                        currentEvents.map((item, index) =>
+                          index === selectedEvent ? { ...item, save_template: state } : item,
+                        ),
+                      );
+                    }}
+                    state={events[selectedEvent].save_template}
+                    label="Save New Template"
+                  />
+                </div>
+              )}
+            </div>
             <div className="mb-6">
               <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
               <Input
