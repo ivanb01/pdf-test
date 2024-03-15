@@ -29,7 +29,7 @@ export const updatePropertiesInPortfolio = (id) => {
   });
 };
 export const getPortfolioByContactId = (id) => {
-  return axiosInstance.get(`v2/property-portfolio?id=${id}`);
+  return axiosInstance.get(`v2/property-portfolio/${id}`);
 };
 
 export const deletePropertyFromPortfolio = (ids) => {

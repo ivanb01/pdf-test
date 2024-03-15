@@ -19,6 +19,8 @@ import { useRouter } from 'next/router';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
+import { getPortfolioByContactId } from '@api/portfolio';
+import { EmptyPortfolioClientDetails } from '@components/Portfolio/empty-portfolio-state';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -81,20 +83,18 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   };
 
   // const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
-  const refetchData = useSelector((state) => state.global.refetchData);
 
   //* FORMIK *//
   const [page, setPage] = useState(1);
   const [allPropertiesCount, setAllPropertiesCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [expandedHeader, setExpandedHeader] = useState(true);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
-  const [lookingForState, setLookingForState] = useState(0);
   const [loadingButton, setLoadingButton] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [propertyInterests, setPropertyInterests] = useState();
   const [filterValue, setFilterValue] = useState('newest');
+  const [userProperties, setUserProperties] = useState([]);
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
 
   const getLookingAction = () => {
@@ -137,7 +137,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     },
   });
 
-  const { errors, touched, resetForm } = formik;
+  const { resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
     setLoadingButton(true);
@@ -246,29 +246,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       });
   };
 
-  const getNeighborhoodShortVersion = () => {
-    const { neighborhood_ids } = formik.values;
-    if (!neighborhood_ids.length) return null;
-
-    const neighborhoods = neighborhood_ids.map((id) => NYCneighborhoods.find((n) => n.value === id)?.label);
-
-    if (neighborhoods.length > 2) {
-      return `${neighborhoods[0]}, ${neighborhoods[1]}, +${neighborhoods.length - 2} more`;
-    }
-    return neighborhoods.join(', ');
-  };
-
-  const getNeighborhoodValue = () => {
-    let neighborhoods = [];
-    if (formik.values.neighborhood_ids.length) {
-      formik.values.neighborhood_ids.forEach((element) => {
-        const foundNeighborhood = NYCneighborhoods.find((neighborhood) => neighborhood.value == element);
-        neighborhoods.push(foundNeighborhood && foundNeighborhood.label);
-      });
-      return neighborhoods.length ? neighborhoods.join(', ') : null;
-    } else return null;
-  };
-
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -298,50 +275,60 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       setDisabledButton(true);
     }
   }, [formik]);
-  const onFiltersChange = (filter) => {
-    setFilterValue(filter);
-  };
-
-  const PropertyDetail = ({ className, label, value, iconAfter, textAfter, title }) => {
-    return (
-      <div className={`${className} text-sm`}>
-        <div className="mb-1 text-gray-500 font-medium">{label}</div>
-        <div className="text-gray-900 flex items-center flex-nowrap sm:flex-wrap" title={title}>
-          <span className="mr-1">{value == 0 ? 'Any' : value}</span> {iconAfter && iconAfter}{' '}
-          {textAfter && <span className="text-gray-500">{textAfter}</span>}
-        </div>
-      </div>
-    );
-  };
 
   const tabs = [
     { name: 'All', href: '#' },
-    { name: 'Portfolio', href: '#', count: 4 },
-    { name: 'Liked', href: '#' },
-    { name: 'Disliked', href: '#' },
+    {
+      name: 'Portfolio',
+      href: '#',
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined).length,
+    },
+    {
+      name: 'Liked',
+      href: '#',
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'liked')
+        .length,
+    },
+    {
+      name: 'Disliked',
+      href: '#',
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'disliked')
+        .length,
+    },
   ];
 
   const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);
 
-  function formatPrice(value) {
-    if (!isNaN(value)) {
-      const num = parseFloat(value);
-
-      if (num >= 1000) {
-        if (num % 1000 !== 0 && num % 100 === 0) {
-          return `$${(num / 1000).toFixed(1)}k`;
-        } else if (num % 1000 === 0) {
-          return `$${(num / 1000).toFixed(0)}k`;
-        }
-        return `$${num.toLocaleString()}`;
-      } else {
-        return `$${num}`;
-      }
-    } else {
-      return `$${value}`;
+  useEffect(() => {
+    if (contactId) {
+      getPortfolioByContactId(contactId)
+        .then((res) => {
+          setUserProperties(res?.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error('Error while loading items');
+          setLoading(false);
+        });
     }
-  }
+  }, [contactId]);
 
+  const updateUserProperties = () => {
+    let properties = [];
+    if (propertiesCurrentTab === 2) {
+      properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'liked');
+    } else if (propertiesCurrentTab === 3) {
+      properties = userProperties?.properties?.filter(
+        (p) => p?.property_details !== undefined && p.status === 'disliked',
+      );
+    } else if (propertiesCurrentTab === 1) {
+      properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined);
+    }
+    return properties;
+  };
+  useEffect(() => {
+    updateUserProperties();
+  }, [propertiesCurrentTab, userProperties]);
   return (
     <>
       {showAddPopup && (
@@ -375,7 +362,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             ) : (
               <>
                 <div className="">
-                  <div className="flex justify-between items-center pt-[9px] pr-[9px]">
+                  <div className="flex justify-between items-center pt-[9px] pr-[9px] h-[47px]">
                     <div className="font-semibold">Properties</div>
                     {propertiesCurrentTab === 0 && (
                       <Button
@@ -393,13 +380,38 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                     className="py-4"
                     tabs={tabs}
                   />
-                  {propertyInterests && propertyInterests.length ? (
+                  {propertiesCurrentTab !== 0 && updateUserProperties().length === 0 ? (
+                    <EmptyPortfolioClientDetails status={propertiesCurrentTab} />
+                  ) : (
+                    <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {updateUserProperties().map((property, index) => (
+                        <PropertyCard
+                          noSelect
+                          key={index}
+                          property={property.property_details && property.property_details}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {propertiesCurrentTab === 0 && (
                     <>
-                      <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {propertyInterests.map((property, index) => (
-                          <PropertyCard noSelect={noSelect} key={index} property={property}></PropertyCard>
-                        ))}
-                      </div>
+                      {propertyInterests && propertyInterests.length > 0 ? (
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                          {propertyInterests.map((property, index) => (
+                            <PropertyCard noSelect={noSelect} key={index} property={property}></PropertyCard>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center flex-col text-center mt-6">
+                          <img src={lookingForEmpty.src} alt="" />
+                          <div className="mt-6 text-sm">
+                            <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
+                            <div className="text-gray-500 mt-[6px]">
+                              Whenever we have property that matched these interests, they will be listed here.
+                            </div>
+                          </div>
+                        </div>
+                      )}
                       {allPropertiesCount > 21 && (
                         <nav
                           className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
@@ -426,7 +438,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                             </p>
                           </div>
                           <div className="flex flex-1 justify-between sm:justify-end">
-                            {getFromNumber() != 1 && (
+                            {getFromNumber() !== 1 && (
                               <a
                                 href="#"
                                 onClick={() => {
@@ -444,7 +456,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                 Previous
                               </a>
                             )}
-                            {getToNumber() != allPropertiesCount && (
+                            {getToNumber() !== allPropertiesCount && (
                               <a
                                 href="#"
                                 onClick={() => {
@@ -466,16 +478,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         </nav>
                       )}
                     </>
-                  ) : (
-                    <div className="flex items-center justify-center flex-col text-center mt-6">
-                      <img src={lookingForEmpty.src} alt="" />
-                      <div className="mt-6 text-sm">
-                        <div className="text-gray-900 font-medium">No matched properties for this contact yet.</div>
-                        <div className="text-gray-500 mt-[6px]">
-                          Whenever we have property that matched these interest, will list here.
-                        </div>
-                      </div>
-                    </div>
                   )}
                 </div>
               </>

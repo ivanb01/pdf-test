@@ -10,7 +10,7 @@ import rooms from '../../../public/images/property/rooms.svg';
 import beds from '../../../public/images/property/beds.svg';
 import bathrooms from '../../../public/images/property/bathrooms.svg';
 import SimpleBar from 'simplebar-react';
-import PropertyOverlay from '@components/PropertyDetailsModal/property-overlay';
+import PropertyOverlay from '@components/Portfolio/property-overlay';
 import PropertiesCarousel from '@components/property-details/properties-carousel';
 import PropertyMainDetails from '@components/property-details/property-main-details';
 import PropertyAmenities from '@components/property-details/property-amenities';
