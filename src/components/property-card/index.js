@@ -16,7 +16,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import PopoverComponent from '@components/shared/Popover';
-
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 const ImageGallery = ({ images, url }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
@@ -121,12 +121,14 @@ const PropertyCard = ({
           } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
           {property?.STATUS}
         </div>
-        {/*<div*/}
-        {/*  role={'button'}*/}
-        {/*  onClick={() => deletePropertyFromPortfolio(String(property?.ID))}*/}
-        {/*  className={`absolute top-2 right-3 h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>*/}
-        {/*  <DeleteOutlineOutlinedIcon className={'h-5 w-5 text-red3'} />*/}
-        {/*</div>*/}
+        {deletePropertyFromPortfolio && (
+          <div
+            role={'button'}
+            onClick={() => deletePropertyFromPortfolio()}
+            className={`absolute top-2 right-3 h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>
+            <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+          </div>
+        )}
         {!putFeedback && (
           <TooltipComponent
             side={'bottom'}

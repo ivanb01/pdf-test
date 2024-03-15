@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
-import { getPortfolioByContactId } from '@api/portfolio';
+import { deletePropertyFromPortfolio, getPortfolioByContactId } from '@api/portfolio';
 import { EmptyPortfolioClientDetails } from '@components/Portfolio/empty-portfolio-state';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
@@ -329,6 +329,18 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   useEffect(() => {
     updateUserProperties();
   }, [propertiesCurrentTab, userProperties]);
+  const _deletePropertyFromPortfolio = (id) => {
+    setUserProperties((prev) => {
+      return {
+        ...prev,
+        properties: prev.properties.filter((p) => p.id !== id),
+      };
+    });
+    deletePropertyFromPortfolio(id).catch(() => {
+      toast.error('Error while loading items');
+      setLoading(false);
+    });
+  };
   return (
     <>
       {showAddPopup && (
@@ -388,6 +400,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         <PropertyCard
                           noSelect
                           key={index}
+                          deletePropertyFromPortfolio={() => _deletePropertyFromPortfolio(property.id)}
                           property={property.property_details && property.property_details}
                         />
                       ))}
