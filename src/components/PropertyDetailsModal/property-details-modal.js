@@ -279,7 +279,7 @@ const PortfolioPopup = ({
   ];
 
   const [openFeedback, setOpenFeedback] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(undefined);
   return (
     <PropertyOverlay
       onNextClick={() => onNextClick(property)}
@@ -303,11 +303,10 @@ const PortfolioPopup = ({
                   close={
                     <Button
                       primary
-                      disabled={value.length < 9}
                       className={'min-w-[252px] mt-[14px]'}
                       onClick={(e) => {
                         e.stopPropagation();
-                        addClientFeedback(property.ID, 'disliked', value);
+                        addClientFeedback(property.ID, 'disliked', value ?? '');
                         if (propertyIndex === 0 && totalNumberOfProperties === 1) {
                           handleCloseOverlay();
                         } else {
@@ -336,18 +335,17 @@ const PortfolioPopup = ({
                       handleChange={(e) => {
                         setValue(e.target.value);
                       }}
-                      value={
-                        !openFeedback
-                          ? 'Please give us your opinion about this property. It will help us improve for next time.'
-                          : value
+                      placeholder={
+                        'Please give us your opinion about this property. It will help us improve for next time.'
                       }
+                      value={value}
                     />
                   </div>
                 </PopoverComponent>
               ) : (
                 <button
                   onClick={() => {
-                    addClientFeedback(property.ID, 'saved', value);
+                    addClientFeedback(property.ID, 'saved', value ?? '');
                     if (propertyIndex === 0 && totalNumberOfProperties === 1) {
                       handleCloseOverlay();
                     } else {

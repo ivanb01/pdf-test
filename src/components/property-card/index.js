@@ -92,7 +92,7 @@ const PropertyCard = ({
     setDisliked(propertyStatus !== 'disliked');
   }, [propertyStatus, property]);
   const [openFeedback, setOpenFeedback] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(undefined);
   let status = '';
   if (property?.STATUS == 'Rented') {
     status = '&status=22';
@@ -225,20 +225,18 @@ const PropertyCard = ({
                         handleChange={(e) => {
                           setValue(e.target.value);
                         }}
-                        value={
-                          !openFeedback
-                            ? 'Please give us your opinion about this property. It will help us improve for next time.'
-                            : value
+                        placeholder={
+                          'Please give us your opinion about this property. It will help us improve for next time.'
                         }
+                        value={value}
                       />
                       <Button
                         primary
-                        disabled={value.length < 9}
                         className={'min-w-[252px] mt-[14px]'}
                         onClick={(e) => {
                           e.stopPropagation();
                           setDisliked(false);
-                          addClientFeedback(property.ID, 'disliked', value);
+                          addClientFeedback(property.ID, 'disliked', value ?? '');
                           setOpenFeedback(false);
                           setValue('');
                         }}>

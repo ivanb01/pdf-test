@@ -11,6 +11,7 @@ const TextArea = ({
   handleChange,
   label,
   optional,
+  placeholder,
   className,
   error,
   errorText,
@@ -52,6 +53,7 @@ const TextArea = ({
         <textarea
           rows={rows}
           name={name}
+          placeholder={placeholder}
           id={id}
           onClick={onClick}
           value={value}

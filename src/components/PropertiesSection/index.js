@@ -317,11 +317,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const tabs = [
     { name: 'All', href: '#' },
     { name: 'Portfolio', href: '#', count: 4 },
-    // { name: 'Sent', href: '#' },
     { name: 'Liked', href: '#' },
     { name: 'Disliked', href: '#' },
-    // { name: 'Applied', href: '#' },
-    // { name: 'Sold', href: '#' },
   ];
 
   const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);
@@ -380,13 +377,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 <div className="">
                   <div className="flex justify-between items-center pt-[9px] pr-[9px]">
                     <div className="font-semibold">Properties</div>
-                    <Button
-                      count={filtersCount}
-                      leftIcon={<img src={filter.src}></img>}
-                      white
-                      onClick={() => setShowEditPopup(true)}>
-                      Client Preferences
-                    </Button>
+                    {propertiesCurrentTab === 0 && (
+                      <Button
+                        count={filtersCount}
+                        leftIcon={<img src={filter.src}></img>}
+                        white
+                        onClick={() => setShowEditPopup(true)}>
+                        Client Preferences
+                      </Button>
+                    )}
                   </div>
                   <TabsWithPills
                     propertiesCurrentTab={propertiesCurrentTab}
@@ -396,39 +395,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   />
                   {propertyInterests && propertyInterests.length ? (
                     <>
-                      {/* <div className="mb-4 text-gray-900 text-xs font-normal flex justify-between items-center">
-                        <div>
-                          {category.toLowerCase() !== 'landlord' && category.toLowerCase() !== 'seller' && (
-                            <>
-                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} properties
-                              recommended
-                              {getLookingAction() === 1 ? ' for sale' : ' for rent'}
-                            </>
-                          )}
-                          {category.toLowerCase() === 'landlord' && (
-                            <>
-                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                              Sold and Rented Properties
-                            </>
-                          )}
-                          {category.toLowerCase() === 'seller' && (
-                            <>
-                              {allPropertiesCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Recommendations on
-                              Sold Properties
-                            </>
-                          )}{' '}
-                          from the REBNY database.
-                        </div>
-
-                        <div className={'flex items-center gap-2'}>
-                          <p
-                            className="text-gray6 font-inter font-normal leading-5 text-sm"
-                            style={{ marginTop: '3px' }}>
-                            Sort by
-                          </p>
-                          <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
-                        </div>
-                      </div> */}
                       <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         {propertyInterests.map((property, index) => (
                           <PropertyCard noSelect={noSelect} key={index} property={property}></PropertyCard>
