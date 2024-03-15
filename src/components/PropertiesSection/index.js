@@ -2,7 +2,7 @@
 import { useFormik } from 'formik';
 import filter from '/public/images/filter.svg';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
-import { useEffect, useState, Fragment, useLayoutEffect } from 'react';
+import React, { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import * as Yup from 'yup';
@@ -21,6 +21,9 @@ import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
 import { deletePropertyFromPortfolio, getPortfolioByContactId } from '@api/portfolio';
 import { EmptyPortfolioClientDetails } from '@components/Portfolio/empty-portfolio-state';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { updateContactLocally } from '@store/contacts/slice';
+import { updateContact } from 'api/contacts';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -330,16 +333,47 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     updateUserProperties();
   }, [propertiesCurrentTab, userProperties]);
   const _deletePropertyFromPortfolio = (id) => {
+    const actualUsers = { ...userProperties };
+
     setUserProperties((prev) => {
       return {
         ...prev,
         properties: prev.properties.filter((p) => p.id !== id),
       };
     });
-    deletePropertyFromPortfolio(id).catch(() => {
-      toast.error('Error while loading items');
-      setLoading(false);
-    });
+    toast.custom(
+      (t) => (
+        <div
+          className={`${
+            t.visible ? 'animate-enter' : 'animate-leave'
+          } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+          <div className="flex gap-2 p-4 word-break items-center">
+            <CheckCircleIcon className={'text-green-500'} />
+            <h1 className={'text-sm leading-5 font-medium'}>
+              Property has been deleted <br />
+              successfully!
+            </h1>
+          </div>
+          <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+            <button
+              onClick={() => {
+                setUserProperties(actualUsers);
+                toast.dismiss(t.id);
+              }}
+              className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+              Undo
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 2000 },
+    );
+    setTimeout(() => {
+      deletePropertyFromPortfolio(id).catch(() => {
+        toast.error('Error while loading items');
+        setLoading(false);
+      });
+    }, [5000]);
   };
   return (
     <>
