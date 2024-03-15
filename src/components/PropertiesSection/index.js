@@ -433,6 +433,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                       {updateUserProperties().map((property, index) => (
                         <PropertyCard
                           noSelect
+                          clientNote={property?.contact_notes}
                           key={index}
                           deletePropertyFromPortfolio={() => _deletePropertyFromPortfolio(property.id)}
                           property={property.property_details && property.property_details}
@@ -530,7 +531,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               </>
             )}
           </div>
-          {/* )} */}
         </SimpleBar>
       )}
     </>

@@ -386,13 +386,15 @@ const PortfolioPopup = ({
               <PropertiesCarousel data={data} />
               <div className="properties-container">
                 <PropertyMainDetails data={data} />
-                {status === 'disliked' && (
-                  <div className={'py-[16px] px-5 bg-gray1 flex gap-4  flex-col mt-6 mb-[-20px]'}>
+                {status === 'disliked' && ((value && value.length > 0) || note?.length > 0) && (
+                  <div className={'py-[16px] px-5 bg-gray1 flex gap-4  flex-col mt-6 mb-[-20px] rounded-md'}>
                     <div className={'flex gap-2 flex-col'}>
                       <h6 className={'text-base  font-semibold text-gray7'}>Client’s thoughts</h6>
                       <div className={'h-[2px] w-5 bg-lightBlue3'}></div>
                     </div>
-                    <p className={'text-base  font-normal text-gray7'}>{value.length > 0 ? value : note}</p>
+                    <p className={'text-base  font-normal text-gray7'}>
+                      {value && value.length > 0 ? value : note ?? ''}
+                    </p>
                   </div>
                 )}
                 <div className="md:mt-10 mt-5 pb-4 flex justify-between">

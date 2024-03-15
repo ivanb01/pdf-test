@@ -5,7 +5,7 @@ import sqft from '/public/images/sqft.svg';
 import placeholder from '/public/images/img-placeholder.png';
 import { toast } from 'react-hot-toast';
 import link from '/public/images/link-2.svg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import TooltipComponent from '@components/shared/tooltip';
@@ -17,6 +17,8 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import PopoverComponent from '@components/shared/Popover';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import Overlay from '@components/shared/overlay';
+import { createPortal } from 'react-dom';
 const ImageGallery = ({ images, url }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
@@ -84,6 +86,7 @@ const PropertyCard = ({
   propertyStatus,
   addClientFeedback,
   deletePropertyFromPortfolio,
+  clientNote,
 }) => {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
@@ -91,7 +94,7 @@ const PropertyCard = ({
     setLiked(propertyStatus !== 'liked');
     setDisliked(propertyStatus !== 'disliked');
   }, [propertyStatus, property]);
-  const [openFeedback, setOpenFeedback] = useState(false);
+  const [openFeedbackModal, setOpenFeedbackModal] = useState(false);
   const [value, setValue] = useState(undefined);
   let status = '';
   if (property?.STATUS == 'Rented') {
@@ -122,11 +125,21 @@ const PropertyCard = ({
           {property?.STATUS}
         </div>
         {deletePropertyFromPortfolio && (
-          <div
-            role={'button'}
-            onClick={() => deletePropertyFromPortfolio()}
-            className={`absolute top-2 right-3 h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>
-            <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+          <div className={'flex gap-2 absolute top-2 right-3 justify-center'}>
+            {clientNote && clientNote.length > 0 && (
+              <div
+                role={'button'}
+                onClick={() => setOpenFeedbackModal(true)}
+                className={`rounded-full  bg-white border border-gray1 h-fit px-2 py-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
+                View Feedback
+              </div>
+            )}
+            <div
+              role={'button'}
+              onClick={() => deletePropertyFromPortfolio()}
+              className={` h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>
+              <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+            </div>
           </div>
         )}
         {!putFeedback && (
@@ -221,7 +234,6 @@ const PropertyCard = ({
                       <TextArea
                         onClick={(e) => {
                           e.stopPropagation();
-                          setOpenFeedback(true);
                         }}
                         className={'min-h-[90px]'}
                         handleChange={(e) => {
@@ -239,7 +251,6 @@ const PropertyCard = ({
                           e.stopPropagation();
                           setDisliked(false);
                           addClientFeedback(property.ID, 'disliked', value ?? '');
-                          setOpenFeedback(false);
                           setValue('');
                         }}>
                         Send your feedback
@@ -302,6 +313,16 @@ const PropertyCard = ({
           </div>
         </div>
       </div>
+      {openFeedbackModal &&
+        createPortal(
+          <Overlay
+            handleCloseOverlay={() => setOpenFeedbackModal(false)}
+            className="w-[500px]"
+            title={"Client's feedback"}>
+            <p className={'text-sm pointer-events-none text-gray8 p-6 pt-0'}>{clientNote}</p>
+          </Overlay>,
+          document.getElementById('modal-portal'),
+        )}
     </div>
   );
 };
