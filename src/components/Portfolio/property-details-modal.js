@@ -393,7 +393,7 @@ const PortfolioPopup = ({
                       <div className={'h-[2px] w-5 bg-lightBlue3'}></div>
                     </div>
                     <p className={'text-base  font-normal text-gray7'}>
-                      {value && value.length > 0 ? value : note ?? ''}
+                      {value && value.length > 0 ? value : note && note}
                     </p>
                   </div>
                 )}

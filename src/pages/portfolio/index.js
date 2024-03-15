@@ -73,7 +73,7 @@ const Portfolio = () => {
     const index = userProperties.properties.findIndex((element) => element?.property_details?.ID === id);
     setUserProperties((prev) => {
       prev.properties[index].status = status;
-      prev.properties[index].agent_notes = note;
+      prev.properties[index].contact_notes = note;
       return {
         ...prev,
         properties: [...prev.properties],
@@ -150,7 +150,7 @@ const Portfolio = () => {
           propertyIndex={updateUserProperties()?.findIndex(
             (element) => element?.property_details?.ID === selectedProperty?.property_details?.ID,
           )}
-          note={selectedProperty?.agent_notes}
+          note={selectedProperty?.contact_notes}
           status={selectedProperty?.status}
           onNextClick={(property) => getNextItem(property && property)}
           onPrevClick={(property) => getPrevItem(property && property)}
