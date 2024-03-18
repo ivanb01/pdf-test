@@ -1,5 +1,6 @@
 import { formatPrice, getBaseUrl } from '@global/functions';
 import room from '/public/images/room.svg';
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import bathroom from '/public/images/bathroom.svg';
 import sqft from '/public/images/sqft.svg';
 import placeholder from '/public/images/img-placeholder.png';
@@ -143,23 +144,30 @@ const PropertyCard = ({
               align={'center'}
               triggerElement={
                 <a
-                  className="cursor-pointer absolute bottom-2 right-2"
+                  className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer absolute bottom-2 right-2"
                   onClick={() => {
                     navigator.clipboard.writeText(url);
                     toast.success('Link copied to clipboard');
                   }}>
-                  <img className="h-7 w-7" src={link.src} alt="" />
+                  <InsertLinkOutlinedIcon className={'h-5 w-5'} />
                 </a>
               }>
               <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
             </TooltipComponent>
             {deletePropertyFromPortfolio && (
-              <div
-                role={'button'}
-                onClick={() => deletePropertyFromPortfolio()}
-                className={` h-7 w-7  rounded-full flex items-center bg-[#FFFFFF90]  absolute bottom-2 right-10 justify-center cursor-pointer`}>
-                <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
-              </div>
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  <div
+                    role={'button'}
+                    onClick={() => deletePropertyFromPortfolio()}
+                    className={` h-7 w-7  rounded-full flex items-center bg-white  absolute bottom-2 right-10 justify-center cursor-pointer`}>
+                    <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+                  </div>
+                }>
+                <p className={'text-[10px] text-white font-medium'}>Delete property</p>
+              </TooltipComponent>
             )}
           </div>
         )}
