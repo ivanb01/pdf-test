@@ -555,7 +555,7 @@ const index = () => {
     if (!open) {
       setTimeout(() => {
         setPropertiesSent(false);
-        setSelectedContacts([]);
+        // setSelectedContacts([]);
       }, 500);
     }
   }, [open]);
