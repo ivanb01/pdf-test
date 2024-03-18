@@ -130,34 +130,38 @@ const PropertyCard = ({
               <div
                 role={'button'}
                 onClick={() => setOpenFeedbackModal(true)}
-                className={`rounded-full  bg-white border border-gray1 h-fit px-2 py-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
-                View Feedback
+                className={`rounded-full border border-gray1 bg-[#FFFFFF90] text-gray5 h-fit px-2 py-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
+                Client’s thoughts
               </div>
             )}
-            <div
-              role={'button'}
-              onClick={() => deletePropertyFromPortfolio()}
-              className={` h-6 w-6 rounded-full bg-white flex items-center justify-center cursor-pointer`}>
-              <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
-            </div>
           </div>
         )}
         {!putFeedback && (
-          <TooltipComponent
-            side={'bottom'}
-            align={'center'}
-            triggerElement={
-              <a
-                className="cursor-pointer absolute bottom-2 right-2"
-                onClick={() => {
-                  navigator.clipboard.writeText(url);
-                  toast.success('Link copied to clipboard');
-                }}>
-                <img className="h-7 w-7" src={link.src} alt="" />
-              </a>
-            }>
-            <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
-          </TooltipComponent>
+          <div className={'flex gap-2'}>
+            <TooltipComponent
+              side={'bottom'}
+              align={'center'}
+              triggerElement={
+                <a
+                  className="cursor-pointer absolute bottom-2 right-2"
+                  onClick={() => {
+                    navigator.clipboard.writeText(url);
+                    toast.success('Link copied to clipboard');
+                  }}>
+                  <img className="h-7 w-7" src={link.src} alt="" />
+                </a>
+              }>
+              <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
+            </TooltipComponent>
+            {deletePropertyFromPortfolio && (
+              <div
+                role={'button'}
+                onClick={() => deletePropertyFromPortfolio()}
+                className={` h-7 w-7  rounded-full flex items-center bg-[#FFFFFF90]  absolute bottom-2 right-10 justify-center cursor-pointer`}>
+                <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+              </div>
+            )}
+          </div>
         )}
       </div>
       <div
@@ -318,7 +322,7 @@ const PropertyCard = ({
           <Overlay
             handleCloseOverlay={() => setOpenFeedbackModal(false)}
             className="w-[500px]"
-            title={"Client's feedback"}>
+            title={"Client's thoughts"}>
             <p className={'text-sm pointer-events-none text-gray8 p-6 pt-0'}>{clientNote}</p>
           </Overlay>,
           document.getElementById('modal-portal'),
