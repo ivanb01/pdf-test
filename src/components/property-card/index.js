@@ -144,7 +144,7 @@ const PropertyCard = ({
               align={'center'}
               triggerElement={
                 <a
-                  className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer absolute bottom-2 right-2"
+                  className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer absolute bottom-2 right-10"
                   onClick={() => {
                     navigator.clipboard.writeText(url);
                     toast.success('Link copied to clipboard');
@@ -162,7 +162,7 @@ const PropertyCard = ({
                   <div
                     role={'button'}
                     onClick={() => deletePropertyFromPortfolio()}
-                    className={` h-7 w-7  rounded-full flex items-center bg-white  absolute bottom-2 right-10 justify-center cursor-pointer`}>
+                    className={` h-7 w-7  rounded-full flex items-center bg-white  absolute bottom-2 right-2 justify-center cursor-pointer`}>
                     <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
                   </div>
                 }>
