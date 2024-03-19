@@ -15,11 +15,11 @@ import RichtextEditor from '@components/Editor';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
-  const [flag, setFlag] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const contactToBeEmailed = useSelector((state) => state.global.contactToBeEmailed);
   const open = useSelector((state) => state.global.openEmailContactOverlay);
+  const [openLocal, setOpenLocal] = useState(open);
   const [contactsCopy, setContactsCopy] = useState();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState();
@@ -28,14 +28,13 @@ const SendEmailOverlay = () => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    setFlag(open);
-    dispatch(setOpenEmailContactOverlay(flag));
-  }, [open, flag]);
-
-  useEffect(() => {
-    if (!open) {
+    if (!openLocal) {
       resetSendEmailForm();
     }
+  }, [openLocal]);
+
+  useEffect(() => {
+    setOpenLocal(open);
   }, [open]);
 
   useEffect(() => {
@@ -114,11 +113,8 @@ const SendEmailOverlay = () => {
   return (
     <SlideOver
       width="w-[540px]"
-      open={flag}
-      setOpen={(state) => {
-        console.log(state);
-        setFlag(true);
-      }}
+      open={openLocal}
+      setOpen={setOpenLocal}
       title="Send New Email"
       className=""
       buttons={

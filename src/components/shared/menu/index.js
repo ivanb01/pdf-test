@@ -273,7 +273,10 @@ const MainMenu = ({ className, fixed }) => {
         {!router.pathname.includes('campaign') && (
           <>
             <a
-              onClick={() => dispatch(setOpenEmailContactOverlay(true))}
+              onClick={() => {
+                console.log('test');
+                dispatch(setOpenEmailContactOverlay(true));
+              }}
               className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
               <ForwardToInbox className="h-[16px] w-[16px]" />
               {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}

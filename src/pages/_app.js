@@ -163,7 +163,7 @@ const MyApp = ({ Component, pageProps }) => {
                   position="bottom-left"
                 />
               )}
-              <SendEmailOverlay open={open} setOpen={setOpen} />
+              <SendEmailOverlay />
               <EmailSendComponent />
             </QueryClientProvider>
           </Provider>
