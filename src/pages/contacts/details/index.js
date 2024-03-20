@@ -31,6 +31,7 @@ import CommunicationForm from '@components/overlays/communication-form';
 import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
 import Dropdown from '@components/shared/dropdown';
 import { setGlobalEmail } from '@store/clientDetails/slice';
+import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 
 const index = () => {
   const router = useRouter();
@@ -90,13 +91,19 @@ const index = () => {
     getContactActivities(id)
       .then((response) => {
         setActivities(response.data.data);
-        setLoadingActivities(false);
       })
       .catch((error) => {
         console.log(error);
         toast.error('Error fetching activity');
       });
   };
+  useEffect(() => {
+    if (contact) {
+      syncEmailOfContact(contact.email).then(() => {
+        setLoadingActivities(false);
+      });
+    }
+  }, [contact]);
 
   useEffect(() => {
     if (globalEmailActivityData) {
@@ -438,31 +445,33 @@ const index = () => {
                     <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communication</span>
                   </button>
                 </div>
-                {activities.length ? (
-                  <Feeds
-                    showFullHeight={contact?.category_1 != 'Client'}
-                    contactId={id}
-                    activities={
-                      activityFilter.id == 0 || !activityFilter
-                        ? activities
-                        : activities.filter((activity) => {
-                            console.log(activityFilter, activity.type_of_activity_id);
-                            if (activityFilter.id == 14) {
-                              return [14, 15, 16].includes(activity.type_of_activity_id);
-                            } else if (activityFilter.id == 3) {
-                              return [3, 26, 27].includes(activity.type_of_activity_id);
-                            }
-                            return activity.type_of_activity_id == activityFilter.id;
-                          })
-                    }
-                    setActivities={setActivities}
-                  />
-                ) : (
-                  <div className="mt-5 text-center">
-                    <div className="text-gray7 font-semibold mb-2">No activities found</div>
-                    <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
-                  </div>
-                )}
+                {/*{activities.length ? (*/}
+                <Feeds
+                  showFullHeight={contact?.category_1 != 'Client'}
+                  contactId={id}
+                  activityId={activityFilter.id}
+                  contactEmail={contact.email}
+                  activities={
+                    activityFilter.id == 0 || !activityFilter
+                      ? activities
+                      : activities.filter((activity) => {
+                          console.log(activityFilter, activity.type_of_activity_id);
+                          if (activityFilter.id == 14) {
+                            return [14, 15, 16].includes(activity.type_of_activity_id);
+                          } else if (activityFilter.id == 3) {
+                            return [3, 26, 27].includes(activity.type_of_activity_id);
+                          }
+                          return activity.type_of_activity_id == activityFilter.id;
+                        })
+                  }
+                  setActivities={setActivities}
+                />
+                {/*) : (*/}
+                {/*  <div className="mt-5 text-center">*/}
+                {/*    <div className="text-gray7 font-semibold mb-2">No activities found</div>*/}
+                {/*    <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>*/}
+                {/*  </div>*/}
+                {/*)}*/}
               </div>
 
               {contact?.category_1 == 'Client' && (
