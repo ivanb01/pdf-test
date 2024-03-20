@@ -305,7 +305,7 @@ export default function Feeds({
                   paddingRight: '-10px',
                 }}
                 autoHide>
-                <ul role="list" className={`pt-6 flex flex-col gap-[20px]`}>
+                <ul role="list" className={`pt-6 flex flex-col gap-8`}>
                   {Object.values(inboxData).flatMap((item) => (
                     <div
                       className={'flex gap-3'}
