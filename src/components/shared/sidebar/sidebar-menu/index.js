@@ -30,8 +30,8 @@ const SidebarMenu = ({ navigation, setCurrentNavigation }) => {
                       {item.name}
                     </div>
                   ) : (
-                    <Disclosure as="div">
-                      {({ open = true }) => (
+                    <Disclosure as="div" defaultOpen={true}>
+                      {({ open }) => (
                         <>
                           <Disclosure.Button
                             className={classNames(

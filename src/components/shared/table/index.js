@@ -118,6 +118,9 @@ const Table = ({
   setSelectedPeople,
   status,
   contacts,
+  setCurrentTemplate,
+  setOpenEdit,
+  setOpenDelete,
 }) => {
   const dispatch = useDispatch();
 
@@ -3159,6 +3162,8 @@ const Table = ({
                         role={'button'}
                         onClick={(e) => {
                           e.stopPropagation();
+                          setCurrentTemplate(template);
+                          setOpenEdit(true);
                         }}
                         className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
                         <Edit className="text-gray3 w-4 h-4" />
@@ -3174,6 +3179,8 @@ const Table = ({
                         role={'button'}
                         onClick={(e) => {
                           e.stopPropagation();
+                          setCurrentTemplate(template);
+                          setOpenDelete(true);
                         }}
                         className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
                         <Delete className="group-hover/delete:text-white text-[16px] text-gray3" />

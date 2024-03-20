@@ -49,8 +49,14 @@ export const getCampaign = (id) => {
 export const getEmailTemplates = () => {
   return axiosInstance.get(`v2/em-templates`);
 };
+export const updateEmailTemplate = (id, template) => {
+  return axiosInstance.put(`v2/em-templates/${id}`, template);
+};
 export const getSMSTemplates = () => {
   return axiosInstance.get(`v2/sm-templates`);
+};
+export const updateSMSTemplate = (id, template) => {
+  return axiosInstance.put(`v2/sm-templates/${id}`, template);
 };
 
 export const addEmailTemplate = (params) => {

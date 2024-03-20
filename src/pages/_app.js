@@ -28,7 +28,7 @@ import GetSubtype from '@components/GetSubtype';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
-import SendEmailOverlay from '@components/SendEmailSidebar';
+import SendEmailOverlay from '@components/shared/sidebar/global-send-email';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
