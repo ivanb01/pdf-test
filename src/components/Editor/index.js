@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
-export default function RichtextEditor({ label, value, onContentChange }) {
+export default function RichtextEditor({ label, value, onContentChange, height }) {
   const editorRef = useRef(null);
 
   return (
@@ -11,7 +11,7 @@ export default function RichtextEditor({ label, value, onContentChange }) {
         onInit={(evt, editor) => (editorRef.current = editor)}
         value={value}
         init={{
-          height: 350,
+          height: height ?? 350,
           branding: false,
           menubar: false,
           plugins: [

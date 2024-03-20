@@ -425,3 +425,24 @@ export const getTotalCountOfAllValues = (data) => {
 
   return totalCount;
 };
+
+export const timeAgo = (timestamp) => {
+  const dt = new Date(timestamp);
+  const currentTime = new Date();
+  const timeDifference = currentTime - dt;
+
+  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+  const minutesDifference = Math.floor(timeDifference / (1000 * 60));
+
+  if (daysDifference === 0) {
+    if (hoursDifference !== 0) {
+      const remainingMinutes = minutesDifference % 60;
+      return `${hoursDifference === 1 ? ' 1 hour' : `${hoursDifference} hours`} and ${remainingMinutes === 1 ? ' 1 minute ago' : `${remainingMinutes} minutes ago`}`;
+    } else {
+      return `${minutesDifference} minutes ago`;
+    }
+  } else {
+    return `${daysDifference === 1 ? ' 1 day ago' : `${daysDifference} days ago`}`;
+  }
+};

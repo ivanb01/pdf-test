@@ -2727,6 +2727,11 @@ export const activityTypesDropdown = [
     id: 14,
     label: 'Notes',
   },
+  //this is the default value for inbox added in frontend only
+  {
+    id: 100,
+    label: 'Inbox',
+  },
 ];
 export const activityTypeIcons = {
   1: <MailOutlineIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />,

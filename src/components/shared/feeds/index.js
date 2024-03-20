@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
+import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore, timeAgo } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -21,37 +20,43 @@ import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TooltipComponent from '@components/shared/tooltip';
+import EmailsPopup from '@components/overlays/email-threads';
+import { getEmailsForSpecificContact } from '@api/email';
+import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
+import Loader from '@components/shared/loader';
 
-export default function Feeds({ showFullHeight, contactId, activities, setActivities, height, filter }) {
-  const placeholderDescription = (activity_type) => {
-    if (activity_type == 1) {
-      return 'Email Sent to contact';
-    }
-    if (activity_type == 2) {
-      return 'SMS sent to contact';
-    }
-    if (activity_type == 3) {
-      return 'Phone Call with contact';
-    }
-    if (activity_type == 4) {
-      return 'Contacted on Social Media';
-    }
-    if (activity_type == 5) {
-      return 'Contacted in person';
-    }
-  };
-
+export default function Feeds({
+  showFullHeight,
+  contactId,
+  activities,
+  setActivities,
+  activityId: filteredActivityType,
+  contactEmail,
+}) {
+  console.log(filteredActivityType, 'filteredActivityType');
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
-
+  const [openEmailsPopup, setOpenEmailsPopup] = useState(false);
+  const [inboxLoading, setInboxLoading] = useState(false);
+  const [inboxData, setInboxData] = useState([]);
+  const [threadData, setThreadData] = useState([]);
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
   });
 
+  useEffect(() => {
+    if (filteredActivityType === 100 && contactEmail) {
+      setInboxLoading(true);
+      getEmailsForSpecificContact(contactEmail).then((res) => {
+        setInboxData(res.data);
+        setInboxLoading(false);
+      });
+    }
+  }, [contactEmail, filteredActivityType]);
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -154,16 +159,19 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
       handleClick: handleDeleteActivity,
     },
   ];
-
+  const [threadId, setThreadId] = useState();
+  useEffect(() => {
+    if (openEmailsPopup) {
+      setThreadData(inboxData[threadId]);
+    }
+  }, [inboxData, threadId]);
+  useEffect(() => {
+    console.log(inboxData);
+  }, [inboxData]);
   return (
     <>
-      <div className="bg-white">
-        <SimpleBar
-          style={{
-            maxHeight: showFullHeight ? '100%' : '280px',
-            paddingRight: '-10px',
-          }}
-          autoHide>
+      {filteredActivityType !== 100 ? (
+        activities.length > 0 ? (
           <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
             {activities
               ?.slice()
@@ -268,8 +276,76 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
                 </li>
               ))}
           </ul>
-        </SimpleBar>
-      </div>
+        ) : (
+          <div className="mt-5 text-center">
+            <div className="text-gray7 font-semibold mb-2">No activities found</div>
+            <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
+          </div>
+        )
+      ) : null}
+      {filteredActivityType === 100 ? (
+        inboxLoading ? (
+          <div className={'w-full h-[200px] relative'}>
+            <Loader />
+          </div>
+        ) : !inboxLoading ? (
+          Object.values(inboxData).length > 0 ? (
+            <div className="bg-white">
+              {openEmailsPopup && (
+                <EmailsPopup
+                  setInboxData={setInboxData}
+                  threadData={threadData}
+                  contactEmail={contactEmail}
+                  handleClose={() => setOpenEmailsPopup(false)}
+                />
+              )}
+              <SimpleBar
+                style={{
+                  maxHeight: showFullHeight ? '100%' : '280px',
+                  paddingRight: '-10px',
+                }}
+                autoHide>
+                <ul role="list" className={`pt-6 flex flex-col gap-[20px]`}>
+                  {Object.values(inboxData).flatMap((item) => (
+                    <div
+                      className={'flex gap-3'}
+                      onClick={() => {
+                        setThreadId(item[0]?.thread_id);
+                        setOpenEmailsPopup(true);
+                      }}
+                      role={'button'}
+                      key={item[0].thread_id}>
+                      <div className={'h-8 w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                        <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                      </div>
+                      <div>
+                        <div className={'flex items-center  flex-wrap'}>
+                          <h6 className={'text-[14px] font-bold mr-2'}>
+                            {item[0].subject.length === 0 ? 'No subject' : item[0].subject}
+                          </h6>
+                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
+                        </div>
+                        <div>
+                          <p
+                            dangerouslySetInnerHTML={{ __html: item[0].body }}
+                            className="text-[#475467] text-sm font-normal w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </ul>
+              </SimpleBar>
+            </div>
+          ) : (
+            <div className="mt-5 text-center">
+              <div className="text-gray7 font-semibold mb-2">No activities found</div>
+              <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
+            </div>
+          )
+        ) : null
+      ) : null}
+
       {activityModal && (
         <Overlay className="w-[550px]" handleCloseOverlay={handleCloseModal} title="Edit Activity">
           <div className="p-5 bg-white">
