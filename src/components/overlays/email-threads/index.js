@@ -5,12 +5,12 @@ import RichtextEditor from '@components/Editor';
 import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
 
-const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData }) => {
+const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData, fromEmail }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const _replyInThread = () => {
     setLoading(true);
-    replyInThread('erzabegu3@gmail.com', message.replace(/<\/?[^>]+(>|$)/g, ''), threadId).then((res) => {
+    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId).then((res) => {
       syncEmailOfContact(contactEmail).then(() => {
         getEmailsForSpecificContact(contactEmail).then((res) => {
           setInboxData(res.data);
@@ -73,6 +73,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
         <div style={{ height: '80%', maxHeight: '80%', overflow: 'scroll' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
+              fromEmail={threadData[0]?.from_email}
               contactEmail={contactEmail}
               setInboxData={setInboxData}
               threadId={threadData[0]?.thread_id}
@@ -100,6 +101,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
             {threadData?.slice(-2).map((e, index) => (
               <React.Fragment key={index}>
                 <EmailItem
+                  fromEmail={threadData[0]?.from_email}
                   contactEmail={contactEmail}
                   setInboxData={setInboxData}
                   threadId={e?.thread_id}
@@ -122,6 +124,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>
                   <EmailItem
+                    fromEmail={threadData[0]?.from_email}
                     contactEmail={contactEmail}
                     setInboxData={setInboxData}
                     threadId={e?.thread_id}

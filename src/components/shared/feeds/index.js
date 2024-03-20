@@ -315,8 +315,14 @@ export default function Feeds({
                       }}
                       role={'button'}
                       key={item[0].thread_id}>
-                      <div className={'h-8 w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                      <div
+                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
                         <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                        <span
+                          style={{ zIndex: '0 !important' }}
+                          className="absolute top-[36px] left-4 -ml-px h-[50%] w-0.5 bg-gray-200"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div>
                         <div className={'flex items-center  flex-wrap'}>
