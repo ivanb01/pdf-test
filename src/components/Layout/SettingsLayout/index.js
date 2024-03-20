@@ -25,30 +25,63 @@ const SettingsLayout = ({ children }) => {
       name: 'Templates',
       href: '#',
       icon: <Summarize className="w-[20px] h-[20px]" />,
-      current: false,
       children: [
-        { name: 'Email', href: '#' },
-        { name: 'SMS', href: '#' },
+        { name: 'Email', href: 'email-templates', current: false },
+        { name: 'SMS', href: 'sms-templates', current: false },
       ],
     },
   ]);
+
+  const setCurrentNavigation = (targetName) => {
+    setNavigation((prevNavigation) => {
+      const updateCurrent = (items) => {
+        return items.map((item) => {
+          const isCurrent = item.name === targetName || item.href === targetName;
+
+          if (item.children) {
+            return {
+              ...item,
+              children: updateCurrent(item.children),
+              ...(isCurrent && { current: true }),
+            };
+          } else {
+            return { ...item, current: isCurrent };
+          }
+        });
+      };
+
+      return updateCurrent(prevNavigation);
+    });
+  };
+
   useEffect(() => {
-    if (!asPath.includes(navigation.find((item) => item.current).href)) {
-      setNavigation((prevNavigation) =>
-        prevNavigation.map((navigationItem) => {
-          return asPath.includes(navigationItem.href)
-            ? { ...navigationItem, current: true }
-            : { ...navigationItem, current: false };
-        }),
-      );
-    }
-  }, [navigation]);
+    const setCurrentFromPath = (asPath) => {
+      setNavigation((prevNavigation) => {
+        const targetPath = asPath.split('/').pop();
+        const updateCurrent = (items) => {
+          return items.map((item) => {
+            const isCurrent =
+              item.href.includes(targetPath) || item.name.replace(/\s+/g, '-').toLowerCase() === targetPath;
+            let updatedItem = { ...item, current: isCurrent };
+            if (item.children) {
+              updatedItem.children = updateCurrent(item.children);
+              updatedItem = { ...updatedItem, current: false }; // Ensure parents don't get the current flag
+            }
+            return updatedItem;
+          });
+        };
+        return updateCurrent(prevNavigation);
+      });
+    };
+
+    setCurrentFromPath(asPath);
+  }, [asPath]);
 
   return (
     <>
       <MainMenu />
       <div className="flex h-full">
-        <SidebarMenu navigation={navigation} setNavigation={setNavigation} />
+        <SidebarMenu navigation={navigation} setCurrentNavigation={setCurrentNavigation} />
         <div className="w-full">{children}</div>
       </div>
     </>

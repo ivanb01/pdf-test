@@ -83,9 +83,9 @@ const index = () => {
   ];
   return (
     <SettingsLayout>
-      <TopBar text="Email Templates" />
+      <TopBar text="SMS Templates" />
       <hr></hr>
-      <Table tableFor={'templates'} data={emailTemplate} />
+      <Table tableFor={'templates'} data={smsTemplate} />
     </SettingsLayout>
   );
 };

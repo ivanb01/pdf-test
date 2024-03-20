@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useRouter } from 'next/router';
 
-const SidebarMenu = ({ navigation, setNavigation }) => {
+const SidebarMenu = ({ navigation, setCurrentNavigation }) => {
   const router = useRouter();
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-gray-200 bg-white p-6 border-r min-w-[350px]">
@@ -20,22 +20,7 @@ const SidebarMenu = ({ navigation, setNavigation }) => {
                       onClick={(e) => {
                         e.preventDefault();
                         router.push(item.href);
-                        setNavigation((prevNavigation) =>
-                          prevNavigation.map((navigationItem) => {
-                            return navigationItem.name == item.name
-                              ? { ...navigationItem, current: true }
-                              : { ...navigationItem, current: false };
-
-                            // if (navigationItem.children) {
-                            //   updatedItem.children = navigationItem.children.map((child) => ({
-                            //     ...child,
-                            //     current: child.name === item.name ? !child.current : child.current,
-                            //   }));
-                            // }
-
-                            // return updatedItem;
-                          }),
-                        );
+                        setCurrentNavigation(item.href);
                       }}
                       className={classNames(
                         item.current ? 'bg-lightBlue1 text-lightBlue3' : 'hover:bg-gray-50',
@@ -46,7 +31,7 @@ const SidebarMenu = ({ navigation, setNavigation }) => {
                     </div>
                   ) : (
                     <Disclosure as="div">
-                      {({ open }) => (
+                      {({ open = true }) => (
                         <>
                           <Disclosure.Button
                             className={classNames(
@@ -70,6 +55,12 @@ const SidebarMenu = ({ navigation, setNavigation }) => {
                                 <Disclosure.Button
                                   as="a"
                                   href={subItem.href}
+                                  onClick={(e) => {
+                                    console.log(subItem);
+                                    e.preventDefault();
+                                    router.push(subItem.href);
+                                    setCurrentNavigation(subItem.href);
+                                  }}
                                   className={classNames(
                                     subItem.current ? 'bg-lightBlue1 text-lightBlue3' : 'hover:bg-gray-50',
                                     'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray5',
