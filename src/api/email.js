@@ -29,13 +29,11 @@ export const sendSMS = (to, message) => {
 
 export const syncEmailOfContact = (contact_email) => {
   return axiosInstance.post('v1/email/sync/gmail', {
-    contact_email: contact_email ?? undefined,
+    contact_email: contact_email,
     number_of_emails: '10',
   });
 };
-export const getCategorizedAIContacts = () => {
-  return axiosInstance.post('v1/email/ai-categorize');
-};
+
 export const getEmailsForSpecificContact = (contact_email) => {
   return axiosInstance.get(`v1/email?contact_email=${contact_email}`);
 };

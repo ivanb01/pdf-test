@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="make changes in buttons for preview and notify">
-      <change afterPath="$PROJECT_DIR$/public/images/icons/thumbDown.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/images/icons/thumbUp.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/PropertyDetailsModal/property-details-modal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/portfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/property-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/property-card/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/global/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/global/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/portfolio/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/portfolio/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="change route in main" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,14 +23,14 @@
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "f/erza/OnBoardingFlow",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
+    "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/images/public" />
