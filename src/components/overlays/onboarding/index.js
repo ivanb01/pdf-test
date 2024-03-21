@@ -7,9 +7,8 @@ import img3 from '/public/images/third-step.png';
 import img4 from '/public/images/fourth.png';
 import { useState } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
-import WelcomePopup from '@components/overlays/welcome-popup';
 
-const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding, setShowSSOverlay }) => {
+const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding }) => {
   const [step, setStep] = useState(0);
 
   const nextStep = () => {
@@ -22,16 +21,29 @@ const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding, s
 
   const firstStep = () => {
     return (
-      <WelcomePopup
-        closeModal={() => {
-          nextStep();
-          closeModal();
-        }}
-        setStartedOnboarding={setShowSSOverlay}
-      />
+      <>
+        <div className="mb-6 text-center">
+          <div className="flex justify-center">
+            <img className="mb-2" src={img.src}></img>
+          </div>
+          <div className="text-lg font-semibold text-gray-900 mb-3">Welcome!</div>
+          <div className="text-xs text-gray-900">
+            We're excited to have you join our community of empowered users. With our CRM, you'll gain the tools and
+            insights to supercharge your relationship management. Get ready to explore the possibilities and achieve
+            your goals with ease.
+            <br />
+            <br />
+            Thank you for choosing us, and we can't wait to help you succeed!
+          </div>
+        </div>
+        <div className="flex items-center justify-center mt-6">
+          <Button loading={loading} primary onClick={() => nextStep()}>
+            Start Journey
+          </Button>
+        </div>
+      </>
     );
   };
-
   const secondStep = () => {
     return (
       <>
@@ -118,7 +130,13 @@ const Onboarding = ({ closeModal, handleAction, loading, setStartedOnboarding, s
     );
   };
 
-  return <>{step === 0 && firstStep()}</>;
+  return (
+    <Overlay className="w-[600px]" closeModal={closeModal}>
+      <div className={`p-6 min-h-[450px] ${secondStep() && 'flex flex-col justify-between'}`}>
+        {step == 0 ? firstStep() : step == 1 ? secondStep() : step == 2 ? thirdStep() : fourthStep()}
+      </div>
+    </Overlay>
+  );
 };
 
 export default Onboarding;
