@@ -165,9 +165,7 @@ export default function Feeds({
       setThreadData(inboxData[threadId]);
     }
   }, [inboxData, threadId]);
-  useEffect(() => {
-    console.log(inboxData);
-  }, [inboxData]);
+
   return (
     <>
       {filteredActivityType !== 100 ? (
@@ -321,7 +319,7 @@ export default function Feeds({
                         <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
                         <span
                           style={{ zIndex: '0 !important' }}
-                          className="absolute top-[36px] left-4 -ml-px h-[50%] w-0.5 bg-gray-200"
+                          className="absolute top-[36px] left-4 -ml-px h-full w-0.5 bg-gray-200"
                           aria-hidden="true"
                         />
                       </div>

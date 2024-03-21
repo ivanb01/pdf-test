@@ -4,32 +4,37 @@ import React, { useState } from 'react';
 import RichtextEditor from '@components/Editor';
 import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
+import toast from 'react-hot-toast';
 
 const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData, fromEmail, inboxData }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const _replyInThread = () => {
     setLoading(true);
-    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId).then((res) => {
-      setInboxData({
-        ...inboxData,
-        [threadId]: [
-          ...inboxData[threadId],
-          {
-            body: message.replace(/<\/?[^>]+(>|$)/g, ''),
-            thread_id: threadId,
-            sent_date: new Date(),
-          },
-        ],
-      });
-      setLoading(false);
-      setMessage('');
-      syncEmailOfContact(contactEmail).then(() => {
-        getEmailsForSpecificContact(contactEmail).then((res) => {
-          setInboxData(res.data);
-        });
-      });
+    setInboxData({
+      ...inboxData,
+      [threadId]: [
+        ...inboxData[threadId],
+        {
+          body: message.replace(/<\/?[^>]+(>|$)/g, ''),
+          thread_id: threadId,
+          sent_date: new Date(),
+        },
+      ],
     });
+    setLoading(false);
+    setMessage('');
+    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId)
+      .then((res) => {
+        syncEmailOfContact(contactEmail).then(() => {
+          getEmailsForSpecificContact(contactEmail).then((res) => {
+            setInboxData(res.data);
+          });
+        });
+      })
+      .catch(() => {
+        toast.error('Something went wrong');
+      });
   };
   return (
     <div className={'flex pr-6 pl-3 flex-col '}>
