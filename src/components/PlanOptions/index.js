@@ -236,7 +236,7 @@ const PlanOptions = ({ userInfo }) => {
             </p>
           </>
         )}
-        {currentPlan.productName && userInfo?.email && (
+        {currentPlan?.productName && userInfo?.email && (
           <>
 
             {
@@ -292,7 +292,7 @@ const PlanOptions = ({ userInfo }) => {
           </>
         )}
       </div>
-      { !currentPlan.error && userInfo.customer_id && (
+      { !currentPlan?.error && userInfo?.customer_id && (
         <>
           <div className="font-medium">Manage your subscription</div>
           <div className="text-sm text-gray-700 mb-6">

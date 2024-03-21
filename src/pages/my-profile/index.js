@@ -12,27 +12,31 @@ import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 import aiIcon from '/public/animations/gmailsync.gif';
 import googleIcon from '/public/images/google-icon.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserConsentForGoogleContactsAndEmail } from '@api/google';
 import { clearData } from '@api/contacts';
 import { fetchCurrentUserInfo, updateUserInfo } from '@helpers/auth';
+import { setUserInfo } from 'store/global/slice';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
 import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
+import useLocalStorage from 'hooks/useLocalStorage'
 
 const index = () => {
+  const dispatch = useDispatch();
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
-  const [userInfo, setUserInfo] = useState({});
-  const [changedUserInfo, setChangedUserInfo] = useState({});
+  const userInfo = useSelector((state) => state.global.userInfo);
+  const [defaultUserInfo] = useLocalStorage('userInfo');
+  const [changedUserInfo, setChangedUserInfo] = useState(defaultUserInfo);
 
   useEffect(() => {
     const getInfo = async () => {
       const info = await fetchCurrentUserInfo();
-      setUserInfo(info);
+      dispatch(setUserInfo(info));
       setChangedUserInfo(info);
     };
 
@@ -81,6 +85,7 @@ const index = () => {
       setLoadingActivate(true);
       try {
         await updateUserInfo(changedUserInfo);
+        dispatch(setUserInfo(changedUserInfo));
         toast.success('Changes saved successfully.');
       } catch (error) {
         console.error('Failed to save user info', error);
@@ -122,8 +127,9 @@ const index = () => {
               type="phone"
               label="Phone Number"
               name="phone_number"
-              value={changedUserInfo?.phone_number}
+              value={changedUserInfo?.phone_number || ''}
               onChange={handleChange}
+              hidePhonePrefix={true}
               secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information."
             />
           </div>

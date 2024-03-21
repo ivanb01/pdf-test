@@ -120,6 +120,7 @@ export {
   setAfterSignInRedirect,
   loadAfterSignInRedirect,
   getCurrentUser,
+  getUserInfo,
   fetchCurrentUserInfo,
   saveUserInfo,
   updateUserInfo,

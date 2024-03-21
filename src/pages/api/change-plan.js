@@ -4,6 +4,9 @@ export default async function handler(req, res) {
 
     const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+    if (!subscriptionId)
+        return res.status(404).json({ error: 'No active subscriptions found' });
+
     try {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
         if (!subscription) {

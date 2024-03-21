@@ -39,6 +39,7 @@ const Input = ({
   secondaryLabel,
   onSignatureEnd,
   onSignatureClear,
+  hidePhonePrefix,
   ...props
 }) => {
   let errorClasses = '';
@@ -303,7 +304,7 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${hidePhonePrefix && 'hidden'}`}>
             <option>US</option>
             <option>CA</option>
             <option>EU</option>
@@ -313,7 +314,7 @@ const Input = ({
           type="text"
           name={name ? name : id}
           id={id}
-          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full pl-16 px-[13px] py-[9px] sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
+          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full px-[13px] py-[9px] ${!hidePhonePrefix && 'pl-16'} sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
           placeholder={placeholder}
           value={value}
           onChange={onChange}

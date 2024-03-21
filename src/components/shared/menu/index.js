@@ -129,10 +129,7 @@ const MainMenu = ({ className, fixed }) => {
     router.push('/authentication/sign-in');
   };
 
-  const [userInfo, setUserInfo] = useState({});
-  useEffect(() => {
-    setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}') || {});
-  }, []);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
     if (userGaveConsent == null || userGaveConsent == undefined) {
@@ -358,7 +355,7 @@ const MainMenu = ({ className, fixed }) => {
                 </div>
                 <div className="max-w-[165px] w-full">
                   <p className="truncate text-sm font-medium text-gray4">
-                    {userInfo.first_name ? userInfo.first_name + ' ' + userInfo.last_name : userInfo.email}
+                    {userInfo?.first_name ? userInfo?.first_name + ' ' + userInfo?.last_name : userInfo?.email}
                   </p>
                 </div>
               </div>
