@@ -66,6 +66,7 @@ const Portfolio = () => {
     } else {
       properties = userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'saved');
     }
+    console.log(properties);
     return properties;
   };
   const addClientFeedback = (share_id, id, status, note) => {
@@ -109,7 +110,7 @@ const Portfolio = () => {
     <Loader />
   ) : (
     <>
-      <Header />
+      <Header noLinks />
       <SimpleBar style={{ height: 'calc(100dvh - 74px)', padding: '25px' }}>
         <h1 className={'text-2xl leading-8 font-bold text-gray7'}>
           {userProperties.first_name} {userProperties.last_name}’s Property Suggestions
@@ -123,7 +124,7 @@ const Portfolio = () => {
           />
         </div>
 
-        {updateUserProperties().length === 0 ? (
+        {updateUserProperties()?.length === 0 || !updateUserProperties() ? (
           <EmptyPortfolioState status={propertiesCurrentTab} />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
