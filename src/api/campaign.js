@@ -46,24 +46,30 @@ export const getCampaignsByCategory = (category) => {
 export const getCampaign = (id) => {
   return axiosInstance.get(`v2/cmps/${id}`);
 };
-export const getEmailTemplates = () => {
-  return axiosInstance.get(`v2/em-templates`);
-};
-export const updateEmailTemplate = (id, template) => {
-  return axiosInstance.put(`v2/em-templates/${id}`, template);
-};
-export const getSMSTemplates = () => {
-  return axiosInstance.get(`v2/sm-templates`);
-};
-export const updateSMSTemplate = (id, template) => {
-  return axiosInstance.put(`v2/sm-templates/${id}`, template);
-};
 
 export const addEmailTemplate = (params) => {
   return axiosInstance.post(`v2/em-templates`, params);
 };
 export const addSMSTemplate = (params) => {
   return axiosInstance.post(`v2/sm-templates`, params);
+};
+export const getEmailTemplates = () => {
+  return axiosInstance.get(`v2/em-templates`);
+};
+export const getSMSTemplates = () => {
+  return axiosInstance.get(`v2/sm-templates`);
+};
+export const updateEmailTemplate = (id, template) => {
+  return axiosInstance.put(`v2/em-templates/${id}`, template);
+};
+export const updateSMSTemplate = (id, template) => {
+  return axiosInstance.put(`v2/sm-templates/${id}`, template);
+};
+export const deleteEmailTemplate = (id) => {
+  return axiosInstance.delete(`v2/em-templates/${id}`);
+};
+export const deleteSMSTemplate = (id) => {
+  return axiosInstance.delete(`v2/sm-templates/${id}`);
 };
 
 export const addCampaign = (campaign) => axiosInstance.post(`v2/cmps`, campaign);

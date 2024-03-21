@@ -1,5 +1,6 @@
-import { getEmailTemplates, getSMSTemplates } from '@api/campaign';
+import { deleteSMSTemplate, getEmailTemplates, getSMSTemplates } from '@api/campaign';
 import SettingsLayout from '@components/Layout/SettingsLayout';
+import ConfirmDelete from '@components/overlays/global/confirm-delete';
 import Button from '@components/shared/button';
 import Loader from '@components/shared/loader';
 import AddTemplate from '@components/shared/sidebar/add-template';
@@ -8,6 +9,7 @@ import Table from '@components/shared/table';
 import TopBar from '@components/shared/top-bar';
 import { PlusIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const index = () => {
   const [loadingData, setLoadingData] = useState(true);
@@ -16,6 +18,7 @@ const index = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [smsTemplates, setSmsTemplates] = useState();
   const [currentTemplate, setCurrentTemplate] = useState();
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const fetchSMSTemplates = async () => {
     try {
@@ -49,6 +52,17 @@ const index = () => {
     setSmsTemplates((prevArray) => [...prevArray, newObject]);
   };
 
+  const handleDelete = async () => {
+    let idToDelete = currentTemplate.id;
+    setLoadingDelete(true);
+    await deleteSMSTemplate(idToDelete);
+    let updatedTemplates = smsTemplates.filter((template) => template.id != idToDelete);
+    setSmsTemplates(updatedTemplates);
+    toast.success('SMS template deleted successfully.');
+    setOpenDelete(false);
+    setLoadingDelete(false);
+  };
+
   return (
     <SettingsLayout>
       {loadingData ? (
@@ -70,6 +84,15 @@ const index = () => {
             open={openEdit}
             setOpen={setOpenEdit}
             template={currentTemplate}
+          />
+          <ConfirmDelete
+            open={openDelete}
+            setOpen={setOpenDelete}
+            title={'Are you sure you want to delete sms template?'}
+            message={'This will permanently delete this template. You will not be able to recover it anymore.'}
+            buttonLabel={'Yes, delete'}
+            handleConfirm={handleDelete}
+            loading={loadingDelete}
           />
           <nav className="p-6 flex items-center justify-between">
             <div className="text-gray7 text-lg font-medium">SMS Templates</div>
