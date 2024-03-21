@@ -30,7 +30,7 @@ export const getCampaigns = (searchterm) => {
     params: { search_term: searchterm },
   });
 };
-
+ 
 export const assignContactToCampaign = (campaignId, contactId) => {
   return axiosInstance.post(`v2/campaigns/${campaignId}/add-contact/${contactId}`);
 };
