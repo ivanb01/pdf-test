@@ -32,11 +32,11 @@ export const getCampaigns = (searchterm) => {
 };
 
 export const assignContactToCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`v2/campaign/${campaignId}/add_contact/${contactId}`);
+  return axiosInstance.post(`v2/campaigns/${campaignId}/add-contact/${contactId}`);
 };
 
 export const unassignContactFromCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`v2/campaign/${campaignId}/remove_contact/${contactId}`);
+  return axiosInstance.post(`v2/campaigns/${campaignId}/remove-contact/${contactId}`);
 };
 
 export const getCampaignsByCategory = (category) => {
