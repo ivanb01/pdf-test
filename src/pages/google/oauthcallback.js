@@ -11,7 +11,7 @@ const GoogleOauthCallbak = () => {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
-      getGoogleAuthCallback(queryParams, '/contacts/no-contact').then((data) => {
+      getGoogleAuthCallback(queryParams, '/contacts/clients').then((data) => {
         console.log(data);
       });
     }

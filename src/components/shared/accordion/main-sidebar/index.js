@@ -1,32 +1,17 @@
-import { ChevronDownIcon } from '@heroicons/react/solid';
 import Text from 'components/shared/text';
 import React, { useState, useEffect } from 'react';
-import MenuOpen from '@mui/icons-material/MenuOpen';
-import Menu from '@mui/icons-material/Menu';
 import Link from 'components/Link';
 import UploadFile from '@mui/icons-material/UploadFile';
-import Router from 'next/router';
 import { setExpandedMenu } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from 'components/shared/button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import { getCount } from 'api/contacts';
 import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
 import ArrowLeft from '/public/images/arrow-circle-left.svg';
 import ArrowRight from '/public/images/arrow-circle-right.svg';
-import { CSSTransition } from 'react-transition-group';
-import { setUserGaveConsent } from 'store/global/slice';
-import CheckCircle from '@mui/icons-material/CheckCircle';
-import {
-  getUserConsentForGoogleContactsAndEmail,
-  getUserConsentForGoogleEmail,
-  getUserConsentStatus,
-} from '@api/google';
-import googleContactsIcon from '/public/images/google-contacts.png';
+import { getUserConsentForGoogleContactsAndEmail } from '@api/google';
 import checkmark from '/public/images/checkmark.svg';
-import Info from '@mui/icons-material/Info';
 import TooltipComponent from '@components/shared/tooltip';
 import { setOpenedTab, setOpenedSubtab, setExpandedTab } from 'store/global/slice';
 import SimpleBar from 'simplebar-react';
@@ -258,9 +243,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     );
   };
 
-  useEffect(() => {
-    console.log(openedSubtab);
-  }, [openedSubtab]);
   return (
     <>
       <div
@@ -276,11 +258,14 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         )}
         {!finishedOnboarding &&
           showOnboarding &&
-          !userGaveConsent?.includes('gmail') &&
-          !userGaveConsent?.includes('contacts') && (
-            <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
+          !userGaveConsent?.includes('gmaill') &&
+          !userGaveConsent?.includes('contactss') && (
+            <Onboarding
+              closeModal={() => setShowOnboarding(false)}
+              setStartedOnboarding={setStartedOnboarding}
+              setShowSSOverlay={setShowSSOverlay}
+            />
           )}
-        {!finishedOnboarding && startedOnboarding && <Tour for={'clients'} setShowSSOverlay={setShowSSOverlay} />}
         <div>
           {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (
@@ -319,12 +304,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           </div>
                         </TooltipComponent>
                         <a
-                          onClick={() =>
-                            router.push({
-                              pathname: '/contacts/no-contact/',
-                              query: { start_importing: true },
-                            })
-                          }
+                          onClick={() => setShowSSOverlay(true)}
                           className="group cursor-pointer ml-5 pt-0 flex items-center justify-start font-semibold text-blue-600">
                           Re-import
                           <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />

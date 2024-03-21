@@ -10,6 +10,7 @@ import { setAllContacts } from '@store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { setUserGaveConsent } from '@store/global/slice';
 import withAuth from '@components/withAuth';
+import ImportingContactsPopup from '@components/overlays/importing-contacts-popup';
 
 const NoContactPage = () => {
   const dispatch = useDispatch();
@@ -56,6 +57,10 @@ const NoContactPage = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(googleContactResponse);
+  }, [googleContactResponse]);
+
   const handleGoogleAuthorize = async () => {
     try {
       const { data } = await getGoogleAuthorize();
@@ -68,7 +73,7 @@ const NoContactPage = () => {
 
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/no-contact');
+      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
       console.log('google auth callback', data);
       if (!data.error) {
         setEmptyModal(false);
@@ -146,7 +151,6 @@ const NoContactPage = () => {
 
   return (
     <>
-      <MainMenu />
       {googleContactResponse?.importable_new_contacts_count > 0 || googleContactResponse?.invalid_contacts_count > 0 ? (
         <div className="w-full flex items-center justify-center">
           <div className="border-t border-gray2 flex  w-full">
@@ -181,6 +185,9 @@ const NoContactPage = () => {
           motionImage={motionImage}
           emptyModal={emptyModal}
         />
+        //TODO should replace this component
+
+        // <ImportingContactsPopup />
       )}
     </>
   );
