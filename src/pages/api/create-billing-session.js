@@ -7,16 +7,21 @@ const DOMAIN = 'https://subscriptions.onelinecrm.com';
 import { getCurrentUser } from '@helpers/amplifySSR';
 
 export default async function handler(req, res) {
-  const { customerId } = req.body;
+  // TODO, add customerID back in
+  // const { customerId } = req.body;
+  const { subscriptionId } = req.body;
 
   const userData = await getCurrentUser(req);
   let user;
 
-  if (userData.error || !customerId) {
+  if (userData.error || !subscriptionId) {
     return res.status(404).json({ status: 404, error: 'Customer not found' });
   }
 
-  const customer = await stripe.customers.retrieve(customerId);
+  // TODO, add customerID back in
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+  const customer = await stripe.customers.retrieve(subscription.customer);
 
   if (!customer) res.status(500).json({ statusCode: 500, message: "Email not found." });
 

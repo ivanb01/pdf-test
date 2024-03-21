@@ -21,7 +21,7 @@ import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
 import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
-import useLocalStorage from 'hooks/useLocalStorage'
+import useLocalStorage from 'hooks/useLocalStorage';
 
 const index = () => {
   const dispatch = useDispatch();

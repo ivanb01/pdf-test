@@ -4,9 +4,13 @@ import { CreditCardIcon, UserIcon } from '@heroicons/react/solid';
 import { Security, Summarize } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { setUserInfo } from 'store/global/slice';
+import { getUserInfo } from '@helpers/auth';
+import { useDispatch } from 'react-redux';
 
 const SettingsLayout = ({ children }) => {
   const { asPath } = useRouter();
+  const dispatch = useDispatch();
   const [navigation, setNavigation] = useState([
     { name: 'My Profile', href: 'my-profile', icon: <UserIcon height={20} className="w-[20px]" />, current: true },
     {
@@ -76,6 +80,11 @@ const SettingsLayout = ({ children }) => {
 
     setCurrentFromPath(asPath);
   }, [asPath]);
+
+  useEffect(() => {
+    const userInfo = getUserInfo();
+    dispatch(setUserInfo(userInfo));
+  }, [])
 
   return (
     <>

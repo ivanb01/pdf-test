@@ -3,6 +3,9 @@ import Button from 'components/shared/button';
 import styles from './styles.module.scss';
 import StripeEmbeddedCheckout from '@components/public/StripeEmbeddedCheckout';
 import clsx from 'clsx';
+import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
+import { setUserInfo } from 'store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const essentialsMonthPrice = 30;
 const essentialsYearPrice = 300;
@@ -84,8 +87,10 @@ const pricingModels = [
 ];
 
 const PlanOptions = ({ userInfo }) => {
+  const dispatch = useDispatch();
   const [currentPlan, setCurrentPlan] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [portalLoading, setPortalLoading] = useState(false);
   const otherInterval = currentPlan?.interval ? (currentPlan?.interval === 'month' ? 'year' : 'month') : null;
   const [plan, setPlan] = useState('month');
 
@@ -104,9 +109,9 @@ const PlanOptions = ({ userInfo }) => {
   };
 
   const openPortal = async () => {
-    setIsLoading(true);
+    setPortalLoading(true);
     
-    if (!userInfo || !userInfo.customer_id) return;
+    if (!userInfo || !userInfo.subscriptionId) return;
 
     fetch('/api/create-billing-session', {
       method: 'POST',
@@ -114,7 +119,7 @@ const PlanOptions = ({ userInfo }) => {
         'Content-Type': 'application/json',
       },
       // Better to pass in customer id instead, once available from backend
-      body: JSON.stringify({ customerId: userInfo.customer_id })
+      body: JSON.stringify({ subscriptionId: userInfo.subscriptionId })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -122,30 +127,11 @@ const PlanOptions = ({ userInfo }) => {
           window.open(data.sessionURL);
       })
       .finally(() => {
-        setIsLoading(false);
+        setPortalLoading(false);
       })
   }
 
-  const fetchCurrentUserInfo = async () => {
-    const data = fetch(`/api/get-current-plan`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userInfo }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCurrentPlan(data);
-        setIsLoading(false);
-      });
-
-      setCurrentPlan(data);
-      setIsLoading(false);
-  };
-
   useEffect(() => {
-    fetchCurrentUserInfo()
     fetchCurrentPlan()
   }, []);
 
@@ -163,8 +149,13 @@ const PlanOptions = ({ userInfo }) => {
     });
     const data = await response.json();
     if (data.success) {
-      fetchCurrentUserInfo();
       fetchCurrentPlan();
+
+      setTimeout(async () => {
+        const info = await fetchCurrentUserInfo();
+        saveUserInfo(info);
+        dispatch(setUserInfo(info));
+      }, 2000);
     } else {
       // Handle error
     }
@@ -292,14 +283,14 @@ const PlanOptions = ({ userInfo }) => {
           </>
         )}
       </div>
-      { !currentPlan?.error && userInfo?.customer_id && (
+      { !currentPlan?.error && userInfo?.subscriptionId && (
         <>
           <div className="font-medium">Manage your subscription</div>
           <div className="text-sm text-gray-700 mb-6">
             Clicking the button below will open your subscription portal.
           </div>
           <Button
-            loading={isLoading}
+            loading={portalLoading}
             information label="Open Subscription Portal"
             onClick={openPortal} 
           />

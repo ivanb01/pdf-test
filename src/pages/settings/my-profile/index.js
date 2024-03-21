@@ -6,9 +6,15 @@ import TopBar from '@components/shared/top-bar';
 import { updateUserInfo } from '@helpers/auth';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useSelector, useDispatch } from 'react-redux';
+import useLocalStorage from 'hooks/useLocalStorage'
+import { setUserInfo } from 'store/global/slice';
 
 const index = () => {
-  const [changedUserInfo, setChangedUserInfo] = useState({});
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.global.userInfo);
+  const [defaultUserInfo] = useLocalStorage('userInfo');
+  const [changedUserInfo, setChangedUserInfo] = useState(defaultUserInfo);  
   const [loadingActivate, setLoadingActivate] = useState(false);
 
   const handleChange = (e) => {
@@ -23,6 +29,7 @@ const index = () => {
     setLoadingActivate(true);
     try {
       await updateUserInfo(changedUserInfo);
+      dispatch(setUserInfo(changedUserInfo));
       toast.success('Changes saved successfully.');
     } catch (error) {
       console.error('Failed to save user info', error);
@@ -65,8 +72,9 @@ const index = () => {
               type="phone"
               label="Phone Number"
               name="phone_number"
-              value={changedUserInfo?.phone_number}
+              value={changedUserInfo?.phone_number || ''}
               onChange={handleChange}
+              hidePhonePrefix={true}
               secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information."
             />
           </div>
