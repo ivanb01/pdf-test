@@ -9,7 +9,7 @@ export const getGoogleAuthCallback = (queryParams, callback) => {
 
 export const getGoogleAuthorize = () => {
   return axiosInstance.get('v1/google/authorize', {
-    params: { test_callback: '/contacts/clients', scope: 'contacts,gmail' },
+    params: { test_callback: '/contacts/no-contact', scope: 'contacts,gmail' },
   });
 };
 
@@ -57,7 +57,7 @@ export const getUserConsentForGoogleEmail = () => {
 
 export const getUserConsentForGoogleContactsAndEmail = () => {
   return axiosInstance.get('v1/google/authorize', {
-    params: { test_callback: '/contacts/clients', scope: 'contacts,gmail' },
+    params: { test_callback: '/contacts/no-contact', scope: 'contacts,gmail' },
   });
 };
 export const getUserConsentStatus = () => {

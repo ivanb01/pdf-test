@@ -59,10 +59,8 @@ const NoContactPage = () => {
   const handleGoogleAuthorize = async () => {
     try {
       const { data } = await getGoogleAuthorize();
-      console.log(data, 'data');
       window.location.href = data.redirect_uri;
     } catch (error) {
-      console.log(error);
       setShowImportGoogleContactsModal(false);
       setErorrImporting('Authorize process was interrupted. Please Try Again!');
     }
@@ -70,7 +68,7 @@ const NoContactPage = () => {
 
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
+      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/no-contact');
       console.log('google auth callback', data);
       if (!data.error) {
         setEmptyModal(false);
