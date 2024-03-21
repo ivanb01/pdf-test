@@ -6,8 +6,8 @@ const EmptyPortfolioState = ({ status }) => {
       </h4>
       <p className={'text-base leading-6 font-medium w-[352px] text-gray8'}>
         {status === 0
-          ? "So far, there haven't been any properties that you've to review."
-          : `So far, there haven't been any properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
+          ? 'There are no properties for review in your portfolio. .'
+          : `There are no properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
       </p>
     </div>
   );
@@ -20,8 +20,8 @@ export const EmptyPortfolioClientDetails = ({ status }) => {
       </h4>
       <p className={'text-gray5 text-sm mb-6 font-medium w-[352px]'}>
         {status === 1
-          ? "So far, there haven't been any properties to review."
-          : `So far, there haven't been any properties ${status === 2 ? 'liked' : 'disliked'}.`}
+          ? 'There are no properties for review in your portfolio.'
+          : `There are no properties that you've ${status === 2 ? 'liked' : 'disliked'}.`}
       </p>
     </div>
   );
