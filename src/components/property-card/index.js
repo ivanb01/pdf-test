@@ -130,7 +130,7 @@ const PropertyCard = ({
           </div>
         )}
         {!putFeedback && (
-          <div className={'flex absolute bottom-2 px-4 justify-between items-center w-full'}>
+          <div className={'flex absolute bottom-2 px-3 justify-between items-center w-full'}>
             <div
               className={`flex items-center justify-center border ${
                 property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
