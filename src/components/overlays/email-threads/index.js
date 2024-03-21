@@ -5,17 +5,28 @@ import RichtextEditor from '@components/Editor';
 import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
 
-const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData, fromEmail }) => {
+const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData, fromEmail, inboxData }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const _replyInThread = () => {
     setLoading(true);
     replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId).then((res) => {
+      setInboxData({
+        ...inboxData,
+        [threadId]: [
+          ...inboxData[threadId],
+          {
+            body: message.replace(/<\/?[^>]+(>|$)/g, ''),
+            thread_id: threadId,
+            sent_date: new Date(),
+          },
+        ],
+      });
+      setLoading(false);
+      setMessage('');
       syncEmailOfContact(contactEmail).then(() => {
         getEmailsForSpecificContact(contactEmail).then((res) => {
           setInboxData(res.data);
-          setLoading(false);
-          setMessage('');
         });
       });
     });
@@ -60,7 +71,7 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
   );
 };
 
-const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) => {
+const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inboxData }) => {
   const [showAll, setShowAll] = useState(false);
   console.log(threadData, 'threadData');
   return (
@@ -73,6 +84,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
         <div style={{ height: '80%', maxHeight: '80%', overflow: 'scroll' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
+              inboxData={inboxData}
               fromEmail={threadData[0]?.from_email}
               contactEmail={contactEmail}
               setInboxData={setInboxData}
@@ -101,6 +113,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
             {threadData?.slice(-2).map((e, index) => (
               <React.Fragment key={index}>
                 <EmailItem
+                  inboxData={inboxData}
                   fromEmail={threadData[0]?.from_email}
                   contactEmail={contactEmail}
                   setInboxData={setInboxData}
@@ -124,6 +137,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail }) =>
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>
                   <EmailItem
+                    inboxData={inboxData}
                     fromEmail={threadData[0]?.from_email}
                     contactEmail={contactEmail}
                     setInboxData={setInboxData}

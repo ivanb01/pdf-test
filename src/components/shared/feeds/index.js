@@ -293,6 +293,7 @@ export default function Feeds({
             <div className="bg-white">
               {openEmailsPopup && (
                 <EmailsPopup
+                  inboxData={inboxData}
                   setInboxData={setInboxData}
                   threadData={threadData}
                   contactEmail={contactEmail}
