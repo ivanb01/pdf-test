@@ -293,6 +293,7 @@ export default function Feeds({
             <div className="bg-white">
               {openEmailsPopup && (
                 <EmailsPopup
+                  inboxData={inboxData}
                   setInboxData={setInboxData}
                   threadData={threadData}
                   contactEmail={contactEmail}
@@ -305,7 +306,7 @@ export default function Feeds({
                   paddingRight: '-10px',
                 }}
                 autoHide>
-                <ul role="list" className={`pt-6 flex flex-col gap-[20px]`}>
+                <ul role="list" className={`pt-6 flex flex-col gap-8`}>
                   {Object.values(inboxData).flatMap((item) => (
                     <div
                       className={'flex gap-3'}
@@ -315,8 +316,14 @@ export default function Feeds({
                       }}
                       role={'button'}
                       key={item[0].thread_id}>
-                      <div className={'h-8 w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                      <div
+                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
                         <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                        <span
+                          style={{ zIndex: '0 !important' }}
+                          className="absolute top-[36px] left-4 -ml-px h-[50%] w-0.5 bg-gray-200"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div>
                         <div className={'flex items-center  flex-wrap'}>

@@ -440,7 +440,7 @@ export const timeAgo = (timestamp) => {
       const remainingMinutes = minutesDifference % 60;
       return `${hoursDifference === 1 ? ' 1 hour' : `${hoursDifference} hours`} and ${remainingMinutes === 1 ? ' 1 minute ago' : `${remainingMinutes} minutes ago`}`;
     } else {
-      return `${minutesDifference} minutes ago`;
+      return `${minutesDifference === 1 ? '1 minute ago' : `${minutesDifference} minutes ago`}`;
     }
   } else {
     return `${daysDifference === 1 ? ' 1 day ago' : `${daysDifference} days ago`}`;
