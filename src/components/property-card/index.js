@@ -125,18 +125,14 @@ const PropertyCard = ({
           } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
           {property?.STATUS}
         </div>
-        {deletePropertyFromPortfolio && (
-          <div className={'flex gap-2 absolute top-2 right-3 justify-center'}>
-            {clientNote && clientNote.length > 0 && (
-              <div
-                role={'button'}
-                onClick={() => setOpenFeedbackModal(true)}
-                className={`rounded-full border border-gray1 bg-[#FFFFFF90] text-gray5 h-fit px-2 py-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
-                Client’s thoughts
-              </div>
-            )}
+        <div className={'flex gap-2 absolute top-2 right-3 justify-center'}>
+          <div
+            role={'button'}
+            onClick={() => setOpenFeedbackModal(true)}
+            className={` rounded-full border border-gray-300 bg-[#ffffffe8] text-gray5 h-fit px-2 py-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
+            Client’s thoughts
           </div>
-        )}
+        </div>
         {!putFeedback && (
           <div className={'flex gap-2'}>
             <TooltipComponent
