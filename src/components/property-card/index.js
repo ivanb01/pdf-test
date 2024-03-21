@@ -117,14 +117,6 @@ const PropertyCard = ({
       }`}>
       <div className="h-[160px] relative">
         <ImageGallery images={property?.PHOTOS} property={property} url={!putFeedback ? url : undefined} />
-        <div
-          className={`absolute ${putFeedback ? 'top-2' : 'bottom-2'} left-2 flex items-center justify-center border ${
-            property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
-              ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-              : 'border-cyan-800 bg-cyan-50 text-cyan-800'
-          } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
-          {property?.STATUS}
-        </div>
         {deletePropertyFromPortfolio && (
           <div className={'flex gap-2 absolute top-2 right-3 justify-center'}>
             {clientNote && clientNote.length > 0 && (
@@ -138,37 +130,47 @@ const PropertyCard = ({
           </div>
         )}
         {!putFeedback && (
-          <div className={'flex gap-2'}>
-            <TooltipComponent
-              side={'bottom'}
-              align={'center'}
-              triggerElement={
-                <a
-                  className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer absolute bottom-2 right-10"
-                  onClick={() => {
-                    navigator.clipboard.writeText(url);
-                    toast.success('Link copied to clipboard');
-                  }}>
-                  <InsertLinkOutlinedIcon className={'h-5 w-5'} />
-                </a>
-              }>
-              <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
-            </TooltipComponent>
-            {deletePropertyFromPortfolio && (
+          <div className={'flex absolute bottom-2 px-4 justify-between items-center w-full'}>
+            <div
+              className={`flex items-center justify-center border ${
+                property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
+                  ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
+                  : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+              } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
+              {property?.STATUS}
+            </div>
+            <div className="flex items-center">
               <TooltipComponent
                 side={'bottom'}
                 align={'center'}
                 triggerElement={
-                  <div
-                    role={'button'}
-                    onClick={() => deletePropertyFromPortfolio()}
-                    className={` h-7 w-7  rounded-full flex items-center bg-white  absolute bottom-2 right-2 justify-center cursor-pointer`}>
-                    <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
-                  </div>
+                  <a
+                    className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer"
+                    onClick={() => {
+                      navigator.clipboard.writeText(url);
+                      toast.success('Link copied to clipboard');
+                    }}>
+                    <InsertLinkOutlinedIcon className={'h-5 w-5'} />
+                  </a>
                 }>
-                <p className={'text-[10px] text-white font-medium'}>Delete property</p>
+                <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
               </TooltipComponent>
-            )}
+              {deletePropertyFromPortfolio && (
+                <TooltipComponent
+                  side={'bottom'}
+                  align={'center'}
+                  triggerElement={
+                    <div
+                      role={'button'}
+                      onClick={() => deletePropertyFromPortfolio()}
+                      className={`ml-2 h-7 w-7 rounded-full flex items-center bg-white justify-center cursor-pointer`}>
+                      <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+                    </div>
+                  }>
+                  <p className={'text-[10px] text-white font-medium'}>Delete property</p>
+                </TooltipComponent>
+              )}
+            </div>
           </div>
         )}
       </div>
