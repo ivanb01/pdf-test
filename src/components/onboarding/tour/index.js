@@ -3,6 +3,8 @@ import { ShepherdTour, ShepherdTourContext } from 'react-shepherd';
 import onboarding_step_one from '/public/images/onboarding/onboarding-1.svg';
 import clients_onboarding_step_two from '/public/images/onboarding/clients-onboarding-step-2.svg';
 import clients_onboarding_step_three from '/public/images/onboarding/clients-onboarding-step-3.svg';
+import { setInitGmail } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const clientSteps = [
   {
@@ -219,7 +221,8 @@ const tourOptions = {
   useModalOverlay: true,
 };
 
-function TourInstance({ setShowSSOverlay }) {
+function TourInstance() {
+  const dispatch = useDispatch();
   const tour = useContext(ShepherdTourContext);
   let functionRan = false;
 
@@ -231,7 +234,7 @@ function TourInstance({ setShowSSOverlay }) {
 
     tour.on('complete', () => {
       localStorage.setItem('finishedTour', true);
-      setShowSSOverlay(true);
+      dispatch(setInitGmail(true));
     });
   }, [tour]);
 
@@ -242,7 +245,7 @@ export default function Tour({ setShowSSOverlay, ...props }) {
   return (
     <>
       <ShepherdTour steps={props.for == 'clients' ? clientSteps : uncategorizedSteps} tourOptions={tourOptions}>
-        <TourInstance setShowSSOverlay={setShowSSOverlay} />
+        <TourInstance />
       </ShepherdTour>
     </>
   );
