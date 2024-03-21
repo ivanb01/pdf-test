@@ -3141,7 +3141,11 @@ const Table = ({
             <tr
               key={template.id}
               className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
-              style={{ height: '76px' }}>
+              style={{ height: '76px' }}
+              onClick={() => {
+                setCurrentTemplate(template);
+                setOpenEdit(true);
+              }}>
               <td className="pl-6 px-3 py-2 text-gray-800 text-left text-sm leading-5">
                 {isEmail ? template.subject : template.name}
               </td>

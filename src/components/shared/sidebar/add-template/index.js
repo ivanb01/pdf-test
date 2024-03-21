@@ -14,39 +14,38 @@ import { setGlobalEmail } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { updateEmailTemplate, updateSMSTemplate } from '@api/campaign';
+import { addEmailTemplate, addSMSTemplate, updateEmailTemplate, updateSMSTemplate } from '@api/campaign';
 import toast from 'react-hot-toast';
 
-const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => {
+const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleEditTemplate = async (values) => {
+  const handleAddTemplate = async (values) => {
     setLoading(true);
     try {
-      let templateId = values.id;
       let payload = null;
-      if (template.body_html) {
+      let result = null;
+      if (isEmail) {
         payload = {
           subject: values.subject,
           body_html: values.message,
           body_text: values.message.replace(/<\/?[^>]+(>|$)/g, ''),
         };
-        await updateEmailTemplate(templateId, payload);
+        result = await addEmailTemplate(payload);
       } else {
         payload = {
           name: values.subject,
           message: values.message.replace(/<\/?[^>]+(>|$)/g, ''),
         };
-        await updateSMSTemplate(templateId, payload);
+        result = await addSMSTemplate(payload);
       }
-      updateDataLocally(templateId, payload);
+      addDataLocally(result.data.id, payload);
       setOpen(false);
-      toast.success('Template updated successfully!');
+      toast.success('Template created successfully!');
       setLoading(false);
-
       resetForm();
     } catch (error) {
       console.log(error);
@@ -56,26 +55,19 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
 
   const formik = useFormik({
     initialValues: {
-      id: template ? template.id : null,
-      subject: template ? (template.body_html ? template.subject : template.name) : '',
-      message: template ? (template.body_html ? template.body_html : template.message) : '',
+      id: '',
+      subject: '',
+      message: '',
     },
     enableReinitialize: true,
     onSubmit: (values) => {
       console.log(values);
-      handleEditTemplate(values);
+      handleAddTemplate(values);
     },
   });
 
   const { resetForm } = formik;
 
-  useEffect(() => {
-    if (template?.id) {
-      formik.setFieldValue('id', template.id);
-      formik.setFieldValue('subject', template.body_html ? template.subject : template.name);
-      formik.setFieldValue('message', template.body_html ? template.body_html : template.message);
-    }
-  }, [template]);
   useEffect(() => {
     if (formik.values.subject && formik.values.message) {
       setFormIsValid(true);
@@ -143,4 +135,4 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
   );
 };
 
-export default EditTemplate;
+export default AddTemplate;

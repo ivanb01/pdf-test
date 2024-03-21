@@ -369,7 +369,7 @@ const MainMenu = ({ className, fixed }) => {
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => router.push('/my-profile')}>
+                      onClick={() => router.push('/settings/my-profile')}>
                       <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>
