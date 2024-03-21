@@ -19,6 +19,7 @@ const global = createSlice({
     vendorSubtypes: null,
     contactToBeEmailed: null,
     openEmailContactOverlay: false,
+    initGmailSetup: false,
     sorted: [
       { name: 'New Lead', sorted: 'asc' },
       { name: 'Attempted Contact', sorted: 'asc' },
@@ -127,6 +128,9 @@ const global = createSlice({
     setAmenities(state, action) {
       state.amenities = action.payload;
     },
+    setInitGmail(state, action) {
+      state.initGmailSetup = action.payload;
+    },
   },
 });
 
@@ -153,5 +157,6 @@ export const {
   setHideUnapproved,
   setContactToBeEmailed,
   setOpenEmailContactOverlay,
+  setInitGmail,
 } = global.actions;
 export default global.reducer;

@@ -17,7 +17,7 @@ const SetupGmail = ({ error, setshowAddContactManuallyOverlay, setShowImportGoog
 
   return (
     <>
-      <div className="max-w-[420px] text-center m-auto pt-14">
+      <div className="max-w-[420px] text-center m-auto pt-[70px]">
         {error && (
           <NotificationAlert className="mb-8 p-4" type="error">
             {error}
