@@ -8,6 +8,7 @@ import { getUserConsentForGoogleContactsAndEmail } from '@api/google';
 import { useSelector } from 'react-redux';
 import ClearContacts from '@components/overlays/clear-all-contacts';
 import SettingsLayout from '@components/Layout/SettingsLayout';
+import toast from 'react-hot-toast';
 
 const index = () => {
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);

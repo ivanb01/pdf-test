@@ -1,7 +1,15 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setExpandedTab, setOpenedSubtab, setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent, setVendorSubtypes } from 'store/global/slice';
+import {
+  setExpandedTab,
+  setOpenedSubtab,
+  setOpenedTab,
+  setRefetchData,
+  setUnapprovedContacts,
+  setUserGaveConsent,
+  setVendorSubtypes,
+} from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
@@ -12,8 +20,11 @@ import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
-import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
+import { getGoogleAuthCallback, getUserConsentStatus, postGoogleContacts } from '@api/google';
 import withAuth from '@components/withAuth';
+import { getAIContacts, syncEmailOfContact } from '@api/email';
+import ImportingContactsPopup from '@components/overlays/importing-contacts-popup';
+import ContactsImportedSuccessfullyPopup from '@components/overlays/contacts-imported-successful';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -131,15 +142,89 @@ const index = () => {
   //     }
   //   }
   // }, [router.query]);
+  const [errorImporting, setErorrImporting] = useState('');
+  const [googleContactResponse, setGoogleContactResponse] = useState(null);
 
+  // const handleGoogleAuthCallback = async (queryParams) => {
+  //   try {
+  //     const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
+  //     console.log('google auth callback', data);
+  //   } catch (error) {
+  //     // setShowImportGoogleContactsModal(false);
+  //     // setErorrImporting('Authorize process was interrupted. Please Try Again!');
+  //     console.log('error', error);
+  //   }
+  // };
+  const [finishedOnboarding, setFinishedOnboarding] = useState(false);
+  useEffect(() => {
+    let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
+    setFinishedOnboarding(finishedTour);
+  }, []);
+  const [showTour, setShowTour] = useState(undefined);
+
+  const [loadingPopup, setLoadingPopup] = useState(false);
+  const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    console.log(loadingPopup);
+  }, [loadingPopup]);
+  const handleImportGoogleContact = async () => {
+    console.log('Testt');
+    try {
+      setLoadingPopup(true);
+      const [promise1, promise2] = await Promise.all([
+        postGoogleContacts()
+          .then(() => {})
+          .catch((err) => console.log(err)),
+        syncEmailOfContact()
+          .then(() => {})
+          .catch((err) => console.log(err)),
+      ]);
+      await getAIContacts()
+        .then((res) => {
+          setSuccess(true);
+          setLoadingPopup(false);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      setLoadingPopup(false);
+      setSuccess(false);
+    }
+  };
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
-      console.log('google auth callback', data);
+      setLoadingPopup(true);
+      await getGoogleAuthCallback(queryParams, '/contacts/no-contact')
+        .then(() => {
+          setTimeout(async () => {
+            const [promise1, promise2] = await Promise.all([
+              postGoogleContacts()
+                .then(() => {})
+                .catch((err) => console.log(err)),
+              syncEmailOfContact()
+                .then(() => {})
+                .catch((err) => console.log(err)),
+            ]);
+            await getAIContacts()
+              .then((res) => {})
+              .catch((err) => console.log(err));
+          }, 4000);
+        })
+        .catch((err) => console.log(err));
+      await getUserConsentStatus()
+        .then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+          setLoadingPopup(false);
+          setSuccess(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          setSuccess(false);
+          setLoadingPopup(false);
+        });
     } catch (error) {
-      // setShowImportGoogleContactsModal(false);
-      // setErorrImporting('Authorize process was interrupted. Please Try Again!');
-      console.log('error',error);
+      setLoadingPopup(false);
+      setSuccess(false);
+      console.log(error);
     }
   };
 
@@ -149,7 +234,10 @@ const index = () => {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
-      if (queryParams?.code) {
+      setShowTour(true);
+      if (queryParams?.start_importing) {
+        handleImportGoogleContact();
+      } else if (queryParams?.code) {
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -178,6 +266,15 @@ const index = () => {
               handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
             />
           )}
+          {Object.entries(router.query).length > 0 &&
+            (loadingPopup ? (
+              <ImportingContactsPopup />
+            ) : !loadingPopup && success ? (
+              <ContactsImportedSuccessfullyPopup />
+            ) : (
+              <></>
+            ))}
+
           <Clients
             currentButton={currentButton}
             handleViewChange={handleViewChange}
@@ -188,7 +285,7 @@ const index = () => {
             unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
-          {/* <Tour for={'clients'} /> */}
+          {!finishedOnboarding && Object.entries(router.query).length > 0 && showTour && <Tour />}
           {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
             <div className="arrow pointer-events-none">
               <span></span>
