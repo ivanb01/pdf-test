@@ -159,7 +159,7 @@ const index = () => {
   useEffect(() => {
     let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
     setFinishedOnboarding(finishedTour);
-  }, []);
+  }, [router.query]);
   const [showTour, setShowTour] = useState(undefined);
 
   const [loadingPopup, setLoadingPopup] = useState(false);
@@ -193,7 +193,7 @@ const index = () => {
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
       setLoadingPopup(true);
-      await getGoogleAuthCallback(queryParams, '/contacts/no-contact')
+      await getGoogleAuthCallback(queryParams, '/contacts/clients')
         .then(() => {
           setTimeout(async () => {
             const [promise1, promise2] = await Promise.all([
@@ -266,7 +266,7 @@ const index = () => {
               handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
             />
           )}
-          {Object.entries(router.query).length > 0 &&
+          {finishedOnboarding &&
             (loadingPopup ? (
               <ImportingContactsPopup />
             ) : !loadingPopup && success ? (
