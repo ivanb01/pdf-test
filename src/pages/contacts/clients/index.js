@@ -194,6 +194,7 @@ const index = () => {
     try {
       setLoadingPopup(true);
       const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
+      console.log(data, 'Data');
       // await getGoogleAuthCallback(queryParams, '/contacts/clients')
       //   .then(() => {
       setTimeout(() => handleImportGoogleContact(), 4000);
@@ -231,6 +232,7 @@ const index = () => {
         handleGoogleAuthCallback(queryParams);
       }
     }
+    console.log(queryParams, 'queryparams');
   }, [router.query]);
 
   useEffect(() => {
