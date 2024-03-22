@@ -196,19 +196,8 @@ const index = () => {
       const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
       // await getGoogleAuthCallback(queryParams, '/contacts/clients')
       //   .then(() => {
-      setTimeout(async () => {
-        const [promise1, promise2] = await Promise.all([
-          postGoogleContacts()
-            .then(() => {})
-            .catch((err) => console.log(err)),
-          syncEmailOfContact()
-            .then(() => {})
-            .catch((err) => console.log(err)),
-        ]);
-        await getAIContacts()
-          .then((res) => {})
-          .catch((err) => console.log(err));
-      }, 4000);
+      setTimeout(() => handleImportGoogleContact(), 4000);
+
       // })
       // .catch((err) => console.log(err));
       await getUserConsentStatus()
