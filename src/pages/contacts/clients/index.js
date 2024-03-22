@@ -105,29 +105,52 @@ const index = () => {
     localStorage.setItem('currentView', viewId);
   };
 
+  // useEffect(() => {
+  //   const queryParams = {};
+  //   for (const [key, value] of Object.entries(router.query)) {
+  //     queryParams[key] = value;
+  //   }
+  //   if (Object.keys(queryParams).length > 0) {
+  //     if (queryParams?.code && queryParams?.prompt == 'consent') {
+  //       setActivatingSmartSync(true);
+  //       setShowSmartSyncOverlay(true);
+  //       getGoogleAuthCallback(queryParams, '/contacts/clients')
+  //         .then(() => {
+  //           getUserConsentStatus()
+  //             .then((results) => {
+  //               setActivatingSmartSync(false);
+  //               dispatch(setUserGaveConsent(results.data.scopes));
+  //             })
+  //             .catch((error) => {
+  //               console.log(error, 'error');
+  //             });
+  //         })
+  //         .catch((error) => {
+  //           console.log(error, 'error');
+  //         });
+  //     }
+  //   }
+  // }, [router.query]);
+
+  const handleGoogleAuthCallback = async (queryParams) => {
+    try {
+      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
+      console.log('google auth callback', data);
+    } catch (error) {
+      // setShowImportGoogleContactsModal(false);
+      // setErorrImporting('Authorize process was interrupted. Please Try Again!');
+      console.log('error',error);
+    }
+  };
+
   useEffect(() => {
     const queryParams = {};
     for (const [key, value] of Object.entries(router.query)) {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
-      if (queryParams?.code && queryParams?.prompt == 'consent') {
-        setActivatingSmartSync(true);
-        setShowSmartSyncOverlay(true);
-        getGoogleAuthCallback(queryParams, '/contacts/clients')
-          .then(() => {
-            getUserConsentStatus()
-              .then((results) => {
-                setActivatingSmartSync(false);
-                dispatch(setUserGaveConsent(results.data.scopes));
-              })
-              .catch((error) => {
-                console.log(error, 'error');
-              });
-          })
-          .catch((error) => {
-            console.log(error, 'error');
-          });
+      if (queryParams?.code) {
+        handleGoogleAuthCallback(queryParams);
       }
     }
   }, [router.query]);
