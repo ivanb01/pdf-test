@@ -3114,7 +3114,7 @@ const Table = ({
     );
   };
   const templatesTable = () => {
-    let isEmail = data[0].body_text ? true : false;
+    let isEmail = data?.length && data[0].body_text ? true : false;
     return (
       <>
         <thead>
