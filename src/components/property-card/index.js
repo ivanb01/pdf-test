@@ -123,8 +123,8 @@ const PropertyCard = ({
               <div
                 role={'button'}
                 onClick={() => setOpenFeedbackModal(true)}
-                className={`pb-[3px] rounded-full border border-gray-300 bg-[#ffffffe8] text-gray5 h-fit px-2 pt-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
-                Client’s thoughts
+                className={`pb-[3px] border border-lightBlue3 text-lightBlue3 bg-lightBlue1 h-fit px-2 pt-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
+                Client’s comments
               </div>
             )}
           </div>
@@ -332,7 +332,7 @@ const PropertyCard = ({
           <Overlay
             handleCloseOverlay={() => setOpenFeedbackModal(false)}
             className="w-[500px]"
-            title={"Client's thoughts"}>
+            title={"Client's comments"}>
             <p className={'text-sm pointer-events-none text-gray8 p-6 pt-0'}>{clientNote}</p>
           </Overlay>,
           document.getElementById('modal-portal'),
