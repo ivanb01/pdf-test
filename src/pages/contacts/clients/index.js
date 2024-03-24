@@ -102,8 +102,6 @@ const index = () => {
     }
   }, [refetchData]);
 
-  // useEffect(() => {
-  // }, [])
   const [currentButton, setCurrentButton] = useState(0);
 
   useEffect(() => {
@@ -142,45 +140,22 @@ const index = () => {
   //     }
   //   }
   // }, [router.query]);
-  const [errorImporting, setErorrImporting] = useState('');
-  const [googleContactResponse, setGoogleContactResponse] = useState(null);
 
-  // const handleGoogleAuthCallback = async (queryParams) => {
-  //   try {
-  //     const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
-  //     console.log('google auth callback', data);
-  //   } catch (error) {
-  //     // setShowImportGoogleContactsModal(false);
-  //     // setErorrImporting('Authorize process was interrupted. Please Try Again!');
-  //     console.log('error', error);
-  //   }
-  // };
   const [finishedOnboarding, setFinishedOnboarding] = useState(false);
-  const [closeTourOnClients, setCloseTourOnClients] = useState(false);
   useEffect(() => {
     let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
     setFinishedOnboarding(finishedTour);
   }, [router.query]);
-  useEffect(() => {
-    let closeTour = localStorage.getItem('closeTour2') ? localStorage.getItem('closeTour2') : false;
-    setCloseTourOnClients(closeTour);
-  }, [router.query]);
-  useEffect(() => {
-    console.log('closeTourOnClients', closeTourOnClients);
-  }, [closeTourOnClients]);
 
   const [loadingPopup, setLoadingPopup] = useState(false);
   const [success, setSuccess] = useState(undefined);
-  useEffect(() => {
-    console.log(loadingPopup);
-  }, [loadingPopup]);
   const handleImportGoogleContact = async () => {
     try {
       setLoadingPopup(true);
       const [promise1, promise2] = await Promise.all([
         postGoogleContacts()
           .then(() => {})
-          .catch((err) => {
+          .catch(() => {
             throw new Error();
           }),
         syncEmailOfContact()
@@ -190,7 +165,7 @@ const index = () => {
           }),
       ]);
       await getAIContacts()
-        .then((res) => {
+        .then(() => {
           setSuccess(true);
           setLoadingPopup(false);
         })
@@ -207,22 +182,14 @@ const index = () => {
       setLoadingPopup(true);
       const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
       console.log(data, 'Data');
-      // await getGoogleAuthCallback(queryParams, '/contacts/clients')
-      //   .then(() => {
       setTimeout(() => handleImportGoogleContact(), 4000);
 
-      // })
-      // .catch((err) => console.log(err));
       await getUserConsentStatus()
         .then((results) => {
           dispatch(setUserGaveConsent(results.data.scopes));
-          // setLoadingPopup(false);
-          // setSuccess(true);
         })
         .catch((error) => {
           console.log(error);
-          // setSuccess(false);
-          // setLoadingPopup(false);
         });
     } catch (error) {
       setLoadingPopup(false);
@@ -246,6 +213,14 @@ const index = () => {
     console.log(queryParams, 'queryparams');
   }, [router.query]);
 
+  const [routerParams, setRouterParams] = useState(false);
+  useEffect(() => {
+    if (Object.entries(router.query).length > 0) {
+      setRouterParams(true);
+    } else {
+      setRouterParams(false);
+    }
+  }, [router.query]);
   useEffect(() => {
     if (
       router.query.code &&
@@ -257,9 +232,6 @@ const index = () => {
     }
   }, [userGaveConsent, router.query]);
 
-  useEffect(() => {
-    console.log(loadingPopup, 'loadingpopup', success, 'success');
-  }, [loadingPopup, success]);
   return (
     <Layout>
       {loading ? (
@@ -272,8 +244,8 @@ const index = () => {
               handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
             />
           )}
-          {Object.entries(router.query).length > 0 &&
-            // closeTourOnClients &&
+          {routerParams &&
+            finishedOnboarding &&
             (loadingPopup && success === undefined ? (
               <ImportingContactsPopup />
             ) : !loadingPopup && success ? (
@@ -291,7 +263,7 @@ const index = () => {
             unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
-          {!finishedOnboarding && Object.entries(router.query).length > 0 && showTour && <Tour />}
+          {!finishedOnboarding && routerParams && <Tour />}
           {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
             <div className="arrow pointer-events-none">
               <span></span>
