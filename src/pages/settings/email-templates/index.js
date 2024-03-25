@@ -10,6 +10,7 @@ import TopBar from '@components/shared/top-bar';
 import { PlusIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import emptyState from '/public/images/templates-empty-state.svg';
 
 const index = () => {
   const [loadingData, setLoadingData] = useState(true);
@@ -97,18 +98,33 @@ const index = () => {
             handleConfirm={handleDelete}
             loading={loadingDelete}
           />
-          <nav className="p-6 flex items-center justify-between">
-            <div className="text-gray7 text-lg font-medium">Email Templates</div>
-            <Button onClick={() => setOpenAdd(true)} leftIcon={<PlusIcon />} label="Email Template" />
-          </nav>
-          <hr></hr>
-          <Table
-            tableFor={'templates'}
-            data={emailTemplates}
-            setCurrentTemplate={setCurrentTemplate}
-            setOpenEdit={setOpenEdit}
-            setOpenDelete={setOpenDelete}
-          />
+          {emailTemplates && emailTemplates.length ? (
+            <>
+              <nav className="p-6 flex items-center justify-between">
+                <div className="text-gray7 text-lg font-medium">Email Templates</div>
+                <Button onClick={() => setOpenAdd(true)} leftIcon={<PlusIcon />} label="Email Template" />
+              </nav>
+              <hr></hr>
+              <Table
+                tableFor={'templates'}
+                data={emailTemplates}
+                setCurrentTemplate={setCurrentTemplate}
+                setOpenEdit={setOpenEdit}
+                setOpenDelete={setOpenDelete}
+              />
+            </>
+          ) : (
+            <div className="bg-[#F5F5F5] h-full w-full flex items-center justify-center">
+              <div className="text-center">
+                <img src={emptyState.src} />
+                <div>
+                  <div className="text-gray7 text-sm font-medium">You have no email templates yet.</div>
+                  <div className="text-gray4 text-sm mt-1 mb-6">Try creating one.</div>
+                  <Button onClick={() => setOpenAdd(true)} leftIcon={<PlusIcon />} label="Email Template" />
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </SettingsLayout>

@@ -10,11 +10,6 @@ import { useFetchOnlineFormsTypes } from 'containers/OnlineForms/queries/queries
 const columnHelper = createColumnHelper();
 
 const columns = [
-  columnHelper.accessor('id', {
-    header: () => <HeaderCell title="ID" />,
-    cell: ({ info }) => <DefaultCell label={info.getValue()} />,
-    minSize: 280,
-  }),
   columnHelper.accessor('form_type', {
     header: () => <HeaderCell title="FORM TYPE" />,
     cell: ({ info }) => <DefaultCell label={info.getValue()?.name} />,
@@ -61,7 +56,7 @@ const columns = [
     minSize: 200,
   }),
   columnHelper.accessor('actions', {
-    header: () => <HeaderCell title="MORE ACTIONS" />,
+    header: () => <HeaderCell title="ACTIONS" />,
     cell: ({ info, onDeleteForm }) => {
       const formTypeId = info.row.original.form_type.id;
       const { data, isSuccess } = useFetchOnlineFormsTypes();

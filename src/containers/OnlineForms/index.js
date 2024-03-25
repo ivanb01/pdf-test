@@ -19,7 +19,7 @@ const OnlineForms = () => {
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearch = useDebounce(searchTerm, 400);
+  const [debouncedSearch] = useDebounce(searchTerm, 400);
   const [isScrolledToBottom, handleScroll] = useIsScrolledToBottom();
   const router = useRouter();
 
@@ -49,8 +49,6 @@ const OnlineForms = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useFetchOnlineFormsPaginated(fetchFormsParams);
-
-  // console.log(formsData);
 
   const onlineForms = useMemo(() => {
     if (formsData)
@@ -174,9 +172,7 @@ const OnlineForms = () => {
             </div>
           )}
         </div>
-        {showSendForm && (
-          <SendForm onCancel={onSendFormExit} params={fetchFormsParams} currentFormName={formTypeFilter?.name} />
-        )}
+        {showSendForm && <SendForm onCancel={onSendFormExit} params={fetchFormsParams} currentForm={formTypeFilter} />}
         {showDeleteForm && <DeleteForm formId={0} onCancel={onCancelDeleteForm} onDelete={onDeleteForm} />}
       </div>
     </div>

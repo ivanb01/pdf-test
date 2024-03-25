@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import { array, object, string } from 'yup';
 import toast from 'react-hot-toast';
 
-const SendForm = ({ params, onCancel, currentFormName }) => {
+const SendForm = ({ params, onCancel, currentForm }) => {
   const { data: formsTypesData } = useFetchOnlineFormsTypes();
   const { refetch: formsRefetch } = useFetchOnlineFormsPaginated(params);
 
@@ -17,9 +17,9 @@ const SendForm = ({ params, onCancel, currentFormName }) => {
     form_type_id: string().required('Form name is required.'),
     clients: array().min(1, 'No clients selected.'),
   });
-  const { handleSubmit, errors, setFieldValue } = useFormik({
+  const { handleSubmit, errors, setFieldValue, values } = useFormik({
     initialValues: {
-      form_type_id: '',
+      form_type_id: currentForm?.id ? currentForm?.id : '',
       clients: [],
     },
     validationSchema: SendFormSchema,
@@ -78,7 +78,7 @@ const SendForm = ({ params, onCancel, currentFormName }) => {
             }}
             error={errors.form_type_id}
             errorText={errors.form_type_id}
-            initialSelect={currentFormName}
+            initialSelect={currentForm?.id ? currentForm.name : ''}
           />
           <ClientsMultiSelect
             handleChange={(clients) =>

@@ -61,8 +61,10 @@ export default function Editor({ initialEditorState }) {
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
-      <div className="my-[20px] flex flex-col	divide-y mx-auto max-w-[770px] leading-5 relative rounded-tl-sm font-normal border-gray20 border-[1px]">
-        <ToolbarPlugin />
+      <div className="my-[20px] flex flex-col	 mx-auto max-w-[770px] leading-5 relative rounded-tl-sm font-normal border-gray20 border-[1px]">
+        <div className="sticky top-0 z-10 ">
+          <ToolbarPlugin />
+        </div>
         <div className="relative bg-white">
           <RichTextPlugin
             contentEditable={
