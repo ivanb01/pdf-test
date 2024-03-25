@@ -91,9 +91,11 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
       setOpen={setOpen}
       title={title}
       className=""
+      buttonsRight
       buttons={
         !formSubmitted && (
           <>
+            <Button className="mr-3" white label="Cancel" onClick={() => setOpen(false)} />
             <Button
               // disabled={!Object.values(clientsFilters).flat().length > 0}
               primary

@@ -20,6 +20,7 @@ export default function SlideOver({
   handleTitleChange,
   specialTitle,
   loading,
+  buttonsRight,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -79,7 +80,8 @@ export default function SlideOver({
                           </SimpleBar>
                         </div>
                         {buttons && (
-                          <div className="flex flex-shrink-0 justify-between px-4 py-4 border-t border-gray-2">
+                          <div
+                            className={`flex flex-shrink-0 ${buttonsRight ? 'justify-end' : 'justify-between'} px-4 py-4 border-t border-gray-2`}>
                             {buttons}
                           </div>
                         )}

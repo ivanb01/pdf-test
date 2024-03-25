@@ -3150,7 +3150,9 @@ const Table = ({
                 {isEmail ? template.subject : template.name}
               </td>
               <td className="px-3 py-2 text-gray-800 text-left text-sm leading-5" style={{ width: '400px' }}>
-                {isEmail ? template.body_text : template.message.replace(/<\/?[^>]+(>|$)/g, '')}
+                {isEmail
+                  ? template.body_text.replace(/<\/?[^>]+(>|$)/g, '')
+                  : template.message.replace(/<\/?[^>]+(>|$)/g, '')}
               </td>
               <td className="px-3 py-2 text-gray-800 text-center text-sm leading-5">
                 {formatDateLL(template.created_at)}

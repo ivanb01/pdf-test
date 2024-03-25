@@ -80,12 +80,17 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
     <SlideOver
       width="w-[600px]"
       open={open}
-      setOpen={setOpen}
+      setOpen={(state) => {
+        setOpen(state);
+        resetForm();
+      }}
       title={title}
       className=""
+      buttonsRight
       buttons={
         !formSubmitted && (
           <>
+            <Button className="mr-3" white label="Cancel" onClick={() => setOpen(false)} />
             <Button
               // disabled={!Object.values(clientsFilters).flat().length > 0}
               primary
