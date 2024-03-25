@@ -88,6 +88,10 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
+    if (!localStorage.getItem('finishedTour')) {
+      localStorage.setItem('finishedTour', true);
+      localStorage.setItem('openTour', true);
+    }
     try {
       const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
@@ -259,17 +263,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     );
   };
 
-  useEffect(() => {
-    console.log(showSSOverlay);
-  }, [showSSOverlay]);
-  const [routerParams, setRouterParams] = useState(false);
-  useEffect(() => {
-    if (Object.entries(router.query).length > 0) {
-      setRouterParams(true);
-    } else {
-      setRouterParams(false);
-    }
-  }, [router.query]);
   return (
     <>
       <div
@@ -289,8 +282,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         )}
         {!finishedOnboarding &&
           showOnboarding &&
-          !routerParams &&
-          !Object.entries(router.query).length &&
           !userGaveConsent?.includes('gmail') &&
           !userGaveConsent?.includes('contacts') && <Onboarding setStartedOnboarding={setShowSSOverlay} />}
         <div>

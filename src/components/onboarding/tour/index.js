@@ -230,7 +230,7 @@ function TourInstance() {
     }
 
     tour.on('complete', () => {
-      localStorage.setItem('finishedTour', true);
+      localStorage.setItem('openTour', false);
     });
   }, [tour]);
 

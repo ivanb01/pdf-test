@@ -11,7 +11,7 @@ import {
   setVendorSubtypes,
 } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContacts } from 'store/contacts/slice';
+import { setAllContacts, setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
@@ -20,11 +20,12 @@ import { useRouter } from 'next/router';
 import { getUnapprovedContacts } from '@api/aiSmartSync';
 import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
-import { getGoogleAuthCallback, getUserConsentStatus, postGoogleContacts } from '@api/google';
+import { getGoogleAuthCallback, getGoogleAuthorize, getUserConsentStatus, postGoogleContacts } from '@api/google';
 import withAuth from '@components/withAuth';
 import { getAIContacts, syncEmailOfContact } from '@api/email';
 import ImportingContactsPopup from '@components/overlays/importing-contacts-popup';
 import ContactsImportedSuccessfullyPopup from '@components/overlays/contacts-imported-successful';
+import { getContacts } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -142,13 +143,22 @@ const index = () => {
   // }, [router.query]);
 
   const [finishedOnboarding, setFinishedOnboarding] = useState(false);
+  const [loadingPopup, setLoadingPopup] = useState(false);
+  const [success, setSuccess] = useState(undefined);
   useEffect(() => {
     let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
     setFinishedOnboarding(finishedTour);
   }, [router.query]);
+  const [openTour, setOpenTour] = useState(localStorage.getItem('openTour'));
+  useEffect(() => {
+    let _openTour = localStorage.getItem('openTour');
+    setOpenTour(_openTour);
+  }, [localStorage.getItem('openTour')]);
 
-  const [loadingPopup, setLoadingPopup] = useState(false);
-  const [success, setSuccess] = useState(undefined);
+  useEffect(() => {
+    console.log(typeof openTour, openTour);
+  }, [openTour]);
+
   const handleImportGoogleContact = async () => {
     try {
       setLoadingPopup(true);
@@ -166,11 +176,12 @@ const index = () => {
       ]);
       await getAIContacts()
         .then(() => {
-          setSuccess(true);
-          setLoadingPopup(false);
+          // setSuccess(true);
+          // setLoadingPopup(false);
         })
-        .catch(() => {
-          throw new Error();
+        .catch((err) => {
+          console.log(err, 'err');
+          // throw new Error();
         });
     } catch (error) {
       setLoadingPopup(true);
@@ -179,10 +190,28 @@ const index = () => {
   };
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
+      console.log('testy');
       setLoadingPopup(true);
-      const { data } = await getGoogleAuthCallback(queryParams, '/contacts/clients');
-      console.log(data, 'Data');
-      setTimeout(() => handleImportGoogleContact(), 4000);
+      await getGoogleAuthCallback(queryParams, '/contacts/clients');
+      const [promise1, promise2] = await Promise.all([
+        postGoogleContacts()
+          .then(() => {})
+          .catch(() => {
+            throw new Error();
+          }),
+        syncEmailOfContact()
+          .then(() => {})
+          .catch(() => {
+            console.log('error');
+            // throw new Error();
+          }),
+      ]);
+      await getAIContacts()
+        .then(() => {})
+        .catch((err) => {
+          console.log('error', err);
+          // throw new Error();
+        });
 
       await getUserConsentStatus()
         .then((results) => {
@@ -191,6 +220,11 @@ const index = () => {
         .catch((error) => {
           console.log(error);
         });
+      const data = await getContacts().then(() => {
+        setSuccess(true);
+        setLoadingPopup(false);
+        dispatch(setAllContacts(data.data));
+      });
     } catch (error) {
       setLoadingPopup(false);
       setSuccess(false);
@@ -199,28 +233,23 @@ const index = () => {
   };
 
   useEffect(() => {
+    console.log(openTour, success, loadingPopup);
+  }, [openTour, success, loadingPopup]);
+  useEffect(() => {
     const queryParams = {};
     for (const [key, value] of Object.entries(router.query)) {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
+      console.log(queryParams, 'queryParams');
       if (queryParams?.start_importing) {
         handleImportGoogleContact();
-      } else if (queryParams?.code) {
+      } else if (queryParams?.code && finishedOnboarding) {
         handleGoogleAuthCallback(queryParams);
       }
     }
-    console.log(queryParams, 'queryparams');
   }, [router.query]);
 
-  const [routerParams, setRouterParams] = useState(false);
-  useEffect(() => {
-    if (Object.entries(router.query).length > 0) {
-      setRouterParams(true);
-    } else {
-      setRouterParams(false);
-    }
-  }, [router.query]);
   // useEffect(() => {
   //   if (
   //     router.query.code &&
@@ -238,17 +267,19 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          {showSmartSyncOverlay && (
-            <SmartSyncActivatedOverlay
-              activatingSmartSync={activatingSmartSync}
-              handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
-            />
-          )}
-          {routerParams &&
-            finishedOnboarding &&
-            (loadingPopup && success === undefined ? (
+          {/*{showSmartSyncOverlay && (*/}
+          {/*  <SmartSyncActivatedOverlay*/}
+          {/*    activatingSmartSync={activatingSmartSync}*/}
+          {/*    handleCloseOverlay={() => setShowSmartSyncOverlay(false)}*/}
+          {/*  />*/}
+          {/*)}*/}
+          {openTour === 'true' && <Tour />}
+          {openTour === 'false' &&
+            (loadingPopup ? (
               <ImportingContactsPopup />
-            ) : !loadingPopup && success ? (
+            ) : success === undefined ? (
+              <></>
+            ) : success ? (
               <ContactsImportedSuccessfullyPopup />
             ) : (
               <></>
@@ -263,7 +294,6 @@ const index = () => {
             unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
-          {!finishedOnboarding && routerParams && <Tour />}
           {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
             <div className="arrow pointer-events-none">
               <span></span>
