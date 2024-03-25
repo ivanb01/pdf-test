@@ -17,7 +17,8 @@ const SearchInputSelect = (props) => {
   const [isInputFocused, setInputFocused] = useState(false);
   const [selectedValues, setSelectedvalues] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const debouncedSearch = useDebounce(searchValue, 500);
+  const [debouncedSearch, debouncing] = useDebounce(searchValue, 500);
+
   const toggleFocus = React.useCallback(() => {
     setInputFocused(true);
     setOpen(true);
@@ -52,6 +53,7 @@ const SearchInputSelect = (props) => {
 
   const onListItemAdd = (item) => {
     setSelectedvalues([...selectedValues, item]);
+    setSearchValue('');
   };
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const SearchInputSelect = (props) => {
         setInputFocused,
         isLoading,
         formError,
+        debouncing,
       }}>
       <div className="flex flex-col gap-[4px] relative">
         <p className="text-sm font-medium text-gray6">{label}</p>
@@ -102,6 +105,7 @@ const SearchInputSelect = (props) => {
             setInputFocused,
             isLoading,
             formError,
+            debouncing,
           }),
         )}
       </div>
@@ -175,7 +179,7 @@ function Input(props) {
 }
 
 function List({ render, noDataComponent }) {
-  const { open, containerRef, selectedValues, data, searchValue, isLoading } =
+  const { open, containerRef, selectedValues, data, searchValue, isLoading, debouncing } =
     React.useContext(SearchInputSelectContext);
   const [containerHeight, setContainerHeight] = useState(0);
 
@@ -198,7 +202,12 @@ function List({ render, noDataComponent }) {
               if (selectedValues) return !selectedValues.some((selectedItem) => selectedItem.id === item.id);
             }),
           )}
-          {!isLoading && Array.isArray(data?.data) && !data?.data.length && searchValue && noDataComponent}
+          {!isLoading &&
+            Array.isArray(data?.data) &&
+            !data?.data.length &&
+            searchValue &&
+            !debouncing &&
+            noDataComponent}
         </ul>
       )}
     </>

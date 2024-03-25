@@ -125,7 +125,7 @@ const OnlineFormsSignForm = () => {
       <div className="w-full h-full flex items-center justify-center flex-col leading-6 text-gray7">
         <CheckCircleIcon className="h-[80px] w-[80px] text-green5 mb-[30px]" />
         <p className="mb-[12px] font-medium text-lg ">Form is submitted succesfully!</p>
-        <p>Wait for your agent to reach you out for the other steps</p>
+        <p>Wait for your agent to reach out for the next steps</p>
       </div>
     );
   }

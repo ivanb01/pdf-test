@@ -272,7 +272,7 @@ export default function ToolbarPlugin() {
   }, [editor, updateToolbar]);
 
   return (
-    <div className="flex mb-px bg-white p-1 rounded-tr-[10px] rounded-tl-[10px] " ref={toolbarRef}>
+    <div className="flex mb-px bg-white p-1 rounded-tr-[10px] rounded-tl-[10px] border-b" ref={toolbarRef}>
       <>
         <div ref={formsButtonRef}>
           <Button
