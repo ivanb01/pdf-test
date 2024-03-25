@@ -114,7 +114,7 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
         <div>
           <div className="mb-6">
             <Input
-              label="Subject"
+              label={isEmail ? 'Subject' : 'Template Title'}
               id="subject"
               className=""
               placeholder="Write here..."

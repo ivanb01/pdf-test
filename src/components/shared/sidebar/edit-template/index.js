@@ -122,7 +122,7 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
         <div>
           <div className="mb-6">
             <Input
-              label="Subject"
+              label={template?.body_html ? 'Subject' : 'Template Title'}
               id="subject"
               className=""
               placeholder="Write here..."
