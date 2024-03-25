@@ -89,8 +89,10 @@ const index = () => {
           <ConfirmDelete
             open={openDelete}
             setOpen={setOpenDelete}
-            title={'Are you sure you want to delete sms template?'}
-            message={'This will permanently delete this template. You will not be able to recover it anymore.'}
+            title={'Delete template'}
+            message={
+              'This will permanently delete this template and you will not be able to use it anymore. This action is irreversible. Are you sure you want to delete?'
+            }
             buttonLabel={'Yes, delete'}
             handleConfirm={handleDelete}
             loading={loadingDelete}

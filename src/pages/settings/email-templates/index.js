@@ -92,8 +92,10 @@ const index = () => {
           <ConfirmDelete
             open={openDelete}
             setOpen={setOpenDelete}
-            title={'Are you sure you want to delete email template?'}
-            message={'This will permanently delete this template. You will not be able to recover it anymore.'}
+            title={'Delete template'}
+            message={
+              'This will permanently delete this template and you will not be able to use it anymore. This action is irreversible. Are you sure you want to delete?'
+            }
             buttonLabel={'Yes, delete'}
             handleConfirm={handleDelete}
             loading={loadingDelete}
@@ -119,7 +121,7 @@ const index = () => {
                 <img src={emptyState.src} />
                 <div>
                   <div className="text-gray7 text-sm font-medium">You have no email templates yet.</div>
-                  <div className="text-gray4 text-sm mt-1 mb-6">Try creating one.</div>
+                  <div className="text-gray4 text-sm mt-1 mb-6">Try creating one for the first time.</div>
                   <Button onClick={() => setOpenAdd(true)} leftIcon={<PlusIcon />} label="Email Template" />
                 </div>
               </div>
