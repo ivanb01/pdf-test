@@ -170,17 +170,23 @@ const index = () => {
           .catch(() => {
             throw new Error();
           }),
-        syncEmailOfContact().then(() => {
-          // setSuccess(true);
-          // setLoadingPopup(false);
-        }),
+        syncEmailOfContact()
+          .then(() => {})
+          .catch((err) => {
+            // throw new Error();
+          }),
       ]);
-      await getAIContacts();
+      await getAIContacts()
+        .then(() => {})
+        .catch((err) => {
+          // throw new Error();
+        });
+
+      await getUserConsentStatus().then((results) => {
+        dispatch(setUserGaveConsent(results.data.scopes));
+      });
 
       await getContacts().then((res) => {
-        // setLoadingPopup(false);
-        // setSuccess(true);
-        // setOpenSuccessPopup(true);
         dispatch(setAllContacts(res.data));
       });
       await getCount().then((data) => {
