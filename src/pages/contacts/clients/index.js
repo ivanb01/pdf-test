@@ -2,6 +2,7 @@ import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
 import {
+  setCount,
   setExpandedTab,
   setOpenedSubtab,
   setOpenedTab,
@@ -25,7 +26,7 @@ import withAuth from '@components/withAuth';
 import { getAIContacts, syncEmailOfContact } from '@api/email';
 import ImportingContactsPopup from '@components/overlays/importing-contacts-popup';
 import ContactsImportedSuccessfullyPopup from '@components/overlays/contacts-imported-successful';
-import { getContacts } from '@api/contacts';
+import { getContacts, getCount } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -143,7 +144,7 @@ const index = () => {
   // }, [router.query]);
 
   const [finishedOnboarding, setFinishedOnboarding] = useState(false);
-  const [loadingPopup, setLoadingPopup] = useState(false);
+  const [loadingPopup, setLoadingPopup] = useState(undefined);
   const [success, setSuccess] = useState(undefined);
   useEffect(() => {
     let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
@@ -169,28 +170,24 @@ const index = () => {
           .catch(() => {
             throw new Error();
           }),
-        syncEmailOfContact()
-          .then(() => {
-            // setSuccess(true);
-            // setLoadingPopup(false);
-          })
-          .catch(() => {
-            // throw new Error();
-          }),
-      ]);
-      await getAIContacts()
-        .then(() => {
+        syncEmailOfContact().then(() => {
           // setSuccess(true);
           // setLoadingPopup(false);
-        })
-        .catch((err) => {
-          // throw new Error();
-        });
-      const data = await getContacts().then(() => {
+        }),
+      ]);
+      await getAIContacts();
+
+      await getContacts().then((res) => {
+        // setLoadingPopup(false);
+        // setSuccess(true);
+        // setOpenSuccessPopup(true);
+        dispatch(setAllContacts(res.data));
+      });
+      await getCount().then((data) => {
+        dispatch(setCount(data.data));
         setLoadingPopup(false);
         setSuccess(true);
-        // setOpenSuccessPopup(true);
-        dispatch(setAllContacts(data.data));
+        setOpenSuccessPopup(true);
       });
     } catch (error) {
       // setLoadingPopup(true);
@@ -216,7 +213,6 @@ const index = () => {
         syncEmailOfContact()
           .then(() => {})
           .catch((err) => {
-            console.log('error');
             // throw new Error();
           }),
       ]);
@@ -230,11 +226,14 @@ const index = () => {
         dispatch(setUserGaveConsent(results.data.scopes));
       });
 
-      const data = await getContacts().then(() => {
+      await getContacts().then((res) => {
+        dispatch(setAllContacts(res.data));
+      });
+      await getCount().then((data) => {
+        dispatch(setCount(data.data));
         setLoadingPopup(false);
         setSuccess(true);
         setOpenSuccessPopup(true);
-        dispatch(setAllContacts(data.data));
       });
     } catch (error) {
       // setLoadingPopup(false);
@@ -254,7 +253,7 @@ const index = () => {
       console.log(queryParams, 'queryParams');
       if (queryParams?.start_importing) {
         handleImportGoogleContact();
-      } else if (queryParams?.code && finishedOnboarding) {
+      } else if (queryParams?.code && queryParams?.authuser && finishedOnboarding) {
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -284,7 +283,7 @@ const index = () => {
           {/*  />*/}
           {/*)}*/}
           {openTour === 'false' ? (
-            loadingPopup ? (
+            loadingPopup === true ? (
               <ImportingContactsPopup />
             ) : openSuccessPopup ? (
               <ContactsImportedSuccessfullyPopup />
