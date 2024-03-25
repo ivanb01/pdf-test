@@ -164,42 +164,47 @@ const index = () => {
   const handleImportGoogleContact = async () => {
     try {
       setLoadingPopup(true);
-      const [promise1, promise2] = await Promise.all([
-        postGoogleContacts()
-          .then(() => {})
-          .catch(() => {
-            throw new Error();
-          }),
-        syncEmailOfContact()
+
+      setTimeout(async () => {
+        const [promise1, promise2] = await Promise.all([
+          postGoogleContacts()
+            .then(() => {})
+            .catch(() => {
+              throw new Error();
+            }),
+          syncEmailOfContact()
+            .then(() => {})
+            .catch((err) => {
+              // throw new Error();
+            }),
+        ]);
+
+        await getAIContacts()
           .then(() => {})
           .catch((err) => {
             // throw new Error();
-          }),
-      ]);
-      await getAIContacts()
-        .then(() => {})
-        .catch((err) => {
-          // throw new Error();
+          });
+
+        await getUserConsentStatus().then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
         });
 
-      await getUserConsentStatus().then((results) => {
-        dispatch(setUserGaveConsent(results.data.scopes));
-      });
-
-      await getContacts().then((res) => {
-        dispatch(setAllContacts(res.data));
-      });
-      await getCount().then((data) => {
-        dispatch(setCount(data.data));
-        setLoadingPopup(false);
-        setSuccess(true);
-        setOpenSuccessPopup(true);
-      });
+        await getContacts().then((res) => {
+          dispatch(setAllContacts(res.data));
+        });
+        await getCount().then((data) => {
+          dispatch(setCount(data.data));
+          setLoadingPopup(false);
+          setSuccess(true);
+          setOpenSuccessPopup(true);
+        });
+      }, 4000);
     } catch (error) {
       // setLoadingPopup(true);
       // setSuccess(false);
     }
   };
+
   const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
   useEffect(() => {
     if (success === true && !loadingPopup) {
@@ -210,37 +215,39 @@ const index = () => {
     try {
       setLoadingPopup(true);
       await getGoogleAuthCallback(queryParams, '/contacts/clients');
-      const [promise1, promise2] = await Promise.all([
-        postGoogleContacts()
-          .then(() => {})
-          .catch(() => {
-            throw new Error();
-          }),
-        syncEmailOfContact()
+      setTimeout(async () => {
+        const [promise1, promise2] = await Promise.all([
+          postGoogleContacts()
+            .then(() => {})
+            .catch(() => {
+              throw new Error();
+            }),
+          syncEmailOfContact()
+            .then(() => {})
+            .catch((err) => {
+              // throw new Error();
+            }),
+        ]);
+        await getAIContacts()
           .then(() => {})
           .catch((err) => {
             // throw new Error();
-          }),
-      ]);
-      await getAIContacts()
-        .then(() => {})
-        .catch((err) => {
-          // throw new Error();
+          });
+
+        await getUserConsentStatus().then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
         });
 
-      await getUserConsentStatus().then((results) => {
-        dispatch(setUserGaveConsent(results.data.scopes));
-      });
-
-      await getContacts().then((res) => {
-        dispatch(setAllContacts(res.data));
-      });
-      await getCount().then((data) => {
-        dispatch(setCount(data.data));
-        setLoadingPopup(false);
-        setSuccess(true);
-        setOpenSuccessPopup(true);
-      });
+        await getContacts().then((res) => {
+          dispatch(setAllContacts(res.data));
+        });
+        await getCount().then((data) => {
+          dispatch(setCount(data.data));
+          setLoadingPopup(false);
+          setSuccess(true);
+          setOpenSuccessPopup(true);
+        });
+      }, 4000);
     } catch (error) {
       // setLoadingPopup(false);
       // setSuccess(false);
