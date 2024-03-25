@@ -221,16 +221,16 @@ const index = () => {
       setRouterParams(false);
     }
   }, [router.query]);
-  useEffect(() => {
-    if (
-      router.query.code &&
-      router.query.prompt == 'consent' &&
-      userGaveConsent?.includes('gmail') &&
-      userGaveConsent?.includes('contacts')
-    ) {
-      setShowSmartSyncOverlay(true);
-    }
-  }, [userGaveConsent, router.query]);
+  // useEffect(() => {
+  //   if (
+  //     router.query.code &&
+  //     router.query.prompt == 'consent' &&
+  //     userGaveConsent?.includes('gmail') &&
+  //     userGaveConsent?.includes('contacts')
+  //   ) {
+  //     setShowSmartSyncOverlay(true);
+  //   }
+  // }, [userGaveConsent, router.query]);
 
   return (
     <Layout>

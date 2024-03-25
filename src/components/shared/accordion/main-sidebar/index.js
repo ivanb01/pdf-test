@@ -293,7 +293,6 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           !Object.entries(router.query).length &&
           !userGaveConsent?.includes('gmail') &&
           !userGaveConsent?.includes('contacts') && <Onboarding setStartedOnboarding={setShowSSOverlay} />}
-        {/*{!finishedOnboarding && startedOnboarding && <Tour for={'clients'} setShowSSOverlay={setShowSSOverlay} />}*/}
         <div>
           {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (

@@ -231,7 +231,6 @@ function TourInstance() {
 
     tour.on('complete', () => {
       localStorage.setItem('finishedTour', true);
-      localStorage.setItem('closeTour2', true);
     });
   }, [tour]);
 
