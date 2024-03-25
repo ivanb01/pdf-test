@@ -219,7 +219,7 @@ const tourOptions = {
   useModalOverlay: true,
 };
 
-function TourInstance() {
+function TourInstance({ setUpdateOpenTour }) {
   const tour = useContext(ShepherdTourContext);
   let functionRan = false;
 
@@ -231,17 +231,18 @@ function TourInstance() {
 
     tour.on('complete', () => {
       localStorage.setItem('openTour', false);
+      setUpdateOpenTour();
     });
   }, [tour]);
 
   return <></>;
 }
 
-export default function Tour({ setShowSSOverlay, ...props }) {
+export default function Tour({ setUpdateOpenTour, ...props }) {
   return (
     <>
       <ShepherdTour steps={clientSteps} tourOptions={tourOptions}>
-        <TourInstance />
+        <TourInstance setUpdateOpenTour={setUpdateOpenTour} />
       </ShepherdTour>
     </>
   );

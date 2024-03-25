@@ -90,7 +90,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     setLoadingActivateSS(true);
     if (!localStorage.getItem('finishedTour')) {
       localStorage.setItem('finishedTour', true);
-      localStorage.setItem('openTour', true);
+      localStorage.setItem('openTour', 'true');
     }
     try {
       const { data } = await getUserConsentForGoogleContactsAndEmail();

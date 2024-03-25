@@ -149,14 +149,15 @@ const index = () => {
     let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
     setFinishedOnboarding(finishedTour);
   }, [router.query]);
-  const [openTour, setOpenTour] = useState(localStorage.getItem('openTour'));
+  const [openTour, setOpenTour] = useState(localStorage.getItem('openTour') === 'true' ? 'true' : 'false');
+  const [renderTour, setRenderTour] = useState(false);
   useEffect(() => {
-    let _openTour = localStorage.getItem('openTour');
+    let _openTour = localStorage.getItem('openTour') === 'true' ? 'true' : 'false';
     setOpenTour(_openTour);
-  }, [localStorage.getItem('openTour')]);
+  }, [renderTour]);
 
   useEffect(() => {
-    console.log(typeof openTour, openTour);
+    console.log(typeof openTour, openTour === 'false', 'openTour false');
   }, [openTour]);
 
   const handleImportGoogleContact = async () => {
@@ -169,9 +170,12 @@ const index = () => {
             throw new Error();
           }),
         syncEmailOfContact()
-          .then(() => {})
+          .then(() => {
+            // setSuccess(true);
+            // setLoadingPopup(false);
+          })
           .catch(() => {
-            throw new Error();
+            // throw new Error();
           }),
       ]);
       await getAIContacts()
@@ -180,17 +184,27 @@ const index = () => {
           // setLoadingPopup(false);
         })
         .catch((err) => {
-          console.log(err, 'err');
           // throw new Error();
         });
+      const data = await getContacts().then(() => {
+        setLoadingPopup(false);
+        setSuccess(true);
+        // setOpenSuccessPopup(true);
+        dispatch(setAllContacts(data.data));
+      });
     } catch (error) {
-      setLoadingPopup(true);
-      setSuccess(false);
+      // setLoadingPopup(true);
+      // setSuccess(false);
     }
   };
+  const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+  useEffect(() => {
+    if (success === true && !loadingPopup) {
+      setOpenSuccessPopup(true);
+    }
+  }, [success, loadingPopup]);
   const handleGoogleAuthCallback = async (queryParams) => {
     try {
-      console.log('testy');
       setLoadingPopup(true);
       await getGoogleAuthCallback(queryParams, '/contacts/clients');
       const [promise1, promise2] = await Promise.all([
@@ -201,7 +215,7 @@ const index = () => {
           }),
         syncEmailOfContact()
           .then(() => {})
-          .catch(() => {
+          .catch((err) => {
             console.log('error');
             // throw new Error();
           }),
@@ -209,26 +223,22 @@ const index = () => {
       await getAIContacts()
         .then(() => {})
         .catch((err) => {
-          console.log('error', err);
           // throw new Error();
         });
 
-      await getUserConsentStatus()
-        .then((results) => {
-          dispatch(setUserGaveConsent(results.data.scopes));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await getUserConsentStatus().then((results) => {
+        dispatch(setUserGaveConsent(results.data.scopes));
+      });
+
       const data = await getContacts().then(() => {
-        setSuccess(true);
         setLoadingPopup(false);
+        setSuccess(true);
+        setOpenSuccessPopup(true);
         dispatch(setAllContacts(data.data));
       });
     } catch (error) {
-      setLoadingPopup(false);
-      setSuccess(false);
-      console.log(error);
+      // setLoadingPopup(false);
+      // setSuccess(false);
     }
   };
 
@@ -273,17 +283,17 @@ const index = () => {
           {/*    handleCloseOverlay={() => setShowSmartSyncOverlay(false)}*/}
           {/*  />*/}
           {/*)}*/}
-          {openTour === 'true' && <Tour />}
-          {openTour === 'false' &&
-            (loadingPopup ? (
+          {openTour === 'false' ? (
+            loadingPopup ? (
               <ImportingContactsPopup />
-            ) : success === undefined ? (
-              <></>
-            ) : success ? (
+            ) : openSuccessPopup ? (
               <ContactsImportedSuccessfullyPopup />
             ) : (
               <></>
-            ))}
+            )
+          ) : (
+            <Tour setUpdateOpenTour={() => setRenderTour(true)} />
+          )}
           <Clients
             currentButton={currentButton}
             handleViewChange={handleViewChange}
