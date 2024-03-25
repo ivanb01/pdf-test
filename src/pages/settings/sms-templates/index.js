@@ -73,7 +73,7 @@ const index = () => {
         <>
           <AddTemplate
             isEmail={false}
-            title={'Add Email Template'}
+            title={'Add SMS Template'}
             open={openAdd}
             setOpen={setOpenAdd}
             addDataLocally={addDataLocally}

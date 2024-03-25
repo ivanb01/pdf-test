@@ -44,7 +44,7 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
       }
       addDataLocally(result.data.id, payload);
       setOpen(false);
-      toast.success('Template created successfully!');
+      toast.success('Template was saved successfully!');
       setLoading(false);
       resetForm();
     } catch (error) {
