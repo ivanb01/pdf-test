@@ -409,10 +409,10 @@ const Input = ({
   return (
     <div className={`${className}`}>
       {label && (
-        <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
+        <div className={`${saved ? 'text-gray4' : 'text-gray-700'} text-sm font-medium`}>
           {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
           {required && <span className="text-gray-500 ml-1">*</span>}
-        </Text>
+        </div>
       )}
       {secondaryLabel && (
         <Text p className="text-gray4">

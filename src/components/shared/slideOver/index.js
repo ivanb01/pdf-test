@@ -61,7 +61,7 @@ export default function SlideOver({
                                 onChange={handleTitleChange}
                               />
                             ) : (
-                              <h6 className="text-xl font-medium text-gray-900">{title}</h6>
+                              <h6 className="font-medium text-gray-900">{title}</h6>
                             )}
                             <div className="ml-3 flex h-7 items-center">
                               <button
