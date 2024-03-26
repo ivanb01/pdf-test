@@ -329,11 +329,8 @@ export default function Feeds({
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
-                        <div>
-                          <p
-                            dangerouslySetInnerHTML={{ __html: item[0].body }}
-                            className="text-[#475467] text-sm font-normal w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis"
-                          />
+                        <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                          <span dangerouslySetInnerHTML={{ __html: item[0]?.body }} />
                         </div>
                       </div>
                     </div>

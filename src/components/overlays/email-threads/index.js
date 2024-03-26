@@ -30,7 +30,7 @@ const EmailItem = ({
       ...inboxData,
       [threadId]: [
         {
-          body: message.replace(/<\/?[^>]+(>|$)/g, ''),
+          body: message,
           thread_id: threadId,
           sent_date: new Date(),
         },
@@ -39,7 +39,7 @@ const EmailItem = ({
     });
     setLoading(false);
     setMessage('');
-    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId, subject)
+    replyInThread(fromEmail, message, threadId, subject)
       .then(() => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {
