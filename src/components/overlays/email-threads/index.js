@@ -16,7 +16,7 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
       [threadId]: [
         ...inboxData[threadId],
         {
-          body: message.replace(/<\/?[^>]+(>|$)/g, ''),
+          body: message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
           thread_id: threadId,
           sent_date: new Date(),
         },
@@ -24,7 +24,7 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
     });
     setLoading(false);
     setMessage('');
-    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId)
+    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''), threadId)
       .then((res) => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {

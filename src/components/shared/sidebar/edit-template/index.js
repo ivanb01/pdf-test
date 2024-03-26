@@ -32,13 +32,13 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
         payload = {
           subject: values.subject,
           body_html: values.message,
-          body_text: values.message.replace(/<\/?[^>]+(>|$)/g, ''),
+          body_text: values.message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
         };
         await updateEmailTemplate(templateId, payload);
       } else {
         payload = {
           name: values.subject,
-          message: values.message.replace(/<\/?[^>]+(>|$)/g, ''),
+          message: values.message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
         };
         await updateSMSTemplate(templateId, payload);
       }
