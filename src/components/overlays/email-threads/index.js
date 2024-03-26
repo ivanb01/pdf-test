@@ -6,7 +6,18 @@ import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
 import toast from 'react-hot-toast';
 
-const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setInboxData, fromEmail, inboxData }) => {
+const EmailItem = ({
+  name,
+  isLast,
+  body,
+  sentDate,
+  threadId,
+  contactEmail,
+  setInboxData,
+  fromEmail,
+  inboxData,
+  subject,
+}) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const _replyInThread = () => {
@@ -24,8 +35,8 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
     });
     setLoading(false);
     setMessage('');
-    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId)
-      .then((res) => {
+    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId, subject)
+      .then(() => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {
             setInboxData(res.data);
@@ -43,11 +54,13 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
           className={
             'h-8 w-8 rounded-full shrink-0 bg-gray1 flex items-center justify-center text-base leading-6 font-semibold '
           }>
-          {name[0]}
+          {!name?.toLowerCase()?.includes('undefined') ? name[0] : ''}
         </div>
         <div className={'flex flex-col'}>
           <div className={'flex gap-3 items-center'}>
-            <h5 className={'font-semibold text-base text-[#344054]'}>{name}</h5>
+            <h5 className={'font-semibold text-base text-[#344054]'}>
+              {!name?.toLowerCase()?.includes('undefined') ? name : ''}
+            </h5>
             <div className="text-[#475467] font-medium text-sm">{sentDate}</div>
           </div>
           <div className={'text-sm font-normal text-[#475467]'} dangerouslySetInnerHTML={{ __html: body }}></div>
@@ -78,7 +91,6 @@ const EmailItem = ({ name, isLast, body, sentDate, threadId, contactEmail, setIn
 
 const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inboxData }) => {
   const [showAll, setShowAll] = useState(false);
-  console.log(threadData, 'threadData');
   return (
     <Overlay
       className="xl:h-[780px] lg:h-[780px] w-[792px]"
@@ -90,12 +102,13 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
-              fromEmail={threadData[0]?.from_email}
+              subject={threadData[threadData?.length - 1]?.subject}
+              fromEmail={threadData[threadData?.length - 1]?.from_email}
               contactEmail={contactEmail}
               setInboxData={setInboxData}
               threadId={threadData[0]?.thread_id}
               sentDate={timeAgo(threadData[0]?.sent_date)}
-              name={`${threadData[0]?.from_first_name}  ${threadData[0]?.from_last_name}`}
+              name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
               body={threadData[0]?.html_body.length > 0 ? threadData[0]?.html_body : threadData[0]?.body}
             />
           </div>
@@ -119,12 +132,13 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               <React.Fragment key={index}>
                 <EmailItem
                   inboxData={inboxData}
-                  fromEmail={threadData[0]?.from_email}
+                  subject={threadData[threadData?.length - 1]?.subject}
+                  fromEmail={threadData[threadData?.length - 1]?.from_email}
                   contactEmail={contactEmail}
                   setInboxData={setInboxData}
                   threadId={e?.thread_id}
                   sentDate={timeAgo(e?.sent_date)}
-                  name={`${threadData[0]?.from_first_name} ${threadData[0]?.from_last_name}`}
+                  name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name} ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
                   isLast={index === threadData?.slice(-2).length - 1}
                   body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
                 />
@@ -138,17 +152,18 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
       ) : (
         <>
           <div className={'pt-[18px] pb-[24px]'} style={{ height: '89%', overflow: 'scroll' }}>
-            {threadData?.length < 3 || showAll ? (
+            {threadData?.length <= 3 || showAll ? (
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>
                   <EmailItem
                     inboxData={inboxData}
-                    fromEmail={threadData[0]?.from_email}
+                    fromEmail={threadData[threadData?.length - 1]?.from_email}
+                    subject={threadData[threadData?.length - 1]?.subject}
                     contactEmail={contactEmail}
                     setInboxData={setInboxData}
                     threadId={e?.thread_id}
                     sentDate={timeAgo(e?.sent_date)}
-                    name={`${threadData[0]?.from_first_name}  ${threadData[0]?.from_last_name}`}
+                    name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
                     isLast={index === threadData?.length - 1}
                     body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
                   />
