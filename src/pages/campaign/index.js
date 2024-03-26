@@ -184,8 +184,10 @@ const index = () => {
           setCurrent={setCurrent}
           tabs={localTabs}
           wrapperClassName={`bg-white mt-5`}
-          className={'mx-auto bg-white'}
+          className={'flex justify-between items-center px-[50px] bg-white'}
           navClassName={'justify-center'}
+          addCampaignButton
+          triggerCreateCustomCampaign={() => setShowCreateCampaign(true)}
         />
       </div>
       <CustomCampaign onClick={() => setShowCreateCampaign(true)} />
