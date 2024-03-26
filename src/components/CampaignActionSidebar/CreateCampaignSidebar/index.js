@@ -502,7 +502,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   setEvents((currentEvents) =>
                     currentEvents.map((item, index) =>
                       index === selectedEvent
-                        ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)/g, '') }
+                        ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
                         : item,
                     ),
                   );
