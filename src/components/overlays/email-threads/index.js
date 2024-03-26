@@ -5,6 +5,7 @@ import RichtextEditor from '@components/Editor';
 import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 const EmailItem = ({
   name,
@@ -17,25 +18,28 @@ const EmailItem = ({
   fromEmail,
   inboxData,
   subject,
+  email,
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
+  const userInfo = useSelector((state) => state.global.userInfo);
   const _replyInThread = () => {
     setLoading(true);
     setInboxData({
       ...inboxData,
       [threadId]: [
-        ...inboxData[threadId],
         {
-          body: message.replace(/<\/?[^>]+(>|$)/g, ''),
+          body: message,
           thread_id: threadId,
           sent_date: new Date(),
         },
+        ...inboxData[threadId],
       ],
     });
     setLoading(false);
     setMessage('');
-    replyInThread(fromEmail, message.replace(/<\/?[^>]+(>|$)/g, ''), threadId, subject)
+    replyInThread(fromEmail, message, threadId, subject)
       .then(() => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {
@@ -50,20 +54,22 @@ const EmailItem = ({
   return (
     <div className={'flex pr-6 pl-3 flex-col '}>
       <div className={'flex gap-3 items-start'}>
-        <div
-          className={
-            'h-8 w-8 rounded-full shrink-0 bg-gray1 flex items-center justify-center text-base leading-6 font-semibold '
-          }>
-          {!name?.toLowerCase()?.includes('undefined') ? name[0] : ''}
-        </div>
+        <img
+          className={'h-8 w-8 rounded-full shrink-0 flex items-center justify-center text-base leading-6 font-semibold'}
+          src={
+            allContacts?.data?.find((c) => c.email === email)?.profile_image_path || 'https://i.imgur.com/UbQ7NC6.png'
+          }
+        />
         <div className={'flex flex-col'}>
           <div className={'flex gap-3 items-center'}>
             <h5 className={'font-semibold text-base text-[#344054]'}>
-              {!name?.toLowerCase()?.includes('undefined') ? name : ''}
+              {email === userInfo?.email
+                ? userInfo?.first_name + ' ' + userInfo?.last_name
+                : name.replace(/\bundefined\b/g, '')}
             </h5>
             <div className="text-[#475467] font-medium text-sm">{sentDate}</div>
           </div>
-          <div className={'text-sm font-normal text-[#475467]'} dangerouslySetInnerHTML={{ __html: body }}></div>
+          <div className={'text-sm font-normal'} dangerouslySetInnerHTML={{ __html: body }}></div>
         </div>
       </div>
       {isLast && (
@@ -96,7 +102,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
       className="xl:h-[780px] lg:h-[780px] w-[792px]"
       handleCloseOverlay={handleClose}
       includeTitleBorder
-      title={threadData[0]?.subject}>
+      title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
         <div style={{ height: '80%', maxHeight: '80%', overflow: 'scroll' }}>
           <div className={'pt-[18px] pb-[36px] '}>
@@ -109,7 +115,8 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               threadId={threadData[0]?.thread_id}
               sentDate={timeAgo(threadData[0]?.sent_date)}
               name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
-              body={threadData[0]?.html_body.length > 0 ? threadData[0]?.html_body : threadData[0]?.body}
+              body={threadData[0]?.html_body?.length > 0 ? threadData[0]?.html_body : threadData[0]?.body}
+              email={threadData[threadData?.length - 1]?.from_email}
             />
           </div>
           <div className={'h-[5px] border-y border-gray2 relative'}>
@@ -138,9 +145,10 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                   setInboxData={setInboxData}
                   threadId={e?.thread_id}
                   sentDate={timeAgo(e?.sent_date)}
-                  name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name} ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
+                  name={`${threadData[index]?.from_first_name} ${threadData[threadData[index]]?.from_last_name}`}
                   isLast={index === threadData?.slice(-2).length - 1}
                   body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
+                  email={threadData[index]?.from_email}
                 />
                 {!(index === threadData?.slice(-2).length - 1) && (
                   <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>
@@ -163,9 +171,10 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                     setInboxData={setInboxData}
                     threadId={e?.thread_id}
                     sentDate={timeAgo(e?.sent_date)}
-                    name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
+                    name={`${threadData[index]?.from_first_name}  ${threadData[threadData[index]]?.from_last_name}`}
                     isLast={index === threadData?.length - 1}
                     body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
+                    email={threadData[index]?.from_email}
                   />
                   {!(index === threadData?.length - 1) && <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>}
                 </React.Fragment>

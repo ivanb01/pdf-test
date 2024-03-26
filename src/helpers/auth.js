@@ -3,6 +3,7 @@ import Router, { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { Auth } from 'aws-amplify';
 import { getUser, updateUser } from 'api/user';
+import { setUserInfo } from '@store/global/slice';
 
 const setAfterSignInRedirect = (redirectionPath, message = '') => {
   sessionStorage.setItem('after-auth-redirect', redirectionPath);
@@ -82,7 +83,10 @@ const getUserInfo = () => JSON.parse(localStorage.getItem('userInfo') || '{}') |
 
 const fetchCurrentUserInfo = async () => {
   const response = getUser()
-    .then((r) => r.data)
+    .then((r) => {
+      dispatch(setUserInfo(userInfo));
+      r.data;
+    })
     .catch((err) => console.error(err));
 
   return response;
