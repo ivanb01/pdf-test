@@ -33,7 +33,6 @@ export default function Feeds({
   activityId: filteredActivityType,
   contactEmail,
 }) {
-  console.log(filteredActivityType, 'filteredActivityType');
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
@@ -326,15 +325,12 @@ export default function Feeds({
                       <div>
                         <div className={'flex items-center  flex-wrap'}>
                           <h6 className={'text-[14px] font-bold mr-2'}>
-                            {item[0].subject.length === 0 ? 'No subject' : item[0].subject}
+                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0].subject}
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
-                        <div>
-                          <p
-                            dangerouslySetInnerHTML={{ __html: item[0].body }}
-                            className="text-[#475467] text-sm font-normal w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis"
-                          />
+                        <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                          <span dangerouslySetInnerHTML={{ __html: item[0]?.body }} />
                         </div>
                       </div>
                     </div>
