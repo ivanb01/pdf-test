@@ -62,7 +62,7 @@ const index = () => {
     await deleteEmailTemplate(idToDelete);
     let updatedTemplates = emailTemplates.filter((template) => template.id != idToDelete);
     setEmailTemplates(updatedTemplates);
-    toast.success('Template was deleted successfully.');
+    toast.success('Email template was deleted successfully.');
     setOpenDelete(false);
     setLoadingDelete(false);
   };

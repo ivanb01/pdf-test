@@ -59,7 +59,7 @@ const index = () => {
     await deleteSMSTemplate(idToDelete);
     let updatedTemplates = smsTemplates.filter((template) => template.id != idToDelete);
     setSmsTemplates(updatedTemplates);
-    toast.success('Template was deleted successfully.');
+    toast.success('SMS Template was deleted successfully.');
     setOpenDelete(false);
     setLoadingDelete(false);
   };

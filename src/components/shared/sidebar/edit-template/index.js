@@ -28,12 +28,14 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
     try {
       let templateId = values.id;
       let payload = null;
+      let typeOfTemplate = null;
       if (template.body_html) {
         payload = {
           subject: values.subject,
           body_html: values.message,
           body_text: values.message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
         };
+        typeOfTemplate = 'Email';
         await updateEmailTemplate(templateId, payload);
       } else {
         payload = {
@@ -41,10 +43,11 @@ const EditTemplate = ({ title, open, setOpen, template, updateDataLocally }) => 
           message: values.message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
         };
         await updateSMSTemplate(templateId, payload);
+        typeOfTemplate = 'SMS';
       }
       updateDataLocally(templateId, payload);
       setOpen(false);
-      toast.success('Template updated successfully!');
+      toast.success(`${typeOfTemplate} Template updated successfully!`);
       setLoading(false);
 
       resetForm();

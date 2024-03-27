@@ -44,7 +44,7 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
       }
       addDataLocally(result.data.id, payload);
       setOpen(false);
-      toast.success('Template was saved successfully!');
+      toast.success(`${isEmail ? 'Email' : 'SMS'} Template was saved successfully!`);
       setLoading(false);
       resetForm();
     } catch (error) {
