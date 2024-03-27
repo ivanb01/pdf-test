@@ -20,6 +20,7 @@ import TextArea from '@components/shared/textarea';
 import PropertyOtherDetails from '@components/property-details/property-other-details';
 import PopoverComponent from '@components/shared/Popover';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const PortfolioPopup = ({
   handleCloseOverlay,
@@ -278,8 +279,24 @@ const PortfolioPopup = ({
     },
   ];
 
-  const [openFeedback, setOpenFeedback] = useState(false);
   const [value, setValue] = useState(undefined);
+  const variants = {
+    enter: { opacity: 0, x: 70 },
+    center: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -70 },
+  };
+  const handleKeyPress = (event) => {
+    if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
   return (
     <PropertyOverlay
       onNextClick={() => onNextClick(property)}
@@ -290,147 +307,164 @@ const PortfolioPopup = ({
         <Loader />
       ) : (
         <>
-          <div className={'px-6 py-[13px] flex justify-between border-b border-gray1 items-center'}>
-            <h4 className={'text-base leading-6 font-semibold'}>
-              {propertyIndex + 1}/{totalNumberOfProperties} Properties to review
-            </h4>
-            <div className={'flex items-center gap-2 '}>
-              {status !== 'disliked' ? (
-                <PopoverComponent
-                  side={'bottom'}
-                  align={'center'}
-                  style={{ backgroundColor: 'white' }}
-                  close={
-                    <Button
-                      primary
-                      className={'min-w-[252px] mt-[14px]'}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addClientFeedback(property.ID, 'disliked', value ?? '');
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={property?.ID}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: 'tween', duration: 0.3 }}>
+              <div className={'px-6 py-[13px] flex justify-between border-b border-gray1 items-center'}>
+                <h4 className={'text-base leading-6 font-semibold'}>
+                  {propertyIndex + 1}/{totalNumberOfProperties} Properties to review
+                </h4>
+                <div className={'flex items-center gap-2 '}>
+                  {status !== 'disliked' ? (
+                    <PopoverComponent
+                      side={'bottom'}
+                      align={'center'}
+                      style={{ backgroundColor: 'white' }}
+                      close={
+                        <Button
+                          primary
+                          className={'min-w-[252px] mt-[14px]'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addClientFeedback(property.ID, 'disliked', value ?? '');
+                            if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                              handleCloseOverlay();
+                            } else {
+                              setTimeout(() => {
+                                onNextClick(property);
+                              }, 500);
+                            }
+                            setValue('');
+                          }}>
+                          Send your feedback
+                        </Button>
+                      }
+                      triggerElement={
+                        <button
+                          className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
+                          <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
+                          <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
+                        </button>
+                      }>
+                      <div className="max-w-[252px] bg-white">
+                        <TextArea
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className={'min-h-[90px]'}
+                          handleChange={(e) => {
+                            e.stopPropagation();
+                            setValue(e.target.value);
+                          }}
+                          placeholder={
+                            'Please give us your opinion about this property. It will help us improve for next time.'
+                          }
+                          value={value}
+                        />
+                      </div>
+                    </PopoverComponent>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        addClientFeedback(property.ID, 'saved', value ?? '');
                         if (propertyIndex === 0 && totalNumberOfProperties === 1) {
                           handleCloseOverlay();
                         } else {
-                          onNextClick(property);
+                          setTimeout(() => {
+                            onNextClick(property);
+                          }, 500);
                         }
-                        setValue('');
-                        setOpenFeedback(false);
-                      }}>
-                      Send your feedback
-                    </Button>
-                  }
-                  triggerElement={
-                    <button
+                      }}
                       className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
                       <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
                       <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
                     </button>
-                  }>
-                  <div className="max-w-[252px] bg-white">
-                    <TextArea
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenFeedback(true);
-                      }}
-                      className={'min-h-[90px]'}
-                      handleChange={(e) => {
-                        setValue(e.target.value);
-                      }}
-                      placeholder={
-                        'Please give us your opinion about this property. It will help us improve for next time.'
+                  )}
+                  <button
+                    onClick={() => {
+                      if (status === 'liked') {
+                        addClientFeedback(property.ID, 'saved', '');
+                        if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                          handleCloseOverlay();
+                        } else {
+                          setTimeout(() => {
+                            onNextClick(property);
+                          }, 500);
+                        }
+                        return;
                       }
-                      value={value}
-                    />
-                  </div>
-                </PopoverComponent>
-              ) : (
-                <button
-                  onClick={() => {
-                    addClientFeedback(property.ID, 'saved', value ?? '');
-                    if (propertyIndex === 0 && totalNumberOfProperties === 1) {
-                      handleCloseOverlay();
-                    } else {
-                      onNextClick(property);
-                    }
-                  }}
-                  className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
-                  <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
-                  <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  if (status === 'liked') {
-                    addClientFeedback(property.ID, 'saved', '');
-                    if (propertyIndex === 0 && totalNumberOfProperties === 1) {
-                      handleCloseOverlay();
-                    } else {
-                      onNextClick(property);
-                    }
-                    return;
-                  }
-                  addClientFeedback(property.ID, 'liked', '');
-                  if (propertyIndex === 0 && totalNumberOfProperties === 1) {
-                    handleCloseOverlay();
-                  } else {
-                    onNextClick(property);
-                  }
-                }}
-                className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}>
-                <ThumbUpAltOutlinedIcon className={'h-[17px] w-[17px]'} />
-                <span className={'text-sm leading-6 font-semibold '}>Like</span>
-              </button>
-            </div>
-          </div>
-          <SimpleBar style={{ height: '80vh' }}>
-            <div className={'mt-4 mb-4'}>
-              <PropertiesCarousel data={data} />
-              <div className="properties-container">
-                <PropertyMainDetails data={data} />
-                {status === 'disliked' && ((value && value.length > 0) || note?.length > 0) && (
-                  <div className={'py-[16px] px-5 bg-gray1 flex gap-4  flex-col mt-6 mb-[-20px] rounded-md'}>
-                    <div className={'flex gap-2 flex-col'}>
-                      <h6 className={'text-base  font-semibold text-gray7'}>Client’s comments</h6>
-                      <div className={'h-[2px] w-5 bg-lightBlue3'}></div>
-                    </div>
-                    <p className={'text-base  font-normal text-gray7'}>
-                      {value && value.length > 0 ? value : note && note}
-                    </p>
-                  </div>
-                )}
-                <div className="md:mt-10 mt-5 pb-4 flex justify-between">
-                  <div className="w-[700px] mr-20">
-                    <div className="property-details">
-                      <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center">
-                          <div className={'flex gap-6 items-center'}>
-                            {propertyDetails.map(
-                              (propertyDetail, index) =>
-                                propertyDetail.value != 0 && (
-                                  <div className="flex items-center" key={index}>
-                                    <div className="md:block hidden">
-                                      <Image src={propertyDetail.icon} />
-                                    </div>
-                                    <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
-                                    {propertyDetail.name}
-                                  </div>
-                                ),
-                            )}
+                      addClientFeedback(property.ID, 'liked', '');
+                      if (propertyIndex === 0 && totalNumberOfProperties === 1) {
+                        handleCloseOverlay();
+                      } else {
+                        setTimeout(() => {
+                          onNextClick(property);
+                        }, 500);
+                      }
+                    }}
+                    className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}>
+                    <ThumbUpAltOutlinedIcon className={'h-[17px] w-[17px]'} />
+                    <span className={'text-sm leading-6 font-semibold '}>Like</span>
+                  </button>
+                </div>
+              </div>
+              <SimpleBar style={{ height: '80vh' }}>
+                <div className={'mt-4 mb-4'}>
+                  <PropertiesCarousel data={data} />
+                  <div className="properties-container">
+                    <PropertyMainDetails data={data} />
+                    {status === 'disliked' && ((value && value.length > 0) || note?.length > 0) && (
+                      <div className={'py-[16px] px-5 bg-gray1 flex gap-4  flex-col mt-6 mb-[-20px] rounded-md'}>
+                        <div className={'flex gap-2 flex-col'}>
+                          <h6 className={'text-base  font-semibold text-gray7'}>Client’s comments</h6>
+                          <div className={'h-[2px] w-5 bg-lightBlue3'}></div>
+                        </div>
+                        <p className={'text-base  font-normal text-gray7'}>
+                          {value && value.length > 0 ? value : note && note}
+                        </p>
+                      </div>
+                    )}
+                    <div className="md:mt-10 mt-5 pb-4 flex justify-between">
+                      <div className="w-[700px] mr-20">
+                        <div className="property-details">
+                          <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center">
+                              <div className={'flex gap-6 items-center'}>
+                                {propertyDetails.map(
+                                  (propertyDetail, index) =>
+                                    propertyDetail.value != 0 && (
+                                      <div className="flex items-center" key={index}>
+                                        <div className="md:block hidden">
+                                          <Image src={propertyDetail.icon} />
+                                        </div>
+                                        <span className="md:mx-2 mr-2 font-semibold">{propertyDetail.value}</span>
+                                        {propertyDetail.name}
+                                      </div>
+                                    ),
+                                )}
+                              </div>
+                            </div>
                           </div>
+                          <div className="mt-6" dangerouslySetInnerHTML={{ __html: data?.DESCRIPTION }}></div>
+                        </div>
+                        <PropertyAmenities data={data} />
+                        <PropertyOtherDetails data={data} />
+                        <div className="mt-10 mb-[20px]">
+                          <PropertyLocation data={data} />
                         </div>
                       </div>
-                      <div className="mt-6" dangerouslySetInnerHTML={{ __html: data?.DESCRIPTION }}></div>
-                    </div>
-                    <PropertyAmenities data={data} />
-                    <PropertyOtherDetails data={data} />
-                    <div className="mt-10 mb-[20px]">
-                      <PropertyLocation data={data} />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </SimpleBar>
+              </SimpleBar>
+            </motion.div>
+          </AnimatePresence>
         </>
       )}
     </PropertyOverlay>
