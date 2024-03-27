@@ -314,7 +314,7 @@ const PortfolioPopup = ({
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: 'tween', duration: 0.3 }}>
+              transition={{ type: 'tween', duration: 0.2 }}>
               <div className={'px-6 py-[13px] flex justify-between border-b border-gray1 items-center'}>
                 <h4 className={'text-base leading-6 font-semibold'}>
                   {propertyIndex + 1}/{totalNumberOfProperties} Properties to review
