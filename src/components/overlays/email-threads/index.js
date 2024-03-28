@@ -22,6 +22,7 @@ const EmailItem = ({
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [openedEditor, setOpenedEditor] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userInfo = useSelector((state) => state.global.userInfo);
   const _replyInThread = () => {
@@ -52,7 +53,7 @@ const EmailItem = ({
       });
   };
   return (
-    <div className={'flex pr-6 pl-3 flex-col '}>
+    <div className={'flex px-6 flex-col '}>
       <div className={'flex gap-3 items-start'}>
         <img
           className={'h-8 w-8 rounded-full shrink-0 flex items-center justify-center text-base leading-6 font-semibold'}
@@ -73,22 +74,30 @@ const EmailItem = ({
         </div>
       </div>
       {isLast && (
-        <div className={'mx-[44px] flex flex-col gap-[18px] mt-[30px]'}>
-          <RichtextEditor
-            height={200}
-            label="Message"
-            value={message}
-            placeholder="Write message here..."
-            onContentChange={(value) => setMessage(value)}
-          />
-          <Button
-            loading={loading}
-            darkBlue
-            disabled={message.length === 0}
-            className={'bg-[#3B82F6] w-[64px] h-[34px]'}
-            onClick={() => _replyInThread()}>
-            Reply
-          </Button>
+        <div className={' flex flex-col gap-[18px] mt-[30px]'}>
+          {openedEditor ? (
+            <>
+              <RichtextEditor
+                height={200}
+                label="Message"
+                value={message}
+                placeholder="Write message here..."
+                onContentChange={(value) => setMessage(value)}
+              />
+              <Button
+                loading={loading}
+                darkBlue
+                disabled={message.length === 0}
+                className={'bg-[#3B82F6] w-[64px] h-[34px]'}
+                onClick={() => _replyInThread()}>
+                Reply
+              </Button>
+            </>
+          ) : (
+            <Button darkBlue className={'bg-[#3B82F6] w-[64px] h-[34px]'} onClick={() => setOpenedEditor(true)}>
+              Reply
+            </Button>
+          )}
         </div>
       )}
     </div>
@@ -100,12 +109,12 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
 
   return (
     <Overlay
-      className="xl:h-[780px] lg:h-[780px] w-[792px]"
+      className=" w-[792px]"
       handleCloseOverlay={handleClose}
       includeTitleBorder
       title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
-        <div style={{ height: '80%', maxHeight: '80%', overflow: 'scroll' }}>
+        <div style={{ height: '80%', maxHeight: '80%', overflow: 'auto' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
@@ -160,7 +169,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
         </div>
       ) : (
         <>
-          <div className={'pt-[18px] pb-[24px]'} style={{ height: '89%', overflow: 'scroll' }}>
+          <div className={'pt-[18px] pb-[24px]'} style={{ height: '89%', overflow: 'auto' }}>
             {threadData?.length <= 3 || showAll ? (
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>

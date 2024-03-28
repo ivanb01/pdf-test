@@ -37,16 +37,24 @@ const index = () => {
 
   const dispatch = useDispatch();
 
+  const getEvents = () => {
+    getAllEvents(id).then((res) => {
+      setCampaignEvents(res.data);
+    });
+  };
+
   useEffect(() => {
     if (id) {
-      getAllEvents(id).then((res) => {
-        setCampaignEvents(res.data);
-      });
+      getEvents();
       getCampaign(id).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
       });
     }
   }, [id]);
+
+  useEffect(() => {
+    if (id) getEvents();
+  }, [campaignDetails]);
 
   useEffect(() => {
     if (usersInCampaignGlobally?.contact_category_id) {
