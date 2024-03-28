@@ -10,11 +10,12 @@ const Overlay = ({
   title,
   height,
   closeModal,
+  alignStart,
 }) => {
   const router = useRouter();
   return (
     <div
-      className={`md:flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[999] w-full md:inset-0 h-full md:h-modal ${bgOverlay}`}>
+      className={`md:flex ${!alignStart && 'items-center'} justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[999] w-full md:inset-0 h-full md:h-modal ${bgOverlay}`}>
       <div className={`relative p-4 h-full md:h-auto ${className}`}>
         <div className={`relative bg-white rounded-lg shadow overflow-scroll md:overflow-hidden h-full md:${height}`}>
           {title || handleCloseOverlay ? (

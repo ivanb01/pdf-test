@@ -1855,3 +1855,15 @@ i.justify-align {
   color: #475467 !important;
   font-weight: normal !important;
 }
+
+@media (min-width: 1023px) and (max-width: 1180px) {
+  .responsive-fix {
+    display: none;
+  }
+}
+
+@media (max-width: 460px) {
+  .responsive-fix {
+    display: none;
+  }
+}

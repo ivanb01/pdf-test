@@ -249,9 +249,9 @@ const index = () => {
             <Loader />
           </div>
         ) : (
-          <div className="px-3 md:px-6 py-[21px] flex flex-col md:flex-row">
-            <div className="w-full md:w-[300px]">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+          <div className="px-3 lg:px-6 py-[21px] flex flex-col lg:flex-row">
+            <div className="w-full lg:w-[300px]">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
                     <img
@@ -355,7 +355,7 @@ const index = () => {
                 </div>
               </div>
               {campaigns.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
                   {campaigns.length > 1 ? (
@@ -425,8 +425,8 @@ const index = () => {
               )}
             </div>
 
-            <div className="flex-grow md:mx-3 order-last md:order-2">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+            <div className="flex-grow lg:mx-3 order-last lg:order-2">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
                     <img src={communication.src} />
@@ -442,7 +442,9 @@ const index = () => {
                     onClick={() => setOpenCommunicationPopup(true)}
                     className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
-                    <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communication</span>
+                    <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
+                      Start communication
+                    </span>
                   </button>
                 </div>
                 {/*{activities.length ? (*/}
@@ -475,13 +477,13 @@ const index = () => {
               </div>
 
               {contact?.category_1 == 'Client' && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <PropertiesSection noSelect contactId={id} category={contact.category_2} />
                 </div>
               )}
             </div>
-            <div className="w-full md:w-[270px] order-1 md:order-3">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
+            <div className="w-full lg:w-[270px] order-1 lg:order-3">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
@@ -516,7 +518,7 @@ const index = () => {
                 )}
               </div>
               {documents.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                   <div className="text-gray8 font-semibold text-sm mb-5">Documents</div>
                   {documents.map((document, index) => (
                     <Item
@@ -528,7 +530,7 @@ const index = () => {
                 </div>
               )}
               {applications.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm mb-5">Applications</div>
                   {applications.map((application, index) => (
                     <Item

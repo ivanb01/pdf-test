@@ -108,12 +108,13 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
   const [showAll, setShowAll] = useState(false);
   return (
     <Overlay
+      alignStart
       className=" w-[792px]"
       handleCloseOverlay={handleClose}
       includeTitleBorder
       title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
-        <div style={{ height: '80%', maxHeight: '80%', overflow: 'auto' }}>
+        <div style={{ height: 'calc(100% - 72px)', maxHeight: 'calc(100% - 72px) ', overflow: 'auto' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
