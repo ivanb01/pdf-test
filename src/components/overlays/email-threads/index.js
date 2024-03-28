@@ -1,6 +1,6 @@
 import Overlay from '@components/shared/overlay';
 import Button from '@components/shared/button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RichtextEditor from '@components/Editor';
 import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
@@ -40,7 +40,7 @@ const EmailItem = ({
     });
     setLoading(false);
     setMessage('');
-    replyInThread(fromEmail, message, threadId, subject)
+    replyInThread(contactEmail, message, threadId, subject)
       .then(() => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {
@@ -106,6 +106,7 @@ const EmailItem = ({
 
 const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inboxData }) => {
   const [showAll, setShowAll] = useState(false);
+
   return (
     <Overlay
       alignStart
@@ -119,7 +120,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
             <EmailItem
               inboxData={inboxData}
               subject={threadData[threadData?.length - 1]?.subject}
-              fromEmail={threadData[threadData?.length - 1]?.from_email}
+              fromEmail={threadData[threadData?.length - 1]?.to_emails}
               contactEmail={contactEmail}
               setInboxData={setInboxData}
               threadId={threadData[0]?.thread_id}
