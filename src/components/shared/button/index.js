@@ -167,7 +167,7 @@ const Button = ({
         {...props}>
         {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
         {leftIcon && !loading && (
-          <div className={`mr-1 -ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
+          <div className={` -ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
             {leftIcon}
           </div>
         )}
