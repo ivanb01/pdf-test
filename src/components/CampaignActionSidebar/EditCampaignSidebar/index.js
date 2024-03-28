@@ -27,7 +27,7 @@ import { addCampaign, getCampaign, getCampaignsByCategory, updateCampaign } from
 import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
 import Loader from '@components/shared/loader';
-import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
+import { setCRMCampaigns, setUsersInCampaignGlobally, updateCRMCampaign } from '@store/campaigns/slice';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
@@ -277,7 +277,6 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               </CircleIcon>
             }
             expanded={eligibleClients === 1 && showExpanded}
-            // prettier-ignore
             active={eligibleClients === 1}
             onClick={() => {
               setEligibleClients(1);
