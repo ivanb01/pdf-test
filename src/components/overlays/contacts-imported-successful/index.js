@@ -18,7 +18,7 @@ const ContactsImportedSuccessfullyPopup = () => {
           <Image src={aiApproved} width={110} height={101} className={'py-[18px]'} />
           <p className={'text-lg leading-6 font-semibold text-gray7 mb-6'}>Contact Import Successful!</p>
           <div className={'flex gap-3 items-center justify-center mb-3 text-gray7'}>
-            <p className={'text-sm leading-5 font-normal'}>We have imported the past 20 days of Important E-mails</p>
+            <p className={'text-sm leading-5 font-normal'}>We have imported the past few days of Important E-mails</p>
             <CheckCircleSharpIcon className={'text-green-500 h-4 w-4'} />
           </div>
           <div className={'flex gap-3 items-center justify-center text-gray7 mb-[32px]'}>
