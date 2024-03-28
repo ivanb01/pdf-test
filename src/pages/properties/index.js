@@ -424,7 +424,7 @@ const index = () => {
       .sort((a, b) => a.first_name.localeCompare(b.first_name))
       .map((contact) => ({
         value: contact.id,
-        label: `${contact.first_name} ${contact.last_name}`,
+        label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
         first_name: contact.first_name,
         last_name: contact.last_name,
         email: contact.email,
@@ -676,6 +676,9 @@ const index = () => {
     }
     return 0;
   });
+  useEffect(() => {
+    console.log(sortedOptions, 'sortedOptions');
+  }, [sortedOptions]);
 
   useEffect(() => {
     console.log(selectedProperties);
