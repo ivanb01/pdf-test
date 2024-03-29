@@ -35,7 +35,7 @@ import FilterList from '@mui/icons-material/FilterList';
 import { addPropertiesInPortfolio } from '@api/portfolio';
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
-import PropertiesSlideOver from '@components/PropertiesSlideOver/properties-slideover';
+import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 
 const statuss = Object.freeze({
   unchecked: 0,

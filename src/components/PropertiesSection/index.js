@@ -21,12 +21,12 @@ import { addPropertiesInPortfolio, deletePropertyFromPortfolio, getPortfolioByCo
 import { EmptyPortfolioClientDetails } from '@components/Portfolio/empty-portfolio-state';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
-import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
 import { getBaseUrl } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
+import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
