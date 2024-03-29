@@ -1,4 +1,3 @@
-// import Accordion from 'components/shared/accordion';
 import { useFormik } from 'formik';
 import filter from '/public/images/filter.svg';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
@@ -6,7 +5,6 @@ import React, { useEffect, useState, Fragment, useLayoutEffect } from 'react';
 import Button from 'components/shared/button';
 import * as contactServices from 'api/contacts';
 import * as Yup from 'yup';
-import { NYCneighborhoods } from 'global/variables';
 import toast from 'react-hot-toast';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
@@ -19,11 +17,16 @@ import { useRouter } from 'next/router';
 import EditLookingForPopup from '@components/overlays/edit-looking-for-popup';
 import AddLookingForPopup from '@components/overlays/add-looking-for-popup';
 import TabsWithPills from '@components/shared/tabs/tabsWithPills';
-import { deletePropertyFromPortfolio, getPortfolioByContactId } from '@api/portfolio';
+import { addPropertiesInPortfolio, deletePropertyFromPortfolio, getPortfolioByContactId } from '@api/portfolio';
 import { EmptyPortfolioClientDetails } from '@components/Portfolio/empty-portfolio-state';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { updateContactLocally } from '@store/contacts/slice';
-import { updateContact } from 'api/contacts';
+import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
+import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
+import { sendEmail } from '@api/marketing';
+import { render } from '@react-email/components';
+import { getBaseUrl } from '@global/functions';
+import { sendSMS } from '@api/email';
+import { fetchCurrentUserInfo } from '@helpers/auth';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -47,9 +50,92 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         }
       }),
   });
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
 
   const [lookingForData, setLookingForData] = useState();
   const [filtersCount, setFiltersCount] = useState(0);
+  const [selectedProperties, setSelectedProperties] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const [propertiesSent, setPropertiesSent] = useState(false);
+  const [sendMethod, setSendMethod] = useState(1);
+
+  useEffect(() => {
+    const contact = contacts.filter((c) => {
+      return c.id == contactId;
+    })[0];
+    console.log(contact.phone_number, sendMethod);
+    if (contact.phone_number !== null && sendMethod === 2) {
+      setSelectedContacts([
+        {
+          value: contact.id,
+          label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+          first_name: contact.first_name,
+          last_name: contact.last_name,
+          email: contact.email,
+          phone_number: contact.phone_number,
+          profile_image_path: contact.profile_image_path,
+        },
+      ]);
+    } else if (sendMethod === 1 || sendMethod === 3) {
+      setSelectedContacts([
+        {
+          value: contact.id,
+          label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+          first_name: contact.first_name,
+          last_name: contact.last_name,
+          email: contact.email,
+          phone_number: contact.phone_number,
+          profile_image_path: contact.profile_image_path,
+        },
+      ]);
+    } else {
+      setSelectedContacts([]);
+    }
+  }, [contactId, contacts, sendMethod, propertiesSent]);
+
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    fetchCurrentUserInfo()
+      .then((res) => {
+        const fullName =
+          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
+            ? `${res?.first_name} ${res?.last_name}`
+            : `${res?.email}`;
+        setUserData(fullName);
+      })
+      .catch(() => {
+        setUserData(user?.email ? user?.email : user);
+      });
+  }, []);
+  function filterAndSortContacts(contacts, condition) {
+    return contacts
+      ?.filter(condition)
+      .sort((a, b) => a.first_name.localeCompare(b.first_name))
+      .map((contact) => ({
+        value: contact.id,
+        label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        email: contact.email,
+        phone_number: contact.phone_number,
+        profile_image_path: contact.profile_image_path,
+      }));
+  }
+  function isClientContact(contact) {
+    return (
+      contact.category_1 == 'Client' &&
+      !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
+    );
+  }
+  useEffect(() => {
+    setFilteredContacts(
+      sendMethod !== 2
+        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
+        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
+    );
+  }, [contacts, sendMethod]);
 
   const getLookingFor = () => {
     return new Promise((resolve, reject) => {
@@ -99,7 +185,105 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [filterValue, setFilterValue] = useState('newest');
   const [userProperties, setUserProperties] = useState([]);
   const [loadingPropertyInterests, setLoadingPropertyInterests] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [loadingEmails, setLoadingEmails] = useState(false);
+  const [showProperties, setShowProperties] = useState(true);
+  const [previewMode, setPreviewMode] = useState(false);
+  const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
+  const sortedOptions = filteredContacts?.sort((a, b) => {
+    const aIsSelected = isSelected(a);
+    const bIsSelected = isSelected(b);
+
+    if (aIsSelected && !bIsSelected) {
+      return -1;
+    } else if (!aIsSelected && bIsSelected) {
+      return 1;
+    }
+    return 0;
+  });
+  const resetPropertySelection = () => {
+    setSelectedContacts([]);
+    setSelectedProperties([]);
+  };
+  const _sendEmail = () => {
+    setLoadingEmails(true);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then((res) => {
+      setLoadingEmails(false);
+
+      if (res?.data.length === 0) {
+        setPropertiesSent(true);
+        resetPropertySelection();
+        return;
+      }
+      const newArray = res.data.map((item) => ({
+        portfolio_sharable_id: item.portfolio_sharable_id,
+        contact_id: item.contact_id,
+      }));
+      const uniqueArray = newArray.filter(
+        (item, index, array) =>
+          index ===
+          array.findIndex(
+            (obj) => obj.portfolio_sharable_id === item.portfolio_sharable_id && obj.contact_id === item.contact_id,
+          ),
+      );
+
+      uniqueArray.forEach((item) => {
+        selectedContacts.forEach((c) => {
+          if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
+            sendEmail(
+              [c.email],
+              `Hi ${c.first_name}, check out these new properties.`,
+              render(
+                <>
+                  <p style={{ color: '#344054', marginBottom: '32px' }}>
+                    Hey {c.first_name},
+                    <br />
+                    <br /> New properties have been added in your portfolio. View here:{' '}
+                    <a
+                      style={{ color: 'blue' }}
+                      role={'button'}
+                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
+                      Portfolio Link
+                    </a>
+                  </p>
+                  <p style={{ color: '#344054' }}>
+                    Best Regards,
+                    <br />
+                    {userData}
+                  </p>
+                </>,
+                {
+                  pretty: true,
+                },
+              ),
+            ).then((res) => {});
+            setPropertiesSent(true);
+            resetPropertySelection();
+          }
+          if (
+            parseInt(c.value) === parseInt(item.contact_id) &&
+            ((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))
+          ) {
+            sendSMS(
+              [c.phone_number],
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+            )
+              .then((res) => {})
+              .catch((error) => {
+                console.error('Error sending SMS:', error);
+                // Handle the error if needed
+              });
+            setPropertiesSent(true);
+            resetPropertySelection();
+          }
+        });
+      });
+    });
+  };
   const getLookingAction = () => {
     const lowerCaseCategory = category.toLowerCase();
     if (lowerCaseCategory === 'buyer') {
@@ -375,6 +559,14 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       });
     }, [5000]);
   };
+  useEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        setPropertiesSent(false);
+        // setSelectedContacts([]);
+      }, 500);
+    }
+  }, [open]);
   return (
     <>
       {showAddPopup && (
@@ -442,11 +634,16 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                     </div>
                   )}
                   {propertiesCurrentTab === 0 && (
-                    <>
+                    <div className={`${selectedProperties.length > 0 && 'pb-[80px]'}`}>
                       {propertyInterests && propertyInterests.length > 0 ? (
                         <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                           {propertyInterests.map((property, index) => (
-                            <PropertyCard noSelect={noSelect} key={index} property={property}></PropertyCard>
+                            <PropertyCard
+                              setSelected={setSelectedProperties}
+                              isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                              selected={selectedProperties}
+                              key={index}
+                              property={property}></PropertyCard>
                           ))}
                         </div>
                       ) : (
@@ -525,12 +722,48 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                           </div>
                         </nav>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
               </>
             )}
           </div>
+          {selectedProperties.length > 0 && (
+            <SendPropertiesFooter
+              selectedProperties={selectedProperties}
+              onSendEmailAndSmsClick={() => {
+                setSendMethod(3);
+                setOpen(true);
+              }}
+              onSendSmsClick={() => {
+                setSendMethod(2);
+                setOpen(true);
+              }}
+              onSendEmailClick={() => {
+                setSendMethod(1);
+                setOpen(true);
+              }}
+            />
+          )}
+          <PropertiesSlideOver
+            setSelectedContacts={setSelectedContacts}
+            setPropertiesSent={setPropertiesSent}
+            open={open}
+            setSelectedProperties={setSelectedProperties}
+            setOpen={setOpen}
+            selectedContacts={selectedContacts}
+            filteredContacts={filteredContacts}
+            selectedProperties={selectedProperties}
+            loadingEmails={loadingEmails}
+            _sendEmail={_sendEmail}
+            showProperties={showProperties}
+            setShowProperties={setShowProperties}
+            previewMode={previewMode}
+            setPreviewMode={setPreviewMode}
+            sendMethod={sendMethod}
+            sortedOptions={sortedOptions}
+            propertiesSent={propertiesSent}
+          />
         </SimpleBar>
       )}
     </>
