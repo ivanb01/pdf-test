@@ -32,6 +32,8 @@ export default function Feeds({
   setActivities,
   activityId: filteredActivityType,
   contactEmail,
+  showGmailInbox,
+  setShowGmailInbox,
 }) {
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
@@ -48,14 +50,15 @@ export default function Feeds({
   });
 
   useEffect(() => {
-    if (filteredActivityType === 100 && contactEmail) {
+    if (showGmailInbox) {
+      console.log(showGmailInbox);
       setInboxLoading(true);
       getEmailsForSpecificContact(contactEmail).then((res) => {
         setInboxData(res.data);
         setInboxLoading(false);
       });
     }
-  }, [contactEmail, filteredActivityType]);
+  }, [showGmailInbox]);
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -167,7 +170,7 @@ export default function Feeds({
 
   return (
     <>
-      {filteredActivityType !== 100 ? (
+      {!showGmailInbox ? (
         activities.length > 0 ? (
           <SimpleBar style={{ maxHeight: '300px' }}>
             <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
@@ -282,7 +285,7 @@ export default function Feeds({
           </div>
         )
       ) : null}
-      {filteredActivityType === 100 ? (
+      {showGmailInbox ? (
         inboxLoading ? (
           <div className={'w-full h-[200px] relative'}>
             <Loader />

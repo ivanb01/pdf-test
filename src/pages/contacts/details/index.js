@@ -22,7 +22,7 @@ import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
 import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
-import { Delete, Edit, More } from '@mui/icons-material';
+import { Delete, Edit, MailOutline, More } from '@mui/icons-material';
 import Text from '@components/shared/text';
 import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
@@ -32,6 +32,7 @@ import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@glo
 import Dropdown from '@components/shared/dropdown';
 import { setGlobalEmail } from '@store/clientDetails/slice';
 import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
+import Email from '@mui/icons-material/Email';
 
 const index = () => {
   const router = useRouter();
@@ -50,6 +51,7 @@ const index = () => {
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [activityFilter, setActivityFilter] = useState(false);
+  const [showGmailInbox, setShowGmailInbox] = useState(false);
 
   const globalEmailActivityData = useSelector((state) => state.clientDetails.globalEmailActivity);
 
@@ -434,8 +436,22 @@ const index = () => {
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
                       className="w-[180px] ml-3"
-                      handleSelect={(choice) => setActivityFilter(choice)}
+                      handleSelect={(choice) => {
+                        setActivityFilter(choice);
+                        setShowGmailInbox(false);
+                      }}
                     />
+                    <button
+                      onClick={() => setShowGmailInbox(!showGmailInbox)}
+                      className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${showGmailInbox && 'border-lightBlue3'}`}>
+                      <MailOutline
+                        className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
+                      />
+                      <span
+                        className={`responsive-fix text-sm leading-5 ${showGmailInbox ? 'text-lightBlue3' : 'text-gray-700'}`}>
+                        Gmail Inbox
+                      </span>
+                    </button>
                     {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
                   <button
@@ -453,6 +469,8 @@ const index = () => {
                   contactId={id}
                   activityId={activityFilter.id}
                   contactEmail={contact.email}
+                  showGmailInbox={showGmailInbox}
+                  setShowGmailInbox={setShowGmailInbox}
                   activities={
                     activityFilter.id == 0 || !activityFilter
                       ? activities
