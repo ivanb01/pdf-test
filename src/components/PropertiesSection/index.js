@@ -64,7 +64,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     const contact = contacts.filter((c) => {
       return c.id == contactId;
     })[0];
-    console.log(contact.phone_number, sendMethod);
     if (contact.phone_number !== null && sendMethod === 2) {
       setSelectedContacts([
         {
