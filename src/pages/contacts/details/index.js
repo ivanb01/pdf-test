@@ -448,7 +448,7 @@ const index = () => {
                         className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
-                        className={`responsive-fix text-sm leading-5 ${showGmailInbox ? 'text-lightBlue3' : 'text-gray-700'}`}>
+                        className={`responsive-fix text-sm leading-5 ${showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'}`}>
                         Gmail Inbox
                       </span>
                     </button>
