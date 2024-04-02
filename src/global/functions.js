@@ -446,3 +446,12 @@ export const timeAgo = (timestamp) => {
     return `${daysDifference === 1 ? ' 1 day ago' : `${daysDifference} days ago`}`;
   }
 };
+
+export const formatPhoneNumber = (phoneNumber) => {
+  const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
+  if (numericPhoneNumber.startsWith('1')) {
+    return `+${numericPhoneNumber.slice(0, 1)} ${numericPhoneNumber.slice(1, 4)} ${numericPhoneNumber.slice(4, 7)} ${numericPhoneNumber.slice(7)}`;
+  } else {
+    return 'Invalid phone number';
+  }
+};

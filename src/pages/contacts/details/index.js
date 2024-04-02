@@ -11,7 +11,7 @@ import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
 import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL } from '@global/functions';
+import { findTagsOption, formatDateLL, formatPhoneNumber } from '@global/functions';
 import { Switch } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ import Dropdown from '@components/shared/dropdown';
 import { setGlobalEmail } from '@store/clientDetails/slice';
 import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 import Email from '@mui/icons-material/Email';
-
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -299,6 +299,12 @@ const index = () => {
                     {contact?.email}
                   </div>
                 </div>
+                {contact?.phone_number && (
+                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467]'}>
+                    <LocalPhoneOutlinedIcon className={'h-[18px] w-[18px]'} />
+                    <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
+                  </div>
+                )}
                 <div className="mt-[18px] flex items-center">
                   <Button
                     size="small"
