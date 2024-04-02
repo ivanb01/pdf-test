@@ -30,6 +30,7 @@ const SendEmailOverlay = () => {
   useEffect(() => {
     if (!openLocal) {
       resetSendEmailForm();
+      dispatch(setOpenEmailContactOverlay(false));
     }
   }, [openLocal]);
 
