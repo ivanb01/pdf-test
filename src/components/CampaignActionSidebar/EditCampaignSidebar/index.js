@@ -222,14 +222,16 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             </div>
           </div>
           <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
-          <div
-            onClick={() => {
-              removeEvent(index);
-              setEventsToDelete((prevState) => [...prevState, id]);
-            }}
-            className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
-            <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
-          </div>
+          {index != 0 && (
+            <div
+              onClick={() => {
+                removeEvent(index);
+                setEventsToDelete((prevState) => [...prevState, id]);
+              }}
+              className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
+              <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
+            </div>
+          )}
         </div>
       </div>
     );
