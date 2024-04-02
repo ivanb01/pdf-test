@@ -213,7 +213,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       selectedProperties.map((property) => property.ID),
     ).then((res) => {
       setLoadingEmails(false);
-
+      getPortfolioByContactId(contactId).then((res) => {
+        setUserProperties(res?.data);
+        setLoading(false);
+      });
       if (res?.data.length === 0) {
         setPropertiesSent(true);
         resetPropertySelection();
