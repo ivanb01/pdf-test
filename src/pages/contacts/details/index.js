@@ -252,7 +252,7 @@ const index = () => {
           </div>
         ) : (
           <div className="px-3 lg:px-6 py-[21px] flex flex-col lg:flex-row">
-            <div className="w-full lg:w-[300px]">
+            <div className="w-full lg:w-[250px]">
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
@@ -506,7 +506,7 @@ const index = () => {
                 </div>
               )}
             </div>
-            <div className="w-full lg:w-[270px] order-1 lg:order-3">
+            <div className="w-full lg:w-[250px] order-1 lg:order-3">
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
