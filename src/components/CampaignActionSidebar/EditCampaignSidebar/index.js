@@ -240,7 +240,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   return (
     <SlideOver
       loading={loadingData}
-      width="w-[1200px]"
+      width="w-[1000px]"
       open={open}
       setOpen={setOpen}
       editableTitle

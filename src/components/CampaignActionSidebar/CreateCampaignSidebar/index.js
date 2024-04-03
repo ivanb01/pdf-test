@@ -271,7 +271,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   return (
     <SlideOver
-      width="w-[1200px]"
+      width="w-[1000px]"
       open={open}
       setOpen={(state) => {
         console.log(state);
