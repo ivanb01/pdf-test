@@ -36,15 +36,15 @@ const columns = [
     header: () => <HeaderCell title="STATUS" />,
     cell: ({ info }) => {
       const firstName = info?.row?.original?.client_first_name;
-      const lastName = info?.row?.original?.client_last_name;
-      const fullName = (firstName ?? '') + ' ' + (lastName ?? '');
+      // const lastName = info?.row?.original?.client_last_name;
+      // const fullName = (firstName ?? '') + ' ' + (lastName ?? '');
       return (
         <StatusCell
           status={info.getValue()}
           formPublicIdentifier={info.row.original.public_identifier}
           clientEmail={info.row.original.client_email}
           formTitle={info.row.original.form_type.name}
-          clientName={fullName}
+          clientName={firstName}
         />
       );
     },
@@ -159,7 +159,6 @@ OnlineFormsTable.propTypes = {
   onlineForms: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      form_type: PropTypes.string,
       form_type: PropTypes.shape({
         id: PropTypes.string,
         name: PropTypes.string,
