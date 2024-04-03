@@ -11,6 +11,9 @@ import toast from 'react-hot-toast';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { TrashIcon } from '@heroicons/react/solid';
+import { render } from '@react-email/components';
+import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
+import { useSelector } from 'react-redux';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 
@@ -34,14 +37,24 @@ export const ClientCell = ({ name, email, imgSrc }) => {
 
 export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPublicIdentifier }) => {
   const [isSendingEmail, setSendingEmail] = useState(false);
+  const userInfo = useSelector((state) => state.global.userInfo);
+
   const sendFormEmail = async () => {
     const emailBody = {
       to: [clientEmail],
       subject: formTitle ?? 'Opgny form',
-      body: `<html>
-          <h4>Client : ${clientName ?? ''}</h4>
-          <h4>Form link : ${`${window.location.origin}/public/online-forms-sign/${formPublicIdentifier}`}</h4>
-        </html>`,
+      body: render(
+        <OnlineFormEmailTemplate
+          email={clientEmail}
+          first_name={clientName}
+          agent_first_name={userInfo?.first_name}
+          agent_last_name={userInfo?.last_name}
+          formLink={`${window.location.origin}/public/online-forms-sign/${formPublicIdentifier}`}
+        />,
+        {
+          pretty: true,
+        },
+      ),
     };
     setSendingEmail(true);
     try {
