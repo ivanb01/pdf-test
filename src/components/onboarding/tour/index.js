@@ -28,7 +28,7 @@ const clientSteps = [
       <div class="description">Clients that are not in the funnel, but you want to stay in touch with in the future.</div>
       <div class="title red">Dropped</div>
       <div class="description">Clients who you were working with, but decided to give up on.</div>
-      <div class="onboarding-progress">1 of 7</div>
+      <div class="onboarding-progress">1 of 6</div>
     </div>`,
   },
   {
@@ -50,7 +50,7 @@ const clientSteps = [
     <div class="onboarding-custom">
       <div class="title">Status Blocks</div>
       <div class="description">Your clients will be placed here depending on their stage in the sales process. </div>
-      <div class="onboarding-progress">2 of 7</div>
+      <div class="onboarding-progress">2 of 6</div>
     </div>`,
   },
   {
@@ -82,7 +82,7 @@ const clientSteps = [
             <div>Unhealthy</div>
           </div>
         </div>
-      <div class="onboarding-progress">3 of 7</div>
+      <div class="onboarding-progress">3 of 6</div>
     </div>`,
   },
   {
@@ -109,7 +109,7 @@ const clientSteps = [
       <div class="description">Contacts that help you close deals, but don't buy, sell or rent real estate.</div>
       <div class="title">Agents</div>
       <div class="description">Other real estate agents you work with to close deals.</div>
-      <div class="onboarding-progress">4 of 7</div>
+      <div class="onboarding-progress">4 of 6</div>
     </div>`,
   },
   {
@@ -135,36 +135,12 @@ const clientSteps = [
       <div class="description">Contacts who you don’t know, but you want to keep in CRM until you remember who they are.</div>
       <div class="title">Need to Categorize</div>
       <div class="description">Contacts you have not categorized yet</div>
-      <div class="onboarding-progress">5 of 7</div>
+      <div class="onboarding-progress">5 of 6</div>
     </div>`,
   },
   {
     id: 'intro',
     attachTo: { element: '.other', on: 'left' },
-    buttons: [
-      {
-        classes: 'shepherd-button-primary back',
-        text: 'back',
-        type: 'back',
-      },
-      {
-        classes: 'shepherd-button-primary',
-        text: 'Next',
-        type: 'next',
-      },
-    ],
-    text: `
-    <div class="onboarding-custom">
-      <div class="title mb-4">Family & Friends</div>
-      <div class="description">Contacts that you import in CRM and are family and friends.</div>
-      <div class="title">Trash</div>
-      <div class="description">Contacts that you move to trash will appear here.</div>
-      <div class="onboarding-progress">6 of 7</div>
-    </div>`,
-  },
-  {
-    id: 'intro',
-    attachTo: { element: '.setup-smart-sync', on: 'left' },
     buttons: [
       {
         classes: 'shepherd-button-primary back',
@@ -179,9 +155,11 @@ const clientSteps = [
     ],
     text: `
     <div class="onboarding-custom">
-      <div class="title mb-4">Setup Smart Sync</div>
-      <div class="description">Click "Setup" to automatically import Google contacts, and activate AI Smart Sync. <br/><br/>Smart Sync will pull in and auto-categorize your contacts from Gmail, as new emails come in.</div>
-      <div class="onboarding-progress">7 of 7</div>
+      <div class="title mb-4">Family & Friends</div>
+      <div class="description">Contacts that you import in CRM and are family and friends.</div>
+      <div class="title">Trash</div>
+      <div class="description">Contacts that you move to trash will appear here.</div>
+      <div class="onboarding-progress">6 of 6</div>
     </div>`,
   },
 ];
