@@ -164,7 +164,7 @@ const MyApp = ({ Component, pageProps }) => {
                 />
               )}
               <SendEmailOverlay />
-              <EmailSendComponent />
+              {/* <EmailSendComponent /> */}
             </QueryClientProvider>
           </Provider>
         </div>

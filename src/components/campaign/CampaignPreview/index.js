@@ -66,7 +66,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
         <div className="fixed inset-0" />
         <div className={`fixed inset-0 overflow-hidden bg-transparentBlack ${className}`}>
           <div className="absolute inset-0 overflow-hidden">
-            <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[1000px]`}>
+            <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[1200px]`}>
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"

@@ -271,10 +271,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   return (
     <SlideOver
-      width="w-[1000px]"
+      width="w-[1200px]"
       open={open}
       setOpen={(state) => {
-        console.log(state);
         setOpen(state);
       }}
       editableTitle

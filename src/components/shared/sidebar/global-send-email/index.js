@@ -28,17 +28,6 @@ const SendEmailOverlay = () => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    if (!openLocal) {
-      resetSendEmailForm();
-      dispatch(setOpenEmailContactOverlay(false));
-    }
-  }, [openLocal]);
-
-  useEffect(() => {
-    setOpenLocal(open);
-  }, [open]);
-
-  useEffect(() => {
     if (contactToBeEmailed) {
       setSelectedContacts([contactToBeEmailed]);
     }
@@ -114,8 +103,8 @@ const SendEmailOverlay = () => {
   return (
     <SlideOver
       width="w-[540px]"
-      open={openLocal}
-      setOpen={setOpenLocal}
+      open={open}
+      setOpen={(state) => dispatch(setOpenEmailContactOverlay(state))}
       title="Send New Email"
       className=""
       buttons={
