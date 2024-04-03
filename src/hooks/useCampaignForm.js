@@ -48,6 +48,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       action: 'Send',
     };
     setEvents((prevState) => [...prevState, newEvent]);
+    setSelectedEvent(events.length);
   };
 
   const removeEvent = (index) => {
