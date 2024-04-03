@@ -25,6 +25,7 @@ import {
   setRefetchData,
   setSkippedEmptyState,
   setUserGaveConsent,
+  setUserInfo,
 } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
@@ -32,7 +33,7 @@ import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
-import { loadAfterSignInRedirect } from '@helpers/auth';
+import { getUserInfo, loadAfterSignInRedirect } from '@helpers/auth';
 import { isHealthyCommuncationDate } from '@global/functions';
 import ForwardToInbox from '@mui/icons-material/ForwardToInbox';
 
@@ -174,6 +175,14 @@ const MainMenu = ({ className, fixed }) => {
     fetchContacts();
   }, []);
 
+  const userInformation = useSelector((state) => state.global.userInfo);
+
+  useEffect(() => {
+    if (userInformation === null) {
+      const userInfo = getUserInfo();
+      dispatch(setUserInfo(userInfo));
+    }
+  }, [userInformation]);
   useEffect(() => {
     console.log(count, 'count');
   }, [count]);
