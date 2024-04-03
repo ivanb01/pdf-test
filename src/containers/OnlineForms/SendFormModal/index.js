@@ -8,6 +8,9 @@ import { useAssignForm, useSendEmail } from '../queries/mutations';
 import { useFormik } from 'formik';
 import { array, object, string } from 'yup';
 import toast from 'react-hot-toast';
+import OnlineFormEmailTemplate from '../OnlineFormEmailTemplate';
+import { useSelector } from 'react-redux';
+import { render } from '@react-email/components';
 
 const SendForm = ({ params, onCancel, currentForm }) => {
   const { data: formsTypesData } = useFetchOnlineFormsTypes();
@@ -29,18 +32,29 @@ const SendForm = ({ params, onCancel, currentForm }) => {
   });
 
   const { mutate: mutateSendEmail } = useSendEmail();
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   const onAssignFormSuccess = (data, variables) => {
     const { public_identifier } = data?.data;
-    const emailsArray = variables.clients.map((client) => client.email);
-    const emailBody = {
-      to: emailsArray,
-      subject: data?.data?.form_type.name ?? 'Opgny form',
-      body: `<html>
-          <h4>Form link : ${`${window.location.origin}/public/online-forms-sign/${public_identifier}`}</h4>
-        </html>`,
-    };
-    mutateSendEmail(emailBody);
+    variables.clients.map((client) => {
+      const emailBody = {
+        to: [client.email],
+        subject: data?.data?.form_type.name ?? 'Opgny form',
+        body: render(
+          <OnlineFormEmailTemplate
+            email={client?.email}
+            first_name={client?.first_name}
+            agent_first_name={userInfo?.first_name}
+            agent_last_name={userInfo?.last_name}
+            formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier}`}
+          />,
+          {
+            pretty: true,
+          },
+        ),
+      };
+      return mutateSendEmail(emailBody);
+    });
     onCancel(false);
     toast.success('Form type saved successfully!');
     formsRefetch();
