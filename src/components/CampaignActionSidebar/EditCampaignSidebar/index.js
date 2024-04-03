@@ -402,7 +402,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                 {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
               </div>
             </div>
-            {/* {events[selectedEvent].type == 'Email' && (
+            {/* {events[selectedEvent]?.type == 'Email' && (
               <div className="mb-6">
                 <div className="mb-4 text-gray8 text-sm font-medium">
                   Select from one of the templates, or create a new template:

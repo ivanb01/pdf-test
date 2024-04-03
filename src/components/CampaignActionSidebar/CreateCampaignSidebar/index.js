@@ -374,16 +374,16 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     title={type.title}
                     icon={
                       type.title == 'Email' ? (
-                        <CircleIcon small active={events[selectedEvent].type == 'Email'}>
-                          <MailIcon fill={events[selectedEvent].type == 'Email' ? '#0284C7' : '#4B5563'} />
+                        <CircleIcon small active={events[selectedEvent]?.type == 'Email'}>
+                          <MailIcon fill={events[selectedEvent]?.type == 'Email' ? '#0284C7' : '#4B5563'} />
                         </CircleIcon>
                       ) : (
-                        <CircleIcon small active={events[selectedEvent].type == 'SMS'}>
-                          <CallIcon fill={events[selectedEvent].type == 'SMS' ? '#0284C7' : '#4B5563'} />
+                        <CircleIcon small active={events[selectedEvent]?.type == 'SMS'}>
+                          <CallIcon fill={events[selectedEvent]?.type == 'SMS' ? '#0284C7' : '#4B5563'} />
                         </CircleIcon>
                       )
                     }
-                    active={type.title == events[selectedEvent].type}
+                    active={type.title == events[selectedEvent]?.type}
                     onClick={() => {
                       setSelectedTemplate(null);
                       setEvents((currentEvents) =>
@@ -437,7 +437,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               </div>
             </div>
             <div className="mb-6">
-              {(events[selectedEvent].type == 'Email' || events[selectedEvent].type == 'SMS') && (
+              {(events[selectedEvent]?.type == 'Email' || events[selectedEvent]?.type == 'SMS') && (
                 <div className="max-w-[380px]">
                   <div className="mb-4 text-gray8 text-sm font-medium">
                     Select from one of the templates, or create a new template:
@@ -458,7 +458,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       );
                     }}
                     initialSelect={selectedTemplate}
-                    options={events[selectedEvent].type == 'Email' ? emailTemplates : smsTemplates}
+                    options={events[selectedEvent]?.type == 'Email' ? emailTemplates : smsTemplates}
                     placeHolder="Select Template"
                   />
                 </div>
@@ -498,7 +498,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
               <RichtextEditor
                 placeholder="Write message here..."
-                value={events[selectedEvent].body_html}
+                value={events[selectedEvent]?.body_html}
                 onContentChange={(value) => {
                   setEvents((currentEvents) =>
                     currentEvents.map((item, index) =>

@@ -54,6 +54,8 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
   const removeEvent = (index) => {
     let modifiedEvents = events.filter((event, key) => key != index);
     setEvents(modifiedEvents);
+    console.log('setevent', modifiedEvents.length - 1);
+    setSelectedEvent(modifiedEvents.length - 1);
   };
 
   useEffect(() => {
