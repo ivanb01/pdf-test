@@ -1,34 +1,60 @@
 import Stripe from 'stripe';
+import { getCurrentUser } from '@helpers/amplifySSR';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const DOMAIN = 'https://subscriptions.onelinecrm.com';
+function getReturnDomain(req, includePath = false) {
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const host = req.headers.host;
+  const path = includePath ? req.url : '';
+  
+  if (protocol && host) {
+    return `${protocol}://${host}${path}`;
+  }
+  
+  return "https://onelinecrm.com/settings/my-profile";
+}
 
-import { getCurrentUser } from '@helpers/amplifySSR';
+function getReturnPath(req) {
+  const referer = req.headers['referer']; 
+  if (referer) return referer;
+  return null;
+}
+
+async function getCustomer(customerId, subscriptionId) {
+  if (customerId) {
+    try {
+      return await stripe.customers.retrieve(customerId);
+    } catch {
+    }
+  }
+  if (subscriptionId) {
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    if (subscription && subscription.customer) {
+      return await stripe.customers.retrieve(subscription.customer);
+    }
+  }
+  throw new Error('Customer or subscription information is not valid.');
+}
 
 export default async function handler(req, res) {
-  // TODO, add customerID back in
-  // const { customerId } = req.body;
-  const { subscriptionId } = req.body;
-
+  const { subscriptionId, customerId } = req.body;
   const userData = await getCurrentUser(req);
-  let user;
 
-  if (userData.error || !subscriptionId) {
-    return res.status(404).json({ status: 404, error: 'Customer not found' });
+  if (userData.error || (!subscriptionId && !customerId)) {
+    return res.status(404).json({ error: 'Customer or subscription required but not found.' });
   }
 
-  // TODO, add customerID back in
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  const return_url = getReturnPath(req) || getReturnDomain(req);
 
-  const customer = await stripe.customers.retrieve(subscription.customer);
-
-  if (!customer) res.status(500).json({ statusCode: 500, message: "Email not found." });
-
-  const billingSession = await stripe.billingPortal.sessions.create({
-    return_url: `${DOMAIN}/my-profile`,
-    customer: customer.id
-  });
-
-  res.send({ sessionURL: billingSession.url });
-};
+  try {
+    const customer = await getCustomer(customerId, subscriptionId);
+    const billingSession = await stripe.billingPortal.sessions.create({
+      return_url,
+      customer: customer.id,
+    });
+    res.send({ sessionURL: billingSession.url });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+}

@@ -6,7 +6,7 @@ const EmptyPortfolioState = ({ status }) => {
       </h4>
       <p className={'text-base leading-6 font-medium w-[352px] text-gray8'}>
         {status === 0
-          ? 'There are no properties for review in your portfolio. .'
+          ? 'There are no properties for review in your portfolio.'
           : `There are no properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
       </p>
     </div>
