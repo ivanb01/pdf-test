@@ -295,72 +295,77 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       </div>
       <hr className=" -mx-6" />
       <div className="flex -mx-6">
-        <div className="w-1/2 px-[22px] py-[26px] border-r border-gray1">
-          <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
-          {events.map((event, index) => (
-            <Event
-              key={index}
-              icon={
-                event.type == 'Email' ? (
-                  <CircleIcon small active={selectedEvent == index}>
-                    <MailIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
-                  </CircleIcon>
-                ) : (
-                  <CircleIcon small active={selectedEvent == index}>
-                    <CallIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
-                  </CircleIcon>
-                )
-              }
-              id={event.id}
-              index={index}
-              title={event.title}
-              wait={event.wait_interval}
-              active={selectedEvent == index}
-              onClick={() => setSelectedEvent(index)}
-            />
-          ))}
-          <div className="my-2 pl-2 mb-3">
-            <Divider />
-          </div>
-          <a
-            onClick={() => addNewEvent()}
-            className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
-            + Add New Event
-          </a>
+        <div className="w-1/2">
+          <SimpleBar style={{ maxHeight: '460px' }}>
+            <div className="px-[22px] py-[26px] border-r border-gray1">
+              <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
+              {events.map((event, index) => (
+                <Event
+                  key={index}
+                  icon={
+                    event.type == 'Email' ? (
+                      <CircleIcon small active={selectedEvent == index}>
+                        <MailIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                      </CircleIcon>
+                    ) : (
+                      <CircleIcon small active={selectedEvent == index}>
+                        <CallIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                      </CircleIcon>
+                    )
+                  }
+                  id={event.id}
+                  index={index}
+                  title={event.title}
+                  wait={event.wait_interval}
+                  active={selectedEvent == index}
+                  onClick={() => setSelectedEvent(index)}
+                />
+              ))}
+              <div className="my-2 pl-2 mb-3">
+                <Divider />
+              </div>
+              <a
+                onClick={() => addNewEvent()}
+                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
+                + Add New Event
+              </a>
+            </div>
+          </SimpleBar>
         </div>
         <div className="w-1/2 bg-gray10 relative">
-          <div className=" px-[22px] py-[26px]">
-            <div>
-              <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
-              <div className="flex mb-6">
-                {typeOfEvents.map((type, index) => (
-                  <Card
-                    key={index}
-                    narrow
-                    className="mr-2 bg-white"
-                    title={type.title}
-                    icon={
-                      type.title == 'Email' ? (
-                        <CircleIcon small active={events[selectedEvent]?.type == 'Email'}>
-                          <MailIcon fill={events[selectedEvent]?.type == 'Email' ? '#0284C7' : '#4B5563'} />
-                        </CircleIcon>
-                      ) : (
-                        <CircleIcon small active={events[selectedEvent]?.type == 'SMS'}>
-                          <CallIcon fill={events[selectedEvent]?.type == 'SMS' ? '#0284C7' : '#4B5563'} />
-                        </CircleIcon>
-                      )
-                    }
-                    active={type.title == events[selectedEvent]?.type}
-                    onClick={() => {
-                      setEvents((currentEvents) =>
-                        currentEvents.map((item, index) =>
-                          index === selectedEvent ? { ...item, type: type.title } : item,
-                        ),
-                      );
-                    }}
-                  />
-                ))}
-                {/* <Card
+          <SimpleBar style={{ maxHeight: '390px' }}>
+            <div className=" px-[22px] py-[26px]">
+              <div>
+                <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
+                <div className="flex mb-6">
+                  {typeOfEvents.map((type, index) => (
+                    <Card
+                      key={index}
+                      narrow
+                      className="mr-2 bg-white"
+                      title={type.title}
+                      icon={
+                        type.title == 'Email' ? (
+                          <CircleIcon small active={events[selectedEvent]?.type == 'Email'}>
+                            <MailIcon fill={events[selectedEvent]?.type == 'Email' ? '#0284C7' : '#4B5563'} />
+                          </CircleIcon>
+                        ) : (
+                          <CircleIcon small active={events[selectedEvent]?.type == 'SMS'}>
+                            <CallIcon fill={events[selectedEvent]?.type == 'SMS' ? '#0284C7' : '#4B5563'} />
+                          </CircleIcon>
+                        )
+                      }
+                      active={type.title == events[selectedEvent]?.type}
+                      onClick={() => {
+                        setEvents((currentEvents) =>
+                          currentEvents.map((item, index) =>
+                            index === selectedEvent ? { ...item, type: type.title } : item,
+                          ),
+                        );
+                      }}
+                    />
+                  ))}
+                  {/* <Card
                   narrow
                   className="mr-2 bg-white"
                   title={'Email'}
@@ -376,33 +381,33 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                   active={selectedEvent.type == 1}
                   onClick={() => setTypeOfEvent(1)}
                 /> */}
+                </div>
               </div>
-            </div>
-            <div className="mb-6">
-              <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
-              <div className="flex">
-                <Dropdown
-                  handleSelect={(option) =>
-                    setEvents((currentEvents) =>
-                      currentEvents.map((item, index) =>
-                        index === selectedEvent ? { ...item, wait_interval: `${option.id}d` } : item,
-                      ),
-                    )
-                  }
-                  inputWidth={'w-[220px]'}
-                  initialSelect={
-                    events[selectedEvent]
-                      ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
-                      : null
-                  }
-                  className="mr-3"
-                  placeHolder="Waiting Days"
-                  options={waitingDays}
-                />
-                {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
+              <div className="mb-6">
+                <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
+                <div className="flex">
+                  <Dropdown
+                    handleSelect={(option) =>
+                      setEvents((currentEvents) =>
+                        currentEvents.map((item, index) =>
+                          index === selectedEvent ? { ...item, wait_interval: `${option.id}d` } : item,
+                        ),
+                      )
+                    }
+                    inputWidth={'w-[220px]'}
+                    initialSelect={
+                      events[selectedEvent]
+                        ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
+                        : null
+                    }
+                    className="mr-3"
+                    placeHolder="Waiting Days"
+                    options={waitingDays}
+                  />
+                  {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
+                </div>
               </div>
-            </div>
-            {/* {events[selectedEvent]?.type == 'Email' && (
+              {/* {events[selectedEvent]?.type == 'Email' && (
               <div className="mb-6">
                 <div className="mb-4 text-gray8 text-sm font-medium">
                   Select from one of the templates, or create a new template:
@@ -410,37 +415,38 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                 <Dropdown options={emailTemplates} placeHolder="Select Template" />
               </div>
             )} */}
-            <div className="mb-6">
-              <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
-              <Input
-                placeholder="Subject"
-                onChange={(e) =>
-                  setEvents((currentEvents) =>
-                    currentEvents.map((item, index) =>
-                      index === selectedEvent ? { ...item, title: e.target.value } : item,
-                    ),
-                  )
-                }
-                value={events[selectedEvent]?.title}
-              />
+              <div className="mb-6">
+                <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
+                <Input
+                  placeholder="Subject"
+                  onChange={(e) =>
+                    setEvents((currentEvents) =>
+                      currentEvents.map((item, index) =>
+                        index === selectedEvent ? { ...item, title: e.target.value } : item,
+                      ),
+                    )
+                  }
+                  value={events[selectedEvent]?.title}
+                />
+              </div>
+              <div className="">
+                <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
+                <RichtextEditor
+                  placeholder="Write message here..."
+                  value={events[selectedEvent]?.body_html}
+                  onContentChange={(value) => {
+                    setEvents((currentEvents) =>
+                      currentEvents.map((item, index) =>
+                        index === selectedEvent
+                          ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
+                          : item,
+                      ),
+                    );
+                  }}
+                />
+              </div>
             </div>
-            <div className="">
-              <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
-              <RichtextEditor
-                placeholder="Write message here..."
-                value={events[selectedEvent]?.body_html}
-                onContentChange={(value) => {
-                  setEvents((currentEvents) =>
-                    currentEvents.map((item, index) =>
-                      index === selectedEvent
-                        ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
-                        : item,
-                    ),
-                  );
-                }}
-              />
-            </div>
-          </div>
+          </SimpleBar>
           <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
             <Button label="Cancel" white className="mr-3" />
             <Button
