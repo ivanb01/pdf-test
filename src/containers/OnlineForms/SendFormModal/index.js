@@ -56,7 +56,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
       return mutateSendEmail(emailBody);
     });
     onCancel(false);
-    toast.success('Form type saved successfully!');
+    toast.success('Form sent successfully!');
     formsRefetch();
   };
   const onAssignFormError = () => {
@@ -110,6 +110,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             }
             error={errors.clients}
             name={'clients'}
+            placeholder={'Search for a Contact...'}
           />
         </div>
         <div className="flex justify-end gap-[17px]">
@@ -117,7 +118,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             Cancel
           </Button>
           <Button className={'min-w-fit'} onClick={handleSubmit} loading={assignFormIsPending}>
-            Save
+            Send
           </Button>
         </div>
       </div>

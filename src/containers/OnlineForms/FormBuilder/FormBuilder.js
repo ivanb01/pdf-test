@@ -272,9 +272,7 @@ const FormBuilder = () => {
           <>
             <Button label="Cancel" secondary white onClick={router.back} />
             <Button
-              onClick={() => {
-                onPreviewClick();
-              }}
+              onClick={onPreviewClick}
               className="flex w-[185px] gap-2 items-center justify-center"
               disabled={isEditorEmpty}
               loading={loadingPdf}>
@@ -295,7 +293,7 @@ const FormBuilder = () => {
               }}
             />
 
-            <Button loading={postOnlineFormTypeIsPending} onClick={() => handleSubmit()}>
+            <Button loading={postOnlineFormTypeIsPending} onClick={handleSubmit}>
               Save
             </Button>
           </>
