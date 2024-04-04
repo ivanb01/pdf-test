@@ -28,6 +28,7 @@ import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
 import Loader from '@components/shared/loader';
 import { setCRMCampaigns, setUsersInCampaignGlobally, updateCRMCampaign } from '@store/campaigns/slice';
+import SimpleBar from 'simplebar-react';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
@@ -296,7 +297,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       <hr className=" -mx-6" />
       <div className="flex -mx-6">
         <div className="w-1/2">
-          <SimpleBar style={{ maxHeight: '460px' }}>
+          <SimpleBar style={{ maxHeight: '390px' }}>
             <div className="px-[22px] py-[26px] border-r border-gray1">
               <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
               {events.map((event, index) => (
@@ -333,7 +334,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           </SimpleBar>
         </div>
         <div className="w-1/2 bg-gray10 relative">
-          <SimpleBar style={{ maxHeight: '390px' }}>
+          <SimpleBar style={{ maxHeight: '320px' }}>
             <div className=" px-[22px] py-[26px]">
               <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
