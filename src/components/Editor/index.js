@@ -36,11 +36,33 @@ export default function RichtextEditor({ label, value, onContentChange, height, 
             'wordcount',
           ],
           toolbar:
-            'undo redo  blocks  bold italic forecolor  alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            'undo redo | variables | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+          setup: (editor) => {
+            editor.ui.registry.addMenuButton('variables', {
+              text: 'Variables',
+              fetch: (callback) => {
+                const items = [
+                  {
+                    type: 'menuitem',
+                    text: 'Client Full Name',
+                    onAction: () => editor.insertContent('{{client_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent Full Name',
+                    onAction: () => editor.insertContent('{{agent_name}}'),
+                  },
+                  // Add more variables as needed
+                ];
+                callback(items);
+              },
+            });
+          },
         }}
         onEditorChange={onContentChange}
       />
+
       {/* <button onClick={log}>Log editor content</button> */}
     </>
   );

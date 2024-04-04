@@ -152,13 +152,15 @@ const SendEmailOverlay = () => {
               />
             )}
           </div>
-          <Input
-            label="Subject"
-            className="mb-6"
-            placeholder="Write here..."
-            value={subject}
-            onChange={(event) => setSubject(event.target.value)}
-          />
+          <div className="mb-6">
+            <Input
+              label="Subject"
+              className=""
+              placeholder="Write here..."
+              value={subject}
+              onChange={(event) => setSubject(event.target.value)}
+            />
+          </div>
           <div className="text-gray6 text-sm font-medium mb-1">Message</div>
           <RichtextEditor
             label="Message"
