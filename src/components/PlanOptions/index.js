@@ -118,8 +118,10 @@ const PlanOptions = ({ userInfo }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Better to pass in customer id instead, once available from backend
-      body: JSON.stringify({ subscriptionId: userInfo.subscriptionId })
+      body: JSON.stringify({
+        customerId: userInfo.customer_id,
+        subscriptionId: userInfo.subscriptionId
+      })
     })
       .then((res) => res.json())
       .then((data) => {
