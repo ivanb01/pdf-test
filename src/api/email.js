@@ -43,11 +43,11 @@ export const getOneThread = (thread_id) => {
 export const getAIContacts = () => {
   return axiosInstance.post('v1/email/ai-categorize');
 };
-export const replyInThread = (contact_name, body, message_id, thread_id, subject) => {
+export const replyInThread = (contact_name, body, message_header_id, thread_id, subject) => {
   return axiosInstance.post('v1/email/send/gmail', {
     to: [contact_name],
     body: body,
-    message_id: message_id,
+    message_header_id: message_header_id,
     action: 'reply',
     thread_id: thread_id,
     subject: subject,

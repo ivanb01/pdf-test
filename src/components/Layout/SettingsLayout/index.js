@@ -19,12 +19,12 @@ const SettingsLayout = ({ children }) => {
       icon: <Security className="w-[20px] h-[20px]" />,
       current: false,
     },
-    // {
-    //   name: 'Billing',
-    //   href: 'billing',
-    //   icon: <CreditCardIcon className="w-[20px] h-[20px]" />,
-    //   current: false,
-    // },
+    {
+      name: 'Billing',
+      href: 'billing',
+      icon: <CreditCardIcon className="w-[20px] h-[20px]" />,
+      current: false,
+    },
     {
       name: 'Templates',
       href: '#',
