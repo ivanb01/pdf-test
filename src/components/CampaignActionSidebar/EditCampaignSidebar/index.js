@@ -430,7 +430,12 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             </div>
           </SimpleBar>
           <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
-            <Button label="Cancel" white className="mr-3" />
+            <Button label="Cancel" white />
+            <a
+              onClick={() => addNewEvent()}
+              className="mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
+              + Add New Event
+            </a>
             <Button
               primary
               label="Save Campaign Template"
