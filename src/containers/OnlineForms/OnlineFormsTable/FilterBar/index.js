@@ -13,7 +13,7 @@ const FilterBar = ({ currentFormName, statusButtons, currentTab, setCurrentTab, 
     <div className="h-[72px] flex justify-between items-center p-[25px] ">
       <div className="color-gray8">{currentFormName}</div>
       <div className="flex gap-[10px] items-center">
-        <Search placeholder="Search..." onChange={(e) => setSearchValue(e.target.value)} />
+        <Search placeholder="Search..." onChange={(e) => setSearchValue(e.target.value)} className={'text-[14px]'} />
         <ButtonsSlider
           buttons={statusButtons}
           currentButton={currentTab}

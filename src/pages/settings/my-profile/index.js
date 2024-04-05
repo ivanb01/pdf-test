@@ -3,8 +3,8 @@ import Button from '@components/shared/button';
 import Input from '@components/shared/input';
 import Text from '@components/shared/text';
 import TopBar from '@components/shared/top-bar';
-import { updateUserInfo } from '@helpers/auth';
-import React, { useState } from 'react';
+import { fetchCurrentUserInfo, updateUserInfo } from '@helpers/auth';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import useLocalStorage from 'hooks/useLocalStorage'
@@ -16,6 +16,16 @@ const index = () => {
   const [defaultUserInfo] = useLocalStorage('userInfo');
   const [changedUserInfo, setChangedUserInfo] = useState(defaultUserInfo);  
   const [loadingActivate, setLoadingActivate] = useState(false);
+
+  useEffect(() => {
+    const getInfo = async () => {
+      const info = await fetchCurrentUserInfo();
+      dispatch(setUserInfo(info));
+      setChangedUserInfo(info);
+    };
+
+    getInfo();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -11,6 +11,7 @@ import { PdfViewer } from 'containers/OnlineForms/Pdf';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import moment from 'moment';
 
 const OnlineFormsSignForm = () => {
   const router = useRouter();
@@ -140,7 +141,13 @@ const OnlineFormsSignForm = () => {
                 <Input
                   onChange={(e) => {
                     const { id } = field;
-                    setFieldValue(`${id}.answer`, e.target.value);
+                    let value = e.target.value;
+
+                    if (field.formType === 'date') {
+                      value = moment(value).format('DD/MM/YYYY');
+                    }
+
+                    setFieldValue(`${id}.answer`, value);
                   }}
                   type={field.formType}
                   label={field.textValue}

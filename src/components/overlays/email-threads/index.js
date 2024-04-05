@@ -11,6 +11,7 @@ const EmailItem = ({
   name,
   isLast,
   body,
+  message_id,
   sentDate,
   threadId,
   contactEmail,
@@ -32,6 +33,7 @@ const EmailItem = ({
       [threadId]: [
         {
           body: message,
+          message_id: message_id,
           thread_id: threadId,
           sent_date: new Date(),
         },
@@ -40,7 +42,7 @@ const EmailItem = ({
     });
     setLoading(false);
     setMessage('');
-    replyInThread(contactEmail, message, threadId, subject)
+    replyInThread(contactEmail, message, message_id, threadId, subject)
       .then(() => {
         syncEmailOfContact(contactEmail).then(() => {
           getEmailsForSpecificContact(contactEmail).then((res) => {
@@ -124,6 +126,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               contactEmail={contactEmail}
               setInboxData={setInboxData}
               threadId={threadData[0]?.thread_id}
+              message_id={threadData[0]?.message_id}
               sentDate={timeAgo(threadData[0]?.sent_date)}
               name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
               body={threadData[0]?.html_body?.length > 0 ? threadData[0]?.html_body : threadData[0]?.body}
@@ -155,6 +158,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                   contactEmail={contactEmail}
                   setInboxData={setInboxData}
                   threadId={e?.thread_id}
+                  message_id={e?.message_id}
                   sentDate={timeAgo(e?.sent_date)}
                   name={`${threadData[index]?.from_first_name} ${threadData[threadData[index]]?.from_last_name}`}
                   isLast={index === threadData?.slice(-2).length - 1}
@@ -181,6 +185,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                     contactEmail={contactEmail}
                     setInboxData={setInboxData}
                     threadId={e?.thread_id}
+                    message_id={e?.message_id}
                     sentDate={timeAgo(e?.sent_date)}
                     name={`${threadData[index]?.from_first_name}  ${threadData[threadData[index]]?.from_last_name}`}
                     isLast={index === threadData?.length - 1}

@@ -65,12 +65,17 @@ const OnlineForms = () => {
       return [
         {
           id: 0,
-          name: 'Sent',
+          name: 'All',
           count: onlineForms.length,
         },
         {
           id: 1,
-          name: 'Draft',
+          name: 'Pending',
+          count: 0,
+        },
+        {
+          id: 2,
+          name: 'Signed',
           count: 0,
         },
       ];

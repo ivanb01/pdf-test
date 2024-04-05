@@ -5,7 +5,7 @@ import { Header } from '@components/public/Header';
 const OnlineFormsSign = () => {
   return (
     <>
-      <Header />
+      <Header noLinks={true} />
       <OnlineFormsSignForm />
     </>
   );

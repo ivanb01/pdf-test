@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import Image from 'next/image';
 import moment from 'moment';
 import ResendEmail from '/public/icons/resend-email.svg';
-
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import Text from '@components/shared/text';
 import { sendEmail } from '@api/email';
 import toast from 'react-hot-toast';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -68,16 +65,15 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
   };
 
   return (
-    <div className="flex flex-col gap-[6px]">
+    <div className="flex flex-col gap-[6px] text-[12px] font-medium">
       <p
-        className={`text-sm ${
-          status.toLowerCase() === 'pending' ? '[&>*]:text-yellow2 text-yellow3' : '[&>*]:text-green5 text-green7'
+        className={`capitalize  rounded-[20px] py-[2px] px-[8px] w-min leading-[18px] ${
+          status.toLowerCase() === 'pending' ? 'bg-[#FFF7ED]  text-[#EA580C]' : 'bg-[#ECFDF3]   text-[#027A48]'
         }`}>
-        <span className="text-base mr-[6px]">&#9679;</span>
-        {status}
+        {status.toLowerCase()}
       </p>
       {status.toLowerCase() === 'pending' && (
-        <button disabled={isSendingEmail} className="text-xs flex gap-[6px]" onClick={sendFormEmail}>
+        <button disabled={isSendingEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
           {!isSendingEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
           Resend Form
         </button>

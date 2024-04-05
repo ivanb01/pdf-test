@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getContactsSearch } from '@api/contacts';
 import PropTypes from 'prop-types';
 
-const ClientsMultiSelect = ({ name, error, handleChange }) => {
+const ClientsMultiSelect = ({ name, error, handleChange, placeholder }) => {
   return (
     <SearchInputSelect
       label="Send Form To*"
@@ -15,7 +15,8 @@ const ClientsMultiSelect = ({ name, error, handleChange }) => {
         queryKey: 'online-forms-users',
       }}
       name={name}
-      error={error}>
+      error={error}
+      placeholder={placeholder}>
       <SearchInputSelect.Input
         render={(selectedList, onRemoveSelectedItem) => {
           return (

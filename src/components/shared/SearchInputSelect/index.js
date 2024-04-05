@@ -9,7 +9,7 @@ import NotificationAlert from '../alert/notification-alert';
 const SearchInputSelectContext = React.createContext();
 
 const SearchInputSelect = (props) => {
-  const { fetchOptions, setValues, label, error: formError, ...rest } = props;
+  const { fetchOptions, setValues, label, error: formError, placeholder, ...rest } = props;
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
   const containerRef = useRef(null);
@@ -83,6 +83,7 @@ const SearchInputSelect = (props) => {
         isLoading,
         formError,
         debouncing,
+        placeholder,
       }}>
       <div className="flex flex-col gap-[4px] relative">
         <p className="text-sm font-medium text-gray6">{label}</p>
@@ -127,6 +128,7 @@ function Input(props) {
     onRemoveSelectedItem,
     isInputFocused,
     isLoading,
+    placeholder,
   } = React.useContext(SearchInputSelectContext);
 
   const inputClassname = clsx(
@@ -157,6 +159,7 @@ function Input(props) {
             value={searchValue}
             onChange={onChange}
             ref={inputRef}
+            placeholder={placeholder}
           />
         </div>
         <div className="">

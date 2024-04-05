@@ -11,11 +11,13 @@ const SideBarFilter = ({ filters, setCurrentFilter, currentFilterId, onPlusClick
   const allForm = filters.find((filter) => {
     return filter.id === '';
   });
+
   const filteredArray = filters.filter((filter) => {
     return allForm.id !== filter.id;
   });
+
   const sortedFilters = filteredArray.sort((a, b) => {
-    if (a.name < b.name) {
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1;
     }
     if (a.name > b.name) {
