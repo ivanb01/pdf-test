@@ -34,6 +34,7 @@ import { setGlobalEmail } from '@store/clientDetails/slice';
 import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 import Email from '@mui/icons-material/Email';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import { getContactCampaign } from '@api/campaign';
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -65,6 +66,7 @@ const index = () => {
       }
       getActivityLog();
       getNotes();
+      // getCampaigns();
       if (contactData.campaign_name) {
         setCampaigns([
           {
@@ -99,6 +101,17 @@ const index = () => {
         toast.error('Error fetching activity');
       });
   };
+  // const getCampaigns = async () => {
+  //   getContactCampaign(id)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setCampaigns(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast.error('Error fetching activity');
+  //     });
+  // };
   useEffect(() => {
     if (contact) {
       syncEmailOfContact(contact.email).then(() => {

@@ -41,6 +41,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       wait_interval: '2d',
       type: 'Email',
       charset: 'A',
+      template: {
+        id: -1,
+        label: 'Create Custom Email',
+      },
       save_template: false,
     },
   ]);
@@ -82,7 +86,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         message: template.body_html,
       }));
 
-      smsTemplates.unshift({ ...initialOption, label: 'Create Custom SMS' });
+      smsTemplates.unshift({ ...initialOption, label: 'Create Custom Email' });
       emailTemplates.unshift({ ...initialOption, label: 'Create Custom Email' });
 
       setSmsTemplates(smsTemplates);
@@ -217,7 +221,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     return (
       <div className="mb-3 last:mb-0">
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-          Waiting: {days} days
+          Wait {days} days, then send this event at {formatDateLThour(date)}
         </div>
         <div className="my-2 pl-2">
           <Divider />
@@ -227,13 +231,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
           } p-3 flex ${className} justify-between items-center group`}>
-          <div className="flex">
+          <div className="flex items-center">
             <div className="w-">{icon}</div>
             <div className="ml-4 text-sm">
               <div className="text-gray7 font-semibold">{title}</div>
-              <div className="text-gray5 mt-1">
-                send at {formatDateLThour(date)} on {formatDateLL(date)}
-              </div>
             </div>
           </div>
           <KeyboardArrowRight className={`text-gray7 ${index != 0 && 'group-hover:hidden'}`} />
@@ -369,7 +370,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         <div className="w-1/2 bg-gray10 relative">
           <SimpleBar style={{ maxHeight: '390px' }}>
             <div className=" px-[22px] py-[26px]">
-              <div>
+              {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
                 <div className="flex mb-6">
                   {typeOfEvents.map((type, index) => (
@@ -400,24 +401,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       }}
                     />
                   ))}
-                  {/* <Card
-                  narrow
-                  className="mr-2 bg-white"
-                  title={'Email'}
-                  icon={call.src}
-                  active={selectedEvent.type == 0}
-                  onClick={() => setTypeOfEvent(0)}
-                />
-                <Card
-                  narrow
-                  className="bg-white"
-                  title={'SMS'}
-                  icon={call.src}
-                  active={selectedEvent.type == 1}
-                  onClick={() => setTypeOfEvent(1)}
-                /> */}
                 </div>
-              </div>
+              </div> */}
               <div className="mb-6">
                 <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
                 <div className="flex">
@@ -455,15 +440,21 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                           currentEvents.map((item, index) => {
                             if (index === selectedEvent) {
                               if (option.id == -1) {
-                                return { ...item, title: '', body_html: '', save_template: false };
+                                return { ...item, title: '', body_html: '', save_template: false, template: option };
                               }
-                              return { ...item, title: option.label, body_html: option.message, save_template: false };
+                              return {
+                                ...item,
+                                template: option,
+                                title: option.label,
+                                body_html: option.message,
+                                save_template: false,
+                              };
                             }
                             return item;
                           }),
                         );
                       }}
-                      initialSelect={selectedTemplate}
+                      initialSelect={events[selectedEvent].template}
                       options={events[selectedEvent]?.type == 'Email' ? emailTemplates : smsTemplates}
                       placeHolder="Select Template"
                     />
@@ -480,7 +471,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                           ),
                         );
                       }}
-                      state={events[selectedEvent].save_template}
+                      state={events[selectedEvent]?.save_template}
                       label="Save New Template"
                     />
                   </div>

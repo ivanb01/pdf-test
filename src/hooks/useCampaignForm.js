@@ -46,6 +46,11 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       type: 'Email',
       charset: 'A',
       action: 'Send',
+      template: {
+        id: -1,
+        label: 'Create Custom',
+      },
+      save_template: false,
     };
     setEvents((prevState) => [...prevState, newEvent]);
     setSelectedEvent(events.length);

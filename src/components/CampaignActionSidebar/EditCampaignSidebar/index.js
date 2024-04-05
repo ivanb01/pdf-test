@@ -203,7 +203,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     return (
       <div className="mb-3 last:mb-0">
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-          Waiting: {days} days
+          Wait {days} days, then send this event at {formatDateLThour(date)}
         </div>
         <div className="my-2 pl-2">
           <Divider />
@@ -217,9 +217,6 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             <div className="w-">{icon}</div>
             <div className="ml-4 text-sm">
               <div className="text-gray7 font-semibold">{title}</div>
-              <div className="text-gray5 mt-1">
-                send at {formatDateLThour(date)} on {formatDateLL(date)}
-              </div>
             </div>
           </div>
           <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
@@ -336,7 +333,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         <div className="w-1/2 bg-gray10 relative">
           <SimpleBar style={{ maxHeight: '320px' }}>
             <div className=" px-[22px] py-[26px]">
-              <div>
+              {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
                 <div className="flex mb-6">
                   {typeOfEvents.map((type, index) => (
@@ -366,24 +363,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                       }}
                     />
                   ))}
-                  {/* <Card
-                  narrow
-                  className="mr-2 bg-white"
-                  title={'Email'}
-                  icon={call.src}
-                  active={selectedEvent.type == 0}
-                  onClick={() => setTypeOfEvent(0)}
-                />
-                <Card
-                  narrow
-                  className="bg-white"
-                  title={'SMS'}
-                  icon={call.src}
-                  active={selectedEvent.type == 1}
-                  onClick={() => setTypeOfEvent(1)}
-                /> */}
                 </div>
-              </div>
+              </div> */}
               <div className="mb-6">
                 <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
                 <div className="flex">

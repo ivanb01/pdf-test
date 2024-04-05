@@ -12,7 +12,7 @@ export const getCampaignsEnrollSummary = () => {
 };
 
 export const getContactCampaign = (id) => {
-  return axiosInstance.get(`v1/campaign/active/contact/${id}`);
+  return axiosInstance.get(`v2/campaigns/active/contact/${id}`);
 };
 
 export const getContactCampaignEventPreview = (id) => {
@@ -30,7 +30,7 @@ export const getCampaigns = (searchterm) => {
     params: { search_term: searchterm },
   });
 };
- 
+
 export const assignContactToCampaign = (campaignId, contactId) => {
   return axiosInstance.post(`v2/campaigns/${campaignId}/add-contact/${contactId}`);
 };
