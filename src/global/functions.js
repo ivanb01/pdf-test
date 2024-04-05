@@ -111,7 +111,8 @@ export const getContactTypeByTypeId = (subtypes, typeId) => {
   if (!foundType && subtypes) {
     foundType = subtypes.find((subtype) => subtype.id == typeId).name;
   }
-  return foundType ? foundType : 'Unknown';
+
+  return foundType ? foundType.charAt(0).toUpperCase() + foundType.slice(1) : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
   let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;

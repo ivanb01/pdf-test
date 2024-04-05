@@ -7,7 +7,13 @@ import call from '/public/images/call.svg';
 import divider from '/public/images/divider.svg';
 import Input from '@components/shared/input';
 import Editor from '@components/Editor';
-import { formatDateLL, formatDateLThour, getDateAfterDays } from '@global/functions';
+import {
+  formatDateLL,
+  formatDateLThour,
+  getContactStatusByStatusId,
+  getContactTypeByTypeId,
+  getDateAfterDays,
+} from '@global/functions';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Dropdown from '@components/shared/dropdown';
 import { clientOptions, clientStatuses, emailTemplates, timeOptions, types, waitingDays } from '@global/variables';
@@ -157,7 +163,13 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         } ${padding} flex ${className} ${!description && 'items-center'}`}>
         {icon}
         <div className="ml-4 text-sm">
-          <div className="text-gray7 font-semibold">{title}</div>
+          <div className="text-gray7 font-semibold">
+            {title}
+            {expandable &&
+              campaign.contact_category_id &&
+              campaign.contact_status_id &&
+              `: ${getContactTypeByTypeId(null, campaign.contact_category_id)} - ${getContactStatusByStatusId(campaign.contact_category_id, campaign.contact_status_id)}`}
+          </div>
           {description && <div className="text-gray5 mt-1">{description}</div>}
         </div>
         {expandable && (
