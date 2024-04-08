@@ -19,6 +19,7 @@ const OnlineForms = () => {
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [status, setStatus] = useState(undefined);
   const [debouncedSearch] = useDebounce(searchTerm, 400);
   const [isScrolledToBottom, handleScroll] = useIsScrolledToBottom();
   const router = useRouter();
@@ -32,13 +33,24 @@ const OnlineForms = () => {
 
   const fetchFormsParams = useMemo(() => {
     const { id: form_type_id } = formTypeFilter;
+    if(currentTab == 1){
+      setStatus("PENDING");
+    }
+    else if(currentTab == 2){
+      setStatus("SIGNED");
+    }
+    else {
+      setStatus(undefined);
+    }
+    console.log("status", status)
     return {
       page_size: 10,
       count_items: true,
       search_param: debouncedSearch,
+      status: status,
       ...(!!form_type_id && { form_type_id }),
     };
-  }, [formTypeFilter, debouncedSearch]);
+  }, [formTypeFilter, debouncedSearch, status, currentTab]);
 
   const {
     data: formsData,
@@ -71,12 +83,12 @@ const OnlineForms = () => {
         {
           id: 1,
           name: 'Pending',
-          count: 0,
+          count: onlineForms.length,
         },
         {
           id: 2,
           name: 'Signed',
-          count: 0,
+          count: onlineForms.length,
         },
       ];
     } else return [];

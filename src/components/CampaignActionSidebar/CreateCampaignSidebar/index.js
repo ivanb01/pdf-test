@@ -285,7 +285,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   return (
     <SlideOver
-      width="w-[1200px]"
+      width="w-[1240px]"
       open={open}
       setOpen={(state) => {
         setOpen(state);
@@ -472,7 +472,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     />
                   </div>
                 )}
-                {selectedTemplate?.id === -1 && (
+                {events[selectedEvent]?.template?.id === -1 && (
                   <div className="mt-3">
                     <Checkbox
                       setState={(state) => {
