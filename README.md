@@ -20,5 +20,5 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 ## Deployment
 
 - Deployed on Vercel:
--- development branch (dev) to dev.onelinecrm.com
--- production branch (main) to onelinecrm.com
+--- development branch (dev) to dev.onelinecrm.com
+--- production branch (main) to onelinecrm.com
