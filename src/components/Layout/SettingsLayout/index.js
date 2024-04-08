@@ -31,7 +31,7 @@ const SettingsLayout = ({ children }) => {
       icon: <Summarize className="w-[20px] h-[20px]" />,
       children: [
         { name: 'Email', href: 'email-templates', current: false },
-        { name: 'SMS', href: 'sms-templates', current: false },
+        // { name: 'SMS', href: 'sms-templates', current: false },
       ],
     },
   ]);

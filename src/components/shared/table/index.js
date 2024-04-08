@@ -2575,7 +2575,7 @@ const Table = ({
             <th
               scope="col"
               className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider">
-              sent emails & SMS
+              sent emails
             </th>
             <th
               scope="col"
@@ -2669,10 +2669,10 @@ const Table = ({
                     </span>
                     <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
                   </div>
-                  <div className={'flex gap-[5px] items-center justify-center'}>
-                    <span className={'text-sm leading-5 font-normal text-gray7'}>{person?.event_sent?.sms ?? '-'}</span>
-                    <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />
-                  </div>
+                  {/*<div className={'flex gap-[5px] items-center justify-center'}>*/}
+                  {/*  <span className={'text-sm leading-5 font-normal text-gray7'}>{person?.event_sent?.sms ?? '-'}</span>*/}
+                  {/*  <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />*/}
+                  {/*</div>*/}
                 </div>
               </td>
               <td className={'px-6 py-4'}>

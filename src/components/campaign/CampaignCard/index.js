@@ -48,13 +48,13 @@ const CampaignCard = ({
             </div>
           </Link>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
-            <span className={'mr-1'}>{`${Number(eventCount.total)}  Events: `}</span>
+            <span className={'mr-1'}>Events:</span>
             <span className={'mr-2'}>
               {eventCount.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
             </span>
-            <span>
-              {eventCount.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
-            </span>
+            {/*<span>*/}
+            {/*  {eventCount.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />*/}
+            {/*</span>*/}
           </div>
         </div>
         <div className={'flex justify-between items-center flex-wrap '}>

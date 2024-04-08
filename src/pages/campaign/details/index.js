@@ -94,16 +94,16 @@ const index = () => {
       icon: allEventsIcon,
       amount: usersInCampaignGlobally?.events.count,
     },
-    {
-      name: 'EMAIL EVENTS',
-      icon: emailEventsIcon,
-      amount: usersInCampaignGlobally?.events.email,
-    },
-    {
-      name: 'SMS EVENTS',
-      icon: smsEventsIcon,
-      amount: usersInCampaignGlobally?.events.sms,
-    },
+    // {
+    //   name: 'EMAIL EVENTS',
+    //   icon: emailEventsIcon,
+    //   amount: usersInCampaignGlobally?.events.email,
+    // },
+    // {
+    //   name: 'SMS EVENTS',
+    //   icon: smsEventsIcon,
+    //   amount: usersInCampaignGlobally?.events.sms,
+    // },
     {
       name: 'CAMPAIGN MATCHED TO',
       icon: campaignsMatchedTo,
@@ -245,13 +245,12 @@ const index = () => {
               </Button>
             </div>
           </div>
-          <div className={'p-6 grid grid-cols-6 gap-2.5 border-y border-gray2'}>
+          <div className={'p-6 grid grid-cols-4 gap-2.5 border-y border-gray2'}>
             {eventTypes.map((event, index) => (
               <div
                 key={index}
-                className={`flex flex-col gap-2.5 items-center justify-center ${
-                  index === 2 ? 'border-r border-borderColor mr-1.5' : ''
-                }`}>
+                className={`flex flex-col gap-2.5 items-center justify-center 
+              `}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
                   <span className="text-gray4  text-center font-medium text-xs leading-5">
