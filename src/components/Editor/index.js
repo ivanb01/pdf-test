@@ -45,15 +45,34 @@ export default function RichtextEditor({ label, value, onContentChange, height, 
                 const items = [
                   {
                     type: 'menuitem',
+                    text: 'Client First Name',
+                    onAction: () => editor.insertContent('{{client_first_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Client Last Name',
+                    onAction: () => editor.insertContent('{{client_last_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
                     text: 'Client Full Name',
                     onAction: () => editor.insertContent('{{client_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent First Name',
+                    onAction: () => editor.insertContent('{{agent_first_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent Last Name',
+                    onAction: () => editor.insertContent('{{agent_last_name}}'),
                   },
                   {
                     type: 'menuitem',
                     text: 'Agent Full Name',
                     onAction: () => editor.insertContent('{{agent_name}}'),
                   },
-                  // Add more variables as needed
                 ];
                 callback(items);
               },
