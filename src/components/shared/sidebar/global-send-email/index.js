@@ -26,6 +26,7 @@ const SendEmailOverlay = () => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
     if (contactToBeEmailed) {
@@ -63,16 +64,36 @@ const SendEmailOverlay = () => {
       ),
     );
     setLoading(true);
-    let contacts = selectedContacts.map((contact) => ({ email: contact.email, id: contact.value }));
+    let contacts = selectedContacts.map((contact) => ({
+      email: contact.email,
+      id: contact.value,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+    }));
     contacts.map((contact) => {
+      let clientFirstName = contact.first_name;
+      let clientLastName = contact.last_name;
+      let clientFullName = clientFirstName + ' ' + clientLastName;
+      let agentFirstName = userInfo?.first_name;
+      let agentLastName = userInfo?.last_name;
+      let agentFullName = agentFirstName + ' ' + agentLastName;
+
+      let newMessage = message;
+      newMessage = newMessage.replace(/\{\{client_first_name\}\}/g, clientFirstName);
+      newMessage = newMessage.replace(/\{\{client_last_name\}\}/g, clientLastName);
+      newMessage = newMessage.replace(/\{\{client_name\}\}/g, clientFullName);
+      newMessage = newMessage.replace(/\{\{agent_first_name\}\}/g, agentFirstName);
+      newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
+      newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
+
       addContactActivity(contact.id, {
         type_of_activity_id: 1,
-        description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
+        description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${newMessage.replace(
           /<[^>]*>/g,
           '',
         )} </h6>`,
       });
-      sendEmail([contact.email], subject, message).then(() => {
+      sendEmail([contact.email], subject, newMessage).then(() => {
         setLoading(false);
         setEmailSent(true);
       });
