@@ -155,6 +155,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           campaign_id: res.data.campaign.id,
         }),
       );
+      resetCreateCampaign();
       toast.success('Campaign created successfully!');
     });
   };
@@ -262,7 +263,35 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     );
   };
 
-  const resetCreateCampaign = () => {};
+  const resetCreateCampaign = () => {
+    setSelectedEvent(0);
+    setCampaign({
+      name: null,
+      description: 'Campaign Description',
+      status: 'Active',
+      contact_category_id: null,
+      contact_status_id: null,
+    });
+
+    setEvents([
+      {
+        action: 'Send',
+        title: 'New Event',
+        body_html: '',
+        body: '',
+        wait_interval: '2d',
+        type: 'Email',
+        charset: 'A',
+        template: {
+          id: -1,
+          label: 'Create Custom Email',
+        },
+        save_template: false,
+      },
+    ]);
+
+    setSelectedTemplate(initialOption);
+  };
 
   const {
     campaign,
@@ -288,6 +317,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       width="w-[1240px]"
       open={open}
       setOpen={(state) => {
+        if (!state) {
+          resetCreateCampaign();
+        }
         setOpen(state);
       }}
       editableTitle
