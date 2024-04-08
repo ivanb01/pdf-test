@@ -2596,13 +2596,16 @@ const Table = ({
               onClick={() => {
                 localStorage.setItem('id', JSON.stringify(id));
                 localStorage.setItem('category', JSON.stringify(category));
-                router.push({
-                  pathname: '/contacts/details',
-                  query: { id: person?.contact_id },
-                });
               }}
-              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
-              <td className="pl-6 py-4 pr-4">
+              className={'border-b border-gray-200 hover:bg-lightBlue1 group'}>
+              <td
+                className="pl-6 py-4 pr-4 cursor-pointer"
+                onClick={() =>
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.contact_id },
+                  })
+                }>
                 <div className={'flex gap-4'}>
                   <div>
                     {person.profile_image_path ? (
