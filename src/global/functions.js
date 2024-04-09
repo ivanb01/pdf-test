@@ -366,13 +366,13 @@ export const getEmailParts = (email) => {
   // Map specific domains to corresponding names
   switch (lastName) {
     case 'opgny':
-      lastName = 'Oxford';
+      lastName = '| Oxford';
       break;
     case 'levelgroup':
-      lastName = 'Level';
+      lastName = '| Level';
       break;
     case 'spiregroupny':
-      lastName = 'Spire';
+      lastName = '| Spire';
       break;
     default:
       // Capitalize the first letter of the last name
