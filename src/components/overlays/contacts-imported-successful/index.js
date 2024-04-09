@@ -18,11 +18,14 @@ const ContactsImportedSuccessfullyPopup = () => {
           <Image src={aiApproved} width={110} height={101} className={'py-[18px]'} />
           <p className={'text-lg leading-6 font-semibold text-gray7 mb-6'}>Contact Import Successful!</p>
           <div className={'flex gap-3 items-center justify-center mb-3 text-gray7'}>
-            <p className={'text-sm leading-5 font-normal'}>We have imported the past few days of Important E-mails</p>
+            <p className={'text-sm leading-5 font-normal'}>
+              Automatically imported contacts from important emails you've received over the past few days into your
+              account.
+            </p>
             <CheckCircleSharpIcon className={'text-green-500 h-4 w-4'} />
           </div>
           <div className={'flex gap-3 items-center justify-center text-gray7 mb-[32px]'}>
-            <p className={'text-sm leading-5 font-normal'}>Oneline CRM has successfully added your Google contacts. </p>
+            <p className={'text-sm leading-5 font-normal'}>Added your Google contacts. </p>
             <CheckCircleSharpIcon className={'text-green-500 h-4 w-4'} />
           </div>
           {allContacts &&
@@ -68,7 +71,6 @@ const ContactsImportedSuccessfullyPopup = () => {
                 ' rounded-lg flex items-center justify-center gap-[10px] w-[379px] bg-[#FFF0DE] text-[#B54708] py-[6px] px-3'
               }>
               <p className={'text-sm font-semibold '}>Back to clients</p>
-              <ArrowForwardRoundedIcon />
             </div>
           )}
         </div>
