@@ -121,7 +121,7 @@ const SignUp = () => {
             Sign In
           </Link>
           <Text p className="text-gray4 mt-10 mb-6">
-            Sign up through Google account
+            Sign up with your Google account
           </Text>
           <div className="flex items-center justify-between mb-6">
             <Button social={gmailIcon} onClick={signUpWithGoogle} />
