@@ -43,8 +43,8 @@ export const menuItems = [
   },
   {
     id: 2,
-    name: 'Reports',
-    url: '/reports',
+    name: 'Leaderboard',
+    url: '/leaderboard',
   },
   {
     id: 3,
