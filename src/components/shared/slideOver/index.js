@@ -21,6 +21,7 @@ export default function SlideOver({
   specialTitle,
   loading,
   buttonsRight,
+  errorName,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -47,17 +48,14 @@ export default function SlideOver({
                     ) : (
                       <>
                         {!noHeader && (
-                          <div
-                            className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1"
-                            // style={{
-                            //   boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
-                            // }}
-                          >
+                          <div className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1">
                             {editableTitle ? (
                               <Input
                                 placeholder="Write campaign title here"
-                                className=" w-[400px] text-xl font-medium text-gray-900"
+                                className={`w-[400px] text-xl font-medium text-gray-900`}
                                 value={title}
+                                error={errorName}
+                                errorText={'Field can not be empty!'}
                                 onChange={handleTitleChange}
                               />
                             ) : (

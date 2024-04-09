@@ -1,14 +1,9 @@
 import Button from '@components/shared/button';
 import SlideOver from '@components/shared/slideOver';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import specificClients from '/public/images/specific-clients.svg';
-import call from '/public/images/call.svg';
-import divider from '/public/images/divider.svg';
 import Input from '@components/shared/input';
-import Editor from '@components/Editor';
 import {
-  formatDateLL,
   formatDateLThour,
   getContactStatusByStatusId,
   getContactTypeByTypeId,
@@ -18,8 +13,6 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Dropdown from '@components/shared/dropdown';
 import { clientOptions, clientStatuses, emailTemplates, timeOptions, types, waitingDays } from '@global/variables';
 import StatusSelect from '@components/status-select';
-import ContactTypeSelect from '@components/contact/contact-type-select';
-import Text from '@components/shared/text';
 import Radio from '@components/shared/radio';
 import Delete from '@mui/icons-material/Delete';
 import RichtextEditor from '@components/Editor';
@@ -29,12 +22,13 @@ import AllClientsIcon from 'icons/AllClientsIcon';
 import MailIcon from 'icons/MailIcon';
 import CallIcon from 'icons/CallIcon';
 import Divider from 'icons/Divider';
-import { addCampaign, getCampaign, getCampaignsByCategory, updateCampaign } from '@api/campaign';
+import { getCampaign, updateCampaign } from '@api/campaign';
 import toast from 'react-hot-toast';
 import { useCampaignForm } from 'hooks/useCampaignForm';
-import Loader from '@components/shared/loader';
-import { setCRMCampaigns, setUsersInCampaignGlobally, updateCRMCampaign } from '@store/campaigns/slice';
+import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import SimpleBar from 'simplebar-react';
+import NotificationAlert from '@components/shared/alert/notification-alert';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
@@ -50,7 +44,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       title: 'New Event',
       body_html: '',
       body: '',
-      wait_interval: '2d',
+      wait_interval: '-d',
       type: 'Email',
     },
   ];
@@ -139,7 +133,14 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       toast.success('Campaign edited successfully!');
       getCampaign(campaignId).then((res) => dispatch(setUsersInCampaignGlobally(res.data)));
     });
+    setShowError(false);
   };
+  const [showError, setShowError] = useState(false);
+  useEffect(() => {
+    if (!open) {
+      setShowError(false);
+    }
+  }, [open]);
 
   const Card = ({
     title,
@@ -153,6 +154,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     expandable,
     setType,
     setStatus,
+    showError,
   }) => {
     let padding = narrow ? 'py-[8px] px-[15px] min-w-[170px]' : 'px-[18px] py-4';
     return (
@@ -163,8 +165,13 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         } ${padding} flex ${className} ${!description && 'items-center'}`}>
         {icon}
         <div className="ml-4 text-sm">
-          <div className="text-gray7 font-semibold">
+          <div className="text-gray7 font-semibold flex items-center gap-[10px]">
             {title}
+            {active && showError && (!campaign.contact_category_id || !campaign.contact_status_id) && (
+              <NotificationAlert className="py-1 px-3" type={'error'}>
+                <p className={'text-sm leading-5 font-medium text-[#991B1B]'}> Please specify type and category!</p>
+              </NotificationAlert>
+            )}
             {expandable &&
               campaign.contact_category_id &&
               campaign.contact_status_id &&
@@ -206,7 +213,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     );
   };
 
-  const Event = ({ id, index, title, className, type, active, onClick, wait, icon }) => {
+  const Event = ({ id, index, title, className, type, active, onClick, wait, icon, error }) => {
     let isSms = type == 0 ? true : false;
 
     let days = wait.split('d')[0];
@@ -224,23 +231,36 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           onClick={onClick}
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
-          } p-3 flex ${className} justify-between items-center group`}>
-          <div className="flex">
-            <div className="w-">{icon}</div>
-            <div className="ml-4 text-sm">
-              <div className="text-gray7 font-semibold">{title}</div>
+          } p-3 flex ${className} flex flex-col gap-[10px] `}>
+          <div className={'flex justify-between items-center group'}>
+            <div className="flex">
+              <div className="w-">{icon}</div>
+              <div className="ml-4 text-sm">
+                <div className="text-gray7 font-semibold">{title}</div>
+              </div>
             </div>
+            <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
+            {index != 0 && (
+              <div
+                onClick={() => {
+                  removeEvent(index);
+                  setEventsToDelete((prevState) => [...prevState, id]);
+                }}
+                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
+                <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
+              </div>
+            )}
           </div>
-          <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
-          {index != 0 && (
-            <div
-              onClick={() => {
-                removeEvent(index);
-                setEventsToDelete((prevState) => [...prevState, id]);
-              }}
-              className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
-              <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
-            </div>
+          {error && showError && (
+            <NotificationAlert className="py-1 px-3" type={'error'}>
+              <div className="flex items-center">
+                <WarningRoundedIcon className="text-red-500 mr-2 h-5 w-5" />{' '}
+                <p className={'text-sm leading-5 font-medium text-[#991B1B]'}>
+                  {' '}
+                  Please fill in all required fields to continue!
+                </p>
+              </div>
+            </NotificationAlert>
           )}
         </div>
       </div>
@@ -254,6 +274,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       open={open}
       setOpen={setOpen}
       editableTitle
+      errorName={campaign?.name?.length === 0 && showError}
       title={campaign.name}
       className="top-[70px]"
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
@@ -280,6 +301,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           />
           <Card
             expandable
+            showError={showError}
             className="w-1/2"
             title={'Specific Clients'}
             description={'Only clients who I choose by the status, will be part of this campaign'}
@@ -312,6 +334,13 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               {events.map((event, index) => (
                 <Event
                   key={index}
+                  error={
+                    (showError &&
+                      (event?.body.length === 0 ||
+                        event?.subject?.length === 0 ||
+                        events[selectedEvent].wait_interval.includes('-'))) ||
+                    (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id))
+                  }
                   icon={
                     event.type == 'Email' ? (
                       <CircleIcon small active={selectedEvent == index}>
@@ -343,7 +372,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           </SimpleBar>
         </div>
         <div className="w-1/2 bg-gray10 relative">
-          <SimpleBar style={{ maxHeight: '320px' }}>
+          <SimpleBar style={{ maxHeight: '380px' }}>
             <div className=" px-[22px] py-[26px]">
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
@@ -388,6 +417,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                         ),
                       )
                     }
+                    error={events[selectedEvent]?.wait_interval?.includes('-') && showError}
+                    errorText={
+                      events[selectedEvent]?.wait_interval?.includes('-') && showError ? 'Field can not be empty!' : ''
+                    }
                     inputWidth={'w-[220px]'}
                     initialSelect={
                       events[selectedEvent]
@@ -420,6 +453,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                       ),
                     )
                   }
+                  error={events[selectedEvent]?.title.length === 0}
+                  errorText={events[selectedEvent]?.title.length === 0 && 'Field can not be empty!'}
                   value={events[selectedEvent]?.title}
                 />
               </div>
@@ -438,11 +473,16 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                     );
                   }}
                 />
+                {events[selectedEvent]?.body_html.length === 0 && showError && (
+                  <NotificationAlert className="mt-2 p-2" type={'error'}>
+                    Field can not be empty!
+                  </NotificationAlert>
+                )}
               </div>
             </div>
           </SimpleBar>
           <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
-            <Button label="Cancel" white />
+            <Button label="Cancel" white onClick={() => setOpen(false)} />
             <a
               onClick={() => addNewEvent()}
               className="mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
@@ -451,9 +491,13 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             <Button
               primary
               label="Save Campaign Template"
-              disabled={!isValid}
               loading={editingCampaignLoader}
-              onClick={() => editCampaign()}
+              onClick={() => {
+                setShowError(true);
+                if (isValid) {
+                  editCampaign();
+                }
+              }}
             />
           </div>
         </div>

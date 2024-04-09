@@ -567,6 +567,10 @@ export const uncategorizedStatuses = [
 
 export const waitingDays = [
   {
+    id: '-',
+    label: '- days',
+  },
+  {
     id: 0,
     label: '0 days',
   },

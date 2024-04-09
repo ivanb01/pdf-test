@@ -30,7 +30,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
     }
 
     for (const event of events) {
-      if (!event.type || !event.title || !event.body_html) {
+      if (!event.type || !event.title || !event.body_html || event.wait_interval === '-d') {
         return false;
       }
     }
@@ -42,7 +42,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       title: 'New Event',
       body_html: '',
       body: '',
-      wait_interval: '3d',
+      wait_interval: '-d',
       type: 'Email',
       charset: 'A',
       action: 'Send',
