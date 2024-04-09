@@ -12,6 +12,8 @@ import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
 import { setGlobalEmail } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
+import TooltipComponent from '@components/shared/tooltip';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
@@ -158,7 +160,17 @@ const SendEmailOverlay = () => {
       ) : (
         <div>
           <div className="mb-6">
-            <div className="text-gray6 text-sm font-medium mb-1">To</div>
+            <div className="flex items-center mb-1">
+              <div className="text-gray6 text-sm font-medium mr-1">To</div>
+              <TooltipComponent
+                side={'bottom'}
+                align={'start'}
+                triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+                <div className={`text-xs font-medium text-white bg-neutral1`}>
+                  Selecting multiple contacts sends individual emails to each user that is selected.
+                </div>
+              </TooltipComponent>
+            </div>
             {contactsCopy && contactsCopy.length && (
               <MultiSelect
                 options={sortedOptions}
