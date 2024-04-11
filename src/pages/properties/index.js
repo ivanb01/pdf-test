@@ -441,6 +441,7 @@ const index = () => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
   };
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
@@ -490,7 +491,9 @@ const index = () => {
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {userData}
+                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      : userInfo?.email}
                   </p>
                 </>,
                 {
