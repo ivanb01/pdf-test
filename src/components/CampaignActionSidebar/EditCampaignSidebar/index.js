@@ -222,7 +222,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     return (
       <div className="mb-3 last:mb-0">
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-          Wait {days} days, then send this event at {formatDateLThour(date)}
+          Wait {days} days, then send this event at {days === '-' ? ' - date' : formatDateLThour(date)}
         </div>
         <div className="my-2 pl-2">
           <Divider />
@@ -333,33 +333,35 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             <div className="px-[22px] py-[26px] border-r border-gray1">
               <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
               {events.map((event, index) => (
-                <Event
-                  key={index}
-                  error={
-                    (showError &&
-                      (event?.body.length === 0 ||
-                        event?.subject?.length === 0 ||
-                        events[selectedEvent].wait_interval.includes('-'))) ||
-                    (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id))
-                  }
-                  icon={
-                    event.type == 'Email' ? (
-                      <CircleIcon small active={selectedEvent == index}>
-                        <MailIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
-                      </CircleIcon>
-                    ) : (
-                      <CircleIcon small active={selectedEvent == index}>
-                        <CallIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
-                      </CircleIcon>
-                    )
-                  }
-                  id={event.id}
-                  index={index}
-                  title={event.title}
-                  wait={event.wait_interval}
-                  active={selectedEvent == index}
-                  onClick={() => setSelectedEvent(index)}
-                />
+                <>
+                  <Event
+                    key={index}
+                    error={
+                      (showError &&
+                        (event?.body.length === 0 ||
+                          event?.title?.length === 0 ||
+                          event?.wait_interval?.includes('-'))) ||
+                      (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id))
+                    }
+                    icon={
+                      event.type == 'Email' ? (
+                        <CircleIcon small active={selectedEvent == index}>
+                          <MailIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                        </CircleIcon>
+                      ) : (
+                        <CircleIcon small active={selectedEvent == index}>
+                          <CallIcon fill={selectedEvent == index ? '#0284C7' : '#4B5563'} />
+                        </CircleIcon>
+                      )
+                    }
+                    id={event.id}
+                    index={index}
+                    title={event.title}
+                    wait={event.wait_interval}
+                    active={selectedEvent == index}
+                    onClick={() => setSelectedEvent(index)}
+                  />
+                </>
               ))}
               <div className="my-2 pl-2 mb-3">
                 <Divider />
@@ -454,8 +456,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                       ),
                     )
                   }
-                  error={events[selectedEvent]?.title.length === 0}
-                  errorText={events[selectedEvent]?.title.length === 0 && 'Field can not be empty!'}
+                  error={events[selectedEvent]?.title.length === 0 && showError}
+                  errorText={events[selectedEvent]?.title.length === 0 && showError && 'Field can not be empty!'}
                   value={events[selectedEvent]?.title}
                 />
               </div>

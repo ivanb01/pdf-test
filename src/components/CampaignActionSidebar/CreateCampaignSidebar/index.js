@@ -354,7 +354,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         setOpen(state);
       }}
       editableTitle
-      errorName={campaign?.name === null && showError}
+      errorName={(campaign?.name === null || campaign?.name?.length === 0) && showError}
       title={campaign.name}
       className=""
       hideScroll
@@ -433,7 +433,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       (showError &&
                         (event?.body.length === 0 ||
                           event?.subject?.length === 0 ||
-                          events?.wait_interval?.includes('-'))) ||
+                          event?.wait_interval?.includes('-'))) ||
                       (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id))
                     }
                     index={index}
@@ -580,8 +580,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       ),
                     )
                   }
-                  error={events[selectedEvent]?.title.length === 0}
-                  errorText={events[selectedEvent]?.title.length === 0 && 'Field can not be empty!'}
+                  error={events[selectedEvent]?.title.length === 0 && showError}
+                  errorText={events[selectedEvent]?.title.length === 0 && showError && 'Field can not be empty!'}
                   value={events[selectedEvent]?.title}
                 />
               </div>
