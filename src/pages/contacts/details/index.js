@@ -148,7 +148,7 @@ const index = () => {
 
   const Item = ({ item, className, icon, isEditable }) => {
     return (
-      <div className="flex justify-between">
+      <div className="flex justify-between break-word">
         <div className={`flex ${className}`}>
           <div className="w-[30px]">
             <img src={icon} className="w-[26px]" />

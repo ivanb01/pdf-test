@@ -254,7 +254,7 @@ export default function Feeds({
                                 {/* Commented 6d ago */}
                               </p>
                             )}
-                            <div className="mt-2 text-sm text-gray6">
+                            <div className="mt-2 text-sm text-gray6 break-word">
                               <code></code>
                               <ActivityDescription activityItem={activityItem} />
                             </div>
