@@ -357,6 +357,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       errorName={campaign?.name === null && showError}
       title={campaign.name}
       className=""
+      hideScroll
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
       rounded>
       <div className="-mt-3 mb-5">
@@ -407,9 +408,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         </div>
       </div>
       <hr className=" -mx-6" />
-      <div className="flex -mx-6">
+      <div className="flex -mx-6 h-full">
         <div className="w-1/2">
-          <SimpleBar style={{ maxHeight: '460px' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 268px)', height: '100vh' }}>
             <div className="px-[22px] py-[26px] border-r border-gray1">
               <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
               {events.map((event, index) => (
@@ -455,7 +456,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           </SimpleBar>
         </div>
         <div className="w-1/2 bg-gray10 relative">
-          <SimpleBar style={{ maxHeight: '445px' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
             <div className=" px-[22px] py-[26px]">
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>

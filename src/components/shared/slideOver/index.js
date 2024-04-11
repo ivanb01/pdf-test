@@ -22,6 +22,7 @@ export default function SlideOver({
   loading,
   buttonsRight,
   errorName,
+  hideScroll,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -73,9 +74,13 @@ export default function SlideOver({
                           </div>
                         )}
                         <div className="side-overlay-wrapper flex min-h-0 flex-1 flex-col">
-                          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                          {hideScroll ? (
                             <div className="relative mt-[30px] flex-1 px-4 sm:px-6">{children}</div>
-                          </SimpleBar>
+                          ) : (
+                            <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                              <div className="relative mt-[30px] flex-1 px-4 sm:px-6">{children}</div>
+                            </SimpleBar>
+                          )}
                         </div>
                         {buttons && (
                           <div

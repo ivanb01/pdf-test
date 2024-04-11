@@ -278,7 +278,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       title={campaign.name}
       className="top-[70px]"
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
-      rounded>
+      rounded
+      hideScroll>
       <div className="-mt-3 mb-5">
         <div className="mb-4 text-gray8 text-sm font-medium">
           Choose the clients who will be eligible of this campaign
@@ -326,9 +327,9 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         </div>
       </div>
       <hr className=" -mx-6" />
-      <div className="flex -mx-6">
+      <div className="flex -mx-6 h-full">
         <div className="w-1/2">
-          <SimpleBar style={{ maxHeight: '390px' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 338px)', height: '100vh' }}>
             <div className="px-[22px] py-[26px] border-r border-gray1">
               <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
               {events.map((event, index) => (
@@ -372,7 +373,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           </SimpleBar>
         </div>
         <div className="w-1/2 bg-gray10 relative">
-          <SimpleBar style={{ maxHeight: '380px' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 410px)', height: '100vh' }}>
             <div className=" px-[22px] py-[26px]">
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
