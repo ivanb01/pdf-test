@@ -235,7 +235,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     return (
       <div className="mb-3 last:mb-0">
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-          Wait {days} days, then send this event at {formatDateLThour(date)}
+          Wait {days} days, then send this event at {days === '-' ? ' - date' : formatDateLThour(date)}
         </div>
         <div className="my-2 pl-2">
           <Divider />
@@ -294,7 +294,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         title: 'New Event',
         body_html: '',
         body: '',
-        wait_interval: '2d',
+        wait_interval: '-d',
         type: 'Email',
         charset: 'A',
         template: {
@@ -333,6 +333,15 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       setShowError(false);
     }
   }, [open]);
+  //
+  // useEffect(() => {
+  //   console.log(waitingDays, 'waitingDays', events[selectedEvent]);
+  //   console.log(
+  //     events[selectedEvent]
+  //       ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
+  //       : null,
+  //   );
+  // }, []);
 
   return (
     <SlideOver
@@ -423,7 +432,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       (showError &&
                         (event?.body.length === 0 ||
                           event?.subject?.length === 0 ||
-                          events[selectedEvent].wait_interval.includes('-'))) ||
+                          events?.wait_interval?.includes('-'))) ||
                       (eligibleClients === 1 && (!campaign.contact_category_id || !campaign.contact_status_id))
                     }
                     index={index}
