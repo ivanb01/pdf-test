@@ -10,7 +10,7 @@ import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import { useSelector } from 'react-redux';
-import { setRefetchPart } from '@store/global/slice';
+import { setAmenities, setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
@@ -27,7 +27,7 @@ import { getBaseUrl } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
-
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
   const router = useRouter();
@@ -502,6 +502,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId]);
 
+  useEffect(() => {
+    dispatch(setAmenities([]));
+  }, [contactId]);
   const updateUserProperties = () => {
     let properties = [];
     if (propertiesCurrentTab === 2) {
@@ -604,15 +607,21 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 <div className="">
                   <div className="flex justify-between items-center pt-[9px] pr-[9px] h-[47px]">
                     <div className="font-semibold">Properties</div>
-                    {propertiesCurrentTab === 0 && (
-                      <Button
-                        count={filtersCount}
-                        leftIcon={<img src={filter.src}></img>}
-                        white
-                        onClick={() => setShowEditPopup(true)}>
-                        Client Preferences
-                      </Button>
-                    )}
+                    <div className={'relative flex'}>
+                      {propertiesCurrentTab === 0 && (
+                        <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>
+                          Client Preferences
+                        </Button>
+                      )}
+                      {filtersCount > 0 && (
+                        <div
+                          className={
+                            'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
+                          }>
+                          <CheckRoundedIcon className={'h-4 w-4'} />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <TabsWithPills
                     propertiesCurrentTab={propertiesCurrentTab}
