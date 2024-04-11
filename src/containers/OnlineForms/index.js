@@ -33,16 +33,14 @@ const OnlineForms = () => {
 
   const fetchFormsParams = useMemo(() => {
     const { id: form_type_id } = formTypeFilter;
-    if(currentTab == 1){
-      setStatus("PENDING");
-    }
-    else if(currentTab == 2){
-      setStatus("SIGNED");
-    }
-    else {
+    if (currentTab == 1) {
+      setStatus('PENDING');
+    } else if (currentTab == 2) {
+      setStatus('SIGNED');
+    } else {
       setStatus(undefined);
     }
-    console.log("status", status)
+    console.log('status', status);
     return {
       page_size: 10,
       count_items: true,

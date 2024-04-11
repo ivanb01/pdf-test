@@ -1,3 +1,4 @@
+import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 export const fecthOnlineFormsTypes = () => {
@@ -33,7 +34,7 @@ export const deleteForm = (formId) => {
 };
 
 export const fetchOnlineForm = (id) => {
-  return axiosInstance.get(`v1/online-forms/public/${id}`);
+  return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v1/online-forms/public/${id}`);
 };
 
 export const postOnlineForm = (fields) => {
