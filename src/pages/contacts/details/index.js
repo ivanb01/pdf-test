@@ -63,6 +63,8 @@ const index = () => {
       console.log(contactData);
       if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
+      } else {
+        setShowReviewOverlay(false);
       }
       getActivityLog();
       getNotes();
