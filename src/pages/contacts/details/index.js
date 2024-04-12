@@ -360,7 +360,7 @@ const index = () => {
                       />
                     </div>
                   )}
-                  {contact.tags && (
+                  {contact.priority && (
                     <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium">
                       <span className="text-gray6 mr-3">Priority:</span>
                       <div className="flex items-center">
