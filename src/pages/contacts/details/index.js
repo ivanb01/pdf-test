@@ -365,7 +365,7 @@ const index = () => {
                       <span className="text-gray6 mr-3">Priority:</span>
                       <div className="flex items-center">
                         <span className={`block h-2 w-2 mr-1 rounded-full bg-red3`} />
-                        <span className="text-gray7">{findTagsOption(contact.tags)[0].value}</span>
+                        <span className="text-gray7">{contact.priority}</span>
                       </div>
                     </div>
                   )}

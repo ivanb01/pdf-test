@@ -5,7 +5,7 @@ import { inputs, steps } from './list';
 import Radio from 'components/shared/radio';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
-import { leadSourceOptions, phoneNumberRules } from 'global/variables';
+import { leadSourceOptions, priorityOptions, phoneNumberRules } from 'global/variables';
 import { useFormik } from 'formik';
 import Input from 'components/shared/input';
 import { useState, useEffect } from 'react';
@@ -63,6 +63,7 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
       email: client?.email,
       phone_number: client?.phone_number ? client?.phone_number : null,
       lead_source: client?.lead_source,
+      priority: client?.priority,
       tags: client?.tags,
     },
     validationSchema: AddContactSchema,
@@ -177,19 +178,18 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               initialSelect={formik.values.lead_source}
               placeHolder={formik.values.lead_source ? formik.values.lead_source : 'Choose'}
             />
-            <DropdownWithSearch
-              top={'-130px'}
-              maxMenuHeight={200}
+            <Dropdown
               label="Priority"
-              typeOfContact={openedTab}
-              value={findTagsOption(formik.values.tags)}
-              onChange={(choice) => {
-                formik.setFieldValue(
-                  'tags',
-                  choice.map((el) => el.label),
-                );
-              }}
+              openClassName={'mb-2'}
+              top={'top-[-260px]'}
+              activeIcon={false}
+              options={priorityOptions}
+              className="col-span-2"
+              handleSelect={(priority) => formik.setValues({ ...formik.values, priority: priority.label })}
+              initialSelect={formik.values.priority}
+              placeHolder={formik.values.priority ? formik.values.priority : 'Choose'}
             />
+           
           </div>
         </form>
       </div>

@@ -901,6 +901,12 @@ export const bathroomsOptions = [
   },
 ];
 
+export const priorityOptions = [
+  { id: 1, label: 'Super High Priority!' },
+  { id: 2, label: 'High Priority' },
+  { id: 3, label: 'Medium Priority' },
+  { id: 4, label: 'Low Priority' },
+]
 export const leadSourceOptions = [
   // {
   //   id: 1,
@@ -979,6 +985,7 @@ export const filtersForLastCommunicationDate = {
 export const multiselectOptionsClients = [
   { value: 'Super High Priority!', label: 'Super High Priority!' },
   { value: 'High Priority', label: 'High Priority' },
+  { value: 'Medium Priority', label: 'Medium Priority' },
   { value: 'Low Priority', label: 'Low Priority' },
 ];
 
