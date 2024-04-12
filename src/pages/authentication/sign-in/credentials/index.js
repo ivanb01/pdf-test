@@ -214,50 +214,51 @@ const SignIn = () => {
             onBackClick={() => router.push('/authentication/sign-in')}>
             Sign In
           </Text>
-          <form onSubmit={formik.handleSubmit}>
-            <Input
-              type="text"
-              label="Email"
-              id="userName"
-              className="mb-6"
-              onChange={formik.handleChange}
-              error={
-                (errors.userName && touched.userName) ||
-                errors.password == 'Invalid email or password. Please try again!'
-              }
-              errorText={errors.userName}
-            />
-            <Input
-              type="password"
-              label="Password"
-              id="password"
-              className="mb-6"
-              iconAfter={true}
-              onChange={formik.handleChange}
-              error={errors.password && touched.password}
-              errorText={errors.password}
-            />
-            <Button
-              loading={loadingButton}
-              type="submit"
-              primary
-              label="Sign in"
-              className="bg-blue2 w-full justify-center"
-            />
-          </form>
+          {/*DO NOT DELETE COMMENTED CODE*/}
+          {/*<form onSubmit={formik.handleSubmit}>*/}
+          {/*  <Input*/}
+          {/*    type="text"*/}
+          {/*    label="Email"*/}
+          {/*    id="userName"*/}
+          {/*    className="mb-6"*/}
+          {/*    onChange={formik.handleChange}*/}
+          {/*    error={*/}
+          {/*      (errors.userName && touched.userName) ||*/}
+          {/*      errors.password == 'Invalid email or password. Please try again!'*/}
+          {/*    }*/}
+          {/*    errorText={errors.userName}*/}
+          {/*  />*/}
+          {/*  <Input*/}
+          {/*    type="password"*/}
+          {/*    label="Password"*/}
+          {/*    id="password"*/}
+          {/*    className="mb-6"*/}
+          {/*    iconAfter={true}*/}
+          {/*    onChange={formik.handleChange}*/}
+          {/*    error={errors.password && touched.password}*/}
+          {/*    errorText={errors.password}*/}
+          {/*  />*/}
+          {/*  <Button*/}
+          {/*    loading={loadingButton}*/}
+          {/*    type="submit"*/}
+          {/*    primary*/}
+          {/*    label="Sign in"*/}
+          {/*    className="bg-blue2 w-full justify-center"*/}
+          {/*  />*/}
+          {/*</form>*/}
 
           {/* <Input type="checkbox" placeholder="Remember me" value="Remember me" /> */}
-          <div className="flex items-center justify-between my-6">
-            <Link href="#" className="font-medium text-sm" onClick={() => router.push('forgot-password')}>
-              Forgot Password?
-            </Link>
-          </div>
+          {/*<div className="flex items-center justify-between my-6">*/}
+          {/*  <Link href="#" className="font-medium text-sm" onClick={() => router.push('forgot-password')}>*/}
+          {/*    Forgot Password?*/}
+          {/*  </Link>*/}
+          {/*</div>*/}
 
-          <Text
-            p
-            className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2">
-            Or continue with
-          </Text>
+          {/*<Text*/}
+          {/*  p*/}
+          {/*  className="text-gray6 mb-6 justify-center before:conent-[''] before:flex-auto before:border before:mr-2 after:conent-[''] after:flex-auto after:border after:ml-2">*/}
+          {/*  Or continue with*/}
+          {/*</Text>*/}
           <div className="flex items-center justify-between mb-6">
             <GoogleButton onClick={signInWithGoogle} label="Sign in with Google" />
           </div>
