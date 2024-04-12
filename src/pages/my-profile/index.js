@@ -3,39 +3,44 @@ import MainMenu from 'components/shared/menu';
 import Text from 'components/shared/text';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
-import { PencilIcon } from '@heroicons/react/solid';
-import { TrashIcon } from '@heroicons/react/solid';
 import { UserIcon } from '@heroicons/react/solid';
-import { ShieldCheckIcon } from '@heroicons/react/solid';
+import { CreditCardIcon } from '@heroicons/react/solid';
 import Security from '@mui/icons-material/Security';
 import { useState, useEffect } from 'react';
 import Table from 'components/shared/table';
-import { Auth, withSSRContext } from 'aws-amplify';
 import SimpleBar from 'simplebar-react';
 import Router from 'next/router';
 import aiIcon from '/public/animations/gmailsync.gif';
 import googleIcon from '/public/images/google-icon.svg';
-import { useSelector } from 'react-redux';
-import { getUserConsentForGoogleContactsAndEmail, getUserConsentForGoogleEmail } from '@api/google';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserConsentForGoogleContactsAndEmail } from '@api/google';
 import { clearData } from '@api/contacts';
+import { fetchCurrentUserInfo, updateUserInfo } from '@helpers/auth';
+import { setUserInfo } from 'store/global/slice';
 import toast from 'react-hot-toast';
 import ClearContacts from '@components/overlays/clear-all-contacts';
+import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
+import useLocalStorage from 'hooks/useLocalStorage';
 
 const index = () => {
+  const dispatch = useDispatch();
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
-  const [currentTab, setCurrentTab] = useState(1);
-  const [showDeleteAccountPopup, setShowDeleteAccountPopup] = useState(false);
-  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
   const [loadingActivate, setLoadingActivate] = useState(false);
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
-  const [showDeleteFunctionality, setShowDeleteFunctionality] = useState(false);
+  const userInfo = useSelector((state) => state.global.userInfo);
+  const [defaultUserInfo] = useLocalStorage('userInfo');
+  const [changedUserInfo, setChangedUserInfo] = useState(defaultUserInfo);
 
   useEffect(() => {
-    const hostname = window.location.hostname;
-    if (hostname.includes('dev') || hostname === 'localhost') {
-      setShowDeleteFunctionality(true);
-    }
+    const getInfo = async () => {
+      const info = await fetchCurrentUserInfo();
+      dispatch(setUserInfo(info));
+      setChangedUserInfo(info);
+    };
+
+    getInfo();
   }, []);
 
   const consentGiven = () => {
@@ -68,6 +73,27 @@ const index = () => {
   const importsSummary = [];
 
   const myProfileTab = () => {
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setChangedUserInfo((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    };
+
+    const handleSubmit = async () => {
+      setLoadingActivate(true);
+      try {
+        await updateUserInfo(changedUserInfo);
+        dispatch(setUserInfo(changedUserInfo));
+        toast.success('Changes saved successfully.');
+      } catch (error) {
+        console.error('Failed to save user info', error);
+        toast.error('Failed to save the information.');
+      }
+      setLoadingActivate(false);
+    };
+
     return (
       <>
         <TopBar text="My profile" />
@@ -79,33 +105,37 @@ const index = () => {
             Profile information that you will be presented to your contacts.
           </Text>
           <hr className="my-5" />
-          <div className="mt-1 sm:mt-0 sm:col-span-2 mb-6">
-            <div className="flex items-center">
-              <span className="h-[100px] w-[100px] rounded-full overflow-hidden bg-gray-100 mr-2">
-                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </span>
-              <Button leftIcon={<PencilIcon className="h-[16px]" />} white label="Change" className="mr-2" />
-              <Button leftIcon={<TrashIcon className="h-[16px]" />} white label="Remove" />
-            </div>
-          </div>
           <div className="w-[40%]">
             <div className="flex mb-6">
-              <Input type="text" label="First Name" className="mr-6" />
-              <Input type="text" label="Last Name" />
+              <Input
+                type="text"
+                label="First Name"
+                name="first_name"
+                className="mr-6"
+                value={changedUserInfo?.first_name || ''}
+                onChange={handleChange}
+              />
+              <Input
+                type="text"
+                label="Last Name"
+                name="last_name"
+                value={changedUserInfo?.last_name || ''}
+                onChange={handleChange}
+              />
             </div>
-            <Input type="email" label="Email" className="mb-6" />
             <Input
               type="phone"
               label="Phone Number"
-              secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information"
+              name="phone_number"
+              value={changedUserInfo?.phone_number || ''}
+              onChange={handleChange}
+              hidePhonePrefix={true}
+              secondaryLabel="We may use this phone number to contact you about security events, sending workflow SMS, and for owner property values. Please refer to our privacy policy for more information."
             />
           </div>
           <hr className="my-5" />
           <div className="flex items-center">
-            <Button label="Cancel" white className="mr-3" />
-            <Button label="Save Changes" />
+            <Button loading={loadingActivate} label="Save Changes" onClick={handleSubmit} />
           </div>
         </div>
       </>
@@ -188,6 +218,18 @@ const index = () => {
       </>
     );
   };
+
+  const billingTab = () => {
+    return (
+      <>
+        <TopBar text="Billing" />
+        <div className="p-6">
+          <PlanOptions userInfo={userInfo} />
+        </div>
+      </>
+    );
+  };
+
   const importsSummaryTab = () => {
     return (
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -210,17 +252,23 @@ const index = () => {
   };
 
   const tabs = [
-    // {
-    //   id: 0,
-    //   name: 'My Profile',
-    //   icon: <UserIcon height={20} className="mr-3" />,
-    //   tabContent: myProfileTab(),
-    // },
+    {
+      id: 0,
+      name: 'My Profile',
+      icon: <UserIcon height={20} className="mr-3" />,
+      tabContent: myProfileTab(),
+    },
     {
       id: 1,
       name: 'Account Management',
       icon: <Security height={20} className="mr-3" />,
       tabContent: accountManagementTab(),
+    },
+    {
+      id: 2,
+      name: 'Billing',
+      icon: <CreditCardIcon height={20} className="mr-3" />,
+      tabContent: billingTab(),
     },
     // {
     //   id: 2,

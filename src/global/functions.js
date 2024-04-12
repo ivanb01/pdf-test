@@ -46,6 +46,26 @@ export const formatNumber = (number) => {
   return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
 };
 
+export const countActionTypes = (actions) => {
+  const counts = {
+    sms: 0,
+    email: 0,
+    total: 0,
+  };
+
+  actions.forEach((action) => {
+    counts.total += 1;
+
+    if (action.type === 'Email') {
+      counts.email += 1;
+    } else if (action.type === 'SMS') {
+      counts.sms += 1;
+    }
+  });
+
+  return counts;
+};
+
 export const formatDate = (eventDate, hideTime) => {
   let dateObj = new Date(eventDate * 1000);
   const year = dateObj.getFullYear();
@@ -75,7 +95,9 @@ export const removeClientFromArray = (clientList, clientEmail) => {
     return el.email != clientEmail;
   });
 };
-
+export const capitalize = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
 export const getContactTypeByTypeId = (subtypes, typeId) => {
   let foundType = null;
   types.forEach((allTypes) => {
@@ -86,10 +108,11 @@ export const getContactTypeByTypeId = (subtypes, typeId) => {
     });
   });
 
-  if (!foundType) {
+  if (!foundType && subtypes) {
     foundType = subtypes.find((subtype) => subtype.id == typeId).name;
   }
-  return foundType ? foundType : 'Unknown';
+
+  return foundType ? foundType.charAt(0).toUpperCase() + foundType.slice(1) : 'Unknown';
 };
 export const getContactStatusByStatusId = (category, statusId) => {
   let statuses = [4, 5, 6, 7].includes(category) ? clientStatuses : professionalsStatuses;
@@ -147,6 +170,13 @@ export const formatDateLThour = (date) => {
   return moment(date).format('LT');
 };
 
+export const getDateAfterDays = (days) => {
+  const currentDate = new Date();
+  const resultDate = new Date(currentDate);
+  resultDate.setDate(currentDate.getDate() + days);
+  return resultDate;
+};
+
 export const formatDateCalendar = (date) => {
   const calendarDate = moment(date).calendar();
   const calendarDateArray = calendarDate.split(' ');
@@ -193,7 +223,7 @@ export const formatDateTo = (date, param) => {
 };
 
 export const formatPrice = (price) => {
-  return price.toLocaleString('en-US', {
+  return price?.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   });
@@ -336,13 +366,13 @@ export const getEmailParts = (email) => {
   // Map specific domains to corresponding names
   switch (lastName) {
     case 'opgny':
-      lastName = 'Oxford';
+      lastName = '| Oxford';
       break;
     case 'levelgroup':
-      lastName = 'Level';
+      lastName = '| Level';
       break;
     case 'spiregroupny':
-      lastName = 'Spire';
+      lastName = '| Spire';
       break;
     default:
       // Capitalize the first letter of the last name
@@ -374,6 +404,16 @@ export const getBaseUrl = () => {
   if (typeof window !== 'undefined') return window.location.origin;
 };
 
+export const deepObjectsEqual = (x, y) => {
+  // console.log('deepObjectsEqual', x, y);
+  const ok = Object.keys,
+    tx = typeof x,
+    ty = typeof y;
+  return x && y && tx === 'object' && tx === ty
+    ? ok(x).length === ok(y).length && ok(x).every((key) => deepObjectsEqual(x[key], y[key]))
+    : x === y;
+};
+
 export const getTotalCountOfAllValues = (data) => {
   let totalCount = 0;
 
@@ -385,4 +425,34 @@ export const getTotalCountOfAllValues = (data) => {
   }
 
   return totalCount;
+};
+
+export const timeAgo = (timestamp) => {
+  const dt = new Date(timestamp);
+  const currentTime = new Date();
+  const timeDifference = currentTime - dt;
+
+  const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+  const minutesDifference = Math.floor(timeDifference / (1000 * 60));
+
+  if (daysDifference === 0) {
+    if (hoursDifference !== 0) {
+      const remainingMinutes = minutesDifference % 60;
+      return `${hoursDifference === 1 ? ' 1 hour' : `${hoursDifference} hours`} and ${remainingMinutes === 1 ? ' 1 minute ago' : `${remainingMinutes} minutes ago`}`;
+    } else {
+      return `${minutesDifference === 1 || minutesDifference === 0 ? '1 minute ago' : `${minutesDifference} minutes ago`}`;
+    }
+  } else {
+    return `${daysDifference === 1 ? ' 1 day ago' : `${daysDifference} days ago`}`;
+  }
+};
+
+export const formatPhoneNumber = (phoneNumber) => {
+  const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
+  if (numericPhoneNumber.startsWith('1')) {
+    return `+${numericPhoneNumber.slice(0, 1)} ${numericPhoneNumber.slice(1, 4)} ${numericPhoneNumber.slice(4, 7)} ${numericPhoneNumber.slice(7)}`;
+  } else {
+    return numericPhoneNumber;
+  }
 };

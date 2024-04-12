@@ -11,9 +11,10 @@ import CampaignPreview from '@components/campaign/CampaignPreview';
 import { useState } from 'react';
 import TooltipComponent from '@components/shared/tooltip';
 import Link from 'next/link';
+import { countActionTypes, getContactStatusByStatusId } from '@global/functions';
 
 const CampaignCard = ({
-  campaign_name,
+  name,
   events,
   category,
   campaign_id,
@@ -22,36 +23,38 @@ const CampaignCard = ({
   contact_unassigned_count,
   contact_status_2,
   isVisible,
+  ...props
 }) => {
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
+  let eventCount = countActionTypes(props.actions);
   return (
     <div className={'flex flex-col rounded-lg campaigns-box-shadow justify-between'}>
       <div className={'px-4 py-[15px]'}>
         <div className={'flex flex-col gap-[14px]'}>
-          <Link href={{ pathname: '/campaign/details', query: { id: campaign_id, category: category } }} passHref>
+          <Link href={{ pathname: '/campaign/details', query: { id: campaign_id } }} passHref>
             <div
               className={'flex justify-between items-center cursor-pointer'}
               role={'button'}
               onClick={() => {
                 router.push({
                   pathname: '/campaign/details',
-                  query: { id: campaign_id, category: category },
+                  query: { id: campaign_id },
                 });
               }}>
-              <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{campaign_name}</h6>
+              <h6 className={'text-sm leading-5 font-semibold text-gray7'}>{name}</h6>
               <ArrowForwardIosIcon className={'h-4 w-4 text-gray5'} />
             </div>
           </Link>
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
-            <span className={'mr-1'}>{`${Number(events.sms + events.email)}  Events: `}</span>
+            <span className={'mr-1'}>Events:</span>
             <span className={'mr-2'}>
-              {events.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+              {eventCount.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
             </span>
-            <span>
-              {events.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
-            </span>
+            {/*<span>*/}
+            {/*  {eventCount.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />*/}
+            {/*</span>*/}
           </div>
         </div>
         <div className={'flex justify-between items-center flex-wrap '}>
@@ -60,9 +63,15 @@ const CampaignCard = ({
             className={
               'bg-gray1 text-xs mt-[14px] leading-5 font-medium text-gray6 px-1.5 py-0.5 flex gap-1 items-center-center'
             }>
-            <div className={'m-auto'}>{contact_status_2}:</div>
+            <div className={'m-auto'}>
+              {props.contact_category_id != null && props.contact_status_id != null
+                ? getContactStatusByStatusId(props.contact_category_id, props.contact_status_id) + ':'
+                : 'All Clients:'}
+            </div>
             <div className={'flex'}>
-              {contact_never_assigned_count + contact_assigned_count + contact_unassigned_count}
+              {contact_assigned_count + contact_unassigned_count
+                ? contact_assigned_count + contact_unassigned_count
+                : 0}
               <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
             </div>
           </div>
@@ -73,7 +82,7 @@ const CampaignCard = ({
               triggerElement={
                 <div className={'flex items-center gap-1'}>
                   <img src={InCampaing.src} className={'h-[18px] w-[18px]'} alt={''} />
-                  <span>{contact_assigned_count}</span>
+                  <span>{contact_assigned_count ? contact_assigned_count : 0}</span>
                 </div>
               }>
               <div className=" pointer-events-none  text-xs font-medium text-white ">
@@ -86,7 +95,7 @@ const CampaignCard = ({
               triggerElement={
                 <div className={'flex items-center gap-1'}>
                   <img src={unassigned.src} alt={''} />
-                  <span>{contact_unassigned_count}</span>
+                  <span>{contact_unassigned_count ? contact_unassigned_count : 0}</span>
                 </div>
               }>
               <div className=" pointer-events-none  text-xs font-medium text-white ">
@@ -99,7 +108,7 @@ const CampaignCard = ({
               triggerElement={
                 <div className={'flex items-center gap-1'}>
                   <img src={neverAssigned.src} alt={''} />
-                  <span>{contact_never_assigned_count}</span>
+                  <span>{contact_never_assigned_count ? contact_never_assigned_count : 0}</span>
                 </div>
               }>
               <div className=" pointer-events-none  text-xs font-medium text-white ">

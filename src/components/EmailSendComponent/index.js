@@ -1,5 +1,5 @@
 import PlusButton from '@components/PlusButton';
-import SendEmailOverlay from '@components/SendEmailSidebar';
+import SendEmailOverlay from '@components/shared/sidebar/global-send-email';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 const EmailSendComponent = () => {

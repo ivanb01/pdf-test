@@ -8,6 +8,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import NotificationAlert from 'components/shared/alert/notification-alert';
 import { phoneNumberInputFormat, revertPhoneNumberInputFormat } from 'global/functions';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SignaturePad from 'react-signature-canvas';
+import DeleteIcon from '@mui/icons-material/Delete';
+import clsx from 'clsx';
 
 const Input = ({
   className,
@@ -34,6 +37,9 @@ const Input = ({
   errorText,
   showForgotPassword,
   secondaryLabel,
+  onSignatureEnd,
+  onSignatureClear,
+  hidePhonePrefix,
   ...props
 }) => {
   let errorClasses = '';
@@ -55,7 +61,7 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={` text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+          className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
         />
@@ -104,8 +110,8 @@ const Input = ({
           readOnly={saved || readonly}
           className={
             saved
-              ? 'text-sm text-gray8 p-0 border-none bg-transparent outline-none'
-              : `text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+              ? `text-sm text-gray8 p-0 border-none bg-transparent outline-none ${className}`
+              : `${className} text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
                   errorClasses ? errorClasses : 'border-borderColor'
                 }`
           }
@@ -298,7 +304,7 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className="outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
+            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${hidePhonePrefix && 'hidden'}`}>
             <option>US</option>
             <option>CA</option>
             <option>EU</option>
@@ -308,7 +314,7 @@ const Input = ({
           type="text"
           name={name ? name : id}
           id={id}
-          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full pl-16 px-[13px] py-[9px] sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
+          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full px-[13px] py-[9px] ${!hidePhonePrefix && 'pl-16'} sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -368,13 +374,45 @@ const Input = ({
       </>
     );
   };
+  const signatureInput = () => {
+    const sigCanvas = useRef({});
+
+    const className = clsx('border	w-full max-h-[170px] rounded-md', error && errorClasses, className);
+    const onEnd = () => {
+      onSignatureEnd({
+        imageData: sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'),
+        height: sigCanvas.current.getTrimmedCanvas().height,
+        width: sigCanvas.current.getTrimmedCanvas().width,
+      });
+    };
+    const clear = () => {
+      onSignatureClear();
+      sigCanvas.current.clear();
+    };
+    return (
+      <div className="relative">
+        <SignaturePad
+          ref={sigCanvas}
+          canvasProps={{
+            className: className,
+          }}
+          onEnd={onEnd}
+          clearOnResize={false}
+        />
+        <button onClick={clear} className="flex items-center gap-[2px] text-[10px] absolute top-[12px] right-[12px]">
+          <DeleteIcon className="text-gray4 h-[16px] w-[11px]" />
+          <span className="text-gray7 leading-4">remove</span>
+        </button>
+      </div>
+    );
+  };
   return (
-    <div className={`checkbox-wrapper ${className}`}>
+    <div className={`${className}`}>
       {label && (
-        <Text h4 className={saved ? 'text-gray4' : 'text-gray6'}>
+        <div className={`${saved ? 'text-gray4' : 'text-gray-700'} text-sm font-medium`}>
           {label} {optional && <span className="text-gray-500 ml-1">(optional)</span>}
           {required && <span className="text-gray-500 ml-1">*</span>}
-        </Text>
+        </div>
       )}
       {secondaryLabel && (
         <Text p className="text-gray4">
@@ -385,16 +423,18 @@ const Input = ({
         {type == 'phone'
           ? phoneInput()
           : type == 'phone_number'
-          ? InputPhone()
-          : type == 'checkbox'
-          ? checkboxInput()
-          : type == 'password'
-          ? passwordInput()
-          : type == 'money'
-          ? moneyInput()
-          : type === 'date'
-          ? dateInput()
-          : textInput()}
+            ? InputPhone()
+            : type == 'checkbox'
+              ? checkboxInput()
+              : type == 'password'
+                ? passwordInput()
+                : type == 'money'
+                  ? moneyInput()
+                  : type === 'date'
+                    ? dateInput()
+                    : type === 'signature'
+                      ? signatureInput()
+                      : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
       {error && errorText && (

@@ -15,6 +15,8 @@ import ContactSupport from '@mui/icons-material/ContactSupport';
 import { setAllContacts } from 'store/contacts/slice';
 import { useDispatch } from 'react-redux';
 import { getContacts } from 'api/contacts';
+import { menuItems } from '@global/variables';
+import PropTypes from 'prop-types';
 import { getCount } from 'api/contacts';
 import {
   setCount,
@@ -23,6 +25,7 @@ import {
   setRefetchData,
   setSkippedEmptyState,
   setUserGaveConsent,
+  setUserInfo,
 } from '@store/global/slice';
 import { SearchIcon } from '@heroicons/react/outline';
 import GlobalSearch from '@components/GlobalSearch';
@@ -30,10 +33,13 @@ import { getUserConsentStatus } from '@api/google';
 import Link from 'next/link';
 import { getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns } from '@store/campaigns/slice';
+import { getUserInfo, loadAfterSignInRedirect } from '@helpers/auth';
 import { isHealthyCommuncationDate } from '@global/functions';
 import ForwardToInbox from '@mui/icons-material/ForwardToInbox';
 
 const MainMenu = ({ className, fixed }) => {
+  const willRedirectAfterSignIn = loadAfterSignInRedirect(true);
+
   const [originalMenuItems, setOriginalMenuItems] = useState([
     {
       id: 0,
@@ -45,15 +51,15 @@ const MainMenu = ({ className, fixed }) => {
     //   name: 'Campaigns',
     //   url: '/campaigns/client-campaigns',
     // },
-    // {
-    //   id: 1,
-    //   name: 'Campaigns',
-    //   url: '/campaign',
-    // },
+    {
+      id: 1,
+      name: 'Campaigns',
+      url: '/campaign',
+    },
     {
       id: 2,
-      name: 'Reports',
-      url: '/reports',
+      name: 'Leaderboard',
+      url: '/leaderboard',
     },
     {
       id: 3,
@@ -64,6 +70,11 @@ const MainMenu = ({ className, fixed }) => {
       id: 4,
       name: 'Properties',
       url: '/properties',
+    },
+    {
+      id: 5,
+      name: 'Online Forms',
+      url: '/online-forms',
     },
   ]);
 
@@ -80,8 +91,8 @@ const MainMenu = ({ className, fixed }) => {
     },
     {
       id: 2,
-      name: 'Reports',
-      url: '/reports',
+      name: 'Leaderboard',
+      url: '/leaderboard',
     },
     {
       id: 3,
@@ -93,12 +104,16 @@ const MainMenu = ({ className, fixed }) => {
       name: 'Properties',
       url: '/properties',
     },
+    {
+      id: 5,
+      name: 'Online Forms',
+      url: '/online-forms',
+    },
   ]);
   const router = useRouter();
   const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
   const refetchCount = useSelector((state) => state.global.refetchCount);
   const refetchData = useSelector((state) => state.global.refetchData);
-  const user = useSelector((state) => state.global.user);
   const dispatch = useDispatch();
   const skippedEmptyState = useSelector((state) => state.global.skippedEmptyState);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
@@ -115,6 +130,20 @@ const MainMenu = ({ className, fixed }) => {
     router.push('/authentication/sign-in');
   };
 
+  const userInfo = useSelector((state) => state.global.userInfo);
+
+  useEffect(() => {
+    if (userGaveConsent == null || userGaveConsent == undefined) {
+      getUserConsentStatus()
+        .then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        })
+        .catch((error) => {
+          console.log(error, 'error');
+        });
+    }
+  }, []);
+
   const fetchContacts = async () => {
     try {
       const data = await getContacts();
@@ -122,9 +151,12 @@ const MainMenu = ({ className, fixed }) => {
       if (data.data.count === 0 && !skippedEmptyState) {
         localStorage.setItem('skippedEmptyState', true);
         dispatch(setSkippedEmptyState(true));
-        router.push({
-          pathname: '/contacts/clients',
-        });
+
+        if (!willRedirectAfterSignIn) {
+          router.push({
+            pathname: '/contacts/clients',
+          });
+        }
       }
     } catch (error) {
       console.error(error);
@@ -143,6 +175,14 @@ const MainMenu = ({ className, fixed }) => {
     fetchContacts();
   }, []);
 
+  const userInformation = useSelector((state) => state.global.userInfo);
+
+  useEffect(() => {
+    if (userInformation === null) {
+      const userInfo = getUserInfo();
+      dispatch(setUserInfo(userInfo));
+    }
+  }, [userInformation]);
   useEffect(() => {
     console.log(count, 'count');
   }, [count]);
@@ -155,7 +195,7 @@ const MainMenu = ({ className, fixed }) => {
     if (refetchData) {
       fetchCount();
     }
-  }, [refetchData]);
+  }, [count, allContacts, dispatch, router, skippedEmptyState]);
 
   const showUncategorizedButton = () => {
     return allContacts && allContacts.length > 0;
@@ -219,23 +259,17 @@ const MainMenu = ({ className, fixed }) => {
         </div>
         <div className="menu-links">
           <ul className="flex items-center">
-            {menuItems.map((item, index) => {
+            {menuItems.map((item) => {
               return (
-                <MenuLink
-                  key={item.id}
-                  className={`mr-5 ${
-                    item.url.split('/')[1] === 'campaign' && router.pathname.split('/')[1] === 'campaign'
-                      ? 'active-campaign'
-                      : router.pathname.split('/')[1] == item.url.split('/')[1] && item.url.split('/')[1] !== 'campaign'
-                      ? 'active'
-                      : ''
-                  }`}
-                  onClick={() => {
-                    dispatch(setOpenedTab(0));
-                    router.push(item.url);
-                  }}>
-                  {item.name}
-                </MenuLink>
+                <Link href={item.url} key={item.id} passHref>
+                  <MenuLink
+                    className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
+                    onClick={() => {
+                      dispatch(setOpenedTab(0));
+                    }}>
+                    {item.name}
+                  </MenuLink>
+                </Link>
               );
             })}
           </ul>
@@ -245,7 +279,10 @@ const MainMenu = ({ className, fixed }) => {
         {!router.pathname.includes('campaign') && (
           <>
             <a
-              onClick={() => dispatch(setOpenEmailContactOverlay(true))}
+              onClick={() => {
+                console.log('test');
+                dispatch(setOpenEmailContactOverlay(true));
+              }}
               className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
               <ForwardToInbox className="h-[16px] w-[16px]" />
               {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
@@ -326,8 +363,9 @@ const MainMenu = ({ className, fixed }) => {
                   <Image width={40} height={40} className="inline-block rounded-full" src={placeholder} alt="" />
                 </div>
                 <div className="max-w-[165px] w-full">
-                  {/* <p className="text-sm text-gray6 font-medium">Test User</p> */}
-                  <p className="truncate text-sm font-medium text-gray4">{user?.email ? user?.email : user}</p>
+                  <p className="truncate text-sm font-medium text-gray4">
+                    {userInfo?.first_name ? userInfo?.first_name + ' ' + userInfo?.last_name : userInfo?.email}
+                  </p>
                 </div>
               </div>
               <div className="py-1">
@@ -337,7 +375,7 @@ const MainMenu = ({ className, fixed }) => {
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => router.push('/my-profile')}>
+                      onClick={() => router.push('/settings/my-profile')}>
                       <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>
@@ -358,19 +396,13 @@ const MainMenu = ({ className, fixed }) => {
             </Menu.Items>
           </Transition>
         </Menu>
-        {/* <a href="#" onClick={() => Router.push('/my-profile')}>
-          <img
-            className="inline-block h-8 w-8 rounded-full"
-            src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
-            alt=""
-          />
-        </a>
-        <button className="text-white ml-2" onClick={handleSignOut}>
-          Sign out
-        </button> */}
       </div>
     </div>
   );
 };
 
 export default MainMenu;
+
+MainMenu.propTypes = {
+  fixed: PropTypes.bool,
+};

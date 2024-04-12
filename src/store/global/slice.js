@@ -38,6 +38,7 @@ const global = createSlice({
         ? localStorage.getItem('skippedEmptyState')
         : false,
     amenities: [],
+    userInfo: null,
   },
   reducers: {
     setOpenEmailContactOverlay(state, action) {
@@ -127,6 +128,9 @@ const global = createSlice({
     setAmenities(state, action) {
       state.amenities = action.payload;
     },
+    setUserInfo(state, action) {
+      state.userInfo = action.payload;
+    },
   },
 });
 
@@ -153,5 +157,6 @@ export const {
   setHideUnapproved,
   setContactToBeEmailed,
   setOpenEmailContactOverlay,
+  setUserInfo,
 } = global.actions;
 export default global.reducer;

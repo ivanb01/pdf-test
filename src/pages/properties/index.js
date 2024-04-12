@@ -1,8 +1,6 @@
 import PropertyCard from '@components/property-card';
 import MainMenu from '@components/shared/menu';
 import lookingForEmpty from '/public/images/looking-for-empty.svg';
-import saved from '/public/images/saved.svg';
-import sent from '/public/images/sent.svg';
 import Dropdown from '@components/shared/dropdown';
 import Search from '@components/shared/input/search';
 import { render } from '@react-email/components';
@@ -17,40 +15,27 @@ import {
 import fetchJsonp from 'fetch-jsonp';
 import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
-import Input from '@components/shared/input';
 import Button from '@components/shared/button';
-import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+import { useLoadScript } from '@react-google-maps/api';
 import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
-import { MultiSelect } from 'react-multi-select-component';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
-import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
-import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
-import { formatDateStringMDY, getInitials, searchContacts } from '@global/functions';
-import { ImageGallery } from '@components/overlays/order-template';
+import { getBaseUrl, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
-import { Tailwind, Button as Btn } from '@react-email/components';
-import { Html } from '@react-email/html';
-import Emails from '../../components/shared/emails';
 import { useDispatch } from 'react-redux';
-import { addContactActivity } from '@api/contacts';
 import FilterList from '@mui/icons-material/FilterList';
-import Close from '@mui/icons-material/Close';
-import chevronDown from '/public/images/ch-down.svg';
-
-const options = [
-  { label: 'Grapes 🍇', value: 'grapes' },
-  { label: 'Mango 🥭', value: 'mango' },
-  { label: 'Strawberry 🍓', value: 'strawberry', disabled: true },
-];
+import { addPropertiesInPortfolio } from '@api/portfolio';
+import { sendSMS } from '@api/email';
+import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
+import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -409,8 +394,9 @@ const index = () => {
 
     return [...selectedOptions, ...unselectedOptions];
   };
-
   const sortedNeighborhoods = sortOptionsByChecked(NYCneighborhoods, neighborhoods);
+
+  const [previewMode, setPreviewMode] = useState(false);
   const [openFilters, setOpenFilters] = useState(false);
   const [sendMethod, setSendMethod] = useState(1);
 
@@ -427,10 +413,11 @@ const index = () => {
       .sort((a, b) => a.first_name.localeCompare(b.first_name))
       .map((contact) => ({
         value: contact.id,
-        label: `${contact.first_name} ${contact.last_name}`,
+        label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
         first_name: contact.first_name,
         last_name: contact.last_name,
         email: contact.email,
+        phone_number: contact.phone_number,
         profile_image_path: contact.profile_image_path,
       }));
   }
@@ -443,9 +430,8 @@ const index = () => {
   }
 
   useEffect(() => {
-    console.log(sendMethod);
     setFilteredContacts(
-      sendMethod == 1
+      sendMethod !== 2
         ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
@@ -455,47 +441,88 @@ const index = () => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
   };
+  const userInfo = useSelector((state) => state.global.userInfo);
 
-  const [chunkedArray, setChunkedArray] = useState([]);
-
-  useEffect(() => {
-    const chunkedArray = [];
-    for (let i = 0; i < selectedProperties.length; i += 2) {
-      chunkedArray.push(selectedProperties.slice(i, i + 2));
-    }
-
-    setChunkedArray(chunkedArray);
-  }, [selectedProperties]);
   const [loadingEmails, setLoadingEmails] = useState(false);
-
   const _sendEmail = () => {
-    const propertyIds = selectedProperties.map((property) => `"${property.PROPERTY_TYPE} in ${property.ADDRESS}"`);
     setLoadingEmails(true);
-    selectedContacts.map((c) => {
-      addContactActivity(c.value, {
-        type_of_activity_id: 28,
-        description: `These properties were sent to this user on ${formatDateStringMDY(new Date())}: ${propertyIds.join(
-          ',  ',
-        )} `,
-      });
-      sendEmail(
-        [c.email],
-        `Hi ${c.first_name}, Check out these new properties.`,
-        `${render(<Emails chunkedArray={chunkedArray} firstName={c.first_name} agentName={user} />, {
-          pretty: true,
-        })}`,
-      ).then((res) => {
-        setLoadingEmails(false);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then((res) => {
+      setLoadingEmails(false);
+
+      if (res?.data.length === 0) {
         setPropertiesSent(true);
         resetPropertySelection();
+        return;
+      }
+      const newArray = res.data.map((item) => ({
+        portfolio_sharable_id: item.portfolio_sharable_id,
+        contact_id: item.contact_id,
+      }));
+      const uniqueArray = newArray.filter(
+        (item, index, array) =>
+          index ===
+          array.findIndex(
+            (obj) => obj.portfolio_sharable_id === item.portfolio_sharable_id && obj.contact_id === item.contact_id,
+          ),
+      );
+
+      uniqueArray.forEach((item) => {
+        selectedContacts.forEach((c) => {
+          if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
+            sendEmail(
+              [c.email],
+              `Hi ${c.first_name}, check out these new properties.`,
+              render(
+                <>
+                  <p style={{ color: '#344054', marginBottom: '32px' }}>
+                    Hey {c.first_name},
+                    <br />
+                    <br /> New properties have been added in your portfolio. View here:{' '}
+                    <a
+                      style={{ color: 'blue' }}
+                      role={'button'}
+                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
+                      Portfolio Link
+                    </a>
+                  </p>
+                  <p style={{ color: '#344054' }}>
+                    Best Regards,
+                    <br />
+                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      : userInfo?.email}
+                  </p>
+                </>,
+                {
+                  pretty: true,
+                },
+              ),
+            ).then((res) => {});
+            setPropertiesSent(true);
+            resetPropertySelection();
+          }
+          if (
+            parseInt(c.value) === parseInt(item.contact_id) &&
+            ((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))
+          ) {
+            sendSMS(
+              [c.phone_number],
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+            )
+              .then((res) => {})
+              .catch((error) => {
+                console.error('Error sending SMS:', error);
+                // Handle the error if needed
+              });
+            setPropertiesSent(true);
+            resetPropertySelection();
+          }
+        });
       });
     });
-  };
-
-  const sendSMS = () => {
-    setPropertiesSent(true);
-    console.log(selectedContacts, selectedProperties, 'sms');
-    resetPropertySelection();
   };
 
   const resetPropertySelection = () => {
@@ -506,7 +533,7 @@ const index = () => {
     if (!open) {
       setTimeout(() => {
         setPropertiesSent(false);
-        setSelectedContacts([]);
+        // setSelectedContacts([]);
       }, 500);
     }
   }, [open]);
@@ -606,8 +633,16 @@ const index = () => {
     };
   }, [setOpenDropdown]);
 
+  const [openSidebar, setOpenSidebar] = useState(true);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
+  useEffect(() => {
+    if (open === false) {
+      setTimeout(() => {
+        setPreviewMode(false);
+      }, [1000]);
+    }
+  }, [open]);
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
     const bIsSelected = isSelected(b);
@@ -619,6 +654,9 @@ const index = () => {
     }
     return 0;
   });
+  useEffect(() => {
+    console.log(sortedOptions, 'sortedOptions');
+  }, [sortedOptions]);
 
   useEffect(() => {
     console.log(selectedProperties);
@@ -718,7 +756,7 @@ const index = () => {
 
           <Dropdown
             options={roomsOptions}
-            className=" min-w-[100px]"
+            className=" min-w-[120px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
             handleSelect={(choice) => {
@@ -867,26 +905,23 @@ const index = () => {
                   </span>
                 </div>
                 <div className="flex">
-                  <Button white label="Save" className="mr-3" />
-                  <Button
-                    primary
-                    leftIcon={<MailIcon />}
-                    label="Send via Email"
-                    className="mr-3"
-                    onClick={() => {
-                      setSendMethod(1);
-                      setOpen(true);
-                    }}
-                  />
-                  {/*<Button*/}
-                  {/*  primary*/}
-                  {/*  leftIcon={<AtSymbolIcon />}*/}
-                  {/*  label="Send via SMS"*/}
-                  {/*  onClick={() => {*/}
-                  {/*    setSendMethod(2);*/}
-                  {/*    setOpen(true);*/}
-                  {/*  }}*/}
-                  {/*/>*/}
+                  {selectedProperties.length > 0 && (
+                    <SendPropertiesFooter
+                      selectedProperties={selectedProperties}
+                      onSendEmailAndSmsClick={() => {
+                        setSendMethod(3);
+                        setOpen(true);
+                      }}
+                      onSendSmsClick={() => {
+                        setSendMethod(2);
+                        setOpen(true);
+                      }}
+                      onSendEmailClick={() => {
+                        setSendMethod(1);
+                        setOpen(true);
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -924,180 +959,25 @@ const index = () => {
         setOpen={() => setOpenFilters(false)}
         selectedAmenities={selectedAmenities}
       />
-      <SlideOver
+      <PropertiesSlideOver
+        setSelectedContacts={setSelectedContacts}
+        setPropertiesSent={setPropertiesSent}
         open={open}
+        setSelectedProperties={setSelectedProperties}
         setOpen={setOpen}
-        withBackdrop
-        noHeader={!propertiesSent}
-        buttons={
-          propertiesSent ? null : (
-            <>
-              <Button
-                // disabled={!Object.values(clientsFilters).flat().length > 0}
-                transparent
-                label="Preview"
-              />
-              {sendMethod == 1 ? (
-                <Button
-                  primary
-                  leftIcon={<MailIcon />}
-                  loading={loadingEmails}
-                  label="Send via Email"
-                  onClick={() => _sendEmail()}
-                  disabled={!selectedContacts.length || !selectedProperties.length}
-                />
-              ) : (
-                <Button
-                  primary
-                  leftIcon={<AtSymbolIcon />}
-                  label="Send via SMS"
-                  onClick={() => sendSMS()}
-                  disabled={!selectedContacts.length || !selectedProperties.length}
-                />
-              )}
-            </>
-          )
-        }>
-        {propertiesSent ? (
-          <div className="text-center">
-            <lottie-player
-              src="/animations/aisummary1.json"
-              background="transparent"
-              speed="1"
-              style={{ height: '200px' }}
-              autoplay></lottie-player>
-            <div className="text-gray7 font-semibold text-[18px] -mt-7">
-              Properties have been successfully sent to your clients!
-            </div>
-            {/*<div className=" mt-2">*/}
-            {/*  All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}*/}
-            {/*  <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.*/}
-            {/*</div>*/}
-            <Button
-              primary
-              label="Back to Properties"
-              onClick={() => {
-                setTimeout(() => {
-                  setPropertiesSent(false);
-                  setSelectedContacts([]);
-                }, 500);
-                setOpen(false);
-              }}
-              className="mt-6"
-            />
-          </div>
-        ) : (
-          <div className="">
-            <div className="flex items-center justify-between  mb-2">
-              <div className="font-semibold text-gray7 text-[20px]">Select clients</div>
-              <button
-                type="button"
-                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
-                onClick={() => setOpen(false)}>
-                <span className="sr-only">Close panel</span>
-                <Close className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            {/* <Search
-              placeholder={`Search for clients`}
-              className="w-full text-sm mt-2"
-              onInput={(event) => handleSearch(event.target.value)}
-              // value={searchTerm}
-              // onInput={(event) => setSearchTerm(event.target.value)}
-            /> */}
-            {filteredContacts && filteredContacts.length && (
-              <MultiSelect
-                options={sortedOptions}
-                value={selectedContacts}
-                onChange={(contacts) => {
-                  setSelectedContacts(contacts);
-                }}
-                labelledBy="Search for clients"
-                overrideStrings={{
-                  selectSomeItems: 'Selected clients will appear here',
-                }}
-              />
-            )}
-            <div className="my-4">
-              <span className="font-semibold text-gray7 text-[18px]">{selectedContacts.length}</span>
-              <span className="text-gray8 text-[14px] font-medium">
-                {' '}
-                {selectedContacts.length == 1 ? 'Client' : 'Clients'} selected
-              </span>
-            </div>
-            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
-              {selectedContacts &&
-                selectedContacts.map((contact) => (
-                  <div className={'flex justify-between items-center mb-5 mr-4'}>
-                    <div className="flex gap-4">
-                      <div>
-                        {contact.profile_image_path ? (
-                          <img
-                            className="inline-block h-10 w-10 rounded-full"
-                            src={contact.profile_image_path}
-                            alt={contact.first_name}
-                          />
-                        ) : (
-                          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
-                            <span className="text-sm font-medium leading-none text-white">
-                              {getInitials(contact.first_name + ' ' + contact.last_name).toUpperCase()}
-                            </span>
-                          </span>
-                        )}
-                      </div>
-                      <div>
-                        <h6 className={'text-sm leading-5 text-gray7 font-semibold '}>
-                          {contact.first_name} {contact.last_name}
-                        </h6>
-                        <h6
-                          className={
-                            ' text-sm leading-5 font-medium text-gray5 ellipsis-email xl:min-w-[230px] lg:w-[130px]'
-                          }
-                          title={contact.email}>
-                          {contact.email}
-                        </h6>
-                      </div>
-                    </div>
-                    <div>
-                      <button
-                        className="text-sm font-semibold px-3 py-[6px] text-[#B91C1C]"
-                        onClick={() =>
-                          setSelectedContacts((prevSelected) =>
-                            prevSelected.filter((prevContact) => prevContact.value !== contact.value),
-                          )
-                        }>
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-            </SimpleBar>
-            <hr className="my-3" />
-            <div className="flex items-center justify-between">
-              <div className="font-semibold text-gray7 text-[20px]">Properties</div>
-              <a
-                className={`cursor-pointer transition-all ${showProperties ? '' : 'rotate-180'}`}
-                onClick={() => setShowProperties(!showProperties)}>
-                <img src={chevronDown.src} />
-              </a>
-            </div>
-            <div className="my-4">
-              <span className="font-semibold text-gray7 text-[18px]">{selectedProperties.length}</span>
-              <span className="text-gray8 font-medium text-[14px]">
-                {' '}
-                {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
-              </span>
-            </div>
-            {showProperties && (
-              <>
-                {selectedProperties.map((property) => (
-                  <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
-                ))}
-              </>
-            )}
-          </div>
-        )}
-      </SlideOver>
+        selectedContacts={selectedContacts}
+        filteredContacts={filteredContacts}
+        selectedProperties={selectedProperties}
+        loadingEmails={loadingEmails}
+        _sendEmail={_sendEmail}
+        showProperties={showProperties}
+        setShowProperties={setShowProperties}
+        previewMode={previewMode}
+        setPreviewMode={setPreviewMode}
+        sendMethod={sendMethod}
+        sortedOptions={sortedOptions}
+        propertiesSent={propertiesSent}
+      />
     </>
   );
 };

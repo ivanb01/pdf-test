@@ -34,7 +34,7 @@ const links = [
   },
 ];
 
-export const Header = () => {
+export const Header = ({ noLinks }) => {
   const user = useSelector((state) => state.global.user);
   let lastScrollPosition = 0;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,86 +79,102 @@ export const Header = () => {
   useEffect(() => {
     isLoggedIn();
   }, []);
-
   return (
     <header className={styles.header}>
-      <div className="container-public">
-        <div className={styles['header__content']}>
+      <div className="container-public" style={{ maxWidth: router.pathname?.includes('portfolio') && '100%' }}>
+        <div
+          className={styles['header__content']}
+          style={{ paddingInline: router.pathname?.includes('portfolio') ? '24px' : '80px' }}>
           <div className={styles['header__content-left']}>
             <Link href="/public/home">
               <Image src={logo} alt="oneline-logo" />
             </Link>
-            <div className={styles['hide-on-smaller-screens']}>
-              <ul className={styles['header__content-list']}>
-                {links.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>
-                      <div className={currentRoute === item.href ? styles.active : ''}> {item.label}</div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className={styles['header__content-right']}>
-            <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
-              {!isAuthenticated ? (
-                <Button
-                  type="secondary"
-                  onClick={() => router.push('/authentication/sign-in')}
-                  style={{ color: '#6B7280' }}>
-                  Log In
-                </Button>
-              ) : (
-                <Button type="secondary" onClick={() => router.push('/contacts/clients')} style={{ color: '#6B7280' }}>
-                  Go to CRM {'->'}
-                </Button>
-              )}
-              {/* <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
-                Register for Free
-              </Button> */}
-            </div>
-            <div className={styles['hide-on-bigger-screens']}>
-              <div onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <Image src={close} alt="icon-close-menu" /> : <Image src={open} alt="icon-open-menu" />}
-              </div>
-            </div>
-          </div>
-          {isMenuOpen && (
-            <div className={styles['header__content-menu']}>
-              <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
-                {!isAuthenticated ? (
-                  <Button
-                    className="w-full"
-                    type="primaryLight"
-                    style={{ color: '#6B7280' }}
-                    onClick={() => router.push('/authentication/sign-in')}>
-                    Log In
-                  </Button>
-                ) : (
-                  <Button
-                    className="w-full"
-                    type="primaryLight"
-                    onClick={() => router.push('/contacts/clients')}
-                    style={{ color: '#6B7280' }}>
-                    Go to CRM {'->'}
-                  </Button>
-                )}
-                {links.map((item) => (
-                  <>
+            {!noLinks && (
+              <div className={styles['hide-on-smaller-screens']}>
+                <ul className={styles['header__content-list']}>
+                  {links.map((item) => (
                     <li key={item.href}>
                       <Link href={item.href}>
-                        <div
-                          onClick={() => setIsMenuOpen(!isMenuOpen)}
-                          className={currentRoute === item.href ? styles.active : styles.active}>
-                          {' '}
-                          {item.label}
-                        </div>
+                        <div className={currentRoute === item.href ? styles.active : ''}> {item.label}</div>
                       </Link>
                     </li>
-                  </>
-                ))}
-              </ul>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          {!noLinks && (
+            <div>
+              <div className={styles['header__content-right']}>
+                <div className={clsx(styles['header__content-right-buttons'], styles['hide-on-smaller-screens'])}>
+                  {!isAuthenticated ? (
+                    <>
+                      <Button
+                        type="secondary"
+                        onClick={() => router.push('/authentication/sign-in')}
+                        style={{ color: '#6B7280' }}>
+                        Log In
+                      </Button>
+                      <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+                        Register for Free
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      type="secondary"
+                      onClick={() => router.push('/contacts/clients')}
+                      style={{ color: '#6B7280' }}>
+                      Go to CRM {'->'}
+                    </Button>
+                  )}
+                </div>
+                <div className={styles['hide-on-bigger-screens']}>
+                  <div onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    {isMenuOpen ? (
+                      <Image src={close} alt="icon-close-menu" />
+                    ) : (
+                      <Image src={open} alt="icon-open-menu" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              {isMenuOpen && (
+                <div className={styles['header__content-menu']}>
+                  <ul className={clsx(styles['header__content-list'], styles['header__content-list--mobile'])}>
+                    {!isAuthenticated ? (
+                      <Button
+                        className="w-full"
+                        type="primaryLight"
+                        style={{ color: '#6B7280' }}
+                        onClick={() => router.push('/authentication/sign-in')}>
+                        Log In
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full"
+                        type="primaryLight"
+                        onClick={() => router.push('/contacts/clients')}
+                        style={{ color: '#6B7280' }}>
+                        Go to CRM {'->'}
+                      </Button>
+                    )}
+                    {links.map((item) => (
+                      <>
+                        <li key={item.href}>
+                          <Link href={item.href}>
+                            <div
+                              onClick={() => setIsMenuOpen(!isMenuOpen)}
+                              className={currentRoute === item.href ? styles.active : styles.active}>
+                              {' '}
+                              {item.label}
+                            </div>
+                          </Link>
+                        </li>
+                      </>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,103 +1,88 @@
-import exampleTheme from 'themes/ExampleTheme';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-import ToolbarPlugin from 'plugins/ToolbarPlugin';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
-import { ListItemNode, ListNode } from '@lexical/list';
-import { CodeHighlightNode, CodeNode } from '@lexical/code';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
-import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { TRANSFORMERS } from '@lexical/markdown';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import ListMaxIndentLevelPlugin from 'plugins/ListMaxIndentLevelPlugin';
-import CodeHighlightPlugin from 'plugins/CodeHighlightPlugin';
-import AutoLinkPlugin from 'plugins/AutoLinkPlugin';
-import { $generateHtmlFromNodes } from '@lexical/html';
+import React, { useRef } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 
-import Text from '@components/shared/text';
-import { useEffect } from 'react';
-
-function Placeholder() {
-  return <div className="editor-placeholder text-sm text-gray4">Enter the email content...</div>;
-}
-
-const editorConfig = {
-  // The editor theme
-  theme: exampleTheme,
-  // Handling of errors during update
-  onError(error) {
-    throw error;
-  },
-  // Any custom nodes go here
-  nodes: [
-    HeadingNode,
-    ListNode,
-    ListItemNode,
-    QuoteNode,
-    CodeNode,
-    CodeHighlightNode,
-    TableNode,
-    TableCellNode,
-    TableRowNode,
-    AutoLinkNode,
-    LinkNode,
-  ],
-};
-
-export default function Editor({ label, message, setValue }) {
-  function ContinuousSaveComponent() {
-    const [editor] = useLexicalComposerContext();
-
-    useEffect(() => {
-      const removeListener = editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          const htmlString = $generateHtmlFromNodes(editor, null);
-          setValue(htmlString);
-        });
-      });
-
-      return () => removeListener();
-    }, [editor]);
-
-    // This component doesn't render anything itself
-    return null;
-  }
+export default function RichtextEditor({ label, value, onContentChange, height, id }) {
+  const editorRef = useRef(null);
 
   return (
     <>
-      {label && (
-        <Text h4 className={'text-gray6 mb-1'}>
-          {label}
-        </Text>
-      )}
-      <LexicalComposer initialConfig={editorConfig}>
-        <div className="editor-container rounded-lg border border-borderColor overflow-hidden">
-          <ToolbarPlugin />
-          <div className="editor-inner">
-            <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
-              placeholder={<Placeholder />}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <ContinuousSaveComponent />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
-            <CodeHighlightPlugin />
-            <ListPlugin />
-            <LinkPlugin />
-            <AutoLinkPlugin />
-            <ListMaxIndentLevelPlugin maxDepth={7} />
-            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-          </div>
-        </div>
-      </LexicalComposer>
+      <Editor
+        id={id}
+        apiKey="6fbb5ydazy62w7lpag3txdszeyvqys6288392vd1e6acpxs7"
+        onInit={(evt, editor) => (editorRef.current = editor)}
+        value={value}
+        init={{
+          height: height ?? 350,
+          branding: false,
+          menubar: false,
+          plugins: [
+            'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'preview',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'code',
+            'help',
+            'wordcount',
+          ],
+          toolbar:
+            'undo redo | variables | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+          setup: (editor) => {
+            editor.ui.registry.addMenuButton('variables', {
+              text: 'Variables',
+              fetch: (callback) => {
+                const items = [
+                  {
+                    type: 'menuitem',
+                    text: 'Client First Name',
+                    onAction: () => editor.insertContent('{{client_first_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Client Last Name',
+                    onAction: () => editor.insertContent('{{client_last_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Client Full Name',
+                    onAction: () => editor.insertContent('{{client_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent First Name',
+                    onAction: () => editor.insertContent('{{agent_first_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent Last Name',
+                    onAction: () => editor.insertContent('{{agent_last_name}}'),
+                  },
+                  {
+                    type: 'menuitem',
+                    text: 'Agent Full Name',
+                    onAction: () => editor.insertContent('{{agent_name}}'),
+                  },
+                ];
+                callback(items);
+              },
+            });
+          },
+        }}
+        onEditorChange={onContentChange}
+      />
+
+      {/* <button onClick={log}>Log editor content</button> */}
     </>
   );
 }

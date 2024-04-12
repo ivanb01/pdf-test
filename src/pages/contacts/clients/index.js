@@ -1,19 +1,21 @@
 import Layout from 'components/Layout';
 import Clients from 'components/Contacts/clients-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setRefetchData, setUnapprovedContacts, setUserGaveConsent } from 'store/global/slice';
+import { setCount, setOpenedTab, setRefetchData, setUserGaveConsent } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContacts } from 'store/contacts/slice';
+import { setAllContacts, setContacts } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { clientStatuses, clientOptions } from 'global/variables';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { getUnapprovedContacts } from '@api/aiSmartSync';
-import SmartSyncActivatedOverlay from '@components/overlays/smart-sync-activated';
 import ReviewContact from '@components/overlays/review-contact';
-import { getGoogleAuthCallback, getUserConsentStatus } from '@api/google';
+import { getGoogleAuthCallback, getUserConsentStatus, postGoogleContacts } from '@api/google';
 import withAuth from '@components/withAuth';
+import { getAIContacts, syncEmailOfContact } from '@api/email';
+import ImportingContactsPopup from '@components/overlays/importing-contacts-popup';
+import ContactsImportedSuccessfullyPopup from '@components/overlays/contacts-imported-successful';
+import { getContacts, getCount } from '@api/contacts';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -25,20 +27,17 @@ const index = () => {
   const [showEditContact, setShowEditContact] = useState(false);
   const [contactToEdit, setContactToEdit] = useState(null);
   const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
-  const [contactsCopy, setContactsCopy] = useState();
-  const [showSmartSyncOverlay, setShowSmartSyncOverlay] = useState(false);
-  const [activatingSmartSync, setActivatingSmartSync] = useState(false);
-
   const [loading, setLoading] = useState(true);
-
-  // const unapprovedContacts = useSelector((state) => state.global.unapprovedContacts);
-  const userGaveConsent = useSelector((state) => state.global.userGaveConsent);
-  const refetchData = useSelector((state) => state.global.refetchData);
-  const openedTab = useSelector((state) => state.global.openedTab);
-  const openedSubtab = useSelector((state) => state.global.openedSubtab);
-  const allContacts = useSelector((state) => state.contacts.allContacts);
-
   const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
+  const { refetchData, openedTab, openedSubtab } = useSelector((state) => state.global);
+  const [currentButton, setCurrentButton] = useState(0);
+  const [finishedOnboarding, setFinishedOnboarding] = useState(false);
+  const [loadingPopup, setLoadingPopup] = useState(undefined);
+  const [success, setSuccess] = useState(undefined);
+  const [openTour, setOpenTour] = useState(localStorage.getItem('openTour') === 'true' ? 'true' : 'false');
+  const [renderTour, setRenderTour] = useState(false);
+  const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
 
   useEffect(() => {
     const ai_unapproved = allContacts?.data?.filter(
@@ -59,10 +58,6 @@ const index = () => {
   //   }
   // };
 
-  // useEffect(() => {
-  //   fetchUnapproved();
-  // }, []);
-
   useEffect(() => {
     setLoading(true);
   }, [openedTab]);
@@ -73,7 +68,6 @@ const index = () => {
       data: allContacts.data.filter((contact) => [4, 5, 6, 7].includes(contact.category_id)),
     };
     dispatch(setContacts(clients));
-    setContactsCopy(clients);
     setLoading(false);
     dispatch(setOpenedTab(0));
   };
@@ -91,10 +85,6 @@ const index = () => {
     }
   }, [refetchData]);
 
-  // useEffect(() => {
-  // }, [])
-  const [currentButton, setCurrentButton] = useState(0);
-
   useEffect(() => {
     let currentView = localStorage.getItem('currentView') ? localStorage.getItem('currentView') : 0;
     setCurrentButton(currentView);
@@ -106,42 +96,88 @@ const index = () => {
   };
 
   useEffect(() => {
+    let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
+    setFinishedOnboarding(finishedTour);
+  }, [router.query]);
+
+  useEffect(() => {
+    let _openTour = localStorage.getItem('openTour') === 'true' ? 'true' : 'false';
+    setOpenTour(_openTour);
+  }, [renderTour]);
+
+  useEffect(() => {
+    if (success === true && !loadingPopup) {
+      setOpenSuccessPopup(true);
+    }
+  }, [success, loadingPopup]);
+  const handleImportGoogleContact = async () => {
+    try {
+      setLoadingPopup(true);
+      setTimeout(async () => {
+        const [promise1, promise2] = await Promise.all([
+          postGoogleContacts()
+            .then(() => {})
+            .catch(() => {
+              throw new Error();
+            }),
+          syncEmailOfContact()
+            .then(() => {})
+            .catch((err) => {}),
+        ]);
+
+        await getAIContacts()
+          .then(() => {})
+          .catch((err) => {});
+
+        await getUserConsentStatus().then((results) => {
+          dispatch(setUserGaveConsent(results.data.scopes));
+        });
+
+        await getContacts().then((res) => {
+          dispatch(setAllContacts(res.data));
+        });
+        await getCount().then((data) => {
+          dispatch(setCount(data.data));
+          setLoadingPopup(false);
+          setSuccess(true);
+          setOpenSuccessPopup(true);
+        });
+      }, 4000);
+    } catch (error) {}
+  };
+
+  const handleGoogleAuthCallback = async (queryParams) => {
+    try {
+      setLoadingPopup(true);
+      await getGoogleAuthCallback(queryParams, '/contacts/clients');
+      await handleImportGoogleContact();
+    } catch (error) {}
+  };
+
+  useEffect(() => {
     const queryParams = {};
     for (const [key, value] of Object.entries(router.query)) {
       queryParams[key] = value;
     }
     if (Object.keys(queryParams).length > 0) {
-      if (queryParams?.code && queryParams?.prompt == 'consent') {
-        setActivatingSmartSync(true);
-        setShowSmartSyncOverlay(true);
-        getGoogleAuthCallback(queryParams, '/contacts/clients')
-          .then(() => {
-            getUserConsentStatus()
-              .then((results) => {
-                setActivatingSmartSync(false);
-                dispatch(setUserGaveConsent(results.data.scopes));
-              })
-              .catch((error) => {
-                console.log(error, 'error');
-              });
-          })
-          .catch((error) => {
-            console.log(error, 'error');
-          });
+      if (queryParams?.start_importing) {
+        handleImportGoogleContact();
+      } else if (queryParams?.code && queryParams?.authuser && finishedOnboarding) {
+        handleGoogleAuthCallback(queryParams);
       }
     }
   }, [router.query]);
 
-  useEffect(() => {
-    if (
-      router.query.code &&
-      router.query.prompt == 'consent' &&
-      userGaveConsent?.includes('gmail') &&
-      userGaveConsent?.includes('contacts')
-    ) {
-      setShowSmartSyncOverlay(true);
-    }
-  }, [userGaveConsent, router.query]);
+  // useEffect(() => {
+  //   if (
+  //     router.query.code &&
+  //     router.query.prompt == 'consent' &&
+  //     userGaveConsent?.includes('gmail') &&
+  //     userGaveConsent?.includes('contacts')
+  //   ) {
+  //     setShowSmartSyncOverlay(true);
+  //   }
+  // }, [userGaveConsent, router.query]);
 
   return (
     <Layout>
@@ -149,11 +185,22 @@ const index = () => {
         <Loader />
       ) : (
         <>
-          {showSmartSyncOverlay && (
-            <SmartSyncActivatedOverlay
-              activatingSmartSync={activatingSmartSync}
-              handleCloseOverlay={() => setShowSmartSyncOverlay(false)}
-            />
+          {/*{showSmartSyncOverlay && (*/}
+          {/*  <SmartSyncActivatedOverlay*/}
+          {/*    activatingSmartSync={activatingSmartSync}*/}
+          {/*    handleCloseOverlay={() => setShowSmartSyncOverlay(false)}*/}
+          {/*  />*/}
+          {/*)}*/}
+          {openTour === 'false' ? (
+            loadingPopup === true ? (
+              <ImportingContactsPopup />
+            ) : openSuccessPopup ? (
+              <ContactsImportedSuccessfullyPopup />
+            ) : (
+              <></>
+            )
+          ) : (
+            <Tour setUpdateOpenTour={() => setRenderTour(true)} />
           )}
           <Clients
             currentButton={currentButton}
@@ -165,9 +212,8 @@ const index = () => {
             unapprovedContacts={unapprovedContacts.length > 0 ? unapprovedContacts : 0}
             setShowAddContactOverlay={setShowAddContactOverlay}
           />
-          {/* <Tour for={'clients'} /> */}
           {currentButton == 0 && openedTab == 0 && openedSubtab == -1 && (
-            <div class="arrow pointer-events-none">
+            <div className="arrow pointer-events-none">
               <span></span>
               <span></span>
               <span></span>

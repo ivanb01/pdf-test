@@ -100,32 +100,26 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
   };
 
   const _addActivity = () => {
+    let activityToBeLogged = null;
     switch (name) {
       case 'Whatsapp':
-        return {
+        activityToBeLogged = {
           type_of_activity_id: 26,
           description: 'Attempted to communicate using Whatsapp.',
         };
-      case 'Email':
-        return {
-          type_of_activity_id: 1,
-          description: 'Attempted to communicate using Email.',
-        };
+        break;
       case 'SMS':
-        return {
+        activityToBeLogged = {
           type_of_activity_id: 2,
           description: 'Attempted to communicate using SMS.',
         };
-      default:
-        return {};
+        break;
     }
+    return activityToBeLogged;
   };
 
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
-  useEffect(() => {
-    console.log(allContacts, 'allContacts');
-  }, [allContacts]);
   return (
     <div
       className={'w-full relative max-w-[270px] communication-box-shadow group'}
@@ -152,11 +146,13 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
             disabled={disabled}
             onClick={() => {
               dispatch(updateContactLocally({ ...client, last_communication_date: new Date() }));
-              addContactActivity(client.id, _addActivity()).then(() => {
-                if (setActivities) {
-                  getContactActivities(client.id).then((response) => setActivities(response.data.data));
-                }
-              });
+              if (_addActivity() !== null) {
+                addContactActivity(client.id, _addActivity()).then(() => {
+                  if (setActivities) {
+                    getContactActivities(client.id).then((response) => setActivities(response.data.data));
+                  }
+                });
+              }
               sendCommunication();
             }}
             className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 bg-white`}>

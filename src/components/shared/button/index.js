@@ -167,7 +167,7 @@ const Button = ({
         {...props}>
         {loading && <CircularProgress size={15} sx={{ color: 'white' }}></CircularProgress>}
         {leftIcon && !loading && (
-          <div className={`mr-1 -ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
+          <div className={` -ml-0.5 ${label || (children && 'mr-2')} ${iconSize ? iconSize : 'h-4 w-4'}`}>
             {leftIcon}
           </div>
         )}
@@ -186,7 +186,7 @@ const Button = ({
     return (
       <button
         type="button"
-        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center "
+        className={`text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center ${className}`}
         onClick={onClick}>
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path

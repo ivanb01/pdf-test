@@ -10,25 +10,40 @@ import Loader from '@components/shared/loader';
 import useElementInView from '../../hooks/useElementInScreen';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { useDispatch, useSelector } from 'react-redux';
+import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
+import { clientOptions } from '@global/variables';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const uniqueCategories = ['Renter', 'Buyer', 'Seller', 'Landlord'];
+  const uniqueCategories = ['All Client', 'Renter', 'Buyer', 'Seller', 'Landlord'];
   const [loading, setLoading] = useState(false);
+  const [showCreateCampaign, setShowCreateCampaign] = useState(false);
   const elementRef = useRef(null);
   let isVisible = useElementInView(elementRef);
   const dispatch = useDispatch();
   const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
 
   const renderCampaignWrapper = (category) => {
-    const filteredCampaigns = CRMCampaigns?.campaigns?.filter(
-      (campaign) =>
-        (campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        campaign.contact_category_2 === category,
-    );
+    let filteredCampaigns;
+    if (category == 'All Client') {
+      filteredCampaigns = CRMCampaigns?.campaigns?.filter(
+        (campaign) =>
+          (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          campaign.contact_category_id === null &&
+          campaign.contact_status_id === null,
+      );
+    } else {
+      filteredCampaigns = CRMCampaigns?.campaigns?.filter(
+        (campaign) =>
+          (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          clientOptions.find((option) => option.id == campaign.contact_category_id)?.name === category,
+      );
+    }
 
     return (
       <CampaignWrapper
@@ -130,8 +145,8 @@ const index = () => {
   const contacts = useSelector((state) => state.contacts.data.data);
 
   useEffect(() => {
-    if (contacts === undefined) {
-      getCampaignsByCategory('Client')
+    if (contacts === undefined && CRMCampaigns === undefined) {
+      getCampaignsByCategory('Clients')
         .then((res) => {
           setLoading(true);
           dispatch(setCRMCampaigns(res.data));
@@ -139,11 +154,14 @@ const index = () => {
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [contacts]);
 
   return (
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+      <CreateCampaignSidebar open={showCreateCampaign} setOpen={setShowCreateCampaign} />
       <div ref={elementRef}>
         <MainMenu />
       </div>
@@ -166,11 +184,13 @@ const index = () => {
           setCurrent={setCurrent}
           tabs={localTabs}
           wrapperClassName={`bg-white mt-5`}
-          className={'mx-auto bg-white'}
+          className={'flex justify-between items-center px-[50px] bg-white'}
           navClassName={'justify-center'}
+          addCampaignButton
+          triggerCreateCustomCampaign={() => setShowCreateCampaign(true)}
         />
       </div>
-      <CustomCampaign />
+      <CustomCampaign onClick={() => setShowCreateCampaign(true)} />
     </div>
   );
 };

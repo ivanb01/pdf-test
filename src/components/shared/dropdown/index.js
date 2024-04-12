@@ -79,7 +79,7 @@ const Dropdown = ({
                 <Listbox.Button
                   className={`${selectClasses ? selectClasses : 'bg-white border rounded-md'} ${inputWidth} relative ${
                     !inputWidth && 'w-full'
-                  } border-borderColor h-[38px] pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}>
+                  } border-borderColor h-[38px] pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm ${error && 'border-red-300 focus:border-red-600 focus:ring-red-600'}`}>
                   <span
                     className={`${
                       selectedOption === 'statusColor' && `absolute top-4 ${selected?.color} w-2 h-2 mr-2 rounded-full`
@@ -94,10 +94,10 @@ const Dropdown = ({
                     {selected && minMaxUsed
                       ? formatNumberToMillions(selected)
                       : selected && afterLabel
-                      ? selected.label + ` ${afterLabel}`
-                      : typeof selected === 'number' || typeof selected === 'string'
-                      ? selected
-                      : selected?.label}
+                        ? selected.label + ` ${afterLabel}`
+                        : typeof selected === 'number' || typeof selected === 'string'
+                          ? selected
+                          : selected?.label}
                   </span>
                   <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <ChevronDownIcon

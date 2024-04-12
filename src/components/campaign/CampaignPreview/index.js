@@ -8,6 +8,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getAllEvents } from '@api/campaign';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import DOMPurify from 'dompurify';
 
 const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [campaignData, setCampaignData] = useState();
@@ -24,6 +25,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
   const [activeEvent, setActiveEvent] = useState();
   useEffect(() => {
     if (campaignData) {
+      console.log(campaignData);
       setActiveEvent(campaignData?.events[0]);
     }
   }, [campaignData]);
@@ -64,7 +66,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
         <div className="fixed inset-0" />
         <div className={`fixed inset-0 overflow-hidden bg-transparentBlack ${className}`}>
           <div className="absolute inset-0 overflow-hidden">
-            <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[900px]`}>
+            <div className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[1240px]`}>
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -81,7 +83,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                     <div className="flex flex-shrink-0 justify-between items-center p-6 border-b border-gray2">
                       <div className={'flex flex-col gap-1'}>
                         <Dialog.Title className="text-base font-medium text-gray-900">
-                          {campaignData?.campaign_name}
+                          {campaignData?.name}
                         </Dialog.Title>
                         {campaignData === undefined ? (
                           <div className="animate-pulse  bg-gray-300 w-[120px] h-4"></div>
@@ -92,10 +94,10 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                               {campaignData.events?.filter((event) => event.event_type === 'Email').length}{' '}
                               <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
                             </span>
-                            <span>
-                              {campaignData.events?.filter((event) => event.event_type === 'SMS').length}{' '}
-                              <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
-                            </span>
+                            {/*<span>*/}
+                            {/*  {campaignData.events?.filter((event) => event.event_type === 'SMS').length}{' '}*/}
+                            {/*  <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />*/}
+                            {/*</span>*/}
                           </div>
                         )}
                       </div>
@@ -224,9 +226,14 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                     }>
                                     MESSAGE
                                   </span>
-                                  <p className={'text-sm leading-5 font-normal text-gray5'}>
-                                    {activeEvent?.preview?.preview?.body_text ?? activeEvent?.preview?.preview?.message}
-                                  </p>
+                                  <div
+                                    className="richtext-styling text-sm leading-5 font-normal text-gray5"
+                                    dangerouslySetInnerHTML={{
+                                      __html: DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
+                                        ? DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
+                                        : DOMPurify.sanitize(activeEvent?.preview?.preview?.message),
+                                    }}
+                                  />
                                 </div>
                               </div>
                             </div>

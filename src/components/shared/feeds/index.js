@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChatAltIcon, UserCircleIcon, PhoneIcon, ChatAlt2Icon } from '@heroicons/react/solid';
-import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore } from 'global/functions';
+import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore, timeAgo } from 'global/functions';
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
@@ -21,37 +20,45 @@ import { setActivityLogData } from '@store/clientDetails/slice';
 import SimpleBar from 'simplebar-react';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TooltipComponent from '@components/shared/tooltip';
+import EmailsPopup from '@components/overlays/email-threads';
+import { getEmailsForSpecificContact } from '@api/email';
+import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
+import Loader from '@components/shared/loader';
 
-export default function Feeds({ showFullHeight, contactId, activities, setActivities, height, filter }) {
-  const placeholderDescription = (activity_type) => {
-    if (activity_type == 1) {
-      return 'Email Sent to contact';
-    }
-    if (activity_type == 2) {
-      return 'SMS sent to contact';
-    }
-    if (activity_type == 3) {
-      return 'Phone Call with contact';
-    }
-    if (activity_type == 4) {
-      return 'Contacted on Social Media';
-    }
-    if (activity_type == 5) {
-      return 'Contacted in person';
-    }
-  };
-
+export default function Feeds({
+  showFullHeight,
+  contactId,
+  activities,
+  setActivities,
+  activityId: filteredActivityType,
+  contactEmail,
+  showGmailInbox,
+  setShowGmailInbox,
+}) {
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
   const [activityId, setActivityId] = useState(0);
   const [activityTypeToEdit, setActivityTypeToEdit] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
-
+  const [openEmailsPopup, setOpenEmailsPopup] = useState(false);
+  const [inboxLoading, setInboxLoading] = useState(false);
+  const [inboxData, setInboxData] = useState([]);
+  const [threadData, setThreadData] = useState([]);
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
   });
 
+  useEffect(() => {
+    if (showGmailInbox) {
+      console.log(showGmailInbox);
+      setInboxLoading(true);
+      getEmailsForSpecificContact(contactEmail).then((res) => {
+        setInboxData(res.data);
+        setInboxLoading(false);
+      });
+    }
+  }, [showGmailInbox]);
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -154,125 +161,197 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
       handleClick: handleDeleteActivity,
     },
   ];
+  const [threadId, setThreadId] = useState();
+  useEffect(() => {
+    if (openEmailsPopup) {
+      setThreadData(inboxData[threadId]);
+    }
+  }, [inboxData, threadId]);
 
   return (
     <>
-      <div className="bg-white">
-        <SimpleBar
-          style={{
-            maxHeight: showFullHeight ? '100%' : '280px',
-            paddingRight: '-10px',
-          }}
-          autoHide>
-          <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
-            {activities
-              ?.slice()
-              .sort((a, b) => b.id - a.id)
-              .map((activityItem, activityItemIdx) => (
-                <li key={activityItemIdx}>
-                  <div className="relative pb-8 flex justify-between">
-                    {activityItemIdx !== activities.length - 1 ? (
-                      <span
-                        style={{ zIndex: '0 !important' }}
-                        className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <div className="relative flex items-start space-x-3">
-                      <>
-                        <div className="relative">
-                          <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                            {activityTypeIcons[activityItem.type_of_activity_id] ?? (
-                              <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
-                            )}
+      {!showGmailInbox ? (
+        activities.length > 0 ? (
+          <SimpleBar style={{ maxHeight: '300px' }}>
+            <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
+              {activities
+                ?.slice()
+                .sort((a, b) => b.id - a.id)
+                .map((activityItem, activityItemIdx) => (
+                  <li key={activityItemIdx}>
+                    <div className="relative pb-8 flex justify-between">
+                      {activityItemIdx !== activities.length - 1 ? (
+                        <span
+                          style={{ zIndex: '0 !important' }}
+                          className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                      <div className="relative flex items-start space-x-3">
+                        <>
+                          <div className="relative">
+                            <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                              {activityTypeIcons[activityItem.type_of_activity_id] ?? (
+                                <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          {activityItem.created_at && (
-                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
-                              <TooltipComponent
-                                side={'right'}
-                                align="center"
-                                triggerElement={
-                                  <div className={'mr-3'}>
-                                    Created:{' '}
+                          <div className="min-w-0 flex-1">
+                            {activityItem.created_at && (
+                              <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                                <TooltipComponent
+                                  side={'right'}
+                                  align="center"
+                                  triggerElement={
+                                    <div className={'mr-3'}>
+                                      Created:{' '}
+                                      {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Today')
+                                        ? formatDateCalendar(activityItem.created_at)
+                                        : daysBefore(activityItem.created_at)}
+                                    </div>
+                                  }>
+                                  <h1 className={'text-sm'}>
                                     {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.created_at).includes('Last') ||
-                                    formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
-                                    formatDateCalendar(activityItem.created_at).includes('Today')
-                                      ? formatDateCalendar(activityItem.created_at)
-                                      : daysBefore(activityItem.created_at)}
-                                  </div>
-                                }>
-                                <h1 className={'text-sm'}>
-                                  {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.created_at).includes('PM')
-                                    ? formatDateStringMDY(activityItem.created_at)
-                                    : formatDateCalendar(activityItem.created_at) +
-                                      ' - ' +
-                                      formatDateLThour(activityItem.created_at)}
-                                </h1>
-                              </TooltipComponent>
-                            </p>
-                          )}
-                          {activityItem.updated_at && (
-                            <p className="mt-0.5 text-sm text-gray-500 w-fit">
-                              <TooltipComponent
-                                side={'right'}
-                                align="center"
-                                triggerElement={
-                                  <div>
-                                    Updated:{' '}
+                                    formatDateCalendar(activityItem.created_at).includes('PM')
+                                      ? formatDateStringMDY(activityItem.created_at)
+                                      : formatDateCalendar(activityItem.created_at) +
+                                        ' - ' +
+                                        formatDateLThour(activityItem.created_at)}
+                                  </h1>
+                                </TooltipComponent>
+                              </p>
+                            )}
+                            {activityItem.updated_at && (
+                              <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                                <TooltipComponent
+                                  side={'right'}
+                                  align="center"
+                                  triggerElement={
+                                    <div>
+                                      Updated:{' '}
+                                      {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Today')
+                                        ? formatDateCalendar(activityItem.updated_at)
+                                        : daysBefore(activityItem.updated_at)}
+                                    </div>
+                                  }>
+                                  <h1 className={'text-sm'}>
                                     {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('Last') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('Today')
-                                      ? formatDateCalendar(activityItem.updated_at)
-                                      : daysBefore(activityItem.updated_at)}
-                                  </div>
-                                }>
-                                <h1 className={'text-sm'}>
-                                  {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                  formatDateCalendar(activityItem.updated_at).includes('PM')
-                                    ? formatDateStringMDY(activityItem.updated_at)
-                                    : formatDateCalendar(activityItem.updated_at) +
-                                      ' - ' +
-                                      formatDateLThour(activityItem.updated_at)}
-                                </h1>
-                              </TooltipComponent>
-                              {/* Commented 6d ago */}
-                            </p>
-                          )}
-                          <div className="mt-2 text-sm text-gray6">
-                            <p>
-                              {activityItem.description
-                                ? activityItem.description
-                                : placeholderDescription(activityItem.type_of_activity_id)}
-                            </p>
+                                    formatDateCalendar(activityItem.updated_at).includes('PM')
+                                      ? formatDateStringMDY(activityItem.updated_at)
+                                      : formatDateCalendar(activityItem.updated_at) +
+                                        ' - ' +
+                                        formatDateLThour(activityItem.updated_at)}
+                                  </h1>
+                                </TooltipComponent>
+                                {/* Commented 6d ago */}
+                              </p>
+                            )}
+                            <div className="mt-2 text-sm text-gray6 break-word">
+                              <code></code>
+                              <ActivityDescription activityItem={activityItem} />
+                            </div>
                           </div>
+                        </>
+                      </div>
+                      {activityItem.contact_id && (
+                        <div className="flex mr-3">
+                          <FilterDropdown
+                            types={[types[1]]}
+                            icon={<More className="w-5 text-gray4 cursor-pointer" />}
+                            data={activityItem}
+                            side={'left'}
+                            align={'center'}
+                            positionClass="right-7 top-0"
+                          />
                         </div>
-                      </>
+                      )}
                     </div>
-                    {activityItem.contact_id && (
-                      <div className="flex mr-3">
-                        <FilterDropdown
-                          types={[types[1]]}
-                          icon={<More className="w-5 text-gray4 cursor-pointer" />}
-                          data={activityItem}
-                          side={'left'}
-                          align={'center'}
-                          positionClass="right-7 top-0"
+                  </li>
+                ))}
+            </ul>
+          </SimpleBar>
+        ) : (
+          <div className="mt-5 text-center">
+            <div className="text-gray7 font-semibold mb-2">No activities found</div>
+            <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
+          </div>
+        )
+      ) : null}
+      {showGmailInbox ? (
+        inboxLoading ? (
+          <div className={'w-full h-[200px] relative'}>
+            <Loader />
+          </div>
+        ) : !inboxLoading ? (
+          Object.values(inboxData).length > 0 ? (
+            <div className="bg-white">
+              {openEmailsPopup && (
+                <EmailsPopup
+                  inboxData={inboxData}
+                  setInboxData={setInboxData}
+                  threadData={threadData}
+                  contactEmail={contactEmail}
+                  handleClose={() => setOpenEmailsPopup(false)}
+                />
+              )}
+              <SimpleBar
+                style={{
+                  maxHeight: showFullHeight ? '100%' : '280px',
+                  paddingRight: '-10px',
+                }}
+                autoHide>
+                <ul role="list" className={`pt-6 flex flex-col gap-8`}>
+                  {Object.values(inboxData).flatMap((item) => (
+                    <div
+                      className={'flex gap-3'}
+                      onClick={() => {
+                        setThreadId(item[0]?.thread_id);
+                        setOpenEmailsPopup(true);
+                      }}
+                      role={'button'}
+                      key={item[0].thread_id}>
+                      <div
+                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                        <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                        <span
+                          style={{ zIndex: '0 !important' }}
+                          className="absolute top-[36px] left-4 -ml-px h-full w-0.5 bg-gray-200"
+                          aria-hidden="true"
                         />
                       </div>
-                    )}
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </SimpleBar>
-      </div>
+                      <div>
+                        <div className={'flex items-center  flex-wrap'}>
+                          <h6 className={'text-[14px] font-bold mr-2'}>
+                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0].subject}
+                          </h6>
+                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
+                        </div>
+                        <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                          <span dangerouslySetInnerHTML={{ __html: item[0]?.body }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </ul>
+              </SimpleBar>
+            </div>
+          ) : (
+            <div className="mt-5 text-center">
+              <div className="text-gray7 font-semibold mb-2">No activities found</div>
+              <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
+            </div>
+          )
+        ) : null
+      ) : null}
+
       {activityModal && (
         <Overlay className="w-[550px]" handleCloseOverlay={handleCloseModal} title="Edit Activity">
           <div className="p-5 bg-white">
@@ -308,3 +387,37 @@ export default function Feeds({ showFullHeight, contactId, activities, setActivi
     </>
   );
 }
+
+const ActivityDescription = ({ activityItem }) => {
+  const htmlString = `${activityItem?.description}`;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const h6Content = doc.querySelector('h6')?.textContent;
+  const subjectContent = doc.querySelector('p')?.textContent;
+
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const isContentLong = h6Content && h6Content.length > 88;
+
+  return activityItem?.type_of_activity_id === 1 ? (
+    <div>
+      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
+        <p>[Email Sent] </p>
+        <p className={'font-bold'}>{subjectContent}</p>
+      </div>
+      {h6Content && (
+        <h6>
+          {isContentLong && !showFullContent ? `${h6Content.slice(0, 88)}... ` : h6Content}
+          {isContentLong && (
+            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
+              {showFullContent ? ' See less' : ' See more'}
+            </span>
+          )}
+        </h6>
+      )}
+    </div>
+  ) : (
+    activityItem.description
+  );
+};

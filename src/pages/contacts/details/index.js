@@ -11,7 +11,7 @@ import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
 import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL } from '@global/functions';
+import { findTagsOption, formatDateLL, formatPhoneNumber } from '@global/functions';
 import { Switch } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
 import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
-import { Delete, Edit, More } from '@mui/icons-material';
+import { Delete, Edit, MailOutline, More } from '@mui/icons-material';
 import Text from '@components/shared/text';
 import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
@@ -30,11 +30,15 @@ import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
 import Dropdown from '@components/shared/dropdown';
-
+import { setGlobalEmail } from '@store/clientDetails/slice';
+import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
+import Email from '@mui/icons-material/Email';
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import { getContactCampaign } from '@api/campaign';
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
-
+  const dispatch = useDispatch();
   const [noteId, setNoteId] = useState(0);
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(false);
@@ -48,6 +52,9 @@ const index = () => {
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [activityFilter, setActivityFilter] = useState(false);
+  const [showGmailInbox, setShowGmailInbox] = useState(false);
+
+  const globalEmailActivityData = useSelector((state) => state.clientDetails.globalEmailActivity);
 
   useEffect(() => {
     if (id && contacts?.length) {
@@ -56,9 +63,12 @@ const index = () => {
       console.log(contactData);
       if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
+      } else {
+        setShowReviewOverlay(false);
       }
-      getNotes();
       getActivityLog();
+      getNotes();
+      // getCampaigns();
       if (contactData.campaign_name) {
         setCampaigns([
           {
@@ -87,13 +97,44 @@ const index = () => {
     getContactActivities(id)
       .then((response) => {
         setActivities(response.data.data);
-        setLoadingActivities(false);
       })
       .catch((error) => {
         console.log(error);
         toast.error('Error fetching activity');
       });
   };
+  // const getCampaigns = async () => {
+  //   getContactCampaign(id)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setCampaigns(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast.error('Error fetching activity');
+  //     });
+  // };
+  useEffect(() => {
+    if (contact) {
+      syncEmailOfContact(contact.email).then(() => {
+        setLoadingActivities(false);
+      });
+    }
+  }, [contact]);
+
+  useEffect(() => {
+    if (globalEmailActivityData) {
+      setActivities((prev) => [
+        { type_of_activity_id: 1, description: globalEmailActivityData, created_at: new Date().toISOString() },
+        ...prev,
+      ]);
+      setTimeout(() => {
+        getActivityLog().then();
+      }, [2000]);
+    } else {
+      dispatch(setGlobalEmail(undefined));
+    }
+  }, [globalEmailActivityData]);
 
   const handleCloseModal = () => {
     setAddNoteModal(false);
@@ -109,7 +150,7 @@ const index = () => {
 
   const Item = ({ item, className, icon, isEditable }) => {
     return (
-      <div className="flex justify-between">
+      <div className="flex justify-between break-word">
         <div className={`flex ${className}`}>
           <div className="w-[30px]">
             <img src={icon} className="w-[26px]" />
@@ -140,6 +181,9 @@ const index = () => {
     console.log('delete activity');
   };
 
+  const handleUpdateActivityLogsInNotes = () => {
+    getActivityLog().then();
+  };
   const handleEditNote = (note) => {
     setNoteToEdit(note);
     setEditNoteModal(true);
@@ -148,7 +192,9 @@ const index = () => {
   const handleDeleteNote = (note) => {
     setNoteToEdit(note);
     setNotes((prevNotes) => prevNotes.filter((noteItem) => noteItem.id !== note.id));
-    deleteContactNote(note.contact_id, note.id);
+    deleteContactNote(note.contact_id, note.id).then(() => {
+      handleUpdateActivityLogsInNotes();
+    });
   };
 
   const types = [
@@ -220,9 +266,9 @@ const index = () => {
             <Loader />
           </div>
         ) : (
-          <div className="px-3 md:px-6 py-[21px] flex flex-col md:flex-row">
-            <div className="w-full md:w-[300px]">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+          <div className="px-3 lg:px-6 py-[21px] flex flex-col lg:flex-row">
+            <div className="w-full lg:w-[275px]">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
                     <img
@@ -268,6 +314,12 @@ const index = () => {
                     {contact?.email}
                   </div>
                 </div>
+                {contact?.phone_number && (
+                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467]'}>
+                    <LocalPhoneOutlinedIcon className={'h-[18px] w-[18px]'} />
+                    <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
+                  </div>
+                )}
                 <div className="mt-[18px] flex items-center">
                   <Button
                     size="small"
@@ -326,7 +378,7 @@ const index = () => {
                 </div>
               </div>
               {campaigns.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
                   {campaigns.length > 1 ? (
@@ -396,8 +448,8 @@ const index = () => {
               )}
             </div>
 
-            <div className="flex-grow md:mx-3 order-last md:order-2">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+            <div className="flex-grow lg:mx-3 order-last lg:order-2">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
                     <img src={communication.src} />
@@ -405,52 +457,72 @@ const index = () => {
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
                       className="w-[180px] ml-3"
-                      handleSelect={(choice) => setActivityFilter(choice)}
+                      handleSelect={(choice) => {
+                        setActivityFilter(choice);
+                        setShowGmailInbox(false);
+                      }}
                     />
+                    <button
+                      onClick={() => setShowGmailInbox(!showGmailInbox)}
+                      className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${showGmailInbox && 'border-lightBlue3'}`}>
+                      <MailOutline
+                        className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
+                      />
+                      <span
+                        className={`responsive-fix text-sm leading-5 ${showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'}`}>
+                        Gmail Inbox
+                      </span>
+                    </button>
                     {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
                     className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
-                    <span className={'text-sm font-semibold leading-5 text-lightBlue6'}>Start communication</span>
+                    <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
+                      Start communication
+                    </span>
                   </button>
                 </div>
-                {activities.length ? (
-                  <Feeds
-                    showFullHeight={contact?.category_1 != 'Client'}
-                    contactId={id}
-                    activities={
-                      activityFilter.id == 0 || !activityFilter
-                        ? activities
-                        : activities.filter((activity) => {
-                            console.log(activityFilter, activity.type_of_activity_id);
-                            if (activityFilter.id == 14) {
-                              return [14, 15, 16].includes(activity.type_of_activity_id);
-                            } else if (activityFilter.id == 3) {
-                              return [3, 26, 27].includes(activity.type_of_activity_id);
-                            }
-                            return activity.type_of_activity_id == activityFilter.id;
-                          })
-                    }
-                    setActivities={setActivities}
-                  />
-                ) : (
-                  <div className="mt-5 text-center">
-                    <div className="text-gray7 font-semibold mb-2">No activities found</div>
-                    <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
-                  </div>
-                )}
+                {/*{activities.length ? (*/}
+                <Feeds
+                  showFullHeight={contact?.category_1 != 'Client'}
+                  contactId={id}
+                  activityId={activityFilter.id}
+                  contactEmail={contact.email}
+                  showGmailInbox={showGmailInbox}
+                  setShowGmailInbox={setShowGmailInbox}
+                  activities={
+                    activityFilter.id == 0 || !activityFilter
+                      ? activities
+                      : activities.filter((activity) => {
+                          console.log(activityFilter, activity.type_of_activity_id);
+                          if (activityFilter.id == 14) {
+                            return [14, 15, 16].includes(activity.type_of_activity_id);
+                          } else if (activityFilter.id == 3) {
+                            return [3, 26, 27].includes(activity.type_of_activity_id);
+                          }
+                          return activity.type_of_activity_id == activityFilter.id;
+                        })
+                  }
+                  setActivities={setActivities}
+                />
+                {/*) : (*/}
+                {/*  <div className="mt-5 text-center">*/}
+                {/*    <div className="text-gray7 font-semibold mb-2">No activities found</div>*/}
+                {/*    <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>*/}
+                {/*  </div>*/}
+                {/*)}*/}
               </div>
 
               {contact?.category_1 == 'Client' && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <PropertiesSection noSelect contactId={id} category={contact.category_2} />
                 </div>
               )}
             </div>
-            <div className="w-full md:w-[270px] order-1 md:order-3">
-              <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
+            <div className="w-full lg:w-[250px] order-1 lg:order-3">
+              <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
@@ -485,7 +557,7 @@ const index = () => {
                 )}
               </div>
               {documents.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                   <div className="text-gray8 font-semibold text-sm mb-5">Documents</div>
                   {documents.map((document, index) => (
                     <Item
@@ -497,7 +569,7 @@ const index = () => {
                 </div>
               )}
               {applications.length > 0 && (
-                <div className="bg-white px-3 md:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm mb-5">Applications</div>
                   {applications.map((application, index) => (
                     <Item
@@ -512,9 +584,22 @@ const index = () => {
           </div>
         )}
       </div>
-      {addNoteModal && <NoteModal id={id} handleCloseModal={() => setAddNoteModal(false)} setNotes={setNotes} />}
+      {addNoteModal && (
+        <NoteModal
+          handleUpdateActivityLogsInNotes={handleUpdateActivityLogsInNotes}
+          id={id}
+          handleCloseModal={() => setAddNoteModal(false)}
+          setNotes={setNotes}
+        />
+      )}
       {editNoteModal && (
-        <NoteModal setNotes={setNotes} note={noteToEdit} id={id} handleCloseModal={() => setEditNoteModal(false)} />
+        <NoteModal
+          handleUpdateActivityLogsInNotes={handleUpdateActivityLogsInNotes}
+          setNotes={setNotes}
+          note={noteToEdit}
+          id={id}
+          handleCloseModal={() => setEditNoteModal(false)}
+        />
       )}
       {openCommunicationPopup &&
         createPortal(

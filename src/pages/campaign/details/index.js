@@ -16,41 +16,66 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
+import { getAllEvents, getCampaign, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
 import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
+import { PencilIcon } from '@heroicons/react/solid';
+import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
+import { capitalize, getContactTypeByTypeId } from '@global/functions';
 
 const index = () => {
   const router = useRouter();
-  const { id, category } = router.query;
+  const { id } = router.query;
   const [currentButton, setCurrentButton] = useState(0);
   const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
   const [campaignDetails, setCampaignDetails] = useState();
   const [campaignEvents, setCampaignEvents] = useState();
   const [searchTerm, setSearchTerm] = useState('');
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
+  const [showEditCampaign, setShowEditCampaign] = useState(false);
+  const [category, setCategory] = useState('');
+
   const dispatch = useDispatch();
+
+  const getEvents = () => {
+    getAllEvents(id).then((res) => {
+      setCampaignEvents(res.data);
+    });
+  };
 
   useEffect(() => {
     if (id) {
-      getAllEvents(id).then((res) => {
-        setCampaignEvents(res.data);
-      });
-      getCampaignsUsers(id).then((res) => {
+      getEvents();
+      getCampaign(id).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
       });
     }
   }, [id]);
 
   useEffect(() => {
+    if (id) getEvents();
+  }, [campaignDetails]);
+
+  useEffect(() => {
+    if (usersInCampaignGlobally?.contact_category_id) {
+      setCategory(getContactTypeByTypeId(null, usersInCampaignGlobally.contact_category_id));
+    }
+  }, [usersInCampaignGlobally]);
+
+  useEffect(() => {
     if (CRMCampaigns === undefined) {
       getCampaignsByCategory('Client').then((res) => {
         dispatch(setCRMCampaigns(res.data));
-        setCampaignDetails(res.data.campaigns.find((c) => c.campaign_id == id));
+        let foundCampaign = res.data.campaigns.find((c) => c.campaign_id == id);
+        if (foundCampaign?.contact_category_id) {
+          setCategory(getContactTypeByTypeId(null, foundCampaign.contact_category_id));
+        }
+        setCampaignDetails(foundCampaign);
       });
     } else if (CRMCampaigns !== undefined) {
-      const campaigns = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
-      setCampaignDetails(campaigns);
+      const campaign = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
+      setCategory(getContactTypeByTypeId(null, campaign.contact_category_id));
+      setCampaignDetails(campaign);
     }
   }, [CRMCampaigns, id]);
 
@@ -69,16 +94,16 @@ const index = () => {
       icon: allEventsIcon,
       amount: usersInCampaignGlobally?.events.count,
     },
-    {
-      name: 'EMAIL EVENTS',
-      icon: emailEventsIcon,
-      amount: usersInCampaignGlobally?.events.email,
-    },
-    {
-      name: 'SMS EVENTS',
-      icon: smsEventsIcon,
-      amount: usersInCampaignGlobally?.events.sms,
-    },
+    // {
+    //   name: 'EMAIL EVENTS',
+    //   icon: emailEventsIcon,
+    //   amount: usersInCampaignGlobally?.events.email,
+    // },
+    // {
+    //   name: 'SMS EVENTS',
+    //   icon: smsEventsIcon,
+    //   amount: usersInCampaignGlobally?.events.sms,
+    // },
     {
       name: 'CAMPAIGN MATCHED TO',
       icon: campaignsMatchedTo,
@@ -180,35 +205,52 @@ const index = () => {
         </div>
       ) : (
         <>
-          <div className={'p-6 flex items-center justify-between'}>
+          <EditCampaignSidebar
+            setCampaignDetails={setCampaignDetails}
+            campaignData={campaignDetails}
+            open={showEditCampaign}
+            setOpen={setShowEditCampaign}
+            id={id}
+          />
+          <div className={'p-6 flex justify-between'}>
             <div className={'flex gap-4 items-start'}>
               <ArrowBackIosIcon
                 className={'text-lightBlue3 h-4 w-4 mt-2 cursor-pointer'}
                 onClick={() => router.push('/campaign')}
               />
               <div>
-                <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.campaign_name}</h4>
+                <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.name}</h4>
                 <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
                   <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {`${category}s`}: {usersInCampaignGlobally?.contact_status_2}
+                    {category == 'Unknown'
+                      ? 'All Clients'
+                      : `${capitalize(category)}s : ${usersInCampaignGlobally?.contact_status_2}`}
                   </span>
                 </div>
               </div>
             </div>
-            <Button
-              primary
-              leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
-              onClick={() => setOpenCampaignPreview(true)}>
-              Campaign Preview
-            </Button>
+            <div className="flex items-center">
+              <Button
+                secondary
+                leftIcon={<PencilIcon className={'h-4 w-4'} />}
+                className="mr-4"
+                onClick={() => setShowEditCampaign(true)}>
+                Edit Campaign
+              </Button>
+              <Button
+                primary
+                leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
+                onClick={() => setOpenCampaignPreview(true)}>
+                Campaign Preview
+              </Button>
+            </div>
           </div>
-          <div className={'p-6 grid grid-cols-6 gap-2.5 border-y border-gray2'}>
+          <div className={'p-6 grid grid-cols-4 gap-2.5 border-y border-gray2'}>
             {eventTypes.map((event, index) => (
               <div
                 key={index}
-                className={`flex flex-col gap-2.5 items-center justify-center ${
-                  index === 2 ? 'border-r border-borderColor mr-1.5' : ''
-                }`}>
+                className={`flex flex-col gap-2.5 items-center justify-center 
+              `}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
                   <span className="text-gray4  text-center font-medium text-xs leading-5">

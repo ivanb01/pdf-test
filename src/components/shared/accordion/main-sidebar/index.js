@@ -43,6 +43,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import SubMenuContent from '@components/shared/SubMenuCard';
 import AIChip from '@components/shared/chip/ai-chip';
 import { isHealthyCommuncationDate } from '@global/functions';
+import Overlay from '@components/shared/overlay';
 
 const getNeedToCommunicateContacts = (allContacts) => {
   if (!allContacts) {
@@ -87,6 +88,10 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
+    if (!localStorage.getItem('finishedTour')) {
+      localStorage.setItem('finishedTour', true);
+      localStorage.setItem('openTour', 'true');
+    }
     try {
       const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
@@ -258,29 +263,27 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     );
   };
 
-  useEffect(() => {
-    console.log(openedSubtab);
-  }, [openedSubtab]);
   return (
     <>
       <div
         className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
           pinned ? 'w-[265px]' : 'w-[62px]'
         }`}>
-        {showSSOverlay && (
-          <SmartSyncOverlay
-            handleAction={() => activateSmartSync()}
-            loading={loadingActivateSS}
-            handleCloseOverlay={() => setShowSSOverlay(false)}
-          />
+        {showSSOverlay ? (
+          <>
+            <SmartSyncOverlay
+              handleAction={() => activateSmartSync()}
+              loading={loadingActivateSS}
+              handleCloseOverlay={() => setShowSSOverlay(false)}
+            />
+          </>
+        ) : (
+          <></>
         )}
         {!finishedOnboarding &&
           showOnboarding &&
           !userGaveConsent?.includes('gmail') &&
-          !userGaveConsent?.includes('contacts') && (
-            <Onboarding closeModal={() => setShowOnboarding(false)} setStartedOnboarding={setStartedOnboarding} />
-          )}
-        {!finishedOnboarding && startedOnboarding && <Tour for={'clients'} setShowSSOverlay={setShowSSOverlay} />}
+          !userGaveConsent?.includes('contacts') && <Onboarding setStartedOnboarding={setShowSSOverlay} />}
         <div>
           {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (
@@ -321,7 +324,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         <a
                           onClick={() =>
                             router.push({
-                              pathname: '/contacts/no-contact/',
+                              pathname: '/contacts/clients/',
                               query: { start_importing: true },
                             })
                           }

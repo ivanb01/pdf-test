@@ -1,6 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenedTab, setOpenedSubtab, setInitializeTabs } from 'store/global/slice';
+import { setOpenedTab, setOpenedSubtab, setInitializeTabs, setUserInfo } from 'store/global/slice';
 import Group from '@mui/icons-material/Group';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import InfoIcon from '@mui/icons-material/Info';
@@ -20,6 +20,7 @@ import Loader from 'components/shared/loader';
 import ContactPage from '@mui/icons-material/ContactPage';
 import Diversity3 from '@mui/icons-material/Diversity3';
 import { Auth } from 'aws-amplify';
+import { getUserInfo } from '@helpers/auth';
 import { getCount } from 'api/contacts';
 import { setCount, setRefetchData } from 'store/global/slice';
 import { setUser } from 'store/global/slice';
@@ -214,6 +215,9 @@ const Layout = ({ children }) => {
       expiryDate.setDate(expiryDate.getDate() + days);
       document.cookie = `isAuthenticated=true; path=/; expires=${expiryDate.toUTCString()};`;
       localStorage.setItem('user', JSON.stringify(user.username));
+
+      const userInfo = getUserInfo();
+      dispatch(setUserInfo(userInfo));
     } catch (error) {
       console.log(error);
     }

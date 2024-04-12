@@ -14,30 +14,27 @@ import 'shepherd.js/dist/css/shepherd.css';
 import '../styles/_global.scss';
 import {
   localRedirectSignIn,
-  productionRedirectSignIn,
-  devRedirectSignIn,
   localRedirectSignOut,
+  productionRedirectSignIn,
   productionRedirectSignOut,
+  devRedirectSignIn,
   devRedirectSignOut,
+  documentsRedirectSignIn,
+  documentsRedirectSignOut,
+  subscriptionsRedirectSignIn,
+  subscriptionsRedirectSignOut,
 } from 'global/variables';
 import GetSubtype from '@components/GetSubtype';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PlusButton from '@components/PlusButton';
 // import { Head } from 'next/document';
-import SendEmailOverlay from '@components/SendEmailSidebar';
+import SendEmailOverlay from '@components/shared/sidebar/global-send-email';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 
-const isLocalhost =
-  typeof window !== 'undefined' &&
-  Boolean(
-    window.location.hostname.includes('localhost') ||
-      // [::1] is the IPv6 localhost address.
-      window.location.hostname === '[::1]' ||
-      // 127.0.0.1/8 is considered localhost for IPv4.
-      window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
-  );
-
-const isDev = typeof window !== 'undefined' && Boolean(window.location.hostname.includes('dev'));
+const queryClient = new QueryClient();
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
+import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -45,6 +42,7 @@ const MyApp = ({ Component, pageProps }) => {
   const [helpEffect, setHelpEffect] = useState(false);
   const [marginTop, setMarginTop] = useState(false);
   const [emailBody, setEmailBody] = useState();
+  const [open, setOpen] = useState(false);
 
   const [domLoaded, setDomLoaded] = useState(false);
 
@@ -55,33 +53,40 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     configureAmplifyAuth();
     Auth.currentSession()
-      .then((item) => {
+      .then(async (item) => {
         localStorage.setItem('currentSession ', JSON.stringify(item));
         console.log('logged in');
         setIsUserAuthenticated(true);
         setHelpEffect(true);
+        const info = await fetchCurrentUserInfo();
+        saveUserInfo(info);
       })
       .catch((e) => {
         setIsUserAuthenticated(false);
         setHelpEffect(true);
         // console.log('this is happening');
-        if (!router.asPath.includes('public') && !router.asPath.includes('property')) {
+        if (
+          !router.asPath.includes('public') &&
+          !router.asPath.includes('property') &&
+          !router.asPath.includes('sign-up') &&
+          !router.asPath.includes('portfolio')
+        ) {
           router.push('/authentication/sign-in');
         }
         console.log('error', e);
       });
   }, []);
 
-  // useEffect(() => {
-  //   if (helpEffect) {
-  //     if (pageProps.requiresAuth && !isUserAuthenticated) {
-  //       router.push('/authentication/sign-in');
-  //     }
-  //     if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-  //       router.push('/contacts/clients');
-  //     }
-  //   }
-  // }, [helpEffect, isUserAuthenticated]);
+  useEffect(() => {
+    if (helpEffect) {
+      if (pageProps.requiresAuth && !isUserAuthenticated) {
+        router.push('/authentication/sign-in');
+      }
+      if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
+        router.push('/contacts/clients');
+      }
+    }
+  }, [helpEffect, isUserAuthenticated]);
 
   const configureAmplifyAuth = () => {
     try {
@@ -99,20 +104,31 @@ const MyApp = ({ Component, pageProps }) => {
           userPoolWebClientId: appClientId,
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
-            // scope: ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost ? localRedirectSignIn : isDev ? devRedirectSignIn : productionRedirectSignIn,
-            redirectSignOut: isLocalhost
+            redirectSignIn: isLocalhost()
+              ? localRedirectSignIn
+              : isDev()
+                ? devRedirectSignIn
+                : isDocuments()
+                  ? documentsRedirectSignIn
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignIn
+                    : productionRedirectSignIn,
+            redirectSignOut: isLocalhost()
               ? localRedirectSignOut
-              : isDev
-              ? devRedirectSignOut
-              : productionRedirectSignOut,
+              : isDev()
+                ? devRedirectSignOut
+                : isDocuments()
+                  ? documentsRedirectSignOut
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignOut
+                    : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
 
-      Amplify.configure(awsmobile);
+      Amplify.configure({ ...awsmobile, ssr: true });
       console.log('configured amplify');
       return true;
     } catch (err) {
@@ -136,17 +152,20 @@ const MyApp = ({ Component, pageProps }) => {
           className={`main-page overflow-y-auto overflow-x-hidden`}
           style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
-            <GetSubtype />
-            <Component {...pageProps} />
-            {domLoaded && (
-              <Toaster
-                toastOptions={{
-                  className: 'bg-gray6 text-white text-sm',
-                }}
-                position="bottom-left"
-              />
-            )}
-            <EmailSendComponent />
+            <QueryClientProvider client={queryClient}>
+              {isUserAuthenticated && <GetSubtype />}
+              <Component {...pageProps} />
+              {domLoaded && (
+                <Toaster
+                  toastOptions={{
+                    className: 'bg-gray6 text-white text-sm',
+                  }}
+                  position="bottom-left"
+                />
+              )}
+              <SendEmailOverlay />
+              {/* <EmailSendComponent /> */}
+            </QueryClientProvider>
           </Provider>
         </div>
       </div>
