@@ -544,7 +544,9 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  <SimpleBar style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
+                  <SimpleBar
+                    className="-mx-3 lg:-mx-6 px-3 lg:px-6"
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes.reverse().map((note, index) => (
                       <Item
                         isEditable
