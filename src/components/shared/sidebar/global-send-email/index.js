@@ -14,6 +14,7 @@ import { setGlobalEmail } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { updateContactLocally } from '@store/contacts/slice';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
@@ -88,14 +89,16 @@ const SendEmailOverlay = () => {
       newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
       newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
 
-      addContactActivity(contact.id, {
-        type_of_activity_id: 1,
-        description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${newMessage.replace(
-          /<[^>]*>/g,
-          '',
-        )} </h6>`,
-      });
       sendEmail([contact.email], subject, newMessage).then(() => {
+        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+
+        addContactActivity(contact.id, {
+          type_of_activity_id: 1,
+          description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${newMessage.replace(
+            /<[^>]*>/g,
+            '',
+          )} </h6>`,
+        });
         setLoading(false);
         setEmailSent(true);
       });
@@ -127,7 +130,12 @@ const SendEmailOverlay = () => {
     <SlideOver
       width="w-[540px]"
       open={open}
-      setOpen={(state) => dispatch(setOpenEmailContactOverlay(state))}
+      setOpen={(state) => {
+        dispatch(setOpenEmailContactOverlay(state));
+        if (!state) {
+          resetSendEmailForm();
+        }
+      }}
       title="Send New Email"
       className=""
       buttons={
