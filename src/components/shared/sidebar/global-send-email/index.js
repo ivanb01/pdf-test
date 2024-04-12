@@ -12,6 +12,12 @@ import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
 import { setGlobalEmail } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
+import TooltipComponent from '@components/shared/tooltip';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import { updateContactLocally } from '@store/contacts/slice';
+import Dropdown from '@components/shared/dropdown';
+import { addEmailTemplate, getEmailTemplates } from '@api/campaign';
+import Checkbox from '@components/shared/checkbox';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
@@ -26,6 +32,10 @@ const SendEmailOverlay = () => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
+  const [emailTemplates, setEmailTemplates] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [saveAsTemplate, setSaveAsTemplate] = useState(false);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
     if (contactToBeEmailed) {
@@ -51,6 +61,7 @@ const SendEmailOverlay = () => {
         })),
       );
     }
+    getTemplates();
   }, [contacts]);
 
   const handleSendEmail = () => {
@@ -63,16 +74,54 @@ const SendEmailOverlay = () => {
       ),
     );
     setLoading(true);
-    let contacts = selectedContacts.map((contact) => ({ email: contact.email, id: contact.value }));
-    contacts.map((contact) => {
-      addContactActivity(contact.id, {
-        type_of_activity_id: 1,
-        description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
-          /<[^>]*>/g,
-          '',
-        )} </h6>`,
+
+    // check if new email template is created
+    if (saveAsTemplate) {
+      addEmailTemplate({
+        subject: subject,
+        body_text: message.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+        body_html: message,
+        status: 'active',
+      }).then(() => {
+        getTemplates();
       });
-      sendEmail([contact.email], subject, message).then(() => {
+    }
+
+    // change format of data to only what we need
+    let contacts = selectedContacts.map((contact) => ({
+      email: contact.email,
+      id: contact.value,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+    }));
+
+    // iterate through all selected contacts, construct email, send email to each individually, add activity log to each individually,
+    contacts.map((contact) => {
+      let clientFirstName = contact.first_name;
+      let clientLastName = contact.last_name;
+      let clientFullName = clientFirstName + ' ' + clientLastName;
+      let agentFirstName = userInfo?.first_name;
+      let agentLastName = userInfo?.last_name;
+      let agentFullName = agentFirstName + ' ' + agentLastName;
+
+      let newMessage = message;
+      newMessage = newMessage.replace(/\{\{client_first_name\}\}/g, clientFirstName);
+      newMessage = newMessage.replace(/\{\{client_last_name\}\}/g, clientLastName);
+      newMessage = newMessage.replace(/\{\{client_name\}\}/g, clientFullName);
+      newMessage = newMessage.replace(/\{\{agent_first_name\}\}/g, agentFirstName);
+      newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
+      newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
+
+      sendEmail([contact.email], subject, newMessage).then(() => {
+        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+
+        addContactActivity(contact.id, {
+          type_of_activity_id: 1,
+          description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${newMessage.replace(
+            /<[^>]*>/g,
+            '',
+          )} </h6>`,
+        });
         setLoading(false);
         setEmailSent(true);
       });
@@ -80,10 +129,14 @@ const SendEmailOverlay = () => {
   };
 
   const resetSendEmailForm = () => {
-    setSubject('');
-    setMessage('');
-    setSelectedContacts([]);
-    setEmailSent(false);
+    setTimeout(() => {
+      setSubject('');
+      setMessage('');
+      setSelectedContacts([]);
+      setEmailSent(false);
+      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+      setSaveAsTemplate(false);
+    }, 500);
   };
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
@@ -100,11 +153,35 @@ const SendEmailOverlay = () => {
     return 0;
   });
 
+  const getTemplates = async () => {
+    try {
+      const emailResponse = await getEmailTemplates();
+      console.log('response', emailResponse);
+      const emailTemplates = emailResponse.data.data.map((template) => ({
+        id: template.id,
+        label: template.subject,
+        message: template.body_html,
+      }));
+
+      emailTemplates.unshift({ label: 'Create Custom Email', id: -1 });
+
+      setEmailTemplates(emailTemplates);
+      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+    } catch (error) {
+      console.error('Failed to get email template:', error);
+    }
+  };
+
   return (
     <SlideOver
       width="w-[540px]"
       open={open}
-      setOpen={(state) => dispatch(setOpenEmailContactOverlay(state))}
+      setOpen={(state) => {
+        dispatch(setOpenEmailContactOverlay(state));
+        if (!state) {
+          resetSendEmailForm();
+        }
+      }}
       title="Send New Email"
       className=""
       buttons={
@@ -137,7 +214,17 @@ const SendEmailOverlay = () => {
       ) : (
         <div>
           <div className="mb-6">
-            <div className="text-gray6 text-sm font-medium mb-1">To</div>
+            <div className="flex items-center mb-1">
+              <div className="text-gray6 text-sm font-medium mr-1">To</div>
+              <TooltipComponent
+                side={'bottom'}
+                align={'start'}
+                triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+                <div className={`text-xs font-medium text-white bg-neutral1`}>
+                  Selecting multiple contacts sends individual emails to each user that is selected.
+                </div>
+              </TooltipComponent>
+            </div>
             {contactsCopy && contactsCopy.length && (
               <MultiSelect
                 options={sortedOptions}
@@ -152,6 +239,39 @@ const SendEmailOverlay = () => {
               />
             )}
           </div>
+          {emailTemplates && (
+            <div className="mb-6">
+              <div className="mb-1 text-gray8 text-sm font-medium">
+                Select from one of the templates, or create a new template:
+              </div>
+              <Dropdown
+                handleSelect={(option) => {
+                  setSelectedTemplate(option);
+                  if (option.id == -1) {
+                    setSubject('');
+                    setMessage('');
+                  } else {
+                    setSubject(option.label);
+                    setMessage(option.message);
+                  }
+                }}
+                initialSelect={selectedTemplate}
+                options={emailTemplates}
+                placeHolder="Select Template"
+              />
+              {selectedTemplate?.id === -1 && (
+                <div className="mt-3">
+                  <Checkbox
+                    setState={(state) => {
+                      setSaveAsTemplate(state);
+                    }}
+                    state={saveAsTemplate}
+                    label="Save New Template"
+                  />
+                </div>
+              )}
+            </div>
+          )}
           <div className="mb-6">
             <Input
               label="Subject"

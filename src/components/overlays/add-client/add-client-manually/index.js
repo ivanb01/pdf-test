@@ -13,7 +13,7 @@ import { addContact, getContacts, findContactByEmail } from 'api/contacts';
 import { addContactLocally, setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
-import { leadSourceOptions, multiselectOptionsClients, phoneNumberRules } from 'global/variables';
+import { leadSourceOptions, multiselectOptionsClients, priorityOptions, phoneNumberRules } from 'global/variables';
 import * as Yup from 'yup';
 import DropdownWithSearch from '@components/dropdownWithSearch';
 import { useSelector } from 'react-redux';
@@ -45,6 +45,12 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   const [existingContactEmail, setExistingContactEmail] = useState('');
   const [newLeadSource, setNewLeadSource] = useState(
     leadSourceOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
+  const [newPriority, setPriority] = useState(
+    priorityOptions.map((option) => ({
       ...option,
       value: option.label,
     })),
@@ -81,7 +87,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
       summary: null,
       lead_source: '',
       import_source: 'Manually Added',
-      tags: [],
+      priority: '',
       selectedContactType: '',
       selectedContactSubtype: '',
       selectedStatus: '',
@@ -130,6 +136,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         phone_number: formik.values.phone_number,
         summary: formik.values.summary,
         lead_source: formik.values.lead_source,
+        priority: formik.values.priority,
         import_source: 'Manually Added',
         tags: formik.values.tags,
         category_id: type,
@@ -274,22 +281,15 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
                   maxMenuHeight={200}
                 />
               </div>
-              <div className={`${!isMenuOpen ? 'mb-0' : 'mb-[120px]'}`}>
+              <div>
                 <DropdownWithSearch
-                  onMenuOpen={() => setIsMenuOpen(true)}
-                  isMulti
-                  bottom={'-59px'}
-                  maxMenuHeight={200}
-                  onMenuClose={() => setIsMenuOpen(false)}
-                  options={multiselectOptionsClients}
-                  value={findTagsOption(formik.values.tags)}
-                  onChange={(choice) => {
-                    formik.setFieldValue(
-                      'tags',
-                      choice.map((el) => el.label),
-                    );
-                  }}
+                  bottom={'-58px'}
+                  options={newPriority}
                   label="Priority"
+                  value={newPriority?.find((vendor) => vendor.value == formik.values.priority)}
+                  onChange={(priority) => formik.setValues({ ...formik.values, ['priority']: priority.label })}
+                  placeHolder={formik.values.priority ? formik.values.priority : 'Choose'}
+                  maxMenuHeight={200}
                 />
               </div>
             </div>

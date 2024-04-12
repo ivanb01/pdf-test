@@ -172,7 +172,7 @@ export default function Feeds({
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar style={{ maxHeight: '300px' }}>
+          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ maxHeight: '300px' }}>
             <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
               {activities
                 ?.slice()
@@ -254,7 +254,7 @@ export default function Feeds({
                                 {/* Commented 6d ago */}
                               </p>
                             )}
-                            <div className="mt-2 text-sm text-gray6">
+                            <div className="mt-2 text-sm text-gray6 break-word">
                               <code></code>
                               <ActivityDescription activityItem={activityItem} />
                             </div>

@@ -148,7 +148,7 @@ const index = () => {
     <>
       <MainMenu />
       <div className="mx-6 my-4 flex items-center justify-between">
-        <div className="text-lg text-gray7 font-medium">Agent Reports</div>
+        <div className="text-lg text-gray7 font-medium">Leaderboard</div>
         <div className="flex items-center">
           <Dropdown
             horizontal
@@ -167,7 +167,7 @@ const index = () => {
         </div>
       ) : data?.count ? (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 150px)' }}>
-          <Table tableFor="reports" data={data.data} />
+          <Table tableFor="leaderboard" data={data.data} />
         </SimpleBar>
       ) : (
         <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 150px)' }}>

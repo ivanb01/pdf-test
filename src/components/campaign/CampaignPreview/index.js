@@ -94,10 +94,10 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                               {campaignData.events?.filter((event) => event.event_type === 'Email').length}{' '}
                               <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
                             </span>
-                            <span>
-                              {campaignData.events?.filter((event) => event.event_type === 'SMS').length}{' '}
-                              <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />
-                            </span>
+                            {/*<span>*/}
+                            {/*  {campaignData.events?.filter((event) => event.event_type === 'SMS').length}{' '}*/}
+                            {/*  <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />*/}
+                            {/*</span>*/}
                           </div>
                         )}
                       </div>

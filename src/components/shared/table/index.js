@@ -1856,7 +1856,7 @@ const Table = ({
     );
   };
 
-  const reportsTable = () => {
+  const leaderboardTable = () => {
     function calculateClosedClients(closedClients, totalClients) {
       if (totalClients === 0) {
         return (0).toFixed(2);
@@ -3218,8 +3218,8 @@ const Table = ({
                     ? contactCampaignsTable()
                     : tableFor == 'professionals'
                       ? professionalsTable()
-                      : tableFor == 'reports'
-                        ? reportsTable()
+                      : tableFor == 'leaderboard'
+                        ? leaderboardTable()
                         : tableFor == 'imports-summary'
                           ? importsSummaryTable()
                           : tableFor === 'needToContact'

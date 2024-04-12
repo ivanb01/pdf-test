@@ -15,6 +15,7 @@ import Modal from './Modal';
 import { Auth } from 'aws-amplify';
 
 import toast from 'react-hot-toast';
+import GoogleButton from '@components/shared/button/google-button';
 
 const apiURL = 'https://cjylzkf22j.execute-api.us-east-1.amazonaws.com/prod/registration';
 
@@ -121,11 +122,13 @@ const SignUp = () => {
             Sign In
           </Link>
           <Text p className="text-gray4 mt-10 mb-6">
-            Sign up through Google account
+            Sign up with your Google account
           </Text>
-          <div className="flex items-center justify-between mb-6">
-            <Button social={gmailIcon} onClick={signUpWithGoogle} />
-          </div>
+          <GoogleButton onClick={signUpWithGoogle} label="Sign up with Google" />
+          {/*DO NOT DELETE COMMENTED CODE*/}
+          {/*<div className="flex items-center justify-between mb-6">*/}
+          {/*  <Button social={gmailIcon} onClick={signUpWithGoogle} />*/}
+          {/*</div>*/}
           {!signUpWithGoogle && (
             <Text p className="text-gray4 mb-6">
               Or continue with
@@ -137,56 +140,57 @@ const SignUp = () => {
             </Text>
           ) : (
             <form onSubmit={registerFormik.handleSubmit} className="mt-10">
-              <Input
-                type="text"
-                label="Name"
-                id="tenantName"
-                className="mb-6"
-                onChange={registerFormik.handleChange}
-                value={registerFormik.values.tenantName}
-                error={errorsSignUp.tenantName && touchedSignUp.tenantName}
-                errorText={errorsSignUp.tenantName}
-              />
-              <Input
-                type="email"
-                label="Email"
-                id="tenantEmail"
-                className="mb-6"
-                onChange={registerFormik.handleChange}
-                value={registerFormik.values.tenantEmail}
-                error={errorsSignUp.tenantEmail && touchedSignUp.tenantEmail}
-                errorText={errorsSignUp.tenantEmail}
-              />
-              <Input
-                type="text"
-                label="Phone"
-                id="tenantPhone"
-                className="mb-6"
-                onChange={registerFormik.handleChange}
-                value={registerFormik.values.tenantPhone}
-                error={errorsSignUp.tenantPhone && touchedSignUp.tenantPhone}
-                errorText={errorsSignUp.tenantPhone}
-              />
+              {/*DO NOT DELETE COMMENTED CODE*/}
+              {/*<Input*/}
+              {/*  type="text"*/}
+              {/*  label="Name"*/}
+              {/*  id="tenantName"*/}
+              {/*  className="mb-6"*/}
+              {/*  onChange={registerFormik.handleChange}*/}
+              {/*  value={registerFormik.values.tenantName}*/}
+              {/*  error={errorsSignUp.tenantName && touchedSignUp.tenantName}*/}
+              {/*  errorText={errorsSignUp.tenantName}*/}
+              {/*/>*/}
+              {/*<Input*/}
+              {/*  type="email"*/}
+              {/*  label="Email"*/}
+              {/*  id="tenantEmail"*/}
+              {/*  className="mb-6"*/}
+              {/*  onChange={registerFormik.handleChange}*/}
+              {/*  value={registerFormik.values.tenantEmail}*/}
+              {/*  error={errorsSignUp.tenantEmail && touchedSignUp.tenantEmail}*/}
+              {/*  errorText={errorsSignUp.tenantEmail}*/}
+              {/*/>*/}
+              {/*<Input*/}
+              {/*  type="text"*/}
+              {/*  label="Phone"*/}
+              {/*  id="tenantPhone"*/}
+              {/*  className="mb-6"*/}
+              {/*  onChange={registerFormik.handleChange}*/}
+              {/*  value={registerFormik.values.tenantPhone}*/}
+              {/*  error={errorsSignUp.tenantPhone && touchedSignUp.tenantPhone}*/}
+              {/*  errorText={errorsSignUp.tenantPhone}*/}
+              {/*/>*/}
 
-              <div className="mb-6">
-                <label htmlFor="tenantTier" className="block mb-2 text-sm font-medium text-gray-900">
-                  Plan
-                </label>
-                <select
-                  onChange={registerFormik.handleChange}
-                  value={registerFormik.values.tenantTier}
-                  id="tenantTier"
-                  className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                  {pricingModels.map((price) => (
-                    <option key={price.priceId}>{price.title}</option>
-                  ))}
-                  <option disabled value="Platinum">
-                    Platinum
-                  </option>
-                </select>
-              </div>
+              {/*<div className="mb-6">*/}
+              {/*  <label htmlFor="tenantTier" className="block mb-2 text-sm font-medium text-gray-900">*/}
+              {/*    Plan*/}
+              {/*  </label>*/}
+              {/*  <select*/}
+              {/*    onChange={registerFormik.handleChange}*/}
+              {/*    value={registerFormik.values.tenantTier}*/}
+              {/*    id="tenantTier"*/}
+              {/*    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">*/}
+              {/*    {pricingModels.map((price) => (*/}
+              {/*      <option key={price.priceId}>{price.title}</option>*/}
+              {/*    ))}*/}
+              {/*    <option disabled value="Platinum">*/}
+              {/*      Platinum*/}
+              {/*    </option>*/}
+              {/*  </select>*/}
+              {/*</div>*/}
 
-              <Button loading={loadingButton} type="submit" primary label="Sign up" className="w-full justify-center" />
+              {/*<Button loading={loadingButton} type="submit" primary label="Sign up" className="w-full justify-center" />*/}
             </form>
           )}
         </div>

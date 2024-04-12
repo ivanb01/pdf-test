@@ -63,6 +63,8 @@ const index = () => {
       console.log(contactData);
       if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
+      } else {
+        setShowReviewOverlay(false);
       }
       getActivityLog();
       getNotes();
@@ -148,7 +150,7 @@ const index = () => {
 
   const Item = ({ item, className, icon, isEditable }) => {
     return (
-      <div className="flex justify-between">
+      <div className="flex justify-between break-word">
         <div className={`flex ${className}`}>
           <div className="w-[30px]">
             <img src={icon} className="w-[26px]" />
@@ -363,7 +365,7 @@ const index = () => {
                       <span className="text-gray6 mr-3">Priority:</span>
                       <div className="flex items-center">
                         <span className={`block h-2 w-2 mr-1 rounded-full bg-red3`} />
-                        <span className="text-gray7">{findTagsOption(contact.tags)[0].value}</span>
+                        <span className="text-gray7">{contact.priority}</span>
                       </div>
                     </div>
                   )}
@@ -542,7 +544,9 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  <SimpleBar style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
+                  <SimpleBar
+                    className="-mx-3 lg:-mx-6 px-3 lg:px-6"
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes.reverse().map((note, index) => (
                       <Item
                         isEditable

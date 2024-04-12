@@ -58,8 +58,8 @@ const MainMenu = ({ className, fixed }) => {
     },
     {
       id: 2,
-      name: 'Reports',
-      url: '/reports',
+      name: 'Leaderboard',
+      url: '/leaderboard',
     },
     {
       id: 3,
@@ -91,8 +91,8 @@ const MainMenu = ({ className, fixed }) => {
     },
     {
       id: 2,
-      name: 'Reports',
-      url: '/reports',
+      name: 'Leaderboard',
+      url: '/leaderboard',
     },
     {
       id: 3,

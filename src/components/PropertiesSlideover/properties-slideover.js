@@ -13,9 +13,10 @@ import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import placeholder from '../../../public/images/img-placeholder.png';
-import { fetchCurrentUserInfo } from '@helpers/auth';
+import { useSelector } from 'react-redux';
+
 const SelectedProperty = ({ property, setSelected, selected }) => {
   return (
     <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
@@ -82,21 +83,7 @@ const PropertiesSlideOver = ({
   showProperties,
   setShowProperties,
 }) => {
-  const [userData, setUserData] = useState('');
-
-  useEffect(() => {
-    fetchCurrentUserInfo()
-      .then((res) => {
-        const fullName =
-          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
-            ? `${res?.first_name} ${res?.last_name}`
-            : `${res?.email}`;
-        setUserData(fullName);
-      })
-      .catch(() => {
-        setUserData(user?.email ? user?.email : user);
-      });
-  }, []);
+  const userInfo = useSelector((state) => state.global.userInfo);
   return (
     <>
       <SlideOver
@@ -312,7 +299,9 @@ const PropertiesSlideOver = ({
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {userData}
+                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      : userInfo?.email}
                   </p>
                 </div>
               ) : (

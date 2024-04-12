@@ -18,15 +18,10 @@ import {
   subscriptionsRedirectSignIn,
   subscriptionsRedirectSignOut,
   documentsRedirectSignIn,
-  documentsRedirectSignOut
+  documentsRedirectSignOut,
 } from 'global/variables';
 
-import {
-  isLocalhost,
-  isDev,
-  isSubscriptions,
-  isDocuments
-} from 'helpers/env';
+import { isLocalhost, isDev, isSubscriptions, isDocuments } from 'helpers/env';
 
 const SignIn = () => {
   //* FORMIK *//
@@ -42,9 +37,10 @@ const SignIn = () => {
 
   const handleSubmit = async (values) => {
     setLoadingButton(true);
+
     try {
       const data = {
-        apiGatewayUrl: 'https://ul3tbvf5h9.execute-api.us-east-1.amazonaws.com/prod/',
+        apiGatewayUrl: process.env.NEXT_PUBLIC_API_URL,
         appClientId: '65o07k7t243s9evjbu4cl40rcn',
         userPoolId: 'us-east-1_ENvP5VYjb',
       };
@@ -68,29 +64,29 @@ const SignIn = () => {
           oauth: {
             domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
             scope: ['email', 'profile', 'openid'],
-            redirectSignIn: isLocalhost() 
-              ? localRedirectSignIn 
-              : isDev() 
-              ? devRedirectSignIn
-              : isSubscriptions() 
-              ? subscriptionsRedirectSignIn
-              : isDocuments() 
-              ? documentsRedirectSignIn
-              : productionRedirectSignIn,
+            redirectSignIn: isLocalhost()
+              ? localRedirectSignIn
+              : isDev()
+                ? devRedirectSignIn
+                : isSubscriptions()
+                  ? subscriptionsRedirectSignIn
+                  : isDocuments()
+                    ? documentsRedirectSignIn
+                    : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-              ? devRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
-              : productionRedirectSignOut,
+                ? devRedirectSignOut
+                : isSubscriptions()
+                  ? subscriptionsRedirectSignOut
+                  : isDocuments()
+                    ? documentsRedirectSignOut
+                    : productionRedirectSignOut,
             responseType: 'code',
           },
         },
       };
-      Amplify.configure({...awsmobile, ssr: true});
+      Amplify.configure({ ...awsmobile, ssr: true });
 
       console.log('aws config input', awsmobile);
       // toast.success('You gave the Brokerage name successfully');
@@ -132,11 +128,7 @@ const SignIn = () => {
         </div>
         <Text p className="text-gray4 mb-[50px]">
           Don't have an account?&nbsp;
-          <Link
-            href="#"
-            className="underline"
-            onClick={() => Router.push('sign-up')}
-          >
+          <Link href="#" className="underline" onClick={() => Router.push('sign-up')}>
             Sign Up
           </Link>
         </Text>

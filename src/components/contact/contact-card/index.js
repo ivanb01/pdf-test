@@ -406,6 +406,12 @@ export default function ContactCard({
                               message = 'Hey, just checking in.';
                               break;
                           }
+                          let activity = {
+                            type_of_activity_id: 26,
+                            description: 'Attempted to communicate using Whatsapp.',
+                          };
+                          dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                          addContactActivity(contact.id, activity);
                           let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(message)}`;
                           window.open(link, '_blank');
                         }}

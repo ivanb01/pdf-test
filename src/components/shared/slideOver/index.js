@@ -21,6 +21,8 @@ export default function SlideOver({
   specialTitle,
   loading,
   buttonsRight,
+  errorName,
+  hideScroll,
 }) {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -47,17 +49,14 @@ export default function SlideOver({
                     ) : (
                       <>
                         {!noHeader && (
-                          <div
-                            className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1"
-                            // style={{
-                            //   boxShadow: '0px 2px 12px rgba(0, 0, 0, 0.07)',
-                            // }}
-                          >
+                          <div className="flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1">
                             {editableTitle ? (
                               <Input
                                 placeholder="Write campaign title here"
-                                className=" w-[400px] text-xl font-medium text-gray-900"
+                                className={`w-[400px] text-xl font-medium text-gray-900`}
                                 value={title}
+                                error={errorName}
+                                errorText={'Field can not be empty!'}
                                 onChange={handleTitleChange}
                               />
                             ) : (
@@ -75,9 +74,13 @@ export default function SlideOver({
                           </div>
                         )}
                         <div className="side-overlay-wrapper flex min-h-0 flex-1 flex-col">
-                          <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                          {hideScroll ? (
                             <div className="relative mt-[30px] flex-1 px-4 sm:px-6">{children}</div>
-                          </SimpleBar>
+                          ) : (
+                            <SimpleBar autoHide style={{ maxHeight: '100%' }}>
+                              <div className="relative mt-[30px] flex-1 px-4 sm:px-6 pb-4">{children}</div>
+                            </SimpleBar>
+                          )}
                         </div>
                         {buttons && (
                           <div

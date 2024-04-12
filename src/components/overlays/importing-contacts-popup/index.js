@@ -10,7 +10,7 @@ const ImportingContactsPopup = () => {
             Importing Google contacts & G-Mail Contacts.
           </h3>
           <p className={'text-xs leading-4 font-normal text-gray7'}>
-            This might take around 1-2 minutes until they’re getting uploaded
+            Please wait while your contacts are being imported. This might take around 1-2 minutes.
           </p>
         </div>
         <div>
