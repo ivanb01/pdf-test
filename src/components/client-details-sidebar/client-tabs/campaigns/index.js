@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
 import { setRefetchData, setRefetchPart } from 'store/global/slice';
 import { useDispatch } from 'react-redux';
+import DOMPurify from 'dompurify';
 
 export default function Campaigns({ contactId, contact }) {
   const dispatch = useDispatch();
@@ -196,8 +197,8 @@ export default function Campaigns({ contactId, contact }) {
                         alert.type === 'success'
                           ? 'text-green7'
                           : alert.type === 'warning'
-                          ? 'text-yellow3'
-                          : 'text-red4'
+                            ? 'text-yellow3'
+                            : 'text-red4'
                       }`}>
                       {alert.text}
                     </p>
@@ -286,7 +287,7 @@ const RawHTML = ({ title, children, className = '' }) => (
     <Text h1 className="mb-3">
       {title}
     </Text>
-    <div dangerouslySetInnerHTML={{ __html: children.replace(/\n/g, '<br />') }} />
+    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(children.replace(/\n/g, '<br />')) }} />
   </div>
 );
 

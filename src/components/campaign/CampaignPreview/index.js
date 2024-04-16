@@ -229,7 +229,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, className, data }) => {
                                   <div
                                     className="richtext-styling text-sm leading-5 font-normal text-gray5"
                                     dangerouslySetInnerHTML={{
-                                      __html: DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
+                                      __html: activeEvent?.preview?.preview?.body_html
                                         ? DOMPurify.sanitize(activeEvent?.preview?.preview?.body_html)
                                         : DOMPurify.sanitize(activeEvent?.preview?.preview?.message),
                                     }}

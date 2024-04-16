@@ -454,11 +454,10 @@ const index = () => {
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
-                    <img src={communication.src} />
                     <Dropdown
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
-                      className="w-[180px] ml-3"
+                      className="w-[180px]"
                       handleSelect={(choice) => {
                         setActivityFilter(choice);
                         setShowGmailInbox(false);

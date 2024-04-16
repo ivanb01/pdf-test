@@ -25,6 +25,7 @@ import PropertyMainDetails from '@components/property-details/property-main-deta
 import PropertyAmenities from '@components/property-details/property-amenities';
 import PropertyLocation from '@components/property-details/property-location';
 import PropertyOtherDetails from '@components/property-details/property-other-details';
+import DOMPurify from 'dompurify';
 
 const index = () => {
   const router = useRouter();
@@ -411,7 +412,7 @@ const index = () => {
                   )}
                 </div>
               </div>
-              <div className="mt-6" dangerouslySetInnerHTML={{ __html: data.DESCRIPTION }}></div>
+              <div className="mt-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.DESCRIPTION) }}></div>
             </div>
             <PropertyAmenities data={data} />
             <PropertyOtherDetails data={data} />
