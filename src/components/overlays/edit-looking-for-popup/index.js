@@ -36,6 +36,14 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
   const reduxAmenities = useSelector((state) => state.global.amenities);
+  const [amenitiesChange, setAmenitiesChange] = useState(false);
+
+  const [internalAmenities, setInternalAmenities] = useState([]);
+
+  useEffect(() => {
+    setInternalAmenities(reduxAmenities.length > 0 ? reduxAmenities : []);
+  }, []);
+
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array()
       .required('Neighborhood IDs are required')
@@ -98,9 +106,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       }
     },
   });
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const { errors, touched } = formik;
 
@@ -145,15 +150,19 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       value: amenities.slice(amenities.indexOf('City View'), amenities.indexOf('Skyline View') + 1),
     },
   ]);
+
   const toggleAmenitySelection = (amenity) => {
-    if (reduxAmenities.includes(amenity)) {
-      dispatch(setAmenities(reduxAmenities.filter((selected) => selected !== amenity)));
+    if (internalAmenities.includes(amenity)) {
+      setInternalAmenities(internalAmenities.filter((selected) => selected !== amenity));
     } else {
-      dispatch(setAmenities([...reduxAmenities, amenity]));
+      setInternalAmenities([...internalAmenities, amenity]);
     }
+    setAmenitiesChange(true);
   };
   const [datav2, setDatav2] = useState([]);
+
   const [ids, setIds] = useState();
+
   const statuss = Object.freeze({
     unchecked: 0,
     checked: 1,
@@ -210,6 +219,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
   };
 
   const [items, setItems] = useState(data1);
+
   const compute = (checkboxId, status) => {
     traverse(items, checkboxId, status);
     setItems(items.slice());
@@ -321,6 +331,22 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     });
   }, [contactId, data?.neighborhood_ids]);
 
+  function arraysHaveSameElements(arr1, arr2) {
+    const sortedArr1 = [...arr1].sort();
+    const sortedArr2 = [...arr2].sort();
+
+    if (sortedArr1.length !== sortedArr2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < sortedArr1.length; i++) {
+      if (sortedArr1[i] !== sortedArr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
   useEffect(() => {
     setNeighborhoodsSearch('');
   }, [openDropdown]);
@@ -340,6 +366,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [setOpenDropdown]);
+
   return (
     <Overlay
       // className="w-[632px]"
@@ -513,7 +540,12 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                   {s.expanded && (
                     <div className={'flex flex-wrap gap-x-2 '}>
                       {s.value.map((a) => (
-                        <Tag key={a} onClick={() => toggleAmenitySelection(a)} selected={reduxAmenities.includes(a)}>
+                        <Tag
+                          key={a}
+                          onClick={() => {
+                            toggleAmenitySelection(a);
+                          }}
+                          selected={internalAmenities?.includes(a)}>
                           <span>{a}</span>
                         </Tag>
                       ))}
@@ -525,23 +557,49 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           </SimpleBar>
         </form>
         <div
-          className="text-right block md:sticky left-0 right-0 bottom-0 bg-white p-5"
+          className="text-right md:sticky left-0 right-0 bottom-0 bg-white p-5 flex justify-between h-[78px]"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
           }}>
-          <Button white label="Cancel" className="mr-2" onClick={handleClose} />
-          <Button
-            label="Save Changes"
-            type="submit"
-            primary
-            className=""
-            loading={loadingButton}
-            disabled={!formik.isValid || ids?.length === 0}
-            onClick={() => {
-              setOpenDropdown(false);
-              formik.handleSubmit();
-            }}
-          />
+          <div>
+            <Button
+              white
+              label={'Clear'}
+              onClick={() => {
+                setDatav2([]);
+                setIds('');
+                setItems(data1);
+                formik?.values?.neighborhood_ids.map((id) => compute(id, 0));
+                filterData(data1, '');
+                dispatch(setAmenities([]));
+                setInternalAmenities([]);
+                formik.setValues({
+                  bathrooms: '',
+                  bedrooms: '',
+                  neighborhood_ids: [0],
+                  budget_max: '',
+                  budget_min: '',
+                  looking_action: 1,
+                });
+              }}
+            />
+          </div>
+          <div>
+            <Button white label="Cancel" className="mr-2" onClick={handleClose} />
+            <Button
+              label="Save Changes"
+              type="submit"
+              primary
+              className=""
+              loading={loadingButton}
+              disabled={!formik.dirty && arraysHaveSameElements(internalAmenities, reduxAmenities)}
+              onClick={() => {
+                dispatch(setAmenities([...reduxAmenities, ...internalAmenities]));
+                setOpenDropdown(false);
+                formik.handleSubmit();
+              }}
+            />
+          </div>
         </div>
       </div>
     </Overlay>
