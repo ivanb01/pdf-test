@@ -184,7 +184,7 @@ export default function LookingFor({ contactId, category }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
-    if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
+    if (filters?.neighborhood_ids) params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
     if (filters?.budget_max) params['priceMax'] = filters.budget_max;
     if (filters?.bedrooms_min) {
