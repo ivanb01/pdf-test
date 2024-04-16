@@ -402,7 +402,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
-    if (!filters?.neighborhood_ids?.includes(0) && filters?.neighborhood_ids?.length !== 0) {
+    if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     }
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
