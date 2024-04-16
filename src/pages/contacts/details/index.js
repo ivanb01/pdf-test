@@ -250,7 +250,9 @@ const index = () => {
   return (
     <>
       <div>
-        <MainMenu />
+        <div className={'sticky z-[9] top-0'}>
+          <MainMenu />
+        </div>
         {showReviewOverlay && (
           <ReviewContact
             showToast
