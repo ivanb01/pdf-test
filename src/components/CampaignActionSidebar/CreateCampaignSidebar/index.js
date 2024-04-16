@@ -41,6 +41,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       body: '',
       wait_interval: '-d',
       type: 'Email',
+      trigger_time: '11:00',
       charset: 'A',
       template: {
         id: -1,
@@ -295,6 +296,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         body_html: '',
         body: '',
         wait_interval: '-d',
+        trigger_time: '11:00',
         type: 'Email',
         charset: 'A',
         template: {
