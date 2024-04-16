@@ -360,12 +360,12 @@ const index = () => {
                       />
                     </div>
                   )}
-                  {contact.tags && (
+                  {contact.priority && (
                     <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium">
                       <span className="text-gray6 mr-3">Priority:</span>
                       <div className="flex items-center">
                         <span className={`block h-2 w-2 mr-1 rounded-full bg-red3`} />
-                        <span className="text-gray7">{findTagsOption(contact.tags)[0].value}</span>
+                        <span className="text-gray7">{contact.priority}</span>
                       </div>
                     </div>
                   )}
@@ -544,7 +544,9 @@ const index = () => {
                     <Button onClick={() => setAddNoteModal(true)} primary label="Create Note" />
                   </div>
                 ) : (
-                  <SimpleBar style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
+                  <SimpleBar
+                    className="-mx-3 lg:-mx-6 px-3 lg:px-6"
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes.reverse().map((note, index) => (
                       <Item
                         isEditable

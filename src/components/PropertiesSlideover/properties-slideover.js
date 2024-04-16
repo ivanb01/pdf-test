@@ -16,6 +16,7 @@ import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined
 import React, { useEffect, useState } from 'react';
 import placeholder from '../../../public/images/img-placeholder.png';
 import { fetchCurrentUserInfo } from '@helpers/auth';
+import { useSelector } from 'react-redux';
 const SelectedProperty = ({ property, setSelected, selected }) => {
   return (
     <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
@@ -82,6 +83,7 @@ const PropertiesSlideOver = ({
   showProperties,
   setShowProperties,
 }) => {
+  const userInfo = useSelector((state) => state.global.userInfo);
   const [userData, setUserData] = useState('');
 
   useEffect(() => {
@@ -312,7 +314,9 @@ const PropertiesSlideOver = ({
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {userData}
+                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      : userInfo?.email}
                   </p>
                 </div>
               ) : (

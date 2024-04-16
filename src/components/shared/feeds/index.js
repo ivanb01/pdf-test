@@ -172,7 +172,7 @@ export default function Feeds({
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar style={{ maxHeight: '300px' }}>
+          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ maxHeight: '300px' }}>
             <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
               {activities
                 ?.slice()

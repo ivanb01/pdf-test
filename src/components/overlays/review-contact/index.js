@@ -7,6 +7,7 @@ import Dropdown from 'components/shared/dropdown';
 import {
   clientOptions,
   leadSourceOptions,
+  priorityOptions,
   multiselectOptionsClients,
   othersOptions,
   professionalsOptions,
@@ -75,6 +76,12 @@ const ReviewContact = ({
       value: option.label,
     })),
   );
+  const [newPriority, setPriority] = useState(
+    priorityOptions.map((option) => ({
+      ...option,
+      value: option.label,
+    })),
+  );
 
   const isUnapprovedAI = !(
     ['GmailAI', 'Gmail', 'Smart Sync A.I.'].includes(client.import_source) &&
@@ -111,6 +118,7 @@ const ReviewContact = ({
       phone_number: client?.phone_number ? client?.phone_number : null,
       summary: client?.summary ? client?.summary : client.ai_email_summary ? client.ai_email_summary : null,
       lead_source: client?.lead_source,
+      priority: client?.priority,
       tags: client?.tags,
       selectedContactCategory:
         client?.category_1 == 'Client'
@@ -125,6 +133,7 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
+      console.log("values", values);
       if (formik.values.email !== formik.initialValues.email) {
         setUpdating(true);
         await userAlreadyExists(values.email)
@@ -242,6 +251,7 @@ const ReviewContact = ({
     if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
       return;
     }
+    console.log("alberina")
     setUpdating(true);
     let category_id;
     if (values.selectedContactCategory === 3) {
@@ -290,11 +300,13 @@ const ReviewContact = ({
           approved_ai: true,
           lead_source: values.lead_source,
           tags: values.tags,
+          priority: values.priority,
         }
       : {
           ...baseData,
           lead_source: values.lead_source,
           tags: values.tags,
+          priority: values.priority,
         };
 
     try {
@@ -637,21 +649,13 @@ const ReviewContact = ({
               </div>
               <div>
                 <DropdownWithSearch
-                  isMulti
-                  options={multiselectOptionsClients}
-                  onMenuOpen={() => setIsMenuOpen(true)}
-                  onMenuClose={() => setIsMenuOpen(false)}
-                  typeOfContact={openedTab}
-                  bottom={'-59px'}
-                  maxMenuHeight={200}
-                  value={findTagsOption(formik.values.tags)}
+                  bottom={'-58px'}
+                  options={newPriority}
                   label="Priority"
-                  onChange={(choice) => {
-                    formik.setFieldValue(
-                      'tags',
-                      choice.map((el) => el.label),
-                    );
-                  }}
+                  value={newPriority?.find((vendor) => vendor.value == formik.values.priority)}
+                  onChange={(el) => formik.setValues({ ...formik.values, priority: el.label })}
+                  placeHolder={formik.values.priority ? formik.values.priority : 'Choose'}
+                  maxMenuHeight={200}
                 />
               </div>
             </div>

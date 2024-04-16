@@ -281,6 +281,14 @@ const index = () => {
       id: 1,
       label: 'For Rent',
     },
+    {
+      id: 2,
+      label: 'Sold',
+    },
+    {
+      id: 3,
+      label: 'Rented',
+    },
   ];
   const [ids, setIds] = useState();
   const removeNullUndefined = (obj) => {
@@ -320,7 +328,7 @@ const index = () => {
       params['address'] = searchKey;
       params['page'] = 1;
     }
-    if (status) params['status'] = status.id == 0 ? 1 : 2;
+    if (status) params['status'] = status.id == 0 ? 1 : status.id == 1 ? 2 : status.id == 2 ? 19 : 22;
     if (ids?.length) params['neighborhood_id'] = ids;
     if (bedrooms) {
       params['bedsMin'] = bedrooms.value;
