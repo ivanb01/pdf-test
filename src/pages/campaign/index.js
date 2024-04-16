@@ -161,7 +161,7 @@ const index = () => {
   return (
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
       <CreateCampaignSidebar open={showCreateCampaign} setOpen={setShowCreateCampaign} />
-      <div ref={elementRef} className={'sticky top-0 z-[9999999]'}>
+      <div ref={elementRef} className={'sticky top-0 z-[10]'}>
         <MainMenu />
       </div>
       <div
