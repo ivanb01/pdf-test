@@ -1,4 +1,3 @@
-
 import Overlay from '@components/shared/overlay';
 import Button from '@components/shared/button';
 import React, { useEffect, useState } from 'react';
@@ -7,6 +6,7 @@ import { timeAgo } from '@global/functions';
 import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import DOMPurify from 'dompurify';
 
 const EmailItem = ({
   name,
@@ -73,7 +73,7 @@ const EmailItem = ({
             </h5>
             <div className="text-[#475467] font-medium text-sm">{sentDate}</div>
           </div>
-          <div className={'text-sm font-normal'} dangerouslySetInnerHTML={{ __html: body }}></div>
+          <div className={'text-sm font-normal'} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}></div>
         </div>
       </div>
       {isLast && (

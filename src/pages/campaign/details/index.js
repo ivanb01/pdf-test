@@ -5,8 +5,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Button from '@components/shared/button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import allEventsIcon from '../../../../public/images/campaign/allEventsIcon.svg';
-import emailEventsIcon from '../../../../public/images/campaign/emailEventsIcon.svg';
-import smsEventsIcon from '../../../../public/images/campaign/smsEventsIcon.svg';
 import campaignsMatchedTo from '../../../../public/images/campaign/campaignsMatchedTo.svg';
 import inCampaign from '../../../../public/images/campaign/inCampaign.svg';
 import notInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
@@ -16,7 +14,7 @@ import { useEffect, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaign, getCampaignsByCategory, getCampaignsUsers } from '@api/campaign';
+import { getAllEvents, getCampaign, getCampaignsByCategory } from '@api/campaign';
 import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
@@ -195,7 +193,9 @@ const index = () => {
 
   return (
     <>
-      <MainMenu />
+      <div className={'sticky top-0 z-[9999999]'}>
+        <MainMenu />
+      </div>
       {campaignEvents === undefined ||
       CRMCampaigns === undefined ||
       campaignDetails === undefined ||

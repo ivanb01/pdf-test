@@ -21,6 +21,7 @@ import PropertyOtherDetails from '@components/property-details/property-other-de
 import PopoverComponent from '@components/shared/Popover';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { AnimatePresence, motion } from 'framer-motion';
+import DOMPurify from 'dompurify';
 
 const PortfolioPopup = ({
   handleCloseOverlay,
@@ -451,7 +452,9 @@ const PortfolioPopup = ({
                               </div>
                             </div>
                           </div>
-                          <div className="mt-6" dangerouslySetInnerHTML={{ __html: data?.DESCRIPTION }}></div>
+                          <div
+                            className="mt-6"
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.DESCRIPTION) }}></div>
                         </div>
                         <PropertyAmenities data={data} />
                         <PropertyOtherDetails data={data} />

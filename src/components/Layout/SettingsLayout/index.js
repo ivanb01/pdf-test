@@ -88,7 +88,9 @@ const SettingsLayout = ({ children }) => {
 
   return (
     <>
-      <MainMenu />
+      <div className={'sticky z-[9999] top-0'}>
+        <MainMenu />
+      </div>
       <div className="flex h-full">
         <SidebarMenu navigation={navigation} setCurrentNavigation={setCurrentNavigation} />
         <div className="w-full">{children}</div>

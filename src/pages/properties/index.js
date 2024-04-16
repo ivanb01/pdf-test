@@ -306,7 +306,7 @@ const index = () => {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       page: page,
-      amenities: selectedAmenities,
+      amenities: selectedAmenities.length > 0 ? selectedAmenities : undefined,
     };
     if (filterValue === 'newest') {
       params['sort'] = 'date';

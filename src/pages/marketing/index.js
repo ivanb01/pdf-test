@@ -333,36 +333,38 @@ const index = () => {
   }, []);
 
   return (
-    <SimpleBar style={{ maxHeight: '100%' }}>
+    <>
       <MainMenu />
-      <div
-        className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-        style={{ height: '230px' }}>
-        <div>
-          <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
-          <p className={'text-[12px] text-center font-medium mt-2 text-white'}>
-            Receive custom digital templates to your email - Ready in 24 Hours or Less!
-          </p>
+      <SimpleBar style={{ maxHeight: '100%' }}>
+        <div
+          className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
+          style={{ height: '230px' }}>
+          <div>
+            <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
+            <p className={'text-[12px] text-center font-medium mt-2 text-white'}>
+              Receive custom digital templates to your email - Ready in 24 Hours or Less!
+            </p>
+          </div>
+          <Search
+            placeholder="Search here..."
+            className="text-sm w-[550px]"
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
         </div>
-        <Search
-          placeholder="Search here..."
-          className="text-sm w-[550px]"
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-      </div>
-      <div className={'w-100 flex items-center'}>
-        <Tabs
-          loadingTabs={false}
-          current={current}
-          setCurrent={setCurrent}
-          tabs={localTabs}
-          wrapperClassName={`bg-white mt-5`}
-          className={'mx-auto bg-white'}
-          navClassName={'justify-center'}
-        />
-      </div>
-      <MarketingFooter />
-    </SimpleBar>
+        <div className={'w-100 flex items-center'}>
+          <Tabs
+            loadingTabs={false}
+            current={current}
+            setCurrent={setCurrent}
+            tabs={localTabs}
+            wrapperClassName={`bg-white mt-5`}
+            className={'mx-auto bg-white'}
+            navClassName={'justify-center'}
+          />
+        </div>
+        <MarketingFooter />
+      </SimpleBar>
+    </>
   );
 };
 

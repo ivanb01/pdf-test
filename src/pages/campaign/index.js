@@ -1,5 +1,4 @@
 import MainMenu from '@components/shared/menu';
-import SimpleBar from 'simplebar-react';
 import Search from '@components/shared/input/search';
 import Tabs from '@components/shared/tabs';
 import { useEffect, useRef, useState } from 'react';
@@ -162,7 +161,7 @@ const index = () => {
   return (
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
       <CreateCampaignSidebar open={showCreateCampaign} setOpen={setShowCreateCampaign} />
-      <div ref={elementRef}>
+      <div ref={elementRef} className={'sticky top-0 z-[10]'}>
         <MainMenu />
       </div>
       <div

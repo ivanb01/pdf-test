@@ -28,6 +28,7 @@ import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
   const router = useRouter();
@@ -108,6 +109,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         setUserData(user?.email ? user?.email : user);
       });
   }, []);
+
   function filterAndSortContacts(contacts, condition) {
     return contacts
       ?.filter(condition)
@@ -122,12 +124,14 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         profile_image_path: contact.profile_image_path,
       }));
   }
+
   function isClientContact(contact) {
     return (
       contact.category_1 == 'Client' &&
       !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
     );
   }
+
   useEffect(() => {
     setFilteredContacts(
       sendMethod !== 2
@@ -154,16 +158,17 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0].budget_min || propertiesData.data[0].budget_max) {
               newFiltersCount += 1;
             }
-            if (propertiesData.data[0].neighborhood_ids && propertiesData.data[0].neighborhood_ids.length > 0) {
+            if (propertiesData.data[0].neighborhood_ids && !propertiesData.data[0].neighborhood_ids.includes(0) > 0) {
+              newFiltersCount += 1;
+            }
+            if (reduxAmenities.length > 0) {
               newFiltersCount += 1;
             }
           }
           setFiltersCount(newFiltersCount);
-          console.log('request done');
           resolve(propertiesData.data);
         })
         .catch((error) => {
-          console.log(error);
           toast.error('Error fetching looking for');
           reject(error);
         });
@@ -342,6 +347,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   };
 
+  const reduxAmenities = useSelector((state) => state.global.amenities);
+
   const initializePropertyInterests = async () => {
     try {
       const lookingProperties = await getLookingFor();
@@ -375,6 +382,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       limit: 21,
       page: page,
     };
+    if (reduxAmenities.length > 0) {
+      params['amenities'] = reduxAmenities.join(',');
+    }
     if (filterValue === 'newest') {
       params['sort'] = 'date';
       params['order'] = 'desc';
@@ -392,7 +402,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
-    if (filters?.neighborhood_ids) params['neighborhood_id'] = filters.neighborhood_ids.join(',');
+    if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
+      params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
+    }
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
     if (filters?.budget_max) params['priceMax'] = filters.budget_max;
     if (filters?.bedrooms_min) {
@@ -408,13 +420,12 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     if (filters?.bathrooms_max) {
       params['bathMax'] = filters.bathrooms_max;
     }
-
+    console.log(params, 'param');
     const urlParams = new URLSearchParams({
       ...params,
     });
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
     const options = {
       timeout: 30000,
     };

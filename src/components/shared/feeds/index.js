@@ -24,6 +24,7 @@ import EmailsPopup from '@components/overlays/email-threads';
 import { getEmailsForSpecificContact } from '@api/email';
 import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
 import Loader from '@components/shared/loader';
+import DOMPurify from 'dompurify';
 
 export default function Feeds({
   showFullHeight,
@@ -335,7 +336,13 @@ export default function Feeds({
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
                         <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
-                          <span dangerouslySetInnerHTML={{ __html: item[0]?.body }} />
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: item[0]?.body
+                                ? DOMPurify.sanitize(item[0].body)
+                                : DOMPurify.sanitize(item[0].html_body.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '')),
+                            }}
+                          />
                         </div>
                       </div>
                     </div>

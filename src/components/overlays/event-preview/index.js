@@ -11,6 +11,7 @@ import { getContactCampaignEventPreview, getAllEvents } from 'api/campaign';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import { useSelector } from 'react-redux';
+import DOMPurify from 'dompurify';
 
 const EventPreview = ({
   topClass,
@@ -332,8 +333,8 @@ const EventPreview = ({
                                 className="text-sm text-gray5"
                                 dangerouslySetInnerHTML={{
                                   __html: eventToPreview?.preview?.body_html
-                                    ? eventToPreview?.preview.body_html
-                                    : eventToPreview?.preview.message,
+                                    ? DOMPurify.sanitize(eventToPreview?.preview.body_html)
+                                    : DOMPurify.sanitize(eventToPreview?.preview.message),
                                 }}></div>
                             </div>
                           </div>

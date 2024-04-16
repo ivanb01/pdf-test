@@ -250,7 +250,9 @@ const index = () => {
   return (
     <>
       <div>
-        <MainMenu />
+        <div className={'sticky z-[9] top-0'}>
+          <MainMenu />
+        </div>
         {showReviewOverlay && (
           <ReviewContact
             showToast
@@ -452,11 +454,10 @@ const index = () => {
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className={'flex items-center'}>
-                    <img src={communication.src} />
                     <Dropdown
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
-                      className="w-[180px] ml-3"
+                      className="w-[180px]"
                       handleSelect={(choice) => {
                         setActivityFilter(choice);
                         setShowGmailInbox(false);
@@ -547,14 +548,16 @@ const index = () => {
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
                     style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
-                    {notes.reverse().map((note, index) => (
-                      <Item
-                        isEditable
-                        className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
-                        item={note}
-                        icon={noteIcon.src}
-                      />
-                    ))}
+                    {notes
+                      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                      .map((note, index) => (
+                        <Item
+                          isEditable
+                          className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
+                          item={note}
+                          icon={noteIcon.src}
+                        />
+                      ))}
                   </SimpleBar>
                 )}
               </div>
