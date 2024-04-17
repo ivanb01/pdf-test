@@ -1,3 +1,4 @@
+import NotificationAlert from '@components/shared/alert/notification-alert';
 import Select from 'react-select';
 
 const DropdownWithSearch = ({
@@ -14,6 +15,8 @@ const DropdownWithSearch = ({
   onMenuOpen,
   onMenuClose,
   required,
+  error,
+  errorText,
   ...props
 }) => {
   return (
@@ -102,6 +105,11 @@ const DropdownWithSearch = ({
             },
           }),
         }}></Select>
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 };

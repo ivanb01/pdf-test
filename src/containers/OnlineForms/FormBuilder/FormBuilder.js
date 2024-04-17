@@ -5,12 +5,11 @@ import Button from '@components/shared/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowNarrowRightIcon } from '@heroicons/react/solid';
 import { PdfViewer } from 'containers/OnlineForms/Pdf';
-import { STEPS, CLIENT_OPTIONS } from '../constants';
+import { STEPS, CONTACT_TYPES_OPTIONS } from '../constants';
 import { InformationCircleIcon } from '@heroicons/react/solid';
 import Input from '@components/shared/input';
 import { useFormik } from 'formik';
 import { object, string, array } from 'yup';
-import Dropdown from 'components/shared/dropdown';
 import Image from 'next/image';
 import useDetectOverflow from '@helpers/hooks/useDetectOverflow';
 import { useRouter } from 'next/router';
@@ -22,6 +21,7 @@ import { useFetchAllClients, useFetchOnlineFormsTypes } from '../queries/queries
 import toast from 'react-hot-toast';
 import { deepObjectsEqual } from '@global/functions';
 import { generatePdfBlob } from 'containers/OnlineForms/Pdf/generatePdf';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const FormBuilder = () => {
   const { editorState, isEditorEmpty, formFields } = useSelector((state) => state.editor);
@@ -52,7 +52,7 @@ const FormBuilder = () => {
 
   const FormTemplateSchema = object().shape({
     name: string().required('Form name is required.'),
-    contact_type: string().required('Contact type is required'),
+    contact_type: array().min(1, 'Contact type is required.'),
     created_by: string().required('Created by is required'),
     share_with: string(),
     selected: array().of(string()),
@@ -72,16 +72,16 @@ const FormBuilder = () => {
     postOnlineFormTypeMutate({
       name,
       created_by,
-      contact_type: contact_type.toUpperCase(),
+      contact_type: contact_type.map((type) => type.label.toUpperCase()),
       fields: formattedFormTypesObject,
       content: editorState,
     });
   };
 
-  const { handleSubmit, handleChange, values, errors, setFieldValue } = useFormik({
+  const { handleSubmit, handleChange, values, errors, setFieldValue, touched } = useFormik({
     initialValues: {
       name: '',
-      contact_type: '',
+      contact_type: [],
       created_by: user,
       share_with: '',
       selected: [],
@@ -144,7 +144,7 @@ const FormBuilder = () => {
                   </span>
                 </div>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-2	gap-6">
+                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
                   <Input
                     type="text"
                     label="Form name*"
@@ -152,22 +152,22 @@ const FormBuilder = () => {
                     onChange={handleChange}
                     value={values.name}
                     className={'[&_input]:h-[38px]'}
-                    error={errors.name}
+                    error={touched.name && errors.name && !values.name}
                     errorText={errors.name}
                   />
-                  <Dropdown
-                    white
-                    label="Contact type*"
-                    activeIcon={false}
-                    options={CLIENT_OPTIONS}
-                    handleSelect={(source) => {
-                      values.contact_type = source.label;
-                    }}
-                    initialSelect={values.contact_type}
-                    placeHolder={values.contact_type ? values.contact_type : 'Choose'}
-                    error={errors.contact_type}
-                    errorText={errors.contact_type}
-                  />
+                  <div>
+                    <DropdownWithSearch
+                      isMulti
+                      label="Contact type*"
+                      options={CONTACT_TYPES_OPTIONS}
+                      value={values.contact_type}
+                      onChange={(choice) => {
+                        setFieldValue('contact_type', choice);
+                      }}
+                      error={touched.contact_type && errors.contact_type && !values.contact_type.length}
+                      errorText={errors.contact_type}
+                    />
+                  </div>
 
                   <Input
                     type="text"

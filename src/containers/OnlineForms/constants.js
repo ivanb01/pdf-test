@@ -3,21 +3,21 @@ export const STEPS = [
   { id: 2, order: 2, label: 'Preview and Save' },
 ];
 
-export const CLIENT_OPTIONS = [
+export const CONTACT_TYPES_OPTIONS = [
   {
-    id: 1,
+    value: 1,
     label: 'Renter',
   },
   {
-    id: 2,
+    value: 2,
     label: 'Buyer',
   },
   {
-    id: 3,
+    value: 3,
     label: 'Seller',
   },
   {
-    id: 4,
+    value: 4,
     label: 'Landlord',
   },
 ];
