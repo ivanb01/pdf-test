@@ -173,7 +173,7 @@ export default function Feeds({
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ maxHeight: '285px', minHeight: '285px' }}>
+          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px' }}>
             <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
               {activities
                 ?.slice()
@@ -305,8 +305,7 @@ export default function Feeds({
               )}
               <SimpleBar
                 style={{
-                  maxHeight: '285px',
-                  minHeight: '285px',
+                  height: '285px',
                   paddingRight: '-10px',
                 }}
                 autoHide>
@@ -336,7 +335,7 @@ export default function Feeds({
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
-                        <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        <div className="break-words gmail-renderings w-full overflow-hidden ">
                           <span
                             dangerouslySetInnerHTML={{
                               __html: item[0]?.body
