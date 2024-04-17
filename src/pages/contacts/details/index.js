@@ -35,6 +35,7 @@ import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 import Email from '@mui/icons-material/Email';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import { getContactCampaign } from '@api/campaign';
+import { updateContactLocally } from '@store/contacts/slice';
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -289,12 +290,11 @@ const index = () => {
                             },
                             ...activities,
                           ]);
+                          dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
                           addContactActivity(contact.id, {
                             type_of_activity_id: 27,
                             description: 'Attempted to make a phone call.',
                             created_at: new Date().toISOString(),
-                          }).then(() => {
-                            getContactActivities(contact.id).then((response) => setActivities(response.data.data));
                           });
                           window.open(`tel:${contact.phone_number}`);
                         }}
