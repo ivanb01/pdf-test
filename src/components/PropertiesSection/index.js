@@ -402,6 +402,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
+
     if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     }

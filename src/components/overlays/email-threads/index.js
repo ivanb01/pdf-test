@@ -21,10 +21,11 @@ const EmailItem = ({
   inboxData,
   subject,
   email,
+  openedEditor,
+  setOpenedEditor,
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [openedEditor, setOpenedEditor] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userInfo = useSelector((state) => state.global.userInfo);
   const _replyInThread = () => {
@@ -91,13 +92,13 @@ const EmailItem = ({
                 loading={loading}
                 darkBlue
                 disabled={message.length === 0}
-                className={'bg-[#3B82F6] w-[64px] h-[34px]'}
+                className={'bg-lightBlue3 w-[64px] h-[34px]'}
                 onClick={() => _replyInThread()}>
                 Reply
               </Button>
             </>
           ) : (
-            <Button darkBlue className={'bg-[#3B82F6] w-[64px] h-[34px]'} onClick={() => setOpenedEditor(true)}>
+            <Button darkBlue className={'bg-lightBlue3 w-[64px] h-[34px]'} onClick={() => setOpenedEditor(true)}>
               Reply
             </Button>
           )}
@@ -109,16 +110,32 @@ const EmailItem = ({
 
 const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inboxData }) => {
   const [showAll, setShowAll] = useState(false);
+  const [openedEditor, setOpenedEditor] = useState(false);
 
   return (
     <Overlay
       alignStart
       className=" w-[792px]"
+      titleButton={
+        <Button
+          primary
+          className="ml-4 mr-2"
+          label="Reply"
+          size="small"
+          onClick={() => {
+            let element = document.querySelector('.email-area');
+            setOpenedEditor(true);
+            setTimeout(() => {
+              element.scrollTop = element.scrollHeight;
+            }, 200);
+          }}
+        />
+      }
       handleCloseOverlay={handleClose}
       includeTitleBorder
       title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
-        <div style={{ height: 'calc(100% - 72px)', maxHeight: 'calc(100% - 72px) ', overflow: 'auto' }}>
+        <div style={{ height: 'calc(100% - 78px)', maxHeight: 'calc(100% - 78px) ', overflow: 'auto' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
@@ -132,6 +149,8 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               name={`${threadData[threadData[threadData?.length - 1]]?.from_first_name}  ${threadData[threadData[threadData?.length - 1]]?.from_last_name}`}
               body={threadData[0]?.html_body?.length > 0 ? threadData[0]?.html_body : threadData[0]?.body}
               email={threadData[threadData?.length - 1]?.from_email}
+              openedEditor={openedEditor}
+              setOpenedEditor={setOpenedEditor}
             />
           </div>
           <div className={'h-[5px] border-y border-gray2 relative'}>
@@ -165,6 +184,8 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                   isLast={index === threadData?.slice(-2).length - 1}
                   body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
                   email={threadData[index]?.from_email}
+                  openedEditor={openedEditor}
+                  setOpenedEditor={setOpenedEditor}
                 />
                 {!(index === threadData?.slice(-2).length - 1) && (
                   <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>
@@ -175,7 +196,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
         </div>
       ) : (
         <>
-          <div className={'pt-[18px] pb-[24px]'} style={{ height: '89%', overflow: 'auto' }}>
+          <div className={'email-area pt-[18px] pb-[24px]'} style={{ height: '89%', overflow: 'auto' }}>
             {threadData?.length <= 3 || showAll ? (
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>
@@ -192,6 +213,8 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                     isLast={index === threadData?.length - 1}
                     body={e?.html_body?.length > 0 ? e?.html_body : e?.body}
                     email={threadData[index]?.from_email}
+                    openedEditor={openedEditor}
+                    setOpenedEditor={setOpenedEditor}
                   />
                   {!(index === threadData?.length - 1) && <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>}
                 </React.Fragment>
