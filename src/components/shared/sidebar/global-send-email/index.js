@@ -156,7 +156,6 @@ const SendEmailOverlay = () => {
   const getTemplates = async () => {
     try {
       const emailResponse = await getEmailTemplates();
-      console.log('response', emailResponse);
       const emailTemplates = emailResponse.data.data.map((template) => ({
         id: template.id,
         label: template.subject,

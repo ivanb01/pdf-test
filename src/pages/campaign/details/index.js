@@ -19,7 +19,7 @@ import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/sl
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-import { capitalize, getContactTypeByTypeId } from '@global/functions';
+import { capitalize, getContactStatusByStatusId, getContactTypeByTypeId } from '@global/functions';
 
 const index = () => {
   const router = useRouter();
@@ -142,9 +142,6 @@ const index = () => {
     localStorage.removeItem('category');
   }, []);
 
-  useEffect(() => {
-    console.log(usersInCampaignGlobally);
-  }, [usersInCampaignGlobally]);
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
@@ -271,15 +268,18 @@ const index = () => {
             />
           </div>
           {renderTable(currentButton)}
-          {openCampaignPreview && (
-            <CampaignPreview
-              data={campaignEvents}
-              campaignId={id}
-              open={openCampaignPreview}
-              setOpen={setOpenCampaignPreview}
-              className={'mt-[68px]'}
-            />
-          )}
+          <CampaignPreview
+            data={campaignEvents}
+            className="top-[70px]"
+            campaignFor={
+              category == 'Unknown'
+                ? 'All Clients'
+                : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
+            }
+            campaignId={id}
+            open={openCampaignPreview}
+            setOpen={setOpenCampaignPreview}
+          />
         </>
       )}
     </>
