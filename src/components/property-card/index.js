@@ -299,16 +299,16 @@ const PropertyCard = ({
             <input
               type="checkbox"
               id={`checkbox-${property?.ID}`}
-              class="hidden"
+              className="hidden"
               value={selected?.length && selected?.includes(property)}
             />
             {!noSelect && (
               <label
                 htmlFor={`checkbox-${property?.ID}`}
-                class="flex items-center cursor-pointer"
+                className="flex items-center cursor-pointer"
                 onClick={(e) => e.preventDefault()}>
                 <div
-                  class={`${
+                  className={`${
                     isSelected ? 'bg-lightBlue3' : 'border border-gray-300'
                   } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
                   {isSelected && (

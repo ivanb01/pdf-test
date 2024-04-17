@@ -304,7 +304,6 @@ const index = () => {
     });
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 
-    console.log(url);
     await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {

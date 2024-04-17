@@ -362,7 +362,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
         fetchProperties(lookingProperties[0], page, filterValue);
-        console.log(lookingProperties[0], page, filterValue);
       } else {
         fetchProperties(formik.values, page, filterValue);
       }

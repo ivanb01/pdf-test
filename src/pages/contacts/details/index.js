@@ -60,7 +60,6 @@ const index = () => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
-      console.log(contactData);
       if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
         setShowReviewOverlay(true);
       } else {

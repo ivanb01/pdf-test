@@ -197,8 +197,8 @@ const PropertiesSlideOver = ({
             </div>
             <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
               {selectedContacts &&
-                selectedContacts.map((contact) => (
-                  <div className={'flex justify-between items-center mb-5 mr-4'}>
+                selectedContacts.map((contact, index) => (
+                  <div key={index} className={'flex justify-between items-center mb-5 mr-4'}>
                     <div className="flex gap-4">
                       <div>
                         {contact.profile_image_path ? (

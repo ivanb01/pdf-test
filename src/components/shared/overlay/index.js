@@ -38,9 +38,9 @@ const Overlay = ({
                     <path
                       d="M19.8033 12.1123L14.1367 17.779L19.8033 23.4456"
                       stroke="#4B4B4B"
-                      stroke-width="2.6"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 )}
