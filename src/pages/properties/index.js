@@ -36,6 +36,9 @@ import { addPropertiesInPortfolio } from '@api/portfolio';
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
+import { addContactActivity } from '@api/contacts';
+import { updateContactLocally } from '@store/contacts/slice';
+
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -507,7 +510,15 @@ const index = () => {
                   pretty: true,
                 },
               ),
-            ).then((res) => {});
+            ).then((res) => {
+              let activity = {
+                type_of_activity_id: 1,
+                description: 'Sent properties through email.',
+              };
+  
+              dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+              addContactActivity(item.contact_id, activity);
+            });
             setPropertiesSent(true);
             resetPropertySelection();
           }
@@ -519,7 +530,15 @@ const index = () => {
               [c.phone_number],
               `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
             )
-              .then((res) => {})
+              .then((res) => {
+                let activity = {
+                  type_of_activity_id: 2,
+                  description: 'Sent properties through SMS.',
+                };
+    
+                dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+                addContactActivity(item.contact_id, activity);
+              })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed

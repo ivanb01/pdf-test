@@ -28,6 +28,8 @@ import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import { addContactActivity } from '@api/contacts';
+import { updateContactLocally } from '@store/contacts/slice';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -267,9 +269,18 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   pretty: true,
                 },
               ),
-            ).then((res) => {});
+            ).then((res) => {
+              let activity = {
+                type_of_activity_id: 1,
+                description: 'Sent properties through email.',
+              };
+  
+              dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+              addContactActivity(item.contact_id, activity);
+            });
             setPropertiesSent(true);
             resetPropertySelection();
+
           }
           if (
             parseInt(c.value) === parseInt(item.contact_id) &&
@@ -279,7 +290,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               [c.phone_number],
               `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
             )
-              .then((res) => {})
+              .then((res) => {
+                let activity = {
+                  type_of_activity_id: 2,
+                  description: 'Sent properties through SMS.',
+                };
+    
+                dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+                addContactActivity(item.contact_id, activity);
+              })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
