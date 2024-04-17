@@ -474,7 +474,6 @@ const index = () => {
                         Gmail Inbox
                       </span>
                     </button>
-                    {/* <div className="text-gray8 ml-[6px] text-sm font-semibold">All Communication</div> */}
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
@@ -485,7 +484,6 @@ const index = () => {
                     </span>
                   </button>
                 </div>
-                {/*{activities.length ? (*/}
                 <Feeds
                   showFullHeight={contact?.category_1 != 'Client'}
                   contactId={id}
@@ -508,12 +506,6 @@ const index = () => {
                   }
                   setActivities={setActivities}
                 />
-                {/*) : (*/}
-                {/*  <div className="mt-5 text-center">*/}
-                {/*    <div className="text-gray7 font-semibold mb-2">No activities found</div>*/}
-                {/*    <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>*/}
-                {/*  </div>*/}
-                {/*)}*/}
               </div>
 
               {contact?.category_1 == 'Client' && (
