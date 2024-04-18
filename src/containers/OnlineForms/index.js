@@ -40,7 +40,7 @@ const OnlineForms = () => {
     } else {
       setStatus(undefined);
     }
-    console.log('status', status);
+
     return {
       page_size: 10,
       count_items: true,

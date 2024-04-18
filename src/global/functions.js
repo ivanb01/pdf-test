@@ -403,7 +403,6 @@ export const getBaseUrl = () => {
 };
 
 export const deepObjectsEqual = (x, y) => {
-  // console.log('deepObjectsEqual', x, y);
   const ok = Object.keys,
     tx = typeof x,
     ty = typeof y;

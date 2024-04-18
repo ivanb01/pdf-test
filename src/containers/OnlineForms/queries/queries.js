@@ -31,7 +31,9 @@ export const useFetchOnlineFormTypeById = (typeId) => {
 export const useFetchOnlineFormsPaginated = (params, options) => {
   const { form_type_id, search_param, status } = params;
   return useInfiniteQuery({
-    queryKey: [`online-forms-page-${form_type_id ? 'form_type_id-' + form_type_id : ''}-search-${search_param}-status-${status}`],
+    queryKey: [
+      `online-forms-page-${form_type_id ? 'form_type_id-' + form_type_id : ''}-search-${search_param}-status-${status}`,
+    ],
     queryFn: (query) => fecthOnlineForms({ page: query.pageParam, ...params }),
 
     initialPageParam: 1,

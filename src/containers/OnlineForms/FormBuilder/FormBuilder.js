@@ -34,6 +34,7 @@ const FormBuilder = () => {
   const dispatch = useDispatch();
   const { refetch: formsTypesRefetch } = useFetchOnlineFormsTypes();
   const [lastGeneratedPdf, setLastGeneratedPdf] = useState(null);
+
   const onPostFormTypeSuccess = () => {
     router.push('/online-forms');
     dispatch(clearEditorState());
@@ -116,7 +117,7 @@ const FormBuilder = () => {
 
   return (
     <div className="w-full h-full bg-white relative overflow-hidden">
-      <Stepper steps={STEPS} currentStep={currentStep} />
+      <Stepper steps={STEPS} currentStep={currentStep} title={'Create Form'} />
 
       <div className={`w-full h-[calc(100%-140px)] overflow-y-scroll flex justify-center z-0 `}>
         {currentStep === 1 && (

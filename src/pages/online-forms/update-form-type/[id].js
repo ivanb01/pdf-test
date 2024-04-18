@@ -1,15 +1,15 @@
 import Head from 'next/head';
 import MainMenu from '@components/shared/menu';
-import FormBuilder from 'containers/OnlineForms/FormBuilder/FormBuilder';
+import UpdateTemplate from 'containers/OnlineForms/UpdateTemplate';
 
 const CreateFormTypePage = () => {
   return (
     <>
       <Head>
-        <title>Create online forms template</title>
+        <title>Update online forms template</title>
       </Head>
       <MainMenu />
-      <FormBuilder />
+      <UpdateTemplate />
     </>
   );
 };

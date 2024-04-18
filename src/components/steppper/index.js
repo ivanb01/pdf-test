@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ArrowNarrowLeftIcon } from '@heroicons/react/solid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useRouter } from 'next/router';
 
-const Stepper = ({ steps, currentStep }) => {
-  const { back } = useRouter();
-
+const Stepper = ({ steps, currentStep, title }) => {
   return (
     <div className="h-[72px] flex gap-[54px] px-6 items-center border-gray2 border">
-      <button className="grow-0 flex items-center gap-2" onClick={back}>
-        <ArrowNarrowLeftIcon className="h-[20px] w-[20px] text-lightBlue3" />
-        Create Custom Form
-      </button>
-      <div className="flex grow ">
+      <span className="w-[250px] font-medium leading-8	text-lg	text-gray7">{title}</span>
+      <div className="flex grow">
         {steps.map(({ id, order, label }) => {
           return (
             <div className={`flex ${order !== steps.length ? 'grow' : 'grow-0'}`} key={id}>
@@ -51,6 +44,7 @@ Stepper.propTypes = {
       label: PropTypes.string,
     }),
   ).isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default Stepper;
