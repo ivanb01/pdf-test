@@ -676,7 +676,7 @@ const index = () => {
         ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
-  }, [contacts, sendMethod, sortedOptions]);
+  }, [contacts, sendMethod]);
 
   return (
     <>

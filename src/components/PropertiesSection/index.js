@@ -140,7 +140,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
-  }, [contacts, sendMethod, sortedOptions]);
+  }, [contacts, sendMethod]);
 
   useEffect(() => {
     console.log(filteredContacts, 'filteredContacts');

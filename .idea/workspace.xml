@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add onboarding">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PropertiesSection/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PropertiesSection/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PropertiesSlideover/properties-slideover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PropertiesSlideover/properties-slideover.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/erza/new-onboard" />
+        <entry key="$PROJECT_DIR$" value="f/erza/InfiniteScrollInCampaigns" />
       </map>
     </option>
   </component>
@@ -31,7 +31,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/RentedSoldStatus",
+    "git-widget-placeholder": "development",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
