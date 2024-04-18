@@ -12,18 +12,18 @@ import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
 import { PencilIcon } from '@heroicons/react/solid';
 import { TrashIcon } from '@heroicons/react/solid';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import SlideOver from '@components/shared/slideOver';
-import { PdfViewer } from 'containers/OnlineForms/Pdf';
-import { generatePdfBlob } from 'containers/OnlineForms/Pdf/generatePdf';
-import { useRouter } from 'next/router';
 
-const SideBarFilter = ({ filters, setCurrentFilter, currentFilterId, onPlusClick, isRefetching }) => {
-  const router = useRouter();
+const SideBarFilter = ({
+  filters,
+  setCurrentFilter,
+  currentFilterId,
+  onPlusClick,
+  isRefetching,
+  handlePreviewTemplate,
+  handleEditTemplate,
+}) => {
   const [hoveredFilterId, setHoveredFilterId] = useState(null);
-  const [openedPopover, setOpenedPopover] = useState(null);
-  const [openSlideover, setOpenSlideover] = useState(false);
-  const [pdfRender, setPdfRender] = useState(null);
-  const [loadingPdf, setLoadingPdf] = useState(false);
+
   const allForm = filters.find((filter) => {
     return filter.id === '';
   });
@@ -51,7 +51,7 @@ const SideBarFilter = ({ filters, setCurrentFilter, currentFilterId, onPlusClick
         </div>
       ),
       handleClick: (template) => {
-        router.push(`/online-forms/update-form-type/${template.id}`);
+        handleEditTemplate(template);
       },
     },
     {
@@ -62,13 +62,7 @@ const SideBarFilter = ({ filters, setCurrentFilter, currentFilterId, onPlusClick
         </div>
       ),
       handleClick: async (template) => {
-        setOpenedPopover(template);
-        setOpenSlideover(true);
-        setLoadingPdf(true);
-        const blob = await generatePdfBlob(template.content, true);
-        const url = URL.createObjectURL(blob);
-        setPdfRender(url);
-        setLoadingPdf(false);
+        handlePreviewTemplate(template);
       },
     },
     {
@@ -150,30 +144,6 @@ const SideBarFilter = ({ filters, setCurrentFilter, currentFilterId, onPlusClick
           );
         })}
       </ul>
-      <SlideOver width="w-[663px]" open={openSlideover} setOpen={setOpenSlideover} title={openedPopover?.name ?? ''}>
-        {pdfRender && !loadingPdf && (
-          <div className="flex flex-col relative">
-            <div className="flex justify-center h-full w-auto pb-[70px]">
-              <PdfViewer pdf={pdfRender} />
-            </div>
-            <div className="bg-white w-[663px] fixed bottom-0 right-0 h-[70px] flex justify-between items-center px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)]">
-              <button className="flex items-center gap-2 text-red5 text-sm font-medium leading-5 bg-red1 py-[9px] px-[17px] rounded-md	">
-                <TrashIcon className="w-5 h-5" />
-                <span>Move to Trash</span>
-              </button>
-              <div className="flex items-center gap-[15px]">
-                <Button white label={'Cancel'} onClick={() => setOpenSlideover(false)} />
-                <Button
-                  leftIcon={<PencilIcon />}
-                  label="Edit Form"
-                  className={'gap-x-2'}
-                  onClick={() => router.push(`/online-forms/update-form-type/${openedPopover.id}`)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </SlideOver>
     </div>
   );
 };

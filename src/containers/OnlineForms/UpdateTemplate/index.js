@@ -26,6 +26,7 @@ const UpdateTemplate = () => {
   const { editorState, isEditorEmpty, formFields } = useSelector((state) => state.editor);
   const {
     isLoading: loadingTemplateData,
+    isRefetching: refetchingTemplateData,
     data: templateData,
     error: errorTemplateData,
   } = useFetchOnlineFormTypeById(router.query.id);
@@ -41,7 +42,7 @@ const UpdateTemplate = () => {
     };
   }, []);
   useEffect(() => {
-    if (templateData) {
+    if (templateData && !loadingTemplateData && !refetchingTemplateData) {
       dispatch(setEditorState(templateData.data.content));
     }
   }, [templateData]);
@@ -141,7 +142,7 @@ const UpdateTemplate = () => {
     return <div className="w-full h-full flex justify-center items-center">Something went worng...</div>;
   }
 
-  if (loadingTemplateData) {
+  if (loadingTemplateData || refetchingTemplateData) {
     return (
       <div className="h-full w-full flex items-center justify-center">
         <CircularProgress size={40} />
