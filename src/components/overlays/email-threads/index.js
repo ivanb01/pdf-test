@@ -23,6 +23,7 @@ const EmailItem = ({
   email,
   openedEditor,
   setOpenedEditor,
+  setHideTopButton,
 }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,12 @@ const EmailItem = ({
         toast.error('Something went wrong');
       });
   };
+  useEffect(() => {
+    if (openedEditor) {
+      setHideTopButton(true);
+    }
+  }, [openedEditor]);
+
   return (
     <div className={'flex px-6 flex-col '}>
       <div className={'flex gap-3 items-start'}>
@@ -111,31 +118,36 @@ const EmailItem = ({
 const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inboxData }) => {
   const [showAll, setShowAll] = useState(false);
   const [openedEditor, setOpenedEditor] = useState(false);
+  const [hideTopButton, setHideTopButton] = useState(false);
 
   return (
     <Overlay
       alignStart
       className=" w-[792px]"
       titleButton={
-        <Button
-          primary
-          className="ml-4 mr-2"
-          label="Reply"
-          size="small"
-          onClick={() => {
-            let element = document.querySelector('.email-area');
-            setOpenedEditor(true);
-            setTimeout(() => {
-              element.scrollTop = element.scrollHeight;
-            }, 200);
-          }}
-        />
+        !hideTopButton && (
+          <Button
+            primary
+            className="ml-4 mr-2"
+            label="Reply"
+            size="small"
+            onClick={() => {
+              let element = document.querySelector('.email-area');
+              setOpenedEditor(true);
+              setTimeout(() => {
+                element.scrollTop = element.scrollHeight;
+              }, 200);
+            }}
+          />
+        )
       }
       handleCloseOverlay={handleClose}
       includeTitleBorder
       title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
-        <div style={{ height: 'calc(100% - 78px)', maxHeight: 'calc(100% - 78px) ', overflow: 'auto' }}>
+        <div
+          className="email-area"
+          style={{ height: 'calc(100% - 78px)', maxHeight: 'calc(100% - 78px) ', overflow: 'auto' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
@@ -151,6 +163,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               email={threadData[threadData?.length - 1]?.from_email}
               openedEditor={openedEditor}
               setOpenedEditor={setOpenedEditor}
+              setHideTopButton={setHideTopButton}
             />
           </div>
           <div className={'h-[5px] border-y border-gray2 relative'}>
@@ -186,6 +199,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                   email={threadData[index]?.from_email}
                   openedEditor={openedEditor}
                   setOpenedEditor={setOpenedEditor}
+                  setHideTopButton={setHideTopButton}
                 />
                 {!(index === threadData?.slice(-2).length - 1) && (
                   <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>
@@ -215,6 +229,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                     email={threadData[index]?.from_email}
                     openedEditor={openedEditor}
                     setOpenedEditor={setOpenedEditor}
+                    setHideTopButton={setHideTopButton}
                   />
                   {!(index === threadData?.length - 1) && <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>}
                 </React.Fragment>
