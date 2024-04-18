@@ -36,7 +36,7 @@ const globalTabs = {
   'Add Professional': 1,
 };
 
-const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => {
+const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, addedContactDetails, onClientAdded }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
@@ -143,11 +143,13 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         status_id: status,
       };
 
-      addContact(contactToAdd).then(() => dispatch(setRefetchData(true)));
+      addContact(contactToAdd).then(async () => {
+        await dispatch(setRefetchData(true));
+        onClientAdded(contactToAdd.email);
+      });
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
-        console.log(subtab, index, formik.values.selectedStatus);
         if (subtab.includes(formik.values.selectedStatus)) {
           subtabValue = index;
         }
@@ -359,7 +361,12 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           // rightIcon={<ArrowRightIcon height={15} />}
           onClick={() => {
             setLoading(false);
-
+            if (addedContactDetails) {
+              addedContactDetails(formik.values);
+              setTimeout(() => {
+                setLoading(false);
+              }, 3000);
+            }
             formik.submitForm();
           }}></Button>
       </div>

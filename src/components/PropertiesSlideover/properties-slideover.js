@@ -8,14 +8,18 @@ import saved from '../../../public/images/saved.svg';
 import Close from '@mui/icons-material/Close';
 import { MultiSelect } from 'react-multi-select-component';
 import SimpleBar from 'simplebar-react';
-import { getInitials } from '@global/functions';
+import { getInitials, isHealthyCommuncationDate } from '@global/functions';
 import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import placeholder from '../../../public/images/img-placeholder.png';
 import { useSelector } from 'react-redux';
+
+import AddClientManuallyOverlay from '@components/overlays/add-client/add-client-manually';
+import { clientOptions, clientStatuses } from '@global/variables';
+import { useRouter } from 'next/router';
 
 const SelectedProperty = ({ property, setSelected, selected }) => {
   return (
@@ -83,6 +87,40 @@ const PropertiesSlideOver = ({
   showProperties,
   setShowProperties,
 }) => {
+  const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
+
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const [email, setEmail] = useState();
+  useEffect(() => {
+    if (email) {
+      handleAfterClientAdd(email);
+    }
+  }, [allContacts, email, sendMethod]);
+  const handleAfterClientAdd = (email) => {
+    setShowAddContactOverlay(false);
+    setOpen(true);
+    const contact = allContacts?.find((contact) => contact.email == email);
+    if (contact && email) {
+      if (contact.phone_number === null && sendMethod === 2) {
+        return;
+      } else {
+        setSelectedContacts([
+          ...selectedContacts,
+          {
+            label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+            value: contact.id,
+            email: contact.email,
+            first_name: contact.first_name,
+            last_name: contact.last_name,
+            phone_number: contact.phone_number,
+            profile_image_path: contact?.profile_image_path,
+          },
+        ]);
+      }
+      setEmail(undefined);
+    }
+  };
+  const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
   return (
     <>
@@ -185,6 +223,21 @@ const PropertiesSlideOver = ({
                 labelledBy="Search for clients"
                 overrideStrings={{
                   selectSomeItems: 'Selected clients will appear here',
+                  noOptions: router.pathname.includes('properties') && (
+                    <div>
+                      <p>
+                        No client found,{' '}
+                        <span
+                          style={{ textDecoration: 'underline', opacity: 1, cursor: 'pointer', color: 'black' }}
+                          onClick={() => {
+                            setOpen(false);
+                            setShowAddContactOverlay(true);
+                          }}>
+                          Add Client
+                        </span>
+                      </p>
+                    </div>
+                  ),
                 }}
               />
             )}
@@ -195,7 +248,7 @@ const PropertiesSlideOver = ({
                 {selectedContacts.length == 1 ? 'Client' : 'Clients'} selected
               </span>
             </div>
-            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
+            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px ' }}>
               {selectedContacts &&
                 selectedContacts.map((contact, index) => (
                   <div key={index} className={'flex justify-between items-center mb-5 mr-4'}>
@@ -343,6 +396,17 @@ const PropertiesSlideOver = ({
           </div>
         )}
       </SlideOver>
+      {showAddContactOverlay && (
+        <AddClientManuallyOverlay
+          onClientAdded={(email) => {
+            setEmail(email);
+          }}
+          handleClose={() => setShowAddContactOverlay(false)}
+          title="Add Client"
+          options={clientOptions}
+          statuses={clientStatuses}
+        />
+      )}
     </>
   );
 };

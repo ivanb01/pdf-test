@@ -177,7 +177,6 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
-        console.log(subtab, index, formik2.values.selectedStatus);
         if (subtab.includes(formik2.values.selectedStatus)) {
           subtabValue = index;
         }

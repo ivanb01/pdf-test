@@ -67,7 +67,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     const contact = contacts.filter((c) => {
       return c.id == contactId;
     })[0];
-    if (contact.phone_number !== null && sendMethod === 2) {
+    if (contact.phone_number !== null && contact.phone_number === '' && sendMethod === 2) {
       setSelectedContacts([
         {
           value: contact.id,
@@ -140,8 +140,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
         : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
     );
-  }, [contacts, sendMethod]);
+  }, [contacts, sendMethod, sortedOptions]);
 
+  useEffect(() => {
+    console.log(filteredContacts, 'filteredContacts');
+  }, [filteredContacts]);
   const getLookingFor = () => {
     return new Promise((resolve, reject) => {
       contactServices
@@ -262,7 +265,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   <p style={{ color: '#344054' }}>
                     Best Regards,
                     <br />
-                    {userData}
+                    {userData ?? ''}
                   </p>
                 </>,
                 {
@@ -274,13 +277,12 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 type_of_activity_id: 1,
                 description: 'Sent properties through email.',
               };
-  
+
               dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
               addContactActivity(item.contact_id, activity);
             });
             setPropertiesSent(true);
             resetPropertySelection();
-
           }
           if (
             parseInt(c.value) === parseInt(item.contact_id) &&
@@ -295,7 +297,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   type_of_activity_id: 2,
                   description: 'Sent properties through SMS.',
                 };
-    
+
                 dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
                 addContactActivity(item.contact_id, activity);
               })

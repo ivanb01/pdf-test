@@ -39,7 +39,6 @@ import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slid
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 
-
 const statuss = Object.freeze({
   unchecked: 0,
   checked: 1,
@@ -439,14 +438,6 @@ const index = () => {
     );
   }
 
-  useEffect(() => {
-    setFilteredContacts(
-      sendMethod !== 2
-        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
-        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
-    );
-  }, [contacts, sendMethod]);
-
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
@@ -515,7 +506,7 @@ const index = () => {
                 type_of_activity_id: 1,
                 description: 'Sent properties through email.',
               };
-  
+
               dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
               addContactActivity(item.contact_id, activity);
             });
@@ -535,7 +526,7 @@ const index = () => {
                   type_of_activity_id: 2,
                   description: 'Sent properties through SMS.',
                 };
-    
+
                 dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
                 addContactActivity(item.contact_id, activity);
               })
@@ -659,7 +650,6 @@ const index = () => {
     };
   }, [setOpenDropdown]);
 
-  const [openSidebar, setOpenSidebar] = useState(true);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
   useEffect(() => {
@@ -681,12 +671,12 @@ const index = () => {
     return 0;
   });
   useEffect(() => {
-    console.log(sortedOptions, 'sortedOptions');
-  }, [sortedOptions]);
-
-  useEffect(() => {
-    console.log(selectedProperties);
-  }, [selectedProperties]);
+    setFilteredContacts(
+      sendMethod !== 2
+        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
+        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
+    );
+  }, [contacts, sendMethod, sortedOptions]);
 
   return (
     <>
