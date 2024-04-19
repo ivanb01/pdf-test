@@ -30,6 +30,7 @@ import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slid
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
+import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -248,26 +249,17 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
               [c.email],
-              `Hi ${c.first_name}, check out these new properties.`,
+              `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
-                <>
-                  <p style={{ color: '#344054', marginBottom: '32px' }}>
-                    Hey {c.first_name},
-                    <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a
-                      style={{ color: 'blue' }}
-                      role={'button'}
-                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
-                      Portfolio Link
-                    </a>
-                  </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
-                    <br />
-                    {userData ?? ''}
-                  </p>
-                </>,
+                <PortfolioEmailTemplate
+                  agent_first_name={
+                    userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name}`
+                      : userInfo?.email
+                  }
+                  first_name={c?.first_name}
+                  portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                />,
                 {
                   pretty: true,
                 },
@@ -422,7 +414,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
-
 
     if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');

@@ -38,6 +38,7 @@ import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properti
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
+import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -475,28 +476,17 @@ const index = () => {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
               [c.email],
-              `Hi ${c.first_name}, check out these new properties.`,
+              `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
-                <>
-                  <p style={{ color: '#344054', marginBottom: '32px' }}>
-                    Hey {c.first_name},
-                    <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a
-                      style={{ color: 'blue' }}
-                      role={'button'}
-                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
-                      Portfolio Link
-                    </a>
-                  </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
-                    <br />
-                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
-                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
-                      : userInfo?.email}
-                  </p>
-                </>,
+                <PortfolioEmailTemplate
+                  agent_first_name={
+                    userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name}`
+                      : userInfo?.email
+                  }
+                  first_name={c?.first_name}
+                  portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                />,
                 {
                   pretty: true,
                 },

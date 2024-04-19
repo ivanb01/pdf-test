@@ -344,18 +344,18 @@ const PropertiesSlideOver = ({
                   <p style={{ color: '#344054', marginBottom: '32px' }}>
                     Hey [client name],
                     <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a style={{ color: 'blue' }} role={'button'}>
-                      [portfolio link]
-                    </a>
+                    <br /> I've compiled a portfolio for you to take a look at. Feel free to browse through and let me
+                    know if anything catches your eye. You can indicate if there are any properties you particularly
+                    like or dislike to help keep your search organized.{' '}
                   </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
+                  <p style={{ color: '#344054' }}>Looking forward to hearing your thoughts!</p>
+                  <p style={{ color: '#344054', marginBottom: '15px' }}>
                     <br />
                     {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
-                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      ? `${userInfo?.first_name}`
                       : userInfo?.email}
                   </p>
+                  <Button darkBlue label={'View Properties in Your Portfolio'} />
                 </div>
               ) : (
                 <p>Hey [client name], new properties have been added in your portfolio. View here: [portfolio link]</p>
