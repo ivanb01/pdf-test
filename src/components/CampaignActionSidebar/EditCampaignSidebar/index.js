@@ -84,25 +84,27 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     }
   };
   useEffect(() => {
-    const fetchCampaignData = async () => {
-      let fetchedCampaign = await getCampaign(campaignId);
-      fetchedCampaign = fetchedCampaign.data;
-      setLoadingData(false);
-      setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
-      let events = fetchedCampaign.actions.map((event) => ({ ...event }));
-      setEvents(events);
-      setEligibleData(fetchedCampaign);
-    };
-    if (!campaignData) {
-      fetchCampaignData();
-    } else {
-      setLoadingData(false);
-      console.log(campaignData);
-      setCampaign(campaignData);
-      setEvents(campaignData.actions);
-      setEligibleData(campaignData);
+    if (!open) {
+      const fetchCampaignData = async () => {
+        let fetchedCampaign = await getCampaign(campaignId);
+        fetchedCampaign = fetchedCampaign.data;
+        setLoadingData(false);
+        setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
+        let events = fetchedCampaign.actions.map((event) => ({ ...event }));
+        setEvents(events);
+        setEligibleData(fetchedCampaign);
+      };
+      if (!campaignData) {
+        fetchCampaignData();
+      } else {
+        setLoadingData(false);
+        console.log(campaignData);
+        setCampaign(campaignData);
+        setEvents(campaignData.actions);
+        setEligibleData(campaignData);
+      }
     }
-  }, [campaignId]);
+  }, [campaignId, open]);
 
   const editCampaign = () => {
     setEditingCampaignLoader(true);
@@ -485,7 +487,13 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             </div>
           </SimpleBar>
           <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
-            <Button label="Cancel" white onClick={() => setOpen(false)} />
+            <Button
+              label="Cancel"
+              white
+              onClick={() => {
+                setOpen(false);
+              }}
+            />
             <a
               onClick={() => addNewEvent()}
               className="mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
