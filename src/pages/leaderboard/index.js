@@ -9,6 +9,9 @@ import { useEffect } from 'react';
 import Loader from 'components/shared/loader';
 import { getEmailParts } from 'global/functions';
 import withAuth from '@components/withAuth';
+import SpinnerLoader from '@components/shared/SpinnerLoader';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+
 const index = () => {
   const [tabs, setTabs] = useState([
     {
@@ -94,7 +97,7 @@ const index = () => {
   };
 
   const sortData = () => {
-    let sortedData = [...data.data].sort((a, b) => {
+    let sortedData = [...items.data].sort((a, b) => {
       if (typeof a[sortColumn.key] === 'number') {
         return sortColumn.type === 'asc'
           ? a[sortColumn.key] - b[sortColumn.key]
@@ -107,13 +110,13 @@ const index = () => {
         throw new Error('Invalid sort key. Key should be a string or a number.');
       }
     });
-    setData((prevState) => {
+    setItems((prevState) => {
       return { ...prevState, data: sortedData };
     });
   };
 
   const initializeData = () => {
-    data.data.map((agent) => {
+    items.data.map((agent) => {
       agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${getEmailParts(agent.agent_id).lastName}`;
       agent.percentage_healthy_clients = calculateHealthyCommunication(
         agent.healthy_communication,
@@ -123,27 +126,81 @@ const index = () => {
       return agent;
     });
   };
-  const [data, setData] = useState([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortColumn, setSortColumn] = useState(0);
   const [currentButton, setCurrentButton] = useState(0);
 
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [error, setError] = useState();
+  const [offset, setOffset] = useState(0);
+  const [count, setCount] = useState(0);
+  // const [globalLoading, setGlobalLoading] = useState(false);
+
   useEffect(() => {
     setLoading(true);
-    getReports().then((data) => {
-      setData(data.data);
+    getReports(10, offset).then((data) => {
+      setItems(data.data);
       setLoading(false);
     });
   }, []);
 
   useEffect(() => {
-    data.data && initializeData();
-  }, [data]);
+    items.data && initializeData();
+  }, [items]);
 
   useEffect(() => {
     sortColumn && sortData(sortColumn);
   }, [sortColumn]);
 
+
+  const loadItems = (offset) => {
+    return getReports(10, offset)
+      .then((response) => {
+        return {
+          hasNextPage: true,
+          data: response.data.data,
+          count: response.data.count,
+          total: response.data.total,
+          // fistTimeLoad: true,
+        };
+      })
+      .catch((error) => {
+        toast.error('Error while loading items');
+        throw error;
+      });
+  };
+
+  async function loadMore() {
+    try {
+      const {total, data, count, hasNextPage: newHasNextPage } = await loadItems(offset);
+      setItems((current) => {
+        return {
+          ...current,
+          data: [...current.data, ...data],
+          count: count 
+        };
+      });
+  
+      setOffset(offset + count);
+
+      setHasNextPage(newHasNextPage);
+      if (count == 0) {
+        setHasNextPage(false);
+        return;
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: loadMore,
+    disabled: !!error,
+  });
   return (
     <>
       <MainMenu />
@@ -165,9 +222,14 @@ const index = () => {
         <div className="w-full h-full relative">
           <Loader />
         </div>
-      ) : data?.count ? (
+      ) : items?.total>0 ? (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 150px)' }}>
-          <Table tableFor="leaderboard" data={data.data} />
+          <Table tableFor="leaderboard" data={items.data} />
+          {hasNextPage && (
+              <div ref={infiniteRef}>
+                <SpinnerLoader />
+              </div>
+            )}
         </SimpleBar>
       ) : (
         <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 150px)' }}>
