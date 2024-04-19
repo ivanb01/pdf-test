@@ -439,12 +439,17 @@ const index = () => {
     );
   }
 
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
   };
   const userInfo = useSelector((state) => state.global.userInfo);
 
+  useEffect(() => {
+    console.log(allContacts.filter((c) => c.id === selectedContacts[0]?.value));
+    console.log(selectedContacts);
+  }, [selectedContacts, allContacts]);
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
     setLoadingEmails(true);
@@ -492,12 +497,13 @@ const index = () => {
                 },
               ),
             ).then((res) => {
+              const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
-                type_of_activity_id: 1,
-                description: 'Sent properties through email.',
+                type_of_activity_id: 28,
+                description: `(Email) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
               };
 
-              dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
               addContactActivity(item.contact_id, activity);
             });
             setPropertiesSent(true);
@@ -513,8 +519,8 @@ const index = () => {
             )
               .then((res) => {
                 let activity = {
-                  type_of_activity_id: 2,
-                  description: 'Sent properties through SMS.',
+                  type_of_activity_id: 34,
+                  description: `(SMS) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
                 };
 
                 dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));

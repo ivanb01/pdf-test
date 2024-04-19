@@ -200,6 +200,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [showProperties, setShowProperties] = useState(true);
   const [previewMode, setPreviewMode] = useState(false);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
@@ -265,12 +266,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 },
               ),
             ).then((res) => {
+              console.log(res);
+              const contact = allContacts.find((con) => con.id === c?.value);
+              console.log(contact, 'contact');
               let activity = {
-                type_of_activity_id: 1,
-                description: 'Sent properties through email.',
+                type_of_activity_id: 28,
+                description: `(Email) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
               };
 
-              dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
               addContactActivity(item.contact_id, activity);
             });
             setPropertiesSent(true);
@@ -286,11 +290,13 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             )
               .then((res) => {
                 let activity = {
-                  type_of_activity_id: 2,
-                  description: 'Sent properties through SMS.',
+                  type_of_activity_id: 34,
+                  description: `(SMS) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
                 };
 
-                dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+                const contact = allContacts.find((c) => c.id === c.value);
+
+                dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
                 addContactActivity(item.contact_id, activity);
               })
               .catch((error) => {
