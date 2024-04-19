@@ -145,7 +145,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, added
 
       addContact(contactToAdd).then(async () => {
         await dispatch(setRefetchData(true));
-        onClientAdded(contactToAdd.email);
+        if (onClientAdded) {
+          onClientAdded(contactToAdd.email);
+        }
       });
 
       let subtabValue = 0;
