@@ -103,7 +103,7 @@ const SideBarFilter = ({
         {[allForm, ...sortedFilters]?.map((filter, index) => {
           return (
             <li
-              className={`group flex h-[55px] w-full text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1 ${
+              className={`group flex  w-full text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1 ${
                 currentFilterId.id === filter.id ? 'bg-lightBlue1' : ''
               } `}
               key={filter.id}
@@ -115,11 +115,11 @@ const SideBarFilter = ({
               }}>
               <div className={`w-[6px] h-full ${currentFilterId.id === filter.id ? 'bg-lightBlue3' : 'bg-white'} `} />
               <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
-                <div className={`flex px-[10px] py-[14px] gap-[8px] items-center text-left	`}>
+                <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
                   {filter?.id ? (
-                    <Image src={FolderIcon} alt="Form type filter" />
+                    <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
                   ) : (
-                    <Image src={FoldersIcon} alt="All forms" />
+                    <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
                   )}
                   {filter?.name}
                 </div>
