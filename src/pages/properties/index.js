@@ -695,7 +695,8 @@ const index = () => {
                 document.querySelector(`#custom-dropdown-search`)?.focus();
               }, 200);
             }}>
-            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis font-normal'}>
+            <div
+              className={`max-w-[300px] overflow-hidden font-normal whitespace-nowrap overflow-ellipsis  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
               {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
             </div>
             <div className={'flex'}>

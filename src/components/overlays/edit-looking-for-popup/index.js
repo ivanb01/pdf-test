@@ -377,15 +377,15 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
+            <p className={'text-gray-700 text-sm font-medium mb-1'}>Neighborhood</p>
             <div
               ref={dropdownRef}
-              className={
-                'min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
-              }
+              className={`min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium rounded-md`}
               style={{ flex: 1, position: 'relative' }}
               onClick={() => setOpenDropdown(!openDropdown)}>
-              <div className={'overflow-hidden whitespace-nowrap overflow-ellipsis'}>
-                {datav2.length > 0 ? datav2.join(', ') : 'Select'}
+              <div
+                className={`overflow-hidden whitespace-nowrap overflow-ellipsis font-normal  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
+                {datav2.length > 0 ? datav2.join(', ') : 'Select neighborhood'}
               </div>
               <div className={'flex'}>
                 {datav2.length > 0 && (
