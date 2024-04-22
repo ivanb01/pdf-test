@@ -8,7 +8,7 @@ import saved from '../../../public/images/saved.svg';
 import Close from '@mui/icons-material/Close';
 import { MultiSelect } from 'react-multi-select-component';
 import SimpleBar from 'simplebar-react';
-import { getInitials, isHealthyCommuncationDate } from '@global/functions';
+import { getInitials } from '@global/functions';
 import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
@@ -97,8 +97,6 @@ const PropertiesSlideOver = ({
     }
   }, [allContacts, email, sendMethod]);
   const handleAfterClientAdd = (email) => {
-    setShowAddContactOverlay(false);
-    setOpen(true);
     const contact = allContacts?.find((contact) => contact.email == email);
     if (contact && email) {
       if (contact.phone_number === null && sendMethod === 2) {
@@ -399,7 +397,9 @@ const PropertiesSlideOver = ({
       {showAddContactOverlay && (
         <AddClientManuallyOverlay
           onClientAdded={(email) => {
+            setOpen(true);
             setEmail(email);
+            setShowAddContactOverlay(false);
           }}
           handleClose={() => setShowAddContactOverlay(false)}
           title="Add Client"

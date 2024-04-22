@@ -446,10 +446,6 @@ const index = () => {
   };
   const userInfo = useSelector((state) => state.global.userInfo);
 
-  useEffect(() => {
-    console.log(allContacts.filter((c) => c.id === selectedContacts[0]?.value));
-    console.log(selectedContacts);
-  }, [selectedContacts, allContacts]);
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
     setLoadingEmails(true);
