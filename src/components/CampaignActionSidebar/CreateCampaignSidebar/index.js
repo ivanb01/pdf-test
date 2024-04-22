@@ -542,6 +542,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                                 title: option.label,
                                 body_html: option.message,
                                 save_template: false,
+                                trigger_time: '11:00'
                               };
                             }
                             return item;
@@ -596,7 +597,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
                         index === selectedEvent
-                          ? { ...item, body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
+                          ? { ...item, trigger_time: '11:00', body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
                           : item,
                       ),
                     );
