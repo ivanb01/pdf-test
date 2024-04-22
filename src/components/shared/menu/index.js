@@ -275,16 +275,18 @@ const MainMenu = ({ className, fixed }) => {
       <div className="flex items-center">
         {!router.pathname.includes('campaign') && (
           <>
-            <a
-              onClick={() => {
-                console.log('test');
-                dispatch(setOpenEmailContactOverlay(true));
-              }}
-              className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
-              <ForwardToInbox className="h-[16px] w-[16px]" />
-              {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
-              <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
-            </a>
+            {!router.pathname.includes('contacts/details') && (
+              <a
+                onClick={() => {
+                  console.log('test');
+                  dispatch(setOpenEmailContactOverlay(true));
+                }}
+                className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
+                <ForwardToInbox className="h-[16px] w-[16px]" />
+                {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
+                <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
+              </a>
+            )}
             {allContacts && allContacts.length > 0 && (
               <div className={'h-[30px] w-[30px] flex items-center justify-center rounded-full bg-lightBlue5 mr-2'}>
                 <SearchIcon
