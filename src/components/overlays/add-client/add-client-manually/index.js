@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 // import * as contactServices from 'api/contacts';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
-import { addContactLocally, setContacts } from 'store/contacts/slice';
+import { addContactLocally, setAllContacts, setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { leadSourceOptions, multiselectOptionsClients, priorityOptions, phoneNumberRules } from 'global/variables';
@@ -25,6 +25,7 @@ import TextArea from '@components/shared/textarea';
 import SimpleBar from 'simplebar-react';
 import Overlay from '@components/shared/overlay';
 import { ArrowRightIcon } from '@heroicons/react/outline';
+import { data } from 'autoprefixer';
 
 const categoryIds = {
   'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
@@ -105,12 +106,25 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
         if (error?.response?.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
-          addClient();
-          handleClose();
+          addClient().then(async () => {
+            if (onClientAdded) {
+              await getContacts().then((data) => {
+                dispatch(setAllContacts(data.data));
+                onClientAdded(formik.values.email);
+                setSubmitting(false);
+                setLoading(false);
+                handleClose();
+              });
+            } else {
+              handleClose();
+            }
+          });
         }
       }
-      setSubmitting(false);
-      setLoading(false);
+      if (!onClientAdded) {
+        setSubmitting(false);
+        setLoading(false);
+      }
     },
   });
   const { errors, touched } = formik;
@@ -143,11 +157,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
         status_id: status,
       };
 
-      addContact(contactToAdd).then(async () => {
-        await dispatch(setRefetchData(true));
-        if (onClientAdded) {
-          onClientAdded(contactToAdd.email);
-        }
+      addContact(contactToAdd).then((data) => {
+        dispatch(setRefetchData(true));
       });
 
       let subtabValue = 0;
