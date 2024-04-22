@@ -97,21 +97,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId, contacts, sendMethod, propertiesSent]);
 
-  const [userData, setUserData] = useState('');
-
-  useEffect(() => {
-    fetchCurrentUserInfo()
-      .then((res) => {
-        const fullName =
-          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
-            ? `${res?.first_name} ${res?.last_name}`
-            : `${res?.email}`;
-        setUserData(fullName);
-      })
-      .catch(() => {
-        setUserData(user?.email ? user?.email : user);
-      });
-  }, []);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   function filterAndSortContacts(contacts, condition) {
     return contacts
