@@ -273,34 +273,32 @@ const MainMenu = ({ className, fixed }) => {
         </div>
       </div>
       <div className="flex items-center">
-        {!router.pathname.includes('campaign') && (
-          <>
-            {!router.pathname.includes('contacts/details') && (
-              <a
+        <>
+          <a
+            onClick={() => {
+              console.log('test');
+              dispatch(setOpenEmailContactOverlay(true));
+            }}
+            className="px-4 mr-4 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
+            <ForwardToInbox className="h-[16px] w-[16px]" />
+            {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
+            <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
+          </a>
+          {allContacts && allContacts.length > 0 && (
+            <div
+              className={`h-[30px] w-[30px] flex items-center justify-center rounded-full ${router.pathname.includes('/campaign') ? 'bg-[#0c5871]' : 'bg-lightBlue5'}  mr-2`}>
+              <SearchIcon
+                className={`text-bold h-[14px] w-[14px] text-white box-content p-2 rounded-full  ${
+                  !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+                } cursor-pointer`}
                 onClick={() => {
-                  console.log('test');
-                  dispatch(setOpenEmailContactOverlay(true));
+                  setOpenGlobalSearch(true);
                 }}
-                className="px-4 mr-2 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
-                <ForwardToInbox className="h-[16px] w-[16px]" />
-                {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
-                <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
-              </a>
-            )}
-            {allContacts && allContacts.length > 0 && (
-              <div className={'h-[30px] w-[30px] flex items-center justify-center rounded-full bg-lightBlue5 mr-2'}>
-                <SearchIcon
-                  className={`text-bold h-[14px] w-[14px] text-white box-content p-2 rounded-full  ${
-                    !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
-                  } cursor-pointer`}
-                  onClick={() => {
-                    setOpenGlobalSearch(true);
-                  }}
-                />
-              </div>
-            )}
-            {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
-            {/* {showUncategorizedButton() && (
+              />
+            </div>
+          )}
+          {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
+          {/* {showUncategorizedButton() && (
               <Button
                 label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
                 narrow
@@ -313,23 +311,20 @@ const MainMenu = ({ className, fixed }) => {
                 }
               />
             )} */}
-          </>
-        )}
-        {!router.pathname.includes('campaign') && (
-          <div className="">
-            <button
-              label="Need Help?"
-              className={`text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4  ${
-                !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
-              } text-white`}
-              onClick={() => {
-                FreshworksWidget('open');
-              }}>
-              <ContactSupport className="h-[20px]" />
-              {/* Need help? */}
-            </button>
-          </div>
-        )}
+        </>
+        <div className="">
+          <button
+            label="Need Help?"
+            className={`text-sm flex items-center justify-center h-9 w-9 p-3 rounded-full mr-4  ${
+              !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
+            } text-white`}
+            onClick={() => {
+              FreshworksWidget('open');
+            }}>
+            <ContactSupport className="h-[20px]" />
+            {/* Need help? */}
+          </button>
+        </div>
         {/* <Button
           label="Import Google Contacts"
           className="mr-4 "
