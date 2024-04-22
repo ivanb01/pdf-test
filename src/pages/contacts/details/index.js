@@ -279,31 +279,6 @@ const index = () => {
                     />
                   </div>
                   <div>
-                    {contact.phone_number && (
-                      <Button
-                        onClick={() => {
-                          setActivities([
-                            {
-                              type_of_activity_id: 27,
-                              description: 'Attempted to make a phone call.',
-                              created_at: new Date().toISOString(),
-                            },
-                            ...activities,
-                          ]);
-                          dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-                          addContactActivity(contact.id, {
-                            type_of_activity_id: 27,
-                            description: 'Attempted to make a phone call.',
-                            created_at: new Date().toISOString(),
-                          });
-                          window.open(`tel:${contact.phone_number}`);
-                        }}
-                        className="mr-2"
-                        white
-                        inline
-                        leftIcon={<img src={call.src} />}
-                      />
-                    )}
                     <Button onClick={() => setEditingContact(true)} white inline leftIcon={<img src={edit.src} />} />
                   </div>
                 </div>
@@ -316,8 +291,31 @@ const index = () => {
                   </div>
                 </div>
                 {contact?.phone_number && (
-                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467]'}>
-                    <LocalPhoneOutlinedIcon className={'h-[18px] w-[18px]'} />
+                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center'}>
+                    <div
+                      className={
+                        'p-1.5 flex justify-center items-center  border border-#D1D5DB text-sm  font-medium rounded-md shadow-sm text-gray6 hover:bg-white bg-white'
+                      }
+                      role={'button'}
+                      onClick={() => {
+                        setActivities([
+                          {
+                            type_of_activity_id: 27,
+                            description: 'Attempted to make a phone call.',
+                            created_at: new Date().toISOString(),
+                          },
+                          ...activities,
+                        ]);
+                        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                        addContactActivity(contact.id, {
+                          type_of_activity_id: 27,
+                          description: 'Attempted to make a phone call.',
+                          created_at: new Date().toISOString(),
+                        });
+                        window.open(`tel:${contact.phone_number}`);
+                      }}>
+                      <img src={call.src} style={{ height: '15px' }} />
+                    </div>
                     <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
                   </div>
                 )}
