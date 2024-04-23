@@ -283,10 +283,10 @@ const index = () => {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <div className="text-[#101828] text-xl font-semibold">
+                  <div className="text-[#101828] text-xl font-semibold break-word">
                     {contact?.first_name + ' ' + contact?.last_name}
                   </div>
-                  <div className="text-[#475467] mt-1 ellipsis-email w-[230px]" title={contact.email}>
+                  <div className="text-[#475467] mt-1 break-word w-[230px]" title={contact.email}>
                     {contact?.email}
                   </div>
                 </div>
