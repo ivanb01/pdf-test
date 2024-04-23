@@ -193,7 +193,9 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
                     </div>
                   )}
                   <div>
-                    <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>SUBJECT</span>
+                    <span className={'text-xs leading-4 font-medium tracking-wider uppercase text-gray4'}>
+                      EMAIL SUBJECT
+                    </span>
                     <p className={'text-xl leading-7 font-medium text-gray8'}>
                       {activeEvent?.preview?.preview?.subject}
                     </p>

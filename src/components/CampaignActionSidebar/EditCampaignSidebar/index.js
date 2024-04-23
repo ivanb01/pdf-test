@@ -448,9 +448,9 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               </div>
             )} */}
               <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
+                <div className="mb-4 text-gray8 text-sm font-medium">Email Subject:</div>
                 <Input
-                  placeholder="Subject"
+                  placeholder="Email Subject"
                   onChange={(e) =>
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>

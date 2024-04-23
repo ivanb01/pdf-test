@@ -542,7 +542,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                                 title: option.label,
                                 body_html: option.message,
                                 save_template: false,
-                                trigger_time: '11:00'
+                                trigger_time: '11:00',
                               };
                             }
                             return item;
@@ -573,9 +573,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 )}
               </div>
               <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">Subject:</div>
+                <div className="mb-4 text-gray8 text-sm font-medium">Email Subject:</div>
                 <Input
-                  placeholder="Subject"
+                  placeholder="Email Subject"
                   onChange={(e) =>
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
@@ -597,7 +597,12 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
                         index === selectedEvent
-                          ? { ...item, trigger_time: '11:00', body_html: value, body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '') }
+                          ? {
+                              ...item,
+                              trigger_time: '11:00',
+                              body_html: value,
+                              body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+                            }
                           : item,
                       ),
                     );
