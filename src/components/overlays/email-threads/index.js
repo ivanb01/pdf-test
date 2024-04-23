@@ -35,6 +35,7 @@ const EmailItem = ({
       ...inboxData,
       [threadId]: [
         {
+          subject: subject,
           body: message,
           message_header_id: message_header_id,
           thread_id: threadId,
