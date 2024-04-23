@@ -906,7 +906,7 @@ export const priorityOptions = [
   { id: 2, label: 'High Priority' },
   { id: 3, label: 'Medium Priority' },
   { id: 4, label: 'Low Priority' },
-]
+];
 export const leadSourceOptions = [
   // {
   //   id: 1,
@@ -977,9 +977,9 @@ export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
   'Not Up to Date': 'unhealthy',
   Today: 'today',
-  '1 Week ago': [1, 'weeks'],
-  '2 Weeks ago': [2, 'weeks'],
-  '1 Month ago': [1, 'months'],
+  '1 Week ago +': [1, 'weeks'],
+  '2 Weeks ago +': [2, 'weeks'],
+  '1 Month ago +': [1, 'months'],
 };
 
 export const multiselectOptionsClients = [
