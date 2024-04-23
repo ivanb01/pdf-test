@@ -97,8 +97,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId, contacts, sendMethod, propertiesSent]);
 
-  const userInfo = useSelector((state) => state.global.userInfo);
-
   function filterAndSortContacts(contacts, condition) {
     return contacts
       ?.filter(condition)
@@ -187,6 +185,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [previewMode, setPreviewMode] = useState(false);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
@@ -272,7 +271,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${userInfo ? `Regards, ${userInfo?.first_name} ${userInfo?.last_name}` : ``}`,
             )
               .then((res) => {
                 let activity = {

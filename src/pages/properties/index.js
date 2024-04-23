@@ -511,7 +511,7 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${userInfo ? `Regards, ${userInfo?.first_name} ${userInfo?.last_name}` : ``}`,
             )
               .then((res) => {
                 let activity = {
