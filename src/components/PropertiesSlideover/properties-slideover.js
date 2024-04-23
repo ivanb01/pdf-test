@@ -181,10 +181,7 @@ const PropertiesSlideOver = ({
             <div className="text-gray7 font-semibold text-[18px] -mt-7">
               Properties have been successfully sent to your clients!
             </div>
-            <div className=" mt-2">
-              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
-              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
-            </div>
+            <div className=" mt-2">All properties that are sent are saved to your client's portfolio.</div>
             <Button
               primary
               label="Back to Properties"
