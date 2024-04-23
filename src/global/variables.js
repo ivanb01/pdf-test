@@ -977,9 +977,9 @@ export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
   'Not Up to Date': 'unhealthy',
   Today: 'today',
-  '1 Week ago +': [1, 'weeks'],
-  '2 Weeks ago +': [2, 'weeks'],
-  '1 Month ago +': [1, 'months'],
+  '1 Week Ago +': [1, 'weeks'],
+  '2 Weeks Ago +': [2, 'weeks'],
+  '1 Month Ago +': [1, 'months'],
 };
 
 export const multiselectOptionsClients = [
