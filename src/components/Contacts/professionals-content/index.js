@@ -218,10 +218,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     } else if (openedSubtab == 2) {
       return filteredProfessionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional')
         .length;
-    } else {
+    } else if (openedSubtab == 3) {
       return filteredProfessionals.filter(
         (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
       ).length;
+    } else {
+      return filteredProfessionals.filter((contact) => contact.category_1 == 'Professional').length;
     }
   };
 
