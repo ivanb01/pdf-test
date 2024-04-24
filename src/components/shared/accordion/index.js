@@ -3,6 +3,8 @@ import { Disclosure } from '@headlessui/react';
 import { classNames } from 'global/functions';
 import Chip from '../chip';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
+import { useEffect, useState } from 'react';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 export default function Accordion({ tabs = [], handleClick, activeSelections, defaultOpen, ...props }) {
   return (
@@ -26,6 +28,26 @@ export default function Accordion({ tabs = [], handleClick, activeSelections, de
                 <Disclosure.Panel as="dd" className="mt-2">
                   {!tab.content.length ? (
                     <div className="mt-6 mb-8">{tab.content}</div>
+                  ) : tab.title === 'PROFESSIONAL TYPES' ? (
+                    <>
+                      <DropdownWithSearch
+                        options={tab.content.map((item) => {
+                          return { label: item, value: item };
+                        })}
+                        position={'initial'}
+                        isMulti
+                        marginBottom={'0px'}
+                        value={
+                          activeSelections?.category_2?.map((item) => ({
+                            label: item,
+                            value: item,
+                          })) ?? null
+                        }
+                        onChange={(change) => {
+                          handleClick(change, 'category_2', false)();
+                        }}
+                      />
+                    </>
                   ) : typeof tab.content === 'object' ? (
                     <div className="mb-4 w-[100%] pb-4 flex flex-wrap">
                       {tab.content.map((content, index) => (

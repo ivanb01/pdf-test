@@ -1,5 +1,6 @@
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import Select from 'react-select';
+import { useEffect } from 'react';
 
 const DropdownWithSearch = ({
   options,
@@ -18,6 +19,7 @@ const DropdownWithSearch = ({
   error,
   errorText,
   position,
+  marginBottom,
   ...props
 }) => {
   return (
@@ -85,7 +87,7 @@ const DropdownWithSearch = ({
             bottom: bottom && bottom,
             fontSize: '14px',
             position: position ?? 'absolute',
-            marginBottom: '100px',
+            marginBottom: marginBottom ?? '100px',
             borderRadius: 5,
             zIndex: 99,
           }),

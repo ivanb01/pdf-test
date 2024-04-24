@@ -97,9 +97,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       value: 'import_source_text',
     },
   ];
-  useEffect(() => {
-    console.log(filteredProfessionals);
-  }, [filteredProfessionals]);
+
   useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
@@ -159,9 +157,16 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    console.log(selectedFilter, 'selectedFilter');
     let filtersCopy = { ...professionalsFilters };
-
-    if (filtersCopy[filterType]) {
+    if (filterType === 'category_2') {
+      if (selectedFilter.length > 0) {
+        filtersCopy[filterType] = selectedFilter.map((f) => f.label);
+      }
+      if (selectedFilter.length === 0) {
+        delete filtersCopy[filterType];
+      }
+    } else if (filtersCopy[filterType]) {
       if (filtersCopy[filterType].includes(selectedFilter)) {
         filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
         if (filtersCopy[filterType].length < 1) {
@@ -186,6 +191,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     }
   };
 
+  useEffect(() => {
+    console.log(professionalsFilters, 'filtersProff');
+  }, [professionalsFilters]);
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...professionalsFilters };
 
