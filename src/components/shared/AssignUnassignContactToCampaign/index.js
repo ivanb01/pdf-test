@@ -10,7 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const Toggle = ({ active, activePerson, objectKey, disabled }) => {
+const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, objectKey, disabled, handleUnassign }) => {
   const [enabled, setEnabled] = useState(false);
   const [makeChanges, setMakeChanges] = useState(false);
   const [openDeactivate, setOpenDeactivate] = useState(false);
@@ -40,18 +40,17 @@ const Toggle = ({ active, activePerson, objectKey, disabled }) => {
     }
   };
 
-  const { id } = router.query;
   const [loading, setLoading] = useState(false);
   const handleCampaignAssignment = async () => {
     if (!active) {
       setEnabled(true);
       setLoading(true);
-      await assignContactToCampaign(id, activePerson.contact_id).then((res) => {
+      await assignContactToCampaign(campaignId, activePerson.contact_id).then((res) => {
         setLoading(false);
         setOpenDeactivate(false);
       });
       updateUserLocally(objectKey, activePerson.contact_campaign_status);
-      getCampaignsUsers(id).then((res) => {
+      getCampaignsUsers(campaignId).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
         setLoading(false);
         setOpenDeactivate(false);
@@ -59,12 +58,15 @@ const Toggle = ({ active, activePerson, objectKey, disabled }) => {
     } else if (active) {
       setEnabled(false);
       setLoading(true);
-      await unassignContactFromCampaign(id, activePerson.contact_id).then((res) => {
+      await unassignContactFromCampaign(campaignId, activePerson.contact_id).then((res) => {
         setLoading(false);
         setOpenDeactivate(false);
+        if (handleUnassign) {
+          handleUnassign();
+        }
       });
       updateUserLocally(objectKey, activePerson.contact_campaign_status);
-      getCampaignsUsers(id).then((res) => {
+      getCampaignsUsers(campaignId).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
         setLoading(false);
         setOpenDeactivate(false);
@@ -102,7 +104,7 @@ const Toggle = ({ active, activePerson, objectKey, disabled }) => {
           aria-hidden="true"
           className={classNames(
             enabled ? 'translate-x-3' : 'translate-x-0',
-            'pointer-events-none inline-block bg-white h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out',
+            ' translate-y-[1px] pointer-events-none inline-block bg-white h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out',
           )}
         />
       </Switch>
@@ -117,4 +119,4 @@ const Toggle = ({ active, activePerson, objectKey, disabled }) => {
     </>
   );
 };
-export default Toggle;
+export default AssignUnassignContactToCampaign;

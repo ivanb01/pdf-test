@@ -34,8 +34,9 @@ import { setGlobalEmail } from '@store/clientDetails/slice';
 import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 import Email from '@mui/icons-material/Email';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import { getContactCampaign } from '@api/campaign';
+import { getContactCampaign, getContactCampaigns } from '@api/campaign';
 import { updateContactLocally } from '@store/contacts/slice';
+import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -68,7 +69,7 @@ const index = () => {
       }
       getActivityLog();
       getNotes();
-      // getCampaigns();
+      getCampaigns();
       if (contactData.campaign_name) {
         setCampaigns([
           {
@@ -103,17 +104,16 @@ const index = () => {
         toast.error('Error fetching activity');
       });
   };
-  // const getCampaigns = async () => {
-  //   getContactCampaign(id)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setCampaigns(response.data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       toast.error('Error fetching activity');
-  //     });
-  // };
+  const getCampaigns = async () => {
+    getContactCampaigns(id)
+      .then((response) => {
+        setCampaigns(response.data.campaigns);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching campaign');
+      });
+  };
   useEffect(() => {
     if (contact) {
       syncEmailOfContact(contact.email).then(() => {
@@ -377,72 +377,55 @@ const index = () => {
                 </div>
               </div>
               {campaigns.length > 0 && (
-                <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
+                <div className="bg-white px-3 mb-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
-                  {campaigns.length > 1 ? (
-                    <>
-                      <div className="flex items-center justify-between text-gray4 text-sm mt-8 mb-6">
-                        <div>Name</div>
-                        <div>Status</div>
-                      </div>
-                      {campaigns.map((campaign, index) => (
-                        <>
-                          <div key={index} className="flex justify-between items-center">
-                            <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.title}</div>
-                            <div>{campaign.status}</div>
-                            <Switch
-                              checked={campaign.status}
-                              onChange={() =>
-                                setCampaigns(
-                                  campaigns.map((foundCampaign) =>
-                                    foundCampaign.id === campaign.id
-                                      ? { ...foundCampaign, status: !foundCampaign.status }
-                                      : foundCampaign,
-                                  ),
-                                )
-                              }
-                              className={`${
-                                campaign.status ? 'bg-green5' : 'bg-gray-200'
-                              } relative inline-flex h-[23px] w-9 items-center rounded-full`}>
-                              <span
-                                className={`${
-                                  campaign.status ? 'translate-x-4' : 'translate-x-[2px]'
-                                } inline-block h-[18px] w-[18px] transform rounded-full bg-white transition`}
-                              />
-                            </Switch>
-                          </div>
-                          {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
-                        </>
-                      ))}
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex justify-between items-center mt-6">
-                        <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaigns[0].title}</div>
-                        <Switch
-                          checked={campaigns[0].status}
-                          onChange={() =>
-                            setCampaigns(
-                              campaigns.map((foundCampaign) =>
-                                foundCampaign.id === campaigns[0].id
-                                  ? { ...foundCampaign, status: !foundCampaign.status }
-                                  : foundCampaign,
-                              ),
-                            )
-                          }
-                          className={`${
-                            campaigns[0].status ? 'bg-green5' : 'bg-gray-200'
-                          } relative inline-flex h-[23px] w-9 items-center rounded-full`}>
-                          <span
-                            className={`${
-                              campaigns[0].status ? 'translate-x-4' : 'translate-x-[2px]'
-                            } inline-block h-[18px] w-[18px] transform rounded-full bg-white transition`}
+                  <>
+                    <div className="flex items-center justify-between text-gray4 text-sm mt-8 mb-3">
+                      <div>Name</div>
+                      <div>Status</div>
+                    </div>
+                    {campaigns.map((campaign, index) => (
+                      <>
+                        <div key={index} className="flex justify-between items-center">
+                          <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>
+                          <AssignUnassignContactToCampaign
+                            campaignId={campaign.id}
+                            active={
+                              contact?.contact_campaign_status !== 'never_assigned' &&
+                              contact?.contact_campaign_status !== 'unassigned'
+                            }
+                            disabled={contact?.contact_campaign_status === 'unassigned'}
+                            handleUnassign={() => getCampaigns()}
+                            activePerson={{ ...contact, contact_id: contact.id }}
                           />
-                        </Switch>
-                      </div>
-                    </>
-                  )}
+                          {/* <Switch
+                            checked={campaign.status == 'Active' || campaign.status == true ? true : false}
+                            onChange={(checked) => {
+                              setCampaigns(
+                                campaigns.map((foundCampaign) =>
+                                  foundCampaign.id === campaign.id
+                                    ? { ...foundCampaign, status: checked }
+                                    : foundCampaign,
+                                ),
+                              );
+                            }}
+                            className={`${
+                              campaign.status == 'Active' || campaign.status == true ? 'bg-green5' : 'bg-gray-200'
+                            } relative inline-flex h-[23px] w-9 items-center rounded-full`}>
+                            <span
+                              className={`${
+                                campaign.status == 'Active' || campaign.status == true
+                                  ? 'translate-x-4'
+                                  : 'translate-x-[2px]'
+                              } inline-block h-[18px] w-[18px] transform rounded-full bg-white transition`}
+                            />
+                          </Switch> */}
+                        </div>
+                        {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
+                      </>
+                    ))}
+                  </>
                 </div>
               )}
             </div>

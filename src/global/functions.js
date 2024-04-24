@@ -353,6 +353,20 @@ export const findTagsOption = (selectedOptions) => {
   };
 };
 
+export const getCompanyFromEmail = (email) => {
+  const domain = email.split('@')[1];
+
+  if (domain === 'opgny.com') {
+    return 'Oxford Property Group';
+  } else if (domain === 'spiregroupny.com') {
+    return 'Spire';
+  } else if (domain === 'levelgroup.com') {
+    return 'Level';
+  } else {
+    return '';
+  }
+};
+
 export const getEmailParts = (email) => {
   const atIndex = email.indexOf('@');
   const dotIndex = email.indexOf('.');

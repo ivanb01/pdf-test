@@ -76,7 +76,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Button from '@components/shared/button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Toggle from '@components/shared/Toggle';
+import Toggle from '@components/shared/AssignUnassignContactToCampaign';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
 import Mail from '@mui/icons-material/Mail';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
@@ -84,6 +84,7 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import CommunicationForm from '@components/overlays/communication-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WhatsApp from '@mui/icons-material/WhatsApp';
+import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -2738,7 +2739,8 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle
+                  <AssignUnassignContactToCampaign
+                    campaignId={router.query.id}
                     active={
                       person?.contact_campaign_status !== 'never_assigned' &&
                       person?.contact_campaign_status !== 'unassigned'
@@ -2929,7 +2931,8 @@ const Table = ({
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle
+                  <AssignUnassignContactToCampaign
+                    campaignId={router.query.id}
                     objectKey={'contacts_not_campaign'}
                     active={false}
                     disabled={person.contact_campaign_status === 'unassigned'}
@@ -3104,7 +3107,8 @@ const Table = ({
             {data.map((person) => (
               <td className={'px-6 py-4 pl-6  pr-4  border-l border-gray2 h-[73px] border-b'} style={{ width: 120 }}>
                 <div className={'flex gap-[5px] items-center justify-start'}>
-                  <Toggle
+                  <AssignUnassignContactToCampaign
+                    campaignId={router.query.id}
                     objectKey={'contacts_in_campaign'}
                     active={person?.contact_campaign_status === 'assigned'}
                     activePerson={person}
