@@ -1906,6 +1906,7 @@ const Table = ({
     }
 
     const userInfo = useSelector((state) => state.global.userInfo);
+    const userEmail = localStorage.getItem('user');
 
     return (
       <>
@@ -1946,7 +1947,7 @@ const Table = ({
           {data.map((dataItem, index) => (
             <tr
               key={index}
-              className={`${dataItem.agent_id == userInfo.email && 'bg-lightBlue1'} contact-row group border-b border-gray-200`}
+              className={`${userEmail.includes(dataItem.agent_id) && 'bg-lightBlue1'} contact-row group border-b border-gray-200`}
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">

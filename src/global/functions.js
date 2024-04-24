@@ -10,9 +10,20 @@ import {
 import moment from 'moment';
 
 export const getInitials = (name) => {
-  // let fullName = name.split(' ');
-  let fullName = name?.split(/\s+/);
-  return (fullName[0][0] + fullName[1][0]).toUpperCase();
+  if (name.includes('|')) {
+    let prePipe = name.split('|')[0].trim();
+    return prePipe[0].toUpperCase();
+  }
+
+  let fullName = name.split(/\s+|\.+/);
+
+  if (fullName.length > 1) {
+    return (fullName[0][0] + fullName[1][0]).toUpperCase();
+  } else if (fullName.length === 1) {
+    return fullName[0][0].toUpperCase();
+  }
+
+  return '';
 };
 
 export const formatDateStringMDY = (dateString) => {
