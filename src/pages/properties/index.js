@@ -23,7 +23,7 @@ import FilterPropertiesDropdown from '@components/shared/dropdown/FilterProperti
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
 import { useSelector } from 'react-redux';
-import { getBaseUrl, searchContacts } from '@global/functions';
+import { generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
@@ -39,6 +39,7 @@ import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slid
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import { getCompanyFromEmail } from '@global/functions';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -511,7 +512,7 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${userInfo ? `Regards, ${userInfo?.first_name} ${userInfo?.last_name}` : ``}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${generateSMSFooter(userInfo)}`,
             )
               .then((res) => {
                 let activity = {

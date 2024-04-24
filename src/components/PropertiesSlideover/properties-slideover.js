@@ -8,7 +8,7 @@ import saved from '../../../public/images/saved.svg';
 import Close from '@mui/icons-material/Close';
 import { MultiSelect } from 'react-multi-select-component';
 import SimpleBar from 'simplebar-react';
-import { getInitials } from '@global/functions';
+import { generateSMSFooter, getCompanyFromEmail, getInitials } from '@global/functions';
 import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
@@ -353,7 +353,10 @@ const PropertiesSlideOver = ({
                   <Button darkBlue label={'View Properties in Your Portfolio'} />
                 </div>
               ) : (
-                <p>Hey [client name], new properties have been added in your portfolio. View here: [portfolio link]</p>
+                <p className="text-sm">
+                  Hey [client name], new properties have been added in your portfolio. View here: [portfolio link].{' '}
+                  {generateSMSFooter(userInfo)}
+                </p>
               )}
             </div>
             <div className={'h-[1px] border border-gray1 my-[26px]'}></div>

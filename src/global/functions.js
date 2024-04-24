@@ -453,3 +453,31 @@ export const formatPhoneNumber = (phoneNumber) => {
     return numericPhoneNumber;
   }
 };
+export const getCompanyFromEmail = (email) => {
+  const domain = email.split('@')[1];
+
+  if (domain === 'opgny.com') {
+    return 'Oxford Property Group';
+  } else if (domain === 'spiregroupny.com') {
+    return 'Spire';
+  } else if (domain === 'levelgroup.com') {
+    return 'Level';
+  } else {
+    return '';
+  }
+};
+export const generateSMSFooter = (user) => {
+  const elements = [];
+  let lastName = user.last_name ? ` ${user.last_name}` : '';
+  let fullName = user.first_name ? `${user.first_name}${lastName}` : '';
+  let phoneNumber = user.phone_number ? user.phone_number : '';
+  let email = user.email ? user.email.toLowerCase() : '';
+  let company = getCompanyFromEmail(email);
+
+  if (fullName) elements.push(fullName);
+  if (phoneNumber) elements.push(phoneNumber);
+  if (email) elements.push(email);
+  if (company) elements.push(company);
+
+  return elements.join(', ') + '.';
+};
