@@ -18,13 +18,14 @@ const CampaignCard = ({
   events,
   category,
   campaign_id,
-  contact_never_assigned_count,
+  contacts_never_assigned_count,
   contact_assigned_count,
   contact_unassigned_count,
   contact_status_2,
   isVisible,
   ...props
 }) => {
+  console.log("props", props)
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
@@ -66,8 +67,8 @@ const CampaignCard = ({
                 : 'All Clients:'}
             </div>
             <div className={'flex'}>
-              {contact_assigned_count + contact_unassigned_count
-                ? contact_assigned_count + contact_unassigned_count
+              {contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
+                ? contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
                 : 0}
               <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
             </div>
@@ -105,7 +106,7 @@ const CampaignCard = ({
               triggerElement={
                 <div className={'flex items-center gap-1'}>
                   <img src={neverAssigned.src} alt={''} />
-                  <span>{contact_never_assigned_count ? contact_never_assigned_count : 0}</span>
+                  <span>{contacts_never_assigned_count ? contacts_never_assigned_count : 0}</span>
                 </div>
               }>
               <div className=" pointer-events-none  text-xs font-medium text-white ">
