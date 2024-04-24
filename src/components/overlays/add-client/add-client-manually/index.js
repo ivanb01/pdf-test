@@ -26,6 +26,7 @@ import SimpleBar from 'simplebar-react';
 import Overlay from '@components/shared/overlay';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 import { data } from 'autoprefixer';
+import toast from 'react-hot-toast';
 
 const categoryIds = {
   'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
@@ -58,7 +59,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
   );
 
   const openedTab = useSelector((state) => state.global.openedTab);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -79,6 +79,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
     }),
   });
 
+  useEffect(() => {
+    console.log(openedTab);
+  }, [openedTab]);
   const formik = useFormik({
     initialValues: {
       first_name: '',
@@ -118,6 +121,7 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
             } else {
               handleClose();
             }
+            toast.success(`${openedTab === 0 ? 'Client' : 'Professional'} has been successfully added!`);
           });
         }
       }
@@ -130,9 +134,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
   const { errors, touched } = formik;
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   const addClient = async () => {
     let subtabs = [[2, 3, 4, 5, 7, 16], [9, 10], [8], [11]];
 
