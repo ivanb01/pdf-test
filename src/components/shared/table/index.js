@@ -1905,7 +1905,7 @@ const Table = ({
       return percentage.toFixed(2);
     }
 
-    const user = useSelector((state) => state.global.user);
+    const userInfo = useSelector((state) => state.global.userInfo);
 
     return (
       <>
@@ -1946,7 +1946,7 @@ const Table = ({
           {data.map((dataItem, index) => (
             <tr
               key={index}
-              className={`contact-row group border-b border-gray-200`}
+              className={`${dataItem.agent_id == userInfo.email && 'bg-lightBlue1'} contact-row group border-b border-gray-200`}
               // onClick={(event) => handleClickRow(contact, event)}
             >
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 w-96">
