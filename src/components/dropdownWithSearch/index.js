@@ -17,6 +17,7 @@ const DropdownWithSearch = ({
   required,
   error,
   errorText,
+  position,
   ...props
 }) => {
   return (
@@ -83,6 +84,7 @@ const DropdownWithSearch = ({
             top: top && top,
             bottom: bottom && bottom,
             fontSize: '14px',
+            position: position ?? 'absolute',
             marginBottom: '100px',
             borderRadius: 5,
             zIndex: 99,
@@ -90,6 +92,7 @@ const DropdownWithSearch = ({
           menuList: (base) => ({
             ...base,
             borderRadius: 5,
+            maxHeight: '300px',
             div: {
               backgroundColor: 'white',
             },

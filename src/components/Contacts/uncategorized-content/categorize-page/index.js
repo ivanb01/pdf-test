@@ -49,17 +49,6 @@ const CategorizePage = ({
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  useEffect(() => {
-    console.log(
-      categorizedInThisSession,
-      'categorizedInThisSession',
-      categorizationInProcess,
-      'categorizationInProcess',
-      uncategorizedContacts,
-      'uncategorizedContacts',
-    );
-  }, [categorizedInThisSession, categorizationInProcess, uncategorizedContacts]);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
@@ -183,8 +172,8 @@ const CategorizePage = ({
           uncategorizedContacts.length
             ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]'
             : uncategorizedContacts.length === 0 && categorizedInThisSession.length === 0
-            ? 'w-[100%]'
-            : 'w-[75%]'
+              ? 'w-[100%]'
+              : 'w-[75%]'
         } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
@@ -197,6 +186,7 @@ const CategorizePage = ({
               right: '0',
               bottom: '0',
               maxHeight: '100%',
+              height: '100%',
             }}>
             <div className="p-6 pb-[77px]">
               <div className="flex items-center mb-4">
@@ -251,12 +241,11 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
+                      <div className={`mb-[-120px]`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          position={'initial'}
                           placeholder="Start typing to search or select one of the options"
-                          onMenuOpen={() => setIsMenuOpen(true)}
-                          onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"
                           onChange={(type) => {
                             console.log(type);
