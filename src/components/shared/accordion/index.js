@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import DropdownWithSearch from '@components/dropdownWithSearch';
 
 export default function Accordion({ tabs = [], handleClick, activeSelections, defaultOpen, ...props }) {
+  useEffect(() => {
+    console.log(tabs);
+  }, [tabs]);
   return (
     <div className="max-w-3xl mx-auto">
       <dl>
@@ -31,9 +34,16 @@ export default function Accordion({ tabs = [], handleClick, activeSelections, de
                   ) : tab.title === 'PROFESSIONAL TYPES' ? (
                     <>
                       <DropdownWithSearch
-                        options={tab.content.map((item) => {
-                          return { label: item, value: item };
-                        })}
+                        options={[
+                          { label: 'Agent', value: 'Agent' },
+                          { label: 'Unspecified', value: 'Unspecified' },
+                        ]
+                          .concat(
+                            tab.content.map((item) => {
+                              return { label: item, value: item };
+                            }),
+                          )
+                          .filter((obj, index, self) => index === self.findIndex((t) => t.value === obj.value))}
                         position={'initial'}
                         isMulti
                         marginBottom={'0px'}
