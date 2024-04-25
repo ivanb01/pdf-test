@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add onboarding">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="fix proffesional filter">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PropertiesSection/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PropertiesSection/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PropertiesSlideover/properties-slideover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PropertiesSlideover/properties-slideover.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/settings/my-profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/settings/my-profile/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +16,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/InfiniteScrollInCampaigns" />
+        <entry key="$PROJECT_DIR$" value="development" />
       </map>
     </option>
   </component>
@@ -31,7 +28,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "development",
+    "git-widget-placeholder": "f/erza/Signature",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -75,14 +72,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00008" summary="remove 0 values">
-      <option name="closed" value="true" />
-      <created>1695670024707</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1695670024707</updated>
-    </task>
     <task id="LOCAL-00009" summary="add coma to result">
       <option name="closed" value="true" />
       <created>1695714763780</created>
@@ -475,14 +464,21 @@
       <option name="project" value="LOCAL" />
       <updated>1711119540425</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="fix proffesional filter">
+      <option name="closed" value="true" />
+      <created>1713975594825</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1713975594825</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="do refactoring at ai-summary" />
     <MESSAGE value="change direction of Tooltip" />
     <MESSAGE value="change ai-summary table" />
     <MESSAGE value="enable scrolling when in need to contacgt page" />
@@ -507,6 +503,7 @@
     <MESSAGE value="add portfolio preview" />
     <MESSAGE value="make changes in buttons for preview and notify" />
     <MESSAGE value="add onboarding" />
-    <option name="LAST_COMMIT_MESSAGE" value="add onboarding" />
+    <MESSAGE value="fix proffesional filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix proffesional filter" />
   </component>
 </project>
