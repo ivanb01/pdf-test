@@ -85,6 +85,7 @@ import CommunicationForm from '@components/overlays/communication-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 
 const categoryIds = {
   Client: '4,5,6,7',
@@ -1148,13 +1149,7 @@ const Table = ({
                       key={contact.id}
                       className={`
                       ${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
-                      ${
-                        isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'
-                      } hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${
-                        isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
-                          ? 'hidden'
-                          : ''
-                      }`}
+                      ${isUnapprovedAIContact(contact) && 'opacity-50 hover:opacity-100'} hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200 ${isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true ? 'hidden' : ''}`}
                       onClick={() =>
                         router.push({
                           pathname: '/contacts/details',
@@ -1353,9 +1348,7 @@ const Table = ({
                                           message = 'Hey, just checking in.';
                                           break;
                                       }
-                                      let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(
-                                        message,
-                                      )}`;
+                                      let link = `https://wa.me/${contact.phone_number}?text=${encodeURIComponent(message)}`;
                                       window.open(link, '_blank');
                                     }}
                                     className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
@@ -2994,37 +2987,25 @@ const Table = ({
                 {events.events.map((e, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className={` flex-grow flex-1 px-6 py-4 border-b border-gray2 pr-20 ${
-                      cellIndex === events.events.length - 1 ? ' border-gray2' : ''
-                    }`}>
-                    <div className={'flex flex-col gap-1 min-w-[200px] '}>
-                      <div className={'flex gap-1.5 items-center'}>
-                        <div
-                          className={`h-2 w-2 rounded-xl ${
-                            e?.event_status?.toLowerCase() === 'scheduled'
-                              ? 'bg-yellow2'
-                              : e?.event_status?.toLowerCase() === 'sent'
-                                ? 'bg-[#10B981]'
-                                : 'bg-red-500'
-                          }`}></div>
-                        <p
-                          className={`text-sm leading-5 font-medium
-                           ${
-                             e?.event_status?.toLowerCase() === 'scheduled'
-                               ? 'text-yellow3'
-                               : e?.event_status?.toLowerCase() === 'sent'
-                                 ? 'text-green7'
-                                 : 'text-red5'
-                           }`}>
-                          {e?.event_status?.toLowerCase() === 'scheduled'
+                    className={` flex-grow flex-1 px-6 py-[15px] border-b border-gray2 pr-20 mb-[0px] ${cellIndex === events.events.length - 1 ? ' border-gray2' : ''}`}>
+                    <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
+                      <StatusChip
+                        variant={
+                          e?.event_status?.toLowerCase() === 'scheduled'
+                            ? VARIANT_ENUM.WARNING
+                            : e?.event_status?.toLowerCase() === 'sent'
+                              ? VARIANT_ENUM.SUCCESS
+                              : VARIANT_ENUM.ERROR
+                        }
+                        text={
+                          e?.event_status?.toLowerCase() === 'scheduled'
                             ? 'To be sent'
                             : e?.event_status?.toLowerCase() === 'sent'
                               ? 'Sent'
-                              : 'Canceled'}
-                        </p>
-                      </div>
+                              : 'Canceled'
+                        }></StatusChip>
                       {e.date !== null && (
-                        <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
+                        <div className={'text-sm leading-4 font-normal text-gray5'}>
                           {getFormattedDateFromTimestamp(e.event_updated_at)}
                         </div>
                       )}

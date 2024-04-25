@@ -464,19 +464,7 @@ export const formatPhoneNumber = (phoneNumber) => {
     return numericPhoneNumber;
   }
 };
-export const getCompanyFromEmail = (email) => {
-  const domain = email.split('@')[1];
 
-  if (domain === 'opgny.com') {
-    return 'Oxford Property Group';
-  } else if (domain === 'spiregroupny.com') {
-    return 'Spire';
-  } else if (domain === 'levelgroup.com') {
-    return 'Level';
-  } else {
-    return '';
-  }
-};
 export const generateSMSFooter = (user) => {
   const elements = [];
   let lastName = user.last_name ? ` ${user.last_name}` : '';
