@@ -5,79 +5,61 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getContactsSearch } from '@api/contacts';
 import PropTypes from 'prop-types';
 
-const ClientsMultiSelect = ({ name, error, handleChange, placeholder }) => {
-  return (
-    <SearchInputSelect
-      label="Send Form To*"
-      setValues={handleChange}
-      fetchOptions={{
-        queryFn: getContactsSearch,
-        queryKey: 'online-forms-users',
-      }}
-      name={name}
-      error={error}
-      placeholder={placeholder}>
-      <SearchInputSelect.Input
-        render={(selectedList, onRemoveSelectedItem) => {
-          return (
-            <>
-              {selectedList?.map((listItem) => (
-                <div key={listItem.id}>
-                  <div
-                    className="flex items-center bg-gray1 gap-[6px] rounded-xl pr-2"
-                    onClick={(e) => e.stopPropagation()}>
-                    <Image
-                      src={'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}
-                      width={20}
-                      height={20}
-                      alt="Profile image"
-                      className="rounded-full"
-                    />
-                    <span className="min-w-max text-xs leading-5 text-gray7 ">{`${listItem.first_name} ${listItem.last_name}`}</span>
-                    <button className="flex items-center" onClick={() => onRemoveSelectedItem(listItem.id)}>
-                      <CloseIcon className="w-[12px] h-[12px] text-gray4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </>
-          );
-        }}
-      />
+import { useSelector } from 'react-redux';
+import { MultiSelect } from 'react-multi-select-component';
+import { useEffect, useState } from 'react';
 
-      <SearchInputSelect.List
-        render={(users) => {
-          return (
-            <>
-              {users?.map((user) => {
-                return (
-                  <SearchInputSelect.ListItem value={user} key={user.id}>
-                    <div className="flex items-center gap-[16px] p-4 " key={user.id}>
-                      <Image
-                        src={'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}
-                        width={40}
-                        height={40}
-                        alt="Profile image"
-                        className="rounded-full"
-                      />
-                      <div className="flex flex-col">
-                        <span className="text-sm text-gray7 font-medium">{user.first_name + ' ' + user.last_name}</span>
-                        <span className="text-sm text-gray4">{user.email}</span>
-                      </div>
-                    </div>
-                  </SearchInputSelect.ListItem>
-                );
-              })}
-            </>
-          );
-        }}
-        noDataComponent={
-          <div className="h-[100px] flex justify-center items-center text-sm font-medium text-gray5">
-            No user found...
-          </div>
-        }
-      />
-    </SearchInputSelect>
+const ClientsMultiSelect = ({ name, error, handleChange, placeholder }) => {
+
+const contacts = useSelector((state) => state.contacts.allContacts.data);
+const [contactsCopy, setContactsCopy] = useState();
+const [selectedContact, setSelectedContact] = useState(null);
+
+// const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+
+// const sortedOptions = contactsCopy?.sort((a, b) => {
+//   const aIsSelected = isSelected(a);
+//   const bIsSelected = isSelected(b);
+
+//   if (aIsSelected && !bIsSelected) {
+//     return -1;
+//   } else if (!aIsSelected && bIsSelected) {
+//     return 1;
+//   }
+//   return 0;
+// });
+
+  useEffect(() => {
+    if (contacts) {
+      setContactsCopy(
+        contacts?.map((contact) => ({
+          value: contact.id,
+          label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+          first_name: contact.first_name,
+          last_name: contact.last_name,
+          email: contact.email,
+          profile_image_path: contact.profile_image_path,
+        })),
+      );
+    }
+  }, [contacts]);
+
+  const handleSelect = (selected) => {
+    setSelectedContact(selected[selected.length - 1]);
+    handleChange(selected[selected.length - 1]);
+  };
+  return (
+    <div>
+      {contactsCopy && contactsCopy.length && (
+        <MultiSelect
+          options={contactsCopy}
+          value={selectedContact ? [selectedContact] : []}
+          onChange={handleSelect}
+          labelledBy="Search for contacts"
+          hasSelectAll={false}
+        />
+      )}
+    </div>
   );
 };
 

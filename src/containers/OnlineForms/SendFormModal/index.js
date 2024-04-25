@@ -28,8 +28,12 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     validationSchema: SendFormSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: (values) => onSubmitForm(values),
+    onSubmit: values => {
+      onSubmitForm(values);
+    },
   });
+  
+  console.log("Errors:", errors);
 
   const { mutate: mutateSendEmail } = useSendEmail();
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -94,24 +98,20 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             errorText={errors.form_type_id}
             initialSelect={currentForm?.id ? currentForm.name : ''}
           />
-          <ClientsMultiSelect
-            handleChange={(clients) =>
-              setFieldValue(
-                'clients',
-                clients.map(({ id, email, first_name, last_name }) => {
-                  return {
-                    id: id.toString(),
-                    email,
-                    first_name,
-                    last_name,
-                  };
-                }),
-              )
-            }
+         <ClientsMultiSelect
+            handleChange={(client) => {
+              const formattedClient = {
+                id: client.value.toString(),
+                email: client.email,
+                first_name: client.first_name,
+                last_name: client.last_name,
+              };
+              setFieldValue('clients', [formattedClient]);
+            }}
             error={errors.clients}
-            name={'clients'}
-            placeholder={'Search for a Contact...'}
+            placeholder="Search for a Contact..."
           />
+
         </div>
         <div className="flex justify-end gap-[17px]">
           <Button white className={'min-w-fit'} onClick={onCancel}>
