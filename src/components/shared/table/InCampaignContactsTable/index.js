@@ -5,9 +5,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import Table from '..';
 import { useRouter } from 'next/router';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 
 const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status, status_2 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const eventsTable = () => {
     return (
       <div>
@@ -33,30 +34,22 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                     cellIndex === events.events.length - 1 ? ' border-gray2' : ''
                   }`}>
                   <div className={'flex flex-col gap-1 min-w-[200px] '}>
-                    <div className={'flex gap-1.5 items-center'}>
-                      <div
-                        className={`h-2 w-2 rounded-xl ${
+                    <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
+                      <StatusChip
+                        variant={
                           e?.event_status?.toLowerCase() === 'scheduled'
-                            ? 'bg-yellow2'
+                            ? VARIANT_ENUM.WARNING
                             : e?.event_status?.toLowerCase() === 'sent'
-                              ? 'bg-[#10B981]'
-                              : 'bg-red-500'
-                        }`}></div>
-                      <p
-                        className={`text-sm leading-5 font-medium
-                         ${
-                           e?.event_status?.toLowerCase() === 'scheduled'
-                             ? 'text-yellow3'
-                             : e?.event_status?.toLowerCase() === 'sent'
-                               ? 'text-green7'
-                               : 'text-red5'
-                         }`}>
-                        {e?.event_status?.toLowerCase() === 'scheduled'
-                          ? 'To be sent'
-                          : e?.event_status?.toLowerCase() === 'sent'
-                            ? 'Sent'
-                            : 'Canceled'}
-                      </p>
+                              ? VARIANT_ENUM.SUCCESS
+                              : VARIANT_ENUM.ERROR
+                        }
+                        text={
+                          e?.event_status?.toLowerCase() === 'scheduled'
+                            ? 'To be sent'
+                            : e?.event_status?.toLowerCase() === 'sent'
+                              ? 'Sent'
+                              : 'Canceled'
+                        }></StatusChip>
                     </div>
                     {e.date !== null && (
                       <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>

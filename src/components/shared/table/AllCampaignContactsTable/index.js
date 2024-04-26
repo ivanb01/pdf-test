@@ -7,6 +7,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import Table from '..';
 import { useRouter } from 'next/router';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 const AllCampaignContactsTable = ({ data, categoryType, status, status_2 }) => {
   const router = useRouter();
 
@@ -159,22 +160,21 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2 }) => {
               </div>
             </td>
             <td className={'px-6 py-4'}>
-              <div className={'flex flex-col gap-1'}>
-                <div className={'flex gap-1 items-center'}>
-                  <div
-                    className={`h-2 w-2 rounded-xl ${
-                      person.contact_campaign_status === 'assigned' ? 'bg-green-500' : 'bg-red-500'
-                    }`}></div>
-                  <p className={'text-sm leading-5 font-medium text-gray7'}>
-                    {person.contact_campaign_status === 'assigned'
-                      ? 'Campaign is Running'
-                      : person.contact_campaign_status === 'unassigned'
-                        ? 'Campaign Deactivated'
-                        : 'Never In Campaign'}
-                  </p>
+              <div className={'flex flex-col gap-1 max-w-[140px] items-center justify-center'}>
+                <div className={'flex gap-1 items-center '}>
+                  <StatusChip
+                    variant={person.contact_campaign_status === 'assigned' ? VARIANT_ENUM.SUCCESS : VARIANT_ENUM.ERROR}
+                    text={
+                      person.contact_campaign_status === 'assigned'
+                        ? 'Campaign is Running'
+                        : person.contact_campaign_status === 'unassigned'
+                          ? 'Campaign Deactivated'
+                          : 'Never In Campaign'
+                    }
+                  />
                 </div>
                 {person.contact_campaign_status !== null && (
-                  <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
+                  <div className={'text-xs leading-4 font-medium text-gray5 ml-0'}>
                     {person.contact_campaign_status === 'assigned'
                       ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
                       : person.contact_campaign_status === 'unassigned'

@@ -6,6 +6,7 @@ import TooltipComponent from '@components/shared/tooltip';
 import noUsersFound from '/public/images/campaign/noUsersFound.svg';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import { useRouter } from 'next/router';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 
 const NotInCampaignContactsTable = ({ data, categoryType, status, status_2 }) => {
   const router = useRouter();
@@ -115,10 +116,13 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2 }) =>
             <td className={'px-6 py-4'}>
               <div className={'flex flex-col gap-1'}>
                 <div className={'flex gap-1 items-center'}>
-                  <div className={`h-2 w-2 rounded-xl bg-red-500`} />
-                  <p className={'text-sm leading-5 font-medium text-gray7'}>
-                    {person.contact_campaign_status === 'never_assigned' ? 'Never in Campaign' : 'Campaign Deactivated'}
-                  </p>
+                  {/* eslint-disable-next-line react/jsx-no-undef */}
+                  <StatusChip
+                    variant={VARIANT_ENUM.ERROR}
+                    text={
+                      person.contact_campaign_status === 'never_assigned' ? 'Never in Campaign' : 'Campaign Deactivated'
+                    }
+                  />
                 </div>
                 {person.contact_unenrolment_date !== null && (
                   <div className={'text-xs leading-4 font-medium text-gray5 ml-3'}>
