@@ -13,6 +13,7 @@ import GlobalAlert from '@components/shared/alert/global-alert';
 import withAuth from '@components/withAuth';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRouter } from 'next/router';
+import TrashTable from '@components/shared/table/TrashTable';
 const index = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ const index = () => {
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)', overflow: 'hidden' }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table
+                <TrashTable
                   tableFor={'trash'}
                   data={onSearch(searchTerm)}
                   searchTerm={searchTerm}

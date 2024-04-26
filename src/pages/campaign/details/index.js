@@ -20,6 +20,9 @@ import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
 import { capitalize, getContactStatusByStatusId, getContactTypeByTypeId } from '@global/functions';
+import AllCampaignContactsTable from '@components/shared/table/AllCampaignContactsTable';
+import NotInCampaignContactsTable from '@components/shared/table/NotInCampaignContactsTable';
+import InCampaignContactsTable from '@components/shared/table/InCampaignContactsTable';
 
 const index = () => {
   const router = useRouter();
@@ -151,7 +154,7 @@ const index = () => {
       case 0:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <AllCampaignContactsTable
               tableFor={'allCampaignContacts'}
               data={totalContacts}
               categoryType={category}
@@ -163,7 +166,7 @@ const index = () => {
       case 1:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <InCampaignContactsTable
               tableFor={'inCampaignContacts'}
               data={inCampaignContacts}
               setCurrentButton={setCurrentButton}
@@ -176,7 +179,7 @@ const index = () => {
       case 2:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <NotInCampaignContactsTable
               tableFor={'notInCampaignContacts'}
               data={notInCamapaignContacts}
               categoryType={category}

@@ -9,6 +9,7 @@ import Button from 'components/shared/button';
 import { setRefetchData } from '@store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllContacts } from '@store/contacts/slice';
+import ImportGoogleContactsDetailsTable from '@components/shared/table/ImportGoogleContactsDetailsTable';
 
 const GoogleContactsImportSummary = ({ data }) => {
   const router = useRouter();
@@ -103,19 +104,19 @@ const GoogleContactsImportSummary = ({ data }) => {
                 allContacts?.importable_new_contacts_count === 0
                   ? '0 contacts to be imported'
                   : allContacts?.importable_new_contacts_count === 1
-                  ? '1 contact imported successfully'
-                  : allContacts?.importable_new_contacts_count > 1
-                  ? `${allContacts?.importable_new_contacts_count} contacts imported successfully`
-                  : ''
+                    ? '1 contact imported successfully'
+                    : allContacts?.importable_new_contacts_count > 1
+                      ? `${allContacts?.importable_new_contacts_count} contacts imported successfully`
+                      : ''
               }
               message={
                 allContacts?.importable_new_contacts_count === 0
                   ? 'There are no contacts to be imported in the CRM.'
                   : allContacts?.importable_new_contacts_count === 1
-                  ? 'This contact was successfully imported. Your next step is to sort it in the uncategorized contacts section.'
-                  : allContacts?.importable_new_contacts_count > 1
-                  ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.'
-                  : ''
+                    ? 'This contact was successfully imported. Your next step is to sort it in the uncategorized contacts section.'
+                    : allContacts?.importable_new_contacts_count > 1
+                      ? 'These contacts were successfully imported. Your next step is to sort them in the uncategorized contacts section.'
+                      : ''
               }
               type="success"
               rounded
@@ -129,11 +130,7 @@ const GoogleContactsImportSummary = ({ data }) => {
             />
             <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
               {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
-              <Table
-                tableFor="import-google-contacts-successful"
-                data={importedContacts}
-                // allContacts={imports1}
-              ></Table>
+              <ImportGoogleContactsDetailsTable tableFor="import-google-contacts-successful" data={importedContacts} />
               {/*</SimpleBar>*/}
             </div>
           </div>
@@ -178,7 +175,7 @@ const GoogleContactsImportSummary = ({ data }) => {
               />
               <div className="border border-gray2 rounded overflow-hidden" style={{ height: 'calc(100vh - 438px)' }}>
                 {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 438px)' }}>*/}
-                <Table tableFor="import-google-contacts-failed" data={notImportedContacts}></Table>
+                <ImportGoogleContactsDetailsTable tableFor="import-google-contacts-failed" data={notImportedContacts} />
                 {/*</SimpleBar>*/}
               </div>
             </div>

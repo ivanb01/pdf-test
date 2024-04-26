@@ -3,7 +3,6 @@ import Table from 'components/shared/table';
 import StatusSelect from 'components/status-select';
 import ContactTypeSelect from 'components/contact/contact-type-select';
 import Image from 'next/image';
-import Button from 'components/shared/button';
 import CircleStepNumber from 'components/shared/circle-step-number';
 import Text from 'components/shared/text';
 import { types } from 'global/variables';
@@ -13,11 +12,12 @@ import noContactsSelectedArrow from '/public/images/categorize-no-contacts-selec
 import noCategorized from '/public/images/no-categorized.svg';
 import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
-import Chip from 'components/shared/chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
 import { updateAllContacts, updateContactLocally, updateContacts } from '@store/contacts/slice';
 import DropdownWithSearch from '@components/dropdownWithSearch';
+import UncategorizedTable from '@components/shared/table/UncategorizedTable';
+import CategorizedTable from '@components/shared/table/CategorizedTable';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -158,7 +158,7 @@ const CategorizePage = ({
         <div
           className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
           {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>*/}
-          <Table
+          <UncategorizedTable
             tableFor="in-categorization"
             data={uncategorizedContacts}
             handleClickRow={handleSelectUncategorized}
@@ -297,7 +297,7 @@ const CategorizePage = ({
       {categorizedInThisSession?.length > 0 ? (
         <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
           {/*<SimpleBar autoHide style={{ maxHeight: '100%' }}>*/}
-          <Table
+          <CategorizedTable
             tableFor="categorized"
             data={categorizedInThisSession}
             undoAllCategorizations={undoAllCategorizations}

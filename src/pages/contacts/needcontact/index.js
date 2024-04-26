@@ -23,6 +23,7 @@ import Chip from '@components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import Text from '@components/shared/text';
 import ReviewContact from '@components/overlays/review-contact';
+import NeedToContactTable from '@components/shared/table/NeedToContactTable';
 
 const index = () => {
   const router = useRouter();
@@ -281,7 +282,7 @@ const index = () => {
             }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table
+                <NeedToContactTable
                   tableFor={'needToContact'}
                   data={filteredContacts}
                   handleCardEdit={(contact) => {

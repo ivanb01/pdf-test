@@ -30,6 +30,7 @@ import { setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import SwitchComponent from '@components/Switch';
 import { useRouter } from 'next/router';
+import ProfessionalsTable from '@components/shared/table/ProfessionalsTable';
 
 const campaignFilterMeaning = {
   'In Campaign': 'assigned',
@@ -50,9 +51,6 @@ const buttons = [
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(openedSubtab, 'opened');
-  }, [openedSubtab]);
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
@@ -368,7 +366,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-              <Table
+              <ProfessionalsTable
                 data={
                   hideUnapproved === true
                     ? filteredProfessionals.filter(

@@ -1,3 +1,6 @@
+import AIChip from '@components/shared/chip/ai-chip';
+import GoogleContact from '/public/images/GoogleContact.png';
+
 import {
   clientStatuses,
   filtersForLastCommunicationDate,
@@ -8,6 +11,7 @@ import {
   types,
 } from './variables';
 import moment from 'moment';
+import Image from 'next/image';
 
 export const getInitials = (name) => {
   if (name.includes('|')) {
@@ -479,4 +483,29 @@ export const generateSMSFooter = (user) => {
   if (company) elements.push(company);
 
   return elements.join(', ') + '.';
+};
+export const getSource = (source, approvedAI = false) => {
+  if (source === 'Smart Sync A.I.' || source === 'GmailAI' || source === 'AI Smart Synced Contact') {
+    return {
+      name: source,
+      icon: <AIChip reviewed={approvedAI} />,
+    };
+  } else if (source === 'Manually Added') {
+    return {
+      name: 'Contact Added Manually',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M6.04175 13.9584H11.4584V12.7084H6.04175V13.9584ZM6.04175 10.625H13.9584V9.37508H6.04175V10.625ZM6.04175 7.29171H13.9584V6.04175H6.04175V7.29171ZM4.42316 17.0834C4.00222 17.0834 3.64591 16.9375 3.35425 16.6459C3.06258 16.3542 2.91675 15.9979 2.91675 15.577V4.42317C2.91675 4.00222 3.06258 3.64591 3.35425 3.35425C3.64591 3.06258 4.00222 2.91675 4.42316 2.91675H15.577C15.9979 2.91675 16.3542 3.06258 16.6459 3.35425C16.9375 3.64591 17.0834 4.00222 17.0834 4.42317V15.577C17.0834 15.9979 16.9375 16.3542 16.6459 16.6459C16.3542 16.9375 15.9979 17.0834 15.577 17.0834H4.42316Z"
+            fill="#9CA3AF"
+          />
+        </svg>
+      ),
+    };
+  } else if (source === 'Google Contacts') {
+    return {
+      name: 'Google Contact',
+      icon: <Image src={GoogleContact} height={16} width={16} />,
+    };
+  } else return <></>;
 };

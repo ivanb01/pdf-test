@@ -24,6 +24,7 @@ import { setClientsFilters } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
 import SwitchComponent from '@components/Switch';
+import ContactsListTable from '@components/shared/table/ContactsListTable';
 
 const buttons = [
   {
@@ -425,7 +426,7 @@ const Clients = ({
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table
+                <ContactsListTable
                   handleFilteredContacts={handleFilteredContacts}
                   contacts={filteredContacts}
                   tableFor="contactsList"

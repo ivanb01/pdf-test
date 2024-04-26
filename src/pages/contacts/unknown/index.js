@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ReviewContact from '@components/overlays/review-contact';
+import OtherTable from '@components/shared/table/OtherTable';
 
 const index = () => {
   const router = useRouter();
@@ -158,7 +159,7 @@ const index = () => {
             <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
               <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
                 <SimpleBar autoHide style={{ maxHeight: '100%', height: '100%' }}>
-                  <Table
+                  <OtherTable
                     tableFor="other"
                     data={actualContact}
                     handleAction={handleAction}

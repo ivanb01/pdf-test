@@ -11,6 +11,7 @@ import { getEmailParts } from 'global/functions';
 import withAuth from '@components/withAuth';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
+import LeaderboardTable from '@components/shared/table/LeaderboardTable';
 
 const index = () => {
   const [tabs, setTabs] = useState([
@@ -153,7 +154,6 @@ const index = () => {
     sortColumn && sortData(sortColumn);
   }, [sortColumn]);
 
-
   const loadItems = (offset) => {
     return getReports(10, offset)
       .then((response) => {
@@ -173,15 +173,15 @@ const index = () => {
 
   async function loadMore() {
     try {
-      const {total, data, count, hasNextPage: newHasNextPage } = await loadItems(offset);
+      const { total, data, count, hasNextPage: newHasNextPage } = await loadItems(offset);
       setItems((current) => {
         return {
           ...current,
           data: [...current.data, ...data],
-          count: count 
+          count: count,
         };
       });
-  
+
       setOffset(offset + count);
 
       setHasNextPage(newHasNextPage);
@@ -222,14 +222,14 @@ const index = () => {
         <div className="w-full h-full relative">
           <Loader />
         </div>
-      ) : items?.total>0 ? (
+      ) : items?.total > 0 ? (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 150px)' }}>
-          <Table tableFor="leaderboard" data={items.data} />
+          <LeaderboardTable tableFor="leaderboard" data={items.data} />
           {hasNextPage && (
-              <div ref={infiniteRef}>
-                <SpinnerLoader />
-              </div>
-            )}
+            <div ref={infiniteRef}>
+              <SpinnerLoader />
+            </div>
+          )}
         </SimpleBar>
       ) : (
         <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 150px)' }}>
