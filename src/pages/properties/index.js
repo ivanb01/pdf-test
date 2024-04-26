@@ -845,13 +845,15 @@ const index = () => {
                 </div>
                 <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
-                    <PropertyCard
-                      setSelected={setSelectedProperties}
-                      isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
-                      selected={selectedProperties}
-                      key={index}
-                      property={property}
-                    />
+                    <>
+                      <PropertyCard
+                        setSelected={setSelectedProperties}
+                        isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                        selected={selectedProperties}
+                        key={index}
+                        property={property}
+                      />
+                    </>
                   ))}
                 </div>
                 {properties.TOTAL_COUNT > 21 && (
