@@ -26,8 +26,10 @@ import CommunicationForm from '@components/overlays/communication-form';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import Table from '..';
 import { getSource } from '@global/functions';
+import { useRouter } from 'next/router';
 
 const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryType, handleCardEdit, searchTerm }) => {
+  const router = useRouter()
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const sorted = useSelector((state) => state.global.sorted);
