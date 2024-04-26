@@ -4,8 +4,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import Table from '..';
+import { useRouter } from 'next/router';
 
 const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status, status_2 }) => {
+  const router = useRouter()
   const eventsTable = () => {
     return (
       <div>

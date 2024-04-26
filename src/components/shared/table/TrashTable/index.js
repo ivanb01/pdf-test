@@ -2,8 +2,10 @@ import React from 'react';
 import Table from '..';
 import { getInitials, getDateFormat } from 'global/functions';
 import RedoIcon from '@mui/icons-material/Redo';
+import { useRouter } from 'next/router';
 
 const TrashTable = ({ data, searchTerm, handleCardEdit }) => {
+  const router = useRouter()
   return data.length > 0 ? (
     <Table>
       <thead>

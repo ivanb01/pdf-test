@@ -13,8 +13,10 @@ import TooltipComponent from '@components/shared/tooltip';
 import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import WhatsApp from '@mui/icons-material/WhatsApp';
+import { useRouter } from 'next/router';
 
 const NeedToContactTable = ({ data, handleCardEdit }) => {
+  const router = useRouter()
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
 

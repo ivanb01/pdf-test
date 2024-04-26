@@ -11,8 +11,10 @@ import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import Table from '..';
 import { getSource } from '@global/functions';
+import { useRouter } from 'next/router';
 
 const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, searchTerm }) => {
+  const router = useRouter()
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contactsOriginal = data;
   const [contacts, setContacts] = useState([]);
