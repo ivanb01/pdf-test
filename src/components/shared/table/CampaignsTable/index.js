@@ -1,7 +1,7 @@
 import eyeIcon from '/public/images/eye.svg';
 import Image from 'next/image';
 import { useState } from 'react';
-import ContactInfo from './contact-info';
+import ContactInfo from '../contact-info';
 import { formatDateLThour, formatDateCalendar } from 'global/functions';
 import Table from '..';
 
