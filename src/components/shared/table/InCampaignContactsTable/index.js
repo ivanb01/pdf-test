@@ -30,27 +30,23 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
               {events.events.map((e, cellIndex) => (
                 <td
                   key={cellIndex}
-                  className={` flex-grow flex-1 px-6 py-4 border-b border-gray2 pr-20 ${
-                    cellIndex === events.events.length - 1 ? ' border-gray2' : ''
-                  }`}>
-                  <div className={'flex flex-col gap-1 min-w-[200px] '}>
-                    <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
-                      <StatusChip
-                        variant={
-                          e?.event_status?.toLowerCase() === 'scheduled'
-                            ? VARIANT_ENUM.WARNING
-                            : e?.event_status?.toLowerCase() === 'sent'
-                              ? VARIANT_ENUM.SUCCESS
-                              : VARIANT_ENUM.ERROR
-                        }
-                        text={
-                          e?.event_status?.toLowerCase() === 'scheduled'
-                            ? 'To be sent'
-                            : e?.event_status?.toLowerCase() === 'sent'
-                              ? 'Sent'
-                              : 'Canceled'
-                        }></StatusChip>
-                    </div>
+                  className={` flex-grow flex-1 px-6 py-[15px] border-b border-gray2 pr-20 mb-[0px] ${cellIndex === events.events.length - 1 ? ' border-gray2' : ''}`}>
+                  <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
+                    <StatusChip
+                      variant={
+                        e?.event_status?.toLowerCase() === 'scheduled'
+                          ? VARIANT_ENUM.WARNING
+                          : e?.event_status?.toLowerCase() === 'sent'
+                            ? VARIANT_ENUM.SUCCESS
+                            : VARIANT_ENUM.ERROR
+                      }
+                      text={
+                        e?.event_status?.toLowerCase() === 'scheduled'
+                          ? 'To be sent'
+                          : e?.event_status?.toLowerCase() === 'sent'
+                            ? 'Sent'
+                            : 'Canceled'
+                      }></StatusChip>
                     {e.date !== null && (
                       <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
                         {getFormattedDateFromTimestamp(e.event_updated_at)}
