@@ -6,6 +6,7 @@ import Edit from '@mui/icons-material/Edit';
 import { Delete } from '@mui/icons-material';
 import TooltipComponent from '@components/shared/tooltip';
 import { useRouter } from 'next/router';
+import { getSource } from '@global/functions';
 
 const OtherTable = ({ data, handleAction, handleCardEdit }) => {
   const router = useRouter()

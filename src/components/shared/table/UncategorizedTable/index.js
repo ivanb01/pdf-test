@@ -4,6 +4,7 @@ import ContactInfo from '../contact-info';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import TooltipComponent from '@components/shared/tooltip';
 import Table from '..';
+import { getSource } from '@global/functions';
 
 const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow }) => {
   return (
