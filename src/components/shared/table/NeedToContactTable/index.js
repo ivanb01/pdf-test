@@ -1,6 +1,6 @@
 import Table from '..';
 import { getContactStatusByStatusId, getContactStatusColorByStatusId, getInitials } from 'global/functions';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Edit from '@mui/icons-material/Edit';
 import Chip from '@components/shared/chip';
@@ -14,6 +14,7 @@ import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import { useRouter } from 'next/router';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 
 const NeedToContactTable = ({ data, handleCardEdit }) => {
   const router = useRouter()
@@ -107,15 +108,12 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                 </Chip>
               </td>
               <td>
-                <div className={'flex gap-1.5 items-center'}>
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      person.is_in_campaign === null ? 'bg-red5' : 'bg-green5'
-                    }`}></div>
-                  <p className={'text-sm leading-5 font-normal'}>
-                    {person.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
-                  </p>
-                </div>
+                <StatusChip
+                  variant={person?.is_in_campaign === null ? VARIANT_ENUM.ERROR : VARIANT_ENUM.SUCCESS}
+                  text={
+                    person?.is_in_campaign === null ? 'Unassigned' : 'Assigned'
+                  }
+                />
               </td>
               <td>
                 <DateChip
