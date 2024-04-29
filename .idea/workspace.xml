@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="fix proffesional filter">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add search in dropdown marketing tab">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/settings/my-profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/settings/my-profile/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/order-template/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/order-template/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/marketing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/marketing/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +32,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/Signature",
+    "git-widget-placeholder": "f/erza/SearchProperties",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -479,7 +483,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="change direction of Tooltip" />
     <MESSAGE value="change ai-summary table" />
     <MESSAGE value="enable scrolling when in need to contacgt page" />
     <MESSAGE value="improve lead source" />
@@ -504,6 +507,7 @@
     <MESSAGE value="make changes in buttons for preview and notify" />
     <MESSAGE value="add onboarding" />
     <MESSAGE value="fix proffesional filter" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix proffesional filter" />
+    <MESSAGE value="add search in dropdown marketing tab" />
+    <option name="LAST_COMMIT_MESSAGE" value="add search in dropdown marketing tab" />
   </component>
 </project>

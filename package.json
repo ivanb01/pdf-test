@@ -56,6 +56,7 @@
     "react-pdf": "^7.4.0",
     "react-redux": "^7.2.6",
     "react-select": "^5.7.2",
+    "react-select-async-paginate": "^0.7.4",
     "react-shepherd": "^4.1.0",
     "react-signature-canvas": "^1.0.6",
     "react-transition-group": "^4.4.5",

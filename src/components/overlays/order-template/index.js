@@ -4,7 +4,7 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Zoom from 'react-medium-image-zoom';
@@ -12,14 +12,24 @@ import 'react-medium-image-zoom/dist/styles.css';
 import { sendMarketingEmail } from '@api/marketing';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { AsyncPaginate } from 'react-select-async-paginate';
+import LaunchIcon from '@mui/icons-material/Launch';
+import fetchJsonp from 'fetch-jsonp';
+import { getBaseUrl } from '@global/functions';
+import useDebounce from '@helpers/hooks/useDebouncedSearch';
 
 const validationSchemaWithListingUrl = Yup.object({
-  listingUrl: Yup.string().url('Invalid URL format').required('Listing URL is required'),
+  listingUrl: Yup.string()
+    .matches(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, 'Invalid URL format')
+    .required('Listing URL is required')
+    .defined('Listing URL is required'),
   note: Yup.string().optional(),
 });
+
 const validationSchemaWithoutListingUrl = Yup.object({
   note: Yup.string().optional(),
 });
+
 const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
   const user = useSelector((state) => state.global.user);
 
@@ -75,7 +85,55 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
         .finally(() => {});
     },
   });
+  const [label, setLabel] = useState('');
+  const [selectedProperty, setSelectedProperty] = useState();
+  const [pagination, setPagination] = useState(1);
+  const [debounced] = useDebounce(label, 300);
 
+  const loadOptions = async (_, _unused, { inputValue }) => {
+    console.log(inputValue, 'inp');
+    let params = {
+      apikey: '4d7139716e6b4a72',
+      callback: 'callback',
+      limit: 21,
+      page: pagination,
+    };
+    if (inputValue?.length > 0) {
+      params['address'] = inputValue;
+      if (pagination !== 0) {
+        setPagination(1);
+      }
+      params['page'] = pagination;
+    } else if (inputValue?.length < 0) {
+      setPagination(pagination);
+    }
+    const urlParams = new URLSearchParams({
+      ...params,
+    });
+
+    const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
+    console.log(url, 'url');
+    const data = await fetchJsonp(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.LISTINGS.length > 0) {
+          setPagination(pagination + 1);
+        }
+        return data;
+      })
+      .catch((error) => {
+        console.log(error, 'error');
+      });
+
+    return {
+      options: data?.LISTINGS ?? [],
+      hasMore: data?.LISTINGS.length > 0,
+    };
+  };
+
+  useEffect(() => {
+    console.log(formik.values.listingUrl);
+  }, [formik.values]);
   return (
     <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
       <form onSubmit={formik.handleSubmit}>
@@ -90,15 +148,121 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
                 ready for both print and digital use. You will receive the file to your email within 24 Hours.
               </p>
               {listingUrl && (
-                <Input
-                  type="text"
-                  label="Listing URL"
-                  required
-                  id="listingUrl"
-                  onChange={formik.handleChange}
-                  error={formik.errors.listingUrl && formik.touched.listingUrl}
-                  errorText={formik.errors.listingUrl}
-                />
+                <>
+                  <div>
+                    <div className="block text-sm font-medium text-gray6 mb-1 mt-1">Search Properties</div>
+                    <AsyncPaginate
+                      loadOptions={loadOptions}
+                      getOptionLabel={(option) => (
+                        <div className={'flex gap-4'}>
+                          <img
+                            src={option?.PHOTOS?.length > 0 ? option?.PHOTOS[0]?.PHOTO_URL : ''}
+                            height={40}
+                            width={50}
+                          />
+                          <div className={'text-gray-600 text-sm flex items-center justify-between flex-1 w-[100%]'}>
+                            {option?.ADDRESS} <br />
+                            {option?.NEIGHBORHOODS}, {option?.CITY}, {option?.STATE} {option?.ZIP_CODE}
+                            <div>
+                              <LaunchIcon
+                                className={'h-4 w-4 cursor-pointer'}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.open(`${getBaseUrl()}/property?id=${option?.ID}`);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      isSearchable
+                      styles={{
+                        input: (base) => ({
+                          ...base,
+                          input: {
+                            fontSize: '14px !important',
+                            borderColor: 'transparent !important',
+                            '&:focus': {
+                              borderColor: 'transparent !important',
+                              boxShadow: 'none !important',
+                              '--tw-ring-color': 'transparent !important',
+                            },
+                          },
+                        }),
+                        placeholder: (base) => ({
+                          ...base,
+                          fontSize: '14px',
+                        }),
+                        control: (base) => ({
+                          ...base,
+                          borderRadius: '8px',
+                          borderColor: '#D1D5DB',
+                          zIndex: 9999,
+                        }),
+                        singleValue: (base) => ({
+                          ...base,
+                          fontSize: '14px',
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          fontSize: '14px',
+                          borderRadius: 5,
+                          zIndex: 99,
+                        }),
+                        menuList: (base) => ({
+                          ...base,
+                          borderRadius: 5,
+                          maxHeight: '300px',
+                          '&:hover': {
+                            // background: '#F3F4F6 !important',
+                            color: 'white !important',
+                          },
+                        }),
+                        option: (base, state) => ({
+                          ...base,
+                          backgroundColor: 'white',
+                          color: 'black',
+                          fontWeight: state.data?.ID === selectedProperty?.ID ? '600' : '400',
+                          '&:hover': {
+                            background: '#F3F4F6 !important',
+                            color: 'white !important',
+                          },
+                        }),
+                      }}
+                      onChange={(i) => {
+                        setSelectedProperty(i == null ? undefined : i);
+                        formik.setFieldValue(
+                          'listingUrl',
+                          i == null ? undefined : `${getBaseUrl()}/property?id=${i?.ID}`,
+                        );
+                      }}
+                      onInputChange={(i) => {
+                        setLabel(i);
+                      }}
+                      placeholder="Select Property"
+                      isClearable
+                      additional={{
+                        page: 1,
+                        inputValue: debounced,
+                      }}
+                    />
+                    <div className="block text-sm font-medium text-gray6 mb-[-15px] mt-3">or</div>
+                  </div>
+
+                  <Input
+                    type="text"
+                    label="Listing URL"
+                    required
+                    disabled={selectedProperty}
+                    value={formik.values.listingUrl ?? ''}
+                    id="listingUrl"
+                    onChange={(e) => {
+                      formik.setFieldValue('listingUrl', e.target.value);
+                    }}
+                    error={formik.errors.listingUrl && formik.touched.listingUrl}
+                    errorText={formik.errors.listingUrl}
+                  />
+                </>
               )}
               <TextArea
                 className="min-h-[120px]"

@@ -334,8 +334,10 @@ const index = () => {
 
   return (
     <>
-      <MainMenu />
       <SimpleBar style={{ maxHeight: '100%' }}>
+        <div className={'sticky top-0 z-10'}>
+          <MainMenu />
+        </div>
         <div
           className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
           style={{ height: '230px' }}>

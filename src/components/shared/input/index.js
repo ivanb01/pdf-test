@@ -40,6 +40,7 @@ const Input = ({
   onSignatureEnd,
   onSignatureClear,
   hidePhonePrefix,
+  disabled,
   ...props
 }) => {
   let errorClasses = '';
@@ -58,10 +59,11 @@ const Input = ({
           placeholder={placeholder}
           onInput={onInput}
           onBlur={onBlur}
+          disabled={disabled}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`text-sm text-gray8 pl-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+          className={`text-sm text-gray8 pl-10 border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${disabled ? 'bg-gray1' : 'bg-white'} ${
             errorClasses ? errorClasses : 'border-borderColor'
           }`}
         />
@@ -81,9 +83,10 @@ const Input = ({
           onInput={onInput}
           onBlur={onBlur}
           onChange={onChange}
+          disabled={disabled}
           onKeyDown={onKeyDown}
           value={value}
-          className={`text-sm text-gray8 pr-10 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+          className={`text-sm text-gray8 pr-10 border ${disabled ? 'bg-gray1' : 'bg-white'} rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
         />
@@ -101,6 +104,7 @@ const Input = ({
           type={type}
           name={name ? name : id}
           id={id}
+          disabled={disabled}
           placeholder={placeholder}
           onInput={onInput}
           onChange={onChange}
@@ -111,7 +115,7 @@ const Input = ({
           className={
             saved
               ? `text-sm text-gray8 p-0 border-none bg-transparent outline-none ${className}`
-              : `${className} text-sm text-gray8 border rounded-lg bg-white px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+              : `${className} text-sm text-gray8 ${disabled ? 'bg-gray1' : 'bg-white'} border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
                   errorClasses ? errorClasses : 'border-borderColor'
                 }`
           }
