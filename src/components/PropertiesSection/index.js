@@ -114,9 +114,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   }
 
   function isClientContact(contact) {
+    //prettier-ignore
     return (
-      contact.category_1 == 'Client' &&
-      !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
+      contact.category_1 == 'Client' ||
+      contact.category_1 == 'Professional' &&
+        !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
     );
   }
 
@@ -257,7 +259,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               console.log(contact, 'contact');
               let activity = {
                 type_of_activity_id: 28,
-                description: `(Email) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+                description: `(Email) Properties sent to ${
+                  c.first_name
+                } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                  item?.portfolio_sharable_id ?? ''
+                }`,
               };
 
               dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
@@ -272,12 +278,20 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${generateSMSFooter(userInfo)}`,
+              `Hey ${
+                c.first_name
+              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
+                item?.portfolio_sharable_id ?? ''
+              }. ${generateSMSFooter(userInfo)}`,
             )
               .then((res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `(SMS) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+                  description: `(SMS) Properties sent to ${
+                    c.first_name
+                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                    item?.portfolio_sharable_id ?? ''
+                  }`,
                 };
 
                 const contact = allContacts.find((c) => c.id === c.value);
