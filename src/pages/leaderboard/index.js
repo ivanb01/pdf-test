@@ -142,6 +142,7 @@ const index = () => {
     setLoading(true);
     getReports(10, offset).then((data) => {
       setItems(data.data);
+      setOffset(offset + data.data.count);
       setLoading(false);
     });
   }, []);
