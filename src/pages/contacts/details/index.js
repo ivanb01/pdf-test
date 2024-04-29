@@ -269,7 +269,7 @@ const index = () => {
           </div>
         ) : (
           <div className="px-3 lg:px-6 py-[21px] flex flex-col lg:flex-row">
-            <div className="w-full lg:w-[275px]">
+            <div className="w-full lg:w-[285px]">
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
@@ -445,12 +445,16 @@ const index = () => {
                     />
                     <button
                       onClick={() => setShowGmailInbox(!showGmailInbox)}
-                      className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${showGmailInbox && 'border-lightBlue3'}`}>
+                      className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
+                        showGmailInbox && 'border-lightBlue3'
+                      }`}>
                       <MailOutline
                         className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
-                        className={`responsive-fix text-sm leading-5 ${showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'}`}>
+                        className={`responsive-fix text-sm leading-5 ${
+                          showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
+                        }`}>
                         Gmail Inbox
                       </span>
                     </button>
