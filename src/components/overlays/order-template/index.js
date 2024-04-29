@@ -68,21 +68,23 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
    ${listingUrlContent}
    </div>
     ${template
-      .map(
-        (image, index) => `
+          .map(
+            (image, index) => `
         <img src='${image}' alt='image ${index}' height='300' width='300' style='object-fit: contain;' />
           `,
-      )
-      .join('')}
+          )
+          .join('')}
    </body>
     </html>
   `,
       })
-        .then(() => {})
+        .then(() => {
+        })
         .catch(() => {
           toast.error('Something went wrong');
         })
-        .finally(() => {});
+        .finally(() => {
+        });
     },
   });
   const [label, setLabel] = useState('');
@@ -90,21 +92,20 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
   const [pagination, setPagination] = useState(1);
   const [debounced] = useDebounce(label, 300);
 
-  const loadOptions = async (_, _unused, { inputValue }) => {
-    console.log(inputValue, 'inp');
+  const loadOptions = async () => {
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       limit: 21,
       page: pagination,
+      address: label,
     };
-    if (inputValue?.length > 0) {
-      params['address'] = inputValue;
+    if (label?.length > 0) {
       if (pagination !== 0) {
         setPagination(1);
       }
       params['page'] = pagination;
-    } else if (inputValue?.length < 0) {
+    } else if (label?.length < 0) {
       setPagination(pagination);
     }
     const urlParams = new URLSearchParams({
@@ -135,7 +136,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
     console.log(formik.values.listingUrl);
   }, [formik.values]);
   return (
-    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
+    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className='w-[1000px]'>
       <form onSubmit={formik.handleSubmit}>
         <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
           <div className={'flex-1 relative'}>
@@ -150,8 +151,9 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
               {listingUrl && (
                 <>
                   <div>
-                    <div className="block text-sm font-medium text-gray6 mb-1 mt-1">Search Properties</div>
+                    <div className='block text-sm font-medium text-gray6 mb-1 mt-1'>Search Properties</div>
                     <AsyncPaginate
+                      debounceTimeout={200}
                       loadOptions={loadOptions}
                       getOptionLabel={(option) => (
                         <div className={'flex gap-4'}>
@@ -239,23 +241,23 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
                       onInputChange={(i) => {
                         setLabel(i);
                       }}
-                      placeholder="Select Property"
+                      placeholder='Select Property'
                       isClearable
                       additional={{
                         page: 1,
                         inputValue: debounced,
                       }}
                     />
-                    <div className="block text-sm font-medium text-gray6 mb-[-15px] mt-3">or</div>
+                    <div className='block text-sm font-medium text-gray6 mb-[-15px] mt-3'>or</div>
                   </div>
 
                   <Input
-                    type="text"
-                    label="Listing URL"
+                    type='text'
+                    label='Listing URL'
                     required
                     disabled={selectedProperty}
                     value={formik.values.listingUrl ?? ''}
-                    id="listingUrl"
+                    id='listingUrl'
                     onChange={(e) => {
                       formik.setFieldValue('listingUrl', e.target.value);
                     }}
@@ -265,10 +267,10 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
                 </>
               )}
               <TextArea
-                className="min-h-[120px]"
-                id="note"
-                name="note"
-                label="Note"
+                className='min-h-[120px]'
+                id='note'
+                name='note'
+                label='Note'
                 value={formik.values.note}
                 optional
                 handleChange={formik.handleChange}
@@ -277,7 +279,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           </div>
         </div>
         <div
-          className="flex items-end justify-end py-4 pr-6"
+          className='flex items-end justify-end py-4 pr-6'
           style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
           <Button className={`mr-4`} white onClick={handleCloseOverlay}>
             Cancel
