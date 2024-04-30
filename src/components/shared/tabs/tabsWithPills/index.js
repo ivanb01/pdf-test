@@ -19,23 +19,24 @@ function classNames(...classes) {
 export default function TabsWithPills({ propertiesCurrentTab, setPropertiesCurrentTab, tabs, className }) {
   return (
     <div className={className}>
-      <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
+      <div className='sm:hidden'>
+        <label htmlFor='tabs' className='sr-only'>
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
         <select
-          id="tabs"
-          name="tabs"
-          className="block w-full rounded-md border-gray-300"
+          id='tabs'
+          name='tabs'
+          className='block w-full rounded-md border-gray-300'
+          onChange={(e) => setPropertiesCurrentTab(tabs.findIndex((t) => t.name === e.target.value))}
           defaultValue={propertiesCurrentTab}>
           {tabs.map((tab) => (
-            <option key={tab.name}>{tab.name}</option>
+            <option key={tab.name}>{tab.name}{console.log(tab)}</option>
           ))}
         </select>
       </div>
-      <div className="hidden sm:block">
-        <nav className="flex space-x-4" aria-label="Tabs">
+      <div className='hidden sm:block'>
+        <nav className='flex space-x-4' aria-label='Tabs'>
           {tabs.map((tab, index) => (
             <a
               key={tab.name}

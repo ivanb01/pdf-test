@@ -22,6 +22,7 @@ import Overlay from '@components/shared/overlay';
 import FsLightbox from 'fslightbox-react';
 import { useRouter } from 'next/router';
 import { createPortal } from 'react-dom';
+
 const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, property, putFeedback, setSelected }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const showButtons = images?.length > 1;
@@ -36,23 +37,23 @@ const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, pr
   };
 
   return (
-    <div onClick={onClick} className="group h-full w-full cursor-pointer">
+    <div onClick={onClick} className='group h-full w-full cursor-pointer'>
       <img
-        className="object-cover h-full w-full"
+        className='object-cover h-full w-full'
         src={images?.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
-        alt="Gallery Image"
+        alt='Gallery Image'
       />
       {!noSelect && (
-        <div className="absolute left-2 top-2" onClick={(e) => e.stopPropagation()}>
+        <div className='absolute left-2 top-2' onClick={(e) => e.stopPropagation()}>
           <input
-            type="checkbox"
+            type='checkbox'
             id={`checkbox-${property?.ID}`}
-            className="hidden"
+            className='hidden'
             value={selected?.length && selected?.includes(property)}
           />
           <label
             htmlFor={`checkbox-${property?.ID}`}
-            className="flex items-center cursor-pointer"
+            className='flex items-center cursor-pointer'
             onClick={(e) => {
               if (!putFeedback) {
                 const currentSelected = selected.find((found) => found.ID == property.ID) ? true : false;
@@ -69,12 +70,12 @@ const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, pr
               } relative rounded-lg border-2  w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
               {isSelected && (
                 <svg
-                  className=" h-[16px] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                  version="1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 50 50"
-                  enable-background="new 0 0 50 50">
-                  <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
+                  className=' h-[16px] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
+                  version='1'
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 50 50'
+                  enable-background='new 0 0 50 50'>
+                  <polygon fill='white' points='40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9' />
                 </svg>
               )}
             </div>
@@ -112,18 +113,18 @@ const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, pr
 };
 
 const PropertyCard = ({
-  property,
-  selected,
-  setSelected,
-  noSelect,
-  isSelected,
-  putFeedback,
-  openPropertyModal,
-  propertyStatus,
-  addClientFeedback,
-  deletePropertyFromPortfolio,
-  clientNote,
-}) => {
+                        property,
+                        selected,
+                        setSelected,
+                        noSelect,
+                        isSelected,
+                        putFeedback,
+                        openPropertyModal,
+                        propertyStatus,
+                        addClientFeedback,
+                        deletePropertyFromPortfolio,
+                        clientNote,
+                      }) => {
   const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
@@ -154,12 +155,14 @@ const PropertyCard = ({
       className={`border transition-all border-gray-200 rounded-[4px] ${putFeedback && 'cursor-pointer'} ${
         isSelected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
-      <div className="h-[160px] relative">
+      <div className='h-[160px] relative'>
         <ImageGallery
           onClick={() => {
-            setLightboxPhotos(property.PHOTOS);
-            setLightboxSlide(0);
-            setLightboxOpen(!lightboxOpen);
+            if (!putFeedback) {
+              setLightboxPhotos(property.PHOTOS);
+              setLightboxSlide(0);
+              setLightboxOpen(!lightboxOpen);
+            }
           }}
           images={property?.PHOTOS}
           property={property}
@@ -192,13 +195,13 @@ const PropertyCard = ({
               } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
               {property?.STATUS}
             </div>
-            <div className="flex items-center">
+            <div className='flex items-center'>
               <TooltipComponent
                 side={'bottom'}
                 align={'center'}
                 triggerElement={
                   <a
-                    className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer"
+                    className=' h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer'
                     onClick={() => {
                       navigator.clipboard.writeText(url);
                       toast.success('Link copied to clipboard');
@@ -227,41 +230,45 @@ const PropertyCard = ({
           </div>
         )}
       </div>
-      <a href={url} target="_blank">
+      <div onClick={() => {
+        if (!putFeedback) {
+          window.open(url, 'blank');
+        }
+      }}>
         <div className={`p-3 text-sm ${noSelect ? 'pointer-events-none' : 'pointer-events-auto'}`}>
-          <div className="mb-4">
-            <div className="font-semibold text-black mb-[6px]">
+          <div className='mb-4'>
+            <div className='font-semibold text-black mb-[6px]'>
               {property?.PROPERTY_TYPE} in {property?.ADDRESS}
             </div>
-            <div className="text-gray-600">
+            <div className='text-gray-600'>
               {property?.ADDRESS} <br />
               {property?.NEIGHBORHOODS}, {property?.CITY}, {property?.STATE} {property?.ZIP_CODE}
             </div>
           </div>
-          <div className="mb-3 flex font-medium">
-            <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-              <img className="mr-2" src={room.src} alt="" />
+          <div className='mb-3 flex font-medium'>
+            <div className='mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]'>
+              <img className='mr-2' src={room.src} alt='' />
               {property?.BEDROOMS}
             </div>
-            <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-              <img className="mr-2" src={bathroom.src} alt="" />
+            <div className='mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]'>
+              <img className='mr-2' src={bathroom.src} alt='' />
               {property?.BATHROOMS}
             </div>
             {property?.SQUARE_FOOTAGE != 0 && (
-              <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-                <img className="mr-1" src={sqft.src} alt="" />
+              <div className='bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]'>
+                <img className='mr-1' src={sqft.src} alt='' />
                 {property?.SQUARE_FOOTAGE} sqft
               </div>
             )}
           </div>
-          <div className="flex items-center justify-between">
-            <div className="font-semibold text-gray-900 text-base">
+          <div className='flex items-center justify-between'>
+            <div className='font-semibold text-gray-900 text-base'>
               {formatPrice(property?.PRICE)}
               {property?.STATUS?.toLowerCase() == 'for rent' && (
-                <span className="text-gray-500 font-normal">/month</span>
+                <span className='text-gray-500 font-normal'>/month</span>
               )}
             </div>
-            <div className="form-checkbox">
+            <div className='form-checkbox'>
               {putFeedback && (
                 <div className={'flex gap-[6px] pointer-events-auto'}>
                   <div
@@ -289,7 +296,7 @@ const PropertyCard = ({
                       align={'center'}
                       style={{ backgroundColor: 'white' }}
                       triggerElement={<img src={ThumbDown.src} onClick={(e) => e.stopPropagation()} />}>
-                      <div className="max-w-[252px] bg-white">
+                      <div className='max-w-[252px] bg-white'>
                         <TextArea
                           onClick={(e) => {
                             e.stopPropagation();
@@ -332,24 +339,26 @@ const PropertyCard = ({
             </div>
           </div>
         </div>
-      </a>
+      </div>
       {openFeedbackModal &&
         createPortal(
           <Overlay
             handleCloseOverlay={() => setOpenFeedbackModal(false)}
-            className="w-[500px]"
-            title={"Client's comments"}>
+            className='w-[500px]'
+            title={'Client\'s comments'}>
             <p className={'text-sm pointer-events-none text-gray8 p-6 pt-0'}>{clientNote}</p>
           </Overlay>,
           document.getElementById('modal-portal'),
         )}
-      <FsLightbox
-        types={[...new Array(lightboxPhotos?.length).fill('image')]}
-        toggler={lightboxOpen}
-        zoomIncrement={0.5}
-        sourceIndex={lightboxSlide}
-        sources={lightboxPhotos?.map((i) => i.PHOTO_URL)}
-      />
+      {createPortal(<FsLightbox
+          types={[...new Array(lightboxPhotos?.length).fill('image')]}
+          toggler={lightboxOpen}
+          zoomIncrement={0.5}
+          sourceIndex={lightboxSlide}
+          sources={lightboxPhotos?.map((i) => i.PHOTO_URL)}
+        />,
+        document.getElementById('modal-portal'),
+      )}
     </div>
   );
 };
