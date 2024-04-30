@@ -31,7 +31,9 @@ export default function TabsWithPills({ propertiesCurrentTab, setPropertiesCurre
           onChange={(e) => setPropertiesCurrentTab(tabs.findIndex((t) => t.name === e.target.value))}
           defaultValue={propertiesCurrentTab}>
           {tabs.map((tab) => (
-            <option key={tab.name}>{tab.name}{console.log(tab)}</option>
+            <option key={tab.name}>
+              {tab.name} {tab.count !== undefined && `(${tab.count})`}
+            </option>
           ))}
         </select>
       </div>
