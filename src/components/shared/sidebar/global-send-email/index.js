@@ -65,14 +65,6 @@ const SendEmailOverlay = () => {
   }, [contacts]);
 
   const handleSendEmail = () => {
-    dispatch(
-      setGlobalEmail(
-        `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
-          /<[^>]*>/g,
-          '',
-        )} </h6>`,
-      ),
-    );
     setLoading(true);
 
     // check if new email template is created
