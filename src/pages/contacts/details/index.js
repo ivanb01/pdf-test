@@ -30,7 +30,7 @@ import { createPortal } from 'react-dom';
 import CommunicationForm from '@components/overlays/communication-form';
 import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
 import Dropdown from '@components/shared/dropdown';
-import { setGlobalEmail } from '@store/clientDetails/slice';
+import { setRefetchActivityLog } from '@store/clientDetails/slice';
 import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
 import Email from '@mui/icons-material/Email';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
@@ -45,6 +45,7 @@ const index = () => {
   const [addNoteModal, setAddNoteModal] = useState(false);
   const [editNoteModal, setEditNoteModal] = useState(false);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const refetchActivityLog = useSelector((state) => state.clientDetails.refetchActivityLog);
   const [contact, setContact] = useState(null);
   const [notes, setNotes] = useState(null);
   const [activities, setActivities] = useState([]);
@@ -123,18 +124,11 @@ const index = () => {
   }, [contact]);
 
   useEffect(() => {
-    if (globalEmailActivityData) {
-      setActivities((prev) => [
-        { type_of_activity_id: 1, description: globalEmailActivityData, created_at: new Date().toISOString() },
-        ...prev,
-      ]);
-      setTimeout(() => {
-        getActivityLog().then();
-      }, [2000]);
-    } else {
-      dispatch(setGlobalEmail(undefined));
+    if (refetchActivityLog) {
+      getActivityLog();
+      dispatch(setRefetchActivityLog(false));
     }
-  }, [globalEmailActivityData]);
+  }, [refetchActivityLog]);
 
   const handleCloseModal = () => {
     setAddNoteModal(false);

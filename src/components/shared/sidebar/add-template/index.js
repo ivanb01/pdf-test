@@ -10,7 +10,6 @@ import { sendEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
-import { setGlobalEmail } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';

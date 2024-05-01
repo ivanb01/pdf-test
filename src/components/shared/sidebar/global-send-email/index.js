@@ -10,7 +10,7 @@ import { sendEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
-import { setGlobalEmail } from '@store/clientDetails/slice';
+import { setRefetchActivityLog } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
@@ -113,7 +113,7 @@ const SendEmailOverlay = () => {
             /<[^>]*>/g,
             '',
           )} </h6>`,
-        });
+        }).then(() => dispatch(setRefetchActivityLog(true)));
         setLoading(false);
         setEmailSent(true);
       });
