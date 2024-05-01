@@ -269,7 +269,7 @@ const index = () => {
           </div>
         ) : (
           <div className="px-3 lg:px-6 py-[21px] flex flex-col lg:flex-row">
-            <div className="w-full lg:w-[285px]">
+            <div className="w-full lg:w-[290px]">
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
                   <div className="bg-white rounded-full w-[105px] h-[105px] custom-box-shadow flex items-center justify-center">
