@@ -31,7 +31,7 @@ import mockSignature from '/public/images/signature.png';
 
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import Button from '@components/shared/button';
-import ChevronDown from '/public/images/icons/chevron-down.svg';
+import ChevronDown from '/public/images/icons/chevron-down-white.svg';
 import Image from 'next/image';
 
 const LowPriority = 1;
