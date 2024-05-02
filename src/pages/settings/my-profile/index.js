@@ -42,7 +42,7 @@ const index = () => {
   const getCompany = () => {
     let imageUrl = '';
     let companyName = '';
-    switch (userInfo.tenantId) {
+    switch (userInfo?.tenantId) {
       case '9b11bc70b91411eda0b1722084980ce8':
         companyName = 'Oxford Property Group';
         imageUrl = 'https://i.imgur.com/kbMXf3r.png';
@@ -74,83 +74,93 @@ const index = () => {
   return (
     <>
       <SettingsLayout>
-        <TopBar text="My profile" />
-        <div className="p-6 flex flex-col justify-between" style={{ height: 'calc(100vh - 160px)' }}>
+        <TopBar text='My profile' />
+        <div className='p-6 flex flex-col justify-between' style={{ height: 'calc(100vh - 160px)' }}>
           <div>
-            <Text h3 className="mb-1">
+            <Text h3 className='mb-1'>
               General Information
             </Text>
-            <Text p className="text-gray4">
+            <Text p className='text-gray4'>
               Profile information that you will be presented to your contacts.
             </Text>
-            <hr className="my-5" />
-            <div className="w-[40%]">
-              <div className="flex mb-6">
+            <hr className='my-5' />
+            <div className='w-[40%]'>
+              <div className='flex mb-6'>
                 <Input
-                  type="text"
-                  label="First Name"
-                  name="first_name"
-                  className="mr-6"
+                  type='text'
+                  label='First Name'
+                  name='first_name'
+                  className='mr-6'
                   value={changedUserInfo?.first_name || ''}
                   onChange={handleChange}
                 />
                 <Input
-                  type="text"
-                  label="Last Name"
-                  name="last_name"
+                  type='text'
+                  label='Last Name'
+                  name='last_name'
                   value={changedUserInfo?.last_name || ''}
                   onChange={handleChange}
                 />
               </div>
               <Input
-                type="phone"
-                label="Phone Number"
-                name="phone_number"
+                type='phone'
+                label='Phone Number'
+                name='phone_number'
                 value={changedUserInfo?.phone_number || ''}
                 onChange={handleChange}
                 hidePhonePrefix={true}
               />
             </div>
-            <hr className="my-5" />
-            <Text h3 className="mb-1">
+            <hr className='my-5' />
+            <Text h3 className='mb-1'>
               Email & SMS Signature Preview
             </Text>
             <div className={'flex gap-[120px] mt-2'}>
-              <div className={'flex flex-col gap-[23px]'}>
+              <div className={'flex flex-col gap-[24px]'}>
                 <p className={'text-gray-800 text-sm font-medium'}>Email Signature:</p>
-                {userInfo?.first_name && userInfo?.last_name && userInfo?.phone_number && userInfo?.tenantId && (
-                  <Signature
-                    userInfo={userInfo}
-                    companyName={getCompany().companyName}
-                    imageUrl={getCompany().imageUrl}
-                  />
-                )}
+                <Signature
+                  userInfo={userInfo}
+                  companyName={getCompany().companyName}
+                  imageUrl={getCompany().imageUrl}
+                />
               </div>
-              <div className={'flex flex-col gap-[23px]'}>
+              <div className={'flex flex-col gap-[24px]'}>
                 <p className={'text-gray-800 text-sm font-medium'}>SMS:</p>
-                {userInfo?.first_name && userInfo?.last_name && userInfo?.phone_number && userInfo?.tenantId && (
-                  <Signature userInfo={userInfo} companyName={getCompany().companyName} />
-                )}
+                <Signature userInfo={userInfo} companyName={getCompany().companyName} />
               </div>
             </div>
           </div>
-          <div className="flex items-center self-end">
-            <Button loading={loadingActivate} label="Save Changes" onClick={handleSubmit} />
+          <div className='flex items-center self-end'>
+            <Button loading={loadingActivate} label='Save Changes' onClick={handleSubmit} />
           </div>
         </div>
       </SettingsLayout>
     </>
   );
 };
-
+const ErrorState = ({ message }) => {
+  return <p className={'px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>
+    {message}
+  </p>;
+};
 const Signature = ({ userInfo, companyName, imageUrl }) => {
+
   return (
-    <div className={'flex flex-col gap-[2px] text-gray5 text-sm font-medium'}>
-      <p>
-        {userInfo?.first_name} {userInfo?.last_name}
-      </p>
+    <div className={'flex flex-col gap-[12px] text-gray5 text-sm font-medium'}>
+      <div className={'flex gap-3 items-center'}>
+        <div>
+          {(userInfo?.first_name === undefined || userInfo?.first_name.length === 0) ?
+            <ErrorState message={'First name is missing'} /> : userInfo?.first_name}
+        </div>
+        <div>{(userInfo?.last_name ===  undefined || userInfo?.last_name.length === 0) ?
+          <ErrorState message={'Last name is missing'} /> : userInfo?.last_name}
+        </div>
+      </div>
       <p>{companyName}</p>
-      <p>{userInfo?.phone_number}</p>
+      <div>
+        {(userInfo?.phone_number ===  undefined || userInfo?.phone_number.length === 0) ?
+          <ErrorState message={'Phone Number is missing'} /> : userInfo?.phone_number}
+      </div>
       <p>{userInfo?.email}</p>
       {imageUrl && (
         <div className={'mt-3'}>
