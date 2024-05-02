@@ -13,9 +13,7 @@ import previewEventsPerClient from '@components/overlays/preview-events-per-clie
 
 const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campaignFor, campaignData, campaignId }) => {
   const router = useRouter();
-  useEffect(() => {
-    console.log(data, 'Data');
-  }, [data]);
+
   const [openEventsPreview, setOpenEventsPreview] = useState(false);
   const { id, category } = router.query;
 
@@ -210,7 +208,7 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
         <div>
           <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact matching to this campaign</h4>
           <span className={'text-xs leading-4 font-normal text-gray4'}>
-            Here, you'll find a list of all contacts that have been matched to this campaign.
+            Contacts must share the same type and status as this campaign to appear in this list.
           </span>
         </div>
       </div>
