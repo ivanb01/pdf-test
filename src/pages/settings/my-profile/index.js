@@ -77,13 +77,13 @@ const index = () => {
         <TopBar text='My profile' />
         <div className='p-6 flex flex-col justify-between' style={{ height: 'calc(100vh - 160px)' }}>
           <div>
-            <Text h3 className='mb-1'>
+            <Text h3 className='mb-1 text-gray7'>
               General Information
             </Text>
             <Text p className='text-gray4'>
               Profile information that you will be presented to your contacts.
             </Text>
-            <hr className='my-5' />
+            <hr className='my-3' />
             <div className='w-[40%]'>
               <div className='flex mb-6'>
                 <Input
@@ -111,13 +111,16 @@ const index = () => {
                 hidePhonePrefix={true}
               />
             </div>
-            <hr className='my-5' />
-            <Text h3 className='mb-1'>
-              Email & SMS Signature Preview
+            <Text h3 className='mb-1 mt-[50px] text-gray7'>
+              Email and SMS Signature
             </Text>
+            <Text p className='text-gray4'>
+              These signatures will be used when sending Email and SMS’s.
+            </Text>
+            <hr className='my-3' />
             <div className={'flex gap-[120px] mt-2'}>
               <div className={'flex flex-col gap-[24px]'}>
-                <p className={'text-gray-800 text-sm font-medium'}>Email Signature:</p>
+                <p className={' font-normal text-gray6'}>Email Signature</p>
                 <Signature
                   userInfo={userInfo}
                   companyName={getCompany().companyName}
@@ -125,12 +128,12 @@ const index = () => {
                 />
               </div>
               <div className={'flex flex-col gap-[24px]'}>
-                <p className={'text-gray-800 text-sm font-medium'}>SMS:</p>
+                <p className={'font-normal text-gray6'}>SMS Signature</p>
                 <Signature userInfo={userInfo} companyName={getCompany().companyName} />
               </div>
             </div>
           </div>
-          <div className='flex items-center self-end'>
+          <div className='flex items-center self-end sticky bottom-4'>
             <Button loading={loadingActivate} label='Save Changes' onClick={handleSubmit} />
           </div>
         </div>
@@ -146,7 +149,7 @@ const ErrorState = ({ message }) => {
 const Signature = ({ userInfo, companyName, imageUrl }) => {
 
   return (
-    <div className={'flex flex-col gap-[12px] text-gray5 text-sm font-medium'}>
+    <div className={'flex flex-col gap-[12px] text-gray8 text-sm font-normal'}>
       <div className={'flex gap-3 items-center'}>
         <div>
           {(userInfo?.first_name === undefined || userInfo?.first_name.length === 0) ?
