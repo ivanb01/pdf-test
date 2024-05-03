@@ -3,13 +3,12 @@ import sms from '../../../../public/images/sms.svg';
 import email from '../../../../public/images/email.svg';
 import whatsapp from '../../../../public/images/whatsapp.svg';
 import { addContactActivity, getContactActivities } from '@api/contacts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateContactLocally } from '@store/contacts/slice';
-import { useEffect } from 'react';
 import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
-  const dispatch = useDispatch();
   const cards = [
     {
       name: 'Whatsapp',
@@ -32,7 +31,7 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
   ];
   return (
     <Overlay handleCloseOverlay={handleCloseOverlay} title={'How do you want to communicate?'} className={'w-[630px]'}>
-      <div className={'pt-6 mx-[22px] mb-[62px] flex gap-[18px]'}>
+      <div className={`pt-6 mx-[22px] ${client?.phone_number && 'mb-[62px]'} flex gap-[18px]`}>
         {cards.map((c, index) => (
           <Card
             {...c}
@@ -43,6 +42,14 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
           />
         ))}
       </div>
+      {!client?.phone_number && <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start  m-6'}>
+        <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
+        <div className={'text-[#991B1B]'}>
+          <p className={'text-sm font-medium'}>Phone number is missing! </p>
+          <p className={'text-sm font-normal'}>To be able to send SMS and to contact in Whatsapp, phone number is
+            required. </p>
+        </div>
+      </div>}
     </Overlay>
   );
 };
@@ -51,7 +58,7 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
   let message = '';
   switch (client.category_2) {
     case 'Renter':
-      message = "Hey, wanted to check in and see if you're still looking for a rental?";
+      message = 'Hey, wanted to check in and see if you\'re still looking for a rental?';
       break;
     case 'Buyer':
       message = 'Hey, wanted to see if we could help with anything related to your purchase.';
@@ -118,7 +125,6 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
     return activityToBeLogged;
   };
 
-  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   return (
     <div
