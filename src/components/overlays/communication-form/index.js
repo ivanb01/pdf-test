@@ -45,7 +45,7 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
       {!client?.phone_number && <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start  m-6'}>
         <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
         <div className={'text-[#991B1B]'}>
-          <p className={'text-sm font-medium'}>Phone number is missing! </p>
+          <p className={'text-sm font-semibold'}>Phone number is missing! </p>
           <p className={'text-sm font-normal'}>To be able to send SMS and to contact in Whatsapp, phone number is
             required. </p>
         </div>
