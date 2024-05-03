@@ -26,7 +26,7 @@ const CampaignCreateConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel
         </svg>
         <div>
           <p className={'text-lg leading-6 font-medium text-gray7 mb-3'}>Are you sure you want to cancel?</p>
-          <p className={'text-sm leading-5 font-normal mb-4 text-gray4'}>If you cancel while creating the campaign, al
+          <p className={'text-sm leading-5 font-normal mb-4 text-gray4'}>If you cancel while creating the campaign, all
             work will be lost.</p>
           <p className={'text-sm leading-5 font-normal text-gray4'}>Are you sure you want to cancel?</p>
         </div>

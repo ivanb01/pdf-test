@@ -344,9 +344,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       open={open}
       setOpen={(state) => {
         if (!state) {
-          resetCreateCampaign();
+          setOpenConfirmationDialog(true);
+        } else {
+          setOpen(true);
         }
-        setOpen(state);
+
       }}
       editableTitle
       errorName={(campaign?.name === null || campaign?.name?.length === 0) && showError}
