@@ -30,6 +30,7 @@ import { addCRMCampaigns } from '@store/campaigns/slice';
 import Checkbox from '@components/shared/checkbox';
 import SimpleBar from 'simplebar-react';
 import NotificationAlert from '@components/shared/alert/notification-alert';
+import CampaignCreateConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
@@ -157,19 +158,19 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
   };
 
   const Card = ({
-    title,
-    description,
-    icon,
-    className,
-    active,
-    expanded,
-    onClick,
-    narrow,
-    expandable,
-    setType,
-    setStatus,
-    showError,
-  }) => {
+                  title,
+                  description,
+                  icon,
+                  className,
+                  active,
+                  expanded,
+                  onClick,
+                  narrow,
+                  expandable,
+                  setType,
+                  setStatus,
+                  showError,
+                }) => {
     let padding = narrow ? 'py-[8px] px-[15px] min-w-[170px]' : 'px-[18px] py-4';
     return (
       <div
@@ -178,11 +179,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           !expanded && active && 'bg-lightBlue1'
         } ${padding} flex ${className} ${!description && 'items-center'}`}>
         {icon}
-        <div className="ml-4 text-sm">
-          <div className="text-gray7 font-semibold flex items-center gap-[10px]">
+        <div className='ml-4 text-sm'>
+          <div className='text-gray7 font-semibold flex items-center gap-[10px]'>
             {title}
             {campaign && active && showError && (!campaign.contact_category_id || !campaign.contact_status_id) && (
-              <NotificationAlert className="py-1 px-3" type={'error'}>
+              <NotificationAlert className='py-1 px-3' type={'error'}>
                 <p className={'text-sm leading-5 font-medium text-[#991B1B]'}> Please specify type and category!</p>
               </NotificationAlert>
             )}
@@ -191,7 +192,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               campaign.contact_status_id &&
               `: ${getContactTypeByTypeId(null, campaign.contact_category_id)} - ${getContactStatusByStatusId(campaign.contact_category_id, campaign.contact_status_id)}`}
           </div>
-          {description && <div className="text-gray5 mt-1">{description}</div>}
+          {description && <div className='text-gray5 mt-1'>{description}</div>}
         </div>
         {expandable && (
           <div
@@ -205,16 +206,16 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 <Radio
                   options={clientOptions}
                   required
-                  label="What type?"
+                  label='What type?'
                   selectedOption={campaign.contact_category_id}
                   setSelectedOption={setType}
-                  className="mb-6"
-                  name="type-of-contact"
+                  className='mb-6'
+                  name='type-of-contact'
                   // error={errors.selectedContactType && touched.selectedContactType}
                   // errorText={errors.selectedContactType}
                 />
                 <StatusSelect
-                  className="bg-lightBlue50 bg"
+                  className='bg-lightBlue50 bg'
                   statuses={clientStatuses}
                   selectedStatus={campaign.contact_status_id}
                   setSelectedStatus={setStatus}
@@ -234,11 +235,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     let date = getDateAfterDays(days);
 
     return (
-      <div className="mb-3 last:mb-0">
-        <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
+      <div className='mb-3 last:mb-0'>
+        <div className='px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5'>
           Wait {days} days, then send this event at {days === '-' ? ' - date' : formatDateLThour(date)}
         </div>
-        <div className="my-2 pl-2">
+        <div className='my-2 pl-2'>
           <Divider />
         </div>
         <div
@@ -247,26 +248,26 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             active && 'border-[#BAE6FD] bg-lightBlue1'
           } p-3 flex ${className} flex flex-col gap-[10px] `}>
           <div className={'flex justify-between items-center group'}>
-            <div className="flex items-center">
-              <div className="w-">{icon}</div>
-              <div className="ml-4 text-sm">
-                <div className="text-gray7 font-semibold">{title}</div>
+            <div className='flex items-center'>
+              <div className='w-'>{icon}</div>
+              <div className='ml-4 text-sm'>
+                <div className='text-gray7 font-semibold'>{title}</div>
               </div>
             </div>
             <KeyboardArrowRight className={`text-gray7 ${index != 0 && 'group-hover:hidden'}`} />
             {index != 0 && (
               <div
                 onClick={() => removeEvent(index)}
-                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
-                <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
+                className='hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete'>
+                <Delete className='transition-all text-[20px] text-red-500 group-hover/delete:text-white' />
               </div>
             )}
           </div>
 
           {error && showError && (
-            <NotificationAlert className="py-1 px-3" type={'error'}>
-              <div className="flex items-center">
-                <WarningRoundedIcon className="text-red-500 mr-2 h-5 w-5" />{' '}
+            <NotificationAlert className='py-1 px-3' type={'error'}>
+              <div className='flex items-center'>
+                <WarningRoundedIcon className='text-red-500 mr-2 h-5 w-5' />{' '}
                 <p className={'text-sm leading-5 font-medium text-[#991B1B]'}>
                   {' '}
                   Please fill in all required fields to continue!
@@ -335,19 +336,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       setShowError(false);
     }
   }, [open]);
-  //
-  // useEffect(() => {
-  //   console.log(waitingDays, 'waitingDays', events[selectedEvent]);
-  //   console.log(
-  //     events[selectedEvent]
-  //       ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
-  //       : null,
-  //   );
-  // }, []);
 
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   return (
     <SlideOver
-      width="w-[1240px]"
+      width='w-[1240px]'
       open={open}
       setOpen={(state) => {
         if (!state) {
@@ -358,17 +351,17 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       editableTitle
       errorName={(campaign?.name === null || campaign?.name?.length === 0) && showError}
       title={campaign.name}
-      className=""
+      className=''
       hideScroll
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
       rounded>
-      <div className="-mt-3 mb-5">
-        <div className="mb-4 text-gray8 text-sm font-medium">
+      <div className='-mt-3 mb-5'>
+        <div className='mb-4 text-gray8 text-sm font-medium'>
           Choose the clients who will be eligible of this campaign
         </div>
-        <div className="flex">
+        <div className='flex'>
           <Card
-            className="mr-3 w-1/2"
+            className='mr-3 w-1/2'
             title={'All Clients'}
             description={'Each client, regardless the status they’re in, will be part of this campaign'}
             icon={
@@ -384,7 +377,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           />
           <Card
             expandable
-            className="w-1/2"
+            className='w-1/2'
             showError={showError}
             title={'Specific Clients'}
             description={'Only clients who I choose by the status, will be part of this campaign'}
@@ -409,12 +402,12 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           />
         </div>
       </div>
-      <hr className=" -mx-6" />
-      <div className="flex -mx-6 h-full">
-        <div className="w-1/2">
+      <hr className=' -mx-6' />
+      <div className='flex -mx-6 h-full'>
+        <div className='w-1/2'>
           <SimpleBar style={{ maxHeight: 'calc(100vh - 268px)', height: '100vh' }}>
-            <div className="px-[22px] py-[26px] border-r border-gray1">
-              <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
+            <div className='px-[22px] py-[26px] border-r border-gray1'>
+              <div className='mb-4 text-gray8 text-sm font-medium'>Events</div>
               {events.map((event, index) => (
                 <>
                   <Event
@@ -446,20 +439,20 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   />
                 </>
               ))}
-              <div className="my-2 pl-2 mb-3">
+              <div className='my-2 pl-2 mb-3'>
                 <Divider />
               </div>
               <a
                 onClick={() => addNewEvent()}
-                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
+                className='px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold'>
                 + Add New Event
               </a>
             </div>
           </SimpleBar>
         </div>
-        <div className="w-1/2 bg-gray10 relative">
+        <div className='w-1/2 bg-gray10 relative'>
           <SimpleBar style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
-            <div className=" px-[22px] py-[26px]">
+            <div className=' px-[22px] py-[26px]'>
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
                 <div className="flex mb-6">
@@ -493,9 +486,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   ))}
                 </div>
               </div> */}
-              <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
-                <div className="flex">
+              <div className='mb-6'>
+                <div className='mb-4 text-gray8 text-sm font-medium'>Set the time you want to send the event:</div>
+                <div className='flex'>
                   <Dropdown
                     handleSelect={(option) =>
                       setEvents((currentEvents) =>
@@ -514,17 +507,17 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                         ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
                         : null
                     }
-                    className="mr-3"
-                    placeHolder="Waiting Days"
+                    className='mr-3'
+                    placeHolder='Waiting Days'
                     options={waitingDays}
                   />
                   {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
                 </div>
               </div>
-              <div className="mb-6">
+              <div className='mb-6'>
                 {(events[selectedEvent]?.type == 'Email' || events[selectedEvent]?.type == 'SMS') && (
-                  <div className="max-w-[380px]">
-                    <div className="mb-4 text-gray8 text-sm font-medium">
+                  <div className='max-w-[380px]'>
+                    <div className='mb-4 text-gray8 text-sm font-medium'>
                       Select from one of the templates, or create a new template:
                     </div>
                     <Dropdown
@@ -551,12 +544,12 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                       }}
                       initialSelect={events[selectedEvent].template}
                       options={events[selectedEvent]?.type == 'Email' ? emailTemplates : smsTemplates}
-                      placeHolder="Select Template"
+                      placeHolder='Select Template'
                     />
                   </div>
                 )}
                 {events[selectedEvent]?.template?.id === -1 && (
-                  <div className="mt-3">
+                  <div className='mt-3'>
                     <Checkbox
                       setState={(state) => {
                         console.log(state);
@@ -567,15 +560,15 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                         );
                       }}
                       state={events[selectedEvent]?.save_template}
-                      label="Save New Template"
+                      label='Save New Template'
                     />
                   </div>
                 )}
               </div>
-              <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">Email Subject:</div>
+              <div className='mb-6'>
+                <div className='mb-4 text-gray8 text-sm font-medium'>Email Subject:</div>
                 <Input
-                  placeholder="Email Subject"
+                  placeholder='Email Subject'
                   onChange={(e) =>
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
@@ -588,28 +581,28 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   value={events[selectedEvent]?.title}
                 />
               </div>
-              <div className="">
-                <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
+              <div className=''>
+                <div className='mb-4 text-gray8 text-sm font-medium'>Message:</div>
                 <RichtextEditor
-                  placeholder="Write message here..."
+                  placeholder='Write message here...'
                   value={events[selectedEvent]?.body_html}
                   onContentChange={(value) => {
                     setEvents((currentEvents) =>
                       currentEvents.map((item, index) =>
                         index === selectedEvent
                           ? {
-                              ...item,
-                              trigger_time: '11:00',
-                              body_html: value,
-                              body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
-                            }
+                            ...item,
+                            trigger_time: '11:00',
+                            body_html: value,
+                            body: value.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+                          }
                           : item,
                       ),
                     );
                   }}
                 />
                 {events[selectedEvent]?.body_html.length === 0 && showError && (
-                  <NotificationAlert className="mt-2 p-2" type={'error'}>
+                  <NotificationAlert className='mt-2 p-2' type={'error'}>
                     Field can not be empty!
                   </NotificationAlert>
                 )}
@@ -617,24 +610,24 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             </div>
           </SimpleBar>
 
-          <div className="z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1">
+          <div
+            className='z-50 sticky left-0 right-0 bottom-0 bg-white px-6 py-4 flex justify-end border-t border-gray1'>
             <Button
-              label="Cancel"
+              label='Cancel'
               white
-              className=""
+              className=''
               onClick={() => {
-                resetCreateCampaign();
-                setOpen(false);
+                setOpenConfirmationDialog(true);
               }}
             />
             <a
               onClick={() => addNewEvent()}
-              className="mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
+              className='mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold'>
               + Add New Event
             </a>
             <Button
               primary
-              label="Create Campaign"
+              label='Create Campaign'
               disabled={false}
               loading={creatingCampaignLoader}
               onClick={() => {
@@ -647,6 +640,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           </div>
         </div>
       </div>
+      {openConfirmationDialog && <CampaignCreateConfirmationOverlay onCancel={() => {
+        resetCreateCampaign();
+        setOpen(false);
+        setOpenConfirmationDialog(false);
+      }} setOpenConfirmationDialog={setOpenConfirmationDialog} />}
     </SlideOver>
   );
 };
