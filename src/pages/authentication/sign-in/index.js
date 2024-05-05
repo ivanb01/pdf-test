@@ -41,8 +41,6 @@ const SignIn = () => {
     try {
       const data = {
         apiGatewayUrl: process.env.NEXT_PUBLIC_API_URL,
-        // appClientId: '65o07k7t243s9evjbu4cl40rcn',
-        // userPoolId: 'us-east-1_ENvP5VYjb',
         appClientId: process.env.NEXT_AUTH_COGNITO_APP_CLIENT_ID,
         userPoolId: process.env.NEXT_AUTH_COGNITO_POOL_ID
       };
@@ -58,7 +56,6 @@ const SignIn = () => {
       const region = data.userPoolId?.split('_')[0];
       const awsmobile = {
         Auth: {
-          //identityPoolId: 'us-east-1:eefc880f-9315-43f4-ab15-2d995127f5d8',
           region: region,
           userPoolId: data.userPoolId,
           userPoolWebClientId: data.appClientId,
