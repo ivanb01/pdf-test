@@ -23,11 +23,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
-import { getBaseUrl } from '@global/functions';
+import { generateSMSFooter, getBaseUrl } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import { addContactActivity } from '@api/contacts';
+import { updateContactLocally } from '@store/contacts/slice';
+import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import { getCompanyFromEmail } from '@global/functions';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -65,7 +69,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     const contact = contacts.filter((c) => {
       return c.id == contactId;
     })[0];
-    if (contact.phone_number !== null && sendMethod === 2) {
+    if (contact.phone_number !== null && contact.phone_number === '' && sendMethod === 2) {
       setSelectedContacts([
         {
           value: contact.id,
@@ -94,22 +98,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId, contacts, sendMethod, propertiesSent]);
 
-  const [userData, setUserData] = useState('');
-
-  useEffect(() => {
-    fetchCurrentUserInfo()
-      .then((res) => {
-        const fullName =
-          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
-            ? `${res?.first_name} ${res?.last_name}`
-            : `${res?.email}`;
-        setUserData(fullName);
-      })
-      .catch(() => {
-        setUserData(user?.email ? user?.email : user);
-      });
-  }, []);
-
   function filterAndSortContacts(contacts, condition) {
     return contacts
       ?.filter(condition)
@@ -126,9 +114,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   }
 
   function isClientContact(contact) {
+    //prettier-ignore
     return (
-      contact.category_1 == 'Client' &&
-      !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
+      contact.category_1 == 'Client' ||
+      contact.category_1 == 'Professional' &&
+        !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
     );
   }
 
@@ -140,6 +130,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     );
   }, [contacts, sendMethod]);
 
+  useEffect(() => {
+    console.log(filteredContacts, 'filteredContacts');
+  }, [filteredContacts]);
   const getLookingFor = () => {
     return new Promise((resolve, reject) => {
       contactServices
@@ -194,6 +187,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [showProperties, setShowProperties] = useState(true);
   const [previewMode, setPreviewMode] = useState(false);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
@@ -243,31 +238,37 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
               [c.email],
-              `Hi ${c.first_name}, check out these new properties.`,
+              `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
-                <>
-                  <p style={{ color: '#344054', marginBottom: '32px' }}>
-                    Hey {c.first_name},
-                    <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a
-                      style={{ color: 'blue' }}
-                      role={'button'}
-                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
-                      Portfolio Link
-                    </a>
-                  </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
-                    <br />
-                    {userData}
-                  </p>
-                </>,
+                <PortfolioEmailTemplate
+                  agent_first_name={
+                    userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name}`
+                      : userInfo?.email
+                  }
+                  first_name={c?.first_name}
+                  portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                />,
                 {
                   pretty: true,
                 },
               ),
-            ).then((res) => {});
+            ).then((res) => {
+              console.log(res);
+              const contact = allContacts.find((con) => con.id === c?.value);
+              console.log(contact, 'contact');
+              let activity = {
+                type_of_activity_id: 28,
+                description: `(Email) Properties sent to ${
+                  c.first_name
+                } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                  item?.portfolio_sharable_id ?? ''
+                }`,
+              };
+
+              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+              addContactActivity(item.contact_id, activity);
+            });
             setPropertiesSent(true);
             resetPropertySelection();
           }
@@ -277,9 +278,27 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+              `Hey ${
+                c.first_name
+              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
+                item?.portfolio_sharable_id ?? ''
+              }. ${generateSMSFooter(userInfo)}`,
             )
-              .then((res) => {})
+              .then((res) => {
+                let activity = {
+                  type_of_activity_id: 34,
+                  description: `(SMS) Properties sent to ${
+                    c.first_name
+                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                    item?.portfolio_sharable_id ?? ''
+                  }`,
+                };
+
+                const contact = allContacts.find((c) => c.id === c.value);
+
+                dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                addContactActivity(item.contact_id, activity);
+              })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
@@ -362,7 +381,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           budget_max: lookingProperties[0].budget_max != 0 ? lookingProperties[0].budget_max : '',
         });
         fetchProperties(lookingProperties[0], page, filterValue);
-        console.log(lookingProperties[0], page, filterValue);
       } else {
         fetchProperties(formik.values, page, filterValue);
       }
@@ -402,6 +420,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
+
     if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     }

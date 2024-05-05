@@ -22,8 +22,10 @@ export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-i
 
 export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
+
 export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
+
 export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
 export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
 
@@ -906,7 +908,7 @@ export const priorityOptions = [
   { id: 2, label: 'High Priority' },
   { id: 3, label: 'Medium Priority' },
   { id: 4, label: 'Low Priority' },
-]
+];
 export const leadSourceOptions = [
   // {
   //   id: 1,
@@ -977,9 +979,9 @@ export const filtersForLastCommunicationDate = {
   'Up to Date': 'healthy',
   'Not Up to Date': 'unhealthy',
   Today: 'today',
-  '1 Week ago': [1, 'weeks'],
-  '2 Weeks ago': [2, 'weeks'],
-  '1 Month ago': [1, 'months'],
+  '1 Week Ago +': [1, 'weeks'],
+  '2 Weeks Ago +': [2, 'weeks'],
+  '1 Month Ago +': [1, 'months'],
 };
 
 export const multiselectOptionsClients = [

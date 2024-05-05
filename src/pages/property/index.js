@@ -304,7 +304,6 @@ const index = () => {
     });
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
 
-    console.log(url);
     await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
@@ -339,6 +338,9 @@ const index = () => {
     toggler: false,
     slide: 1,
   });
+  const updateLightBoxTrigger = (slide) => {
+    setLightboxController({ toggler: !lightboxController.toggler, slide: slide });
+  };
 
   return loading ? (
     <div className="h-full w-full relative">
@@ -349,7 +351,7 @@ const index = () => {
       <div className="bg-white p-6 flex items-center properties-container">
         <Image src={oneLineLogo} alt="" className="h-[20px] w-full" />
       </div>
-      <PropertiesCarousel data={data} />
+      <PropertiesCarousel data={data} updateLightBoxTrigger={updateLightBoxTrigger} />
       <div className="properties-container">
         <PropertyMainDetails data={data} />
         <div className="md:mt-10 mt-5 pb-10 flex justify-between">

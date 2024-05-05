@@ -184,7 +184,6 @@ export default function LookingFor({ contactId, category }) {
       params['order'] = 'desc';
     }
     params['status'] = getLookingAction();
-
     if (Array.isArray(filters?.neighborhood_ids) && filters?.neighborhood_ids) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     }

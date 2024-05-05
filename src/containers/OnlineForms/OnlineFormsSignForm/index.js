@@ -37,7 +37,7 @@ const OnlineFormsSignForm = () => {
   };
 
   useEffect(() => {
-    if (onlineFormIsSuccess) {
+    if (onlineFormIsSuccess && !!Object.keys(onlineFormData?.data.content).length) {
       generatePreview();
     }
   }, [onlineFormIsSuccess]);
@@ -95,6 +95,14 @@ const OnlineFormsSignForm = () => {
   const onDownloadPdf = async () => {
     await downloadPdf(onlineFormData?.data?.content, false, values);
   };
+
+  if (onlineFormIsSuccess && !Object.keys(onlineFormData?.data.content).length) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <p className="leading-5 text-sm text-center text-gray5 font-medium">You managed to create empty form...</p>
+      </div>
+    );
+  }
 
   if (onlineFormIsLoading)
     return (
@@ -180,8 +188,8 @@ const OnlineFormsSignForm = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center   overflow-y-scroll  overflow-x-scroll shrink-0 grow w-1/2">
-        <div className="h-full w-full pt-[30px] px-[30px] ">
+      <div className="flex items-center justify-center  overflow-y-scroll  overflow-x-scroll shrink-0 grow w-1/2">
+        <div className="h-full  pt-[30px] px-[30px] ">
           {!loadingPdf && <PdfViewer pdf={render} />}
           <div className="h-[20px]" />
         </div>

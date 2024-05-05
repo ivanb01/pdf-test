@@ -133,7 +133,6 @@ const ReviewContact = ({
       selectedStatus: client?.status_id,
     },
     onSubmit: async (values) => {
-      console.log("values", values);
       if (formik.values.email !== formik.initialValues.email) {
         setUpdating(true);
         await userAlreadyExists(values.email)
@@ -240,18 +239,11 @@ const ReviewContact = ({
     }
     // Rest of your handleSubmit logic goes here
   }, [existingContactEmailError]);
-  useEffect(() => {
-    console.log(formik.values, 'values');
-  }, [formik.values]);
 
-  useEffect(() => {
-    console.log(client);
-  }, [client]);
   const handleSubmit = async (values) => {
     if (existingContactEmailError !== undefined && existingContactEmailError.length > 0) {
       return;
     }
-    console.log("alberina")
     setUpdating(true);
     let category_id;
     if (values.selectedContactCategory === 3) {
@@ -270,7 +262,6 @@ const ReviewContact = ({
       category_id == 3 ? 1 : values.selectedStatus,
     );
 
-    console.log(vendorSubtypesFormatted, 'vendorSubtypesFormatted');
     const category =
       values.selectedContactCategory === 0
         ? clientOptions.find((client) => client.id === category_id)?.name
@@ -291,8 +282,6 @@ const ReviewContact = ({
       summary: values.summary,
       category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
     };
-    console.log(status_id == '' ? 1 : status_id, 'status_id');
-    console.log(baseData, 'baseData');
 
     const newData = !isUnapprovedAI
       ? {
@@ -355,7 +344,6 @@ const ReviewContact = ({
       }
 
       // make changes to global state
-      console.log(newData, 'newData');
       dispatch(updateContactLocally(newData));
       setUpdating(false);
       handleClose();

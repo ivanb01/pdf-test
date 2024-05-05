@@ -19,6 +19,7 @@ const Portfolio = () => {
   const [openViewPropertyModal, setOpenViewPropertyModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   useEffect(() => {
+    console.log(share_id,"share")
     if (share_id) {
       getPortfolioByShareId(share_id)
         .then((res) => {
@@ -106,6 +107,9 @@ const Portfolio = () => {
     setSelectedProperty(updateUserProperties()[index - 1]);
   };
 
+  useEffect(() => {
+    console.log(propertiesCurrentTab,"propertiesCurrentTab")
+  }, [propertiesCurrentTab]);
   return loading ? (
     <Loader />
   ) : (

@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 // import * as contactServices from 'api/contacts';
 import { addContact, getContacts, findContactByEmail } from 'api/contacts';
-import { addContactLocally, setContacts } from 'store/contacts/slice';
+import { addContactLocally, setAllContacts, setContacts } from 'store/contacts/slice';
 import { findTagsOption, formatPhoneNumber } from 'global/functions';
 import Dropdown from 'components/shared/dropdown';
 import { leadSourceOptions, multiselectOptionsClients, priorityOptions, phoneNumberRules } from 'global/variables';
@@ -25,6 +25,8 @@ import TextArea from '@components/shared/textarea';
 import SimpleBar from 'simplebar-react';
 import Overlay from '@components/shared/overlay';
 import { ArrowRightIcon } from '@heroicons/react/outline';
+import { data } from 'autoprefixer';
+import toast from 'react-hot-toast';
 
 const categoryIds = {
   'Add Client': JSON.stringify(types[0].types.map((type) => type.id)),
@@ -36,7 +38,7 @@ const globalTabs = {
   'Add Professional': 1,
 };
 
-const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => {
+const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onClientAdded }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
   const [vendorSubtypesFormatted, setVendorSubtypesFormatted] = useState();
@@ -57,7 +59,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
   );
 
   const openedTab = useSelector((state) => state.global.openedTab);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -78,6 +79,9 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
     }),
   });
 
+  useEffect(() => {
+    console.log(openedTab);
+  }, [openedTab]);
   const formik = useFormik({
     initialValues: {
       first_name: '',
@@ -105,20 +109,31 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         if (error?.response?.status === 404) {
           setExistingContactEmailError('');
           setExistingContactEmail('');
-          addClient();
-          handleClose();
+          addClient().then(async () => {
+            if (onClientAdded) {
+              await getContacts().then((data) => {
+                dispatch(setAllContacts(data.data));
+                onClientAdded(formik.values.email);
+                setSubmitting(false);
+                setLoading(false);
+                handleClose();
+              });
+            } else {
+              handleClose();
+            }
+            toast.success(`${openedTab === 0 ? 'Client' : 'Professional'} has been successfully added!`);
+          });
         }
       }
-      setSubmitting(false);
-      setLoading(false);
+      if (!onClientAdded) {
+        setSubmitting(false);
+        setLoading(false);
+      }
     },
   });
   const { errors, touched } = formik;
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   const addClient = async () => {
     let subtabs = [[2, 3, 4, 5, 7, 16], [9, 10], [8], [11]];
 
@@ -143,11 +158,12 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
         status_id: status,
       };
 
-      addContact(contactToAdd).then(() => dispatch(setRefetchData(true)));
+      addContact(contactToAdd).then((data) => {
+        dispatch(setRefetchData(true));
+      });
 
       let subtabValue = 0;
       subtabs.forEach((subtab, index) => {
-        console.log(subtab, index, formik.values.selectedStatus);
         if (subtab.includes(formik.values.selectedStatus)) {
           subtabValue = index;
         }
@@ -359,7 +375,6 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses }) => 
           // rightIcon={<ArrowRightIcon height={15} />}
           onClick={() => {
             setLoading(false);
-
             formik.submitForm();
           }}></Button>
       </div>

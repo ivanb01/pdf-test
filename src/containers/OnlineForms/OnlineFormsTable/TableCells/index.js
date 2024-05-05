@@ -11,6 +11,7 @@ import { TrashIcon } from '@heroicons/react/solid';
 import { render } from '@react-email/components';
 import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
 import { useSelector } from 'react-redux';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 
@@ -66,12 +67,10 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
 
   return (
     <div className="flex flex-col gap-[6px] text-[12px] font-medium">
-      <p
-        className={`capitalize  rounded-[20px] py-[2px] px-[8px] w-min leading-[18px] ${
-          status.toLowerCase() === 'pending' ? 'bg-[#FFF7ED]  text-[#EA580C]' : 'bg-[#ECFDF3]   text-[#027A48]'
-        }`}>
-        {status.toLowerCase()}
-      </p>
+      <StatusChip
+        text={status.toLowerCase()}
+        variant={status.toLowerCase() === 'pending' ? VARIANT_ENUM.WARNING : VARIANT_ENUM.SUCCESS}
+      />
       {status.toLowerCase() === 'pending' && (
         <button disabled={isSendingEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
           {!isSendingEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}

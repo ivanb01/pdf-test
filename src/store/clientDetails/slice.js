@@ -8,6 +8,7 @@ const clientDetails = createSlice({
     campaignsData: null,
     lookingForData: null,
     globalEmailActivity: null,
+    refetchActivityLog: false,
   },
   reducers: {
     setActivityLogData(state, action) {
@@ -25,9 +26,18 @@ const clientDetails = createSlice({
     setGlobalEmail(state, action) {
       state.globalEmailActivity = action.payload;
     },
+    setRefetchActivityLog(state, action) {
+      state.refetchActivityLog = action.payload;
+    },
   },
 });
 
-export const { setActivityLogData, setNotesData, setCampaignsData, setLookingForData, setGlobalEmail } =
-  clientDetails.actions;
+export const {
+  setActivityLogData,
+  setNotesData,
+  setCampaignsData,
+  setLookingForData,
+  setGlobalEmail,
+  setRefetchActivityLog,
+} = clientDetails.actions;
 export default clientDetails.reducer;

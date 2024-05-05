@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add onboarding">
+    <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add debounce in search in Order Template">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/onboarding/tour/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/onboarding/tour/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/contacts/clients/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/contacts/clients/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/campaign/CampaignPreview/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/properties/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/properties/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/property-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/property-card/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/portfolio/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/portfolio/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/erza/new-onboard" />
+        <entry key="$PROJECT_DIR$" value="f/erza/SearchProperties" />
       </map>
     </option>
   </component>
@@ -33,7 +31,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "f/erza/RentedSoldStatus",
+    "git-widget-placeholder": "development",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -51,7 +49,18 @@
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <package-manager value="npm" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -65,7 +74,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
@@ -77,30 +86,6 @@
     <configuration />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00008" summary="remove 0 values">
-      <option name="closed" value="true" />
-      <created>1695670024707</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1695670024707</updated>
-    </task>
-    <task id="LOCAL-00009" summary="add coma to result">
-      <option name="closed" value="true" />
-      <created>1695714763780</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1695714763780</updated>
-    </task>
-    <task id="LOCAL-00010" summary="change icons of floorplan and vtour">
-      <option name="closed" value="true" />
-      <created>1695719252123</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1695719252123</updated>
-    </task>
     <task id="LOCAL-00011" summary="add coma in pagination">
       <option name="closed" value="true" />
       <created>1695721422095</created>
@@ -477,17 +462,37 @@
       <option name="project" value="LOCAL" />
       <updated>1711119540425</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="fix proffesional filter">
+      <option name="closed" value="true" />
+      <created>1713975594825</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1713975594825</updated>
+    </task>
+    <task id="LOCAL-00058" summary="fix chips in Need to contact table">
+      <option name="closed" value="true" />
+      <created>1714388518325</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1714388518325</updated>
+    </task>
+    <task id="LOCAL-00059" summary="add debounce in search in Order Template">
+      <option name="closed" value="true" />
+      <created>1714417206473</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1714417206473</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="do refactoring at ai-summary" />
-    <MESSAGE value="change direction of Tooltip" />
-    <MESSAGE value="change ai-summary table" />
-    <MESSAGE value="enable scrolling when in need to contacgt page" />
     <MESSAGE value="improve lead source" />
     <MESSAGE value="fix ui of add manually client" />
     <MESSAGE value="control tags on add client manually" />
@@ -509,6 +514,10 @@
     <MESSAGE value="add portfolio preview" />
     <MESSAGE value="make changes in buttons for preview and notify" />
     <MESSAGE value="add onboarding" />
-    <option name="LAST_COMMIT_MESSAGE" value="add onboarding" />
+    <MESSAGE value="fix proffesional filter" />
+    <MESSAGE value="add search in dropdown marketing tab" />
+    <MESSAGE value="fix chips in Need to contact table" />
+    <MESSAGE value="add debounce in search in Order Template" />
+    <option name="LAST_COMMIT_MESSAGE" value="add debounce in search in Order Template" />
   </component>
 </project>

@@ -23,7 +23,7 @@ import FilterPropertiesDropdown from '@components/shared/dropdown/FilterProperti
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
 import { useSelector } from 'react-redux';
-import { getBaseUrl, searchContacts } from '@global/functions';
+import { generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
@@ -36,6 +36,10 @@ import { addPropertiesInPortfolio } from '@api/portfolio';
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
+import { addContactActivity } from '@api/contacts';
+import { updateContactLocally } from '@store/contacts/slice';
+import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import { getCompanyFromEmail } from '@global/functions';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -347,7 +351,6 @@ const index = () => {
     const urlParams = new URLSearchParams(params);
 
     const url = 'https://dataapi.realtymx.com/listings?' + urlParams.toString();
-    console.log(url);
 
     await fetchJsonp(url)
       .then((res) => res.json())
@@ -437,14 +440,7 @@ const index = () => {
     );
   }
 
-  useEffect(() => {
-    setFilteredContacts(
-      sendMethod !== 2
-        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
-        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
-    );
-  }, [contacts, sendMethod]);
-
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const handleSearch = (searchTerm) => {
     const filteredArray = searchContacts(contacts, searchTerm);
     setFilteredContacts(filteredArray.data);
@@ -482,33 +478,31 @@ const index = () => {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
               [c.email],
-              `Hi ${c.first_name}, check out these new properties.`,
+              `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
-                <>
-                  <p style={{ color: '#344054', marginBottom: '32px' }}>
-                    Hey {c.first_name},
-                    <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a
-                      style={{ color: 'blue' }}
-                      role={'button'}
-                      href={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}>
-                      Portfolio Link
-                    </a>
-                  </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
-                    <br />
-                    {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
-                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
-                      : userInfo?.email}
-                  </p>
-                </>,
+                <PortfolioEmailTemplate
+                  agent_first_name={
+                    userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
+                      ? `${userInfo?.first_name}`
+                      : userInfo?.email
+                  }
+                  first_name={c?.first_name}
+                  portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                />,
                 {
                   pretty: true,
                 },
               ),
-            ).then((res) => {});
+            ).then((res) => {
+              const contact = allContacts.find((con) => con.id === c?.value);
+              let activity = {
+                type_of_activity_id: 28,
+                description: `(Email) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+              };
+
+              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+              addContactActivity(item.contact_id, activity);
+            });
             setPropertiesSent(true);
             resetPropertySelection();
           }
@@ -518,9 +512,17 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''} `,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${generateSMSFooter(userInfo)}`,
             )
-              .then((res) => {})
+              .then((res) => {
+                let activity = {
+                  type_of_activity_id: 34,
+                  description: `(SMS) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+                };
+
+                dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
+                addContactActivity(item.contact_id, activity);
+              })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
@@ -641,7 +643,6 @@ const index = () => {
     };
   }, [setOpenDropdown]);
 
-  const [openSidebar, setOpenSidebar] = useState(true);
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
   useEffect(() => {
@@ -663,12 +664,12 @@ const index = () => {
     return 0;
   });
   useEffect(() => {
-    console.log(sortedOptions, 'sortedOptions');
-  }, [sortedOptions]);
-
-  useEffect(() => {
-    console.log(selectedProperties);
-  }, [selectedProperties]);
+    setFilteredContacts(
+      sendMethod !== 2
+        ? filterAndSortContacts(contacts, (contact) => contact.email && isClientContact(contact))
+        : filterAndSortContacts(contacts, (contact) => contact.phone_number && isClientContact(contact)),
+    );
+  }, [contacts, sendMethod]);
 
   return (
     <>
@@ -695,7 +696,8 @@ const index = () => {
                 document.querySelector(`#custom-dropdown-search`)?.focus();
               }, 200);
             }}>
-            <div className={'max-w-[300px] overflow-hidden whitespace-nowrap overflow-ellipsis font-normal'}>
+            <div
+              className={`max-w-[300px] overflow-hidden font-normal whitespace-nowrap overflow-ellipsis  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
               {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
             </div>
             <div className={'flex'}>
@@ -843,13 +845,15 @@ const index = () => {
                 </div>
                 <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
-                    <PropertyCard
-                      setSelected={setSelectedProperties}
-                      isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
-                      selected={selectedProperties}
-                      key={index}
-                      property={property}
-                    />
+                    <>
+                      <PropertyCard
+                        setSelected={setSelectedProperties}
+                        isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
+                        selected={selectedProperties}
+                        key={index}
+                        property={property}
+                      />
+                    </>
                   ))}
                 </div>
                 {properties.TOTAL_COUNT > 21 && (

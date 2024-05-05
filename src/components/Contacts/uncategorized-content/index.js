@@ -14,6 +14,7 @@ import CategorizePage from './categorize-page';
 import GlobalAlert from '@components/shared/alert/global-alert';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRouter } from 'next/router';
+import UncategorizedTable from '@components/shared/table/UncategorizedTable';
 
 const Uncategorized = ({
   uncategorizedContacts,
@@ -72,7 +73,7 @@ const Uncategorized = ({
           <>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-3/5`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <Table
+                <UncategorizedTable
                   tableFor="uncategorized"
                   data={uncategorizedContacts}
                   handleClickRow={(event) => {

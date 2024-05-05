@@ -8,15 +8,19 @@ import saved from '../../../public/images/saved.svg';
 import Close from '@mui/icons-material/Close';
 import { MultiSelect } from 'react-multi-select-component';
 import SimpleBar from 'simplebar-react';
-import { getInitials } from '@global/functions';
+import { generateSMSFooter, getCompanyFromEmail, getInitials } from '@global/functions';
 import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import placeholder from '../../../public/images/img-placeholder.png';
-import { fetchCurrentUserInfo } from '@helpers/auth';
 import { useSelector } from 'react-redux';
+
+import AddClientManuallyOverlay from '@components/overlays/add-client/add-client-manually';
+import { clientOptions, clientStatuses } from '@global/variables';
+import { useRouter } from 'next/router';
+
 const SelectedProperty = ({ property, setSelected, selected }) => {
   return (
     <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
@@ -83,22 +87,39 @@ const PropertiesSlideOver = ({
   showProperties,
   setShowProperties,
 }) => {
-  const userInfo = useSelector((state) => state.global.userInfo);
-  const [userData, setUserData] = useState('');
+  const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
 
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const [email, setEmail] = useState();
   useEffect(() => {
-    fetchCurrentUserInfo()
-      .then((res) => {
-        const fullName =
-          res?.first_name && res?.last_name && res?.first_name.length > 0 && res?.last_name.length > 0
-            ? `${res?.first_name} ${res?.last_name}`
-            : `${res?.email}`;
-        setUserData(fullName);
-      })
-      .catch(() => {
-        setUserData(user?.email ? user?.email : user);
-      });
-  }, []);
+    if (email) {
+      handleAfterClientAdd(email);
+    }
+  }, [allContacts, email, sendMethod]);
+  const handleAfterClientAdd = (email) => {
+    const contact = allContacts?.find((contact) => contact.email == email);
+    if (contact && email) {
+      if (contact.phone_number === null && sendMethod === 2) {
+        return;
+      } else {
+        setSelectedContacts([
+          ...selectedContacts,
+          {
+            label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+            value: contact.id,
+            email: contact.email,
+            first_name: contact.first_name,
+            last_name: contact.last_name,
+            phone_number: contact.phone_number,
+            profile_image_path: contact?.profile_image_path,
+          },
+        ]);
+      }
+      setEmail(undefined);
+    }
+  };
+  const router = useRouter();
+  const userInfo = useSelector((state) => state.global.userInfo);
   return (
     <>
       <SlideOver
@@ -160,10 +181,7 @@ const PropertiesSlideOver = ({
             <div className="text-gray7 font-semibold text-[18px] -mt-7">
               Properties have been successfully sent to your clients!
             </div>
-            <div className=" mt-2">
-              All properties that are <img className="inline-block mr-1" src={sent.src} /> are also{' '}
-              <img className="inline-block mr-1" src={saved.src} /> on the clients detail page.
-            </div>
+            <div className=" mt-2">All properties that are sent are saved to your client's portfolio.</div>
             <Button
               primary
               label="Back to Properties"
@@ -200,6 +218,21 @@ const PropertiesSlideOver = ({
                 labelledBy="Search for clients"
                 overrideStrings={{
                   selectSomeItems: 'Selected clients will appear here',
+                  noOptions: router.pathname.includes('properties') && (
+                    <div>
+                      <p>
+                        No client found,{' '}
+                        <span
+                          style={{ textDecoration: 'underline', opacity: 1, cursor: 'pointer', color: 'black' }}
+                          onClick={() => {
+                            setOpen(false);
+                            setShowAddContactOverlay(true);
+                          }}>
+                          Add Client
+                        </span>
+                      </p>
+                    </div>
+                  ),
                 }}
               />
             )}
@@ -210,10 +243,10 @@ const PropertiesSlideOver = ({
                 {selectedContacts.length == 1 ? 'Client' : 'Clients'} selected
               </span>
             </div>
-            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px' }}>
+            <SimpleBar autoHide={false} className="-mr-4" style={{ maxHeight: '300px ' }}>
               {selectedContacts &&
-                selectedContacts.map((contact) => (
-                  <div className={'flex justify-between items-center mb-5 mr-4'}>
+                selectedContacts.map((contact, index) => (
+                  <div key={index} className={'flex justify-between items-center mb-5 mr-4'}>
                     <div className="flex gap-4">
                       <div>
                         {contact.profile_image_path ? (
@@ -306,21 +339,24 @@ const PropertiesSlideOver = ({
                   <p style={{ color: '#344054', marginBottom: '32px' }}>
                     Hey [client name],
                     <br />
-                    <br /> New properties have been added in your portfolio. View here:{' '}
-                    <a style={{ color: 'blue' }} role={'button'}>
-                      [portfolio link]
-                    </a>
+                    <br /> I've compiled a portfolio for you to take a look at. Feel free to browse through and let me
+                    know if anything catches your eye. You can indicate if there are any properties you particularly
+                    like or dislike to help keep your search organized.{' '}
                   </p>
-                  <p style={{ color: '#344054' }}>
-                    Best Regards,
+                  <p style={{ color: '#344054' }}>Looking forward to hearing your thoughts!</p>
+                  <p style={{ color: '#344054', marginBottom: '15px' }}>
                     <br />
                     {userInfo && userInfo?.first_name?.length > 0 && userInfo?.last_name?.length > 0
-                      ? `${userInfo?.first_name} ${userInfo?.last_name}`
+                      ? `${userInfo?.first_name}`
                       : userInfo?.email}
                   </p>
+                  <Button darkBlue label={'View Properties in Your Portfolio'} />
                 </div>
               ) : (
-                <p>Hey [client name], new properties have been added in your portfolio. View here: [portfolio link]</p>
+                <p className="text-sm">
+                  Hey [client name], new properties have been added in your portfolio. View here: [portfolio link].{' '}
+                  {generateSMSFooter(userInfo)}
+                </p>
               )}
             </div>
             <div className={'h-[1px] border border-gray1 my-[26px]'}></div>
@@ -358,6 +394,19 @@ const PropertiesSlideOver = ({
           </div>
         )}
       </SlideOver>
+      {showAddContactOverlay && (
+        <AddClientManuallyOverlay
+          onClientAdded={(email) => {
+            setOpen(true);
+            setEmail(email);
+            setShowAddContactOverlay(false);
+          }}
+          handleClose={() => setShowAddContactOverlay(false)}
+          title="Add Client"
+          options={clientOptions}
+          statuses={clientStatuses}
+        />
+      )}
     </>
   );
 };

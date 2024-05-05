@@ -30,6 +30,7 @@ import { setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import SwitchComponent from '@components/Switch';
 import { useRouter } from 'next/router';
+import ProfessionalsTable from '@components/shared/table/ProfessionalsTable';
 
 const campaignFilterMeaning = {
   'In Campaign': 'assigned',
@@ -50,9 +51,6 @@ const buttons = [
 const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, unapprovedContacts }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(openedSubtab, 'opened');
-  }, [openedSubtab]);
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
@@ -80,7 +78,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     {
       title: 'PROFESSIONAL TYPES',
       content:
-        openedSubtab === 0
+        openedSubtab === 1
           ? renamedArray?.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
           : renamedArray?.map((option) => option.label),
       value: 'category_2',
@@ -97,9 +95,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
       value: 'import_source_text',
     },
   ];
-  useEffect(() => {
-    console.log(filteredProfessionals);
-  }, [filteredProfessionals]);
+
   useEffect(() => {
     setFilteredProfessionals(contacts);
   }, [contacts]);
@@ -159,9 +155,16 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+    console.log(selectedFilter, 'selectedFilter');
     let filtersCopy = { ...professionalsFilters };
-
-    if (filtersCopy[filterType]) {
+    if (filterType === 'category_2') {
+      if (selectedFilter.length > 0) {
+        filtersCopy[filterType] = selectedFilter.map((f) => f.label);
+      }
+      if (selectedFilter.length === 0) {
+        delete filtersCopy[filterType];
+      }
+    } else if (filtersCopy[filterType]) {
       if (filtersCopy[filterType].includes(selectedFilter)) {
         filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
         if (filtersCopy[filterType].length < 1) {
@@ -186,6 +189,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     }
   };
 
+  useEffect(() => {
+    console.log(professionalsFilters, 'filtersProff');
+  }, [professionalsFilters]);
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...professionalsFilters };
 
@@ -210,10 +216,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     } else if (openedSubtab == 2) {
       return filteredProfessionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional')
         .length;
-    } else {
+    } else if (openedSubtab == 3) {
       return filteredProfessionals.filter(
         (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
       ).length;
+    } else {
+      return filteredProfessionals.filter((contact) => contact.category_1 == 'Professional').length;
     }
   };
 
@@ -358,7 +366,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-              <Table
+              <ProfessionalsTable
                 data={
                   hideUnapproved === true
                     ? filteredProfessionals.filter(

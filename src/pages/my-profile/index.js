@@ -22,6 +22,7 @@ import ClearContacts from '@components/overlays/clear-all-contacts';
 import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
 import useLocalStorage from 'hooks/useLocalStorage';
+import ImportsSummaryTable from '@components/shared/table/ImportsSummaryTable';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -238,10 +239,11 @@ const index = () => {
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
             <SimpleBar autoHide style={{ maxHeight: '100%' }}>
               {/* <Table tableFor="clients" data={clientTypeCards} /> */}
-              <Table
+              <ImportsSummaryTable
                 data={importsSummary}
                 tableFor="imports-summary"
-                handleClickRow={() => Router.push('/my-profile/import-details')}></Table>
+                handleClickRow={() => Router.push('/my-profile/import-details')}
+              />
             </SimpleBar>
           </div>
         </div>

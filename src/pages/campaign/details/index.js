@@ -19,7 +19,10 @@ import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/sl
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-import { capitalize, getContactTypeByTypeId } from '@global/functions';
+import { capitalize, getContactStatusByStatusId, getContactTypeByTypeId } from '@global/functions';
+import AllCampaignContactsTable from '@components/shared/table/AllCampaignContactsTable';
+import NotInCampaignContactsTable from '@components/shared/table/NotInCampaignContactsTable';
+import InCampaignContactsTable from '@components/shared/table/InCampaignContactsTable';
 
 const index = () => {
   const router = useRouter();
@@ -143,9 +146,6 @@ const index = () => {
   }, []);
 
   useEffect(() => {
-    console.log(usersInCampaignGlobally);
-  }, [usersInCampaignGlobally]);
-  useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
 
@@ -154,8 +154,15 @@ const index = () => {
       case 0:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <AllCampaignContactsTable
+              campaignData={campaignEvents}
+              campaignId={id}
               tableFor={'allCampaignContacts'}
+              campaignFor={
+                category == 'Unknown'
+                  ? 'All Clients'
+                  : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
+              }
               data={totalContacts}
               categoryType={category}
               status={usersInCampaignGlobally?.contact_status_1}
@@ -166,7 +173,7 @@ const index = () => {
       case 1:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <InCampaignContactsTable
               tableFor={'inCampaignContacts'}
               data={inCampaignContacts}
               setCurrentButton={setCurrentButton}
@@ -179,7 +186,7 @@ const index = () => {
       case 2:
         return (
           <SimpleBar style={{ height: '100%' }} autoHide>
-            <Table
+            <NotInCampaignContactsTable
               tableFor={'notInCampaignContacts'}
               data={notInCamapaignContacts}
               categoryType={category}
@@ -193,14 +200,12 @@ const index = () => {
 
   return (
     <>
-      <div className={'sticky top-0 z-[9999999]'}>
-        <MainMenu />
-      </div>
+      <MainMenu />
       {campaignEvents === undefined ||
       CRMCampaigns === undefined ||
       campaignDetails === undefined ||
       usersInCampaignGlobally === undefined ? (
-        <div className="relative h-[90vh]">
+        <div className='relative h-[90vh]'>
           <Loader />
         </div>
       ) : (
@@ -229,11 +234,11 @@ const index = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center">
+            <div className='flex items-center'>
               <Button
                 secondary
                 leftIcon={<PencilIcon className={'h-4 w-4'} />}
-                className="mr-4"
+                className='mr-4'
                 onClick={() => setShowEditCampaign(true)}>
                 Edit Campaign
               </Button>
@@ -253,7 +258,7 @@ const index = () => {
               `}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
-                  <span className="text-gray4  text-center font-medium text-xs leading-5">
+                  <span className='text-gray4  text-center font-medium text-xs leading-5'>
                     {event.name.toUpperCase()}
                   </span>
                 </div>
@@ -264,22 +269,25 @@ const index = () => {
           <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
             <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
             <Search
-              placeholder="Search"
-              className="mr-4 text-sm"
+              placeholder='Search'
+              className='mr-4 text-sm'
               value={searchTerm}
               onInput={(event) => setSearchTerm(event.target.value)}
             />
           </div>
           {renderTable(currentButton)}
-          {openCampaignPreview && (
-            <CampaignPreview
-              data={campaignEvents}
-              campaignId={id}
-              open={openCampaignPreview}
-              setOpen={setOpenCampaignPreview}
-              className={'mt-[68px]'}
-            />
-          )}
+          <CampaignPreview
+            data={campaignEvents}
+            className='top-[70px]'
+            campaignFor={
+              category == 'Unknown'
+                ? 'All Clients'
+                : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
+            }
+            campaignId={id}
+            open={openCampaignPreview}
+            setOpen={setOpenCampaignPreview}
+          />
         </>
       )}
     </>

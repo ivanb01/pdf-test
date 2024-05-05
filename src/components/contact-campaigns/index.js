@@ -25,6 +25,7 @@ import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setExpandedMenu } from '@store/global/slice';
+import ContactCampaignsTable from '@components/shared/table/ContactCampaignsTable';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
   const dispatch = useDispatch();
@@ -182,8 +183,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
       currentButton == 0
         ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'never_assigned')
         : currentButton == 1
-        ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
-        : currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'unassigned');
+          ? currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'assigned')
+          : currentCampaign?.contacts?.filter((contact) => contact.contact_campaign_status == 'unassigned');
 
     const filteredArr = handleSearch(searchTerm, contactsInCurrentCampaign);
 
@@ -232,7 +233,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
               <div className={`w-auto h-auto`}>
                 <div className={`border border-gray-200 overflow-hidden relative h-full border-l-0 border-b-0`}>
                   <SimpleBar autoHide style={{ maxHeight: '520px' }}>
-                    <Table
+                    <ContactCampaignsTable
                       campaignId={currentCampaign.campaign_id}
                       tableFor="contact-campaigns"
                       titleLabel={campaigns[openedCampaignCategory].value}

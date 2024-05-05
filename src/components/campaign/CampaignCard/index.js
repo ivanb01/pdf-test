@@ -18,13 +18,14 @@ const CampaignCard = ({
   events,
   category,
   campaign_id,
-  contact_never_assigned_count,
+  contacts_never_assigned_count,
   contact_assigned_count,
   contact_unassigned_count,
   contact_status_2,
   isVisible,
   ...props
 }) => {
+  console.log("props", props)
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
@@ -52,9 +53,6 @@ const CampaignCard = ({
             <span className={'mr-2'}>
               {eventCount.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
             </span>
-            {/*<span>*/}
-            {/*  {eventCount.sms} <ChatIcon className={'h-3 w-3  text-[#909CBE]'} />*/}
-            {/*</span>*/}
           </div>
         </div>
         <div className={'flex justify-between items-center flex-wrap '}>
@@ -69,8 +67,8 @@ const CampaignCard = ({
                 : 'All Clients:'}
             </div>
             <div className={'flex'}>
-              {contact_assigned_count + contact_unassigned_count
-                ? contact_assigned_count + contact_unassigned_count
+              {contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
+                ? contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
                 : 0}
               <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
             </div>
@@ -108,7 +106,7 @@ const CampaignCard = ({
               triggerElement={
                 <div className={'flex items-center gap-1'}>
                   <img src={neverAssigned.src} alt={''} />
-                  <span>{contact_never_assigned_count ? contact_never_assigned_count : 0}</span>
+                  <span>{contacts_never_assigned_count ? contacts_never_assigned_count : 0}</span>
                 </div>
               }>
               <div className=" pointer-events-none  text-xs font-medium text-white ">
@@ -128,14 +126,16 @@ const CampaignCard = ({
         <VisibilityIcon className={'h-4 w-4'} />
         <p className={'text-xs leading-4 font-medium'}>Template Preview</p>
       </div>
-      {openCampaignPreview && (
-        <CampaignPreview
-          campaignId={campaign_id}
-          open={openCampaignPreview}
-          setOpen={setOpenCampaignPreview}
-          className={`${isVisible ? 'mt-[68px]' : ''}`}
-        />
-      )}
+      <CampaignPreview
+        campaignFor={
+          props.contact_category_id != null && props.contact_status_id != null
+            ? category + '-' + getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)
+            : 'All Clients'
+        }
+        campaignId={campaign_id}
+        open={openCampaignPreview}
+        setOpen={setOpenCampaignPreview}
+      />
     </div>
   );
 };

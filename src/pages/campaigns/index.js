@@ -18,6 +18,7 @@ import { sortDateAsc } from 'global/functions';
 import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
 import { setExpandedMenu } from '@store/global/slice';
+import CampaignsTable from '@components/shared/table/CampaignsTable';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -186,13 +187,8 @@ const Campaigns = () => {
             ) : currentCampaignsEvents.length ? (
               <div className="relative h-full">
                 <SimpleBar autoHide className="overflow-x-hidden" style={{ maxHeight: '590px' }}>
-                  <Table
+                  <CampaignsTable
                     tableFor="campaigns"
-                    // data={
-                    //   currentButton == 0
-                    //     ? campaignsEvents.thisWeek
-                    //     : campaignsEvents.thisMonth
-                    // }
                     data={currentCampaignsEvents}
                     handleSelectAll={handleSelectAll}
                     handleClickRow={handleClickContact}

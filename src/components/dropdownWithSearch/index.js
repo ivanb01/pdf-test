@@ -1,4 +1,6 @@
+import NotificationAlert from '@components/shared/alert/notification-alert';
 import Select from 'react-select';
+import { useEffect } from 'react';
 
 const DropdownWithSearch = ({
   options,
@@ -14,6 +16,10 @@ const DropdownWithSearch = ({
   onMenuOpen,
   onMenuClose,
   required,
+  error,
+  errorText,
+  position,
+  marginBottom,
   ...props
 }) => {
   return (
@@ -80,13 +86,15 @@ const DropdownWithSearch = ({
             top: top && top,
             bottom: bottom && bottom,
             fontSize: '14px',
-            marginBottom: '100px',
+            position: position ?? 'absolute',
+            marginBottom: marginBottom ?? '100px',
             borderRadius: 5,
             zIndex: 99,
           }),
           menuList: (base) => ({
             ...base,
             borderRadius: 5,
+            maxHeight: '300px',
             div: {
               backgroundColor: 'white',
             },
@@ -102,6 +110,11 @@ const DropdownWithSearch = ({
             },
           }),
         }}></Select>
+      {error && errorText && (
+        <NotificationAlert className="mt-2 p-2" type={'error'}>
+          {errorText}
+        </NotificationAlert>
+      )}
     </div>
   );
 };

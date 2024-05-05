@@ -1,8 +1,4 @@
-// import MainMenu from '@components/shared/menu';
-// import FormBuilder from 'containers/OnlineForms/FormBuilder/FormBuilder';
-
 import Head from 'next/head';
-
 import MainMenu from '@components/shared/menu';
 import FormBuilder from 'containers/OnlineForms/FormBuilder/FormBuilder';
 

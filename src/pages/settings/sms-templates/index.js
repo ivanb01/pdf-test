@@ -11,6 +11,7 @@ import { PlusIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import emptyState from '/public/images/templates-empty-state.svg';
+import TemplatesTable from '@components/shared/table/TemplatesTable';
 
 const index = () => {
   const [loadingData, setLoadingData] = useState(true);
@@ -104,7 +105,7 @@ const index = () => {
                 <Button onClick={() => setOpenAdd(true)} leftIcon={<PlusIcon />} label="SMS Template" />
               </nav>
               <hr></hr>
-              <Table
+              <TemplatesTable
                 tableFor={'templates'}
                 data={smsTemplates}
                 setCurrentTemplate={setCurrentTemplate}

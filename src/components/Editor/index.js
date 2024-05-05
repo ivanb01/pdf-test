@@ -38,6 +38,8 @@ export default function RichtextEditor({ label, value, onContentChange, height, 
           toolbar:
             'undo redo | variables | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+          toolbar_mode: 'wrap',
+          statusbar: false,
           setup: (editor) => {
             editor.ui.registry.addMenuButton('variables', {
               text: 'Variables',

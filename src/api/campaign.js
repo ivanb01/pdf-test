@@ -7,6 +7,10 @@ export const getCampaignsEventsUpcoming = (queryParams) => {
   });
 };
 
+export const getContactCampaigns = (contactId) => {
+  return axiosInstance.get(`/v2/contacts/${contactId}/campaigns`);
+};
+
 export const getCampaignsEnrollSummary = () => {
   return axiosInstance.get(`v1/campaigns/dashboard/enroll_summary`);
 };

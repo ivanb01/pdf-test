@@ -12,6 +12,7 @@ const Overlay = ({
   closeModal,
   alignStart,
   includeTitleBorder,
+  titleButton,
 }) => {
   const router = useRouter();
   return (
@@ -22,7 +23,7 @@ const Overlay = ({
           {title || handleCloseOverlay ? (
             <div
               className={`flex justify-between items-center ${title ? 'p-5' : 'p-5 pb-1'} rounded-t ${includeTitleBorder && 'border-b'}`}>
-              <div className={`flex items-center`}>
+              <div className={`flex items-center justify-between w-full`}>
                 {(title === 'Review AI Smart Synced Contact' || title === 'Review AI Imported Contact') && (
                   <svg
                     onClick={() => router.back()}
@@ -37,9 +38,9 @@ const Overlay = ({
                     <path
                       d="M19.8033 12.1123L14.1367 17.779L19.8033 23.4456"
                       stroke="#4B4B4B"
-                      stroke-width="2.6"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 )}
@@ -50,6 +51,7 @@ const Overlay = ({
                 ) : (
                   title
                 )}
+                {titleButton && titleButton}
               </div>
               {handleCloseOverlay && (
                 <Button

@@ -173,7 +173,7 @@ export default function Feeds({
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ maxHeight: '300px' }}>
+          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px' }}>
             <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
               {activities
                 ?.slice()
@@ -280,7 +280,7 @@ export default function Feeds({
             </ul>
           </SimpleBar>
         ) : (
-          <div className="mt-5 text-center">
+          <div className="mt-5 text-center h-[265px] flex flex-col justify-center align-center">
             <div className="text-gray7 font-semibold mb-2">No activities found</div>
             <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
           </div>
@@ -288,7 +288,7 @@ export default function Feeds({
       ) : null}
       {showGmailInbox ? (
         inboxLoading ? (
-          <div className={'w-full h-[200px] relative'}>
+          <div className={'w-full h-[285px] relative'}>
             <Loader />
           </div>
         ) : !inboxLoading ? (
@@ -305,7 +305,7 @@ export default function Feeds({
               )}
               <SimpleBar
                 style={{
-                  maxHeight: showFullHeight ? '100%' : '280px',
+                  height: '285px',
                   paddingRight: '-10px',
                 }}
                 autoHide>
@@ -335,7 +335,7 @@ export default function Feeds({
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
-                        <div className="gmail-renderings w-[740px] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        <div className="break-words gmail-renderings w-full overflow-hidden ">
                           <span
                             dangerouslySetInnerHTML={{
                               __html: item[0]?.body
@@ -351,7 +351,7 @@ export default function Feeds({
               </SimpleBar>
             </div>
           ) : (
-            <div className="mt-5 text-center">
+            <div className="mt-5 text-center h-[265px] flex flex-col justify-center align-center">
               <div className="text-gray7 font-semibold mb-2">No activities found</div>
               <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
             </div>

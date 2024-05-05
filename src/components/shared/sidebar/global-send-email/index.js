@@ -10,7 +10,7 @@ import { sendEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity } from '@api/contacts';
-import { setGlobalEmail } from '@store/clientDetails/slice';
+import { setRefetchActivityLog } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import TooltipComponent from '@components/shared/tooltip';
 import InfoSharpIcon from '@mui/icons-material/InfoSharp';
@@ -65,14 +65,6 @@ const SendEmailOverlay = () => {
   }, [contacts]);
 
   const handleSendEmail = () => {
-    dispatch(
-      setGlobalEmail(
-        `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${message.replace(
-          /<[^>]*>/g,
-          '',
-        )} </h6>`,
-      ),
-    );
     setLoading(true);
 
     // check if new email template is created
@@ -121,7 +113,7 @@ const SendEmailOverlay = () => {
             /<[^>]*>/g,
             '',
           )} </h6>`,
-        });
+        }).then(() => dispatch(setRefetchActivityLog(true)));
         setLoading(false);
         setEmailSent(true);
       });
@@ -156,7 +148,6 @@ const SendEmailOverlay = () => {
   const getTemplates = async () => {
     try {
       const emailResponse = await getEmailTemplates();
-      console.log('response', emailResponse);
       const emailTemplates = emailResponse.data.data.map((template) => ({
         id: template.id,
         label: template.subject,

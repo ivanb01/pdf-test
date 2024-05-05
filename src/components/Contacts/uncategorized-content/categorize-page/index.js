@@ -3,7 +3,6 @@ import Table from 'components/shared/table';
 import StatusSelect from 'components/status-select';
 import ContactTypeSelect from 'components/contact/contact-type-select';
 import Image from 'next/image';
-import Button from 'components/shared/button';
 import CircleStepNumber from 'components/shared/circle-step-number';
 import Text from 'components/shared/text';
 import { types } from 'global/variables';
@@ -13,11 +12,12 @@ import noContactsSelectedArrow from '/public/images/categorize-no-contacts-selec
 import noCategorized from '/public/images/no-categorized.svg';
 import { useEffect, useState } from 'react';
 import { bulkUpdateContacts } from 'api/contacts';
-import Chip from 'components/shared/chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRefetchData } from '@store/global/slice';
 import { updateAllContacts, updateContactLocally, updateContacts } from '@store/contacts/slice';
 import DropdownWithSearch from '@components/dropdownWithSearch';
+import UncategorizedTable from '@components/shared/table/UncategorizedTable';
+import CategorizedTable from '@components/shared/table/CategorizedTable';
 
 const CategorizePage = ({
   uncategorizedContacts,
@@ -49,17 +49,6 @@ const CategorizePage = ({
   const [categorizedInThisSession, setCategorizedInThisSession] = useState([]);
   const [categorizationInProcess, setCategorizationInProcess] = useState(false);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  useEffect(() => {
-    console.log(
-      categorizedInThisSession,
-      'categorizedInThisSession',
-      categorizationInProcess,
-      'categorizationInProcess',
-      uncategorizedContacts,
-      'uncategorizedContacts',
-    );
-  }, [categorizedInThisSession, categorizationInProcess, uncategorizedContacts]);
 
   const undoAllCategorizations = () => {
     dispatch(updateContacts(uncategorizedInitialState.contacts));
@@ -169,7 +158,7 @@ const CategorizePage = ({
         <div
           className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
           {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>*/}
-          <Table
+          <UncategorizedTable
             tableFor="in-categorization"
             data={uncategorizedContacts}
             handleClickRow={handleSelectUncategorized}
@@ -183,8 +172,8 @@ const CategorizePage = ({
           uncategorizedContacts.length
             ? 'sm:w-[100%] md:w-[60%] xl:w-[55%] xxl:w-[50%]'
             : uncategorizedContacts.length === 0 && categorizedInThisSession.length === 0
-            ? 'w-[100%]'
-            : 'w-[75%]'
+              ? 'w-[100%]'
+              : 'w-[75%]'
         } `}>
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
@@ -197,6 +186,7 @@ const CategorizePage = ({
               right: '0',
               bottom: '0',
               maxHeight: '100%',
+              height: '100%',
             }}>
             <div className="p-6 pb-[77px]">
               <div className="flex items-center mb-4">
@@ -251,12 +241,11 @@ const CategorizePage = ({
                       //     />
                       //   ))}
                       // </div>
-                      <div className={`${!isMenuOpen ? 'mb-[-5px]' : 'mb-[200px]'}`}>
+                      <div className={`mb-[-120px]`}>
                         <DropdownWithSearch
                           options={vendorSubtypesFormatted}
+                          position={'initial'}
                           placeholder="Start typing to search or select one of the options"
-                          onMenuOpen={() => setIsMenuOpen(true)}
-                          onMenuClose={() => setIsMenuOpen(false)}
                           label="What kind of vendor is this for you?"
                           onChange={(type) => {
                             console.log(type);
@@ -308,7 +297,7 @@ const CategorizePage = ({
       {categorizedInThisSession?.length > 0 ? (
         <div className={`border border-gray-200 overflow-hidden relative h-full sm:w-[250%] md:w-[270px] xl:w-[25%]`}>
           {/*<SimpleBar autoHide style={{ maxHeight: '100%' }}>*/}
-          <Table
+          <CategorizedTable
             tableFor="categorized"
             data={categorizedInThisSession}
             undoAllCategorizations={undoAllCategorizations}
