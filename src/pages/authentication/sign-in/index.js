@@ -44,6 +44,7 @@ const SignIn = () => {
         appClientId: process.env.NEXT_AUTH_COGNITO_APP_CLIENT_ID,
         userPoolId: process.env.NEXT_AUTH_COGNITO_POOL_ID
       };
+      console.log(data);
       localStorage.setItem('tenantName', values.tenantName);
       localStorage.setItem('apiGatewayUrl', data.apiGatewayUrl);
       localStorage.setItem('appClientId', data.appClientId);
