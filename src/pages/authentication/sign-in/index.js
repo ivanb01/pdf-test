@@ -41,8 +41,10 @@ const SignIn = () => {
     try {
       const data = {
         apiGatewayUrl: process.env.NEXT_PUBLIC_API_URL,
-        appClientId: '65o07k7t243s9evjbu4cl40rcn',
-        userPoolId: 'us-east-1_ENvP5VYjb',
+        // appClientId: '65o07k7t243s9evjbu4cl40rcn',
+        // userPoolId: 'us-east-1_ENvP5VYjb',
+        appClientId: process.env.NEXT_AUTH_COGNITO_APP_CLIENT_ID,
+        userPoolId: process.env.NEXT_AUTH_COGNITO_POOL_ID
       };
       localStorage.setItem('tenantName', values.tenantName);
       localStorage.setItem('apiGatewayUrl', data.apiGatewayUrl);
@@ -53,7 +55,6 @@ const SignIn = () => {
         return false;
       }
 
-      process.env.OAUTH_DOMAIN;
       const region = data.userPoolId?.split('_')[0];
       const awsmobile = {
         Auth: {
@@ -62,7 +63,7 @@ const SignIn = () => {
           userPoolId: data.userPoolId,
           userPoolWebClientId: data.appClientId,
           oauth: {
-            domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
+            domain: process.env.NEXT_AUTH_COGNITO_DOMAIN,
             scope: ['email', 'profile', 'openid'],
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn

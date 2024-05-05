@@ -22,8 +22,10 @@ export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-i
 
 export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
+
 export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
+
 export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
 export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
 
