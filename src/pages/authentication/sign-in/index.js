@@ -41,18 +41,17 @@ const SignIn = () => {
     try {
       const data = {
         apiGatewayUrl: process.env.NEXT_PUBLIC_API_URL,
-        appClientId: process.env.NEXT_AUTH_COGNITO_APP_CLIENT_ID,
-        userPoolId: process.env.NEXT_AUTH_COGNITO_POOL_ID
+        appClientId: process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID,
+        userPoolId: process.env.NEXT_PUBLIC_COGNITO_POOL_ID
       };
       console.log(data);
+      if (!data.userPoolId || !data.appClientId) {
+        return false;
+      }
       localStorage.setItem('tenantName', values.tenantName);
       localStorage.setItem('apiGatewayUrl', data.apiGatewayUrl);
       localStorage.setItem('appClientId', data.appClientId);
       localStorage.setItem('userPoolId', data.userPoolId);
-
-      if (!data.userPoolId || !data.appClientId) {
-        return false;
-      }
 
       const region = data.userPoolId?.split('_')[0];
       const awsmobile = {
@@ -61,7 +60,7 @@ const SignIn = () => {
           userPoolId: data.userPoolId,
           userPoolWebClientId: data.appClientId,
           oauth: {
-            domain: process.env.NEXT_AUTH_COGNITO_DOMAIN,
+            domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
             scope: ['email', 'profile', 'openid'],
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn

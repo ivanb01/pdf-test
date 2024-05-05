@@ -104,7 +104,7 @@ const MyApp = ({ Component, pageProps }) => {
           userPoolWebClientId: appClientId,
           oauth: {
             // domain: 'pooledtenant-serverlesssaas-210580452463.auth.us-east-1.amazoncognito.com',
-            domain: process.env.NEXT_AUTH_COGNITO_DOMAIN,
+            domain: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
             scope: ['email', 'profile', 'openid'],
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn
