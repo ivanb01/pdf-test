@@ -197,9 +197,9 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
         ))}
         </tbody>
       </Table>
-      <PreviewEventsPerClient campaignData={campaignData} campaignId={campaignId} person={person && person}
-                              open={openEventsPreview} setOpen={setOpenEventsPreview}
-                              title={campaignFor} />
+      {/*<PreviewEventsPerClient campaignData={campaignData} campaignId={campaignId} person={person && person}*/}
+      {/*                        open={openEventsPreview} setOpen={setOpenEventsPreview}*/}
+      {/*                        title={campaignFor} />*/}
     </>
   ) : (
     <div>
