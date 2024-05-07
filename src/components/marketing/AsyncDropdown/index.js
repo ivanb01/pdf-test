@@ -14,15 +14,17 @@ const AsyncDropdown = ({ formik, updateSelectedProperty, selectedProperty }) => 
       callback: 'callback',
       limit: 21,
       page: pagination,
-      address: label,
     };
+
     if (label?.length > 0) {
+      params['address'] = label
       if (pagination !== 0) {
         setPagination(1);
       }
       params['page'] = pagination;
     } else if (label?.length < 0) {
       setPagination(pagination);
+      params['address'] = undefined
     }
     const urlParams = new URLSearchParams({
       ...params,
