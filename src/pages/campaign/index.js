@@ -166,7 +166,8 @@ const index = () => {
       </div>
       <div
         className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-        style={{ height: '230px' }}>
+        style={{ height: '230px' }}
+      >
         <h3 className={'text-3xl leading-9 font-semibold text-white'}>
           Effortless Client and Contact Campaign Coordination
         </h3>

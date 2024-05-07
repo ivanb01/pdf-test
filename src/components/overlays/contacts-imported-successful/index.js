@@ -54,7 +54,8 @@ const ContactsImportedSuccessfullyPopup = () => {
                   onClick={() => router.push('/ai-summary')}
                   className={
                     ' rounded-lg flex items-center justify-center gap-[10px] w-[379px] bg-[#FFF0DE] text-[#B54708] py-[6px] px-3'
-                  }>
+                  }
+                >
                   <p className={'text-sm font-semibold '}>Proceed to AI review</p>
                   <ArrowForwardRoundedIcon />
                 </div>
@@ -69,7 +70,8 @@ const ContactsImportedSuccessfullyPopup = () => {
               }}
               className={
                 ' rounded-lg flex items-center justify-center gap-[10px] w-[379px] bg-[#FFF0DE] text-[#B54708] py-[6px] px-3'
-              }>
+              }
+            >
               <p className={'text-sm font-semibold '}>Back to clients</p>
             </div>
           )}

@@ -98,7 +98,8 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray2',
           'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ',
-        )}>
+        )}
+      >
         <span className="sr-only">Use setting</span>
         <span
           aria-hidden="true"

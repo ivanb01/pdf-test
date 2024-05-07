@@ -118,7 +118,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     return (
       contact.category_1 == 'Client' ||
       contact.category_1 == 'Professional' &&
-        !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
+      !(contact.import_source_text == 'Smart Sync A.I.' && contact.approved_ai === null)
     );
   }
 
@@ -565,7 +565,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         <div
           className={`${
             t.visible ? 'animate-enter' : 'animate-leave'
-          } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+          } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+        >
           <div className="flex gap-2 p-4 word-break items-center">
             <CheckCircleIcon className={'text-green-500'} />
             <h1 className={'text-sm leading-5 font-medium'}>
@@ -579,7 +580,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 setUserProperties(actualUsers);
                 toast.dismiss(t.id);
               }}
-              className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+              className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
+            >
               Undo
             </button>
           </div>
@@ -594,6 +596,29 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       });
     }, [5000]);
   };
+  const _onPropertiesSave = () => {
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then((res) => {
+      setSelectedProperties([]);
+      if (res?.data.length === 0) {
+        toast.success(`${selectedProperties.length === 1 ? 'Property' : 'Properties'} already exists in portfolio!`);
+        return;
+      }
+      toast.success(`${selectedProperties.length === 1 ? 'Property' : 'Properties'} saved successfully!`);
+      getPortfolioByContactId(contactId)
+        .then((res) => {
+          setUserProperties(res?.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error('Error while loading items');
+          setLoading(false);
+        });
+    });
+  };
+
   useEffect(() => {
     if (!open) {
       setTimeout(() => {
@@ -647,7 +672,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         <div
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
-                          }>
+                          }
+                        >
                           <CheckRoundedIcon className={'h-4 w-4'} />
                         </div>
                       )}
@@ -684,7 +710,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                               isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
                               selected={selectedProperties}
                               key={index}
-                              property={property}></PropertyCard>
+                              property={property}
+                            ></PropertyCard>
                           ))}
                         </div>
                       ) : (
@@ -701,7 +728,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                       {allPropertiesCount > 21 && (
                         <nav
                           className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                          aria-label="Pagination">
+                          aria-label="Pagination"
+                        >
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
                               Showing{' '}
@@ -738,7 +766,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page - 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                              >
                                 Previous
                               </a>
                             )}
@@ -756,7 +785,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page + 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                              >
                                 Next
                               </a>
                             )}
@@ -772,10 +802,12 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           {selectedProperties.length > 0 && (
             <SendPropertiesFooter
               selectedProperties={selectedProperties}
+              disabled={loading}
               onSendEmailAndSmsClick={() => {
                 setSendMethod(3);
                 setOpen(true);
               }}
+              onPropertiesSave={() => _onPropertiesSave()}
               onSendSmsClick={() => {
                 setSendMethod(2);
                 setOpen(true);

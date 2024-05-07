@@ -97,7 +97,6 @@ const index = () => {
     setFilterValue(filter);
   };
 
-
   const forOptions = [
     {
       id: 0,
@@ -369,7 +368,6 @@ const index = () => {
     }
   }, [open]);
 
-
   useEffect(() => {
     if (document.querySelector('.side-overlay-wrapper')) {
       if (propertiesSent) {
@@ -382,21 +380,21 @@ const index = () => {
 
   const SelectedProperty = ({ property, setSelected, selected }) => {
     return (
-      <div className='bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2'>
-        <div className='flex items-center'>
+      <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
+        <div className="flex items-center">
           <img
-            className='h-[50px] w-[85px] object-cover rounded-lg mr-3'
+            className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
             src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
           />
-          <div className='font-semibold text-gray7 mr-3 text-[14px]'>
+          <div className="font-semibold text-gray7 mr-3 text-[14px]">
             {property.PROPERTY_TYPE} in {property.ADDRESS}
           </div>
         </div>
-        <div class='form-checkbox'>
+        <div class="form-checkbox">
           <input
-            type='checkbox'
+            type="checkbox"
             id={`checkbox-${property.ID}`}
-            class='hidden'
+            class="hidden"
             onChange={(event) => {
               if (event.target.checked) {
                 setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
@@ -405,19 +403,21 @@ const index = () => {
               }
             }}
           />
-          <label htmlFor={`checkbox-${property.ID}`} class='flex items-center cursor-pointer'>
+          <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
             <div
               class={`${
                 selected ? 'bg-lightBlue3' : 'border border-gray-300'
-              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}
+            >
               {selected && (
                 <svg
-                  className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
-                  version='1'
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 48 48'
-                  enable-background='new 0 0 48 48'>
-                  <polygon fill='white' points='40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9' />
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  version="1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  enable-background="new 0 0 48 48"
+                >
+                  <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}
             </div>
@@ -443,7 +443,6 @@ const index = () => {
       return result;
     }, []);
   };
-
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
@@ -476,25 +475,31 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      <div className='border border-b'>
-        <div className='flex p-6 gap-4'>
+      <div className="border border-b">
+        <div className="flex p-6 gap-4">
           <Search
             className={`w-[250px] text-sm`}
             border={`${searchKey.length > 0 && 'border-blue1'}`}
-            placeholder='Search by address'
+            placeholder="Search by address"
             onInput={(event) => {
               setSearchKey(event.target.value);
             }}
             value={searchKey}
           />
-          <NeighbourhoodDropdown border={datav2.length > 0} setIds={setIds} items={items}
-                                 initializeStatus={initializeStatus} setItems={setItems}
-                                 datav2={datav2} setDatav2={setDatav2} />
+          <NeighbourhoodDropdown
+            border={datav2.length > 0}
+            setIds={setIds}
+            items={items}
+            initializeStatus={initializeStatus}
+            setItems={setItems}
+            datav2={datav2}
+            setDatav2={setDatav2}
+          />
           <Dropdown
             options={forOptions}
-            className=' w-[130px]'
+            className=" w-[130px]"
             border={status && 'border-blue1'}
-            placeHolder='Status'
+            placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
             }}
@@ -503,9 +508,9 @@ const index = () => {
 
           <Dropdown
             options={roomsOptions}
-            className=' min-w-[120px]'
-            placeHolder='Bedrooms'
-            afterLabel='Beds'
+            className=" min-w-[120px]"
+            placeHolder="Bedrooms"
+            afterLabel="Beds"
             border={bedrooms && 'border-blue1'}
             handleSelect={(choice) => {
               setBedrooms(choice);
@@ -515,9 +520,9 @@ const index = () => {
           <Dropdown
             options={bathroomsOptions}
             border={bathrooms && 'border-blue1'}
-            className='w-[140px]'
-            placeHolder='Bathrooms'
-            afterLabel='Baths'
+            className="w-[140px]"
+            placeHolder="Bathrooms"
+            afterLabel="Baths"
             handleSelect={(choice) => {
               setBathrooms(choice);
             }}
@@ -527,7 +532,7 @@ const index = () => {
             border={(minPrice || maxPrice) && 'border-blue1'}
             // options={bathroomOptions}
             label={'Min/Max Price'}
-            className='min-w-[170px] font-normal'
+            className="min-w-[170px] font-normal"
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
@@ -535,25 +540,27 @@ const index = () => {
             options={options}
           />
           <Button
-            className='min-w-[120px]'
+            className="min-w-[120px]"
             leftIcon={
               <div className={'relative'}>
                 {selectedAmenities.length > 0 && selectedAmenities.split(',').length > 0 && (
                   <div
                     className={
                       'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
-                    }>
+                    }
+                  >
                     {selectedAmenities.split(',').length}
                   </div>
                 )}
-                <FilterList className='w-5 h-5 mt-[-2px]' />
+                <FilterList className="w-5 h-5 mt-[-2px]" />
               </div>
             }
             primary
-            onClick={() => setOpenFilters(true)}>
+            onClick={() => setOpenFilters(true)}
+          >
             Filters
           </Button>
-          <Button white onClick={() => resetFilters()} className='min-w-[120px]'>
+          <Button white onClick={() => resetFilters()} className="min-w-[120px]">
             Clear All
           </Button>
           {/* <Dropdown
@@ -565,25 +572,25 @@ const index = () => {
         </div>
       </div>
       {loading ? (
-        <div className='relative h-full w-full'>
+        <div className="relative h-full w-full">
           <Loader></Loader>
         </div>
       ) : properties.LISTINGS && properties.LISTINGS.length ? (
-        <div className='flex items-center justify-between'>
-          <div className='w-full'>
+        <div className="flex items-center justify-between">
+          <div className="w-full">
             <SimpleBar style={{ maxHeight: 'calc(100vh - 156px)' }}>
               <div className={`p-6 ${selectedProperties.length > 0 && 'pb-[100px]'}`}>
                 <div className={'flex items-center justify-between mb-6'}>
-                  <div className='text-gray-900 text-sm font-normal'>
+                  <div className="text-gray-900 text-sm font-normal">
                     {properties.TOTAL_COUNT.toLocaleString()} total properties. These properties are sourced from REBNY
                     database.
                   </div>
                   <div className={'flex items-center gap-2'}>
-                    <p className='text-gray6 font-inter font-normal leading-5 text-sm mt-1'>Sort by</p>
+                    <p className="text-gray6 font-inter font-normal leading-5 text-sm mt-1">Sort by</p>
                     <FilterPropertiesDropdown onFiltersChange={onFiltersChange} />
                   </div>
                 </div>
-                <div className='grid grid-cols-4 gap-6'>
+                <div className="grid grid-cols-4 gap-6">
                   {properties.LISTINGS.map((property, index) => (
                     <>
                       <PropertyCard
@@ -597,48 +604,50 @@ const index = () => {
                   ))}
                 </div>
                 {properties.TOTAL_COUNT > 21 && (
-                  <nav className='flex items-center justify-between bg-white py-3 pb-0 mt-5' aria-label='Pagination'>
-                    <div className='hidden sm:block'>
-                      <p className='text-sm text-gray-700'>
+                  <nav className="flex items-center justify-between bg-white py-3 pb-0 mt-5" aria-label="Pagination">
+                    <div className="hidden sm:block">
+                      <p className="text-sm text-gray-700">
                         Showing{' '}
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {getFromNumber()
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
                         </span>
                         to{' '}
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {getToNumber()
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         </span>{' '}
                         of{' '}
-                        <span className='font-medium'>
+                        <span className="font-medium">
                           {properties.TOTAL_COUNT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         </span>{' '}
                         results
                       </p>
                     </div>
-                    <div className='flex flex-1 justify-between sm:justify-end'>
+                    <div className="flex flex-1 justify-between sm:justify-end">
                       {getFromNumber() != 1 && (
                         <a
-                          href='#'
+                          href="#"
                           onClick={() => {
                             fetchProperties(filterValue, page - 1);
                             setPage(page - 1);
                           }}
-                          className='relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0'>
+                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Previous
                         </a>
                       )}
                       {getToNumber() != properties.TOTAL_COUNT && (
                         <a
-                          href='#'
+                          href="#"
                           onClick={() => {
                             fetchProperties(filterValue, page + 1);
                             setPage(page + 1);
                           }}
-                          className='relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0'>
+                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Next
                         </a>
                       )}
@@ -648,16 +657,15 @@ const index = () => {
               </div>
             </SimpleBar>
             {selectedProperties.length > 0 && (
-              <div
-                className='custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between'>
-                <div className=' bg-gray1 px-[14px] py-[10px] w-fit'>
-                  <span className='font-semibold text-gray7'>{selectedProperties.length}</span>
-                  <span className='text-gray8 font-medium'>
+              <div className="custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between">
+                <div className=" bg-gray1 px-[14px] py-[10px] w-fit">
+                  <span className="font-semibold text-gray7">{selectedProperties.length}</span>
+                  <span className="text-gray8 font-medium">
                     {' '}
                     {selectedProperties.length == 1 ? 'Property' : 'Properties'} selected
                   </span>
                 </div>
-                <div className='flex'>
+                <div className="flex">
                   {selectedProperties.length > 0 && (
                     <SendPropertiesFooter
                       selectedProperties={selectedProperties}
@@ -694,12 +702,12 @@ const index = () => {
           </div> */}
         </div>
       ) : (
-        <div className=' h-full flex items-center justify-center'>
-          <div className='flex items-center justify-center flex-col text-center'>
-            <img src={lookingForEmpty.src} alt='' />
-            <div className='mt-6'>
-              <div className='text-sm text-black font-medium'>No Property Found</div>
-              <div className='text-xs leading-5 font-normal text-black mt-[6px] '>
+        <div className=" h-full flex items-center justify-center">
+          <div className="flex items-center justify-center flex-col text-center">
+            <img src={lookingForEmpty.src} alt="" />
+            <div className="mt-6">
+              <div className="text-sm text-black font-medium">No Property Found</div>
+              <div className="text-xs leading-5 font-normal text-black mt-[6px] ">
                 No property with these details found, please try again!
               </div>
             </div>

@@ -114,7 +114,8 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
       title={title}
-      className={className}>
+      className={className}
+    >
       <div className="p-5">
         {/* <div className="flex items-center mb-6">
           <Avatar size="large" className="mr-4" />
@@ -189,7 +190,6 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
               initialSelect={formik.values.priority}
               placeHolder={formik.values.priority ? formik.values.priority : 'Choose'}
             />
-           
           </div>
         </form>
       </div>
@@ -204,7 +204,8 @@ const EditContactOverlay = ({ className, handleClose, title, client }) => {
             onClick={() => {
               setLoadingButton(true);
               submitForm();
-            }}></Button>
+            }}
+          ></Button>
         </div>
       </div>
     </Overlay>

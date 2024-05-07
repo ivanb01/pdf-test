@@ -21,7 +21,8 @@ const DeactivateCampaign = ({ handleCloseModal, makeChanges, active, loading }) 
             {active ? 'Deactivate Campaign for this Client?' : 'Assign this contact to campaign?'}
           </h5>
         </div>
-      }>
+      }
+    >
       <div style={{ marginTop: -50 }}>
         <div className={'p-6 flex gap-3 items-start '}>
           <div className={'flex flex-col ml-9 mt-3'}>
@@ -50,7 +51,8 @@ const DeactivateCampaign = ({ handleCloseModal, makeChanges, active, loading }) 
             onClick={(e) => {
               e.stopPropagation();
               handleCloseModal();
-            }}>
+            }}
+          >
             Cancel
           </Button>
           <Button
@@ -60,7 +62,8 @@ const DeactivateCampaign = ({ handleCloseModal, makeChanges, active, loading }) 
             onClick={(e) => {
               e.stopPropagation();
               makeChanges(true);
-            }}>
+            }}
+          >
             {active ? 'Yes, deactivate' : 'Yes, assign'}
           </Button>
         </div>

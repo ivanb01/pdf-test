@@ -25,7 +25,8 @@ const FloatingAlert = ({ message, className, buttonText, onClick, inProp = true 
             <button
               onClick={onClick}
               type="button"
-              className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none">
+              className="ml-6 bg-[#fff0de] rounded-md px-2 py-1.5 text-sm font-medium text-[#B54708] hover:bg-orange-200/50 focus:outline-none"
+            >
               {buttonText} {'->'}
             </button>
           )}

@@ -411,7 +411,8 @@ export default function LookingFor({ contactId, category }) {
                       {allPropertiesCount > 21 && (
                         <nav
                           className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                          aria-label="Pagination">
+                          aria-label="Pagination"
+                        >
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
                               Showing{' '}
@@ -445,7 +446,8 @@ export default function LookingFor({ contactId, category }) {
                                   });
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                              >
                                 Previous
                               </a>
                             )}
@@ -460,7 +462,8 @@ export default function LookingFor({ contactId, category }) {
                                   });
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                              >
                                 Next
                               </a>
                             )}

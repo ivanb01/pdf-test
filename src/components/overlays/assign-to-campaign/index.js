@@ -49,7 +49,8 @@ const AssignToCampaign = ({ contacts, handleCloseOverlay, onSubmit }) => {
                 onClick={() => {
                   setLoadingButton(true);
                   onSubmit();
-                }}>
+                }}
+              >
                 Start Campaign
               </Button>
             </div>

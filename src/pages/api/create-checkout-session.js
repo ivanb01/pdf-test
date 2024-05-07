@@ -6,7 +6,7 @@ function getReturnDomain(req) {
   const protocol = req.headers['x-forwarded-proto'] || 'http';
   const host = req.headers.host;
   if (protocol && host) return `${protocol}://${host}`;
-  return "https://onelinecrm.com";
+  return 'https://onelinecrm.com';
 }
 
 export default async function handler(req, res) {
@@ -63,8 +63,8 @@ export default async function handler(req, res) {
 
   const session = await stripe.checkout.sessions.create(stripeCheckout);
 
-  res.send({clientSecret: session.client_secret});
-};
+  res.send({ clientSecret: session.client_secret });
+}
 
 // The session id is used in client-side as follows
 // Stripe.redirectToCheckout({ sessionId });

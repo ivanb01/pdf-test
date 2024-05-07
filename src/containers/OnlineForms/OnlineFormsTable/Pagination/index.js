@@ -7,9 +7,7 @@ const Pagination = ({ currentPage, totalPages, setPage }) => {
   return (
     <div className="flex h-[130px] items-center justify-end gap-4">
       <div className="w-[80px] flex items-center justify-center">
-        <button
-          className={`${currentPage > 0 ? '' : 'hidden'}`}
-          onClick={() => setPage((currPage) => currPage - 1)}>
+        <button className={`${currentPage > 0 ? '' : 'hidden'}`} onClick={() => setPage((currPage) => currPage - 1)}>
           <ChevronLeftOutlinedIcon />
         </button>
       </div>
@@ -17,10 +15,9 @@ const Pagination = ({ currentPage, totalPages, setPage }) => {
         {Array.from(Array(totalPages).keys()).map((number) => {
           return (
             <button
-              className={`px-4 py-2 ${
-                number === currentPage && 'bg-lightBlue3'
-              }`}
-              onClick={() => setPage(number)}>
+              className={`px-4 py-2 ${number === currentPage && 'bg-lightBlue3'}`}
+              onClick={() => setPage(number)}
+            >
               {number + 1}
             </button>
           );
@@ -29,7 +26,8 @@ const Pagination = ({ currentPage, totalPages, setPage }) => {
       <div className="w-[80px] flex items-center justify-center">
         <button
           className={`${currentPage < totalPages - 1 ? '' : 'hidden'} `}
-          onClick={() => setPage((currPage) => currPage - 1)}>
+          onClick={() => setPage((currPage) => currPage - 1)}
+        >
           <ChevronRightOutlinedIcon />
         </button>
       </div>

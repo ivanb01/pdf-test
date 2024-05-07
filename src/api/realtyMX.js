@@ -18,5 +18,9 @@ export const getProperties = async (filters) => {
     properties['bathsMax'] = filters.bathrooms;
   }
 
-await fetchJsonp('https://dataapi.realtymx.com/listings?apikey=4d7139716e6b4a72&callback=callback').then((res) => res.json()).then((data) => {return data});
+  await fetchJsonp('https://dataapi.realtymx.com/listings?apikey=4d7139716e6b4a72&callback=callback')
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    });
 };

@@ -162,12 +162,14 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       setOpenedTab(tab.id);
                       router.push(tab.href);
                       setExpandedTab({ id: tab.id, opened: true });
-                    }}>
+                    }}
+                  >
                     <div
                       className={` flex items-center cursor-pointer ${
                         openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                       }`}
-                      title={tab.name}>
+                      title={tab.name}
+                    >
                       <div title={''}>{tab.icon}</div>
                       {showPulse(tab) && (
                         <span class="absolute right-0 top-2 flex h-2 w-2 ml-4">
@@ -178,7 +180,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     </div>
                   </Link>
                 </div>
-              }>
+              }
+            >
               {tab.subtab ? (
                 <div className={`absolute flex flex-col bg-white border border-gray2 rounded-md`}>
                   {tab.subtab.map((t) => (
@@ -187,7 +190,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         isSubtabActive(t.id, tab.id)
                           ? 'text-lightBlue3 bg-lightBlue1 font-semibold'
                           : 'text-gray4 font-medium'
-                      }`}>
+                      }`}
+                    >
                       <div
                         role={'button'}
                         onClick={() => {
@@ -195,7 +199,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                           dispatch(setOpenedSubtab(t.id));
                           router.push(tab.href);
                         }}
-                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm relative flex items-center`}>
+                        className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm relative flex items-center`}
+                      >
                         {t?.dot}
                         <div className={'w-max'}>{t.name}</div>
                         <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
@@ -207,7 +212,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 <div className={`absolute flex mt-1 shadowCustom`}>
                   <div className={'bg-gray8 h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
                   <div
-                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-gray8 ml-[-10px] rounded-md z-10 text-white`}>
+                    className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-gray8 ml-[-10px] rounded-md z-10 text-white`}
+                  >
                     {tab.name}
                   </div>
                 </div>
@@ -220,7 +226,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             <hr className="my-2 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
+            >
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
             </div>
           </>
@@ -238,7 +245,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           {Object.keys(groupedTabs).map((groupName, index) => (
             <div
               key={groupName}
-              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}>
+              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}
+            >
               <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />
@@ -251,7 +259,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
             <hr className="my-4 mx-4" />
             <div
               onClick={() => importContacts()}
-              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
+              className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}
+            >
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
               <Text h4 className={`ml-3 text-gray5`}>
                 {pinned && 'Import Contacts from CSV'}
@@ -268,7 +277,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
       <div
         className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
           pinned ? 'w-[265px]' : 'w-[62px]'
-        }`}>
+        }`}
+      >
         {showSSOverlay ? (
           <>
             <SmartSyncOverlay
@@ -293,7 +303,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                   {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
                     <>
                       <div
-                        className={`absolute flex gap-[10px] bg-white mb-[-10px] absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3`}>
+                        className={`absolute flex gap-[10px] bg-white mb-[-10px] absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3`}
+                      >
                         <div className={'relative  w-6 mt-1'}>
                           <img
                             src={checkmark.src}
@@ -313,7 +324,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                               />
                               <AIChip reviewed={false} />
                             </div>
-                          }>
+                          }
+                        >
                           <div className={`w-[270px] pointer-events-none text-xs text-white bg-neutral1 rounded-lg`}>
                             <p className="">
                               From now on each new contact that you will communicate in Gmail will be synced here and
@@ -328,7 +340,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                               query: { start_importing: true },
                             })
                           }
-                          className="group cursor-pointer ml-5 pt-0 flex items-center justify-start font-semibold text-blue-600">
+                          className="group cursor-pointer ml-5 pt-0 flex items-center justify-start font-semibold text-blue-600"
+                        >
                           Re-import
                           <ArrowForward className="ml-2 h-5 group-hover:translate-x-1 transition-all" />
                         </a>
@@ -337,7 +350,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                   )}
                   {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
                     <div
-                      className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}>
+                      className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}
+                    >
                       <div className="text-xs font-semibold text-gray6">
                         Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{' '}
                         <span className="font-bold text-gray-900">“Import Google Contacts”</span> in order to import
@@ -346,7 +360,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       <button
                         onClick={() => setShowSSOverlay(true)}
                         type="button"
-                        className="flex mt-2 bg-[#EDDDFD] rounded-md px-2 py-1.5 text-sm items-center font-medium text-gray7 ml-auto hover:bg-purple-200 focus:outline-none">
+                        className="flex mt-2 bg-[#EDDDFD] rounded-md px-2 py-1.5 text-sm items-center font-medium text-gray7 ml-auto hover:bg-purple-200 focus:outline-none"
+                      >
                         Setup <ArrowForward className="ml-2 h-4 group-hover:translate-x-1 transition-all" />
                       </button>
                     </div>
@@ -364,7 +379,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 query: { start_importing: true },
               })
             }
-            className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md">
+            className="!text-blue2 cursor-pointer mt-10 font-medium hover:text-lightBlue4 flex items-center h-10 justify-between px-2 py-4 mx-3 rounded-md"
+          >
             <AccountCircle className="h-5" />
           </a>
         )}
@@ -373,7 +389,8 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <div
             onClick={() => dispatch(setExpandedMenu(!pinned))}
             className="absolute cursor-pointer"
-            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 100 }}>
+            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 100 }}
+          >
             <div className="">
               <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
@@ -469,7 +486,8 @@ const TabBar = ({ tab }) => {
           (openedTab === 6 && tab.id === 6)
             ? 'bg-lightBlue1'
             : ''
-        }`}>
+        }`}
+      >
         <div className={'flex items-center h-8 justify-between pl-2 pr-3 hover:bg-gray1 w-[241px]'}>
           <div className={` flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
             {tab.icon}
@@ -506,20 +524,23 @@ const TabBar = ({ tab }) => {
                 className={`h-8 hover:bg-gray1 px-10 transition-all duration-200 flex items-center ${
                   isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
-                onClick={() => handleSubtabClick(subtab.id)}>
+                onClick={() => handleSubtabClick(subtab.id)}
+              >
                 {subtab.icon ? subtab.icon : subtab.dot}
                 <Text
                   h4
                   className={` ${subtab.icon || (subtab.dot && 'pl-[10px]')} py-[10px] ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
-                  }`}>
+                  }`}
+                >
                   {subtab.name}
                 </Text>
                 <Text
                   h4
                   className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[5px]')}  py-[10px]  ${
                     isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
-                  }`}>
+                  }`}
+                >
                   {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
                 </Text>
               </a>

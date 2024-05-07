@@ -7,16 +7,16 @@ function getReturnDomain(req, includePath = false) {
   const protocol = req.headers['x-forwarded-proto'] || 'http';
   const host = req.headers.host;
   const path = includePath ? req.url : '';
-  
+
   if (protocol && host) {
     return `${protocol}://${host}${path}`;
   }
-  
-  return "https://onelinecrm.com/settings/my-profile";
+
+  return 'https://onelinecrm.com/settings/my-profile';
 }
 
 function getReturnPath(req) {
-  const referer = req.headers['referer']; 
+  const referer = req.headers['referer'];
   if (referer) return referer;
   return null;
 }
@@ -25,8 +25,7 @@ async function getCustomer(customerId, subscriptionId) {
   if (customerId) {
     try {
       return await stripe.customers.retrieve(customerId);
-    } catch {
-    }
+    } catch {}
   }
   if (subscriptionId) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);

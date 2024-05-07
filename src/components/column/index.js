@@ -215,10 +215,12 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
             <TooltipComponent
               side={'bottom'}
               align={'start'}
-              triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
+              triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}
+            >
               <div
                 // style={{ width: '300px' }}
-                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
+                className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}
+              >
                 <div className="text-sm font-semibold mb-2">
                   Every{' '}
                   {healthLastCommunicationDate[categoryType][status?.name] === 1
@@ -236,7 +238,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
                 <div className="flex flex-col mt-4">
                   <div className="flex items-center mb-2">
                     <div
-                      className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
+                      className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}
+                    >
                       <Mail className="w-4 mr-1" />
                       <span>Today</span>
                     </div>
@@ -265,7 +268,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
               id="mdi-sort-alphabetical-ascending"
               width="20"
               height="20"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           ) : (
@@ -276,7 +280,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
               id="mdi-sort-alphabetical-descending"
               width="20"
               height="20"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
             </svg>
           )}
@@ -290,7 +295,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
             overflowX: 'hidden',
             maxHeight: '100%',
             height: 'calc(100vh - 224px) !important',
-          }}>
+          }}
+        >
           <div className="p-[16px] contact-column-custom-height">
             {filteredContacts.map((contact, index) => {
               if (contact.status_id === status.id && contact.category_1.toLowerCase() === category) {

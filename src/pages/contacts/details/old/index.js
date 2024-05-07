@@ -143,14 +143,14 @@ const index = () => {
     campaign_id && campaign
       ? 'Campaigns'
       : contact?.category_id === 14 || contact?.category_id === 13
-      ? 'family'
-      : contact?.category_2 === 'Uncategorized'
-      ? 'uncategorized'
-      : contact?.category_id === 2
-      ? 'unknown'
-      : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized'
-      ? contact?.category_1
-      : `${contact?.category_1}s`;
+        ? 'family'
+        : contact?.category_2 === 'Uncategorized'
+          ? 'uncategorized'
+          : contact?.category_id === 2
+            ? 'unknown'
+            : contact?.category_1 === 'Trash' || contact?.category_1 === 'Uncategorized'
+              ? contact?.category_1
+              : `${contact?.category_1}s`;
 
   useEffect(() => {
     if (campaign_id && campaign) {
@@ -201,7 +201,8 @@ const index = () => {
                         onClick={() => {
                           backUrl !== null ? router.push(backUrl) : router.back();
                         }}
-                        className="items-center flex">
+                        className="items-center flex"
+                      >
                         <Image className="cursor-pointer" src={backArrow} />
                         <div className="ml-2 font-medium">
                           Back to{' '}

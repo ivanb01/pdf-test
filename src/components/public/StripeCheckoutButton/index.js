@@ -35,7 +35,7 @@ const CheckoutButton = ({ priceId, children }) => {
 
   return (
     <Button type="primary" onClick={handleClick}>
-      { children }
+      {children}
     </Button>
   );
 };

@@ -278,7 +278,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                       <div
                         className={
                           'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
-                        }>
+                        }
+                      >
                         {getTotalCountOfAllValues(professionalsFilters)}
                       </div>
                     )}
@@ -333,7 +334,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setProfessionalsFilter({}));
-                }}>
+                }}
+              >
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -411,7 +413,8 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 }
               /> */}
           </>
-        }>
+        }
+      >
         <Accordion
           tabs={openedSubtab === 1 || openedSubtab === 2 ? tabs.slice(1) : tabs}
           handleClick={handleFilterClick}

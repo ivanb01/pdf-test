@@ -34,7 +34,8 @@ const DropdownNoInput = ({ options, handleSelect, selectedOption }) => {
             <div
               className={
                 'flex sticky top-0 bg-white items-center gap-2 py-2.5 px-2 border-b border-borderColor shadow-sm mb-2'
-              }>
+              }
+            >
               {dot}
               <h6 className={'text-gray7 text-sm font-medium relative flex items-center'}>{category}</h6>
             </div>
@@ -44,7 +45,8 @@ const DropdownNoInput = ({ options, handleSelect, selectedOption }) => {
                   onClick={() => handleSelect(option)}
                   key={option.id}
                   className={`cursor-pointer pl-8 py-1.5 hover:bg-lightBlue1 
-                ${option.label == selectedOption ? 'bg-lightBlue1 font-medium' : 'text-gray5 font-normal'}`}>
+                ${option.label == selectedOption ? 'bg-lightBlue1 font-medium' : 'text-gray5 font-normal'}`}
+                >
                   {option.label}
                 </li>
               ))}

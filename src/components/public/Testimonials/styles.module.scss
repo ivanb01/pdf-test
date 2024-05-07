@@ -45,7 +45,7 @@
   @extend .flex-direction-column;
   @extend .flex-align-items-center;
 
-  background-color: #6292F2;
+  background-color: #6292f2;
 }
 
 .section-container {
@@ -64,8 +64,8 @@
   @extend .display-flex;
   @extend .flex-direction-column;
 
-  @media (min-width:1024px){
-    border-right: 2px solid #5D8BE7;
+  @media (min-width: 1024px) {
+    border-right: 2px solid #5d8be7;
   }
   padding: 64px 31px 36px 12px;
   gap: 32px;
@@ -108,7 +108,7 @@
 
   top: -10px;
   left: -12px;
-  z-index: -1
+  z-index: -1;
 }
 
 .section-swiper-container-content-container-text {
@@ -118,7 +118,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 28px;
-  color: #FFF;
+  color: #fff;
   height: 140px;
 
   @media screen and (max-width: $screen-md) {
@@ -147,7 +147,7 @@
 }
 
 .section-swiper-container-person-info-name {
-  color: #FFF;
+  color: #fff;
 
   @media screen and (max-width: $screen-md) {
     font-size: 14px;
@@ -156,7 +156,7 @@
 }
 
 .section-swiper-container-person-info-position {
-  color: #C7D2FE;
+  color: #c7d2fe;
 
   @media screen and (max-width: $screen-md) {
     font-size: 14px;

@@ -13,27 +13,23 @@ export const PriceCard = ({ item, plan }) => {
         </div>
         <div className={styles['card__top-price']}>
           <span>${item[plan].price}</span>
-          <span>/{plan === "monthly" ? 'mo' : 'year'}</span>
+          <span>/{plan === 'monthly' ? 'mo' : 'year'}</span>
         </div>
-        <StripeEmbeddedCheckout priceId={item[plan].priceId}>
-          Subscribe
-        </StripeEmbeddedCheckout>
+        <StripeEmbeddedCheckout priceId={item[plan].priceId}>Subscribe</StripeEmbeddedCheckout>
       </div>
       <div className={styles['card__bottom']}>
         <span className={styles['card__bottom-description']}>WHAT’S INCLUDED</span>
         <div className={styles['card__bottom-features']}>
-          {item.features.map(feature => {
+          {item.features.map((feature) => {
             return (
               <div className={styles['card__bottom-feature']} key={feature}>
                 <Image src={iconCheck} alt="oneline-logo" />
-                <p>
-                  {feature}
-                </p>
+                <p>{feature}</p>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -107,7 +107,8 @@ const AddLookingForPopup = ({ title, handleClose, className, contactId, action }
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
       title={title}
-      className={className}>
+      className={className}
+    >
       <div className="p-5">
         <form onSubmit={formik.handleSubmit}>
           <div className="mx-auto relative">

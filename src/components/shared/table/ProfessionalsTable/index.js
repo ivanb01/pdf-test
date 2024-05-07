@@ -14,7 +14,7 @@ import { getSource } from '@global/functions';
 import { useRouter } from 'next/router';
 
 const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, searchTerm }) => {
-  const router = useRouter()
+  const router = useRouter();
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contactsOriginal = data;
   const [contacts, setContacts] = useState([]);
@@ -70,7 +70,8 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
         <tr>
           <th
             scope="col"
-            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+          >
             {/* <Input
               type="checkbox"
               onChange={(event) => handleSelectContact(event, contact)}
@@ -128,7 +129,8 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
                           pathname: '/contacts/details',
                           query: { id: contact.id },
                         })
-                      }>
+                      }
+                    >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                         <ContactInfo
                           data={{
@@ -158,10 +160,12 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
                               <div
                                 className={
                                   'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
-                                }>
+                                }
+                              >
                                 {contact.summary}
                               </div>
-                            }>
+                            }
+                          >
                             <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                               <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                             </div>
@@ -189,11 +193,13 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
                             onClick={(e) => {
                               e.stopPropagation();
                               handleCardEdit(contact);
-                            }}>
+                            }}
+                          >
                             <Edit id={'edit-contact-icon-' + contact.id} className="text-lightBlue5 w-4 h-4" />
                             <div
                               id={'tooltip-edit-contact-' + contact.id}
-                              className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 ">
+                              className="inline-block absolute bottom-[34px]  whitespace-nowrap invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700 "
+                            >
                               Edit Contact
                             </div>
                           </div>

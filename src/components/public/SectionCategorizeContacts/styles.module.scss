@@ -25,7 +25,7 @@
 
     h3 {
       span {
-        color: #567AF5;
+        color: #567af5;
       }
     }
   }
@@ -35,7 +35,7 @@
   }
 
   &__swiper-container {
-    [class~="swiper"] {
+    [class~='swiper'] {
       padding-bottom: 60px;
 
       @media screen and (max-width: $screen-md) {
@@ -43,15 +43,15 @@
       }
     }
 
-    [class~="swiper-pagination-bullet"] {
+    [class~='swiper-pagination-bullet'] {
       width: 70px;
       height: 8px;
       border-radius: 5px;
       margin: 0 5px !important;
     }
 
-    [class~="swiper-pagination-bullet-active"] {
-      background-color: #0EA5E9;
+    [class~='swiper-pagination-bullet-active'] {
+      background-color: #0ea5e9;
     }
   }
 }

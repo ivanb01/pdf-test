@@ -81,32 +81,36 @@ const MinMaxPrice = ({ className, label, setMinPrice, setMaxPrice, minPrice, max
       onClick={handleDivClick}
       className={`${className} ${
         touched && 'text-gray8 font-normal'
-      } ${!border ? ' border-gray-300' : border} border cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative  text-sm font-medium text-[#808080] rounded-md`}>
+      } ${!border ? ' border-gray-300' : border} border cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative  text-sm font-medium text-[#808080] rounded-md`}
+    >
       {intialLabel}
       <ChevronDownIcon
         className={`chevron-custom-icon transition-all h-5 w-5 text-gray3 ${opened && 'rotate-180'}`}
-        aria-hidden='true'
+        aria-hidden="true"
       />
       <div
         className={` ${
           !opened && 'hidden'
-        }  px-4 py-5 flex items-center z-10 absolute top-[120%] right-0 bg-white border border-gray-300 rounded-md p-3 min-w-[400px]`}>
+        }  px-4 py-5 flex items-center z-10 absolute top-[120%] right-0 bg-white border border-gray-300 rounded-md p-3 min-w-[400px]`}
+      >
         <Dropdown
           initialSelect={minPrice}
           options={options}
-          label='Min. Price'
+          label="Min. Price"
           minMaxUsed
-          border={minPrice && "border-blue1"}
-          className='w-full mr-4'
-          handleSelect={(option) => setMinPrice(option.value)}></Dropdown>
+          border={minPrice && 'border-blue1'}
+          className="w-full mr-4"
+          handleSelect={(option) => setMinPrice(option.value)}
+        ></Dropdown>
         <Dropdown
-          border={maxPrice && "border-blue1"}
+          border={maxPrice && 'border-blue1'}
           initialSelect={maxPrice}
           options={minPrice ? options.filter((option) => option.value > minPrice) : options}
-          label='Max. Price'
+          label="Max. Price"
           minMaxUsed
           handleSelect={(option) => setMaxPrice(option.value)}
-          className='w-full'></Dropdown>
+          className="w-full"
+        ></Dropdown>
       </div>
     </div>
   );

@@ -109,7 +109,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
         <div className={`fixed inset-0 overflow-hidden bg-transparentBlack ${className}`}>
           <div className="absolute inset-0 overflow-hidden">
             <div
-              className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[420px] justify-between`}>
+              className={`pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 w-[420px] justify-between`}
+            >
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -117,7 +118,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
                 enterTo="translate-x-0"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
-                leaveTo="translate-x-full">
+                leaveTo="translate-x-full"
+              >
                 <Dialog.Panel className={`pointer-events-auto w-screen ${className}`}>
                   <div className={`flex flex-col bg-white shadow-xl overflow-y-auto h-full overflow-hidden`}>
                     <div className="flex flex-shrink-0 justify-between items-center p-[20px] pr-6 pl-4 w-[100%]">
@@ -147,7 +149,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
                                     });
                                     return updatedSections;
                                   })
-                                }>
+                                }
+                              >
                                 <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>
                                   {s.name}
                                 </p>
@@ -163,7 +166,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
                                     <Tag
                                       key={a}
                                       onClick={() => toggleAmenitySelection(a)}
-                                      selected={internalAmenities?.includes(a)}>
+                                      selected={internalAmenities?.includes(a)}
+                                    >
                                       <span>{a}</span>
                                     </Tag>
                                   ))}
@@ -181,7 +185,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
                           onClick={() => {
                             setInternalAmenities([]);
                             selectAmenities([]);
-                          }}>
+                          }}
+                        >
                           Clear Filters
                         </Button>
                         <Button
@@ -193,7 +198,8 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
                               selectAmenities(internalAmenities.join(','));
                             }
                             setOpen(false);
-                          }}>
+                          }}
+                        >
                           Apply Filter
                         </Button>
                       </div>

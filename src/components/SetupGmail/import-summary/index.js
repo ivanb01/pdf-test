@@ -98,7 +98,8 @@ const GoogleContactsImportSummary = ({ data }) => {
               (allContacts?.existing_contacts && allContacts?.existing_contacts.length >= 1)
                 ? 'w-1/2'
                 : 'w-full'
-            }`}>
+            }`}
+          >
             <GlobalAlert
               title={
                 allContacts?.importable_new_contacts_count === 0

@@ -23,7 +23,8 @@ const PdfViewer = ({ pdf }) => {
               <p>Loading pdf file...</p>
             </div>
           }
-          onLoadSuccess={onDocumentLoadSuccess}>
+          onLoadSuccess={onDocumentLoadSuccess}
+        >
           {Array.from(new Array(numPages), (_, index) => (
             <Page
               key={`page_${index + 1}`}

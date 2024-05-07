@@ -9,7 +9,8 @@ const SubMenuContent = ({ triggerElement, children, side, align, open, style, cl
           style={{ zIndex: 999999, ...style }}
           className={!children ? '' : ` text-white ${className}`}
           side={side}
-          align={align}>
+          align={align}
+        >
           {children && children}
         </HoverCard.Content>
       </HoverCard.Portal>

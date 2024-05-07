@@ -92,7 +92,8 @@ const index = () => {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+          >
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
@@ -106,7 +107,8 @@ const index = () => {
                   dispatch(updateContactLocally({ ...data, category_id: 2 }));
                   updateContact(data.id, { ...newData, category_id: 2 }).then(() => dispatch(setRefetchData(true)));
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
+              >
                 Undo
               </button>
             </div>
@@ -176,7 +178,8 @@ const index = () => {
             src="/animations/unknown.json"
             loop
             autoplay
-            style={{ width: '420px', height: '300px' }}></lottie-player>
+            style={{ width: '420px', height: '300px' }}
+          ></lottie-player>
           <Text h3 className="text-gray7 mt-4 mb-2 text-center">
             {'You have no contacts categorized as unknown.'}
           </Text>

@@ -278,7 +278,8 @@ export default function ToolbarPlugin() {
           <Button
             rightIcon={<Image src={ChevronDown} alt="Dropdown" className="object-none" />}
             onClick={() => setShowFormElementsDropdown(!showFormElementsDropdown)}
-            className="focus:ring-transparent">
+            className="focus:ring-transparent"
+          >
             Form Elements
           </Button>
         </div>
@@ -304,7 +305,8 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           !canUndo ? ' opacity-20 cursor-not-allowed ' : ''
         }`}
-        aria-label="Undo">
+        aria-label="Undo"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/arrow-counterclockwise.svg)]" />
       </button>
       <button
@@ -315,7 +317,8 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle ${
           !canRedo ? 'opacity-20 cursor-not-allowed' : ''
         }`}
-        aria-label="Redo">
+        aria-label="Redo"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/arrow-clockwise.svg)]" />
       </button>
       <Divider />
@@ -324,7 +327,8 @@ export default function ToolbarPlugin() {
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle block-controls items-center shrink-0"
         onClick={() => setShowBlockOptionsDropDown(!showBlockOptionsDropDown)}
         aria-label="Formatting Options"
-        ref={formatButtonRef}>
+        ref={formatButtonRef}
+      >
         <span className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain bg-[url(/icons/${blockTypeIcon}.svg)]`} />
         <span className="flex leading-5 align-middle font-sm text-[#777] text-ellipsis h-5 text-left mr-4">
           {BLOCK_TYPE_TO_BLOCK_NAME[blockType]}
@@ -351,7 +355,8 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isBold ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Bold">
+        aria-label="Format Bold"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-bold.svg)]" />
       </button>
       <button
@@ -361,7 +366,8 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isItalic ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Italics">
+        aria-label="Format Italics"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-italic.svg)]" />
       </button>
       <button
@@ -371,7 +377,8 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isUnderline ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Underline">
+        aria-label="Format Underline"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-underline.svg)]" />
       </button>
       <Divider />
@@ -380,7 +387,8 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Left Align">
+        aria-label="Left Align"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-left.svg)]" />
       </button>
       <button
@@ -388,7 +396,8 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Center Align">
+        aria-label="Center Align"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-center.svg)]" />
       </button>
       <button
@@ -396,7 +405,8 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Right Align">
+        aria-label="Right Align"
+      >
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-right.svg)]" />
       </button>
     </div>

@@ -1,5 +1,5 @@
 .section {
-  background-color: #1D2645;
+  background-color: #1d2645;
   position: relative;
   height: 550px;
   display: flex;
@@ -13,7 +13,8 @@
     bottom: 0;
     left: 0;
 
-    span, img {
+    span,
+    img {
       width: 100% !important;
     }
   }
@@ -28,7 +29,7 @@
   }
 
   &__description {
-    color: #C7D2FE;
+    color: #c7d2fe;
     text-align: center;
     font-size: 18px;
     font-weight: 400;
@@ -49,7 +50,6 @@
     position: relative;
     gap: 20px;
     justify-content: center;
-
 
     @media screen and (max-width: $screen-md) {
       flex-direction: column;

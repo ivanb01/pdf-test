@@ -76,7 +76,8 @@ export default function ClientCard({ client }) {
                 <TooltipComponent
                   side={'right'}
                   align={'center'}
-                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}>
+                  triggerElement={<ExclamationCircleIcon className="h-5 w-5 text-red-600 " aria-hidden="true" />}
+                >
                   <div style={{ width: '238px' }} className=" pointer-events-none  text-xs font-medium text-white ">
                     <p className="mb-2 font-semibold">Please add a phone number!</p>
                     <p>Without a phone number the SMS events in campaign cannot run.</p>

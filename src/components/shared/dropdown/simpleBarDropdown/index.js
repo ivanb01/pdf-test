@@ -35,7 +35,8 @@ const Dropdown = ({
         onChange={(val) => {
           handleSelect(val);
           props.noOptionChange ? null : setSelected(val);
-        }}>
+        }}
+      >
         {({ open }) => (
           <>
             {label && (
@@ -50,7 +51,8 @@ const Dropdown = ({
                 <Listbox.Button
                   className={`${
                     selectClasses ? selectClasses : 'bg-white border rounded-md'
-                  }  relative w-full  border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}>
+                  }  relative w-full  border-gray-300 pl-3 pr-10 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 sm:text-sm`}
+                >
                   <span className="block truncate capitalize">
                     {!dropdownValue && placeHolder && placeHolder}
                     {dropdownValue && dropdownValue.label}
@@ -67,7 +69,8 @@ const Dropdown = ({
                 leave="transition ease-in duration-100"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
-                afterLeave={() => handleDropdownClosed(open)}>
+                afterLeave={() => handleDropdownClosed(open)}
+              >
                 <Listbox.Options className=" z-50 absolute mt-1 top-[20px] right-[50%] w-auto bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                   {options?.map((option) => (
                     <Listbox.Option
@@ -78,14 +81,16 @@ const Dropdown = ({
                           'cursor-pointer select-none relative py-2 pl-3 pr-9',
                         )
                       }
-                      value={option}>
+                      value={option}
+                    >
                       {({ selected, active }) => (
                         <>
                           <span
                             className={classNames(
                               selected ? 'font-semibold' : 'font-normal',
                               'block truncate capitalize',
-                            )}>
+                            )}
+                          >
                             {option.label}
                           </span>
 
@@ -94,7 +99,8 @@ const Dropdown = ({
                               className={classNames(
                                 active ? 'text-white' : 'text-blue2',
                                 'absolute inset-y-0 right-0 flex items-center pr-4 capitalize',
-                              )}>
+                              )}
+                            >
                               <CheckIcon className="h-5 w-5" aria-hidden="true" />
                             </span>
                           ) : null}

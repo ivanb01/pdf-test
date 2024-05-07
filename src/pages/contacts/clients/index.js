@@ -47,16 +47,6 @@ const index = () => {
     );
     setUnapprovedContacts(ai_unapproved);
   }, [allContacts]);
-  // const fetchUnapproved = async () => {
-  //   try {
-  //     const response = await getUnapprovedContacts();
-  //     console.log(response.data);
-  //     dispatch(setUnapprovedContacts(response.data));
-  //   } catch (error) {
-  //     dispatch(setUnapprovedContacts([]));
-  //     console.log('error msg', error.message);
-  //   }
-  // };
 
   useEffect(() => {
     setLoading(true);

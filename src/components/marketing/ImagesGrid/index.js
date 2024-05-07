@@ -29,7 +29,8 @@ const ImagesGrid = ({ src, id, fileName, fileSize, uploadPercentage, deleteImage
                 height: '7px',
                 width: `${uploadPercentage}%`,
                 backgroundColor: '#10B981',
-              }}></div>
+              }}
+            ></div>
           </div>
         </div>
         <span className={'text-xs leading-4 font-medium text-gray-500'}>
@@ -44,7 +45,8 @@ const ImagesGrid = ({ src, id, fileName, fileSize, uploadPercentage, deleteImage
           width="20"
           height="21"
           viewBox="0 0 20 21"
-          fill="none">
+          fill="none"
+        >
           <g clipPath="url(#clip0_1146_1618)">
             <path
               d="M9.99999 2.60938C5.39166 2.60938 1.66666 6.33437 1.66666 10.9427C1.66666 15.551 5.39166 19.276 9.99999 19.276C14.6083 19.276 18.3333 15.551 18.3333 10.9427C18.3333 6.33437 14.6083 2.60938 9.99999 2.60938ZM14.1667 13.9344L12.9917 15.1094L9.99999 12.1177L7.00832 15.1094L5.83332 13.9344L8.82499 10.9427L5.83332 7.95104L7.00832 6.77604L9.99999 9.76771L12.9917 6.77604L14.1667 7.95104L11.175 10.9427L14.1667 13.9344Z"

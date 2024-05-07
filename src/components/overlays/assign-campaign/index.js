@@ -16,7 +16,8 @@ const AssignCampaignOverlay = ({ title, handleCloseOverlay, onSubmit, loading })
             speed="1"
             style={{ width: '100%', height: '100%' }}
             loop
-            autoplay></lottie-player>
+            autoplay
+          ></lottie-player>
         </div>
         <Text h2 className="max-w-xs mx-auto mb-3 leading-[1.4] mt-6 justify-center">
           Starting Campaign

@@ -5,7 +5,8 @@ const CircleIcon = ({ color, small, padding, active, children }) => {
     <div
       className={`${
         active ? 'bg-white border-lightBlue2' : 'bg-gray10 border-gray1'
-      } relative rounded-full ${iconPadding} ${iconBorder}`}>
+      } relative rounded-full ${iconPadding} ${iconBorder}`}
+    >
       {children}
     </div>
   );

@@ -211,7 +211,8 @@ const SignIn = () => {
           <Text
             title
             className="text-onelineMainColor mb-[50px]"
-            onBackClick={() => router.push('/authentication/sign-in')}>
+            onBackClick={() => router.push('/authentication/sign-in')}
+          >
             Sign In
           </Text>
           {/*DO NOT DELETE COMMENTED CODE*/}

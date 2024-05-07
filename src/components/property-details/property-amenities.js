@@ -155,7 +155,8 @@ const PropertyAmenities = ({ data }) => {
                     <div
                       key={index}
                       style={{ borderRadius: '20px' }}
-                      className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}>
+                      className={'mb-2 text-gray6 border border-solid border-borderColor bg-gray1 '}
+                    >
                       <p className={'text-sm leading-4 font-medium px-[10px] py-1.5 text-gray-6'}> {remaining}</p>
                     </div>
                   ),

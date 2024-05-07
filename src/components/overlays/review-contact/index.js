@@ -193,7 +193,8 @@ const ReviewContact = ({
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+          >
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
@@ -213,7 +214,8 @@ const ReviewContact = ({
                   }
                   toast.dismiss(t.id);
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
+              >
                 Undo
               </button>
             </div>
@@ -308,7 +310,8 @@ const ReviewContact = ({
               className={`${
                 t.visible ? 'animate-enter' : 'animate-leave'
               } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-              style={{ width: '316px' }}>
+              style={{ width: '316px' }}
+            >
               <div className="flex gap-2 p-4 ">
                 <CheckCircleIcon className={'text-green-500'} />
                 <h1 className={'text-sm leading-5 font-medium'}>
@@ -322,7 +325,8 @@ const ReviewContact = ({
                     restoreContact({ ...newData, category_id: 3 });
                     toast.dismiss(t.id);
                   }}
-                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
+                >
                   Undo
                 </button>
               </div>
@@ -376,7 +380,8 @@ const ReviewContact = ({
               <div
                 className={`${
                   t.visible ? 'animate-enter' : 'animate-leave'
-                } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+                } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+              >
                 <div className="flex gap-2 p-4 word-break items-center">
                   <CheckCircleIcon className={'text-green-500'} />
                   <h1 className={'text-sm leading-5 font-medium'}>
@@ -396,7 +401,8 @@ const ReviewContact = ({
                         afterSubmit(client.id, { ...newData, approved_ai: false });
                       }
                     }}
-                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
+                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
+                  >
                     Undo
                   </button>
                 </div>
@@ -481,7 +487,8 @@ const ReviewContact = ({
             leftIcon={<Delete />}
             coloredButton
             onClick={() => removeFromCRM()}
-            loading={removing}>
+            loading={removing}
+          >
             Move to Trash
           </Button>
           <Button
@@ -492,7 +499,8 @@ const ReviewContact = ({
             coloredButton
             disabled={submitDisabled}
             onClick={() => submitForm()}
-            loading={updating}>
+            loading={updating}
+          >
             Mark as Correct
           </Button>
         </div>
@@ -532,7 +540,8 @@ const ReviewContact = ({
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
-      className={`${className} w-full lg:w-[1150px]`}>
+      className={`${className} w-full lg:w-[1150px]`}
+    >
       <div className="flex min-h-[500px] flex-col lg:flex-row">
         <div className={`w-full lg:w-1/2 border-r border-borderColor`}>
           {/*<SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>*/}

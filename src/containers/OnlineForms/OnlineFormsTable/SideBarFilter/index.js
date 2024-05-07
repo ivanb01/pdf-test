@@ -79,7 +79,8 @@ const SideBarFilter = ({
   return (
     <div>
       <div
-        className={`flex h-[72px] px-[10px] border-gray-200 w-full text-sm font-medium text-gray7 justify-between items-center`}>
+        className={`flex h-[72px] px-[10px] border-gray-200 w-full text-sm font-medium text-gray7 justify-between items-center`}
+      >
         <div className="flex ">
           <div className={`w-[6px] h-full`} />
           <div className={`flex  py-[14px] gap-[8px]  items-center`}>{filters?.length - 1} Forms</div>
@@ -112,7 +113,8 @@ const SideBarFilter = ({
               }}
               onMouseLeave={() => {
                 setHoveredFilterId(null);
-              }}>
+              }}
+            >
               <div className={`w-[6px] h-full ${currentFilterId.id === filter.id ? 'bg-lightBlue3' : 'bg-white'} `} />
               <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
                 <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
@@ -128,7 +130,8 @@ const SideBarFilter = ({
                 <div
                   className={clsx('opacity-0 mr-6 ', {
                     ['opacity-100']: hoveredFilterId === filter.id,
-                  })}>
+                  })}
+                >
                   <FilterDropdown
                     types={Actions}
                     icon={<DotsHorizontalIcon className="w-5 cursor-pointer text-lightBlue3" />}

@@ -55,7 +55,8 @@ const ContactInfo = ({
       </div>
       <div className="ml-3">
         <div
-          className={`font-medium text-gray7 flex  ${maxWidth && `lg-w-[${maxWidth}]`}  xl:min-w-[100px] lg:w-[150px]`}>
+          className={`font-medium text-gray7 flex  ${maxWidth && `lg-w-[${maxWidth}]`}  xl:min-w-[100px] lg:w-[150px]`}
+        >
           <p className={'word-break overflow-hidden '} style={{ textOverflow: 'ellipsis' }}>
             {data.name}
           </p>{' '}
@@ -66,7 +67,8 @@ const ContactInfo = ({
             title={data.email}
             className={`ellipsis-email text-gray-500 font-medium ${
               maxWidth && `xl:min-w-[${maxWidth}]`
-            } xl:min-w-[300px] lg:w-[120px] flex `}>
+            } xl:min-w-[300px] lg:w-[120px] flex `}
+          >
             {emailHover && (
               <TooltipComponent
                 side={'bottom'}
@@ -75,7 +77,8 @@ const ContactInfo = ({
                   <div className={`ellipsis-email ${maxWidth && `lg:w-[${maxWidth}]`} xl:min-w-[150px] lg:w-[130px]`}>
                     {data.email}
                   </div>
-                }>
+                }
+              >
                 <div className={'text-sm'}>{data.email}</div>
               </TooltipComponent>
             )}
@@ -94,7 +97,8 @@ const ContactInfo = ({
                         style={{ height: '15px', width: '15px' }}
                         aria-hidden="true"
                       />
-                    }>
+                    }
+                  >
                     <div className={`max-w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                       <div className={`flex gap-1.5`}>
                         {getSource(data.import_source_text).icon}
@@ -116,7 +120,8 @@ const ContactInfo = ({
                   <div className={`ellipsis-email xl:min-w-[300px] lg:w-[130px] ${maxWidth && `lg:w-[${maxWidth}]`} `}>
                     {data.email}
                   </div>
-                }>
+                }
+              >
                 <div className={'text-sm'}>{data.email}</div>
               </TooltipComponent>
             ) : (

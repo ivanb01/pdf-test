@@ -231,7 +231,8 @@ const UpdateTemplate = () => {
               onClick={onPreviewClick}
               className="flex w-[185px] gap-2 items-center justify-center"
               disabled={isEditorEmpty || !isEditorUpdated}
-              loading={loadingPdf}>
+              loading={loadingPdf}
+            >
               Preview and Save
               <ArrowNarrowRightIcon className="w-4 h-4" />
             </Button>

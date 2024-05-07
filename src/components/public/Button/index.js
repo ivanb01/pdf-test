@@ -18,7 +18,8 @@ export const Button = ({ children, type, onClick, style, disabled, className }) 
         className,
       )}
       onClick={onClick}
-      style={style ? style : undefined}>
+      style={style ? style : undefined}
+    >
       {children}
     </button>
   );

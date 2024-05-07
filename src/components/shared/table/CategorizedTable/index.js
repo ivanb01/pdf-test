@@ -17,7 +17,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
         <tr>
           <th
             scope="col"
-            className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+            className="py-3 pl-4 pr-6 text-center text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
+          >
             <TooltipComponent
               side={'bottom'}
               align={'center'}
@@ -28,7 +29,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
                   viewBox="0 0 16 20"
                   width="15px"
                   xmlns="http://www.w3.org/2000/svg"
-                  onClick={() => undoAllCategorizations()}>
+                  onClick={() => undoAllCategorizations()}
+                >
                   <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
                     <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
                       <g id="undo" transform="translate(424.000000, 464.000000)">
@@ -40,7 +42,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
                     </g>
                   </g>
                 </svg>
-              }>
+              }
+            >
               <p className="text-xs leading-4 font-normal"> Undo All</p>
             </TooltipComponent>
           </th>
@@ -64,7 +67,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
                       width="15px"
                       xmlns="http://www.w3.org/2000/svg"
                       className={'cursor-pointer'}
-                      onClick={() => undoCategorization(dataItem.id)}>
+                      onClick={() => undoCategorization(dataItem.id)}
+                    >
                       <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
                         <g fill="#6B7280" id="Core" transform="translate(-424.000000, -463.000000)">
                           <g id="undo" transform="translate(424.000000, 464.000000)">
@@ -76,7 +80,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
                         </g>
                       </g>
                     </svg>
-                  }>
+                  }
+                >
                   <p className="text-xs leading-4 font-normal"> Undo Categorization</p>
                 </TooltipComponent>
               </td>
@@ -99,7 +104,8 @@ const CategorizedTable = ({ data, undoAllCategorizations, undoCategorization }) 
                     {showStatus(dataItem) && (
                       <Chip
                         statusStyle
-                        className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
+                        className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}
+                      >
                         {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                       </Chip>
                     )}

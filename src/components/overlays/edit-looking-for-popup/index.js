@@ -349,22 +349,29 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
 
   const dropdownRef = useRef(null);
 
-
-
   return (
     <Overlay
       // className="w-[632px]"
       handleCloseOverlay={handleClose}
       height="md:max-h-[500px]"
       title={title}
-      className={className}>
+      className={className}
+    >
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
             <p className={'text-gray-700 text-sm font-medium mb-1'}>Neighborhood</p>
-            <NeighbourhoodDropdown className={"max-w-[610px] "} style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }} border={datav2.length > 0} setIds={setIds} items={items}
-                                   initializeStatus={initializeStatus} setItems={setItems}
-                                   datav2={datav2} setDatav2={setDatav2} />
+            <NeighbourhoodDropdown
+              className={'max-w-[610px] '}
+              style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}
+              border={datav2.length > 0}
+              setIds={setIds}
+              items={items}
+              initializeStatus={initializeStatus}
+              setItems={setItems}
+              datav2={datav2}
+              setDatav2={setDatav2}
+            />
             <RadioChips
               options={roomsOptions}
               value={formik.values.bedrooms ? formik.values.bedrooms : null}
@@ -447,7 +454,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                         });
                         return updatedSections;
                       })
-                    }>
+                    }
+                  >
                     <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
                     {!s.expanded ? (
                       <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
@@ -463,7 +471,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                           onClick={() => {
                             toggleAmenitySelection(a);
                           }}
-                          selected={internalAmenities?.includes(a)}>
+                          selected={internalAmenities?.includes(a)}
+                        >
                           <span>{a}</span>
                         </Tag>
                       ))}
@@ -478,7 +487,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           className="text-right md:sticky left-0 right-0 bottom-0 bg-white p-5 flex justify-between h-[78px]"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-          }}>
+          }}
+        >
           <div>
             <Button
               white

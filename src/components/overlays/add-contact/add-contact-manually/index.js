@@ -207,7 +207,8 @@ const AddContactManuallyOverlay = ({ handleClose, title }) => {
       title={title}
       submit={submitForm2}
       isSubmittingNextButton={isSubmitting1}
-      isSubmittingButton={isSubmitting2}>
+      isSubmittingButton={isSubmitting2}
+    >
       <div className="step">
         {currentStep == 1 ? (
           <div>

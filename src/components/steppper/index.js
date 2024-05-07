@@ -15,7 +15,8 @@ const Stepper = ({ steps, currentStep, title }) => {
                   <span
                     className={`grow-0 border-2  ${
                       currentStep === order ? 'border-lightBlue3 text-lightBlue3' : 'border-gray3 text-gray3'
-                    }  rounded-full min-h-[30px] min-w-[30px] flex justify-center items-center`}>
+                    }  rounded-full min-h-[30px] min-w-[30px] flex justify-center items-center`}
+                  >
                     {order}
                   </span>
                 ) : (

@@ -13,7 +13,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
         WebkitTextSizeAdjust: '100%',
         margin: '0',
         padding: '0',
-      }}>
+      }}
+    >
       <table
         role="presentation"
         border="0"
@@ -23,7 +24,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
           backgroundColor: '#f4f5f6',
           width: '100%',
           margin: 'auto',
-        }}>
+        }}
+      >
         <tr>
           <td
             style={{
@@ -32,7 +34,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
               padding: '0',
               paddingTop: '24px',
               width: '800px',
-            }}>
+            }}
+          >
             <div
               style={{
                 boxSizing: 'border-box',
@@ -40,7 +43,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                 margin: '0 auto',
                 maxWidth: '800px',
                 padding: '0',
-              }}>
+              }}
+            >
               <table
                 role="presentation"
                 border="0"
@@ -51,13 +55,15 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                   border: '1px solid #eaebed',
                   width: '100%',
                   marginBottom: '60px',
-                }}>
+                }}
+              >
                 <tr>
                   <td
                     style={{
                       boxSizing: 'border-box',
                       padding: '32px',
-                    }}>
+                    }}
+                  >
                     <div style={{ padding: '24px 0' }}>
                       <img
                         src="https://opgny.com/newdist/images/theme_setting_images/36486919104_images_Oxford_logo_coloR.png"
@@ -90,7 +96,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                         width: '50%',
                                         padding: '10px',
                                         boxSizing: 'border-box',
-                                      }}>
+                                      }}
+                                    >
                                       <table
                                         width="100%"
                                         border="0"
@@ -99,21 +106,24 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                         style={{
                                           fontFamily: 'Arial, sans-serif',
                                           boxShadow: '0px 4px 6px -2px #0000000D, 0px 10px 15px -3px #0000001A',
-                                        }}>
+                                        }}
+                                      >
                                         <tr>
                                           <td
                                             align="center"
                                             style={{
                                               border: '1px solid #F3F4F6',
                                               boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-                                            }}>
+                                            }}
+                                          >
                                             <table
                                               width="350"
                                               border="0"
                                               cellSpacing="0"
                                               cellPadding="0"
                                               bgcolor="#FFFFFF"
-                                              style={{ overflow: 'hidden' }}>
+                                              style={{ overflow: 'hidden' }}
+                                            >
                                               <tr>
                                                 <td style={{ position: 'relative' }}>
                                                   <img
@@ -143,9 +153,10 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                       property.STATUS === 'Rented'
                                                         ? '&status=22'
                                                         : property.STATUS === 'Sold'
-                                                        ? '&status=19'
-                                                        : ''
-                                                    }`}>
+                                                          ? '&status=19'
+                                                          : ''
+                                                    }`}
+                                                  >
                                                     <table width="100%" border="0" cellSpacing="0" cellPadding="0">
                                                       <tr style={{ height: '65px' }}>
                                                         <td
@@ -153,7 +164,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                             fontSize: '14px',
                                                             fontWeight: '600',
                                                             color: '#333333',
-                                                          }}>
+                                                          }}
+                                                        >
                                                           {property.PROPERTY_TYPE} in {property.ADDRESS}
                                                         </td>
                                                       </tr>
@@ -163,7 +175,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                             width="100%"
                                                             border="0"
                                                             cellSpacing="0"
-                                                            cellPadding="0">
+                                                            cellPadding="0"
+                                                          >
                                                             <tr>
                                                               <td
                                                                 style={{
@@ -179,7 +192,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                                   textAlign: 'center',
                                                                   verticalAlign: 'middle',
                                                                   whiteSpace: 'nowrap',
-                                                                }}>
+                                                                }}
+                                                              >
                                                                 <img
                                                                   style={{ marginRight: '5px' }}
                                                                   src="https://i.imgur.com/5SNx5uf.png"
@@ -201,7 +215,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                                   textAlign: 'center',
                                                                   verticalAlign: 'middle',
                                                                   whiteSpace: 'nowrap',
-                                                                }}>
+                                                                }}
+                                                              >
                                                                 <img
                                                                   style={{ marginRight: '5px' }}
                                                                   src="https://i.imgur.com/WXRetUp.png"
@@ -223,7 +238,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                                     textAlign: 'center',
                                                                     verticalAlign: 'middle',
                                                                     whiteSpace: 'nowrap',
-                                                                  }}>
+                                                                  }}
+                                                                >
                                                                   <img
                                                                     style={{
                                                                       marginRight: '5px',
@@ -246,7 +262,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                             fontSize: '24px',
                                                             fontWeight: 'bold',
                                                             color: '#333333',
-                                                          }}>
+                                                          }}
+                                                        >
                                                           {formatPrice(property.PRICE)}
                                                           {property.STATUS.toLowerCase() == 'for rent' && (
                                                             <span className="text-gray-500 font-normal">/month</span>
@@ -264,7 +281,8 @@ export const Emails = ({ chunkedArray, firstName, agentName }) => {
                                                               width: '60px',
                                                               textAlign: 'center',
                                                               marginTop: '15px',
-                                                            }}>
+                                                            }}
+                                                          >
                                                             {property.STATUS}
                                                           </div>
                                                         </td>

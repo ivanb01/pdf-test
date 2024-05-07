@@ -5,16 +5,16 @@ import List from '@components/NestedCheckbox/List';
 import React, { useEffect, useRef, useState } from 'react';
 
 const NeighbourhoodDropdown = ({
-                                 initializeStatus,
-                                 items,
-                                 setItems,
-                                 setIds,
-                                 setDatav2,
-                                 datav2,
-                                 border,
-                                 style,
-                                 className,
-                               }) => {
+  initializeStatus,
+  items,
+  setItems,
+  setIds,
+  setDatav2,
+  datav2,
+  border,
+  style,
+  className,
+}) => {
   const statuss = Object.freeze({
     unchecked: 0,
     checked: 1,
@@ -142,76 +142,79 @@ const NeighbourhoodDropdown = ({
       return result;
     }, []);
   };
-  return <div
-    ref={dropdownRef}
-    className={
-      ` ${className} ${border ? 'border border-blue1' : 'border border-gray-300'}  min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative  text-sm font-medium text-[#808080] rounded-md`
-    }
-    style={{ flex: 1, maxWidth: '300px', position: 'relative', ...style }}
-    onClick={() => {
-      setOpenDropdown(!openDropdown);
-      setTimeout(() => {
-        document.querySelector(`#custom-dropdown-search`)?.focus();
-      }, 200);
-    }}>
+  return (
     <div
-      className={`max-w-[300px] overflow-hidden font-normal whitespace-nowrap overflow-ellipsis  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
-      {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
-    </div>
-    <div className={'flex'}>
-      {datav2.length > 0 && (
-        <CloseIcon
-          className={`transition-all h-5 w-5 text-gray3 cursor-pointer`}
-          aria-hidden='true'
-          onClick={(e) => {
-            e.stopPropagation();
-            initializeStatus() && initializeStatus();
-            setDatav2([]);
-          }}
-        />
-      )}
-      <ChevronDownIcon
-        className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
-        aria-hidden='true'
-      />
-    </div>
-    {openDropdown && (
+      ref={dropdownRef}
+      className={` ${className} ${border ? 'border border-blue1' : 'border border-gray-300'}  min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative  text-sm font-medium text-[#808080] rounded-md`}
+      style={{ flex: 1, maxWidth: '300px', position: 'relative', ...style }}
+      onClick={() => {
+        setOpenDropdown(!openDropdown);
+        setTimeout(() => {
+          document.querySelector(`#custom-dropdown-search`)?.focus();
+        }, 200);
+      }}
+    >
       <div
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpenDropdown(true);
-        }}
-        className={
-          'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg min-w-[500px] w-full bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
-        }>
-        <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px', ...style }}>
-          <input
-            className={`text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
-            id={`custom-dropdown-search`}
-            type={'text'}
-            placeholder={'Select'}
-            onChange={(e) => setNeighborhoodsSearch(e.target.value)}
+        className={`max-w-[300px] overflow-hidden font-normal whitespace-nowrap overflow-ellipsis  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}
+      >
+        {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
+      </div>
+      <div className={'flex'}>
+        {datav2.length > 0 && (
+          <CloseIcon
+            className={`transition-all h-5 w-5 text-gray3 cursor-pointer`}
+            aria-hidden="true"
             onClick={(e) => {
               e.stopPropagation();
-              e.preventDefault();
-              setOpenDropdown(true);
+              initializeStatus() && initializeStatus();
+              setDatav2([]);
             }}
           />
-          {filterData(items, neighborhoodsSearch).length > 0 ? (
-            <div className={'mt-2'}>
-              <List
-                items={filterData(items, neighborhoodsSearch)}
-                compute={compute}
-                setOpenDropdown={setOpenDropdown}
-              />
-            </div>
-          ) : (
-            <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
-          )}
-        </SimpleBar>
+        )}
+        <ChevronDownIcon
+          className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
+          aria-hidden="true"
+        />
       </div>
-    )}
-  </div>;
+      {openDropdown && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenDropdown(true);
+          }}
+          className={
+            'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg min-w-[500px] w-full bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
+          }
+        >
+          <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px', ...style }}>
+            <input
+              className={`text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
+              id={`custom-dropdown-search`}
+              type={'text'}
+              placeholder={'Select'}
+              onChange={(e) => setNeighborhoodsSearch(e.target.value)}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setOpenDropdown(true);
+              }}
+            />
+            {filterData(items, neighborhoodsSearch).length > 0 ? (
+              <div className={'mt-2'}>
+                <List
+                  items={filterData(items, neighborhoodsSearch)}
+                  compute={compute}
+                  setOpenDropdown={setOpenDropdown}
+                />
+              </div>
+            ) : (
+              <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
+            )}
+          </SimpleBar>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default NeighbourhoodDropdown;

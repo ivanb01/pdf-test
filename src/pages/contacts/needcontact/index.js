@@ -217,7 +217,8 @@ const index = () => {
                       <div
                         className={
                           'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
-                        }>
+                        }
+                      >
                         {getTotalCountOfAllValues(clientsFilters)}
                       </div>
                     )}
@@ -263,7 +264,8 @@ const index = () => {
                   className="flex flex-row items-center cursor-pointer"
                   onClick={() => {
                     setClientsFilters({});
-                  }}>
+                  }}
+                >
                   <TrashIcon height={20} className="text-gray3 mr-1" />
                   <Text p className="whitespace-nowrap">
                     Clear Filter
@@ -279,7 +281,8 @@ const index = () => {
                 unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '210px' : '160px'
               })`,
               overflow: 'hidden',
-            }}>
+            }}
+          >
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <NeedToContactTable
@@ -318,7 +321,8 @@ const index = () => {
                   }}
                 />
               </>
-            }>
+            }
+          >
             <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
           </SlideOver>
         </>
