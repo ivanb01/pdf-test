@@ -32,7 +32,7 @@ import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
 import { useDispatch } from 'react-redux';
 import FilterList from '@mui/icons-material/FilterList';
-import { addPropertiesInPortfolio } from '@api/portfolio';
+import { addPropertiesInPortfolio, getPortfolioByContactId } from '@api/portfolio';
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
@@ -41,6 +41,7 @@ import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 import { getCompanyFromEmail } from '@global/functions';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
+import toast from 'react-hot-toast';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -426,22 +427,18 @@ const index = () => {
       </div>
     );
   };
-  const filterData = (data, searchTerm) => {
-    return data.reduce((result, item) => {
-      const isParentMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const filteredItems = item.items.filter((subItem) =>
-        subItem.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-
-      if (isParentMatch && filteredItems.length === 0) {
-        result.push(item);
-      } else if (filteredItems.length > 0) {
-        result.push({ ...item, items: filteredItems });
-      }
-
-      return result;
-    }, []);
+  const _onPropertiesSave = () => {
+    setLoadingEmails(true);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then(() => {
+      setLoadingEmails(false);
+      setLoadingEmails(false);
+      setPropertiesSent(true);
+      resetPropertySelection();
+    });
   };
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
@@ -669,6 +666,10 @@ const index = () => {
                   {selectedProperties.length > 0 && (
                     <SendPropertiesFooter
                       selectedProperties={selectedProperties}
+                      onSavePropertiesClick={() => {
+                        setSendMethod(4);
+                        setOpen(true);
+                      }}
                       onSendEmailAndSmsClick={() => {
                         setSendMethod(3);
                         setOpen(true);
@@ -730,6 +731,7 @@ const index = () => {
         filteredContacts={filteredContacts}
         selectedProperties={selectedProperties}
         loadingEmails={loadingEmails}
+        onPropertiesSave={_onPropertiesSave}
         _sendEmail={_sendEmail}
         showProperties={showProperties}
         setShowProperties={setShowProperties}

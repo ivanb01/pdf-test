@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import AddClientManuallyOverlay from '@components/overlays/add-client/add-client-manually';
 import { clientOptions, clientStatuses } from '@global/variables';
 import { useRouter } from 'next/router';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 const SelectedProperty = ({ property, setSelected, selected }) => {
   return (
@@ -80,6 +81,7 @@ const PropertiesSlideOver = ({
   setPreviewMode,
   loadingEmails,
   _sendEmail,
+  onPropertiesSave,
   selectedContacts,
   selectedProperties,
   setPropertiesSent,
@@ -94,6 +96,7 @@ const PropertiesSlideOver = ({
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const [email, setEmail] = useState();
   useEffect(() => {
+    console.log(sendMethod);
     if (email) {
       handleAfterClientAdd(email);
     }
@@ -131,8 +134,10 @@ const PropertiesSlideOver = ({
         noHeader={!propertiesSent}
         buttons={
           propertiesSent ? null : (
-            <div className={`flex items-center ${previewMode ? 'justify-end' : 'justify-between'}  w-[100%]`}>
-              {!previewMode && (
+            <div
+              className={`flex items-center ${previewMode || sendMethod === 4 ? 'justify-end' : 'justify-between'}  w-[100%]`}
+            >
+              {!previewMode && sendMethod !== 4 && (
                 <div
                   className={'flex gap-[6px] items-center justify-center text-gray8 cursor-pointer'}
                   role={'button'}
@@ -160,7 +165,7 @@ const PropertiesSlideOver = ({
                   onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />
-              ) : (
+              ) : sendMethod == 3 ? (
                 <Button
                   primary
                   leftIcon={<SendIcon className={'h-3 w-3'} />}
@@ -168,6 +173,18 @@ const PropertiesSlideOver = ({
                   label="Notify by Email & SMS"
                   onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
+                />
+              ) : (
+                <Button
+                  primary
+                  leftIcon={<SaveAltIcon className={'h-4 w-4'} />}
+                  label="Save to portfolio"
+                  loading={loadingEmails}
+                  className="mr-3"
+                  disabled={!selectedContacts.length || !selectedProperties.length}
+                  onClick={() => {
+                    onPropertiesSave();
+                  }}
                 />
               )}
             </div>
@@ -184,9 +201,13 @@ const PropertiesSlideOver = ({
               autoplay
             ></lottie-player>
             <div className="text-gray7 font-semibold text-[18px] -mt-7">
-              Properties have been successfully sent to your clients!
+              {sendMethod !== 4
+                ? 'Properties have been successfully sent to your clients!'
+                : "Properties have been successfully saved to the client's portfolio!"}
             </div>
-            <div className=" mt-2">All properties that are sent are saved to your client's portfolio.</div>
+            {sendMethod !== 4 && (
+              <div className=" mt-2">All properties that are sent are saved to your client's portfolio.</div>
+            )}
             <Button
               primary
               label="Back to Properties"

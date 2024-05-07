@@ -596,28 +596,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       });
     }, [5000]);
   };
-  const _onPropertiesSave = () => {
-    addPropertiesInPortfolio(
-      selectedContacts.map((contact) => contact.value),
-      selectedProperties.map((property) => property.ID),
-    ).then((res) => {
-      setSelectedProperties([]);
-      if (res?.data.length === 0) {
-        toast.success(`${selectedProperties.length === 1 ? 'Property' : 'Properties'} already exists in portfolio!`);
-        return;
-      }
-      toast.success(`${selectedProperties.length === 1 ? 'Property' : 'Properties'} saved successfully!`);
-      getPortfolioByContactId(contactId)
-        .then((res) => {
-          setUserProperties(res?.data);
-          setLoading(false);
-        })
-        .catch(() => {
-          toast.error('Error while loading items');
-          setLoading(false);
-        });
-    });
-  };
 
   useEffect(() => {
     if (!open) {
@@ -802,12 +780,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           {selectedProperties.length > 0 && (
             <SendPropertiesFooter
               selectedProperties={selectedProperties}
-              disabled={loading}
               onSendEmailAndSmsClick={() => {
                 setSendMethod(3);
                 setOpen(true);
               }}
-              onPropertiesSave={() => _onPropertiesSave()}
               onSendSmsClick={() => {
                 setSendMethod(2);
                 setOpen(true);
