@@ -31,6 +31,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import List from '@components/NestedCheckbox/List';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
+import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
 
 const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
   const dispatch = useDispatch();
@@ -233,7 +234,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
 
     setItems(updatedData);
   };
-  const [openDropdown, setOpenDropdown] = useState(false);
   useEffect(() => {
     initializeStatus();
   }, []);
@@ -265,7 +265,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
 
     setDatav2(newData);
   }, [items, contactId]);
-  const [neighborhoodsSearch, setNeighborhoodsSearch] = useState('');
 
   const filterData = (data, searchTerm) => {
     return data.reduce((result, item) => {
@@ -347,25 +346,10 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
 
     return true;
   }
-  useEffect(() => {
-    setNeighborhoodsSearch('');
-  }, [openDropdown]);
 
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdown(false);
-      }
-    };
 
-    document.body.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [setOpenDropdown]);
 
   return (
     <Overlay
@@ -378,75 +362,9 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
             <p className={'text-gray-700 text-sm font-medium mb-1'}>Neighborhood</p>
-            <div
-              ref={dropdownRef}
-              className={`min-w-[170px]  cursor-pointer flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium rounded-md`}
-              style={{ flex: 1, position: 'relative' }}
-              onClick={() => setOpenDropdown(!openDropdown)}>
-              <div
-                className={`overflow-hidden whitespace-nowrap overflow-ellipsis font-normal  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
-                {datav2.length > 0 ? datav2.join(', ') : 'Select neighborhood'}
-              </div>
-              <div className={'flex'}>
-                {datav2.length > 0 && (
-                  <CloseIcon
-                    className={`transition-all h-5 w-5 text-gray3`}
-                    aria-hidden="true"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      initializeStatus();
-                      setDatav2([]);
-                    }}
-                  />
-                )}
-                <ChevronDownIcon
-                  className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
-                  aria-hidden="true"
-                />
-              </div>
-              {openDropdown && (
-                <div
-                  className={
-                    'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg max-w-[598px] bg-white w-full max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
-                  }>
-                  <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
-                    <input
-                      className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
-                      type={'text'}
-                      placeholder={'Search'}
-                      onChange={(e) => setNeighborhoodsSearch(e.target.value)}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setOpenDropdown(true);
-                      }}
-                    />
-                    {filterData(items, neighborhoodsSearch).length > 0 ? (
-                      <div className={'mt-2'}>
-                        <List
-                          items={filterData(items, neighborhoodsSearch)}
-                          compute={compute}
-                          setOpenDropdown={setOpenDropdown}
-                        />
-                      </div>
-                    ) : (
-                      <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
-                    )}
-                  </SimpleBar>
-                </div>
-              )}
-            </div>
-            {/*<SearchSelectInput*/}
-            {/*  label="Neighborhood*"*/}
-            {/*  options={NYCneighborhoods}*/}
-            {/*  value={valueOptions(formik.values.neighborhood_ids, NYCneighborhoods)}*/}
-            {/*  onChange={(choice) => {*/}
-            {/*    let choices = choice.map((el) => el.value);*/}
-            {/*    formik.setFieldValue('neighborhood_ids', choices);*/}
-            {/*  }}*/}
-            {/*  error={errors.neighborhood_ids && touched.neighborhood_ids}*/}
-            {/*  errorText={errors.neighborhood_ids}*/}
-            {/*/>*/}
+            <NeighbourhoodDropdown className={"max-w-[610px] "} style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }} border={datav2.length > 0} setIds={setIds} items={items}
+                                   initializeStatus={initializeStatus} setItems={setItems}
+                                   datav2={datav2} setDatav2={setDatav2} />
             <RadioChips
               options={roomsOptions}
               value={formik.values.bedrooms ? formik.values.bedrooms : null}
@@ -595,7 +513,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
               disabled={!formik.dirty && arraysHaveSameElements(internalAmenities, reduxAmenities)}
               onClick={() => {
                 dispatch(setAmenities([...reduxAmenities, ...internalAmenities]));
-                setOpenDropdown(false);
                 formik.handleSubmit();
               }}
             />

@@ -499,7 +499,7 @@ const index = () => {
 
               {contact?.category_1 == 'Client' && (
                 <div className='bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg'>
-                  <PropertiesSection noSelect contactId={id} category={contact.category_2} />
+                   <PropertiesSection noSelect contactId={id} category={contact.category_2} />
                 </div>
               )}
             </div>
