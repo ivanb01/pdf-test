@@ -379,7 +379,7 @@ const index = () => {
                   )}
                 </div>
               </div>
-              {campaigns.length > 0 && (
+              {campaigns?.length > 0 && (
                 <div className="bg-white px-3 mb-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
@@ -388,7 +388,7 @@ const index = () => {
                       <div>Name</div>
                       <div>Status</div>
                     </div>
-                    {campaigns.map((campaign, index) => (
+                    {campaigns?.map((campaign, index) => (
                       <>
                         <div key={index} className="flex justify-between items-center">
                           <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>
@@ -425,7 +425,7 @@ const index = () => {
                             />
                           </Switch> */}
                         </div>
-                        {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
+                        {campaigns?.length - 1 !== index && <hr className="my-[18px]" />}
                       </>
                     ))}
                   </>
@@ -506,7 +506,7 @@ const index = () => {
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
-                    {notes && notes.length > 0 && (
+                    {notes && notes?.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                         <img src={addNote.src} className={'h-7  w-7'} />
                       </a>
