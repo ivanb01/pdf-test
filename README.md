@@ -1,4 +1,4 @@
-#[OneLine CRM - Frontend Application](onelinecrm.com)
+#[OneLine CRM - Frontend Application](www.onelinecrm.com)
 
 This is the web client of OneLineCRM.com platform created with [Next.js](https://nextjs.org/)
 
