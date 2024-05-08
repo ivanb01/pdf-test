@@ -2,9 +2,7 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 export const fecthOnlineFormsTypes = () => {
-  return axiosInstance.get('v1/online-forms/types',{
-    params: { page: 1},
-  });
+  return axiosInstance.get('v1/online-forms/types');
 };
 
 export const fetchOnlineFormTypeById = (id) => {
