@@ -77,7 +77,8 @@ const AddActivity = ({ setActivities, className, handleClose, title, clientId, s
             handleChange={formik.handleChange}
             value={formik.values.description}
             error={errors.description && touched.description}
-            errorText={errors.description}></TextArea>
+            errorText={errors.description}
+          ></TextArea>
           <div className="flex items-center justify-between pt-6 ">
             <div></div>
             <div>

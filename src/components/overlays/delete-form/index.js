@@ -20,7 +20,8 @@ const DeleteForm = ({ onCancel, onDelete }) => {
           </div>
         </>
       }
-      handleCloseOverlay={onCancel}>
+      handleCloseOverlay={onCancel}
+    >
       <div className="p-[24px] pt-0 flex flex-col gap-[24px]">
         <div className="flex justify-end gap-[17px]">
           <div className="flex flex-row justify-end gap-3">

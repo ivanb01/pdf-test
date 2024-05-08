@@ -55,8 +55,8 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
   ${noteContent}
   <p>Here you can find  <a href='${values.listingUrl}' style='font-style: italic'>Listing url</a></p>
    <p style='display:flex;'>I would greatly appreciate it if this could be ready by ${formatDateStringMDY(
-          new Date(values.date),
-        )}</p>
+     new Date(values.date),
+   )}</p>
    </div>
    </body>
 </html>`,
@@ -65,7 +65,7 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
   });
 
   return (
-    <Overlay title={'Request Custom Digital Design'} handleCloseOverlay={handleOverlayClose} className='w-[700px]'>
+    <Overlay title={'Request Custom Digital Design'} handleCloseOverlay={handleOverlayClose} className="w-[700px]">
       <div className={'flex gap-10'}>
         <SimpleBar autoHide style={{ maxHeight: '620px', width: '100%', height: '100%' }}>
           <div className={'flex-1'}>
@@ -76,15 +76,18 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
                   ready for both print and digital use. You will receive the file to your email within 24 Hours.
                 </p>
                 <>
-                  <AsyncDropdown formik={formik} updateSelectedProperty={updateSelectedProperty}
-                                 selectedProperty={selectedProperty} />
+                  <AsyncDropdown
+                    formik={formik}
+                    updateSelectedProperty={updateSelectedProperty}
+                    selectedProperty={selectedProperty}
+                  />
                   <Input
-                    type='text'
-                    label='Listing URL'
+                    type="text"
+                    label="Listing URL"
                     required
                     disabled={selectedProperty}
                     value={formik.values.listingUrl ?? ''}
-                    id='listingUrl'
+                    id="listingUrl"
                     onChange={(e) => {
                       formik.setFieldValue('listingUrl', e.target.value);
                     }}
@@ -93,18 +96,19 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
                   />
                 </>
                 <TextArea
-                  className='min-h-[120px]'
-                  id='note'
-                  label='Note'
+                  className="min-h-[120px]"
+                  id="note"
+                  label="Note"
                   optional
                   value={formik.values.note}
-                  handleChange={formik.handleChange}></TextArea>
+                  handleChange={formik.handleChange}
+                ></TextArea>
                 <div className={'grid grid-cols-2 gap-6'}>
                   <Input
-                    type='date'
+                    type="date"
                     required
-                    label='I need this to be ready until'
-                    id='date'
+                    label="I need this to be ready until"
+                    id="date"
                     value={formik.values.date}
                     onChange={(e) => formik.setFieldValue('date', e.target.value)}
                     error={formik.errors.date && formik.touched.date}
@@ -115,8 +119,9 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
                 </div>
               </div>
               <div
-                className='flex items-end justify-end py-4 pr-6 sticky bottom-0 bg-white'
-                style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
+                className="flex items-end justify-end py-4 pr-6 sticky bottom-0 bg-white"
+                style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}
+              >
                 <Button className={`mr-4`} white onClick={handleOverlayClose}>
                   Cancel
                 </Button>

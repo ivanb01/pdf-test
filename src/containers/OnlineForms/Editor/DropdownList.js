@@ -40,13 +40,15 @@ const DropdownList = ({ toolbarRef, setShowBlockOptionsDropDown, options, button
   return (
     <div
       className="z-10 block absolute shadow-[0_12px_28px_0_rgba(0,0,0,0.2),0_2px_4px_0_rgba(0,0,0,0.1),inset_0_0_0_1px_rgba(255,255,255,0.5)] rounded-lg min-w-[100px] min-h-[40px] bg-white [&>*:first-child]:mt-2 [&>*:last-child]:mb-2"
-      ref={dropDownRef}>
+      ref={dropDownRef}
+    >
       {options.map(({ id, label, icon, onClick }) => {
         return (
           <button
             className="mx-2 p-2 text-[#050505] cursor-pointer leading-4 text-base flex shrink-0  rounded-lg min-w-[268px] content-center hover:bg-[#eee]"
             onClick={onClick}
-            key={id}>
+            key={id}
+          >
             <span className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain ${icon}`} />
             <span className="flex grow-1 leading-5 w-[200px]">{label}</span>
           </button>

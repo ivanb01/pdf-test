@@ -19,7 +19,8 @@ const PropertyMainDetails = ({ data }) => {
               data?.STATUS?.toLowerCase() === 'sold' || data?.STATUS?.toLowerCase() === 'for sale'
                 ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
                 : 'border-cyan-800 bg-cyan-50 text-cyan-800'
-            } rounded-full h-fit px-2 py-1 text-xs font-medium`}>
+            } rounded-full h-fit px-2 py-1 text-xs font-medium`}
+          >
             {data?.STATUS}
           </div>
         </div>
@@ -27,7 +28,8 @@ const PropertyMainDetails = ({ data }) => {
           <Image src={location} alt="" />
           <div
             className="ml-3 text-[#1F2937] md:text-base text-sm hover:underline cursor-pointer"
-            onClick={() => scrollToMap()}>
+            onClick={() => scrollToMap()}
+          >
             {data?.ADDRESS}, {data?.CITY}, {data?.STATE} {data?.ZIP_CODE}
           </div>
         </div>

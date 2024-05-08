@@ -47,17 +47,20 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
         onChange={(item) => {
           setSelected(item);
           dispatch(setActiveFilterOfProperties(item.id));
-        }}>
+        }}
+      >
         <div className="relative mt-1 w-[220px]">
           <Listbox.Button
             onClick={handleToggle}
-            className=" flex justify-between w-[220px] border rounded-md border-borderColor px-3 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-0 focus:ring-lightBlue3 focus:border-lightBlue3 sm:text-sm">
+            className=" flex justify-between w-[220px] border rounded-md border-borderColor px-3 py-[9px] text-left cursor-pointer focus:outline-none focus:ring-0 focus:ring-lightBlue3 focus:border-lightBlue3 sm:text-sm"
+          >
             <span
               className={
                 selected === null
                   ? 'text-gray4 italic text-sm font-normal leading-5'
                   : 'text-sm leading-5 font-normal text-gray7'
-              }>
+              }
+            >
               {selected.name}
             </span>
             <ArrowDropUpIcon className={` transition-all h-5 w-5 text-gray-400 ${!isOpen ? 'rotate-180' : ''}`} />
@@ -66,7 +69,8 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
             as={Fragment}
             leave="transition ease-in duration-100 "
             leaveFrom="opacity-100"
-            leaveTo="opacity-0">
+            leaveTo="opacity-0"
+          >
             <Listbox.Options className="absolute mt-1 z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-3 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {options.map((option, personIdx) => (
                 <Listbox.Option
@@ -78,7 +82,8 @@ const FilterPropertiesDropdown = ({ onFiltersChange }) => {
                   className={({ active }) =>
                     `relative cursor-default select-none py-2.5 px-3 text-gray7  ${active ? 'bg-lightBlue1' : ''}`
                   }
-                  value={option}>
+                  value={option}
+                >
                   {({ selected }) => (
                     <>
                       <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>

@@ -2,8 +2,8 @@
   'object' == typeof exports && 'undefined' != typeof module
     ? e(exports)
     : 'function' == typeof define && define.amd
-    ? define(['exports'], e)
-    : e(((t = 'undefined' != typeof globalThis ? globalThis : t || self)['lottie-player'] = {}));
+      ? define(['exports'], e)
+      : e(((t = 'undefined' != typeof globalThis ? globalThis : t || self)['lottie-player'] = {}));
 })(this, function (exports) {
   'use strict';
   function _asyncIterator(t) {
@@ -88,10 +88,10 @@
             _defineProperty(t, e, i[e]);
           })
         : Object.getOwnPropertyDescriptors
-        ? Object.defineProperties(t, Object.getOwnPropertyDescriptors(i))
-        : ownKeys(Object(i)).forEach(function (e) {
-            Object.defineProperty(t, e, Object.getOwnPropertyDescriptor(i, e));
-          });
+          ? Object.defineProperties(t, Object.getOwnPropertyDescriptors(i))
+          : ownKeys(Object(i)).forEach(function (e) {
+              Object.defineProperty(t, e, Object.getOwnPropertyDescriptor(i, e));
+            });
     }
     return t;
   }
@@ -609,8 +609,8 @@
         'Map' === i || 'Set' === i
           ? Array.from(t)
           : 'Arguments' === i || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(i)
-          ? _arrayLikeToArray(t, e)
-          : void 0
+            ? _arrayLikeToArray(t, e)
+            : void 0
       );
     }
   }
@@ -1032,10 +1032,10 @@
     'method' === t.kind
       ? (e = { value: t.value, writable: !0, configurable: !0, enumerable: !1 })
       : 'get' === t.kind
-      ? (e = { get: t.value, configurable: !0, enumerable: !1 })
-      : 'set' === t.kind
-      ? (e = { set: t.value, configurable: !0, enumerable: !1 })
-      : 'field' === t.kind && (e = { configurable: !0, writable: !0, enumerable: !0 });
+        ? (e = { get: t.value, configurable: !0, enumerable: !1 })
+        : 'set' === t.kind
+          ? (e = { set: t.value, configurable: !0, enumerable: !1 })
+          : 'field' === t.kind && (e = { configurable: !0, writable: !0, enumerable: !0 });
     var s = {
       kind: 'field' === t.kind ? 'field' : 'method',
       key: i,
@@ -1747,8 +1747,8 @@
                 null !== (s = null === (i = l) || void 0 === i ? void 0 : i.fromAttribute) && void 0 !== s
                   ? s
                   : 'function' == typeof l
-                  ? l
-                  : null) && void 0 !== n
+                    ? l
+                    : null) && void 0 !== n
               ? n
               : o$4.fromAttribute;
         (this._$Ei = o), (this[o] = p(e, h.type)), (this._$Ei = null);
@@ -1901,28 +1901,28 @@
               ? '!--' === d[1]
                 ? (h = v)
                 : void 0 !== d[1]
-                ? (h = a)
-                : void 0 !== d[2]
-                ? (g.test(d[2]) && (i = RegExp('</' + d[2], 'g')), (h = f))
-                : void 0 !== d[3] && (h = f)
+                  ? (h = a)
+                  : void 0 !== d[2]
+                    ? (g.test(d[2]) && (i = RegExp('</' + d[2], 'g')), (h = f))
+                    : void 0 !== d[3] && (h = f)
               : h === f
-              ? '>' === d[0]
-                ? ((h = null != i ? i : c), ($ = -1))
-                : void 0 === d[1]
-                ? ($ = -2)
-                : (($ = h.lastIndex - d[2].length), (u = d[1]), (h = void 0 === d[3] ? f : '"' === d[3] ? m : _))
-              : h === m || h === _
-              ? (h = f)
-              : h === v || h === a
-              ? (h = c)
-              : ((h = f), (i = void 0));
+                ? '>' === d[0]
+                  ? ((h = null != i ? i : c), ($ = -1))
+                  : void 0 === d[1]
+                    ? ($ = -2)
+                    : (($ = h.lastIndex - d[2].length), (u = d[1]), (h = void 0 === d[3] ? f : '"' === d[3] ? m : _))
+                : h === m || h === _
+                  ? (h = f)
+                  : h === v || h === a
+                    ? (h = c)
+                    : ((h = f), (i = void 0));
         var b = h === f && t[l + 1].startsWith('/>') ? ' ' : '';
         o +=
           h === c
             ? p + n$3
             : $ >= 0
-            ? (n.push(u), p.slice(0, $) + '$lit$' + p.slice($) + e$6 + b)
-            : p + e$6 + (-2 === $ ? (n.push(void 0), l) : b);
+              ? (n.push(u), p.slice(0, $) + '$lit$' + p.slice($) + e$6 + b)
+              : p + e$6 + (-2 === $ ? (n.push(void 0), l) : b);
       }
       var x = o + (t[s] || '<?>') + (2 === e ? '</svg>' : '');
       if (!Array.isArray(t) || !t.hasOwnProperty('raw')) throw Error('invalid template strings array');
@@ -2030,8 +2030,8 @@
           2 === l.type
             ? (p = new N(a, a.nextSibling, this, t))
             : 1 === l.type
-            ? (p = new l.ctor(a, l.name, l.strings, this, t))
-            : 6 === l.type && (p = new L(a, this, t)),
+              ? (p = new l.ctor(a, l.name, l.strings, this, t))
+              : 6 === l.type && (p = new L(a, this, t)),
             this.v.push(p),
             (l = s[++h]);
         }
@@ -2079,12 +2079,12 @@
             ? (this._$AH !== w && this._$AR(), (this._$AH = w))
             : t !== this._$AH && t !== b && this.$(t)
           : void 0 !== t._$litType$
-          ? this.T(t)
-          : void 0 !== t.nodeType
-          ? this.S(t)
-          : u(t)
-          ? this.A(t)
-          : this.$(t);
+            ? this.T(t)
+            : void 0 !== t.nodeType
+              ? this.S(t)
+              : u(t)
+                ? this.A(t)
+                : this.$(t);
     }
     M(t) {
       var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this._$AB;
@@ -2522,12 +2522,12 @@
     'undefined' != typeof globalThis
       ? globalThis
       : 'undefined' != typeof window
-      ? window
-      : 'undefined' != typeof global
-      ? global
-      : 'undefined' != typeof self
-      ? self
-      : {};
+        ? window
+        : 'undefined' != typeof global
+          ? global
+          : 'undefined' != typeof self
+            ? self
+            : {};
   function getDefaultExportFromCjs(t) {
     return t && t.__esModule && Object.prototype.hasOwnProperty.call(t, 'default') ? t.default : t;
   }
@@ -2635,19 +2635,19 @@
                   return this.audioFactory
                     ? this.audioFactory(t)
                     : window.Howl
-                    ? new window.Howl({ src: [t] })
-                    : {
-                        isPlaying: !1,
-                        play: function () {
-                          this.isPlaying = !0;
-                        },
-                        seek: function () {
-                          this.isPlaying = !1;
-                        },
-                        playing: function () {},
-                        rate: function () {},
-                        setVolume: function () {},
-                      };
+                      ? new window.Howl({ src: [t] })
+                      : {
+                          isPlaying: !1,
+                          play: function () {
+                            this.isPlaying = !0;
+                          },
+                          seek: function () {
+                            this.isPlaying = !1;
+                          },
+                          playing: function () {},
+                          rate: function () {},
+                          setVolume: function () {},
+                        };
                 },
                 setAudioFactory: function (t) {
                   this.audioFactory = t;
@@ -2696,10 +2696,10 @@
                   return 'float32' === e
                     ? new Float32Array(i)
                     : 'int16' === e
-                    ? new Int16Array(i)
-                    : 'uint8c' === e
-                    ? new Uint8ClampedArray(i)
-                    : t(e, i);
+                      ? new Int16Array(i)
+                      : 'uint8c' === e
+                        ? new Uint8ClampedArray(i)
+                        : t(e, i);
                 }
               : t;
           })();
@@ -3014,8 +3014,8 @@
                               0 === o.ty
                                 ? ((o.layers = e(o.refId, a)), t(o.layers, a))
                                 : 4 === o.ty
-                                ? i(o.shapes)
-                                : 5 === o.ty && u(o);
+                                  ? i(o.shapes)
+                                  : 5 === o.ty && u(o);
                             }
                         }
                         function e(t, e) {
@@ -3262,10 +3262,10 @@
                             (t.response && 'object' === _typeof$5(t.response))
                             ? t.response
                             : t.response && 'string' == typeof t.response
-                            ? JSON.parse(t.response)
-                            : t.responseText
-                            ? JSON.parse(t.responseText)
-                            : null;
+                              ? JSON.parse(t.response)
+                              : t.responseText
+                                ? JSON.parse(t.responseText)
+                                : null;
                         }
                         return {
                           load: function (e, i, s, n) {
@@ -3647,8 +3647,8 @@
               '' === t.loop || null === t.loop || void 0 === t.loop || !0 === t.loop
                 ? (this.loop = !0)
                 : !1 === t.loop
-                ? (this.loop = !1)
-                : (this.loop = parseInt(t.loop, 10)),
+                  ? (this.loop = !1)
+                  : (this.loop = parseInt(t.loop, 10)),
               (this.autoplay = !('autoplay' in t) || t.autoplay),
               (this.name = t.name ? t.name : ''),
               (this.autoloadSegments =
@@ -3679,50 +3679,50 @@
             (i.path = s.getNamedItem('data-animation-path')
               ? s.getNamedItem('data-animation-path').value
               : s.getNamedItem('data-bm-path')
-              ? s.getNamedItem('data-bm-path').value
-              : s.getNamedItem('bm-path')
-              ? s.getNamedItem('bm-path').value
-              : ''),
+                ? s.getNamedItem('data-bm-path').value
+                : s.getNamedItem('bm-path')
+                  ? s.getNamedItem('bm-path').value
+                  : ''),
               (i.animType = s.getNamedItem('data-anim-type')
                 ? s.getNamedItem('data-anim-type').value
                 : s.getNamedItem('data-bm-type')
-                ? s.getNamedItem('data-bm-type').value
-                : s.getNamedItem('bm-type')
-                ? s.getNamedItem('bm-type').value
-                : s.getNamedItem('data-bm-renderer')
-                ? s.getNamedItem('data-bm-renderer').value
-                : s.getNamedItem('bm-renderer')
-                ? s.getNamedItem('bm-renderer').value
-                : 'canvas');
+                  ? s.getNamedItem('data-bm-type').value
+                  : s.getNamedItem('bm-type')
+                    ? s.getNamedItem('bm-type').value
+                    : s.getNamedItem('data-bm-renderer')
+                      ? s.getNamedItem('data-bm-renderer').value
+                      : s.getNamedItem('bm-renderer')
+                        ? s.getNamedItem('bm-renderer').value
+                        : 'canvas');
             var n = s.getNamedItem('data-anim-loop')
               ? s.getNamedItem('data-anim-loop').value
               : s.getNamedItem('data-bm-loop')
-              ? s.getNamedItem('data-bm-loop').value
-              : s.getNamedItem('bm-loop')
-              ? s.getNamedItem('bm-loop').value
-              : '';
+                ? s.getNamedItem('data-bm-loop').value
+                : s.getNamedItem('bm-loop')
+                  ? s.getNamedItem('bm-loop').value
+                  : '';
             'false' === n ? (i.loop = !1) : 'true' === n ? (i.loop = !0) : '' !== n && (i.loop = parseInt(n, 10));
             var a = s.getNamedItem('data-anim-autoplay')
               ? s.getNamedItem('data-anim-autoplay').value
               : s.getNamedItem('data-bm-autoplay')
-              ? s.getNamedItem('data-bm-autoplay').value
-              : !s.getNamedItem('bm-autoplay') || s.getNamedItem('bm-autoplay').value;
+                ? s.getNamedItem('data-bm-autoplay').value
+                : !s.getNamedItem('bm-autoplay') || s.getNamedItem('bm-autoplay').value;
             (i.autoplay = 'false' !== a),
               (i.name = s.getNamedItem('data-name')
                 ? s.getNamedItem('data-name').value
                 : s.getNamedItem('data-bm-name')
-                ? s.getNamedItem('data-bm-name').value
-                : s.getNamedItem('bm-name')
-                ? s.getNamedItem('bm-name').value
-                : ''),
+                  ? s.getNamedItem('data-bm-name').value
+                  : s.getNamedItem('bm-name')
+                    ? s.getNamedItem('bm-name').value
+                    : ''),
               'false' ===
                 (s.getNamedItem('data-anim-prerender')
                   ? s.getNamedItem('data-anim-prerender').value
                   : s.getNamedItem('data-bm-prerender')
-                  ? s.getNamedItem('data-bm-prerender').value
-                  : s.getNamedItem('bm-prerender')
-                  ? s.getNamedItem('bm-prerender').value
-                  : '') && (i.prerender = !1),
+                    ? s.getNamedItem('data-bm-prerender').value
+                    : s.getNamedItem('bm-prerender')
+                      ? s.getNamedItem('bm-prerender').value
+                      : '') && (i.prerender = !1),
               this.setParams(i);
           }),
           (AnimationItem.prototype.includeLayers = function (t) {
@@ -3926,12 +3926,12 @@
                   : this.checkSegments(e > this.totalFrames ? e % this.totalFrames : 0) ||
                     ((i = !0), (e = this.totalFrames - 1))
                 : e < 0
-                ? this.checkSegments(e % this.totalFrames) ||
-                  (!this.loop || (this.playCount-- <= 0 && !0 !== this.loop)
-                    ? ((i = !0), (e = 0))
-                    : (this.setCurrentRawFrameValue(this.totalFrames + (e % this.totalFrames)),
-                      this._completedLoop ? this.trigger('loopComplete') : (this._completedLoop = !0)))
-                : this.setCurrentRawFrameValue(e),
+                  ? this.checkSegments(e % this.totalFrames) ||
+                    (!this.loop || (this.playCount-- <= 0 && !0 !== this.loop)
+                      ? ((i = !0), (e = 0))
+                      : (this.setCurrentRawFrameValue(this.totalFrames + (e % this.totalFrames)),
+                        this._completedLoop ? this.trigger('loopComplete') : (this._completedLoop = !0)))
+                  : this.setCurrentRawFrameValue(e),
                 i && (this.setCurrentRawFrameValue(e), this.pause(), this.trigger('complete'));
             }
           }),
@@ -4318,15 +4318,15 @@
                         return e;
                       })(t, p, e, s)
                     : 0 === f
-                    ? p
-                    : (function (t, e, i, s, n) {
-                        var a,
-                          o,
-                          l = 0;
-                        do (a = h((o = e + (i - e) / 2), s, n) - t) > 0 ? (i = o) : (e = o);
-                        while (Math.abs(a) > 1e-7 && ++l < 10);
-                        return o;
-                      })(t, a, a + i, e, s);
+                      ? p
+                      : (function (t, e, i, s, n) {
+                          var a,
+                            o,
+                            l = 0;
+                          do (a = h((o = e + (i - e) / 2), s, n) - t) > 0 ? (i = o) : (e = o);
+                          while (Math.abs(a) > 1e-7 && ++l < 10);
+                          return o;
+                        })(t, a, a + i, e, s);
                 },
               }),
               t
@@ -4692,26 +4692,26 @@
                     (t >= I
                       ? ($ = 1)
                       : t < L
-                      ? ($ = 0)
-                      : (f.o.x.constructor === Array
-                          ? (c.__fnct || (c.__fnct = []),
-                            c.__fnct[b]
-                              ? (v = c.__fnct[b])
-                              : ((i = void 0 === f.o.x[b] ? f.o.x[0] : f.o.x[b]),
-                                (n = void 0 === f.o.y[b] ? f.o.y[0] : f.o.y[b]),
-                                (a = void 0 === f.i.x[b] ? f.i.x[0] : f.i.x[b]),
-                                (o = void 0 === f.i.y[b] ? f.i.y[0] : f.i.y[b]),
+                        ? ($ = 0)
+                        : (f.o.x.constructor === Array
+                            ? (c.__fnct || (c.__fnct = []),
+                              c.__fnct[b]
+                                ? (v = c.__fnct[b])
+                                : ((i = void 0 === f.o.x[b] ? f.o.x[0] : f.o.x[b]),
+                                  (n = void 0 === f.o.y[b] ? f.o.y[0] : f.o.y[b]),
+                                  (a = void 0 === f.i.x[b] ? f.i.x[0] : f.i.x[b]),
+                                  (o = void 0 === f.i.y[b] ? f.i.y[0] : f.i.y[b]),
+                                  (v = BezierFactory.getBezierEasing(i, n, a, o).get),
+                                  (c.__fnct[b] = v)))
+                            : c.__fnct
+                              ? (v = c.__fnct)
+                              : ((i = f.o.x),
+                                (n = f.o.y),
+                                (a = f.i.x),
+                                (o = f.i.y),
                                 (v = BezierFactory.getBezierEasing(i, n, a, o).get),
-                                (c.__fnct[b] = v)))
-                          : c.__fnct
-                          ? (v = c.__fnct)
-                          : ((i = f.o.x),
-                            (n = f.o.y),
-                            (a = f.i.x),
-                            (o = f.i.y),
-                            (v = BezierFactory.getBezierEasing(i, n, a, o).get),
-                            (f.keyframeMetadata = v)),
-                        ($ = v((t - L) / (I - L))))),
+                                (f.keyframeMetadata = v)),
+                          ($ = v((t - L) / (I - L))))),
                     (k = u.s || f.e),
                     (h = 1 === f.h ? f.s[b] : f.s[b] + (k[b] - f.s[b]) * $),
                     'multidimensional' === this.propType ? (l[b] = h) : (l = h);
@@ -5104,11 +5104,11 @@
                     (t >= g.t - this.offsetTime
                       ? (f = 1)
                       : t < $.t - this.offsetTime
-                      ? (f = 0)
-                      : (y.__fnct
-                          ? (m = y.__fnct)
-                          : ((m = BezierFactory.getBezierEasing($.o.x, $.o.y, $.i.x, $.i.y).get), (y.__fnct = m)),
-                        (f = m((t - ($.t - this.offsetTime)) / (g.t - this.offsetTime - ($.t - this.offsetTime))))),
+                        ? (f = 0)
+                        : (y.__fnct
+                            ? (m = y.__fnct)
+                            : ((m = BezierFactory.getBezierEasing($.o.x, $.o.y, $.i.x, $.i.y).get), (y.__fnct = m)),
+                          (f = m((t - ($.t - this.offsetTime)) / (g.t - this.offsetTime - ($.t - this.offsetTime))))),
                     (n = g.s ? g.s[0] : $.e[0])),
                   (s = $.s[0]);
               }
@@ -5470,10 +5470,10 @@
                   3 === i || 4 === i
                     ? (s = (3 === i ? e.pt : e.ks).k.length ? new l(t, e, i) : new o(t, e, i))
                     : 5 === i
-                    ? (s = new u(t, e))
-                    : 6 === i
-                    ? (s = new p(t, e))
-                    : 7 === i && (s = new f(t, e)),
+                      ? (s = new u(t, e))
+                      : 6 === i
+                        ? (s = new p(t, e))
+                        : 7 === i && (s = new f(t, e)),
                   s.k && t.addDynamicProperty(s),
                   s
                 );
@@ -6004,8 +6004,8 @@
             e <= 1
               ? h.push({ s: t, e: e })
               : t >= 1
-              ? h.push({ s: t - 1, e: e - 1 })
-              : (h.push({ s: t, e: 1 }), h.push({ s: 0, e: e - 1 }));
+                ? h.push({ s: t - 1, e: e - 1 })
+                : (h.push({ s: t, e: 1 }), h.push({ s: 0, e: e - 1 }));
             var l,
               p,
               f = [],
@@ -6094,9 +6094,9 @@
                       _ <= 1
                         ? g.push({ s: m.totalShapeLength * v, e: m.totalShapeLength * _ })
                         : v >= 1
-                        ? g.push({ s: m.totalShapeLength * (v - 1), e: m.totalShapeLength * (_ - 1) })
-                        : (g.push({ s: m.totalShapeLength * v, e: m.totalShapeLength }),
-                          g.push({ s: 0, e: m.totalShapeLength * (_ - 1) }));
+                          ? g.push({ s: m.totalShapeLength * (v - 1), e: m.totalShapeLength * (_ - 1) })
+                          : (g.push({ s: m.totalShapeLength * v, e: m.totalShapeLength }),
+                            g.push({ s: 0, e: m.totalShapeLength * (_ - 1) }));
                     var x = this.addShapes(m, g[0]);
                     if (g[0].s !== g[0].e) {
                       if (g.length > 1) {
@@ -6352,17 +6352,17 @@
                           ? ((s = this.p.getValueAtTime((this.p.keyframes[0].t + 0.01) / i, 0)),
                             (n = this.p.getValueAtTime(this.p.keyframes[0].t / i, 0)))
                           : this.p._caching.lastFrame + this.p.offsetTime >=
-                            this.p.keyframes[this.p.keyframes.length - 1].t
-                          ? ((s = this.p.getValueAtTime(this.p.keyframes[this.p.keyframes.length - 1].t / i, 0)),
-                            (n = this.p.getValueAtTime(
-                              (this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) / i,
-                              0,
-                            )))
-                          : ((s = this.p.pv),
-                            (n = this.p.getValueAtTime(
-                              (this.p._caching.lastFrame + this.p.offsetTime - 0.01) / i,
-                              this.p.offsetTime,
-                            )));
+                              this.p.keyframes[this.p.keyframes.length - 1].t
+                            ? ((s = this.p.getValueAtTime(this.p.keyframes[this.p.keyframes.length - 1].t / i, 0)),
+                              (n = this.p.getValueAtTime(
+                                (this.p.keyframes[this.p.keyframes.length - 1].t - 0.05) / i,
+                                0,
+                              )))
+                            : ((s = this.p.pv),
+                              (n = this.p.getValueAtTime(
+                                (this.p._caching.lastFrame + this.p.offsetTime - 0.01) / i,
+                                this.p.offsetTime,
+                              )));
                       else if (
                         this.px &&
                         this.px.keyframes &&
@@ -6382,13 +6382,16 @@
                             (n[0] = a.getValueAtTime(a.keyframes[0].t / i, 0)),
                             (n[1] = o.getValueAtTime(o.keyframes[0].t / i, 0)))
                           : a._caching.lastFrame + a.offsetTime >= a.keyframes[a.keyframes.length - 1].t
-                          ? ((s[0] = a.getValueAtTime(a.keyframes[a.keyframes.length - 1].t / i, 0)),
-                            (s[1] = o.getValueAtTime(o.keyframes[o.keyframes.length - 1].t / i, 0)),
-                            (n[0] = a.getValueAtTime((a.keyframes[a.keyframes.length - 1].t - 0.01) / i, 0)),
-                            (n[1] = o.getValueAtTime((o.keyframes[o.keyframes.length - 1].t - 0.01) / i, 0)))
-                          : ((s = [a.pv, o.pv]),
-                            (n[0] = a.getValueAtTime((a._caching.lastFrame + a.offsetTime - 0.01) / i, a.offsetTime)),
-                            (n[1] = o.getValueAtTime((o._caching.lastFrame + o.offsetTime - 0.01) / i, o.offsetTime)));
+                            ? ((s[0] = a.getValueAtTime(a.keyframes[a.keyframes.length - 1].t / i, 0)),
+                              (s[1] = o.getValueAtTime(o.keyframes[o.keyframes.length - 1].t / i, 0)),
+                              (n[0] = a.getValueAtTime((a.keyframes[a.keyframes.length - 1].t - 0.01) / i, 0)),
+                              (n[1] = o.getValueAtTime((o.keyframes[o.keyframes.length - 1].t - 0.01) / i, 0)))
+                            : ((s = [a.pv, o.pv]),
+                              (n[0] = a.getValueAtTime((a._caching.lastFrame + a.offsetTime - 0.01) / i, a.offsetTime)),
+                              (n[1] = o.getValueAtTime(
+                                (o._caching.lastFrame + o.offsetTime - 0.01) / i,
+                                o.offsetTime,
+                              )));
                       } else s = n = t;
                       this.v.rotate(-Math.atan2(s[1] - n[1], s[0] - n[0]));
                     }
@@ -7449,17 +7452,17 @@
                 this.fonts[t].loaded
                   ? (n -= 1)
                   : 'n' === this.fonts[t].fOrigin || 0 === this.fonts[t].origin
-                  ? (this.fonts[t].loaded = !0)
-                  : ((e = this.fonts[t].monoCase.node),
-                    (i = this.fonts[t].monoCase.w),
-                    e.offsetWidth !== i
-                      ? ((n -= 1), (this.fonts[t].loaded = !0))
-                      : ((e = this.fonts[t].sansCase.node),
-                        (i = this.fonts[t].sansCase.w),
-                        e.offsetWidth !== i && ((n -= 1), (this.fonts[t].loaded = !0))),
-                    this.fonts[t].loaded &&
-                      (this.fonts[t].sansCase.parent.parentNode.removeChild(this.fonts[t].sansCase.parent),
-                      this.fonts[t].monoCase.parent.parentNode.removeChild(this.fonts[t].monoCase.parent)));
+                    ? (this.fonts[t].loaded = !0)
+                    : ((e = this.fonts[t].monoCase.node),
+                      (i = this.fonts[t].monoCase.w),
+                      e.offsetWidth !== i
+                        ? ((n -= 1), (this.fonts[t].loaded = !0))
+                        : ((e = this.fonts[t].sansCase.node),
+                          (i = this.fonts[t].sansCase.w),
+                          e.offsetWidth !== i && ((n -= 1), (this.fonts[t].loaded = !0))),
+                      this.fonts[t].loaded &&
+                        (this.fonts[t].sansCase.parent.parentNode.removeChild(this.fonts[t].sansCase.parent),
+                        this.fonts[t].monoCase.parent.parentNode.removeChild(this.fonts[t].monoCase.parent)));
               0 !== n && Date.now() - this.initTime < 5e3
                 ? setTimeout(this.checkLoadedFontsBinded, 20)
                 : setTimeout(this.setIsLoadedBinded, 10);
@@ -7766,11 +7769,11 @@
                   0 === this.data.ty || this.data.xt
                     ? (this.compInterface = a(this))
                     : 4 === this.data.ty
-                    ? ((this.layerInterface.shapeInterface = s(this.shapesData, this.itemsData, this.layerInterface)),
-                      (this.layerInterface.content = this.layerInterface.shapeInterface))
-                    : 5 === this.data.ty &&
-                      ((this.layerInterface.textInterface = n(this)),
-                      (this.layerInterface.text = this.layerInterface.textInterface));
+                      ? ((this.layerInterface.shapeInterface = s(this.shapesData, this.itemsData, this.layerInterface)),
+                        (this.layerInterface.content = this.layerInterface.shapeInterface))
+                      : 5 === this.data.ty &&
+                        ((this.layerInterface.textInterface = n(this)),
+                        (this.layerInterface.text = this.layerInterface.textInterface));
               }
             },
             setBlendMode: function () {
@@ -9020,15 +9023,15 @@
               'st' === t.ty
                 ? (i = new SVGStrokeStyleData(this, t, s))
                 : 'fl' === t.ty
-                ? (i = new SVGFillStyleData(this, t, s))
-                : 'gf' === t.ty || 'gs' === t.ty
-                ? ((i = new ('gf' === t.ty ? SVGGradientFillStyleData : SVGGradientStrokeStyleData)(this, t, s)),
-                  this.globalData.defs.appendChild(i.gf),
-                  i.maskId &&
-                    (this.globalData.defs.appendChild(i.ms),
-                    this.globalData.defs.appendChild(i.of),
-                    n.setAttribute('mask', 'url(' + getLocationHref() + '#' + i.maskId + ')')))
-                : 'no' === t.ty && (i = new SVGNoStyleData(this, t, s)),
+                  ? (i = new SVGFillStyleData(this, t, s))
+                  : 'gf' === t.ty || 'gs' === t.ty
+                    ? ((i = new ('gf' === t.ty ? SVGGradientFillStyleData : SVGGradientStrokeStyleData)(this, t, s)),
+                      this.globalData.defs.appendChild(i.gf),
+                      i.maskId &&
+                        (this.globalData.defs.appendChild(i.ms),
+                        this.globalData.defs.appendChild(i.of),
+                        n.setAttribute('mask', 'url(' + getLocationHref() + '#' + i.maskId + ')')))
+                    : 'no' === t.ty && (i = new SVGNoStyleData(this, t, s)),
               ('st' !== t.ty && 'gs' !== t.ty) ||
                 (n.setAttribute('stroke-linecap', lineCapEnum[t.lc || 2]),
                 n.setAttribute('stroke-linejoin', lineJoinEnum[t.lj || 2]),
@@ -9120,28 +9123,28 @@
                 'tr' === t[h].ty
                   ? (c || (e[h] = this.createTransformElement(t[h], s)), (f = e[h].transform), d.push(f))
                   : 'sh' === t[h].ty || 'rc' === t[h].ty || 'el' === t[h].ty || 'sr' === t[h].ty
-                  ? (c || (e[h] = this.createShapeElement(t[h], d, n)), this.setElementStyles(e[h]))
-                  : 'tm' === t[h].ty ||
-                    'rd' === t[h].ty ||
-                    'ms' === t[h].ty ||
-                    'pb' === t[h].ty ||
-                    'zz' === t[h].ty ||
-                    'op' === t[h].ty
-                  ? (c
-                      ? ((u = e[h]).closed = !1)
-                      : ((u = ShapeModifiers.getModifier(t[h].ty)).init(this, t[h]),
-                        (e[h] = u),
-                        this.shapeModifiers.push(u)),
-                    g.push(u))
-                  : 'rp' === t[h].ty &&
-                    (c
-                      ? ((u = e[h]).closed = !0)
-                      : ((u = ShapeModifiers.getModifier(t[h].ty)),
-                        (e[h] = u),
-                        u.init(this, t, h, e),
-                        this.shapeModifiers.push(u),
-                        (o = !1)),
-                    g.push(u));
+                    ? (c || (e[h] = this.createShapeElement(t[h], d, n)), this.setElementStyles(e[h]))
+                    : 'tm' === t[h].ty ||
+                        'rd' === t[h].ty ||
+                        'ms' === t[h].ty ||
+                        'pb' === t[h].ty ||
+                        'zz' === t[h].ty ||
+                        'op' === t[h].ty
+                      ? (c
+                          ? ((u = e[h]).closed = !1)
+                          : ((u = ShapeModifiers.getModifier(t[h].ty)).init(this, t[h]),
+                            (e[h] = u),
+                            this.shapeModifiers.push(u)),
+                        g.push(u))
+                      : 'rp' === t[h].ty &&
+                        (c
+                          ? ((u = e[h]).closed = !0)
+                          : ((u = ShapeModifiers.getModifier(t[h].ty)),
+                            (e[h] = u),
+                            u.init(this, t, h, e),
+                            this.shapeModifiers.push(u),
+                            (o = !1)),
+                        g.push(u));
               this.addProcessedElement(t[h], h + 1);
             }
             for (m = $.length, h = 0; h < m; h += 1) $[h].closed = !0;
@@ -9258,20 +9261,20 @@
                 FontManager.isCombinedCharacter(e)
                   ? (s[s.length - 1] += t.charAt(n))
                   : e >= 55296 && e <= 56319
-                  ? (i = t.charCodeAt(n + 1)) >= 56320 && i <= 57343
-                    ? (o || FontManager.isModifier(e, i)
-                        ? ((s[s.length - 1] += t.substr(n, 2)), (o = !1))
-                        : s.push(t.substr(n, 2)),
-                      (n += 1))
-                    : s.push(t.charAt(n))
-                  : e > 56319
-                  ? ((i = t.charCodeAt(n + 1)),
-                    FontManager.isZeroWidthJoiner(e, i)
-                      ? ((o = !0), (s[s.length - 1] += t.substr(n, 2)), (n += 1))
-                      : s.push(t.charAt(n)))
-                  : FontManager.isZeroWidthJoiner(e)
-                  ? ((s[s.length - 1] += t.charAt(n)), (o = !0))
-                  : s.push(t.charAt(n)),
+                    ? (i = t.charCodeAt(n + 1)) >= 56320 && i <= 57343
+                      ? (o || FontManager.isModifier(e, i)
+                          ? ((s[s.length - 1] += t.substr(n, 2)), (o = !1))
+                          : s.push(t.substr(n, 2)),
+                        (n += 1))
+                      : s.push(t.charAt(n))
+                    : e > 56319
+                      ? ((i = t.charCodeAt(n + 1)),
+                        FontManager.isZeroWidthJoiner(e, i)
+                          ? ((o = !0), (s[s.length - 1] += t.substr(n, 2)), (n += 1))
+                          : s.push(t.charAt(n)))
+                      : FontManager.isZeroWidthJoiner(e)
+                        ? ((s[s.length - 1] += t.charAt(n)), (o = !0))
+                        : s.push(t.charAt(n)),
                 (n += 1);
             return s;
           }),
@@ -9473,8 +9476,8 @@
                   u === f
                     ? (p = 0)
                     : (p = t(0, e(0.5 / (u - f) + (s - f) / (u - f), 1))) < 0.5
-                    ? (p *= 2)
-                    : (p = 1 - 2 * (p - 0.5)),
+                      ? (p *= 2)
+                      : (p = 1 - 2 * (p - 0.5)),
                     (p = l(p));
                 else if (5 === c) {
                   if (u === f) p = 0;
@@ -9783,8 +9786,8 @@
                             $[(c += 1)]
                               ? (m = $[c].points)
                               : b.v.c
-                              ? ((u = 0), (m = $[(c = 0)].points))
-                              : ((p -= l.partialLength), (m = null))),
+                                ? ((u = 0), (m = $[(c = 0)].points))
+                                : ((p -= l.partialLength), (m = null))),
                           m && ((d = l), (g = (l = m[u]).partialLength)));
                     (R = E[n].an / 2 - E[n].add), w.translate(-R, 0, 0);
                   } else
@@ -9800,8 +9803,8 @@
                             ? (h += T.t.v * L[0])
                             : (h += T.t.v * L)
                           : L.length
-                          ? (i += T.t.v * L[0])
-                          : (i += T.t.v * L)));
+                            ? (i += T.t.v * L[0])
+                            : (i += T.t.v * L)));
                   for (
                     t.strokeWidthAnim && (q = t.sw || 0),
                       t.strokeColorAnim && (G = t.sc ? [t.sc[0], t.sc[1], t.sc[2]] : [0, 0, 0]),
@@ -9855,8 +9858,8 @@
                           ? w.translate(0, T.p.v[1] * L[0], -T.p.v[2] * L[1])
                           : w.translate(0, T.p.v[1] * L, -T.p.v[2] * L)
                         : L.length
-                        ? w.translate(T.p.v[0] * L[0], T.p.v[1] * L[1], -T.p.v[2] * L[2])
-                        : w.translate(T.p.v[0] * L, T.p.v[1] * L, -T.p.v[2] * L));
+                          ? w.translate(T.p.v[0] * L[0], T.p.v[1] * L[1], -T.p.v[2] * L[2])
+                          : w.translate(T.p.v[0] * L, T.p.v[1] * L, -T.p.v[2] * L));
                   if (
                     (t.strokeWidthAnim && (W = q < 0 ? 0 : q),
                     t.strokeColorAnim &&
@@ -9911,25 +9914,25 @@
                   'html' === A
                     ? (te = w.toCSS())
                     : 'svg' === A
-                    ? (te = w.to2dCSS())
-                    : (ti = [
-                        w.props[0],
-                        w.props[1],
-                        w.props[2],
-                        w.props[3],
-                        w.props[4],
-                        w.props[5],
-                        w.props[6],
-                        w.props[7],
-                        w.props[8],
-                        w.props[9],
-                        w.props[10],
-                        w.props[11],
-                        w.props[12],
-                        w.props[13],
-                        w.props[14],
-                        w.props[15],
-                      ]),
+                      ? (te = w.to2dCSS())
+                      : (ti = [
+                          w.props[0],
+                          w.props[1],
+                          w.props[2],
+                          w.props[3],
+                          w.props[4],
+                          w.props[5],
+                          w.props[6],
+                          w.props[7],
+                          w.props[8],
+                          w.props[9],
+                          w.props[10],
+                          w.props[11],
+                          w.props[12],
+                          w.props[13],
+                          w.props[14],
+                          w.props[15],
+                        ]),
                     (X = N);
                 }
                 C <= n
@@ -11029,23 +11032,23 @@
                     m.push(e[a]),
                     this.addTransformToStyleList(e[a]))
                   : 'sh' === t[a].ty || 'rc' === t[a].ty || 'el' === t[a].ty || 'sr' === t[a].ty
-                  ? l || (e[a] = this.createShapeElement(t[a]))
-                  : 'tm' === t[a].ty || 'rd' === t[a].ty || 'pb' === t[a].ty || 'zz' === t[a].ty || 'op' === t[a].ty
-                  ? (l
-                      ? ((p = e[a]).closed = !1)
-                      : ((p = ShapeModifiers.getModifier(t[a].ty)).init(this, t[a]),
-                        (e[a] = p),
-                        this.shapeModifiers.push(p)),
-                    d.push(p))
-                  : 'rp' === t[a].ty &&
-                    (l
-                      ? ((p = e[a]).closed = !0)
-                      : ((p = ShapeModifiers.getModifier(t[a].ty)),
-                        (e[a] = p),
-                        p.init(this, t, a, e),
-                        this.shapeModifiers.push(p),
-                        (s = !1)),
-                    d.push(p));
+                    ? l || (e[a] = this.createShapeElement(t[a]))
+                    : 'tm' === t[a].ty || 'rd' === t[a].ty || 'pb' === t[a].ty || 'zz' === t[a].ty || 'op' === t[a].ty
+                      ? (l
+                          ? ((p = e[a]).closed = !1)
+                          : ((p = ShapeModifiers.getModifier(t[a].ty)).init(this, t[a]),
+                            (e[a] = p),
+                            this.shapeModifiers.push(p)),
+                        d.push(p))
+                      : 'rp' === t[a].ty &&
+                        (l
+                          ? ((p = e[a]).closed = !0)
+                          : ((p = ShapeModifiers.getModifier(t[a].ty)),
+                            (e[a] = p),
+                            p.init(this, t, a, e),
+                            this.shapeModifiers.push(p),
+                            (s = !1)),
+                        d.push(p));
               this.addProcessedElement(t[a], a + 1);
             }
             for (this.removeTransformFromStyleList(), this.closeStyles(c), u = d.length, a = 0; a < u; a += 1)
@@ -11111,8 +11114,8 @@
                     'm' === o[s].t
                       ? u.moveTo(o[s].p[0], o[s].p[1])
                       : 'c' === o[s].t
-                      ? u.bezierCurveTo(o[s].pts[0], o[s].pts[1], o[s].pts[2], o[s].pts[3], o[s].pts[4], o[s].pts[5])
-                      : u.closePath();
+                        ? u.bezierCurveTo(o[s].pts[0], o[s].pts[1], o[s].pts[2], o[s].pts[3], o[s].pts[4], o[s].pts[5])
+                        : u.closePath();
                   ('st' !== h && 'gs' !== h) || (u.stroke(), l.da && u.setLineDash(this.dashResetter));
                 }
                 'st' !== h && 'gs' !== h && u.fill(l.r), f.restore();
@@ -11124,16 +11127,16 @@
               'tr' === e[n].ty
                 ? ((a = i[n].transform), this.renderShapeTransform(t, a))
                 : 'sh' === e[n].ty || 'el' === e[n].ty || 'rc' === e[n].ty || 'sr' === e[n].ty
-                ? this.renderPath(e[n], i[n])
-                : 'fl' === e[n].ty
-                ? this.renderFill(e[n], i[n], a)
-                : 'st' === e[n].ty
-                ? this.renderStroke(e[n], i[n], a)
-                : 'gf' === e[n].ty || 'gs' === e[n].ty
-                ? this.renderGradientFill(e[n], i[n], a)
-                : 'gr' === e[n].ty
-                ? this.renderShape(a, e[n].it, i[n].it)
-                : e[n].ty;
+                  ? this.renderPath(e[n], i[n])
+                  : 'fl' === e[n].ty
+                    ? this.renderFill(e[n], i[n], a)
+                    : 'st' === e[n].ty
+                      ? this.renderStroke(e[n], i[n], a)
+                      : 'gf' === e[n].ty || 'gs' === e[n].ty
+                        ? this.renderGradientFill(e[n], i[n], a)
+                        : 'gr' === e[n].ty
+                          ? this.renderShape(a, e[n].it, i[n].it)
+                          : e[n].ty;
             s && this.drawLayer();
           }),
           (CVShapeElement.prototype.renderStyledShape = function (t, e) {
@@ -11575,14 +11578,14 @@
                   'xMid' === p && ((a < n && 'meet' === h) || (a > n && 'slice' === h))
                     ? ((i - this.transformCanvas.w * (s / this.transformCanvas.h)) / 2) * this.renderConfig.dpr
                     : 'xMax' === p && ((a < n && 'meet' === h) || (a > n && 'slice' === h))
-                    ? (i - this.transformCanvas.w * (s / this.transformCanvas.h)) * this.renderConfig.dpr
-                    : 0),
+                      ? (i - this.transformCanvas.w * (s / this.transformCanvas.h)) * this.renderConfig.dpr
+                      : 0),
                 (this.transformCanvas.ty =
                   'YMid' === f && ((a > n && 'meet' === h) || (a < n && 'slice' === h))
                     ? ((s - this.transformCanvas.h * (i / this.transformCanvas.w)) / 2) * this.renderConfig.dpr
                     : 'YMax' === f && ((a > n && 'meet' === h) || (a < n && 'slice' === h))
-                    ? (s - this.transformCanvas.h * (i / this.transformCanvas.w)) * this.renderConfig.dpr
-                    : 0);
+                      ? (s - this.transformCanvas.h * (i / this.transformCanvas.w)) * this.renderConfig.dpr
+                      : 0);
             } else
               'none' === this.renderConfig.preserveAspectRatio
                 ? ((this.transformCanvas.sx = i / (this.transformCanvas.w / this.renderConfig.dpr)),
@@ -11897,8 +11900,8 @@
               t[i] && t[i].sh
                 ? this.calculateShapeBoundingBox(t[i], e)
                 : t[i] && t[i].it
-                ? this.calculateBoundingBox(t[i].it, e)
-                : t[i] && t[i].style && t[i].w && this.expandStrokeBoundingBox(t[i].w, e);
+                  ? this.calculateBoundingBox(t[i].it, e)
+                  : t[i] && t[i].style && t[i].w && this.expandStrokeBoundingBox(t[i].w, e);
           }),
           (HShapeElement.prototype.expandStrokeBoundingBox = function (t, e) {
             var i = 0;
@@ -12029,10 +12032,10 @@
                           (f = createNS('svg')).appendChild(l),
                           styleDiv(p))))
                   : this.isMasked
-                  ? (l = this.textPaths[$] ? this.textPaths[$] : createNS('text'))
-                  : this.textSpans[$]
-                  ? ((p = this.textSpans[$]), (l = this.textPaths[$]))
-                  : (styleDiv((p = createTag('span'))), styleDiv((l = createTag('span'))), p.appendChild(l)),
+                    ? (l = this.textPaths[$] ? this.textPaths[$] : createNS('text'))
+                    : this.textSpans[$]
+                      ? ((p = this.textSpans[$]), (l = this.textPaths[$]))
+                      : (styleDiv((p = createTag('span'))), styleDiv((l = createTag('span'))), p.appendChild(l)),
                 this.globalData.fontManager.chars)
               ) {
                 var g,
@@ -12605,8 +12608,8 @@
                     's' in e.keyframes[s - 1]
                       ? e.keyframes[s - 1].s
                       : 'e' in e.keyframes[s - 2]
-                      ? e.keyframes[s - 2].e
-                      : e.keyframes[s - 2].s;
+                        ? e.keyframes[s - 2].e
+                        : e.keyframes[s - 2].s;
                   var a = 'unidimensional' === i ? new Number(n) : Object.assign({}, n);
                   return (
                     (a.time = e.keyframes[s - 1].t / e.elem.comp.globalData.frameRate),
@@ -12999,33 +13002,33 @@
                 'gr' === t[d].ty
                   ? m.push(e(t[d], o[d], c))
                   : 'fl' === t[d].ty
-                  ? m.push(i(t[d], o[d], c))
-                  : 'st' === t[d].ty
-                  ? m.push(n(t[d], o[d], c))
-                  : 'tm' === t[d].ty
-                  ? m.push(a(t[d], o[d], c))
-                  : 'tr' === t[d].ty ||
-                    ('el' === t[d].ty
-                      ? m.push(h(t[d], o[d], c))
-                      : 'sr' === t[d].ty
-                      ? m.push(l(t[d], o[d], c))
-                      : 'sh' === t[d].ty
-                      ? m.push(ShapePathInterface(t[d], o[d], c))
-                      : 'rc' === t[d].ty
-                      ? m.push(p(t[d], o[d], c))
-                      : 'rd' === t[d].ty
-                      ? m.push(f(t[d], o[d], c))
-                      : 'rp' === t[d].ty
-                      ? m.push(u(t[d], o[d], c))
-                      : 'gf' === t[d].ty
-                      ? m.push(s(t[d], o[d], c))
-                      : m.push(
-                          (t[d],
-                          o[d],
-                          function () {
-                            return null;
-                          }),
-                        ));
+                    ? m.push(i(t[d], o[d], c))
+                    : 'st' === t[d].ty
+                      ? m.push(n(t[d], o[d], c))
+                      : 'tm' === t[d].ty
+                        ? m.push(a(t[d], o[d], c))
+                        : 'tr' === t[d].ty ||
+                          ('el' === t[d].ty
+                            ? m.push(h(t[d], o[d], c))
+                            : 'sr' === t[d].ty
+                              ? m.push(l(t[d], o[d], c))
+                              : 'sh' === t[d].ty
+                                ? m.push(ShapePathInterface(t[d], o[d], c))
+                                : 'rc' === t[d].ty
+                                  ? m.push(p(t[d], o[d], c))
+                                  : 'rd' === t[d].ty
+                                    ? m.push(f(t[d], o[d], c))
+                                    : 'rp' === t[d].ty
+                                      ? m.push(u(t[d], o[d], c))
+                                      : 'gf' === t[d].ty
+                                        ? m.push(s(t[d], o[d], c))
+                                        : m.push(
+                                            (t[d],
+                                            o[d],
+                                            function () {
+                                              return null;
+                                            }),
+                                          ));
               return m;
             }
             function e(e, i, s) {
@@ -13108,10 +13111,10 @@
                 return 'Start Point' === t || 'start point' === t
                   ? s.startPoint
                   : 'End Point' === t || 'end point' === t
-                  ? s.endPoint
-                  : 'Opacity' === t || 'opacity' === t
-                  ? s.opacity
-                  : null;
+                    ? s.endPoint
+                    : 'Opacity' === t || 'opacity' === t
+                      ? s.opacity
+                      : null;
               }
               return (
                 Object.defineProperties(s, {
@@ -13146,10 +13149,10 @@
                 return 'Color' === t || 'color' === t
                   ? p.color
                   : 'Opacity' === t || 'opacity' === t
-                  ? p.opacity
-                  : 'Stroke Width' === t || 'stroke width' === t
-                  ? p.strokeWidth
-                  : null;
+                    ? p.opacity
+                    : 'Stroke Width' === t || 'stroke width' === t
+                      ? p.strokeWidth
+                      : null;
               }
               return (
                 Object.defineProperties(p, {
@@ -13175,10 +13178,10 @@
                 return e === t.e.ix || 'End' === e || 'end' === e
                   ? s.end
                   : e === t.s.ix
-                  ? s.start
-                  : e === t.o.ix
-                  ? s.offset
-                  : null;
+                    ? s.start
+                    : e === t.o.ix
+                      ? s.offset
+                      : null;
               }
               var n = propertyGroupFactory(s, i);
               return (
@@ -13203,18 +13206,18 @@
                 return t.a.ix === e || 'Anchor Point' === e
                   ? s.anchorPoint
                   : t.o.ix === e || 'Opacity' === e
-                  ? s.opacity
-                  : t.p.ix === e || 'Position' === e
-                  ? s.position
-                  : t.r.ix === e || 'Rotation' === e || 'ADBE Vector Rotation' === e
-                  ? s.rotation
-                  : t.s.ix === e || 'Scale' === e
-                  ? s.scale
-                  : (t.sk && t.sk.ix === e) || 'Skew' === e
-                  ? s.skew
-                  : (t.sa && t.sa.ix === e) || 'Skew Axis' === e
-                  ? s.skewAxis
-                  : null;
+                    ? s.opacity
+                    : t.p.ix === e || 'Position' === e
+                      ? s.position
+                      : t.r.ix === e || 'Rotation' === e || 'ADBE Vector Rotation' === e
+                        ? s.rotation
+                        : t.s.ix === e || 'Scale' === e
+                          ? s.scale
+                          : (t.sk && t.sk.ix === e) || 'Skew' === e
+                            ? s.skew
+                            : (t.sa && t.sa.ix === e) || 'Skew Axis' === e
+                              ? s.skewAxis
+                              : null;
               }
               var n = propertyGroupFactory(s, i);
               return (
@@ -13267,18 +13270,18 @@
                 return t.p.ix === e
                   ? s.position
                   : t.r.ix === e
-                  ? s.rotation
-                  : t.pt.ix === e
-                  ? s.points
-                  : t.or.ix === e || 'ADBE Vector Star Outer Radius' === e
-                  ? s.outerRadius
-                  : t.os.ix === e
-                  ? s.outerRoundness
-                  : t.ir && (t.ir.ix === e || 'ADBE Vector Star Inner Radius' === e)
-                  ? s.innerRadius
-                  : t.is && t.is.ix === e
-                  ? s.innerRoundness
-                  : null;
+                    ? s.rotation
+                    : t.pt.ix === e
+                      ? s.points
+                      : t.or.ix === e || 'ADBE Vector Star Outer Radius' === e
+                        ? s.outerRadius
+                        : t.os.ix === e
+                          ? s.outerRoundness
+                          : t.ir && (t.ir.ix === e || 'ADBE Vector Star Inner Radius' === e)
+                            ? s.innerRadius
+                            : t.is && t.is.ix === e
+                              ? s.innerRoundness
+                              : null;
               }
               var n = propertyGroupFactory(s, i),
                 a = 'tm' === e.sh.ty ? e.sh.prop : e.sh;
@@ -13311,10 +13314,10 @@
                 return t.p.ix === e
                   ? s.position
                   : t.r.ix === e
-                  ? s.roundness
-                  : t.s.ix === e || 'Size' === e || 'ADBE Vector Rect Size' === e
-                  ? s.size
-                  : null;
+                    ? s.roundness
+                    : t.s.ix === e || 'Size' === e || 'ADBE Vector Rect Size' === e
+                      ? s.size
+                      : null;
               }
               var n = propertyGroupFactory(s, i),
                 a = 'tm' === e.sh.ty ? e.sh.prop : e.sh;
@@ -13529,17 +13532,17 @@
                   (d = !0 === d ? { entropy: !0 } : d || {}).entropy
                     ? [h, c(t)]
                     : null === h
-                    ? (function () {
-                        try {
-                          var e = new Uint8Array(s);
-                          return (i.crypto || i.msCrypto).getRandomValues(e), c(e);
-                        } catch (n) {
-                          var a = i.navigator,
-                            o = a && a.plugins;
-                          return [+new Date(), i, o, i.screen, c(t)];
-                        }
-                      })()
-                    : h,
+                      ? (function () {
+                          try {
+                            var e = new Uint8Array(s);
+                            return (i.crypto || i.msCrypto).getRandomValues(e), c(e);
+                          } catch (n) {
+                            var a = i.navigator,
+                              o = a && a.plugins;
+                            return [+new Date(), i, o, i.screen, c(t)];
+                          }
+                        })()
+                      : h,
                   3,
                 ),
                 $,

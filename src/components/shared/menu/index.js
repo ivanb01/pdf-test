@@ -241,7 +241,8 @@ const MainMenu = ({ className, fixed }) => {
     <div
       className={`${fixed && 'fixed top-0 left-0 right-0'} main-menu px-6 py-4 ${
         !router.pathname.includes('/campaign') ? 'bg-oxford-gradient' : 'bg-campaignHeader'
-      } z-50 flex items-center justify-between`}>
+      } z-50 flex items-center justify-between`}
+    >
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
           <Image
@@ -263,7 +264,8 @@ const MainMenu = ({ className, fixed }) => {
                     className={`mr-5 ${router.pathname.split('/')[1] == item.url.split('/')[1] ? 'active' : ''}`}
                     onClick={() => {
                       dispatch(setOpenedTab(0));
-                    }}>
+                    }}
+                  >
                     {item.name}
                   </MenuLink>
                 </Link>
@@ -280,7 +282,8 @@ const MainMenu = ({ className, fixed }) => {
                 console.log('test');
                 dispatch(setOpenEmailContactOverlay(true));
               }}
-              className="px-4 mr-4 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden">
+              className="px-4 mr-4 bg-white text-gray6 cursor-pointer flex items-center justify-center transition-all rounded-full border-2 border-gray2 w-auto h-[30px] group overflow-hidden"
+            >
               <ForwardToInbox className="h-[16px] w-[16px]" />
               {/* <Add className="text-gray6 group-hover:text-white text-[32px]" /> */}
               <span className="ml-2 group-hover:block text-nowrap text-sm">Send Email</span>
@@ -288,7 +291,8 @@ const MainMenu = ({ className, fixed }) => {
           )}
           {allContacts && allContacts.length > 0 && (
             <div
-              className={`h-[30px] w-[30px] flex items-center justify-center rounded-full ${router.pathname.includes('/campaign') ? 'bg-[#0c5871]' : 'bg-lightBlue5'}  mr-2`}>
+              className={`h-[30px] w-[30px] flex items-center justify-center rounded-full ${router.pathname.includes('/campaign') ? 'bg-[#0c5871]' : 'bg-lightBlue5'}  mr-2`}
+            >
               <SearchIcon
                 className={`text-bold h-[14px] w-[14px] text-white box-content p-2 rounded-full  ${
                   !router.pathname.includes('/campaign') ? 'hover:bg-campaignMenuHover' : 'hover:bg-menuHover'
@@ -322,7 +326,8 @@ const MainMenu = ({ className, fixed }) => {
             } text-white`}
             onClick={() => {
               FreshworksWidget('open');
-            }}>
+            }}
+          >
             <ContactSupport className="h-[20px]" />
             {/* Need help? */}
           </button>
@@ -352,7 +357,8 @@ const MainMenu = ({ className, fixed }) => {
             enterTo="transform opacity-100 scale-100"
             leave="transition ease-in duration-75"
             leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95">
+            leaveTo="transform opacity-0 scale-95"
+          >
             <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-5 px-4 flex items-center">
                 <div className="mr-3">
@@ -371,7 +377,8 @@ const MainMenu = ({ className, fixed }) => {
                       className={
                         ' cursor-pointer text-gray6 group flex items-center px-4 py-2 text-sm hover:bg-lightBlue2'
                       }
-                      onClick={() => router.push('/settings/my-profile')}>
+                      onClick={() => router.push('/settings/my-profile')}
+                    >
                       <Settings className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Settings
                     </a>
@@ -382,7 +389,8 @@ const MainMenu = ({ className, fixed }) => {
                     <a
                       href="#"
                       className={'text-gray6 flex items-center px-4 py-2 text-sm bg-red hover:bg-lightBlue2'}
-                      onClick={handleSignOut}>
+                      onClick={handleSignOut}
+                    >
                       <Logout className="text-gray4 mr-3 h-5 w-5" aria-hidden="true" />
                       Logout
                     </a>

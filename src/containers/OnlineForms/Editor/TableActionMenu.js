@@ -97,11 +97,13 @@ function TableActionMenu({ onClose, tableCellNode: _tableCellNode, setIsMenuOpen
       ref={dropDownRef}
       onClick={(e) => {
         e.stopPropagation();
-      }}>
+      }}
+    >
       <button
         className="mx-2 p-2 text-[#050505] cursor-pointer leading-4 text-base flex shrink-0  rounded-lg min-w-[268px] content-center hover:bg-[#eee]"
         onClick={() => deleteTableAtSelection()}
-        data-test-id="table-delete">
+        data-test-id="table-delete"
+      >
         <span className="flex grow-1 leading-5 w-[200px]">Delete table</span>
       </button>
     </div>,
@@ -208,7 +210,8 @@ function TableCellActionMenuContainer({ anchorElem, cellMerge }) {
               e.stopPropagation();
               setIsMenuOpen(!isMenuOpen);
             }}
-            ref={menuRootRef}>
+            ref={menuRootRef}
+          >
             <i className="bg-transparent bg-contain inline-block h-[10px] w-[10px] bg-[url(/icons/chevron-down.svg)]" />
           </button>
           {isMenuOpen && (

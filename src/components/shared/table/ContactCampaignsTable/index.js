@@ -82,7 +82,8 @@ const ContactCampaignsTable = ({
         <tr>
           <th
             scope="col"
-            className="h-[56px] min-w-96 w-96 py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6  items-center border-r border-gray-200">
+            className="h-[56px] min-w-96 w-96 py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6  items-center border-r border-gray-200"
+          >
             {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
             <div className="flex items-center justify-between">
               <span>{titleLabel}</span>
@@ -95,7 +96,8 @@ const ContactCampaignsTable = ({
                 <th
                   key={index}
                   scope="col"
-                  className="px-3 py-3 text-center text-xs font-medium tracking-wide animate-pulse">
+                  className="px-3 py-3 text-center text-xs font-medium tracking-wide animate-pulse"
+                >
                   <div className="">
                     <div className="uppercase bg-gray-300 h-3.5 mb-1"></div>
                     <div className="bg-gray-300 h-3.5"></div>
@@ -160,7 +162,8 @@ const ContactCampaignsTable = ({
                       dataItem?.events.map((event, index) => (
                         <td
                           key={`event-${index}`}
-                          className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
+                          className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500"
+                        >
                           <EventStatus status={event.event_status} />
                           <div className="text-gray7">{formatDateMDY(event?.event_updated_at)}</div>
                         </td>

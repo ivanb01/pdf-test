@@ -97,7 +97,8 @@ const Uncategorized = ({
               <Button
                 className="bg-purple6"
                 rightIcon={<ArrowForward className=" h-[18px] w-[18px]" />}
-                onClick={() => handleStartCategorizing(true)}>
+                onClick={() => handleStartCategorizing(true)}
+              >
                 Let's go
               </Button>
             </div>
@@ -108,7 +109,8 @@ const Uncategorized = ({
               src="/animations/uncategorized.json"
               loop="true"
               autoplay
-              style={{ width: '420px', height: '300px' }}></lottie-player>
+              style={{ width: '420px', height: '300px' }}
+            ></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               {openedSubtab == 0
                 ? 'Yay, well done! No uncategorized new records.'
@@ -191,7 +193,8 @@ const Uncategorized = ({
           className="w-auto relative flex"
           style={{
             height: `${unapprovedContacts > 0 ? 'calc(100vh - 211px)' : 'calc(100vh - 142px)'}`,
-          }}>
+          }}
+        >
           {categorizing ? (
             <CategorizePage
               uncategorizedContacts={uncategorizedContacts}

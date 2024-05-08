@@ -92,7 +92,8 @@ export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-4 h-4">
+          className="w-4 h-4"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -107,7 +108,8 @@ export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-4 h-4">
+          class="w-4 h-4"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"

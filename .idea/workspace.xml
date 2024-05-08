@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="286d9f64-8020-4104-8257-6fa5cb6fa540" name="Changes" comment="add debounce in search in Order Template">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/portfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/property-card/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/property-card/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/shared/tabs/tabsWithPills/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/portfolio/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/portfolio/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +15,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="f/erza/SearchProperties" />
+        <entry key="$PROJECT_DIR$" value="f/erza/CampaignPreviewPerClient" />
       </map>
     </option>
   </component>
@@ -31,7 +27,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "git-widget-placeholder": "development",
+    "git-widget-placeholder": "f/erza/SaveToPortfolio",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "/Users/erezabegu/WebstormProjects/crm_nextjs_vercel_deploy/node_modules/prettier",
     "ts.external.directory.path": "/Users/erezabegu/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
@@ -76,7 +72,7 @@
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>

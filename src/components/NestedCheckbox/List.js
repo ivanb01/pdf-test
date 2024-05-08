@@ -16,7 +16,8 @@ export default function List(props) {
       onClick={(e) => {
         e.stopPropagation();
         setOpenDropdown(true);
-      }}>
+      }}
+    >
       {items.map((item) => {
         let childList = null;
         if (Array.isArray(item.items)) {
@@ -34,7 +35,8 @@ export default function List(props) {
                 checkbox.checked = item.status === status.checked;
                 compute(item.id, checkbox.checked ? 0 : 1);
               }
-            }}>
+            }}
+          >
             <div className={'pb-1 '}>
               <Checkbox
                 id={item.id + 'checkbox'}

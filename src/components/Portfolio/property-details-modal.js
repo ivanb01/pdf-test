@@ -303,7 +303,8 @@ const PortfolioPopup = ({
       onNextClick={() => onNextClick(property)}
       onPrevClick={() => onPrevClick(property)}
       className={'max-w-[1077px] h-[80vh] w-[100%]'}
-      handleCloseOverlay={handleCloseOverlay}>
+      handleCloseOverlay={handleCloseOverlay}
+    >
       {loading ? (
         <Loader />
       ) : (
@@ -315,7 +316,8 @@ const PortfolioPopup = ({
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ type: 'tween', duration: 0.2 }}>
+              transition={{ type: 'tween', duration: 0.2 }}
+            >
               <div className={'px-6 py-[13px] flex justify-between border-b border-gray1 items-center'}>
                 <h4 className={'text-base leading-6 font-semibold'}>
                   {propertyIndex + 1}/{totalNumberOfProperties} Properties to review
@@ -341,17 +343,20 @@ const PortfolioPopup = ({
                               }, 500);
                             }
                             setValue('');
-                          }}>
+                          }}
+                        >
                           Send your feedback
                         </Button>
                       }
                       triggerElement={
                         <button
-                          className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
+                          className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}
+                        >
                           <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
                           <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
                         </button>
-                      }>
+                      }
+                    >
                       <div className="max-w-[252px] bg-white">
                         <TextArea
                           onClick={(e) => {
@@ -381,7 +386,8 @@ const PortfolioPopup = ({
                           }, 500);
                         }
                       }}
-                      className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}>
+                      className={`h-[40px] hover:bg-black hover:text-white items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[125px] ${status === 'disliked' ? 'bg-black text-white' : 'bg-white'}`}
+                    >
                       <ThumbDownAltOutlinedIcon className={'h-[17px] w-[17px]'} />
                       <span className={'text-sm leading-6 font-semibold'}>Dislike</span>
                     </button>
@@ -408,7 +414,8 @@ const PortfolioPopup = ({
                         }, 500);
                       }
                     }}
-                    className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}>
+                    className={`${status === 'liked' ? 'bg-black text-white' : 'bg-white'} h-[40px] items-center justify-center flex gap-[10px] px-[10px] py-5 border border-borderColor rounded-[222px] w-[105px]`}
+                  >
                     <ThumbUpAltOutlinedIcon className={'h-[17px] w-[17px]'} />
                     <span className={'text-sm leading-6 font-semibold '}>Like</span>
                   </button>
@@ -454,7 +461,8 @@ const PortfolioPopup = ({
                           </div>
                           <div
                             className="mt-6"
-                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.DESCRIPTION) }}></div>
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.DESCRIPTION) }}
+                          ></div>
                         </div>
                         <PropertyAmenities data={data} />
                         <PropertyOtherDetails data={data} />

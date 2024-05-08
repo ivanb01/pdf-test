@@ -151,7 +151,8 @@ const MyApp = ({ Component, pageProps }) => {
         </Head>
         <div
           className={`main-page overflow-y-auto overflow-x-hidden`}
-          style={{ display: 'flex', flexDirection: 'column' }}>
+          style={{ display: 'flex', flexDirection: 'column' }}
+        >
           <Provider store={store}>
             <QueryClientProvider client={queryClient}>
               {isUserAuthenticated && <GetSubtype />}

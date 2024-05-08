@@ -199,7 +199,8 @@ export default function Campaigns({ contactId, contact }) {
                           : alert.type === 'warning'
                             ? 'text-yellow3'
                             : 'text-red4'
-                      }`}>
+                      }`}
+                    >
                       {alert.text}
                     </p>
                     {alert.button}

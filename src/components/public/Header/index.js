@@ -84,7 +84,8 @@ export const Header = ({ noLinks }) => {
       <div className="container-public" style={{ maxWidth: router.pathname?.includes('portfolio') && '100%' }}>
         <div
           className={styles['header__content']}
-          style={{ paddingInline: router.pathname?.includes('portfolio') ? '24px' : '80px' }}>
+          style={{ paddingInline: router.pathname?.includes('portfolio') ? '24px' : '80px' }}
+        >
           <div className={styles['header__content-left']}>
             <Link href="/public/home">
               <Image src={logo} alt="oneline-logo" />
@@ -112,7 +113,8 @@ export const Header = ({ noLinks }) => {
                       <Button
                         type="secondary"
                         onClick={() => router.push('/authentication/sign-in')}
-                        style={{ color: '#6B7280' }}>
+                        style={{ color: '#6B7280' }}
+                      >
                         Log In
                       </Button>
                       <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
@@ -123,7 +125,8 @@ export const Header = ({ noLinks }) => {
                     <Button
                       type="secondary"
                       onClick={() => router.push('/contacts/clients')}
-                      style={{ color: '#6B7280' }}>
+                      style={{ color: '#6B7280' }}
+                    >
                       Go to CRM {'->'}
                     </Button>
                   )}
@@ -146,7 +149,8 @@ export const Header = ({ noLinks }) => {
                         className="w-full"
                         type="primaryLight"
                         style={{ color: '#6B7280' }}
-                        onClick={() => router.push('/authentication/sign-in')}>
+                        onClick={() => router.push('/authentication/sign-in')}
+                      >
                         Log In
                       </Button>
                     ) : (
@@ -154,7 +158,8 @@ export const Header = ({ noLinks }) => {
                         className="w-full"
                         type="primaryLight"
                         onClick={() => router.push('/contacts/clients')}
-                        style={{ color: '#6B7280' }}>
+                        style={{ color: '#6B7280' }}
+                      >
                         Go to CRM {'->'}
                       </Button>
                     )}
@@ -164,7 +169,8 @@ export const Header = ({ noLinks }) => {
                           <Link href={item.href}>
                             <div
                               onClick={() => setIsMenuOpen(!isMenuOpen)}
-                              className={currentRoute === item.href ? styles.active : styles.active}>
+                              className={currentRoute === item.href ? styles.active : styles.active}
+                            >
                               {' '}
                               {item.label}
                             </div>

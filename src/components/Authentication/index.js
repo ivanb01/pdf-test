@@ -19,7 +19,8 @@ const Authentication = ({ children }) => {
                 speed="1"
                 style={{ width: '100%', height: '100%' }}
                 loop="true"
-                autoplay></lottie-player>
+                autoplay
+              ></lottie-player>
             </div>
           </div>
         </div>

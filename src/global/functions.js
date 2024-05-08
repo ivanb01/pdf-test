@@ -475,12 +475,12 @@ export const generateSMSFooter = (user) => {
   let fullName = user.first_name ? `${user.first_name}${lastName}` : '';
   let phoneNumber = user.phone_number ? user.phone_number : '';
   let email = user.email ? user.email.toLowerCase() : '';
-  let company = getCompanyFromEmail(email);
+  // let company = getCompanyFromEmail(email);
 
   if (fullName) elements.push(fullName);
   if (phoneNumber) elements.push(phoneNumber);
   if (email) elements.push(email);
-  if (company) elements.push(company);
+  // if (company) elements.push(company);
 
   return elements.join(', ') + '.';
 };

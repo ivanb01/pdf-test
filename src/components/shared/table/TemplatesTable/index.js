@@ -15,7 +15,8 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete }
           <th
             // style={{ width: '400px' }}
             scope="col"
-            className="pl-6 py-3 pr-2 text-left font-medium text-xs leading-4 tracking-wider">
+            className="pl-6 py-3 pr-2 text-left font-medium text-xs leading-4 tracking-wider"
+          >
             TEMPLATE TITLE
           </th>
           <th scope="col" className="flex-grow py-3 px-2 text-left  text-xs leading-4 font-medium tracking-wider">
@@ -26,7 +27,8 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete }
           </th>
           <th
             scope="col"
-            className="flex-grow pl-2 pr-6 py-3  text-center text-xs leading-4 font-medium tracking-wider"></th>
+            className="flex-grow pl-2 pr-6 py-3  text-center text-xs leading-4 font-medium tracking-wider"
+          ></th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +40,8 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete }
             onClick={() => {
               setCurrentTemplate(template);
               setOpenEdit(true);
-            }}>
+            }}
+          >
             <td className="pl-6 px-3 py-2 text-gray-800 text-left text-sm leading-5">
               {isEmail ? template.subject : template.name}
             </td>
@@ -64,10 +67,12 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete }
                         setCurrentTemplate(template);
                         setOpenEdit(true);
                       }}
-                      className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                      className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
+                    >
                       <Edit className="text-gray3 w-4 h-4" />
                     </div>
-                  }>
+                  }
+                >
                   <p className=" text-xs font-medium text-white"> Edit Template</p>
                 </TooltipComponent>
                 <TooltipComponent
@@ -81,10 +86,12 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete }
                         setCurrentTemplate(template);
                         setOpenDelete(true);
                       }}
-                      className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                      className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
+                    >
                       <Delete className="group-hover/delete:text-white text-[16px] text-gray3" />
                     </div>
-                  }>
+                  }
+                >
                   <p className=" text-xs font-medium text-white"> Delete Template</p>
                 </TooltipComponent>
               </div>

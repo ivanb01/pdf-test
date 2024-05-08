@@ -32,7 +32,7 @@ import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
 import { useDispatch } from 'react-redux';
 import FilterList from '@mui/icons-material/FilterList';
-import { addPropertiesInPortfolio } from '@api/portfolio';
+import { addPropertiesInPortfolio, getPortfolioByContactId } from '@api/portfolio';
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
@@ -40,6 +40,8 @@ import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 import { getCompanyFromEmail } from '@global/functions';
+import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
+import toast from 'react-hot-toast';
 
 const statuss = Object.freeze({
   unchecked: 0,
@@ -69,62 +71,9 @@ const index = () => {
   const [open, setOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState('');
   const [showProperties, setShowProperties] = useState(true);
-
-  const setStatuss = (root, status) => {
-    root.status = status;
-    if (Array.isArray(root.items)) {
-      return root.items.forEach((item) => {
-        setStatuss(item, status);
-      });
-    }
-  };
-
-  const computeStatus = (items) => {
-    let checked = 0;
-    let indeterminate = 0;
-
-    items.forEach((item) => {
-      if (item.status && item.status === statuss?.checked) checked++;
-      if (item.status && item.status === statuss?.indeterminate) indeterminate++;
-    });
-
-    if (checked === items.length) {
-      return statuss.checked;
-    } else if (checked > 0 || indeterminate > 0) {
-      return statuss.indeterminate;
-    }
-  };
-
-  const traverse = (root, needle, status) => {
-    let id;
-    let items;
-
-    if (Array.isArray(root)) {
-      items = root;
-    } else {
-      id = root.id;
-      items = root.items;
-    }
-
-    // return if needle is found
-    // we don't have to compute the status of the items if root.id === needle
-    if (id === needle) {
-      return setStatuss(root, status);
-    }
-
-    if (!items) {
-      return root;
-    } else {
-      items.forEach((item) => traverse(item, needle, status));
-      root.status = computeStatus(items);
-    }
-  };
-
+  const [datav2, setDatav2] = useState([]);
   const [items, setItems] = useState(data);
-  const compute = (checkboxId, status) => {
-    traverse(items, checkboxId, status);
-    setItems(items.slice());
-  };
+
   const initializeStatus = () => {
     const updatedData = items.map((category) => ({
       ...category,
@@ -135,46 +84,10 @@ const index = () => {
     setItems(updatedData);
   };
 
-  const [datav2, setDatav2] = useState([]);
-
-  useEffect(() => {
-    // Use a temporary variable to store the new data
-    const newData = [];
-    const idsOfNeighboorhoods = [];
-
-    items.forEach((d) => {
-      if (d.status === 1) {
-        newData.push(d.name);
-        d.items.forEach((i) => {
-          if (i.status === 1) {
-            idsOfNeighboorhoods.push(i.id);
-          }
-        });
-      } else {
-        d.items.forEach((i) => {
-          if (i.status === 1) {
-            newData.push(i.name);
-            idsOfNeighboorhoods.push(i.id);
-          }
-        });
-      }
-    });
-
-    console.log(newData, 'newData');
-
-    const idsString = idsOfNeighboorhoods.join(',');
-    setIds(idsString);
-
-    // Set the new data in the state
-    setDatav2(newData);
-  }, [items]);
-
   const selectAmenities = (a) => {
     setSelectedAmenities(a);
   };
-  useEffect(() => {
-    console.log(selectedAmenities, 'selectedAmenities');
-  }, [selectedAmenities]);
+
   const getFromNumber = () => {
     return (page - 1) * 21 + 1;
   };
@@ -184,97 +97,6 @@ const index = () => {
   const onFiltersChange = (filter) => {
     setFilterValue(filter);
   };
-
-  // const bathroomOptions = [
-  //   {
-  //     id: 0,
-  //     label: 1,
-  //   },
-  //   {
-  //     id: 1,
-  //     label: 2,
-  //   },
-
-  //   {
-  //     id: 2,
-  //     label: 3,
-  //   },
-  //   {
-  //     id: 3,
-  //     label: 4,
-  //   },
-  //   {
-  //     id: 4,
-  //     label: 5,
-  //   },
-  //   {
-  //     id: 5,
-  //     label: 6,
-  //   },
-  //   {
-  //     id: 6,
-  //     label: 7,
-  //   },
-  //   {
-  //     id: 7,
-  //     label: 8,
-  //   },
-  //   {
-  //     id: 8,
-  //     label: 9,
-  //   },
-  //   {
-  //     id: 9,
-  //     label: 10,
-  //   },
-  //   {
-  //     id: 10,
-  //     label: '10+',
-  //   },
-  // ];
-  // const bedroomsOptions = [
-  //   {
-  //     id: 0,
-  //     label: '1+',
-  //   },
-  //   {
-  //     id: 1,
-  //     label: '2+',
-  //   },
-
-  //   {
-  //     id: 2,
-  //     label: '3+',
-  //   },
-  //   {
-  //     id: 3,
-  //     label: '4+',
-  //   },
-  //   {
-  //     id: 4,
-  //     label: '5+',
-  //   },
-  //   {
-  //     id: 5,
-  //     label: '6+',
-  //   },
-  //   {
-  //     id: 6,
-  //     label: '7+',
-  //   },
-  //   {
-  //     id: 7,
-  //     label: '8+',
-  //   },
-  //   {
-  //     id: 8,
-  //     label: '9+',
-  //   },
-  //   {
-  //     id: 9,
-  //     label: '10+',
-  //   },
-  // ];
 
   const forOptions = [
     {
@@ -390,7 +212,6 @@ const index = () => {
 
   let [options, setOptions] = useState([...rentalPriceOptions, ...salePriceOptions].sort((a, b) => a.value - b.value));
 
-  const [openDropdown, setOpenDropdown] = useState(false);
   useEffect(() => {
     if (typeof status?.id !== 'undefined') {
       setOptions(status.id == 1 ? rentalPriceOptions : salePriceOptions);
@@ -548,12 +369,6 @@ const index = () => {
     }
   }, [open]);
 
-  const [neighborhoodsSearch, setNeighborhoodsSearch] = useState('');
-  useEffect(() => {
-    if (openDropdown === false) {
-      setNeighborhoodsSearch('');
-    }
-  }, [openDropdown]);
   useEffect(() => {
     if (document.querySelector('.side-overlay-wrapper')) {
       if (propertiesSent) {
@@ -593,14 +408,16 @@ const index = () => {
             <div
               class={`${
                 selected ? 'bg-lightBlue3' : 'border border-gray-300'
-              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}
+            >
               {selected && (
                 <svg
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                   version="1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
-                  enable-background="new 0 0 48 48">
+                  enable-background="new 0 0 48 48"
+                >
                   <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}
@@ -610,38 +427,19 @@ const index = () => {
       </div>
     );
   };
-  const filterData = (data, searchTerm) => {
-    return data.reduce((result, item) => {
-      const isParentMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const filteredItems = item.items.filter((subItem) =>
-        subItem.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-
-      if (isParentMatch && filteredItems.length === 0) {
-        result.push(item);
-      } else if (filteredItems.length > 0) {
-        result.push({ ...item, items: filteredItems });
-      }
-
-      return result;
-    }, []);
+  const _onPropertiesSave = () => {
+    setLoadingEmails(true);
+    addPropertiesInPortfolio(
+      selectedContacts.map((contact) => contact.value),
+      selectedProperties.map((property) => property.ID),
+    ).then(() => {
+      setLoadingEmails(false);
+      setLoadingEmails(false);
+      setPropertiesSent(true);
+      resetPropertySelection();
+    });
   };
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdown(false);
-      }
-    };
-
-    document.body.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [setOpenDropdown]);
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
@@ -677,86 +475,27 @@ const index = () => {
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search
-            className="w-[250px]  text-sm"
+            className={`w-[250px] text-sm`}
+            border={`${searchKey.length > 0 && 'border-blue1'}`}
             placeholder="Search by address"
             onInput={(event) => {
               setSearchKey(event.target.value);
             }}
             value={searchKey}
           />
-          <div
-            ref={dropdownRef}
-            className={
-              'min-w-[170px] flex justify-between h-[38px] px-2 py-[9px] relative border border-gray-300 text-sm font-medium text-[#808080] rounded-md'
-            }
-            style={{ flex: 1, maxWidth: '300px', position: 'relative' }}
-            onClick={() => {
-              setOpenDropdown(!openDropdown);
-              setTimeout(() => {
-                document.querySelector(`#custom-dropdown-search`)?.focus();
-              }, 200);
-            }}>
-            <div
-              className={`max-w-[300px] overflow-hidden font-normal whitespace-nowrap overflow-ellipsis  ${datav2.length > 0 ? 'text-gray8' : 'text-[#808080]'}`}>
-              {datav2.length > 0 ? datav2.join(',') : 'Select Neighborhood'}
-            </div>
-            <div className={'flex'}>
-              {datav2.length > 0 && (
-                <CloseIcon
-                  className={`transition-all h-5 w-5 text-gray3 cursor-pointer`}
-                  aria-hidden="true"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    initializeStatus();
-                    setDatav2([]);
-                  }}
-                />
-              )}
-              <ChevronDownIcon
-                className={`transition-all h-5 w-5 text-gray3 ${openDropdown && 'rotate-180'}`}
-                aria-hidden="true"
-              />
-            </div>
-            {openDropdown && (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenDropdown(true);
-                }}
-                className={
-                  'flex-1 left-0 py-3 pl-[10px] z-10 absolute top-[45px] shadow-lg w-[500px] bg-white max-h-[250px] rounded-md  text-base ring-1 ring-black ring-opacity-5  focus:outline-none sm:text-sm'
-                }>
-                <SimpleBar style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}>
-                  <input
-                    className={` text-sm mb-2 text-gray8 pl-3 border border-gray2 rounded-lg bg-white px-[13px] h-[35px] w-full  mt-1 ml-0.5 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 z-[9999999]`}
-                    id={`custom-dropdown-search`}
-                    type={'text'}
-                    placeholder={'Select'}
-                    onChange={(e) => setNeighborhoodsSearch(e.target.value)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setOpenDropdown(true);
-                    }}
-                  />
-                  {filterData(items, neighborhoodsSearch).length > 0 ? (
-                    <div className={'mt-2'}>
-                      <List
-                        items={filterData(items, neighborhoodsSearch)}
-                        compute={compute}
-                        setOpenDropdown={setOpenDropdown}
-                      />
-                    </div>
-                  ) : (
-                    <div className={'text-sm mb-1 text-gray8 text-center mt-2'}>No Neighborhood with this name</div>
-                  )}
-                </SimpleBar>
-              </div>
-            )}
-          </div>
+          <NeighbourhoodDropdown
+            border={datav2.length > 0}
+            setIds={setIds}
+            items={items}
+            initializeStatus={initializeStatus}
+            setItems={setItems}
+            datav2={datav2}
+            setDatav2={setDatav2}
+          />
           <Dropdown
             options={forOptions}
             className=" w-[130px]"
+            border={status && 'border-blue1'}
             placeHolder="Status"
             handleSelect={(choice) => {
               setStatus(choice);
@@ -769,6 +508,7 @@ const index = () => {
             className=" min-w-[120px]"
             placeHolder="Bedrooms"
             afterLabel="Beds"
+            border={bedrooms && 'border-blue1'}
             handleSelect={(choice) => {
               setBedrooms(choice);
             }}
@@ -776,6 +516,7 @@ const index = () => {
           />
           <Dropdown
             options={bathroomsOptions}
+            border={bathrooms && 'border-blue1'}
             className="w-[140px]"
             placeHolder="Bathrooms"
             afterLabel="Baths"
@@ -785,6 +526,7 @@ const index = () => {
             initialSelect={bathrooms}
           />
           <MinMaxPrice
+            border={(minPrice || maxPrice) && 'border-blue1'}
             // options={bathroomOptions}
             label={'Min/Max Price'}
             className="min-w-[170px] font-normal"
@@ -802,7 +544,8 @@ const index = () => {
                   <div
                     className={
                       'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
-                    }>
+                    }
+                  >
                     {selectedAmenities.split(',').length}
                   </div>
                 )}
@@ -810,7 +553,8 @@ const index = () => {
               </div>
             }
             primary
-            onClick={() => setOpenFilters(true)}>
+            onClick={() => setOpenFilters(true)}
+          >
             Filters
           </Button>
           <Button white onClick={() => resetFilters()} className="min-w-[120px]">
@@ -887,7 +631,8 @@ const index = () => {
                             fetchProperties(filterValue, page - 1);
                             setPage(page - 1);
                           }}
-                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Previous
                         </a>
                       )}
@@ -898,7 +643,8 @@ const index = () => {
                             fetchProperties(filterValue, page + 1);
                             setPage(page + 1);
                           }}
-                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Next
                         </a>
                       )}
@@ -920,6 +666,10 @@ const index = () => {
                   {selectedProperties.length > 0 && (
                     <SendPropertiesFooter
                       selectedProperties={selectedProperties}
+                      onSavePropertiesClick={() => {
+                        setSendMethod(4);
+                        setOpen(true);
+                      }}
                       onSendEmailAndSmsClick={() => {
                         setSendMethod(3);
                         setOpen(true);
@@ -981,6 +731,7 @@ const index = () => {
         filteredContacts={filteredContacts}
         selectedProperties={selectedProperties}
         loadingEmails={loadingEmails}
+        onPropertiesSave={_onPropertiesSave}
         _sendEmail={_sendEmail}
         showProperties={showProperties}
         setShowProperties={setShowProperties}

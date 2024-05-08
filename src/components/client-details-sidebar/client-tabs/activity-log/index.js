@@ -57,7 +57,8 @@ export default function ActivityLog({ contactId, source, contact }) {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+          >
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
@@ -72,7 +73,8 @@ export default function ActivityLog({ contactId, source, contact }) {
                   updateContact(contact.id, { ...contact, summary: summaryBackup.current });
                   toast.dismiss(t.id);
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
+              >
                 Undo
               </button>
             </div>
@@ -167,7 +169,8 @@ export default function ActivityLog({ contactId, source, contact }) {
                 <div
                   className={'flex gap-3 text-lightBlue3 mt-6 cursor-pointer'}
                   role={'button'}
-                  onClick={() => setToggleAddActivity(true)}>
+                  onClick={() => setToggleAddActivity(true)}
+                >
                   <AddCircleIcon className={'h-5 w-5'} />
                   <p className={' text-center text-sm font-medium '}>Add Activity</p>
                 </div>
@@ -213,7 +216,8 @@ export default function ActivityLog({ contactId, source, contact }) {
               <div
                 className={'flex gap-3 text-lightBlue3 mt-6 cursor-pointer'}
                 role={'button'}
-                onClick={() => setOpenSummaryModal(true)}>
+                onClick={() => setOpenSummaryModal(true)}
+              >
                 <AddCircleIcon className={'h-5 w-5'} />
                 <p className={' text-center text-sm font-medium '}>Add Summary</p>
               </div>

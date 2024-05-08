@@ -205,7 +205,7 @@ const index = () => {
       CRMCampaigns === undefined ||
       campaignDetails === undefined ||
       usersInCampaignGlobally === undefined ? (
-        <div className='relative h-[90vh]'>
+        <div className="relative h-[90vh]">
           <Loader />
         </div>
       ) : (
@@ -234,18 +234,20 @@ const index = () => {
                 </div>
               </div>
             </div>
-            <div className='flex items-center'>
+            <div className="flex items-center">
               <Button
                 secondary
                 leftIcon={<PencilIcon className={'h-4 w-4'} />}
-                className='mr-4'
-                onClick={() => setShowEditCampaign(true)}>
+                className="mr-4"
+                onClick={() => setShowEditCampaign(true)}
+              >
                 Edit Campaign
               </Button>
               <Button
                 primary
                 leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
-                onClick={() => setOpenCampaignPreview(true)}>
+                onClick={() => setOpenCampaignPreview(true)}
+              >
                 Campaign Preview
               </Button>
             </div>
@@ -255,10 +257,11 @@ const index = () => {
               <div
                 key={index}
                 className={`flex flex-col gap-2.5 items-center justify-center 
-              `}>
+              `}
+              >
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
-                  <span className='text-gray4  text-center font-medium text-xs leading-5'>
+                  <span className="text-gray4  text-center font-medium text-xs leading-5">
                     {event.name.toUpperCase()}
                   </span>
                 </div>
@@ -269,8 +272,8 @@ const index = () => {
           <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
             <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
             <Search
-              placeholder='Search'
-              className='mr-4 text-sm'
+              placeholder="Search"
+              className="mr-4 text-sm"
               value={searchTerm}
               onInput={(event) => setSearchTerm(event.target.value)}
             />
@@ -278,7 +281,7 @@ const index = () => {
           {renderTable(currentButton)}
           <CampaignPreview
             data={campaignEvents}
-            className='top-[70px]'
+            className="top-[70px]"
             campaignFor={
               category == 'Unknown'
                 ? 'All Clients'

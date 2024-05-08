@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SearchIcon } from '@heroicons/react/outline';
 import Button from 'components/shared/button';
 import { useState } from 'react';
@@ -15,6 +15,7 @@ const Search = ({
   className,
   iconBefore,
   onClick,
+  border,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -53,7 +54,7 @@ const Search = ({
             onChange={onChange}
             onKeyDown={onKeyDown}
             value={value}
-            className={`pl-10 border border-borderColor rounded-lg bg-white px-[13px] h-[38px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1`}
+            className={`pl-10 border rounded-lg bg-white px-[13px] h-[38px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${border ?? 'border-borderColor'}`}
           />
         </div>
       )}

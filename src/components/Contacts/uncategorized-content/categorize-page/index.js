@@ -156,7 +156,8 @@ const CategorizePage = ({
     <>
       {uncategorizedContacts.length > 0 && (
         <div
-          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}>
+          className={`border border-gray-200 overflow-hidden overflow-x-clip relative h-full sm:w-[250%] md:w-[350px]  xl:w-[27%]`}
+        >
           {/*<SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 143px)', overflowX: 'hidden' }}>*/}
           <UncategorizedTable
             tableFor="in-categorization"
@@ -174,7 +175,8 @@ const CategorizePage = ({
             : uncategorizedContacts.length === 0 && categorizedInThisSession.length === 0
               ? 'w-[100%]'
               : 'w-[75%]'
-        } `}>
+        } `}
+      >
         {categorizationInProcess || selectedUncategorized?.length > 0 ? (
           <SimpleBar
             autoHide
@@ -187,7 +189,8 @@ const CategorizePage = ({
               bottom: '0',
               maxHeight: '100%',
               height: '100%',
-            }}>
+            }}
+          >
             <div className="p-6 pb-[77px]">
               <div className="flex items-center mb-4">
                 <CircleStepNumber number={1} className="mr-2" />
@@ -268,7 +271,8 @@ const CategorizePage = ({
               src="/animations/categorize.json"
               style={{ width: '420px', height: '300px' }}
               loop
-              autoplay></lottie-player>
+              autoplay
+            ></lottie-player>
             <Text h3 className="text-gray7 mt-4 mb-2 text-center">
               Yay, well done! No uncategorized contact.
             </Text>

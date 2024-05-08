@@ -197,7 +197,8 @@ const OnlineFormsSignForm = () => {
       <div className="absolute w-full flex h-[70px] justify-between items-center gap-[12px] px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)] ronded-b-lg bottom-0 bg-white">
         <button
           onClick={onDownloadPdf}
-          className="flex items-center gap-[4px] text-lightBlue3 leading-5 text-sm	font-medium">
+          className="flex items-center gap-[4px] text-lightBlue3 leading-5 text-sm	font-medium"
+        >
           <SaveAltIcon className="w-[20px] h-[20px]" />
           Download PDF
         </button>

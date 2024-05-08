@@ -114,10 +114,12 @@ export const SectionFeaturesSwiper = () => {
           className={clsx(
             styles['pagination-element'],
             currentItemIndex === current && styles['pagination-element--active'],
-          )}>
+          )}
+        >
           <div
             className={`md:block hidden ${styles['pagination-element__image']}`}
-            style={{ backgroundImage: `url(${getPaginationImage(modifier)})` }}></div>
+            style={{ backgroundImage: `url(${getPaginationImage(modifier)})` }}
+          ></div>
 
           <span className="hidden md:block pagination-dots-custom">{sectionLabels[i]}</span>
         </div>
@@ -172,7 +174,8 @@ export const SectionFeaturesSwiper = () => {
               769: {
                 direction: 'vertical',
               },
-            }}>
+            }}
+          >
             {slides.map((slide, i) => (
               <SwiperSlide key={'feature-slide-' + i}>
                 <Slide item={slide} />

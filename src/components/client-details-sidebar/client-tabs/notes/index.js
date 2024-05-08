@@ -166,13 +166,15 @@ export default function Notes({ contactId }) {
         autoHide
         style={{
           maxHeight: 'calc(100vh - 158px)',
-        }}>
+        }}
+      >
         {notesOriginal &&
           (notesOriginal.length == 0 ? (
             <div className="h-full">
               <div
                 className="flex flex-col items-center justify-center h-full max-w-[350px] mx-auto my-0"
-                style={{ minHeight: 'calc(100vh - 158px)' }}>
+                style={{ minHeight: 'calc(100vh - 158px)' }}
+              >
                 <Image src={noNotes}></Image>
                 <Text h3 className="text-gray7 mb-2 mt-4 text-center">
                   You don’t have any notes for this contact yet
@@ -277,7 +279,8 @@ export default function Notes({ contactId }) {
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}></TextArea>
+                errorText={errors.description}
+              ></TextArea>
               <div className="flex flex-row justify-end mt-6">
                 <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
                 <Button type="submit" primary label="Save" loading={loadingButton} />

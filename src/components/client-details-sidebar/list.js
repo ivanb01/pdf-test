@@ -84,8 +84,8 @@ export const tabs = (contactId, contact) => {
   return contact?.category_1 == 'Professional'
     ? professionalsTabs
     : contact?.category_1 != 'Client'
-    ? othersTabs
-    : clientTabs;
+      ? othersTabs
+      : clientTabs;
 };
 
 export const inputs = [

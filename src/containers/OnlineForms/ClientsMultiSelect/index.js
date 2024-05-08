@@ -10,24 +10,23 @@ import { MultiSelect } from 'react-multi-select-component';
 import { useEffect, useState } from 'react';
 
 const ClientsMultiSelect = ({ name, error, handleChange, placeholder }) => {
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+  const [contactsCopy, setContactsCopy] = useState();
+  const [selectedContact, setSelectedContact] = useState(null);
 
-const contacts = useSelector((state) => state.contacts.allContacts.data);
-const [contactsCopy, setContactsCopy] = useState();
-const [selectedContact, setSelectedContact] = useState(null);
+  // const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
 
-// const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+  // const sortedOptions = contactsCopy?.sort((a, b) => {
+  //   const aIsSelected = isSelected(a);
+  //   const bIsSelected = isSelected(b);
 
-// const sortedOptions = contactsCopy?.sort((a, b) => {
-//   const aIsSelected = isSelected(a);
-//   const bIsSelected = isSelected(b);
-
-//   if (aIsSelected && !bIsSelected) {
-//     return -1;
-//   } else if (!aIsSelected && bIsSelected) {
-//     return 1;
-//   }
-//   return 0;
-// });
+  //   if (aIsSelected && !bIsSelected) {
+  //     return -1;
+  //   } else if (!aIsSelected && bIsSelected) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // });
 
   useEffect(() => {
     if (contacts) {

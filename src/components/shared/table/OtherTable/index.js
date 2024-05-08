@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { getSource } from '@global/functions';
 
 const OtherTable = ({ data, handleAction, handleCardEdit }) => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <>
       {data?.length ? (
@@ -18,17 +18,20 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
             <tr>
               <th
                 scope="col"
-                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+              >
                 Contact
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500"
+              >
                 Contact summary
               </th>
               <th
                 scope="col"
-                className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500">
+                className="px-3 py-3 text-xs font-medium uppercase  text-left tracking-wide text-gray-500"
+              >
                 Actions
               </th>
             </tr>
@@ -43,7 +46,8 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
                     pathname: '/contacts/details',
                     query: { id: dataItem?.id },
                   })
-                }>
+                }
+              >
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center ">
                   <ContactInfo
                     data={{
@@ -68,10 +72,12 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
                         <div
                           className={
                             'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
-                          }>
+                          }
+                        >
                           {dataItem.summary}
                         </div>
-                      }>
+                      }
+                    >
                       <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                         <p className="text-xs leading-4 font-normal">{dataItem.summary}</p>
                       </div>
@@ -89,10 +95,12 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
                           e.stopPropagation();
                           handleCardEdit(dataItem);
                         }}
-                        className="group cursor-pointer  h-7 w-7   relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center">
+                        className="group cursor-pointer  h-7 w-7   relative rounded-full p-1.5 bg-lightBlue1 hover:bg-lightBlue2 mr-2 flex items-center justify-center"
+                      >
                         <Edit className="text-lightBlue5 w-4 h-4 " />
                       </div>
-                    }>
+                    }
+                  >
                     <p className=" text-xs font-medium text-white"> Edit Contact</p>
                   </TooltipComponent>
                   <TooltipComponent
@@ -105,10 +113,12 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
                           e.stopPropagation();
                           handleAction(dataItem);
                         }}
-                        className=" h-7 w-7  group bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7 cursor-pointer rounded-full bg-gray2 hover:bg-gray2 flex items-center justify-center relative">
+                        className=" h-7 w-7  group bg-gray2  hover:bg-gray6  mr-2 flex items-center justify-center hover:text-[#0284C7 cursor-pointer rounded-full bg-gray2 hover:bg-gray2 flex items-center justify-center relative"
+                      >
                         <Delete className="text-gray5 w-4 h-4 group-hover:text-white" />
                       </div>
-                    }>
+                    }
+                  >
                     <p className=" text-xs font-medium text-white"> Move to trash</p>
                   </TooltipComponent>
                 </td>

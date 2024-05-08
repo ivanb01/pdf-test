@@ -319,7 +319,8 @@ const Clients = ({
                       <div
                         className={
                           'absolute flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[20px] w-[20px] rounded-xl text-xs text-white'
-                        }>
+                        }
+                      >
                         {getTotalCountOfAllValues(clientsFilters)}
                       </div>
                     )}
@@ -374,7 +375,8 @@ const Clients = ({
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setClientsFilters({}));
-                }}>
+                }}
+              >
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -391,7 +393,8 @@ const Clients = ({
               maxWidth: '100%',
               height: '100%',
               background: '#f9fafb',
-            }}>
+            }}
+          >
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {openedSubtab === -1
                 ? clientStatuses.map((item) => {
@@ -464,7 +467,8 @@ const Clients = ({
               }
             /> */}
           </>
-        }>
+        }
+      >
         <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
       </SlideOver>
     </>

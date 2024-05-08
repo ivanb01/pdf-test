@@ -4,7 +4,7 @@ import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Zoom from 'react-medium-image-zoom';
@@ -64,23 +64,21 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
    ${listingUrlContent}
    </div>
     ${template
-          .map(
-            (image, index) => `
+      .map(
+        (image, index) => `
         <img src='${image}' alt='image ${index}' height='300' width='300' style='object-fit: contain;' />
           `,
-          )
-          .join('')}
+      )
+      .join('')}
    </body>
     </html>
   `,
       })
-        .then(() => {
-        })
+        .then(() => {})
         .catch(() => {
           toast.error('Something went wrong');
         })
-        .finally(() => {
-        });
+        .finally(() => {});
     },
   });
   const [selectedProperty, setSelectedProperty] = useState();
@@ -89,7 +87,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
     setSelectedProperty(i == null ? undefined : i);
   };
   return (
-    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className='w-[1000px]'>
+    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
       <form onSubmit={formik.handleSubmit}>
         <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
           <div className={'flex-1 relative'}>
@@ -103,15 +101,18 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
               </p>
               {listingUrl && (
                 <>
-                  <AsyncDropdown formik={formik} updateSelectedProperty={updateSelectedProperty}
-                                 selectedProperty={selectedProperty} />
+                  <AsyncDropdown
+                    formik={formik}
+                    updateSelectedProperty={updateSelectedProperty}
+                    selectedProperty={selectedProperty}
+                  />
                   <Input
-                    type='text'
-                    label='Listing URL'
+                    type="text"
+                    label="Listing URL"
                     required
                     disabled={selectedProperty}
                     value={formik.values.listingUrl ?? ''}
-                    id='listingUrl'
+                    id="listingUrl"
                     onChange={(e) => {
                       formik.setFieldValue('listingUrl', e.target.value);
                     }}
@@ -121,10 +122,10 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
                 </>
               )}
               <TextArea
-                className='min-h-[120px]'
-                id='note'
-                name='note'
-                label='Note'
+                className="min-h-[120px]"
+                id="note"
+                name="note"
+                label="Note"
                 value={formik.values.note}
                 optional
                 handleChange={formik.handleChange}
@@ -133,8 +134,9 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           </div>
         </div>
         <div
-          className='flex items-end justify-end py-4 pr-6'
-          style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
+          className="flex items-end justify-end py-4 pr-6"
+          style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}
+        >
           <Button className={`mr-4`} white onClick={handleCloseOverlay}>
             Cancel
           </Button>
@@ -175,7 +177,8 @@ export const ImageGallery = ({ images, className, includeZoom }) => {
         <div
           className={
             'absolute top-[50%] left-[20px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }>
+          }
+        >
           <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
         </div>
       )}
@@ -183,7 +186,8 @@ export const ImageGallery = ({ images, className, includeZoom }) => {
         <div
           className={
             'absolute right-[20px] top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }>
+          }
+        >
           <KeyboardArrowRightIcon onClick={() => showNextImage()} />
         </div>
       )}

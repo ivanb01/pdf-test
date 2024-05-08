@@ -43,7 +43,8 @@ export const SectionContact = () => {
     toast.custom((t) => {
       return (
         <div
-          className={`p-4 items-center  gap-3 border border-[#D5DDFA] shadow-lg rounded-lg pointer-events-auto flex ring-1 bg-white ring-black ring-opacity-5 text-sm text-gray7`}>
+          className={`p-4 items-center  gap-3 border border-[#D5DDFA] shadow-lg rounded-lg pointer-events-auto flex ring-1 bg-white ring-black ring-opacity-5 text-sm text-gray7`}
+        >
           <div>
             <p>Thanks for reaching out! We'll get back to you soon.</p>
           </div>

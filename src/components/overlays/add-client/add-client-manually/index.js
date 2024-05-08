@@ -376,7 +376,8 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
           onClick={() => {
             setLoading(false);
             formik.submitForm();
-          }}></Button>
+          }}
+        ></Button>
       </div>
     </Overlay>
   );

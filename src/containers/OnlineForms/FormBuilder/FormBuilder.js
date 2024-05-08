@@ -211,12 +211,14 @@ const FormBuilder = () => {
 
               <div
                 className={`h-full border-[1px] border-gray2 bg-white rounded-md overflow-y-scroll `}
-                ref={clientsContainerRef}>
+                ref={clientsContainerRef}
+              >
                 <div
                   className={clsx('[&>*]:border-b-[1px] ', {
                     ['last:[&>*]:border-b-0']: isTableOverflow,
                   })}
-                  ref={clientsTableRef}>
+                  ref={clientsTableRef}
+                >
                   {clientsIsSuccess &&
                     !clientsIsLoading &&
                     clientsData?.data?.data.map(({ id, first_name, last_name, email }) => {
@@ -276,7 +278,8 @@ const FormBuilder = () => {
               onClick={onPreviewClick}
               className="flex w-[185px] gap-2 items-center justify-center"
               disabled={isEditorEmpty}
-              loading={loadingPdf}>
+              loading={loadingPdf}
+            >
               Preview and Save
               <ArrowNarrowRightIcon className="w-4 h-4" />
             </Button>

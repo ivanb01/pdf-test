@@ -28,12 +28,12 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     validationSchema: SendFormSchema,
     validateOnChange: false,
     validateOnBlur: false,
-    onSubmit: values => {
+    onSubmit: (values) => {
       onSubmitForm(values);
     },
   });
-  
-  console.log("Errors:", errors);
+
+  console.log('Errors:', errors);
 
   const { mutate: mutateSendEmail } = useSendEmail();
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -80,7 +80,8 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     <Overlay
       className="w-[600px] min-h-[332px] [&>div]:overflow-visible"
       title={'Send New Form'}
-      handleCloseOverlay={onCancel}>
+      handleCloseOverlay={onCancel}
+    >
       <div className="p-[24px] pt-0 flex flex-col gap-[24px]">
         <div className="flex flex-col gap-[24px]">
           <Dropdown
@@ -98,7 +99,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             errorText={errors.form_type_id}
             initialSelect={currentForm?.id ? currentForm.name : ''}
           />
-         <ClientsMultiSelect
+          <ClientsMultiSelect
             handleChange={(client) => {
               const formattedClient = {
                 id: client.value.toString(),
@@ -111,7 +112,6 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             error={errors.clients}
             placeholder="Search for a Contact..."
           />
-
         </div>
         <div className="flex justify-end gap-[17px]">
           <Button white className={'min-w-fit'} onClick={onCancel}>

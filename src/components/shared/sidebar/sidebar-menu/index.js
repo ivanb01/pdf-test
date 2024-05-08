@@ -25,7 +25,8 @@ const SidebarMenu = ({ navigation, setCurrentNavigation }) => {
                       className={classNames(
                         item.current ? 'bg-lightBlue1 text-lightBlue3' : 'hover:bg-gray-50',
                         'cursor-pointer group flex gap-x-3 rounded-md p-2 text-sm leading-6 text-gray5',
-                      )}>
+                      )}
+                    >
                       {item.icon}
                       {item.name}
                     </div>
@@ -37,7 +38,8 @@ const SidebarMenu = ({ navigation, setCurrentNavigation }) => {
                             className={classNames(
                               item.current ? 'bg-lightBlue1 text-lightBlue3' : 'hover:bg-gray-50',
                               'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 text-gray5',
-                            )}>
+                            )}
+                          >
                             {item.icon}
                             {item.name}
                             <ChevronRightIcon
@@ -64,7 +66,8 @@ const SidebarMenu = ({ navigation, setCurrentNavigation }) => {
                                   className={classNames(
                                     subItem.current ? 'bg-lightBlue1 text-lightBlue3' : 'hover:bg-gray-50',
                                     'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray5',
-                                  )}>
+                                  )}
+                                >
                                   {subItem.name}
                                 </Disclosure.Button>
                               </li>

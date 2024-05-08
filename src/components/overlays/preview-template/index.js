@@ -22,7 +22,8 @@ const PreviewTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => 
               rightIcon={<EastIcon fontSize={'16px'} />}
               onClick={() => {
                 setOpenOrderTemplate(true);
-              }}>
+              }}
+            >
               Order this template
             </Button>
           </div>

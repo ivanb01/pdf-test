@@ -52,7 +52,8 @@ const PropertiesCarousel = ({ data, updateLightBoxTrigger }) => {
               loop
               spaceBetween={12}
               navigation
-              modules={[Pagination, Navigation, Scrollbar]}>
+              modules={[Pagination, Navigation, Scrollbar]}
+            >
               {data?.PHOTOS?.map((picture, index) => (
                 <SwiperSlide key={index} className="mr-3 last:mr-0 md:w-2/5 w-full">
                   <img

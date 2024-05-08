@@ -340,7 +340,8 @@ const index = () => {
         </div>
         <div
           className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-          style={{ height: '230px' }}>
+          style={{ height: '230px' }}
+        >
           <div>
             <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
             <p className={'text-[12px] text-center font-medium mt-2 text-white'}>

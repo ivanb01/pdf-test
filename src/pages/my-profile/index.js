@@ -171,7 +171,8 @@ const index = () => {
                 loading={loadingActivate}
                 googleActivated={consentGiven()}
                 // disabled={consentGiven()}
-                onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
+                onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}
+              >
                 {consentGiven() ? 'Connected' : 'Connect'}
               </Button>
             </div>
@@ -293,7 +294,8 @@ const index = () => {
                   onClick={() => setCurrentTab(tab.id)}
                   className={`p-3 flex items-center ${
                     currentTab == tab.id ? 'bg-lightBlue1 text-lightBlue3' : 'text-gray4 hover:text-gray5'
-                  } rounded-md`}>
+                  } rounded-md`}
+                >
                   {tab.icon}
                   {tab.name}
                 </a>

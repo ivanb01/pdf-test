@@ -46,13 +46,15 @@ export const Testimonials = () => {
               1024: {
                 slidesPerView: 2,
               },
-            }}>
+            }}
+          >
             {testimonials.map((testimonial, i) => (
               <SwiperSlide key={'slide' + i}>
                 <div
                   className={
                     i % 2 === 0 ? styles['section-swiper-container-left'] : styles['section-swiper-container-right']
-                  }>
+                  }
+                >
                   <div className={styles['section-swiper-container-content']}>
                     <div className={styles['section-swiper-container-content-logo']}>
                       <Image width="78" src={testimonial.logo} alt="logo" />

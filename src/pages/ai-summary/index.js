@@ -143,7 +143,8 @@ const index = () => {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+          >
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
@@ -159,7 +160,8 @@ const index = () => {
                   updateContact(data.id, { ...newData, approved_ai: false }).then(() => dispatch(setRefetchData(true)));
                   // updateAiSummaryTable(data.id, { ...newData, approved_ai: false });
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
+              >
                 Undo
               </button>
             </div>
@@ -213,7 +215,8 @@ const index = () => {
             <div
               className={`${
                 t.visible ? 'animate-enter' : 'animate-leave'
-              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+            >
               <div className="flex gap-2 p-4 word-break">
                 <CheckCircleIcon className={'text-green-500'} />
                 <h1 className={'text-sm leading-5 font-medium'}>{toastMessage}</h1>
@@ -227,7 +230,8 @@ const index = () => {
                     setTotalContacts(allData.length);
                     dispatch(setAIUnApprovedContacts(allData));
                   }}
-                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
+                >
                   Undo
                 </button>
               </div>
@@ -315,7 +319,8 @@ const index = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]">
+                    className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]"
+                  >
                     <input
                       type="checkbox"
                       className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
@@ -327,32 +332,38 @@ const index = () => {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
                     Type
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
                     Status
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 "
+                  >
                     Email Summary
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]">
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]"
+                  >
                     Imported Date
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                    className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+                  >
                     Actions
                   </th>
                   <th
                     scope="col"
-                    className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
+                    className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"
+                  ></th>
                 </tr>
               </thead>
               <tbody className=" bg-white">
@@ -364,7 +375,8 @@ const index = () => {
                     onClick={(e) => {
                       if (e.target.type === 'checkbox') return;
                       handleCardEdit(dataItem);
-                    }}>
+                    }}
+                  >
                     {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
                     <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
                       <input
@@ -404,7 +416,8 @@ const index = () => {
                     <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
                       <Chip
                         statusStyle
-                        className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
+                        className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}
+                      >
                         {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
                       </Chip>
                     </td>
@@ -415,7 +428,8 @@ const index = () => {
                             href={dataItem.email_link}
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
-                            rel="noreferrer">
+                            rel="noreferrer"
+                          >
                             <Launch className="h-5 w-5 text-blue-500 mr-2" />
                           </a>
                         )}
@@ -437,13 +451,15 @@ const index = () => {
                                 e.stopPropagation();
                                 handleAction('approve', dataItem);
                               }}
-                              className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
+                              className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative"
+                            >
                               <CheckCircle
                                 id={'edit-contact-icon-' + dataItem.id}
                                 className="group-hover/check:text-white text-[16px]"
                               />
                             </div>
-                          }>
+                          }
+                        >
                           <p className=" text-xs font-medium text-white">Mark as Correct</p>
                         </TooltipComponent>
                         <TooltipComponent
@@ -456,10 +472,12 @@ const index = () => {
                                 e.stopPropagation();
                                 handleCardEdit(dataItem);
                               }}
-                              className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                              className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative"
+                            >
                               <Edit className="text-gray3 w-4 h-4" />
                             </div>
-                          }>
+                          }
+                        >
                           <p className=" text-xs font-medium text-white"> Edit Contact</p>
                         </TooltipComponent>
                         <TooltipComponent
@@ -472,10 +490,12 @@ const index = () => {
                                 e.stopPropagation();
                                 handleAction('delete', dataItem);
                               }}
-                              className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
+                              className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative"
+                            >
                               <Delete className="group-hover/delete:text-white text-[16px]" />
                             </div>
-                          }>
+                          }
+                        >
                           <p className=" text-xs font-medium text-white"> Move to trash</p>
                         </TooltipComponent>
                       </div>
@@ -500,14 +520,16 @@ const index = () => {
               background="transparent"
               speed="1"
               style={{ height: '300px' }}
-              autoplay></lottie-player>
+              autoplay
+            ></lottie-player>
             <div className="-mt-10 text-gray-900 text-center">
               <div className="font-semibold text-lg">Well Done!</div>
               <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
             </div>
             <div
               onClick={() => router.push('/contacts/clients')}
-              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
+              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm"
+            >
               <img className="mr-2" src={backBtn.src} alt="" />
               Back to Contacts
             </div>
@@ -517,7 +539,8 @@ const index = () => {
             background="transparent"
             speed="1"
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}
-            autoplay></lottie-player>
+            autoplay
+          ></lottie-player>
         </div>
       )}
       {showReviewOverlay && popupData && (
@@ -542,12 +565,14 @@ const index = () => {
               onClick={() => {
                 bulkUpdate(2);
               }}
-              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500"
+            >
               <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               onClick={() => bulkUpdate(1)}
-              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]"
+            >
               <CheckCircle />
               <span className="ml-2">Mark as Correct</span>
             </button>

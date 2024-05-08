@@ -9,7 +9,8 @@ const ImportsSummaryTable = ({ data, handleClickRow }) => {
         <tr>
           <th
             scope="col"
-            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+          >
             <Input type="checkbox" onChange={(event) => console.log(event)}></Input>
             File Name
           </th>
@@ -41,13 +42,15 @@ const ImportsSummaryTable = ({ data, handleClickRow }) => {
           <tr
             key={data.id}
             className="hover:bg-lightBlue1 cursor-pointer contact-row border-b border-gray-200"
-            onClick={(event) => handleClickRow(data, event)}>
+            onClick={(event) => handleClickRow(data, event)}
+          >
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 pl-6">
               <div className="flex items-center">
                 <Input
                   type="checkbox"
                   onChange={(event) => handleSelectContact(event, contact)}
-                  className="mr-1"></Input>
+                  className="mr-1"
+                ></Input>
                 <div className="text-gray7 font-medium">{data.fileName}</div>
               </div>
             </td>

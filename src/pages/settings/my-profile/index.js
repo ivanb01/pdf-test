@@ -74,50 +74,50 @@ const index = () => {
   return (
     <>
       <SettingsLayout>
-        <TopBar text='My profile' />
-        <div className='p-6 flex flex-col justify-between' style={{ height: 'calc(100vh - 160px)' }}>
+        <TopBar text="My profile" />
+        <div className="p-6 flex flex-col justify-between" style={{ height: 'calc(100vh - 160px)' }}>
           <div>
-            <Text h3 className='mb-1 text-gray7'>
+            <Text h3 className="mb-1 text-gray7">
               General Information
             </Text>
-            <Text p className='text-gray4'>
+            <Text p className="text-gray4">
               Profile information that you will be presented to your contacts.
             </Text>
-            <hr className='my-3' />
-            <div className='w-[40%]'>
-              <div className='flex mb-6'>
+            <hr className="my-3" />
+            <div className="w-[40%]">
+              <div className="flex mb-6">
                 <Input
-                  type='text'
-                  label='First Name'
-                  name='first_name'
-                  className='mr-6'
+                  type="text"
+                  label="First Name"
+                  name="first_name"
+                  className="mr-6"
                   value={changedUserInfo?.first_name || ''}
                   onChange={handleChange}
                 />
                 <Input
-                  type='text'
-                  label='Last Name'
-                  name='last_name'
+                  type="text"
+                  label="Last Name"
+                  name="last_name"
                   value={changedUserInfo?.last_name || ''}
                   onChange={handleChange}
                 />
               </div>
               <Input
-                type='phone'
-                label='Phone Number'
-                name='phone_number'
+                type="phone"
+                label="Phone Number"
+                name="phone_number"
                 value={changedUserInfo?.phone_number || ''}
                 onChange={handleChange}
                 hidePhonePrefix={true}
               />
             </div>
-            <Text h3 className='mb-1 mt-[50px] text-gray7'>
+            <Text h3 className="mb-1 mt-[50px] text-gray7">
               Email and SMS Signature
             </Text>
-            <Text p className='text-gray4'>
+            <Text p className="text-gray4">
               These signatures will be used when sending Email and SMS’s.
             </Text>
-            <hr className='my-3' />
+            <hr className="my-3" />
             <div className={'flex gap-[120px] mt-2'}>
               <div className={'flex flex-col gap-[24px]'}>
                 <p className={' font-normal text-gray6'}>Email Signature</p>
@@ -133,8 +133,8 @@ const index = () => {
               </div>
             </div>
           </div>
-          <div className='flex items-center self-end sticky bottom-4'>
-            <Button loading={loadingActivate} label='Save Changes' onClick={handleSubmit} />
+          <div className="flex items-center self-end sticky bottom-4">
+            <Button loading={loadingActivate} label="Save Changes" onClick={handleSubmit} />
           </div>
         </div>
       </SettingsLayout>
@@ -142,27 +142,34 @@ const index = () => {
   );
 };
 const ErrorState = ({ message }) => {
-  return <p className={'px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>
-    {message}
-  </p>;
+  return <p className={'px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>{message}</p>;
 };
 const Signature = ({ userInfo, companyName, imageUrl }) => {
-
   return (
     <div className={'flex flex-col gap-[12px] text-gray8 text-sm font-normal'}>
       <div className={'flex gap-3 items-center'}>
         <div>
-          {(userInfo?.first_name === undefined || userInfo?.first_name.length === 0) ?
-            <ErrorState message={'First name is missing'} /> : userInfo?.first_name}
+          {userInfo?.first_name === undefined || userInfo?.first_name.length === 0 ? (
+            <ErrorState message={'First name is missing'} />
+          ) : (
+            userInfo?.first_name
+          )}
         </div>
-        <div>{(userInfo?.last_name ===  undefined || userInfo?.last_name.length === 0) ?
-          <ErrorState message={'Last name is missing'} /> : userInfo?.last_name}
+        <div>
+          {userInfo?.last_name === undefined || userInfo?.last_name.length === 0 ? (
+            <ErrorState message={'Last name is missing'} />
+          ) : (
+            userInfo?.last_name
+          )}
         </div>
       </div>
       <p>{companyName}</p>
       <div>
-        {(userInfo?.phone_number ===  undefined || userInfo?.phone_number.length === 0) ?
-          <ErrorState message={'Phone Number is missing'} /> : userInfo?.phone_number}
+        {userInfo?.phone_number === undefined || userInfo?.phone_number.length === 0 ? (
+          <ErrorState message={'Phone Number is missing'} />
+        ) : (
+          userInfo?.phone_number
+        )}
       </div>
       <p>{userInfo?.email}</p>
       {imageUrl && (

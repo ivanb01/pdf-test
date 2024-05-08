@@ -154,7 +154,8 @@ const Input = ({
         )}
         <div
           onClick={() => setShowPassword(!showPassword)}
-          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}>
+          className={`absolute cursor-pointer inset-y-0 ${error ? 'right-7' : 'right-0'} pr-3 flex items-center`}
+        >
           {showPassword ? (
             <VisibilityIcon className="text-gray-400" />
           ) : (
@@ -308,7 +309,8 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${hidePhonePrefix && 'hidden'}`}>
+            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${hidePhonePrefix && 'hidden'}`}
+          >
             <option>US</option>
             <option>CA</option>
             <option>EU</option>

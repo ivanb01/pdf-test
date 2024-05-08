@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Header } from '@components/public/Header';
 import { Footer } from '@components/public/Footer';
@@ -17,7 +17,7 @@ const Return = () => {
     const sessionId = urlParams.get('session_id');
 
     if (!sessionId) {
-      window.location.href = "/public/pricing";
+      window.location.href = '/public/pricing';
       return;
     }
 
@@ -28,13 +28,13 @@ const Return = () => {
         setCustomerEmail(data.customer_email);
       })
       .catch((error) => {
-        console.error("An error happened.");
-        router.push("/public/pricing");
+        console.error('An error happened.');
+        router.push('/public/pricing');
       });
   }, []);
 
   if (status === 'open') {
-    router.push("/checkout");
+    router.push('/checkout');
     return;
   }
 
@@ -46,19 +46,20 @@ const Return = () => {
           <section id="success">
             <p>
               We appreciate your trust! A confirmation email will be sent to <strong>{customerEmail}</strong>.
-
               <br />
               If you have any questions, please email <a href="mailto:orders@onelinecrm.com">orders@onelinecrm.com</a>.
             </p>
-            <div className={styles.dashboard}>Enjoy access and go to our <Link href="/contacts/clients">Dashboard</Link></div>
+            <div className={styles.dashboard}>
+              Enjoy access and go to our <Link href="/contacts/clients">Dashboard</Link>
+            </div>
           </section>
         </main>
         <Footer />
       </>
-    )
+    );
   }
 
   return null;
-}
+};
 
 export default Return;

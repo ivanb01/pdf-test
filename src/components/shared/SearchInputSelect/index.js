@@ -84,7 +84,8 @@ const SearchInputSelect = (props) => {
         formError,
         debouncing,
         placeholder,
-      }}>
+      }}
+    >
       <div className="flex flex-col gap-[4px] relative">
         <p className="text-sm font-medium text-gray6">{label}</p>
         {React.Children.map(rest.children, (child) =>
@@ -151,7 +152,8 @@ function Input(props) {
           toggleFocus(true);
         }}
         onBlur={toggleBlur}
-        className={inputClassname}>
+        className={inputClassname}
+      >
         <div className="flex flex-wrap gap-[8px] grow">
           {render(selectedValues, onRemoveSelectedItem)}
           <input
@@ -199,7 +201,8 @@ function List({ render, noDataComponent }) {
           style={{ top: containerHeight + 24 }}
           className={
             'absolute bg-white w-full  max-h-[216px] z-[500] overflow-scroll shadow-[0px_2px_4px_-1px_rgba(0,0,0,0.3),0px_4px_6px_-1px_rgba(0,0,0,0.1)] rounded rounded-t-0 '
-          }>
+          }
+        >
           {render(
             data?.data.filter((item) => {
               if (selectedValues) return !selectedValues.some((selectedItem) => selectedItem.id === item.id);
@@ -225,7 +228,8 @@ function ListItem({ children, value }) {
       className="hover:bg-lightBlue1 cursor-pointer"
       onMouseDown={() => {
         onListItemAdd(value);
-      }}>
+      }}
+    >
       {children}
     </li>
   );

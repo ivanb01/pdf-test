@@ -84,7 +84,8 @@ export const SectionIntro = () => {
             </div>
             <div
               className={styles['section__content-right']}
-              style={{ backgroundImage: `url(${intoMobileRight.src})` }}>
+              style={{ backgroundImage: `url(${intoMobileRight.src})` }}
+            >
               <Image src={intoChatBg} alt="intro chat bg" />
             </div>
             <div className={styles['section__content-bg-sm']} style={{ backgroundImage: `url(${bgSm.src})` }}>

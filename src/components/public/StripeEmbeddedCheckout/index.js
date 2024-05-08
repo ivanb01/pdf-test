@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout
-} from '@stripe/react-stripe-js';
-import Modal from "./Modal";
+import React, { useState, useEffect } from 'react';
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
+import Modal from './Modal';
 import { Button } from '../Button';
 import { isAuthValidRedirect, getCurrentUser } from '@helpers/auth';
 
@@ -28,7 +25,7 @@ const CheckoutForm = ({ priceId, children }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ priceId, email, tenantName, tenantId })
+        body: JSON.stringify({ priceId, email, tenantName, tenantId }),
       })
         .then((res) => res.json())
         .then((data) => setClientSecret(data.clientSecret));
@@ -40,34 +37,34 @@ const CheckoutForm = ({ priceId, children }) => {
   return (
     <div id="checkout">
       {clientSecret && (
-        <EmbeddedCheckoutProvider
-          stripe={stripeProvider}
-          options={{clientSecret}}
-        >
+        <EmbeddedCheckoutProvider stripe={stripeProvider} options={{ clientSecret }}>
           <EmbeddedCheckout />
         </EmbeddedCheckoutProvider>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default (props) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
-      <Button type="primary" onClick={async () => {
-        if (!(await isAuthValidRedirect(props.priceId))) return;
-        setShowModal(true)
-      }}>
-        { props.children }
+      <Button
+        type="primary"
+        onClick={async () => {
+          if (!(await isAuthValidRedirect(props.priceId))) return;
+          setShowModal(true);
+        }}
+      >
+        {props.children}
       </Button>
-      { showModal && (
+      {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <CheckoutForm {...props} />
         </Modal>
       )}
       <div id="modal-root"></div>
     </>
-  )
+  );
 };

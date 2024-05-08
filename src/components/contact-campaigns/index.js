@@ -227,7 +227,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}
-                    onClick={setCurrentButton}></ButtonsSlider>
+                    onClick={setCurrentButton}
+                  ></ButtonsSlider>
                 </div>
               </div>
               <div className={`w-auto h-auto`}>

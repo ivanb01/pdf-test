@@ -24,7 +24,8 @@ const WelcomePopup = ({ closeModal, setStartedOnboarding }) => {
           onClick={() => {
             setStartedOnboarding(true);
             closeModal();
-          }}>
+          }}
+        >
           Start your journey
         </Button>
       </div>

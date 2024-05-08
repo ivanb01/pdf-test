@@ -83,7 +83,8 @@ const SearchSelectInput = ({
               color: 'white !important',
             },
           }),
-        }}></Select>
+        }}
+      ></Select>
       {error && errorText && (
         <NotificationAlert className="mt-2 p-2" type={'error'}>
           {errorText}

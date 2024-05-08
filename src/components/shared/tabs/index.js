@@ -32,7 +32,8 @@ export default function Tabs({
           id="tabs"
           name="tabs"
           className="block w-full focus:lightBlue3 focus:lightBlue3 border-text-gray4 rounded-md"
-          defaultValue={tabs[current]?.name}>
+          defaultValue={tabs[current]?.name}
+        >
           {tabs.map((tab) => (
             <option key={tab.name}>{tab.name}</option>
           ))}
@@ -50,7 +51,8 @@ export default function Tabs({
                   ? 'border-lightBlue3 text-lightBlue3'
                   : 'border-transparent text-gray4 hover:text-gray4 hover:border-gray4',
                 'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm',
-              )}>
+              )}
+            >
               {withNumbers ? (
                 <>
                   {tab.name}
@@ -58,7 +60,8 @@ export default function Tabs({
                     className={classNames(
                       current == tab.id ? 'bg-lightBlue2 text-lightBlue3' : 'bg-gray-100 text-gray-900',
                       'hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block',
-                    )}>
+                    )}
+                  >
                     {tab.count}
                   </span>
                 </>
@@ -68,7 +71,8 @@ export default function Tabs({
                   <span
                     className={classNames(
                       current === tab.id ? 'text-lightBlue3' : 'text-gray4 hover:text-gray4 hover:border-gray4',
-                    )}>
+                    )}
+                  >
                     {tab.name}
                   </span>
                 </>

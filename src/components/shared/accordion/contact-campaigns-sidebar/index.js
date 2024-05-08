@@ -49,7 +49,8 @@ const ContactCampaignsSidebar = ({
     <div
       className={`accordion-wrapper h-full ${className} transition-all flex flex-col justify-between ${
         pinned ? 'w-[290px]' : 'w-[62px]'
-      }`}>
+      }`}
+    >
       <div>
         <SimpleBar style={{ maxHeight: 'calc(100vh - 145px)' }}>
           <div className="pt-6 pb-3">
@@ -66,7 +67,8 @@ const ContactCampaignsSidebar = ({
                         setCollapseMainTab(!collapseMainTab);
                       }
                       setOpenedTab(tab.id);
-                    }}>
+                    }}
+                  >
                     <div className={`flex items-center ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
                       {tab.icon}
                       <Text h4 className={`ml-3 ${openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
@@ -104,13 +106,15 @@ const ContactCampaignsSidebar = ({
                               className={`transition-all duration-200 flex items-center ${
                                 isSubtabActive(`${subtab.campaign_id}`) ? 'text-lightBlue3' : 'text-gray4'
                               }`}
-                              onClick={() => setOpenedSubtab(subtab.campaign_id)}>
+                              onClick={() => setOpenedSubtab(subtab.campaign_id)}
+                            >
                               {subtab.icon ? subtab.icon : subtab.dot}
                               <Text
                                 h4
                                 className={`px-[10px] py-[10px] ${
                                   isSubtabActive(`${subtab.campaign_id}`) ? 'text-lightBlue3' : 'text-gray4'
-                                }`}>
+                                }`}
+                              >
                                 {subtab.campaign_name} ({subtab.contact_assigned_count}/
                                 {subtab.contact_unassigned_count +
                                   subtab.contact_assigned_count +

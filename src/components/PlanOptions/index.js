@@ -110,7 +110,7 @@ const PlanOptions = ({ userInfo }) => {
 
   const openPortal = async () => {
     setPortalLoading(true);
-    
+
     if (!userInfo || !userInfo.subscriptionId) return;
 
     fetch('/api/create-billing-session', {
@@ -120,21 +120,20 @@ const PlanOptions = ({ userInfo }) => {
       },
       body: JSON.stringify({
         customerId: userInfo.customer_id,
-        subscriptionId: userInfo.subscriptionId
-      })
+        subscriptionId: userInfo.subscriptionId,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.sessionURL)
-          window.open(data.sessionURL);
+        if (data?.sessionURL) window.open(data.sessionURL);
       })
       .finally(() => {
         setPortalLoading(false);
-      })
-  }
+      });
+  };
 
   useEffect(() => {
-    fetchCurrentPlan()
+    fetchCurrentPlan();
   }, []);
 
   const handlePlanChange = async (newPlanType, newInterval = null) => {
@@ -172,7 +171,7 @@ const PlanOptions = ({ userInfo }) => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    return new Date(parseInt(timestamp) * 1000).toLocaleDateString("en-US");
+    return new Date(parseInt(timestamp) * 1000).toLocaleDateString('en-US');
   };
 
   return (
@@ -195,7 +194,8 @@ const PlanOptions = ({ userInfo }) => {
                   className={clsx(
                     styles['section__tabs-item'],
                     plan === 'month' && styles['section__tabs-item--active'],
-                  )}>
+                  )}
+                >
                   Monthly billing
                 </span>
                 <span
@@ -203,7 +203,8 @@ const PlanOptions = ({ userInfo }) => {
                   className={clsx(
                     styles['section__tabs-item'],
                     plan === 'yearly' && styles['section__tabs-item--active'],
-                  )}>
+                  )}
+                >
                   Yearly billing
                 </span>
               </div>
@@ -231,18 +232,15 @@ const PlanOptions = ({ userInfo }) => {
         )}
         {currentPlan?.productName && userInfo?.email && (
           <>
-
-            {
-              userInfo && userInfo?.email && (
-                <>
-                  <p className="mb-5">Email: {userInfo?.email}</p>
-                  <p className="mb-5">Subscription Status: {userInfo?.subscriptionStatus}</p>
-                  <p className="mb-5">Subscription Start: {formatDate(userInfo?.subscriptionStartDate)}</p>
-                  <p className="mb-5">Current Period Start: {formatDate(userInfo?.subscriptionCurrentPeriodStart)}</p>
-                  <p className="mb-5">Current Period End: {formatDate(userInfo?.subscriptionCurrentPeriodEnd)}</p>
-                </>
-              )
-            }
+            {userInfo && userInfo?.email && (
+              <>
+                <p className="mb-5">Email: {userInfo?.email}</p>
+                <p className="mb-5">Subscription Status: {userInfo?.subscriptionStatus}</p>
+                <p className="mb-5">Subscription Start: {formatDate(userInfo?.subscriptionStartDate)}</p>
+                <p className="mb-5">Current Period Start: {formatDate(userInfo?.subscriptionCurrentPeriodStart)}</p>
+                <p className="mb-5">Current Period End: {formatDate(userInfo?.subscriptionCurrentPeriodEnd)}</p>
+              </>
+            )}
             <p className="mb-5">
               Current Plan: <strong>{currentPlan.description}</strong>
             </p>
@@ -285,17 +283,13 @@ const PlanOptions = ({ userInfo }) => {
           </>
         )}
       </div>
-      { !currentPlan?.error && userInfo?.subscriptionId && (
+      {!currentPlan?.error && userInfo?.subscriptionId && (
         <>
           <div className="font-medium">Manage your subscription</div>
           <div className="text-sm text-gray-700 mb-6">
             Clicking the button below will open your subscription portal.
           </div>
-          <Button
-            loading={portalLoading}
-            information label="Open Subscription Portal"
-            onClick={openPortal} 
-          />
+          <Button loading={portalLoading} information label="Open Subscription Portal" onClick={openPortal} />
         </>
       )}
     </>

@@ -14,7 +14,8 @@ const CampaignsTable = (data, handleSelectAll, handleClickRow, handleSelectConta
         <tr>
           <th
             scope="col"
-            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
+            className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
+          >
             {/* <Input type="checkbox" onChange={() => handleSelectAll}></Input> */}
             Contacts
           </th>
@@ -51,7 +52,8 @@ const CampaignsTable = (data, handleSelectAll, handleClickRow, handleSelectConta
                 onClick={() => {
                   console.log(dataItem, data);
                   setCampaignId(dataItem.campaign_id);
-                }}>
+                }}
+              >
                 <Image src={eyeIcon} />
                 <span className="ml-1">Preview Campaign</span>
               </div>

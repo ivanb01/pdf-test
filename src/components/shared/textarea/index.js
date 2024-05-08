@@ -29,7 +29,8 @@ const TextArea = ({
               <TooltipComponent
                 side={'bottom'}
                 align={'left'}
-                triggerElement={<ExclamationCircleIcon className="h-4 w-4 ml-1 text-gray3 z-10" aria-hidden="true" />}>
+                triggerElement={<ExclamationCircleIcon className="h-4 w-4 ml-1 text-gray3 z-10" aria-hidden="true" />}
+              >
                 <div style={{ width: '205px' }}>
                   <p className={'text-xs leading-4 font-normal text-white'}>
                     Write a short summary so you can easily identify this client.
@@ -41,7 +42,8 @@ const TextArea = ({
                   target="_blank"
                   href={link}
                   className="cursor-pointer flex items-center text-xs text-gray-900 underline"
-                  rel="noreferrer">
+                  rel="noreferrer"
+                >
                   <img src={newTab.src} alt="" className="ml-1" />
                 </a>
               )}

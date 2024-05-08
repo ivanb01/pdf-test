@@ -7,6 +7,6 @@ export default async function handler(req, res) {
 
   res.status(200).json({
     status: session.status,
-    customer_email: session.customer_details.email
+    customer_email: session.customer_details.email,
   });
-};
+}

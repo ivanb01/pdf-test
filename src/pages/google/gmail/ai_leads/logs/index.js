@@ -66,8 +66,8 @@ export default function GmailAILogs() {
                       {log.ai_contact_category_1 || log.ai_contact_category_2
                         ? `${log.ai_contact_category_1 || ''} ${log.ai_contact_category_2 || ''}`
                         : log.result_contact_category_id === 1
-                        ? 'Uncategorized'
-                        : log.result_contact_category_id}
+                          ? 'Uncategorized'
+                          : log.result_contact_category_id}
                     </td>
                     <td className="px-4 py-2">
                       {log.ai_email_summary ? `${log.ai_email_summary} - ` : 'No AI summary - '}

@@ -4,7 +4,7 @@ const configureAmplify = () => {
   const data = {
     apiGatewayUrl: process.env.NEXT_PUBLIC_API_URL,
     appClientId: process.env.NEXT_PUBLIC_COGNITO_APP_CLIENT_ID,
-    userPoolId: process.env.NEXT_PUBLIC_COGNITO_POOL_ID
+    userPoolId: process.env.NEXT_PUBLIC_COGNITO_POOL_ID,
   };
   console.log(data);
 

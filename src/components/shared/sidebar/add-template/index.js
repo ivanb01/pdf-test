@@ -100,7 +100,8 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
             />
           </>
         )
-      }>
+      }
+    >
       {/* <Input label="To" className="mb-6" /> */}
       {formSubmitted ? (
         <div className="text-center">
@@ -109,7 +110,8 @@ const AddTemplate = ({ title, open, setOpen, addDataLocally, isEmail }) => {
             background="transparent"
             speed="1"
             style={{ height: '200px' }}
-            autoplay></lottie-player>
+            autoplay
+          ></lottie-player>
           <div className="text-gray7 font-medium text-lg -mt-4">Template has been updated successfully</div>
 
           {/* <Button primary label="Create Another Template" onClick={() => resetForm()} className="mt-6" /> */}
