@@ -39,6 +39,7 @@ export default function SlideOver({
                 enterTo="translate-x-0"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
+
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
@@ -57,7 +58,7 @@ export default function SlideOver({
                                 className={`w-[400px] text-xl font-medium text-gray-900`}
                                 value={title}
                                 error={errorName}
-                                errorText={'Field can not be empty!'}
+                                errorText={'Field cannot be empty!'}
                                 onChange={handleTitleChange}
                               />
                             ) : (
@@ -67,6 +68,7 @@ export default function SlideOver({
                               <button
                                 type="button"
                                 className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+
                                 onClick={() => setOpen(false)}
                               >
                                 <span className="sr-only">Close panel</span>
@@ -86,6 +88,7 @@ export default function SlideOver({
                         </div>
                         {buttons && (
                           <div
+
                             className={`flex flex-shrink-0 ${buttonsRight ? 'justify-end' : 'justify-between'} px-4 py-4 border-t border-gray-2`}
                           >
                             {buttons}

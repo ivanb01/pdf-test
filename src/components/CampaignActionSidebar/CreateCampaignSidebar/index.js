@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Input from '@components/shared/input';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import {
+  convertTo12HourFormat,
   formatDateLThour,
   getContactStatusByStatusId,
   getContactTypeByTypeId,
@@ -191,7 +192,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             {expandable &&
               campaign.contact_category_id &&
               campaign.contact_status_id &&
-              `: ${getContactTypeByTypeId(null, campaign.contact_category_id)} - ${getContactStatusByStatusId(campaign.contact_category_id, campaign.contact_status_id)}`}
+              `: ${getContactTypeByTypeId(null, campaign.contact_category_id)} - ${getContactStatusByStatusId(
+                campaign.contact_category_id,
+                campaign.contact_status_id,
+              )}`}
           </div>
           {description && <div className="text-gray5 mt-1">{description}</div>}
         </div>
@@ -230,7 +234,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     );
   };
 
-  const Event = ({ index, title, className, type, active, onClick, wait, icon, error, showError }) => {
+  const Event = ({ index, title, className, type, active, onClick, wait, icon, error, showError, time }) => {
     let isSms = type == 0 ? true : false;
 
     let days = wait.split('d')[0];
@@ -239,7 +243,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     return (
       <div className="mb-3 last:mb-0">
         <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-          Wait {days} days, then send this event at {days === '-' ? ' - date' : formatDateLThour(date)}
+          Wait {days} days, then send this event at {days === '-' ? ' - date' : convertTo12HourFormat(time)}
         </div>
         <div className="my-2 pl-2">
           <Divider />
@@ -440,6 +444,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                     index={index}
                     title={event.title}
                     wait={event.wait_interval}
+                    time={event.trigger_time}
                     active={selectedEvent == index}
                     onClick={() => setSelectedEvent(index)}
                   />
@@ -493,32 +498,58 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                   ))}
                 </div>
               </div> */}
-              <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">Set the time you want to send the event:</div>
-                <div className="flex">
-                  <Dropdown
-                    handleSelect={(option) =>
-                      setEvents((currentEvents) =>
-                        currentEvents.map((item, index) =>
-                          index === selectedEvent ? { ...item, wait_interval: `${option.id}d` } : item,
-                        ),
-                      )
-                    }
-                    error={events[selectedEvent]?.wait_interval?.includes('-') && showError}
-                    errorText={
-                      events[selectedEvent]?.wait_interval?.includes('-') && showError ? 'Field can not be empty!' : ''
-                    }
-                    inputWidth={'w-[220px]'}
-                    initialSelect={
-                      events[selectedEvent]
-                        ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
-                        : null
-                    }
-                    className="mr-3"
-                    placeHolder="Waiting Days"
-                    options={waitingDays}
-                  />
-                  {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
+              <div className="mb-6 flex">
+                <div>
+                  <div className="mb-4 text-gray8 text-sm font-medium">Waiting Days</div>
+                  <div className="flex">
+                    <Dropdown
+                      handleSelect={(option) =>
+                        setEvents((currentEvents) =>
+                          currentEvents.map((item, index) =>
+                            index === selectedEvent ? { ...item, wait_interval: `${option.id}d` } : item,
+                          ),
+                        )
+                      }
+                      error={events[selectedEvent]?.wait_interval?.includes('-') && showError}
+                      errorText={
+                        events[selectedEvent]?.wait_interval?.includes('-') && showError
+                          ? 'Field can not be empty!'
+                          : ''
+                      }
+                      inputWidth={'w-[150px]'}
+                      initialSelect={
+                        events[selectedEvent]
+                          ? waitingDays.find((option) => option.id == events[selectedEvent].wait_interval.split('d')[0])
+                          : null
+                      }
+                      className="mr-3"
+                      placeHolder="Waiting Days"
+                      options={waitingDays}
+                    />
+                    {/* <Dropdown inputWidth="w-[160px]" placeHolder="Time" options={timeOptions} /> */}
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-4 text-gray8 text-sm font-medium">What time?</div>
+                  <div className="flex">
+                    <Input
+                      type="time"
+                      id="timeInput"
+                      onChange={(event) => {
+                        setEvents((currentEvents) =>
+                          currentEvents.map((item, index) =>
+                            index === selectedEvent ? { ...item, trigger_time: event.target.value } : item,
+                          ),
+                        );
+                      }}
+                      value={events[selectedEvent].trigger_time}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Backspace' || event.key === 'Delete') {
+                          event.preventDefault();
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="mb-6">
@@ -626,14 +657,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                 setOpenConfirmationDialog(true);
               }}
             />
-            <a
-              onClick={() => addNewEvent()}
-              className="mx-3 px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold"
-            >
-              + Add New Event
-            </a>
             <Button
               primary
+              className="ml-2"
               label="Create Campaign"
               disabled={false}
               loading={creatingCampaignLoader}

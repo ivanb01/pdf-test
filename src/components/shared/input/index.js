@@ -63,9 +63,9 @@ const Input = ({
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={value}
-          className={`text-sm text-gray8 pl-10 border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${disabled ? 'bg-gray1' : 'bg-white'} ${
-            errorClasses ? errorClasses : 'border-borderColor'
-          }`}
+          className={`text-sm text-gray8 pl-10 border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+            disabled ? 'bg-gray1' : 'bg-white'
+          } ${errorClasses ? errorClasses : 'border-borderColor'}`}
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -86,7 +86,9 @@ const Input = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           value={value}
-          className={`text-sm text-gray8 pr-10 border ${disabled ? 'bg-gray1' : 'bg-white'} rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
+          className={`text-sm text-gray8 pr-10 border ${
+            disabled ? 'bg-gray1' : 'bg-white'
+          } rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
             errorClasses ? errorClasses : ' border-borderColor'
           }`}
         />
@@ -115,7 +117,9 @@ const Input = ({
           className={
             saved
               ? `text-sm text-gray8 p-0 border-none bg-transparent outline-none ${className}`
-              : `${className} text-sm text-gray8 ${disabled ? 'bg-gray1' : 'bg-white'} border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
+              : `${className} text-sm text-gray8 ${
+                  disabled ? 'bg-gray1' : 'bg-white'
+                } border rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1  ${
                   errorClasses ? errorClasses : 'border-borderColor'
                 }`
           }
@@ -309,8 +313,10 @@ const Input = ({
             id="country"
             name="country"
             autoComplete="country"
-            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${hidePhonePrefix && 'hidden'}`}
-          >
+            className={`outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md ${
+              hidePhonePrefix && 'hidden'
+            }`}>
+
             <option>US</option>
             <option>CA</option>
             <option>EU</option>
@@ -320,7 +326,9 @@ const Input = ({
           type="text"
           name={name ? name : id}
           id={id}
-          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full px-[13px] py-[9px] ${!hidePhonePrefix && 'pl-16'} sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
+          className={`text-sm text-gray8 outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 block w-full px-[13px] py-[9px] ${
+            !hidePhonePrefix && 'pl-16'
+          } sm:text-sm border-gray-300 rounded-md ${errorClasses}`}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -380,6 +388,18 @@ const Input = ({
       </>
     );
   };
+  const timeInput = () => {
+    return (
+      <input
+        className="text-sm h-full border-gray-300 rounded-md py-[6px] text-gray-800"
+        id={id}
+        type={type}
+        value={value}
+        onKeyDown={onKeyDown}
+        onChange={onChange}
+      />
+    );
+  };
   const signatureInput = () => {
     const sigCanvas = useRef({});
 
@@ -425,22 +445,24 @@ const Input = ({
           {secondaryLabel}{' '}
         </Text>
       )}
-      <div className={`${type == 'checkbox' ? '' : 'mt-1 relative rounded-md'}`}>
+      <div className={`${type == 'checkbox' || type == 'time' ? '' : 'mt-1 relative rounded-md'}`}>
         {type == 'phone'
           ? phoneInput()
           : type == 'phone_number'
-            ? InputPhone()
-            : type == 'checkbox'
-              ? checkboxInput()
-              : type == 'password'
-                ? passwordInput()
-                : type == 'money'
-                  ? moneyInput()
-                  : type === 'date'
-                    ? dateInput()
-                    : type === 'signature'
-                      ? signatureInput()
-                      : textInput()}
+          ? InputPhone()
+          : type == 'checkbox'
+          ? checkboxInput()
+          : type == 'password'
+          ? passwordInput()
+          : type == 'money'
+          ? moneyInput()
+          : type === 'date'
+          ? dateInput()
+          : type === 'signature'
+          ? signatureInput()
+          : type == 'time'
+          ? timeInput()
+          : textInput()}
       </div>
       {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
       {error && errorText && (
