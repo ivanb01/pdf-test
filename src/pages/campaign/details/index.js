@@ -118,7 +118,7 @@ const index = () => {
     {
       name: 'Unassigned + Never Assigned',
       icon: notInCampaign,
-      amount: usersInCampaignGlobally?.contacts_not_campaign?.length,
+      amount: usersInCampaignGlobally?.contacts_not_campaign?.length + usersInCampaignGlobally?.contacts_unassigned_count,
     },
   ];
   const buttons = [
