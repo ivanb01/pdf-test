@@ -25,7 +25,6 @@ const CampaignCard = ({
   isVisible,
   ...props
 }) => {
-  console.log('props', props);
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 

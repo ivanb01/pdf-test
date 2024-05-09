@@ -13,11 +13,17 @@ import previewEventsPerClient from '@components/overlays/preview-events-per-clie
 
 const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campaignFor, campaignData, campaignId }) => {
   const router = useRouter();
-
   const [openEventsPreview, setOpenEventsPreview] = useState(false);
   const { id, category } = router.query;
-
   const [person, setPerson] = useState();
+
+  useEffect(() => {
+    console.log(data, 'data');
+    setPerson(person);
+  }, [data]);
+  useEffect(() => {
+    console.log(person);
+  }, [person]);
   return data && data.length > 0 ? (
     <>
       <Table>
@@ -148,10 +154,6 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                     </span>
                     <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
                   </div>
-                  {/*<div className={'flex gap-[5px] items-center justify-center'}>*/}
-                  {/*  <span className={'text-sm leading-5 font-normal text-gray7'}>{person?.event_sent?.sms ?? '-'}</span>*/}
-                  {/*  <ChatIcon className={'h-3 w-3 text-[#909CBE]'} />*/}
-                  {/*</div>*/}
                 </div>
               </td>
               <td className={'px-6 py-4'}>
@@ -211,9 +213,14 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
           ))}
         </tbody>
       </Table>
-      {/*<PreviewEventsPerClient campaignData={campaignData} campaignId={campaignId} person={person && person}*/}
-      {/*                        open={openEventsPreview} setOpen={setOpenEventsPreview}*/}
-      {/*                        title={campaignFor} />*/}
+      <PreviewEventsPerClient
+        campaignData={campaignData}
+        campaignId={campaignId}
+        person={person && data?.find((c) => c.contact_id === person?.contact_id)}
+        open={openEventsPreview}
+        setOpen={setOpenEventsPreview}
+        title={campaignFor}
+      />
     </>
   ) : (
     <div>

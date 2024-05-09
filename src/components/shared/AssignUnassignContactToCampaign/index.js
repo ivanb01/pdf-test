@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Switch } from '@headlessui/react';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
-import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
+import { assignContactToCampaign, getAllEvents, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
+import { setRefetchCampaign, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -50,6 +50,8 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
         setOpenDeactivate(false);
       });
       updateUserLocally(objectKey, activePerson.contact_campaign_status);
+      dispatch(setRefetchCampaign(true));
+
       getCampaignsUsers(campaignId).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));
         setLoading(false);
@@ -65,6 +67,7 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
           handleUnassign();
         }
       });
+      dispatch(setRefetchCampaign(true));
       updateUserLocally(objectKey, activePerson.contact_campaign_status);
       getCampaignsUsers(campaignId).then((res) => {
         dispatch(setUsersInCampaignGlobally(res.data));

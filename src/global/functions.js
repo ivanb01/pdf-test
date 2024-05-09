@@ -29,6 +29,34 @@ export const getInitials = (name) => {
 
   return '';
 };
+export const areObjectsEqual = (obj1, obj2) => {
+  if (!obj2) {
+    return;
+  }
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2 && obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (let key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const getTimeWithAMPM = (timestamp) => {
+  const dateObject = new Date(timestamp);
+  let hours = dateObject.getHours();
+  const minutes = dateObject.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+  return `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+};
 
 export const formatDateStringMDY = (dateString) => {
   const months = [
@@ -204,6 +232,7 @@ export const formatDateCalendar = (date) => {
   let resultString = calendarDateArray.join(' ');
   return resultString;
 };
+
 export function daysBefore(dateString) {
   // Parse the input date string using Moment.js
   const inputDate = moment(dateString, 'YYYY-MM-DD');
@@ -233,6 +262,7 @@ export function isAfterToday(timestamp) {
 
   return dateToCompare.isAfter(currentDate);
 }
+
 export const formatDateTo = (date, param) => {
   return moment(date).endOf(param).fromNow();
 };

@@ -5,6 +5,7 @@ const CRMCampaigns = createSlice({
   initialState: {
     CRMCampaigns: undefined,
     usersInCampaignGlobally: undefined,
+    refetchCampaign: false,
   },
   reducers: {
     setCRMCampaigns(state, action) {
@@ -22,8 +23,12 @@ const CRMCampaigns = createSlice({
     setUsersInCampaignGlobally(state, action) {
       state.usersInCampaignGlobally = action.payload;
     },
+    setRefetchCampaign(state, action) {
+      state.refetchCampaign = action.payload;
+    },
   },
 });
 
-export const { setCRMCampaigns, setUsersInCampaignGlobally, addCRMCampaigns, updateCRMCampaign } = CRMCampaigns.actions;
+export const { setRefetchCampaign, setCRMCampaigns, setUsersInCampaignGlobally, addCRMCampaigns, updateCRMCampaign } =
+  CRMCampaigns.actions;
 export default CRMCampaigns.reducer;

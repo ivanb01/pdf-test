@@ -19,7 +19,7 @@ import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/sl
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
 import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-import { capitalize, getContactStatusByStatusId, getContactTypeByTypeId } from '@global/functions';
+import { capitalize, getContactTypeByTypeId } from '@global/functions';
 import AllCampaignContactsTable from '@components/shared/table/AllCampaignContactsTable';
 import NotInCampaignContactsTable from '@components/shared/table/NotInCampaignContactsTable';
 import InCampaignContactsTable from '@components/shared/table/InCampaignContactsTable';
