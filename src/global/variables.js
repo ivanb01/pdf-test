@@ -2775,6 +2775,7 @@ export const activityTypeIcons = {
   26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
   28: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  36: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 export const rentalPriceOptions = [
   { id: 1, value: 500, label: '$500' },
