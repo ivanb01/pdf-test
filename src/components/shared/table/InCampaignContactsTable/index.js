@@ -19,7 +19,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
               scope="col"
               className={`${
                 index === data[0].events.length - 1 ? ' border-gray-2' : ''
-              } flex-grow flex-1 pl-6 pr-20 py-3 bg-gray-50  border-b text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}>
+              } flex-grow flex-1 pl-6 pr-20 py-3 bg-gray-50  border-b text-left uppercase text-xs leading-4 font-medium tracking-wider text-lightBlue3`}
+            >
               <div className={'min-w-[200px]'}> {e?.event_name}</div>
             </th>
           ))}
@@ -32,23 +33,25 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                   key={cellIndex}
                   className={` flex-grow flex-1 px-6 py-[15px] border-b border-gray2 pr-20 mb-[0px] ${
                     cellIndex === events.events.length - 1 ? ' border-gray2' : ''
-                  }`}>
+                  }`}
+                >
                   <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
                     <StatusChip
                       variant={
                         e?.event_status?.toLowerCase() === 'scheduled'
                           ? VARIANT_ENUM.WARNING
                           : e?.event_status?.toLowerCase() === 'sent'
-                          ? VARIANT_ENUM.SUCCESS
-                          : VARIANT_ENUM.ERROR
+                            ? VARIANT_ENUM.SUCCESS
+                            : VARIANT_ENUM.ERROR
                       }
                       text={
                         e?.event_status?.toLowerCase() === 'scheduled'
                           ? 'To be sent'
                           : e?.event_status?.toLowerCase() === 'sent'
-                          ? 'Sent'
-                          : 'Canceled'
-                      }></StatusChip>
+                            ? 'Sent'
+                            : 'Canceled'
+                      }
+                    ></StatusChip>
                     {e.date !== null && (
                       <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
                         {getFormattedDateFromTimestamp(e.event_updated_at)}
@@ -71,7 +74,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
           <tr className="bg-gray-50 text-gray4">
             <th
               scope="col"
-              className="px-6 py-3 text-left border-b text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
+              className="px-6 py-3 text-left border-b text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase"
+            >
               {categoryType}-{status}
             </th>
           </tr>
@@ -88,7 +92,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                   query: { id: person?.contact_id },
                 });
               }}
-              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}>
+              className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
+            >
               <td className="pl-6 py-4 pr-[100px] border-b border-r  border-gray2">
                 <div className={'flex gap-4'}>
                   <div>
@@ -125,7 +130,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
           <tr className="bg-gray-50 text-gray4">
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs border-l leading-4 font-medium tracking-wider border-b border-gray2 uppercase">
+              className="px-6 py-3 text-left text-xs border-l leading-4 font-medium tracking-wider border-b border-gray2 uppercase"
+            >
               Campaign
             </th>
           </tr>
@@ -144,12 +150,13 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                   <span
                     className={`text-xs leading-5 font-medium ${
                       person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
-                    }`}>
+                    }`}
+                  >
                     {person.contact_campaign_status === 'assigned'
                       ? 'Active'
                       : person.contact_campaign_status === 'unassigned'
-                      ? 'Disabled'
-                      : 'Active'}
+                        ? 'Disabled'
+                        : 'Active'}
                   </span>
                 </div>
               </div>
@@ -183,7 +190,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
             <div
               role={'button'}
               className={'flex gap-3 items-center justify-center'}
-              onClick={() => setCurrentButton(0)}>
+              onClick={() => setCurrentButton(0)}
+            >
               <ArrowBackIcon className={'text-lightBlue3 h-5 w-5'} />
               <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">Back to all</div>
             </div>
@@ -191,7 +199,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
             <div
               role={'button'}
               className={'flex gap-3 items-center justify-center'}
-              onClick={() => setCurrentButton(2)}>
+              onClick={() => setCurrentButton(2)}
+            >
               <div className="text-center font-inter font-medium text-lightBlue3 text-base leading-5">
                 Not in campaign
               </div>
