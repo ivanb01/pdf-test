@@ -1,5 +1,11 @@
 import SlideOver from '@components/shared/slideOver';
-import { areObjectsEqual, formatDateStringMDY, getInitials, getTimeWithAMPM } from '@global/functions';
+import {
+  areObjectsEqual,
+  formatDateStringMDY,
+  getFormattedDateFromTimestamp,
+  getInitials,
+  getTimeWithAMPM,
+} from '@global/functions';
 import React, { useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 import Divider from '../../../icons/Divider';
@@ -313,7 +319,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         }
                                       ></StatusChip>
                                       <div className="text-gray-500 font-inter font-medium text-sm leading-5">
-                                        on {formatDateStringMDY(e?.execute_date)}
+                                        on {getFormattedDateFromTimestamp(correspondingEvent.event_updated_at)}
                                       </div>
                                     </div>
                                   </div>

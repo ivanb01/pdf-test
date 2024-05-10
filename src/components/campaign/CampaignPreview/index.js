@@ -46,7 +46,8 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
       }}
       className={className}
       hideScroll
-      title={campaignData?.campaign_name}>
+      title={campaignData?.campaign_name}
+    >
       <div className=" mt-[-8px] w-[480px] px-[18px] py-[16px] pb-[40px]">
         <div className={'text-sm leading-5 font-medium mb-[32px]'}>Clients who will be eligible of this campaign</div>
         <div>
@@ -108,7 +109,8 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
                             className={`cursor-pointer rounded-lg border ${
                               areObjectsEqual(campaignData?.events[index], activeEvent) &&
                               'border-[#BAE6FD] bg-lightBlue1'
-                            } p-3 flex  flex-col gap-[10px] `}>
+                            } p-3 flex  flex-col gap-[10px] `}
+                          >
                             <div className={'flex justify-between items-center group'}>
                               <div className="flex items-center">
                                 <div className="w-">
