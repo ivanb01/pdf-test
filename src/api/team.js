@@ -5,7 +5,7 @@ export const getReports = (limit, offset, sort_by) => {
     params: {
       limit: limit,
       offset: offset,
-      sort_by: sort_by
+      sort_by: sort_by,
     },
   });
 };

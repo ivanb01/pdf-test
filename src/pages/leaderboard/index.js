@@ -155,7 +155,7 @@ const index = () => {
       setLoading(false);
     });
   }, []);
-  
+
   const handleSelect = (item) => {
     setSortBy(item); // Update selected item
     // Pass the api_key of the selected item to the API
@@ -167,7 +167,7 @@ const index = () => {
       setOffset(data.data.count);
       setLoading(false);
     });
-  }
+  };
 
   useEffect(() => {
     items.data && initializeData();

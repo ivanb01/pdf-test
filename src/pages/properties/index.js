@@ -420,14 +420,16 @@ const index = () => {
             <div
               class={`${
                 selected ? 'bg-lightBlue3' : 'border border-gray-300'
-              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}
+            >
               {selected && (
                 <svg
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                   version="1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
-                  enable-background="new 0 0 48 48">
+                  enable-background="new 0 0 48 48"
+                >
                   <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}
@@ -562,7 +564,8 @@ const index = () => {
                   <div
                     className={
                       'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
-                    }>
+                    }
+                  >
                     {selectedAmenities.split(',').length}
                   </div>
                 )}
@@ -570,7 +573,8 @@ const index = () => {
               </div>
             }
             primary
-            onClick={() => setOpenFilters(true)}>
+            onClick={() => setOpenFilters(true)}
+          >
             Filters
           </Button>
           <Button white onClick={() => resetFilters()} className="min-w-[120px]">
@@ -647,7 +651,8 @@ const index = () => {
                             fetchProperties(filterValue, page - 1);
                             setPage(page - 1);
                           }}
-                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Previous
                         </a>
                       )}
@@ -658,7 +663,8 @@ const index = () => {
                             fetchProperties(filterValue, page + 1);
                             setPage(page + 1);
                           }}
-                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
+                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
+                        >
                           Next
                         </a>
                       )}
