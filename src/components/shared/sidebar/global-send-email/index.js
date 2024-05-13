@@ -126,7 +126,7 @@ const SendEmailOverlay = () => {
       setMessage('');
       setSelectedContacts([]);
       setEmailSent(false);
-      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+      setSelectedTemplate({ label: 'Create New Email', id: -1 });
       setSaveAsTemplate(false);
     }, 500);
   };
@@ -155,10 +155,10 @@ const SendEmailOverlay = () => {
         message: template.body_html,
       }));
 
-      emailTemplates.unshift({ label: 'Create Custom Email', id: -1 });
+      emailTemplates.unshift({ label: 'Create New Email', id: -1 });
 
       setEmailTemplates(emailTemplates);
-      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+      setSelectedTemplate({ label: 'Create New Email', id: -1 });
     } catch (error) {
       console.error('Failed to get email template:', error);
     }
@@ -233,9 +233,7 @@ const SendEmailOverlay = () => {
           </div>
           {emailTemplates && (
             <div className="mb-6">
-              <div className="mb-1 text-gray8 text-sm font-medium">
-                Select from one of the templates, or create a new template:
-              </div>
+              <div className="mb-1 text-gray8 text-sm font-medium">Create new email, or select a template:</div>
               <Dropdown
                 handleSelect={(option) => {
                   setSelectedTemplate(option);
@@ -258,7 +256,7 @@ const SendEmailOverlay = () => {
                       setSaveAsTemplate(state);
                     }}
                     state={saveAsTemplate}
-                    label="Save New Template"
+                    label="Save this new email as a template"
                   />
                 </div>
               )}

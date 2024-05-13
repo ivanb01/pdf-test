@@ -48,7 +48,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       action: 'Send',
       template: {
         id: -1,
-        label: 'Create Custom Email',
+        label: 'Create New Email',
       },
       save_template: false,
     };

@@ -46,7 +46,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       charset: 'A',
       template: {
         id: -1,
-        label: 'Create Custom Email',
+        label: 'Create New Email',
       },
       save_template: false,
     },
@@ -89,8 +89,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         message: template.body_html,
       }));
 
-      smsTemplates.unshift({ ...initialOption, label: 'Create Custom Email' });
-      emailTemplates.unshift({ ...initialOption, label: 'Create Custom Email' });
+      smsTemplates.unshift({ ...initialOption, label: 'Create New Email' });
+      emailTemplates.unshift({ ...initialOption, label: 'Create New Email' });
 
       setSmsTemplates(smsTemplates);
       setEmailTemplates(emailTemplates);
@@ -177,8 +177,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         onClick={onClick}
         className={`relative ${!expanded && 'cursor-pointer'} rounded-lg border-2 ${active && 'border-lightBlue3'} ${
           !expanded && active && 'bg-lightBlue1'
-        } ${padding} flex ${className} ${!description && 'items-center'}`}
-      >
+        } ${padding} flex ${className} ${!description && 'items-center'}`}>
         {icon}
         <div className="ml-4 text-sm">
           <div className="text-gray7 font-semibold flex items-center gap-[10px]">
@@ -204,8 +203,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               expanded
                 ? 'h-auto border-l-2 border-r-2 border-b-2 pointer-events-auto border-lightBlue3 px-[18px] py-6'
                 : 'border-none pointer-events-none'
-            } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}
-          >
+            } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}>
             {expanded && (
               <>
                 <Radio
@@ -251,8 +249,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           onClick={onClick}
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
-          } p-3 flex ${className} flex flex-col gap-[10px] `}
-        >
+          } p-3 flex ${className} flex flex-col gap-[10px] `}>
           <div className={'flex justify-between items-center group'}>
             <div className="flex items-center">
               <div className="w-">{icon}</div>
@@ -264,8 +261,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
             {index != 0 && (
               <div
                 onClick={() => removeEvent(index)}
-                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete"
-              >
+                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
                 <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
               </div>
             )}
@@ -309,7 +305,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         charset: 'A',
         template: {
           id: -1,
-          label: 'Create Custom Email',
+          label: 'Create New Email',
         },
         save_template: false,
       },
@@ -372,8 +368,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       className=""
       hideScroll
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
-      rounded
-    >
+      rounded>
       <div className="-mt-3 mb-5">
         <div className="mb-4 text-gray8 text-sm font-medium">
           Choose the clients who will be eligible of this campaign
@@ -463,8 +458,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               </div>
               <a
                 onClick={() => addNewEvent()}
-                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold"
-              >
+                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
                 + Add New Event
               </a>
             </div>
@@ -537,9 +531,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               <div className="mb-6">
                 {(events[selectedEvent]?.type == 'Email' || events[selectedEvent]?.type == 'SMS') && (
                   <div className="max-w-[380px]">
-                    <div className="mb-4 text-gray8 text-sm font-medium">
-                      Select from one of the templates, or create a new template:
-                    </div>
+                    <div className="mb-4 text-gray8 text-sm font-medium">Create new email, or select a template:</div>
                     <Dropdown
                       handleSelect={(option) => {
                         setSelectedTemplate(option);
@@ -580,7 +572,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
                         );
                       }}
                       state={events[selectedEvent]?.save_template}
-                      label="Save New Template"
+                      label="Save this new email as a template"
                     />
                   </div>
                 )}
