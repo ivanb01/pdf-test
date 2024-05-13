@@ -579,8 +579,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 onClick={() => {
                   addPropertiesInPortfolio([contactId], [id]).then(() => {
                     setUserProperties(actualUsers);
+                    toast.dismiss(t.id);
                   });
-                  toast.dismiss(t.id);
                 }}
                 className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
                 Undo
