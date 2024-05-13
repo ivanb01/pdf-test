@@ -19,7 +19,6 @@ const Portfolio = () => {
   const [openViewPropertyModal, setOpenViewPropertyModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   useEffect(() => {
-    console.log(share_id, 'share');
     if (share_id) {
       getPortfolioByShareId(share_id)
         .then((res) => {
@@ -71,6 +70,7 @@ const Portfolio = () => {
     return properties;
   };
   const addClientFeedback = (share_id, id, status, note) => {
+    console.log('status', status);
     putClientFeedback(share_id, status, note).catch((e) => toast.error('Something went wrong, please refresh'));
     const index = userProperties.properties.findIndex((element) => element?.property_details?.ID === id);
     setUserProperties((prev) => {

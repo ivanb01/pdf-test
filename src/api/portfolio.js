@@ -15,7 +15,7 @@ export const getPortfolioByShareId = (id) => {
 export const putClientFeedback = (id, status, note) => {
   return axios.put(`${process.env.NEXT_PUBLIC_API_URL}/v2/property-portfolio/property/share/${id}`, {
     status,
-    note,
+    note: note ?? '',
   });
 };
 

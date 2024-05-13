@@ -679,6 +679,7 @@ const index = () => {
                 <div className="flex">
                   {selectedProperties.length > 0 && (
                     <SendPropertiesFooter
+                      setSelectedProperties={setSelectedProperties}
                       selectedProperties={selectedProperties}
                       onSavePropertiesClick={() => {
                         setSendMethod(4);

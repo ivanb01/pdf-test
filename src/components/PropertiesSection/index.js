@@ -772,6 +772,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           </div>
           {selectedProperties.length > 0 && (
             <SendPropertiesFooter
+              setSelectedProperties={setSelectedProperties}
               selectedProperties={selectedProperties}
               onSendEmailAndSmsClick={() => {
                 setSendMethod(3);
