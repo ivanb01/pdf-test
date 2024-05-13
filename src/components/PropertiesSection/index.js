@@ -554,47 +554,45 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const _deletePropertyFromPortfolio = (id) => {
     const actualUsers = { ...userProperties };
 
-    setUserProperties((prev) => {
-      return {
-        ...prev,
-        properties: prev.properties.filter((p) => p.id !== id),
-      };
-    });
-    toast.custom(
-      (t) => (
-        <div
-          className={`${
-            t.visible ? 'animate-enter' : 'animate-leave'
-          } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-        >
-          <div className="flex gap-2 p-4 word-break items-center">
-            <CheckCircleIcon className={'text-green-500'} />
-            <h1 className={'text-sm leading-5 font-medium'}>
-              Property has been deleted <br />
-              successfully!
-            </h1>
+    deletePropertyFromPortfolio(id)
+      .then(() => {
+        setUserProperties((prev) => {
+          return {
+            ...prev,
+            properties: prev.properties.filter((p) => p.id !== id),
+          };
+        });
+        toast.custom((t) => (
+          <div
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                Property has been deleted <br />
+                successfully!
+              </h1>
+            </div>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+              <button
+                onClick={() => {
+                  addPropertiesInPortfolio([contactId], [id]).then(() => {
+                    setUserProperties(actualUsers);
+                  });
+                  toast.dismiss(t.id);
+                }}
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                Undo
+              </button>
+            </div>
           </div>
-          <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
-            <button
-              onClick={() => {
-                setUserProperties(actualUsers);
-                toast.dismiss(t.id);
-              }}
-              className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
-            >
-              Undo
-            </button>
-          </div>
-        </div>
-      ),
-      { duration: 2000 },
-    );
-    setTimeout(() => {
-      deletePropertyFromPortfolio(id).catch(() => {
+        ));
+      })
+      .catch(() => {
         toast.error('Error while loading items');
         setLoading(false);
       });
-    }, [5000]);
   };
 
   useEffect(() => {
@@ -650,8 +648,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         <div
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
-                          }
-                        >
+                          }>
                           <CheckRoundedIcon className={'h-4 w-4'} />
                         </div>
                       )}
@@ -688,8 +685,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                               isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
                               selected={selectedProperties}
                               key={index}
-                              property={property}
-                            ></PropertyCard>
+                              property={property}></PropertyCard>
                           ))}
                         </div>
                       ) : (
@@ -706,8 +702,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                       {allPropertiesCount > 21 && (
                         <nav
                           className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                          aria-label="Pagination"
-                        >
+                          aria-label="Pagination">
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
                               Showing{' '}
@@ -744,8 +739,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page - 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                              >
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Previous
                               </a>
                             )}
@@ -763,8 +757,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page + 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                              >
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Next
                               </a>
                             )}
