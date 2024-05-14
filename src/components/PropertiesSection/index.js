@@ -401,6 +401,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
+      limit: 21,
       page: page,
     };
     if (reduxAmenities.length > 0) {
