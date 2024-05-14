@@ -35,19 +35,19 @@ export const SectionStartTrial = () => {
       <div className={styles['section__container']}>
         <h2 className={styles['section__title']}>Easy Peasy Lemon Squeezy</h2>
         <p className={styles['section__description']}>
-          {'Don\'t look left, dont look right, click this button and take a bite.'}
+          {"Don't look left, dont look right, click this button and take a bite."}
         </p>
         <div className={styles['section__actions']}>
-          <Button type='primary' onClick={() => redirect()}>
+          <Button type="primary" onClick={() => redirect()}>
             GET STARTED
           </Button>
           <div className={styles['section__img-arrow']}>
-            <Image className={styles['section__img-arrow']} src={arrow} alt='trial-arrow' />
+            <Image className={styles['section__img-arrow']} src={arrow} alt="trial-arrow" />
           </div>
         </div>
       </div>
       <div className={styles['section__img-bottom']}>
-        <Image src={sectionBg} alt='bottom-arc' />
+        <Image src={sectionBg} alt="bottom-arc" />
       </div>
     </div>
   );
