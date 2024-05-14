@@ -43,7 +43,7 @@ const CommunicationForm = ({ handleCloseOverlay, client, setActivities }) => {
         ))}
       </div>
       {!client?.phone_number && (
-        <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start  m-6'}>
+        <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-auto rounded-md m-6'}>
           <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
           <div className={'text-[#991B1B]'}>
             <p className={'text-sm font-semibold'}>Phone number is missing! </p>
@@ -131,8 +131,7 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
   return (
     <div
       className={'w-full relative max-w-[270px] communication-box-shadow group'}
-      style={{ opacity: disabled ? '50%' : 1 }}
-    >
+      style={{ opacity: disabled ? '50%' : 1 }}>
       <div
         style={{
           height: '3px',
@@ -142,14 +141,12 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
           position: 'absolute',
           width: '174px',
           left: '-1px',
-        }}
-      ></div>
+        }}></div>
       <div
         style={{ boxSizing: 'border-box' }}
         className={
           'rounded-lg pt-[20px] w-[172px] h-[180px] pr-[15px] pb-[18px] pl-[17px] flex flex-col items-start gap-[26px] rounded-8 outline outline-solid rounded-tr-[1px] rounded-tl-[1px] outline-gray2 group-hover:outline-2'
-        }
-      >
+        }>
         <img src={icon.src} />
         <div>
           <p className={'text-sm leading-5 font-medium text-gray7 mb-[10px]'}>{name}</p>
@@ -166,8 +163,7 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
               }
               sendCommunication();
             }}
-            className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 bg-white`}
-          >
+            className={`border w-[140px] rounded-[2222px] border-borderColor flex items-center justify-center p-2 gap-2 text-sm leading-5 font-medium text-gray5 bg-white`}>
             Send
           </button>
         </div>

@@ -11,7 +11,7 @@ import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
 import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL, formatPhoneNumber } from '@global/functions';
+import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from '@global/functions';
 import { Switch } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -314,14 +314,13 @@ const index = () => {
                           created_at: new Date().toISOString(),
                         });
                         window.open(`tel:${contact.phone_number}`);
-                      }}
-                    >
+                      }}>
                       <img src={call.src} style={{ height: '15px' }} />
                     </div>
                     <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
                   </div>
                 ) : (
-                  <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-max mt-[14px] '}>
+                  <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-max rounded-md mt-[14px] pr-4'}>
                     <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
                     <div className={'text-[#991B1B]'}>
                       <p className={'text-sm font-semibold'}>Phone number is missing! </p>
@@ -329,25 +328,18 @@ const index = () => {
                   </div>
                 )}
                 <div className="mt-[18px] flex items-center">
-                  <Button
-                    size="small"
-                    inline
-                    white
-                    label={
-                      contact.category_1 === 'Other'
-                        ? othersOptions.find((c) => c.id === contact.category_id)?.name
-                        : contact.category_2
-                    }
-                    className="mr-2 text-xs pointer-events-none"
-                  />
+                  <a className="mr-3 text-neutral1 bg-gray-100 rounded-md px-3 py-[6px] text-xs font-medium uppercase">
+                    {contact.category_1 === 'Other'
+                      ? othersOptions.find((c) => c.id === contact.category_id)?.name
+                      : contact.category_2}
+                  </a>
                   {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
-                    <Button
-                      size="small"
-                      inline
-                      white
-                      label={allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
-                      className="pointer-events-none text-xs"
-                    />
+                    <a
+                      className={`${
+                        allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).color
+                      } text-neutral1 rounded-xl px-3 py-[6px] text-xs font-medium`}>
+                      {allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
+                    </a>
                   )}
                 </div>
                 {contact.summary && (
@@ -456,24 +448,21 @@ const index = () => {
                       onClick={() => setShowGmailInbox(!showGmailInbox)}
                       className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
                         showGmailInbox && 'border-lightBlue3'
-                      }`}
-                    >
+                      }`}>
                       <MailOutline
                         className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
                         className={`responsive-fix text-sm leading-5 ${
                           showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
-                        }`}
-                      >
+                        }`}>
                         Gmail Inbox
                       </span>
                     </button>
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
-                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2"
-                  >
+                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
                     <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
                       Start communication
@@ -535,8 +524,7 @@ const index = () => {
                 ) : (
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
-                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}
-                  >
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes
                       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                       .map((note, index) => (
