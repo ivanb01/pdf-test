@@ -401,7 +401,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
-      limit: 21,
       page: page,
     };
     if (reduxAmenities.length > 0) {
@@ -430,12 +429,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
     if (filters?.budget_max) params['priceMax'] = filters.budget_max;
-    if (filters?.bedrooms_min) {
+    if (filters?.bedrooms_min || filters?.bedrooms_min === 0) {
       params['bedsMin'] = filters.bedrooms_min;
+      if (filters?.bedrooms_min === 0) {
+        params['bedsMax'] = 0;
+      }
     }
-    if (filters?.bedrooms_max) {
-      params['bedsMax'] = filters.bedrooms_max;
-    }
+    // if (filters?.bedrooms_max) {
+    //   params['bedsMax'] = filters.bedrooms_max;
+    // }
 
     if (filters?.bathrooms_min) {
       params['bathMin'] = filters.bathrooms_min;
