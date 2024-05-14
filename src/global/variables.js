@@ -814,6 +814,11 @@ export const roomsOptions = [
     value: null,
   },
   {
+    id: 0,
+    label: 'Studio',
+    value: 0,
+  },
+  {
     id: 1,
     label: '1+',
     value: 1,
