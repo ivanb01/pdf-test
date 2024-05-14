@@ -13,13 +13,29 @@ import introRight from '/public/images/public/intro-right-bg.png';
 import intoMobileRight from '/public/images/public/intro-right-bg-mobile.png';
 import bgSm from '/public/images/public/intro-mobile-bg.png';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 export const SectionIntro = () => {
   const router = useRouter();
-  const redirect = () => {
-    //router.push('/contact')
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isLoggedIn = () => {
+    let user = localStorage.getItem('user');
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
   };
-
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+  const redirect = () => {
+    if (isAuthenticated) {
+      router.push('/contacts/clients');
+    } else {
+      router.push('/authentication/sign-up');
+    }
+  };
   return (
     <div className={styles.section}>
       <div className={clsx(styles['bg'], styles['bg--left'])}>
@@ -46,7 +62,7 @@ export const SectionIntro = () => {
               your workflows as an agent & brokerage.
             </p>
             <div style={{ alignSelf: 'flex-start', padding: '15px 0px' }}>
-              <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+              <Button type="primary" onClick={() => redirect()}>
                 GET STARTED
               </Button>
             </div>
@@ -78,7 +94,7 @@ export const SectionIntro = () => {
               your workflows as an agent & brokerage.
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
-              <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+              <Button type="primary" onClick={() => redirect()}>
                 GET STARTED
               </Button>
             </div>
