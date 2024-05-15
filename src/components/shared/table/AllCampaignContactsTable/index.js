@@ -32,32 +32,27 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
             </th>
             <th
               scope="col"
-              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider"
-            >
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
               contact summary
             </th>
             <th
               scope="col"
-              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider"
-            >
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
               last communication
             </th>
             <th
               scope="col"
-              className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider"
-            >
+              className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               sent emails
             </th>
             <th
               scope="col"
-              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider"
-            >
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               campaign
             </th>
             <th
               scope="col"
-              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider"
-            >
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               CAMPAIGN history
             </th>
           </tr>
@@ -72,9 +67,16 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                 localStorage.setItem('category', JSON.stringify(category));
                 setOpenEventsPreview(true);
               }}
-              className={'border-b border-gray-200 hover:bg-lightBlue1 group cursor-pointer'}
-            >
-              <td className="pl-6 py-4 pr-4 cursor-pointer">
+              className={'border-b border-gray-200 hover:bg-lightBlue1 group cursor-pointer'}>
+              <td
+                className="pl-6 py-4 pr-4 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push({
+                    pathname: '/contacts/details',
+                    query: { id: person?.contact_id },
+                  });
+                }}>
                 <div className={'flex gap-4'}>
                   <div>
                     {person.profile_image_path ? (
@@ -124,12 +126,10 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       <div
                         className={
                           'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
-                        }
-                      >
+                        }>
                         {person.contact_summary}
                       </div>
-                    }
-                  >
+                    }>
                     <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                       <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
@@ -172,13 +172,12 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                     <span
                       className={`text-xs leading-5 font-medium ${
                         person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
-                      }`}
-                    >
+                      }`}>
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                          ? 'Deactivated'
-                          : 'Inactive'}
+                        ? 'Deactivated'
+                        : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -194,8 +193,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                         person.contact_campaign_status === 'assigned'
                           ? 'Campaign is Running'
                           : person.contact_campaign_status === 'unassigned'
-                            ? 'Campaign Deactivated'
-                            : 'Never In Campaign'
+                          ? 'Campaign Deactivated'
+                          : 'Never In Campaign'
                       }
                     />
                   </div>
@@ -204,8 +203,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       {person.contact_campaign_status === 'assigned'
                         ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
                         : person.contact_campaign_status === 'unassigned'
-                          ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
-                          : ''}
+                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                        : ''}
                     </div>
                   )}
                 </div>

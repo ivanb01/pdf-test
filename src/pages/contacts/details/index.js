@@ -65,7 +65,7 @@ const index = () => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
-      if (['GmailAI', 'Gmail'].includes(contactData.import_source) && contactData.approved_ai !== true) {
+      if (['GmailAI', 'Gmail'].includes(contactData?.import_source) && contactData?.approved_ai !== true) {
         setShowReviewOverlay(true);
       } else {
         setShowReviewOverlay(false);
@@ -73,10 +73,10 @@ const index = () => {
       getActivityLog();
       getNotes();
       getCampaigns();
-      if (contactData.campaign_name) {
+      if (contactData?.campaign_name) {
         setCampaigns([
           {
-            title: contactData.campaign_name,
+            title: contactData?.campaign_name,
             status: true,
           },
         ]);
@@ -388,7 +388,7 @@ const index = () => {
                       <div>Name</div>
                       <div>Status</div>
                     </div>
-                    {campaigns.map((campaign, index) => (
+                    {campaigns?.map((campaign, index) => (
                       <>
                         <div key={index} className="flex justify-between items-center">
                           <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>

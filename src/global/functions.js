@@ -481,9 +481,13 @@ export const timeAgo = (timestamp) => {
   if (daysDifference === 0) {
     if (hoursDifference !== 0) {
       const remainingMinutes = minutesDifference % 60;
-      return `${hoursDifference === 1 ? ' 1 hour' : `${hoursDifference} hours`} and ${remainingMinutes === 1 ? ' 1 minute ago' : `${remainingMinutes} minutes ago`}`;
+      return `${hoursDifference === 1 ? ' 1 hour' : `${hoursDifference} hours`} and ${
+        remainingMinutes === 1 ? ' 1 minute ago' : `${remainingMinutes} minutes ago`
+      }`;
     } else {
-      return `${minutesDifference === 1 || minutesDifference === 0 ? '1 minute ago' : `${minutesDifference} minutes ago`}`;
+      return `${
+        minutesDifference === 1 || minutesDifference === 0 ? '1 minute ago' : `${minutesDifference} minutes ago`
+      }`;
     }
   } else {
     return `${daysDifference === 1 ? ' 1 day ago' : `${daysDifference} days ago`}`;
@@ -493,7 +497,10 @@ export const timeAgo = (timestamp) => {
 export const formatPhoneNumber = (phoneNumber) => {
   const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
   if (numericPhoneNumber.startsWith('1')) {
-    return `+${numericPhoneNumber.slice(0, 1)} ${numericPhoneNumber.slice(1, 4)} ${numericPhoneNumber.slice(4, 7)} ${numericPhoneNumber.slice(7)}`;
+    return `+${numericPhoneNumber.slice(0, 1)} ${numericPhoneNumber.slice(1, 4)} ${numericPhoneNumber.slice(
+      4,
+      7,
+    )} ${numericPhoneNumber.slice(7)}`;
   } else {
     return numericPhoneNumber;
   }
@@ -538,4 +545,33 @@ export const getSource = (source, approvedAI = false) => {
       icon: <Image src={GoogleContact} height={16} width={16} />,
     };
   } else return <></>;
+};
+
+export const convertTo12HourFormat = (time) => {
+  const [hours, minutes] = time.split(':');
+  let hour = parseInt(hours, 10);
+  let period = 'AM';
+
+  if (hour >= 12) {
+    period = 'PM';
+  }
+
+  if (hour > 12) {
+    hour -= 12;
+  } else if (hour === 0) {
+    hour = 12;
+  }
+
+  const hourString = hour.toString().padStart(2, '0');
+
+  return `${hourString}:${minutes} ${period}`;
+};
+
+export const removeSecondsFromTime = (timeStr) => {
+  var parts = timeStr.split(':');
+  if (parts.length >= 2) {
+    return parts.slice(0, 2).join(':');
+  } else {
+    return timeStr;
+  }
 };

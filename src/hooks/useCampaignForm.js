@@ -43,6 +43,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       body_html: '',
       body: '',
       wait_interval: '-d',
+      trigger_time: '11:00',
       type: 'Email',
       charset: 'A',
       action: 'Send',
