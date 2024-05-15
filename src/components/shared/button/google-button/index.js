@@ -34,8 +34,7 @@ const GoogleButton = ({ onClick, label }) => {
       onClick={onClick}
       style={buttonStyle}
       onMouseOver={() => setButtonStyle({ ...baseStyle, ...hoverStyle })}
-      onMouseOut={() => setButtonStyle(baseStyle)}
-    >
+      onMouseOut={() => setButtonStyle(baseStyle)}>
       <GoogleIcon />
       <span>{label}</span>
     </div>
