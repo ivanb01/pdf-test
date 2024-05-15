@@ -200,7 +200,7 @@ export const statuses = [
       {
         id: 16,
         name: 'Offer Submitted',
-        color: 'bg-purple4',
+        color: 'bg-purple3',
       },
     ],
   },
@@ -279,7 +279,7 @@ export const allStatusesQuickEdit = {
     {
       id: 16,
       label: 'Offer Submitted',
-      color: 'bg-purple4',
+      color: 'bg-purple3',
     },
     {
       id: 9,
