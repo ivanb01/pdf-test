@@ -125,7 +125,11 @@ const index = () => {
   const buttons = [
     {
       id: 0,
-      name: 'All',
+      name: `${
+        category == 'Unknown'
+          ? 'All Clients'
+          : `All ${capitalize(category)}s - ${usersInCampaignGlobally?.contact_status_2}`
+      }`,
       count: usersInCampaignGlobally?.contacts?.length,
     },
     {
