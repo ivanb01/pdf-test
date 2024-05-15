@@ -670,11 +670,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                     className="py-4"
                     tabs={tabs}
                   />
-                  {propertiesCurrentTab !== 0 && updateUserProperties().length === 0 ? (
+                  {propertiesCurrentTab !== 0 && updateUserProperties()?.length === 0 ? (
                     <EmptyPortfolioClientDetails status={propertiesCurrentTab} />
                   ) : (
                     <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {updateUserProperties().map((property, index) => (
+                      {updateUserProperties()?.map((property, index) => (
                         <PropertyCard
                           noSelect
                           clientNote={property?.contact_notes}
