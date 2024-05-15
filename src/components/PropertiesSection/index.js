@@ -567,7 +567,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         });
         const toastId = toast.custom(() => (
           <div
-            className={`shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+            className={`${
+              t.visible ? 'animate-enter' : 'animate-leave'
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
+
           >
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />

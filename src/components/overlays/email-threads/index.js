@@ -82,7 +82,12 @@ const EmailItem = ({
           <div className={'flex gap-3 items-center'}>
             <h5 className={'font-semibold text-base text-[#344054]'}>
               {email === userInfo?.email
-                ? userInfo?.first_name + ' ' + userInfo?.last_name
+                ? userInfo?.first_name === undefined ||
+                  userInfo?.first_name.length === 0 ||
+                  userInfo?.last_name === undefined ||
+                  userInfo?.last_name.length === 0
+                  ? userInfo?.email
+                  : userInfo?.first_name + ' ' + userInfo?.last_name
                 : name.replace(/\bundefined\b/g, '')}
             </h5>
             <div className="text-[#475467] font-medium text-sm">{sentDate}</div>
@@ -106,8 +111,7 @@ const EmailItem = ({
                 darkBlue
                 disabled={message.length === 0}
                 className={'bg-lightBlue3 w-[64px] h-[34px]'}
-                onClick={() => _replyInThread()}
-              >
+                onClick={() => _replyInThread()}>
                 Reply
               </Button>
             </>
@@ -151,13 +155,11 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
       }
       handleCloseOverlay={handleClose}
       includeTitleBorder
-      title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}
-    >
+      title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
         <div
           className="email-area"
-          style={{ height: 'calc(100% - 78px)', maxHeight: 'calc(100% - 78px) ', overflow: 'auto' }}
-        >
+          style={{ height: 'calc(100% - 78px)', maxHeight: 'calc(100% - 78px) ', overflow: 'auto' }}>
           <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
