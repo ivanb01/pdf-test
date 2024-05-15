@@ -539,7 +539,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             <Button
               primary
               className="ml-2"
-              label="Save Campaign Template"
+              label="Update Campaign"
               loading={editingCampaignLoader}
               onClick={() => {
                 setShowError(true);
