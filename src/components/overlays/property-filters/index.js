@@ -95,6 +95,7 @@ const PropertyFilters = ({ open, setOpen, className, selectAmenities, selectedAm
   ]);
 
   const toggleAmenitySelection = (amenity) => {
+    // console.log("alberina data", data)
     if (internalAmenities.includes(amenity)) {
       setInternalAmenities(internalAmenities.filter((selected) => selected !== amenity));
     } else {

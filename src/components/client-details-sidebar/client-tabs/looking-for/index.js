@@ -101,6 +101,7 @@ export default function LookingFor({ contactId, category }) {
       bathrooms: '',
       budget_min: '',
       budget_max: '',
+      general_tags: []
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values) => {
@@ -114,6 +115,7 @@ export default function LookingFor({ contactId, category }) {
           bathrooms_max: values.bathrooms,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
+          // general_tags: values.internalAmenities.length>0? null: values.internalAmenities
         });
       }
     },

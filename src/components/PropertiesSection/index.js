@@ -10,7 +10,7 @@ import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import { useSelector } from 'react-redux';
-import { setAmenities, setRefetchPart } from '@store/global/slice';
+import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
@@ -157,7 +157,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0].neighborhood_ids && !propertiesData.data[0].neighborhood_ids.includes(0) > 0) {
               newFiltersCount += 1;
             }
-            if (reduxAmenities.length > 0) {
+            if (propertiesData.data[0].general_tags.length > 0) {
               newFiltersCount += 1;
             }
           }
@@ -370,8 +370,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   };
 
-  const reduxAmenities = useSelector((state) => state.global.amenities);
-
   const initializePropertyInterests = async () => {
     try {
       const lookingProperties = await getLookingFor();
@@ -398,14 +396,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
 
   const fetchProperties = async (values, page, filterValue) => {
     let filters = values;
+    console.log(filters, 'filters');
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       limit: 21,
       page: page,
     };
-    if (reduxAmenities.length > 0) {
-      params['amenities'] = reduxAmenities.join(',');
+    if (filters?.general_tags?.length > 0) {
+      params['amenities'] = filters?.general_tags.join(',');
     }
     if (filterValue === 'newest') {
       params['sort'] = 'date';
@@ -539,9 +538,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId]);
 
-  useEffect(() => {
-    dispatch(setAmenities([]));
-  }, [contactId]);
   const updateUserProperties = () => {
     let properties = [];
     if (propertiesCurrentTab === 2) {

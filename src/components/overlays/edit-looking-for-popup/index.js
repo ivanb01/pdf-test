@@ -15,24 +15,24 @@ import RadioChips from '@components/shared/radio/radio-chips';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useSelector } from 'react-redux';
-import { setAmenities } from '@store/global/slice';
 import { amenities } from '@global/variables';
 import React from 'react';
 import Tag from '@components/Tag';
 import SimpleBar from 'simplebar-react';
+import CloseIcon from '@mui/icons-material/Close';
+import { ChevronDownIcon } from '@heroicons/react/solid';
+import List from '@components/NestedCheckbox/List';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
 
 const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
-  const reduxAmenities = useSelector((state) => state.global.amenities);
-  const [amenitiesChange, setAmenitiesChange] = useState(false);
 
   const [internalAmenities, setInternalAmenities] = useState([]);
 
   useEffect(() => {
-    setInternalAmenities(reduxAmenities.length > 0 ? reduxAmenities : []);
-  }, []);
+    setInternalAmenities(data?.general_tags ? data?.general_tags : []);
+  }, [data]);
 
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array()
@@ -40,6 +40,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       .min(1, 'Please select at least one neighborhood'),
     bedrooms: Yup.string().notRequired().nullable(),
     bathrooms: Yup.string().notRequired().nullable(),
+    general_tags: Yup.array(),
     budget_min: Yup.number()
       .min(0, 'Budget Min should be greater than 0')
       .typeError('Budget Min should be an integer')
@@ -73,6 +74,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       bathrooms: data?.bathrooms_min ? data.bathrooms_min : '',
       budget_min: data?.budget_min ? data.budget_min : '',
       budget_max: data?.budget_max ? data.budget_max : '',
+      general_tags: data?.general_tags ? data?.general_tags : [],
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
@@ -94,6 +96,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           bathrooms_max: null,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
+          general_tags: internalAmenities,
         });
       }
     },
@@ -143,13 +146,18 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     },
   ]);
 
-  const toggleAmenitySelection = (amenity) => {
+  const toggleAmenitySelection = async (amenity) => {
     if (internalAmenities.includes(amenity)) {
       setInternalAmenities(internalAmenities.filter((selected) => selected !== amenity));
+      formik.setFieldValue(
+        'general_tags',
+        internalAmenities.filter((selected) => selected !== amenity),
+      );
     } else {
       setInternalAmenities([...internalAmenities, amenity]);
+      formik.setFieldValue('general_tags', [...internalAmenities, amenity]);
+      // await contactServices.updateContactLookingProperty(data?.contact_id, propertyId, { general_tags: [...internalAmenities, amenity] });
     }
-    setAmenitiesChange(true);
   };
   const [datav2, setDatav2] = useState([]);
 
@@ -321,9 +329,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     });
   }, [contactId, data?.neighborhood_ids]);
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   function arraysHaveSameElements(arr1, arr2) {
     const sortedArr1 = [...arr1].sort();
     const sortedArr2 = [...arr2].sort();
@@ -493,7 +498,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                 setItems(data1);
                 formik?.values?.neighborhood_ids.map((id) => compute(id, 0));
                 filterData(data1, '');
-                dispatch(setAmenities([]));
                 setInternalAmenities([]);
                 formik.setValues({
                   bathrooms: '',
@@ -514,9 +518,9 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
               primary
               className=""
               loading={loadingButton}
-              disabled={!formik.dirty && arraysHaveSameElements(internalAmenities, reduxAmenities)}
+              disabled={!formik.dirty}
               onClick={() => {
-                dispatch(setAmenities([...reduxAmenities, ...internalAmenities]));
+                setOpenDropdown(false);
                 formik.handleSubmit();
               }}
             />
