@@ -129,7 +129,10 @@ const Portfolio = () => {
         </div>
 
         {updateUserProperties()?.length === 0 || !updateUserProperties() ? (
-          <EmptyPortfolioState status={propertiesCurrentTab} />
+          <EmptyPortfolioState
+            status={propertiesCurrentTab}
+            propertiesLength={userProperties?.properties?.filter((p) => p.property_details !== undefined).length}
+          />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
             {updateUserProperties().map((property, index) => (

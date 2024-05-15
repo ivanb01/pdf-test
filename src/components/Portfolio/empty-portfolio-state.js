@@ -1,12 +1,14 @@
-const EmptyPortfolioState = ({ status }) => {
+const EmptyPortfolioState = ({ status, propertiesLength }) => {
   return (
     <div className={'h-[80%] flex items-center justify-center text-center w-full flex-col gap-3'}>
       <h4 className={'text-xl leading-7 font-semibold text-gray7'}>
-        {status === 0 ? 'No Properties in Portfolio Yet' : `No ${status === 1 ? 'Liked' : 'Disliked'} Properties Yet`}
+        {status === 0
+          ? `${propertiesLength !== 0 ? 'There are no properties for you to review' : 'No Properties in Portfolio Yet'}`
+          : `No ${status === 1 ? 'Liked' : 'Disliked'} Properties Yet`}
       </h4>
       <p className={'text-base leading-6 font-medium w-[352px] text-gray8'}>
         {status === 0
-          ? 'There are no properties for review in your portfolio.'
+          ? `${propertiesLength === 0 ? 'There are no properties for review in your portfolio.' : ''}`
           : `There are no properties that you've ${status === 1 ? 'liked' : 'disliked'}.`}
       </p>
     </div>
