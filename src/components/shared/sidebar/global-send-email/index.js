@@ -120,11 +120,13 @@ const SendEmailOverlay = () => {
     });
   };
 
-  const resetSendEmailForm = () => {
+  const resetSendEmailForm = (sendAnother = false) => {
     setTimeout(() => {
       setSubject('');
       setMessage('');
-      setSelectedContacts([]);
+      if (!sendAnother) {
+        setSelectedContacts([]);
+      }
       setEmailSent(false);
       setSelectedTemplate({ label: 'Create New Email', id: -1 });
       setSaveAsTemplate(false);
@@ -189,8 +191,7 @@ const SendEmailOverlay = () => {
             />
           </>
         )
-      }
-    >
+      }>
       {/* <Input label="To" className="mb-6" /> */}
       {emailSent ? (
         <div className="text-center">
@@ -199,11 +200,10 @@ const SendEmailOverlay = () => {
             background="transparent"
             speed="1"
             style={{ height: '200px' }}
-            autoplay
-          ></lottie-player>
+            autoplay></lottie-player>
           <div className="text-gray7 font-medium text-lg -mt-4">Email has been sent successfully</div>
 
-          <Button primary label="Send Another Email" onClick={() => resetSendEmailForm()} className="mt-6" />
+          <Button primary label="Send Another Email" onClick={() => resetSendEmailForm(true)} className="mt-6" />
         </div>
       ) : (
         <div>
@@ -213,8 +213,7 @@ const SendEmailOverlay = () => {
               <TooltipComponent
                 side={'bottom'}
                 align={'start'}
-                triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}
-              >
+                triggerElement={<InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />}>
                 <div className={`text-xs font-medium text-white bg-neutral1`}>
                   Selecting multiple contacts sends individual emails to each user that is selected.
                 </div>
