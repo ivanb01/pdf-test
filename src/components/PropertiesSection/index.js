@@ -320,7 +320,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     if (lowerCaseCategory === 'buyer') {
       return 1;
     } else if (lowerCaseCategory === 'landlord') {
-      return '19,22';
+      return 22;
     } else if (lowerCaseCategory === 'seller') {
       return 19;
     } else {
@@ -343,18 +343,23 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       if (formik.isValid) {
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids,
-          looking_action: getLookingAction(),
+          looking_action: values?.looking_action ?? getLookingAction(),
           bedrooms_min: values.bedrooms,
           bedrooms_max: values.bedrooms,
           bathrooms_min: values.bathrooms,
           bathrooms_max: values.bathrooms,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
+        }).then(() => {
+          toast.success('Property interests saved successfully!');
         });
       }
     },
   });
 
+  useEffect(() => {
+    handleAddSubmit({ ...formik.values, looking_action: getLookingAction() });
+  }, [category]);
   const { resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
@@ -362,7 +367,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     try {
       await contactServices.addContactLookingProperty(contactId, values);
       setLoadingButton(false);
-      toast.success('Property interests saved successfully!');
       dispatch(setRefetchPart('looking-for'));
       resetForm();
     } catch (error) {
@@ -423,7 +427,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['sort'] = 'price';
       params['order'] = 'desc';
     }
-    params['status'] = getLookingAction();
+    params['status'] = filters?.looking_action ?? getLookingAction();
 
     if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
@@ -622,6 +626,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         <EditLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
+          category_2={category}
           data={lookingForData[0]}
           title={lookingForData[0] ? 'Edit Property Interests' : 'Add Property Interests'}
           className="w-full md:w-[700px]"

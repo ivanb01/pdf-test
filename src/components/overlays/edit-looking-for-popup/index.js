@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Overlay from '@components/shared/overlay';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { NYCneighborhoods, bathroomsOptions, roomsOptions, data as data1 } from '@global/variables';
+import { NYCneighborhoods, bathroomsOptions, roomsOptions, data as data1, forOptions } from '@global/variables';
 import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
 import { useEffect, useRef, useState } from 'react';
@@ -23,8 +23,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import List from '@components/NestedCheckbox/List';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
+import Dropdown from '@components/shared/dropdown';
 
-const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
+const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action, category_2 }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -64,12 +65,11 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       )
       .notRequired(),
   });
-
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
       neighborhood_ids: data?.neighborhood_ids ? data.neighborhood_ids : '',
-      looking_action: action,
+      looking_action: data?.looking_action ? data?.looking_action : action,
       bedrooms: data?.bedrooms_min || data?.bedrooms_min === 0 ? data.bedrooms_min : '',
       bathrooms: data?.bathrooms_min ? data.bathrooms_min : '',
       budget_min: data?.budget_min ? data.budget_min : '',
@@ -89,7 +89,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
 
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
-          looking_action: values.looking_action ? values.looking_action : null,
+          looking_action: values.looking_action ? values.looking_action : action,
           bedrooms_min: bedrooms,
           bedrooms_max: bedrooms,
           bathrooms_min: bathrooms,
@@ -101,6 +101,10 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       }
     },
   });
+
+  useEffect(() => {
+    console.log(formik.values, 'Val');
+  }, [formik.values]);
 
   const { errors, touched } = formik;
 
@@ -329,22 +333,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     });
   }, [contactId, data?.neighborhood_ids]);
 
-  function arraysHaveSameElements(arr1, arr2) {
-    const sortedArr1 = [...arr1].sort();
-    const sortedArr2 = [...arr2].sort();
-
-    if (sortedArr1.length !== sortedArr2.length) {
-      return false;
-    }
-
-    for (let i = 0; i < sortedArr1.length; i++) {
-      if (sortedArr1[i] !== sortedArr2[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
+  // if Buyer = For Sale, if Renter = For Rent, Landlord = Rented, Sellers = Sold
 
   return (
     <Overlay
@@ -356,11 +345,20 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
-            <p className={'text-gray-700 text-sm font-medium mb-1'}>Neighborhood</p>
+            <Dropdown
+              options={forOptions}
+              className="w-full"
+              placeHolder="Status"
+              label={'Status'}
+              handleSelect={(choice) => {
+                formik.setFieldValue('looking_action', choice.realtymxValue);
+              }}
+              initialSelect={forOptions.find((option) => option.realtymxValue == formik.values?.looking_action)}
+            />
+            <p className={'text-gray-700 text-sm font-medium mb-1 mt-4'}>Neighborhood</p>
             <NeighbourhoodDropdown
               className={'max-w-[610px] '}
               style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}
-              border={datav2.length > 0}
               setIds={setIds}
               items={items}
               initializeStatus={initializeStatus}
@@ -500,7 +498,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                   neighborhood_ids: [0],
                   budget_max: '',
                   budget_min: '',
-                  looking_action: 1,
+                  looking_action: action,
                 });
               }}
             />

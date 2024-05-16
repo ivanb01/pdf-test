@@ -2889,3 +2889,26 @@ export const amenities = [
   'River View',
   'Skyline View',
 ];
+
+export const forOptions = [
+  {
+    id: 0,
+    label: 'For Sale',
+    realtymxValue: 1,
+  },
+  {
+    id: 1,
+    label: 'For Rent',
+    realtymxValue: 2,
+  },
+  {
+    id: 2,
+    label: 'Sold',
+    realtymxValue: 19,
+  },
+  {
+    id: 3,
+    label: 'Rented',
+    realtymxValue: 22,
+  },
+];
