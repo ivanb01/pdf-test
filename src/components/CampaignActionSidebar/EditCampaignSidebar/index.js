@@ -470,7 +470,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                           ),
                         );
                       }}
-                      value={events[selectedEvent].trigger_time}
+                      value={events[selectedEvent]?.trigger_time}
                       onKeyDown={(event) => {
                         if (event.key === 'Backspace' || event.key === 'Delete') {
                           event.preventDefault();
