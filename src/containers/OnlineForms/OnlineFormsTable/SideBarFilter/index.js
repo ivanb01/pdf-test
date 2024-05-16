@@ -25,11 +25,11 @@ const SideBarFilter = ({
   const [hoveredFilterId, setHoveredFilterId] = useState(null);
 
   const allForm = filters.find((filter) => {
-    return filter.id === '';
+    return filter.id.hex === '';
   });
 
   const filteredArray = filters.filter((filter) => {
-    return allForm.id !== filter.id;
+    return allForm.id.hex !== filter.id.hex;
   });
 
   const sortedFilters = filteredArray.sort((a, b) => {
@@ -79,8 +79,7 @@ const SideBarFilter = ({
   return (
     <div>
       <div
-        className={`flex h-[72px] px-[10px] border-gray-200 w-full text-sm font-medium text-gray7 justify-between items-center`}
-      >
+        className={`flex h-[72px] px-[10px] border-gray-200 w-full text-sm font-medium text-gray7 justify-between items-center`}>
         <div className="flex ">
           <div className={`w-[6px] h-full`} />
           <div className={`flex  py-[14px] gap-[8px]  items-center`}>{filters?.length - 1} Forms</div>
@@ -100,25 +99,26 @@ const SideBarFilter = ({
         </Button>
       </div>
 
-      <ul className="[&>*:first-child]:border-t-[1px]">
-        {[allForm, ...sortedFilters]?.map((filter, index) => {
+      <ul className="[&>*:first-child]:border-t-[1px] ">
+        {[allForm, ...sortedFilters]?.map((filter) => {
           return (
             <li
-              className={`group flex  w-full text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1 ${
-                currentFilterId.id === filter.id ? 'bg-lightBlue1' : ''
+              className={`group flex w-full h-[50px] text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1  ${
+                currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue1' : ''
               } `}
-              key={filter.id}
+              key={filter.id.hex}
               onMouseEnter={() => {
-                setHoveredFilterId(filter.id);
+                setHoveredFilterId(filter.id.hex);
               }}
               onMouseLeave={() => {
                 setHoveredFilterId(null);
-              }}
-            >
-              <div className={`w-[6px] h-full ${currentFilterId.id === filter.id ? 'bg-lightBlue3' : 'bg-white'} `} />
+              }}>
+              <div
+                className={`w-[6px] h-[50px] ${currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue3 ' : 'bg-white '} `}
+              />
               <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
                 <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
-                  {filter?.id ? (
+                  {filter?.id.hex ? (
                     <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
                   ) : (
                     <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
@@ -129,9 +129,8 @@ const SideBarFilter = ({
               {hoveredFilterId !== '' ? (
                 <div
                   className={clsx('opacity-0 mr-6 ', {
-                    ['opacity-100']: hoveredFilterId === filter.id,
-                  })}
-                >
+                    ['opacity-100']: hoveredFilterId === filter.id.hex,
+                  })}>
                   <FilterDropdown
                     types={Actions}
                     icon={<DotsHorizontalIcon className="w-5 cursor-pointer text-lightBlue3" />}

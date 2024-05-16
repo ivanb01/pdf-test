@@ -22,7 +22,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
   });
   const { handleSubmit, errors, setFieldValue, values } = useFormik({
     initialValues: {
-      form_type_id: currentForm?.id ? currentForm?.id : '',
+      form_type_id: currentForm?.id.hex ? currentForm?.id.hex : '',
       clients: [],
     },
     validationSchema: SendFormSchema,
@@ -32,8 +32,6 @@ const SendForm = ({ params, onCancel, currentForm }) => {
       onSubmitForm(values);
     },
   });
-
-  console.log('Errors:', errors);
 
   const { mutate: mutateSendEmail } = useSendEmail();
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -50,7 +48,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             first_name={client?.first_name}
             agent_first_name={userInfo?.first_name}
             agent_last_name={userInfo?.last_name}
-            formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier}`}
+            formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier.hex}`}
           />,
           {
             pretty: true,
@@ -80,8 +78,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     <Overlay
       className="w-[600px] min-h-[332px] [&>div]:overflow-visible"
       title={'Send New Form'}
-      handleCloseOverlay={onCancel}
-    >
+      handleCloseOverlay={onCancel}>
       <div className="p-[24px] pt-0 flex flex-col gap-[24px]">
         <div className="flex flex-col gap-[24px]">
           <Dropdown
@@ -93,11 +90,11 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             activeIcon={false}
             activeClasses="bg-lightBlue1"
             handleSelect={(source) => {
-              setFieldValue('form_type_id', source.id);
+              setFieldValue('form_type_id', source.id.hex);
             }}
             error={errors.form_type_id}
             errorText={errors.form_type_id}
-            initialSelect={currentForm?.id ? currentForm.name : ''}
+            initialSelect={currentForm?.id.hex ? currentForm.name : ''}
           />
           <ClientsMultiSelect
             handleChange={(client) => {

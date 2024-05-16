@@ -20,7 +20,7 @@ import SlideOver from '@components/shared/slideOver';
 
 const OnlineForms = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const [formTypeFilter, setFormTypeFilter] = useState({ id: '', name: 'All Forms' });
+  const [formTypeFilter, setFormTypeFilter] = useState({ id: { hex: '' }, name: 'All Forms' });
   const [showSendForm, setShowSendForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState(null);
@@ -43,7 +43,8 @@ const OnlineForms = () => {
   } = useFetchOnlineFormsTypes();
 
   const fetchFormsParams = useMemo(() => {
-    const { id: form_type_id } = formTypeFilter;
+    const { id } = formTypeFilter;
+    const { hex: form_type_id } = id;
     if (currentTab == 1) {
       setStatus('PENDING');
     } else if (currentTab == 2) {
@@ -75,7 +76,7 @@ const OnlineForms = () => {
     if (formsData)
       return formsData?.pages
         .map((page) => {
-          return page?.data?.data?.map((singlePage) => singlePage);
+          return page?.data?.items?.map((singlePage) => singlePage);
         })
         .flat();
     else return [];
@@ -149,7 +150,7 @@ const OnlineForms = () => {
   }, [isScrolledToBottom, hasNextPage, fetchNextPage]);
 
   const handleEditTemplate = (template) => {
-    router.push(`/online-forms/update-form-type/${template.id}`);
+    router.push(`/online-forms/update-form-type/${template.id.hex}`);
   };
 
   const handlePreviewTemplate = async (template) => {
@@ -182,7 +183,7 @@ const OnlineForms = () => {
     <div className="flex divide-x-[1px] h-[calc(100vh-140px)]">
       <div className="w-[320px] shrink-0 h-[calc(100vh-140px)] overflow-y-scroll">
         <SideBarFilter
-          filters={[{ id: '', name: 'All Forms' }, ...(formsTypesData?.data ?? [])]}
+          filters={[{ id: { hex: '' }, name: 'All Forms' }, ...(formsTypesData?.data ?? [])]}
           currentFilterId={formTypeFilter}
           setCurrentFilter={setFormTypeFilter}
           onPlusClick={onCreateNewFormTemplate}
@@ -193,7 +194,6 @@ const OnlineForms = () => {
       </div>
       <div className="flex flex-col divide-y-[1px] w-[calc(100%-320px)]">
         <FilterBar
-          currentFormName={formTypeFilter?.name}
           statusButtons={statusButtons}
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
@@ -236,7 +236,7 @@ const OnlineForms = () => {
                   leftIcon={<PencilIcon />}
                   label="Edit Form"
                   className={'gap-x-2'}
-                  onClick={() => router.push(`/online-forms/update-form-type/${openedPopover.id}`)}
+                  onClick={() => router.push(`/online-forms/update-form-type/${openedPopover.id.hex}`)}
                 />
               </div>
             </div>

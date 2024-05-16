@@ -36,12 +36,10 @@ const columns = [
     header: () => <HeaderCell title="STATUS" />,
     cell: ({ info }) => {
       const firstName = info?.row?.original?.client_first_name;
-      // const lastName = info?.row?.original?.client_last_name;
-      // const fullName = (firstName ?? '') + ' ' + (lastName ?? '');
       return (
         <StatusCell
           status={info.getValue()}
-          formPublicIdentifier={info.row.original.public_identifier}
+          formPublicIdentifier={info.row.original.public_identifier.hex}
           clientEmail={info.row.original.client_email}
           formTitle={info.row.original.form_type.name}
           clientName={firstName}
@@ -50,7 +48,7 @@ const columns = [
     },
     minSize: 150,
   }),
-  columnHelper.accessor('createdAt', {
+  columnHelper.accessor('created_at', {
     header: () => <HeaderCell title="SENT ON" />,
     cell: ({ info }) => <DateCell date={info.getValue()} />,
     minSize: 200,
@@ -58,22 +56,25 @@ const columns = [
   columnHelper.accessor('actions', {
     header: () => <HeaderCell title="ACTIONS" />,
     cell: ({ info, onDeleteForm }) => {
-      const formTypeId = info.row.original.form_type.id;
+      const formTypeId = info.row.original.form_type.id.hex;
       const { data, isSuccess } = useFetchOnlineFormsTypes();
+
+      // console.log('formTypeId', formTypeId);
+      // console.log('data?.data', data?.data);
+
       const onDownloadPdf = async () => {
         if (isSuccess && formTypeId) {
-          const typeData = data?.data?.find((type) => type.id === formTypeId);
+          const typeData = data?.data?.find((type) => type.id.hex === formTypeId);
           downloadPdf(typeData.content, false, info.row.original.submitted_answers, typeData.name);
         }
       };
+
       return (
         <ActionsCell
           formId={info.row.original.id}
-          onDownloadPdf={() => {
-            onDownloadPdf();
-          }}
+          onDownloadPdf={() => onDownloadPdf()}
           onDeleteForm={() => {
-            onDeleteForm(info.row.original.id);
+            onDeleteForm(info.row.original.id.hex);
           }}
         />
       );
@@ -98,8 +99,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
               return (
                 <tr
                   key={headerGroup.id}
-                  className="w-fit [&>*]:px-[16px] [&>*]:py-[12px] [&>*:first-child]:px-[24px]  border-y-[1px] border-gray-200"
-                >
+                  className="w-fit [&>*]:px-[16px] [&>*]:py-[12px] [&>*:first-child]:px-[24px]  border-y-[1px] border-gray-200">
                   {headerGroup.headers.map((header) => {
                     return (
                       <th
@@ -107,8 +107,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
                         className="[&>*]:w-fit  text-xs leading-4 font-medium text-gray-500"
                         style={{
                           width: header.column.getSize(),
-                        }}
-                      >
+                        }}>
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
                     );
@@ -121,8 +120,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
             {table?.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="h-[70px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]"
-              >
+                className="h-[70px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]">
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td
@@ -130,8 +128,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
                       className="[&>*]:w-max"
                       style={{
                         width: cell.column.getSize(),
-                      }}
-                    >
+                      }}>
                       {flexRender(cell.column.columnDef.cell, {
                         info: cell.getContext(),
                         onDeleteForm,

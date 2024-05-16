@@ -82,7 +82,7 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
 };
 export const DateCell = ({ date }) => <p className="text-sm">{moment(new Date(date)).format('MMM DD, YYYY')}</p>;
 
-export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
+export const ActionsCell = ({ onDownloadPdf, onDeleteForm }) => {
   return (
     <div className="flex gap-4">
       <button onClick={onDownloadPdf}>
@@ -92,8 +92,7 @@ export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-4 h-4"
-        >
+          className="w-4 h-4">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -108,8 +107,7 @@ export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-4 h-4"
-        >
+          class="w-4 h-4">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"

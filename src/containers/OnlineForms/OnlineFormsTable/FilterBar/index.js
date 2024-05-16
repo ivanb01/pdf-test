@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 const FilterBar = ({
-  currentFormName,
   statusButtons,
   currentTab,
   setCurrentTab,
@@ -22,14 +21,13 @@ const FilterBar = ({
   return (
     <div className="h-[72px] flex justify-between items-center p-[25px] ">
       <div className="flex items-center gap-2">
-        <div className="color-gray8">{currentFormName}</div>
-        {!!formTypeFilter.id && (
+        <div className="color-gray8">{formTypeFilter.name}</div>
+        {!!formTypeFilter.id.hex && (
           <button
             onClick={() => {
               handlePreviewTemplate(formTypeFilter);
             }}
-            className="flex items-center h-[30px] bg-lightBlue1 text-lightBlue3 text-[12px] rounded gap-2 py-[7px] px-[11px]"
-          >
+            className="flex items-center h-[30px] bg-lightBlue1 text-lightBlue3 text-[12px] rounded gap-2 py-[7px] px-[11px]">
             <RemoveRedEyeIcon className="w-4 h-4" />
             <span className="">preview</span>
           </button>
@@ -58,7 +56,6 @@ const FilterBar = ({
 export default FilterBar;
 
 FilterBar.propTypes = {
-  currentFormName: PropTypes.string,
   currentTab: PropTypes.number,
   setCurrentTab: PropTypes.func,
   setSearchValue: PropTypes.func,
