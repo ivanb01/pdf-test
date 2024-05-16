@@ -1,9 +1,10 @@
 import Button from '@components/shared/button';
 import SendIcon from '@mui/icons-material/Send';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
-import React from 'react';
+import React, { useEffect } from 'react';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const SendPropertiesFooter = ({
   selectedProperties,
@@ -12,7 +13,13 @@ const SendPropertiesFooter = ({
   onSendSmsClick,
   setSelectedProperties,
   onSavePropertiesClick,
+  contactId,
 }) => {
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+
+  useEffect(() => {
+    console.log(contacts.find((c) => c.id == contactId));
+  }, [contacts]);
   const router = useRouter();
   const clearSelectedProperties = () => {
     setSelectedProperties([]);
@@ -39,6 +46,7 @@ const SendPropertiesFooter = ({
             }}
           />
         )}
+
         <Button
           primary
           leftIcon={<SendIcon className={'h-4 w-4'} />}
@@ -50,17 +58,19 @@ const SendPropertiesFooter = ({
             // setOpen(true);
           }}
         />
-        <Button
-          primary
-          leftIcon={<AtSymbolIcon />}
-          label="Send via SMS"
-          className="mr-3"
-          onClick={() => {
-            onSendSmsClick();
-            // setSendMethod(2);
-            // setOpen(true);
-          }}
-        />
+        {(router.pathname.includes('properties') || contacts.find((c) => c.id == contactId)?.phone_number) && (
+          <Button
+            primary
+            leftIcon={<AtSymbolIcon />}
+            label="Send via SMS"
+            className="mr-3"
+            onClick={() => {
+              onSendSmsClick();
+              // setSendMethod(2);
+              // setOpen(true);
+            }}
+          />
+        )}
         <Button
           primary
           leftIcon={<MailIcon />}

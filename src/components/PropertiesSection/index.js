@@ -68,7 +68,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     const contact = contacts.filter((c) => {
       return c.id == contactId;
     })[0];
-    if (contact.phone_number !== null && contact.phone_number === '' && sendMethod === 2) {
+    if (contact.phone_number !== null && contact.phone_number !== '' && sendMethod === 2) {
       setSelectedContacts([
         {
           value: contact.id,
@@ -165,6 +165,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           resolve(propertiesData.data);
         })
         .catch((error) => {
+          console.log(error, 'Err');
           toast.error('Error fetching looking for');
           reject(error);
         });
@@ -780,6 +781,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             <SendPropertiesFooter
               setSelectedProperties={setSelectedProperties}
               selectedProperties={selectedProperties}
+              contactId={contactId}
               onSendEmailAndSmsClick={() => {
                 setSendMethod(3);
                 setOpen(true);
