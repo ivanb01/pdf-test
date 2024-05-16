@@ -623,7 +623,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           contactId={contactId}
           data={lookingForData[0]}
           title={lookingForData[0] ? 'Edit Property Interests' : 'Add Property Interests'}
-          className="w-full md:w-[670px]"
+          className="w-full md:w-[700px]"
           handleClose={() => setShowEditPopup(false)}
         />
       )}
