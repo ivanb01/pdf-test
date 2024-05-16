@@ -23,7 +23,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
-import { generateSMSFooter, getBaseUrl } from '@global/functions';
+import { generateSMSFooter, getBaseUrl, getLookingAction } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
@@ -160,6 +160,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0]?.general_tags?.length > 0) {
               newFiltersCount += 1;
             }
+            if (Number(propertiesData.data[0]?.looking_action) != getLookingAction()) {
+              newFiltersCount += 1;
+            }
           }
           setFiltersCount(newFiltersCount);
           resolve(propertiesData.data);
@@ -259,9 +262,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 },
               ),
             ).then((res) => {
-              console.log(res);
               const contact = allContacts.find((con) => con.id === c?.value);
-              console.log(contact, 'contact');
               let activity = {
                 type_of_activity_id: 28,
                 description: `(Email) Properties sent to ${
@@ -357,9 +358,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     },
   });
 
-  useEffect(() => {
-    handleAddSubmit({ ...formik.values, looking_action: getLookingAction() });
-  }, [category]);
   const { resetForm } = formik;
 
   const handleAddSubmit = async (values) => {
@@ -401,7 +399,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
 
   const fetchProperties = async (values, page, filterValue) => {
     let filters = values;
-    console.log(filters, 'filters');
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
@@ -450,7 +447,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     if (filters?.bathrooms_max) {
       params['bathMax'] = filters.bathrooms_max;
     }
-    console.log(params, 'param');
     const urlParams = new URLSearchParams({
       ...params,
     });

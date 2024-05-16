@@ -102,10 +102,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     },
   });
 
-  useEffect(() => {
-    console.log(formik.values, 'Val');
-  }, [formik.values]);
-
   const { errors, touched } = formik;
 
   const handleAddSubmit = async (values) => {

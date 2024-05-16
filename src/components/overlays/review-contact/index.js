@@ -15,7 +15,7 @@ import {
 import Input from 'components/shared/input';
 import { findContactByEmail, updateContact } from 'api/contacts';
 import { findTagsOption, formatDateLL } from 'global/functions';
-import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
+import { setOpenedSubtab, setRefetchData, setRefetchPart } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
@@ -40,6 +40,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
 import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
+import * as contactServices from '@api/contacts';
 
 const ReviewContact = ({
   className,
@@ -89,8 +90,18 @@ const ReviewContact = ({
     !router.pathname.toLowerCase().includes('trash')
   );
 
-  useEffect(() => console.log(client.tags), [client.tags]);
-
+  const getLookingAction = (category) => {
+    const lowerCaseCategory = category?.toLowerCase();
+    if (lowerCaseCategory === 'buyer') {
+      return 1;
+    } else if (lowerCaseCategory === 'landlord') {
+      return 22;
+    } else if (lowerCaseCategory === 'seller') {
+      return 19;
+    } else {
+      return 2;
+    }
+  };
   const options = [
     {
       id: 6,
@@ -154,7 +165,13 @@ const ReviewContact = ({
             setUpdating(false);
           });
       } else {
-        handleSubmit(values).then();
+        handleSubmit(values).then(async () => {
+          await contactServices
+            .addContactLookingProperty(client?.id, { looking_action: getLookingAction(values?.category_2) })
+            .then(() => {
+              dispatch(setRefetchPart('looking-for'));
+            });
+        });
       }
     },
   });
@@ -193,8 +210,7 @@ const ReviewContact = ({
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-          >
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
             <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
@@ -214,8 +230,7 @@ const ReviewContact = ({
                   }
                   toast.dismiss(t.id);
                 }}
-                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
-              >
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                 Undo
               </button>
             </div>
@@ -257,12 +272,6 @@ const ReviewContact = ({
     } else {
       category_id = values.selectedContactType;
     }
-
-    console.log(category_id, 'category_id');
-    console.log(
-      '    let status_id = category_id == 3 ? 1 : values.selectedStatus;',
-      category_id == 3 ? 1 : values.selectedStatus,
-    );
 
     const category =
       values.selectedContactCategory === 0
@@ -310,8 +319,7 @@ const ReviewContact = ({
               className={`${
                 t.visible ? 'animate-enter' : 'animate-leave'
               } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-              style={{ width: '316px' }}
-            >
+              style={{ width: '316px' }}>
               <div className="flex gap-2 p-4 ">
                 <CheckCircleIcon className={'text-green-500'} />
                 <h1 className={'text-sm leading-5 font-medium'}>
@@ -325,8 +333,7 @@ const ReviewContact = ({
                     restoreContact({ ...newData, category_id: 3 });
                     toast.dismiss(t.id);
                   }}
-                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
-                >
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                   Undo
                 </button>
               </div>
@@ -380,8 +387,7 @@ const ReviewContact = ({
               <div
                 className={`${
                   t.visible ? 'animate-enter' : 'animate-leave'
-                } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-              >
+                } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
                 <div className="flex gap-2 p-4 word-break items-center">
                   <CheckCircleIcon className={'text-green-500'} />
                   <h1 className={'text-sm leading-5 font-medium'}>
@@ -401,8 +407,7 @@ const ReviewContact = ({
                         afterSubmit(client.id, { ...newData, approved_ai: false });
                       }
                     }}
-                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium"
-                  >
+                    className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium">
                     Undo
                   </button>
                 </div>
@@ -487,8 +492,7 @@ const ReviewContact = ({
             leftIcon={<Delete />}
             coloredButton
             onClick={() => removeFromCRM()}
-            loading={removing}
-          >
+            loading={removing}>
             Move to Trash
           </Button>
           <Button
@@ -499,8 +503,7 @@ const ReviewContact = ({
             coloredButton
             disabled={submitDisabled}
             onClick={() => submitForm()}
-            loading={updating}
-          >
+            loading={updating}>
             Mark as Correct
           </Button>
         </div>
@@ -540,8 +543,7 @@ const ReviewContact = ({
     <Overlay
       handleCloseOverlay={!hideCloseButton && handleClose}
       title={title}
-      className={`${className} w-full lg:w-[1150px]`}
-    >
+      className={`${className} w-full lg:w-[1150px]`}>
       <div className="flex min-h-[500px] flex-col lg:flex-row">
         <div className={`w-full lg:w-1/2 border-r border-borderColor`}>
           {/*<SimpleBar autoHide={true} style={{ maxHeight: '500px' }}>*/}
