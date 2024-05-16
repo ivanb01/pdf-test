@@ -436,11 +436,11 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                 errorText={errors.budget_max}
               />
             </div>
-            <div className={'w-[100%] mt-6'}>
+            <div className={'w-[100%] mt-4'}>
               {sections.map((s) => (
                 <React.Fragment key={s.name}>
                   <div
-                    className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                    className={' text-gray-700  flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
                     role={'button'}
                     onClick={() =>
                       setSections((prev) => {
@@ -453,12 +453,11 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                         return updatedSections;
                       })
                     }>
-                    <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
-                    {!s.expanded ? (
-                      <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
-                    ) : (
-                      <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
-                    )}
+                    <p className={'text-sm font-medium text-gray-700 '}>{s.name}</p>
+                    <KeyboardArrowDownIcon
+                      className={`transition-all h-4 w-4 text-gray-700  ${!s.expanded && 'rotate-180'}`}
+                      aria-hidden="true"
+                    />
                   </div>
                   {s.expanded && (
                     <div className={'flex flex-wrap gap-x-2 '}>
