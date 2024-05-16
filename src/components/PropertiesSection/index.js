@@ -157,7 +157,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0].neighborhood_ids && !propertiesData.data[0].neighborhood_ids.includes(0) > 0) {
               newFiltersCount += 1;
             }
-            if (propertiesData.data[0].general_tags.length > 0) {
+            if (propertiesData.data[0]?.general_tags?.length > 0) {
               newFiltersCount += 1;
             }
           }
