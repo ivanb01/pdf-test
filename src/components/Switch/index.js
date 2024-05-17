@@ -29,8 +29,7 @@ const SwitchComponent = ({ label }) => {
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray-200',
           'relative inline-flex h-[19px] w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
-        )}
-      >
+        )}>
         <span
           aria-hidden="true"
           className={classNames(
