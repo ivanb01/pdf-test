@@ -40,7 +40,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     const { public_identifier } = data?.data;
     variables.clients.map((client) => {
       const emailBody = {
-        to: [client.email],
+        to: [client.email, userInfo?.email],
         subject: data?.data?.form_type.name ?? 'Opgny form',
         body: render(
           <OnlineFormEmailTemplate

@@ -104,7 +104,7 @@ const SendEmailOverlay = () => {
       newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
       newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
 
-      sendEmail([contact.email], subject, newMessage).then(() => {
+      sendEmail([contact.email, userInfo?.email], subject, newMessage).then(() => {
         dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
 
         addContactActivity(contact.id, {

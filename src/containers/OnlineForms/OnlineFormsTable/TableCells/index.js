@@ -39,7 +39,7 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
 
   const sendFormEmail = async () => {
     const emailBody = {
-      to: [clientEmail],
+      to: [clientEmail, userInfo?.email],
       subject: formTitle ?? 'Opgny form',
       body: render(
         <OnlineFormEmailTemplate

@@ -337,7 +337,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       handleCloseOverlay={handleClose}
       height="md:max-h-[500px]"
       title={title}
-      className={className}>
+      className={className}
+    >
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
@@ -461,7 +462,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                           onClick={() => {
                             toggleAmenitySelection(a);
                           }}
-                          selected={internalAmenities?.includes(a)}>
+                          selected={internalAmenities?.includes(a)}
+                        >
                           <span>{a}</span>
                         </Tag>
                       ))}
@@ -476,7 +478,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           className="text-right md:sticky left-0 right-0 bottom-0 bg-white p-5 flex justify-between h-[78px]"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-          }}>
+          }}
+        >
           <div>
             <Button
               white
