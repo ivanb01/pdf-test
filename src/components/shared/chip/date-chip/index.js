@@ -3,6 +3,10 @@ import { healthLastCommunicationDate } from 'global/variables';
 import { isHealthyCommuncationDate, formatDateAgo, isValidDate, isToday } from 'global/functions';
 import TooltipComponent from '@components/shared/tooltip';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import { updateContactLocally } from '@store/contacts/slice';
+import { updateContact } from '@api/contacts';
 
 export default function DateChip({
   className,
@@ -10,7 +14,9 @@ export default function DateChip({
   lastCommunicationType,
   contactCategory,
   contactStatus,
+  contact,
 }) {
+  const dispatch = useDispatch();
   let lastCommunicationLabel = '';
   let styling = '';
   const healthyCommunicationDays = healthLastCommunicationDate[contactCategory]
@@ -26,17 +32,43 @@ export default function DateChip({
       : formatDateAgo(lastCommunication)
     : 'No communication';
 
+  const updateCommunicationDate = (event) => {
+    event.stopPropagation();
+    if (contact) {
+      toast.success('Updated last communication to Today.');
+      dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+      updateContact(contact.id, { last_communication_date: new Date() });
+    }
+  };
+
   return (
     <TooltipComponent
       side={'left'}
       align="center"
       triggerElement={
-        <div className={`inline-flex rounded-full px-2 text-xs font-medium items-center  ${styling}  ${className}  `}>
-          <Mail className="w-4 mr-1" />
-          <span>{lastCommunicationLabel} </span>
+        <div className="group/update h-[26px] w-full">
+          {lastCommunicationLabel == 'Today' ? (
+            <div
+              className={`inline-flex rounded-full px-2 text-xs font-medium items-center  ${styling}  ${className}  `}>
+              <Mail className="w-4 mr-1" />
+              <span>{lastCommunicationLabel} </span>
+            </div>
+          ) : (
+            <>
+              <div
+                onClick={(event) => updateCommunicationDate(event)}
+                className="group-hover/update:inline-flex hidden rounded-full px-2 h-[24px] text-xs font-medium items-center bg-lightBlue1 text-lightBlue3">
+                Update to: Today
+              </div>
+              <div
+                className={`group-hover/update:hidden inline-flex rounded-full px-2 text-xs font-medium items-center  ${styling}  ${className}  `}>
+                <Mail className="w-4 mr-1" />
+                <span>{lastCommunicationLabel} </span>
+              </div>
+            </>
+          )}
         </div>
-      }
-    >
+      }>
       <div style={{ width: '202px' }} className={`flex flex-col justify-center  gap-1.5`}>
         <h6 className={' text-xs leading-4 font-medium'}>
           Communication Health is {isHealthyCommunication ? 'good' : 'low'}!
