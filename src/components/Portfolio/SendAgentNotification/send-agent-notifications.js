@@ -17,7 +17,7 @@ const SendNotificationsToAgent = ({ userProperties, status, propertyId }) => {
               <Link href={`${getBaseUrl()}/property?id=${propertyId ?? ''}`}>Property Link</Link>
             </Text>
             <Text style={paragraph}>
-              Please visit client profile below to see their preferences:{' '}
+              Please visit client profile to see their preferences:{' '}
               <Link href={`${getBaseUrl()}/contacts/details?id=${userProperties?.properties[0]?.contact_id ?? ''}`}>
                 Client Details
               </Link>
