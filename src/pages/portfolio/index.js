@@ -14,6 +14,8 @@ import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
 import { useSelector } from 'react-redux';
 import SendNotificationsToAgent from '@components/Portfolio/SendAgentNotification/send-agent-notifications';
+import { getUserInfo } from '@helpers/auth';
+import { getUser } from '@api/user';
 
 const Portfolio = () => {
   const router = useRouter();
