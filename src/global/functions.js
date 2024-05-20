@@ -575,3 +575,23 @@ export const removeSecondsFromTime = (timeStr) => {
     return timeStr;
   }
 };
+
+export const getCompany = (userInfo) => {
+  let imageUrl = '';
+  let companyName = '';
+  switch (userInfo?.tenantId) {
+    case '9b11bc70b91411eda0b1722084980ce8':
+      companyName = 'Oxford Property Group';
+      imageUrl = 'https://i.imgur.com/kbMXf3r.png';
+      break;
+    case 'aa47d67ab91411eda0b1722084980ce8':
+      companyName = 'Spire Group';
+      imageUrl = 'https://i.imgur.com/RAyYKtU.png';
+      break;
+    case 'ba3b15bab91411eda0b1722084980ce8':
+      companyName = 'Level Group';
+      imageUrl = 'https://i.imgur.com/Gq2NDtu.png';
+      break;
+  }
+  return { imageUrl, companyName };
+};

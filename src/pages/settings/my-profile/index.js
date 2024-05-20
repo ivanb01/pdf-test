@@ -9,7 +9,8 @@ import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { setUserInfo } from 'store/global/slice';
-import PropTypes from 'prop-types';
+import Signature from '@components/Signature';
+import { getCompany } from '@global/functions';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -39,25 +40,6 @@ const index = () => {
   useEffect(() => {
     console.log(userInfo);
   }, [userInfo]);
-  const getCompany = () => {
-    let imageUrl = '';
-    let companyName = '';
-    switch (userInfo?.tenantId) {
-      case '9b11bc70b91411eda0b1722084980ce8':
-        companyName = 'Oxford Property Group';
-        imageUrl = 'https://i.imgur.com/kbMXf3r.png';
-        break;
-      case 'aa47d67ab91411eda0b1722084980ce8':
-        companyName = 'Spire Group';
-        imageUrl = 'https://i.imgur.com/RAyYKtU.png';
-        break;
-      case 'ba3b15bab91411eda0b1722084980ce8':
-        companyName = 'Level Group';
-        imageUrl = 'https://i.imgur.com/Gq2NDtu.png';
-        break;
-    }
-    return { imageUrl, companyName };
-  };
   const handleSubmit = async () => {
     setLoadingActivate(true);
     try {
@@ -120,16 +102,16 @@ const index = () => {
             <hr className="my-3" />
             <div className={'flex gap-[120px] mt-2'}>
               <div className={'flex flex-col gap-[24px]'}>
-                <p className={' font-normal text-gray6'}>Email Signature</p>
+                <p className={'font-normal text-gray6'}>Email Signature</p>
                 <Signature
                   userInfo={userInfo}
-                  companyName={getCompany().companyName}
-                  imageUrl={getCompany().imageUrl}
+                  companyName={getCompany(userInfo).companyName}
+                  imageUrl={getCompany(userInfo).imageUrl}
                 />
               </div>
               <div className={'flex flex-col gap-[24px]'}>
                 <p className={'font-normal text-gray6'}>SMS Signature</p>
-                <Signature userInfo={userInfo} companyName={getCompany().companyName} />
+                <Signature userInfo={userInfo} companyName={getCompany(userInfo).companyName} />
               </div>
             </div>
           </div>
@@ -141,54 +123,5 @@ const index = () => {
     </>
   );
 };
-const ErrorState = ({ message }) => {
-  return <p className={'px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>{message}</p>;
-};
-const Signature = ({ userInfo, companyName, imageUrl }) => {
-  return (
-    <div className={'flex flex-col gap-[12px] text-gray8 text-sm font-normal'}>
-      <div className={'flex gap-3 items-center'}>
-        <div>
-          {userInfo?.first_name === undefined || userInfo?.first_name.length === 0 ? (
-            <ErrorState message={'First name is missing'} />
-          ) : (
-            userInfo?.first_name
-          )}
-        </div>
-        <div>
-          {userInfo?.last_name === undefined || userInfo?.last_name.length === 0 ? (
-            <ErrorState message={'Last name is missing'} />
-          ) : (
-            userInfo?.last_name
-          )}
-        </div>
-      </div>
-      <p>{companyName}</p>
-      <div>
-        {userInfo?.phone_number === undefined || userInfo?.phone_number.length === 0 ? (
-          <ErrorState message={'Phone Number is missing'} />
-        ) : (
-          userInfo?.phone_number
-        )}
-      </div>
-      <p>{userInfo?.email}</p>
-      {imageUrl && (
-        <div className={'mt-3'}>
-          <img src={`${imageUrl}`} alt={''} height={20} width={120} />
-        </div>
-      )}
-    </div>
-  );
-};
 
-Signature.PropTypes = {
-  userInfo: PropTypes.shape({
-    first_name: PropTypes.number.isRequired,
-    last_name: PropTypes.string.isRequired,
-    phone_number: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-  }),
-  imageUrl: PropTypes.string,
-  companyName: PropTypes.string.isRequired,
-};
 export default index;

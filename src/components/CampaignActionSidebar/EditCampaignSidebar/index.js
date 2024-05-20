@@ -44,7 +44,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       id: 0,
       action: 'Send',
       title: 'New Event',
-      body_html: '',
+      body_html: `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage.getItem('agentSignature')),
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',

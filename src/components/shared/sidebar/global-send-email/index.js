@@ -38,6 +38,12 @@ const SendEmailOverlay = () => {
   const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
+    if (localStorage.getItem('agentSignature')) {
+      setMessage(`<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage.getItem('agentSignature')));
+    }
+  }, [open]);
+
+  useEffect(() => {
     if (contactToBeEmailed) {
       setSelectedContacts([contactToBeEmailed]);
     }

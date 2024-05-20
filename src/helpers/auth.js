@@ -3,6 +3,9 @@ import Router, { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { Auth } from 'aws-amplify';
 import { getUser, updateUser } from 'api/user';
+import Signature from '@components/Signature';
+import { getCompany } from '@global/functions';
+import ReactDOMServer from 'react-dom/server';
 
 const setAfterSignInRedirect = (redirectionPath, message = '') => {
   sessionStorage.setItem('after-auth-redirect', redirectionPath);
@@ -88,7 +91,16 @@ const fetchCurrentUserInfo = async () => {
   return response;
 };
 
-const saveUserInfo = async (info) => info && localStorage.setItem('userInfo', JSON.stringify(info));
+const saveUserInfo = async (info) => {
+  if (info) {
+    let signatureHtml = ReactDOMServer.renderToString(
+      <Signature userInfo={info} companyName={getCompany(info).companyName} imageUrl={getCompany(info).imageUrl} />,
+    );
+    console.log(signatureHtml);
+    localStorage.setItem('agentSignature', JSON.stringify(signatureHtml));
+    localStorage.setItem('userInfo', JSON.stringify(info));
+  }
+};
 
 const updateUserInfo = async (userInfo) => {
   const { first_name, last_name, phone_number } = userInfo;
