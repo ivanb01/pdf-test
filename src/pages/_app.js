@@ -32,6 +32,7 @@ import SendEmailOverlay from '@components/shared/sidebar/global-send-email';
 import { setOpenEmailContactOverlay } from '@store/global/slice';
 import EmailSendComponent from '@components/EmailSendComponent';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
@@ -110,21 +111,21 @@ const MyApp = ({ Component, pageProps }) => {
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn
               : isDev()
-                ? devRedirectSignIn
-                : isDocuments()
-                  ? documentsRedirectSignIn
-                  : isSubscriptions()
-                    ? subscriptionsRedirectSignIn
-                    : productionRedirectSignIn,
+              ? devRedirectSignIn
+              : isDocuments()
+              ? documentsRedirectSignIn
+              : isSubscriptions()
+              ? subscriptionsRedirectSignIn
+              : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-                ? devRedirectSignOut
-                : isDocuments()
-                  ? documentsRedirectSignOut
-                  : isSubscriptions()
-                    ? subscriptionsRedirectSignOut
-                    : productionRedirectSignOut,
+              ? devRedirectSignOut
+              : isDocuments()
+              ? documentsRedirectSignOut
+              : isSubscriptions()
+              ? subscriptionsRedirectSignOut
+              : productionRedirectSignOut,
             responseType: 'code',
           },
         },
@@ -152,10 +153,10 @@ const MyApp = ({ Component, pageProps }) => {
         </Head>
         <div
           className={`main-page overflow-y-auto overflow-x-hidden`}
-          style={{ display: 'flex', flexDirection: 'column' }}
-        >
+          style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
             <QueryClientProvider client={queryClient}>
+              <ReactQueryDevtools initialIsOpen={false} />
               {isUserAuthenticated && <GetSubtype />}
               <Component {...pageProps} />
               <SpeedInsights />

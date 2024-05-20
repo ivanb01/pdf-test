@@ -1,38 +1,11 @@
-import React, { useState } from 'react';
-import FolderIcon from '/public/icons/folder.svg';
-import FoldersIcon from '/public/icons/folders.svg';
-import PropTypes from 'prop-types';
+import React, { useMemo, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import Image from 'next/image';
 import Button from '@components/shared/button';
 import { PlusIcon } from '@heroicons/react/outline';
-import clsx from 'clsx';
-import { DotsHorizontalIcon } from '@heroicons/react/outline';
-import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
-import { PencilIcon } from '@heroicons/react/solid';
-import { TrashIcon } from '@heroicons/react/solid';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import TypesAccordionElement from './TypesAccordionElement';
 
-const SideBarFilter = ({
-  filters,
-  setCurrentFilter,
-  currentFilterId,
-  onPlusClick,
-  isRefetching,
-  handlePreviewTemplate,
-  handleEditTemplate,
-}) => {
-  const [hoveredFilterId, setHoveredFilterId] = useState(null);
-
-  const allForm = filters.find((filter) => {
-    return filter.id.hex === '';
-  });
-
-  const filteredArray = filters.filter((filter) => {
-    return allForm.id.hex !== filter.id.hex;
-  });
-
-  const sortedFilters = filteredArray.sort((a, b) => {
+const sortTemplatesAlphabetically = (templates) =>
+  templates.sort((a, b) => {
     if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1;
     }
@@ -42,45 +15,42 @@ const SideBarFilter = ({
     return 0;
   });
 
-  const Actions = [
-    {
-      name: (
-        <div className="flex item-center gap-3 text-gray6  cursor-pointer leading-5 py-[2px]">
-          <PencilIcon className="w-5 h-5" />
-          <span>Edit Form</span>
-        </div>
-      ),
-      handleClick: (template) => {
-        handleEditTemplate(template);
-      },
-    },
-    {
-      name: (
-        <div className="flex item-center gap-3 text-gray6  cursor-pointer py-[2px]">
-          <RemoveRedEyeIcon className="w-5 h-5" />
-          <span>Preview Form</span>
-        </div>
-      ),
-      handleClick: async (template) => {
-        handlePreviewTemplate(template);
-      },
-    },
-    {
-      name: (
-        <div className="flex items-center gap-3 text-red5  cursor-pointer py-[2px]">
-          <TrashIcon className="w-5 h-5" />
-          <span>Move to Trash</span>
-        </div>
-      ),
-      handleClick: () => {},
-    },
-  ];
+const SideBarFilter = ({
+  filters,
+  setCurrentFilter,
+  currentFilterId,
+  onPlusClick,
+  isRefetching,
+  handlePreviewTemplate,
+  handleEditTemplate,
+  handleDeleteTemplate,
+  isDeletingTemplate,
+}) => {
+  const [hoveredFilterId, setHoveredFilterId] = useState(null);
+
+  const [allForm, sortedDefaultTypes, sortedNonDefaultTypes, sortedTrashedTypes] = useMemo(() => {
+    const allForm = filters.find((filter) => {
+      return filter.id.hex === '';
+    });
+
+    const filteredArray = filters.filter((filter) => {
+      return allForm.id.hex !== filter.id.hex;
+    });
+
+    const defaultTypes = sortTemplatesAlphabetically(filteredArray.filter((type) => type.is_default && !type.deleted));
+    const nonDefaultTypes = sortTemplatesAlphabetically(
+      filteredArray.filter((type) => !type.is_default && !type.deleted),
+    );
+    const sortedTrashedTypes = sortTemplatesAlphabetically(filteredArray.filter((type) => type.deleted));
+
+    return [allForm, defaultTypes, nonDefaultTypes, sortedTrashedTypes];
+  }, [filters]);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div
-        className={`flex h-[72px] px-[10px] border-gray-200 w-full text-sm font-medium text-gray7 justify-between items-center`}>
-        <div className="flex ">
+        className={` flex min-h-[72px] px-[10px] border-b border-gray-200  w-full text-sm font-medium text-gray7 justify-between items-center bg-white `}>
+        <div className="flex">
           <div className={`w-[6px] h-full`} />
           <div className={`flex  py-[14px] gap-[8px]  items-center`}>{filters?.length - 1} Forms</div>
         </div>
@@ -99,71 +69,63 @@ const SideBarFilter = ({
         </Button>
       </div>
 
-      <ul className="[&>*:first-child]:border-t-[1px] ">
-        {[allForm, ...sortedFilters]?.map((filter) => {
-          return (
-            <li
-              className={`group flex w-full h-[50px] text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1  ${
-                currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue1' : ''
-              } `}
-              key={filter.id.hex}
-              onMouseEnter={() => {
-                setHoveredFilterId(filter.id.hex);
-              }}
-              onMouseLeave={() => {
-                setHoveredFilterId(null);
-              }}>
-              <div
-                className={`w-[6px] h-[50px] ${currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue3 ' : 'bg-white '} `}
-              />
-              <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
-                <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
-                  {filter?.id.hex ? (
-                    <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
-                  ) : (
-                    <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
-                  )}
-                  {filter?.name}
-                </div>
-              </div>
-              {hoveredFilterId !== '' ? (
-                <div
-                  className={clsx('opacity-0 mr-6 ', {
-                    ['opacity-100']: hoveredFilterId === filter.id.hex,
-                  })}>
-                  <FilterDropdown
-                    types={Actions}
-                    icon={<DotsHorizontalIcon className="w-5 cursor-pointer text-lightBlue3" />}
-                    data={filter}
-                    align={'start'}
-                    side={'bottom'}
-                  />
-                </div>
-              ) : (
-                <div className="w-5 h-5  mr-6"></div>
-              )}
-            </li>
-          );
-        })}
+      <ul className="h-full overflow-y-scroll">
+        <li className="">
+          <TypesAccordionElement
+            types={[allForm]}
+            hoveredFilterId={hoveredFilterId}
+            setHoveredFilterId={setHoveredFilterId}
+            currentFilterId={currentFilterId}
+            setCurrentFilter={setCurrentFilter}
+            handleEditTemplate={handleEditTemplate}
+            handlePreviewTemplate={handlePreviewTemplate}
+            hideActionsMenu={true}
+          />
+        </li>
+        <li>
+          <TypesAccordionElement
+            title={'Default forms'}
+            types={sortedDefaultTypes}
+            hoveredFilterId={hoveredFilterId}
+            setHoveredFilterId={setHoveredFilterId}
+            currentFilterId={currentFilterId}
+            setCurrentFilter={setCurrentFilter}
+            handleEditTemplate={handleEditTemplate}
+            handlePreviewTemplate={handlePreviewTemplate}
+            hideActionsMenu={true}
+          />
+        </li>
+        <li>
+          <TypesAccordionElement
+            title={'Forms created by me'}
+            types={sortedNonDefaultTypes}
+            hoveredFilterId={hoveredFilterId}
+            setHoveredFilterId={setHoveredFilterId}
+            currentFilterId={currentFilterId}
+            setCurrentFilter={setCurrentFilter}
+            handleEditTemplate={handleEditTemplate}
+            handlePreviewTemplate={handlePreviewTemplate}
+            hideActionsMenu={false}
+            handleDeleteTemplate={handleDeleteTemplate}
+            isDeletingTemplate={isDeletingTemplate}
+          />
+        </li>
+        <li>
+          <TypesAccordionElement
+            title={'Trash'}
+            types={sortedTrashedTypes}
+            hoveredFilterId={hoveredFilterId}
+            setHoveredFilterId={setHoveredFilterId}
+            currentFilterId={currentFilterId}
+            setCurrentFilter={setCurrentFilter}
+            handleEditTemplate={handleEditTemplate}
+            handlePreviewTemplate={handlePreviewTemplate}
+            hideActionsMenu={false}
+          />
+        </li>
       </ul>
     </div>
   );
 };
 
 export default SideBarFilter;
-
-SideBarFilter.propTypes = {
-  filters: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    }),
-  ),
-  setCurrentFilter: PropTypes.func,
-  currentFilterId: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  }),
-  onPlusClick: PropTypes.func,
-  isRefetching: PropTypes.bool,
-};

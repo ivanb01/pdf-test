@@ -7,7 +7,7 @@ import SendForm from './SendFormModal';
 import DeleteForm from '@components/overlays/delete-form';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useFetchOnlineFormsTypes, useFetchOnlineFormsPaginated } from './queries/queries';
-import { useDeleteForm } from './queries/mutations';
+import { useDeleteForm, useDeleteFormType } from './queries/mutations';
 import toast from 'react-hot-toast';
 import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
 import useDebounce from '@helpers/hooks/useDebouncedSearch';
@@ -17,6 +17,7 @@ import Button from '@components/shared/button';
 import { PencilIcon } from '@heroicons/react/solid';
 import { TrashIcon } from '@heroicons/react/solid';
 import SlideOver from '@components/shared/slideOver';
+import TrashTypeOverlay from './TrashTypeOverlay';
 
 const OnlineForms = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -28,6 +29,7 @@ const OnlineForms = () => {
   const [status, setStatus] = useState(undefined);
   const [debouncedSearch] = useDebounce(searchTerm, 400);
   const [isScrolledToBottom, handleScroll] = useIsScrolledToBottom();
+  const [trashOverlayOpened, setTrashOverlayOpened] = useState(false);
   const router = useRouter();
 
   const [openedPopover, setOpenedPopover] = useState(null);
@@ -40,7 +42,16 @@ const OnlineForms = () => {
     error: formsTypesErrors,
     isLoading: formsTypesIsLoading,
     isRefetching: formsTypesIsRefetching,
+    refetch: formsTypesRefetch,
   } = useFetchOnlineFormsTypes();
+
+  const {
+    data: trashedFormsTypesData,
+    error: trashedFormsTypesErrors,
+    isLoading: trashedFormsTypesIsLoading,
+    isRefetching: trashedFormsTypesIsRefetching,
+    refetch: trashedFormsTemplatesRefetch,
+  } = useFetchOnlineFormsTypes({ deleted: true });
 
   const fetchFormsParams = useMemo(() => {
     const { id } = formTypeFilter;
@@ -163,7 +174,34 @@ const OnlineForms = () => {
     setLoadingPdf(false);
   };
 
-  if (formsTypesIsLoading) {
+  const handleDeleteTemplateSuccess = () => {
+    setTrashOverlayOpened(false);
+    setOpenSlideover(false);
+    formsTypesRefetch();
+    trashedFormsTemplatesRefetch();
+    toast.success('Form Type Moved to Trash!');
+  };
+  const handleDeleteTemplateError = () => {
+    setTrashOverlayOpened(false);
+    toast.error('Unable to Move Form Type to Trash?');
+  };
+
+  const {
+    isPending: isPendingDeleteTemplate,
+    mutateAsync: deleteFormTemplate,
+    error,
+  } = useDeleteFormType({
+    onSuccess: handleDeleteTemplateSuccess,
+    onError: handleDeleteTemplateError,
+  });
+
+  const onDeleteTemplate = async (id) => {
+    try {
+      await deleteFormTemplate(id);
+    } catch (e) {}
+  };
+
+  if (formsTypesIsLoading || trashedFormsTypesIsLoading) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <CircularProgress size={50} />
@@ -171,7 +209,7 @@ const OnlineForms = () => {
     );
   }
 
-  if (formsTypesErrors || formsErrors) {
+  if (formsTypesErrors || trashedFormsTypesErrors || formsErrors) {
     return (
       <div className="w-full h-full flex justify-center items-center text-center">
         <p>Something went wrong while trying to fetch forms or templates...</p>
@@ -180,19 +218,25 @@ const OnlineForms = () => {
   }
 
   return (
-    <div className="flex divide-x-[1px] h-[calc(100vh-140px)]">
-      <div className="w-[320px] shrink-0 h-[calc(100vh-140px)] overflow-y-scroll">
+    <div className="flex divide-x h-[calc(100vh-140px)] overflow-hidden">
+      <div className="w-[320px] shrink-0 h-[calc(100vh-140px)] ">
         <SideBarFilter
-          filters={[{ id: { hex: '' }, name: 'All Forms' }, ...(formsTypesData?.data ?? [])]}
+          filters={[
+            { id: { hex: '' }, name: 'All Forms' },
+            ...(formsTypesData?.data ?? []),
+            ...(trashedFormsTypesData?.data ?? []),
+          ]}
           currentFilterId={formTypeFilter}
           setCurrentFilter={setFormTypeFilter}
           onPlusClick={onCreateNewFormTemplate}
-          isRefetching={formsTypesIsRefetching}
+          isRefetching={formsTypesIsRefetching || trashedFormsTypesIsRefetching}
           handlePreviewTemplate={handlePreviewTemplate}
           handleEditTemplate={handleEditTemplate}
+          handleDeleteTemplate={onDeleteTemplate}
+          isDeletingTemplate={isPendingDeleteTemplate}
         />
       </div>
-      <div className="flex flex-col divide-y-[1px] w-[calc(100%-320px)]">
+      <div className="flex flex-col w-[calc(100%-320px)]">
         <FilterBar
           statusButtons={statusButtons}
           currentTab={currentTab}
@@ -202,7 +246,7 @@ const OnlineForms = () => {
           formTypeFilter={formTypeFilter}
           handlePreviewTemplate={handlePreviewTemplate}
         />
-        <div onScroll={handleScroll} className=" h-[calc(100vh-140px)]  overflow-x-scroll overflow-y-scroll">
+        <div onScroll={handleScroll} className="h-[calc(100vh-140px)]  overflow-x-scroll overflow-y-scroll">
           {formsIsLoading ? (
             <div className="h-full w-full flex justify-center items-center">
               <CircularProgress size={40} />
@@ -226,9 +270,15 @@ const OnlineForms = () => {
               <PdfViewer pdf={pdfRender} />
             </div>
             <div className="bg-white w-[663px] fixed bottom-0 right-0 h-[70px] flex justify-between items-center px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)]">
-              <button className="flex items-center gap-2 text-red5 text-sm font-medium leading-5 bg-red1 py-[9px] px-[17px] rounded-md	">
-                <TrashIcon className="w-5 h-5" />
-                <span>Move to Trash</span>
+              <button
+                onClick={() => {
+                  setTrashOverlayOpened(true);
+                }}
+                className="  text-red5 text-sm font-medium leading-5 bg-red1  rounded-md	">
+                <div className="flex items-center gap-2 py-[9px] px-[17px]">
+                  <TrashIcon className="w-5 h-5" />
+                  <span>Move to Trash</span>
+                </div>
               </button>
               <div className="flex items-center gap-[15px]">
                 <Button white label={'Cancel'} onClick={() => setOpenSlideover(false)} />
@@ -241,6 +291,13 @@ const OnlineForms = () => {
               </div>
             </div>
           </div>
+        )}
+        {trashOverlayOpened && (
+          <TrashTypeOverlay
+            onCancel={() => setTrashOverlayOpened(false)}
+            onDelete={() => onDeleteTemplate(openedPopover.id.hex)}
+            isDeleting={isPendingDeleteTemplate}
+          />
         )}
       </SlideOver>
     </div>
