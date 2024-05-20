@@ -2,11 +2,10 @@ import React from 'react';
 import Search from '@components/shared/input/search';
 import PropTypes from 'prop-types';
 import Button from '@components/shared/button';
-import NoteIcon from '@mui/icons-material/Note';
 import ButtonsSlider from '@components/shared/button/buttonsSlider';
 import clsx from 'clsx';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-
+import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 const FilterBar = ({
   statusButtons,
   currentTab,
@@ -44,7 +43,7 @@ const FilterBar = ({
         />
         <Button onClick={onSendFormClick}>
           <div className="flex gap-2 justify-center items-center">
-            <NoteIcon />
+            <FeedOutlinedIcon className={'h-5 w-5'} />
             Send New Form
           </div>
         </Button>
