@@ -38,13 +38,15 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
   const [eventsToDelete, setEventsToDelete] = useState([]);
+  const agentSignature = typeof window !== 'undefined' ?
+    JSON.parse(localStorage.getItem('agentSignature')) : '';
 
   const defaultEvents = [
     {
       id: 0,
       action: 'Send',
       title: 'New Event',
-      body_html: `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage.getItem('agentSignature')),
+      body_html: `<div>&nbsp;</div><div>&nbsp;</div>` + agentSignature,
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',
