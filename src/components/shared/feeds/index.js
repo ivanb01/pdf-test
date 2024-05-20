@@ -181,8 +181,8 @@ export default function Feeds({
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px' }}>
-            <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
+          <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px', marginTop: '24px' }}>
+            <ul role="list" className={`${activities.length > 0 && ''}`}>
               {activities
                 ?.slice()
                 .sort((a, b) => b.id - a.id)
