@@ -11,7 +11,8 @@ const SwitchComponent = ({ label }) => {
   const [enabled, setEnabled] = useState(!hideUnapproved);
 
   useEffect(() => {
-    let showUnapproved = localStorage.getItem('showUnapproved') === 'true' ? true : false;
+    let showUnapproved =
+      localStorage.getItem('showUnapproved') && localStorage.getItem('showUnapproved') === 'true' ? true : false;
     setEnabled(showUnapproved);
     dispatch(setHideUnapproved(!showUnapproved));
   }, []);
