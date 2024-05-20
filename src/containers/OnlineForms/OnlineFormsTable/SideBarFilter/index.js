@@ -92,7 +92,7 @@ const SideBarFilter = ({
             setCurrentFilter={setCurrentFilter}
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
-            hideActionsMenu={true}
+            hideActionsMenu={false}
           />
         </li>
         <li>
@@ -121,6 +121,8 @@ const SideBarFilter = ({
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
             hideActionsMenu={false}
+            handleDeleteTemplate={() => {}}
+            isDeletingTemplate={false}
           />
         </li>
       </ul>

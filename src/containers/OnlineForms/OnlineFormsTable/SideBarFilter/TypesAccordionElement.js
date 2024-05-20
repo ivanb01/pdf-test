@@ -41,6 +41,7 @@ const TypesAccordionElement = ({
 
   const Actions = [
     {
+      action: 'edit',
       name: (
         <div className="flex item-center gap-3 text-gray6  cursor-pointer leading-5 py-[2px]">
           <PencilIcon className="w-5 h-5" />
@@ -52,6 +53,7 @@ const TypesAccordionElement = ({
       },
     },
     {
+      action: 'preview',
       name: (
         <div className="flex item-center gap-3 text-gray6  cursor-pointer py-[2px]">
           <RemoveRedEyeIcon className="w-5 h-5" />
@@ -63,6 +65,7 @@ const TypesAccordionElement = ({
       },
     },
     {
+      action: 'delete',
       name: (
         <div className="flex items-center gap-3 text-red5  cursor-pointer py-[2px]">
           <TrashIcon className="w-5 h-5" />
