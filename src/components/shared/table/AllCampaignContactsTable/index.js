@@ -103,8 +103,7 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                           pathname: '/contacts/details',
                           query: { id: person?.contact_id },
                         });
-                      }}
-                    >
+                      }}>
                       {person.contact_name}
                     </h6>
                     <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
@@ -139,6 +138,7 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
               <td className={'px-6 py-4'}>
                 {person.last_communication !== null ? (
                   <DateChip
+                    contact={person}
                     lastCommunication={person.last_communication ?? ''}
                     contactStatus={status_2}
                     contactCategory={'clients'}
