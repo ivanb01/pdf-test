@@ -62,7 +62,7 @@ const PropertiesCarousel = ({ data, updateLightBoxTrigger }) => {
                     }}
                     src={picture.PHOTO_URL}
                     alt={`Image ${index + 1}`}
-                    className="object-cover w-full  object-center h-[500px] cursor-pointer"
+                    className="object-cover w-full  object-center h-[300px] md:h-[500px] cursor-pointer"
                   />
                 </SwiperSlide>
               ))}

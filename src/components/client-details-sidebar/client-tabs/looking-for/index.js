@@ -101,7 +101,7 @@ export default function LookingFor({ contactId, category }) {
       bathrooms: '',
       budget_min: '',
       budget_max: '',
-      general_tags: []
+      general_tags: [],
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values) => {

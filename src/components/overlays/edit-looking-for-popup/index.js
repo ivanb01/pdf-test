@@ -447,7 +447,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                         });
                         return updatedSections;
                       })
-                    }>
+                    }
+                  >
                     <p className={'text-sm font-medium text-gray-700 '}>{s.name}</p>
                     <KeyboardArrowDownIcon
                       className={`transition-all h-4 w-4 text-gray-700  ${!s.expanded && 'rotate-180'}`}

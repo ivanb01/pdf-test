@@ -1840,7 +1840,6 @@ i.justify-align {
 .richtext-styling {
   div {
     margin-bottom: 20px;
-    border: 1px solid red;
   }
 
   h2 {
@@ -1913,5 +1912,18 @@ i.justify-align {
   &::before {
     border: 2px solid #60A5FA !important;
     border-radius: 8px !important;
+  }
+}
+
+.swiper-button-prev {
+  @media screen and (max-width: $screen-sm) {
+    height: 30px !important;
+    width: 30px !important;
+  }
+}
+.swiper-button-next {
+  @media screen and (max-width: $screen-sm) {
+    height: 30px !important;
+    width: 30px !important;
   }
 }

@@ -48,7 +48,8 @@ export default function SlideOver({
                 enterTo="translate-x-0"
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
-                leaveTo="translate-x-full">
+                leaveTo="translate-x-full"
+              >
                 <Dialog.Panel className={`pointer-events-auto ${width ? width : 'w-screen max-w-md'}`}>
                   <div className={`flex h-full flex-col bg-white shadow-xl relative ${border}`}>
                     {loading ? (
@@ -59,7 +60,8 @@ export default function SlideOver({
                       <>
                         {!noHeader && (
                           <div
-                            className={`flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1 items-center`}>
+                            className={`flex flex-shrink-0 justify-between px-6 py-5 border-b border-gray1 items-center`}
+                          >
                             {editableTitle ? (
                               <Input
                                 placeholder="Write campaign title here"
@@ -87,8 +89,8 @@ export default function SlideOver({
                                           person?.contact_campaign_status === 'assigned'
                                             ? 'Campaign is Running'
                                             : person?.contact_campaign_status === 'unassigned'
-                                            ? 'Campaign Deactivated'
-                                            : 'Never In Campaign'
+                                              ? 'Campaign Deactivated'
+                                              : 'Never In Campaign'
                                         }
                                       />
                                       {person?.contact_campaign_status !== null && (
@@ -96,8 +98,8 @@ export default function SlideOver({
                                           {person?.contact_campaign_status === 'assigned'
                                             ? `from ${formatDateStringMDY(person?.contact_enrollment_date)}`
                                             : person?.contact_campaign_status === 'unassigned'
-                                            ? `from ${formatDateStringMDY(person?.contact_unenrolment_date)}`
-                                            : ''}
+                                              ? `from ${formatDateStringMDY(person?.contact_unenrolment_date)}`
+                                              : ''}
                                         </div>
                                       )}
                                     </div>
@@ -117,12 +119,13 @@ export default function SlideOver({
                                             person?.contact_campaign_status === 'unassigned'
                                               ? 'text-gray3'
                                               : 'text-gray7'
-                                          }`}>
+                                          }`}
+                                        >
                                           {person?.contact_campaign_status === 'assigned'
                                             ? 'Active'
                                             : person?.contact_campaign_status === 'unassigned'
-                                            ? 'Deactivated'
-                                            : 'Inactive'}
+                                              ? 'Deactivated'
+                                              : 'Inactive'}
                                         </span>
                                       </div>
                                     </div>
@@ -134,7 +137,8 @@ export default function SlideOver({
                                 <button
                                   type="button"
                                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
-                                  onClick={() => setOpen(false)}>
+                                  onClick={() => setOpen(false)}
+                                >
                                   <span className="sr-only">Close panel</span>
                                   <Close className="h-6 w-6" aria-hidden="true" />
                                 </button>
@@ -155,7 +159,8 @@ export default function SlideOver({
                           <div
                             className={`flex flex-shrink-0 ${
                               buttonsRight ? 'justify-end' : 'justify-between'
-                            } px-4 py-4 border-t border-gray-2`}>
+                            } px-4 py-4 border-t border-gray-2`}
+                          >
                             {buttons}
                           </div>
                         )}

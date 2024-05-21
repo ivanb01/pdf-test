@@ -10,21 +10,27 @@ const PropertyOverlay = ({ handleCloseOverlay, children, className, onNextClick,
       <div className={'relative flex h-full justify-center items-center  z-[999999]'}>
         <div
           className={
-            'z-[99999999] cursor-pointer absolute top-[20px] right-[20px] h-8 w-8 bg-gray5 text-white flex items-center justify-center align-center rounded-full'
+            'z-[99999999] cursor-pointer absolute  md:top-[20px]   right-[10px] md:right-[20px] top-[10px] h-4 w-4 md:h-8 md:w-8 bg-gray5 text-white flex items-center justify-center align-center rounded-full'
           }
         >
-          <ClearRoundedIcon onClick={() => handleCloseOverlay()} />
+          <ClearRoundedIcon className={'h-4 w-4'} onClick={() => handleCloseOverlay()} />
         </div>
         <div
-          className={`relative p-4 h-full md:h-auto flex gap-[32px]  items-center justify-center z-[999999] w-[100%]`}
+          className={`relative p-2 md:p-4 h-full md:h-auto flex md:gap-[32px] gap-[10px] items-center justify-center z-[999999] w-[100%]`}
         >
-          <ArrowBackIosRoundedIcon className={'w-[50px] text-white cursor-pointer '} onClick={onPrevClick} />
+          <ArrowBackIosRoundedIcon
+            className={'w-[20px] md:w-[50px] text-white cursor-pointer '}
+            onClick={onPrevClick}
+          />
           <div
             className={`relative h-[100px] bg-white rounded-lg shadow overflow-scroll md:overflow-hidden ${className} h-full`}
           >
             {children}
           </div>
-          <ArrowForwardIosRoundedIcon className={'w-[50px] text-white cursor-pointer'} onClick={() => onNextClick()} />
+          <ArrowForwardIosRoundedIcon
+            className={'w-[20px] md:w-[50px]  text-white cursor-pointer'}
+            onClick={() => onNextClick()}
+          />
         </div>
       </div>
     </div>

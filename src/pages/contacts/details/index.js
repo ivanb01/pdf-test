@@ -338,7 +338,7 @@ const index = () => {
                     <a
                       className={`${
                         allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).color
-                      } text-neutral1 rounded-xl px-3 py-[6px] text-xs font-medium`}
+                      } text-gray6 rounded-xl px-3 py-[6px] text-xs font-medium`}
                     >
                       {allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
                     </a>

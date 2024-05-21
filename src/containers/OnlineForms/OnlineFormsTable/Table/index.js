@@ -99,7 +99,8 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
               return (
                 <tr
                   key={headerGroup.id}
-                  className="w-fit [&>*]:px-[16px] [&>*]:py-[12px] [&>*:first-child]:px-[24px]  border-y-[1px] border-gray-200">
+                  className="w-fit [&>*]:px-[16px] [&>*]:py-[12px] [&>*:first-child]:px-[24px]  border-y-[1px] border-gray-200"
+                >
                   {headerGroup.headers.map((header) => {
                     return (
                       <th
@@ -107,7 +108,8 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
                         className="[&>*]:w-fit  text-xs leading-4 font-medium text-gray-500"
                         style={{
                           width: header.column.getSize(),
-                        }}>
+                        }}
+                      >
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
                     );
@@ -120,7 +122,8 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
             {table?.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="h-[70px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]">
+                className="h-[70px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]"
+              >
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td
@@ -128,7 +131,8 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
                       className="[&>*]:w-max"
                       style={{
                         width: cell.column.getSize(),
-                      }}>
+                      }}
+                    >
                       {flexRender(cell.column.columnDef.cell, {
                         info: cell.getContext(),
                         onDeleteForm,
