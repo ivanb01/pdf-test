@@ -44,6 +44,11 @@ const SendEmailOverlay = () => {
   }, [open]);
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+  }, [open]);
+  useEffect(() => {
     if (contactToBeEmailed) {
       setSelectedContacts([contactToBeEmailed]);
     }

@@ -1,7 +1,7 @@
 import Table from '..';
 import { getContactStatusByStatusId, getContactStatusColorByStatusId, getInitials } from 'global/functions';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Edit from '@mui/icons-material/Edit';
 import Chip from '@components/shared/chip';
 import DateChip from '@components/shared/chip/date-chip';
@@ -22,6 +22,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
 
+  const dispatch = useDispatch();
   const [contactToModify, setContactToModify] = useState(null);
   const isUnapprovedAIContact = (contact) => {
     if (
