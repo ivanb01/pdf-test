@@ -434,7 +434,7 @@ const PortfolioPopup = ({
                       </div>
                     )}
                     <div className="md:mt-10 mt-5 pb-4">
-                      <div className="w-full md:w-[700px] mr-20">
+                      <div className="w-full max-w-[700px] mr-20">
                         <div className="property-details">
                           <div className="text-gray7 text-xl mb-6 font-medium">Property Details</div>
                           <div className="flex justify-between items-center">
@@ -456,7 +456,7 @@ const PortfolioPopup = ({
                             </div>
                           </div>
                           <div
-                            className="mt-6 md:break-keep break-all"
+                            className="mt-6 break-word"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.DESCRIPTION) }}></div>
                         </div>
                         <PropertyAmenities data={data} />
