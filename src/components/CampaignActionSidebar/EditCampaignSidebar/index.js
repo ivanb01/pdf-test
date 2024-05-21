@@ -38,8 +38,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
   const [eventsToDelete, setEventsToDelete] = useState([]);
-  const agentSignature = typeof window !== 'undefined' ?
-    JSON.parse(localStorage.getItem('agentSignature')) : '';
+  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
 
   const [defaultEvents, setDefaultEvents] = useState([
     {
@@ -50,7 +49,6 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         typeof window !== 'undefined' &&
         window.localStorage &&
         `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
-
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',
@@ -519,6 +517,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               <div className="">
                 <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
                 <RichtextEditor
+                  includeSignature
                   placeholder="Write message here..."
                   value={events[selectedEvent]?.body_html}
                   onContentChange={(value) => {

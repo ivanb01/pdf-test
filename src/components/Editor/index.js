@@ -1,8 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
-export default function RichtextEditor({ label, value, onContentChange, height, id }) {
+export default function RichtextEditor({ label, value, onContentChange, height, id, includeSignature }) {
   const editorRef = useRef(null);
+
+  const [agentSignature, setAgentSignature] = useState(null);
+
+  useEffect(() => {
+    //prettier-ignore
+    let agentSignature =
+      (typeof window !== 'undefined' &&
+      window.localStorage) &&
+      `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature'));
+    setAgentSignature(agentSignature);
+  }, []);
+
   useEffect(() => {
     setTimeout(() => {
       const element = document.querySelector('.mce-edit-focus');
@@ -19,7 +31,7 @@ export default function RichtextEditor({ label, value, onContentChange, height, 
       id={'richTextId'}
       apiKey="6fbb5ydazy62w7lpag3txdszeyvqys6288392vd1e6acpxs7"
       onInit={(evt, editor) => (editorRef.current = editor)}
-      value={value}
+      value={!value && includeSignature ? agentSignature : value}
       init={{
         auto_focus: 'richTextId',
         height: height ?? 350,

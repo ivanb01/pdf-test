@@ -38,12 +38,6 @@ const SendEmailOverlay = () => {
   const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
-    if (localStorage.getItem('agentSignature')) {
-      setMessage(`<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage.getItem('agentSignature')));
-    }
-  }, [open]);
-
-  useEffect(() => {
     if (!open) {
       return;
     }
@@ -289,6 +283,7 @@ const SendEmailOverlay = () => {
           </div>
           <div className="text-gray6 text-sm font-medium mb-1">Message</div>
           <RichtextEditor
+            includeSignature
             label="Message"
             value={message}
             placeholder="Write message here..."

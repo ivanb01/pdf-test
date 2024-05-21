@@ -38,15 +38,9 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
     return true;
   };
   const addNewEvent = () => {
-    const agentSignature = typeof window !== 'undefined' ?
-    JSON.parse(localStorage.getItem('agentSignature')) : '';
-
     let newEvent = {
       title: 'New Event',
-      body_html:
-        typeof window !== 'undefined' &&
-        window.localStorage &&
-        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
+      body_html: '',
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',

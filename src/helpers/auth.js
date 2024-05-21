@@ -6,6 +6,7 @@ import { getUser, updateUser } from 'api/user';
 import Signature from '@components/Signature';
 import { getCompany } from '@global/functions';
 import ReactDOMServer from 'react-dom/server';
+import SignatureEmailFooter from '@components/Signature/SignatureEmailFooter';
 
 const setAfterSignInRedirect = (redirectionPath, message = '') => {
   sessionStorage.setItem('after-auth-redirect', redirectionPath);
@@ -94,7 +95,11 @@ const fetchCurrentUserInfo = async () => {
 const saveUserInfo = async (info) => {
   if (info) {
     let signatureHtml = ReactDOMServer.renderToString(
-      <Signature userInfo={info} companyName={getCompany(info).companyName} imageUrl={getCompany(info).imageUrl} />,
+      <SignatureEmailFooter
+        userInfo={info}
+        companyName={getCompany(info).companyName}
+        imageUrl={getCompany(info).imageUrl}
+      />,
     );
     console.log(signatureHtml);
     localStorage.setItem('agentSignature', JSON.stringify(signatureHtml));
