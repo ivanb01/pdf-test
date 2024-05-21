@@ -31,10 +31,11 @@ import { addCRMCampaigns } from '@store/campaigns/slice';
 import Checkbox from '@components/shared/checkbox';
 import SimpleBar from 'simplebar-react';
 import NotificationAlert from '@components/shared/alert/notification-alert';
-import CampaignCreateConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
+import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
+  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
 
   const [defaultEvents, setDefaultEvents] = useState([
     {
@@ -682,7 +683,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         </div>
       </div>
       {openConfirmationDialog && (
-        <CampaignCreateConfirmationOverlay
+        <CampaignCreateEditConfirmationOverlay
           onCancel={() => {
             resetCreateCampaign();
             setOpen(false);

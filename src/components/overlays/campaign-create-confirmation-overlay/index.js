@@ -2,7 +2,7 @@ import Overlay from '@components/shared/overlay';
 import Button from '@components/shared/button';
 import PropTypes from 'prop-types';
 
-const CampaignCreateConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel }) => {
+const CampaignCreateEditConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel, editMode }) => {
   return (
     <Overlay>
       <div className={'p-6 flex gap-[40px] flex-col'}>
@@ -32,7 +32,7 @@ const CampaignCreateConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel
           <div>
             <p className={'text-lg leading-6 font-medium text-gray7 mb-3'}>Are you sure you want to cancel?</p>
             <p className={'text-sm leading-5 font-normal mb-4 text-gray4'}>
-              If you cancel while creating the campaign, all work will be lost.
+              If you cancel while {editMode ? 'editing' : 'creating'} the campaign, all work will be lost.
             </p>
             <p className={'text-sm leading-5 font-normal text-gray4'}>Are you sure you want to cancel?</p>
           </div>
@@ -42,8 +42,7 @@ const CampaignCreateConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel
             white
             onClick={() => {
               setOpenConfirmationDialog(false);
-            }}
-          >
+            }}>
             Cancel
           </Button>
           <Button danger onClick={onCancel}>
@@ -54,9 +53,10 @@ const CampaignCreateConfirmationOverlay = ({ setOpenConfirmationDialog, onCancel
     </Overlay>
   );
 };
-export default CampaignCreateConfirmationOverlay;
+export default CampaignCreateEditConfirmationOverlay;
 
-CampaignCreateConfirmationOverlay.propTypes = {
+CampaignCreateEditConfirmationOverlay.propTypes = {
   setOpenConfirmationDialog: PropTypes.func,
   onCancel: PropTypes.func,
+  editMode: PropTypes.bool,
 };
