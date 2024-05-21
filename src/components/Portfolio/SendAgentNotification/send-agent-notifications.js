@@ -11,7 +11,7 @@ const SendNotificationsToAgent = ({ userProperties, status, propertyId }) => {
         <Container style={container}>
           <Img src={`https://i.imgur.com/GPHstEx.png`} width="134" height="28" alt="OxfordLogo" style={logo} />
           <Section style={mainContainer}>
-            <Text style={paragraph}>Hey {userProperties?.properties[0]?.agent_id},</Text>
+            <Text style={paragraph}>Hi,</Text>
             <Text style={paragraph}>
               Your client {status} a property:{' '}
               <Link href={`${getBaseUrl()}/property?id=${propertyId ?? ''}`}>Property Link</Link>

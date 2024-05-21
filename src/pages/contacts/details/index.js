@@ -314,7 +314,8 @@ const index = () => {
                           created_at: new Date().toISOString(),
                         });
                         window.open(`tel:${contact.phone_number}`);
-                      }}>
+                      }}
+                    >
                       <img src={call.src} style={{ height: '15px' }} />
                     </div>
                     <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
@@ -450,21 +451,24 @@ const index = () => {
                       onClick={() => setShowGmailInbox(!showGmailInbox)}
                       className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
                         showGmailInbox && 'border-lightBlue3'
-                      }`}>
+                      }`}
+                    >
                       <MailOutline
                         className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
                         className={`responsive-fix text-sm leading-5 ${
                           showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
-                        }`}>
+                        }`}
+                      >
                         Gmail Inbox
                       </span>
                     </button>
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
-                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
+                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2"
+                  >
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
                     <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
                       Start communication
@@ -526,7 +530,8 @@ const index = () => {
                 ) : (
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
-                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}
+                  >
                     {notes
                       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                       .map((note, index) => (
