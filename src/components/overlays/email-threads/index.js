@@ -96,7 +96,7 @@ const EmailItem = ({
         </div>
       </div>
       {isLast && (
-        <div className={' flex flex-col gap-[18px] mt-[30px]'}>
+        <div className={' flex flex-col gap-[18px] mt-[30px] mb-[18px]'}>
           {openedEditor ? (
             <>
               <RichtextEditor
