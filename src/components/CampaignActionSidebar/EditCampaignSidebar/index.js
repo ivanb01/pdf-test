@@ -41,18 +41,22 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   const agentSignature = typeof window !== 'undefined' ?
     JSON.parse(localStorage.getItem('agentSignature')) : '';
 
-  const defaultEvents = [
+  const [defaultEvents, setDefaultEvents] = useState([
     {
       id: 0,
       action: 'Send',
       title: 'New Event',
-      body_html: `<div>&nbsp;</div><div>&nbsp;</div>` + agentSignature,
+      body_html:
+        typeof window !== 'undefined' &&
+        window.localStorage &&
+        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
+
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',
       type: 'Email',
     },
-  ];
+  ]);
 
   const defaultCampaign = {
     name: null,

@@ -35,6 +35,7 @@ import CampaignCreateConfirmationOverlay from '@components/overlays/campaign-cre
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
+
   const agentSignature = typeof window !== 'undefined' ?
     JSON.parse(localStorage.getItem('agentSignature')) : '';
 
@@ -42,7 +43,11 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     {
       action: 'Send',
       title: 'New Event',
-      body_html: `<div>&nbsp;</div><div>&nbsp;</div>` + agentSignature,
+      body_html:
+        typeof window !== 'undefined' &&
+        window.localStorage &&
+        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
+
       body: '',
       wait_interval: '-d',
       type: 'Email',
@@ -301,7 +306,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       {
         action: 'Send',
         title: 'New Event',
-        body_html: '',
+        body_html:
+          typeof window !== 'undefined' &&
+          window.localStorage &&
+          `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
         body: '',
         wait_interval: '-d',
         trigger_time: '11:00',
