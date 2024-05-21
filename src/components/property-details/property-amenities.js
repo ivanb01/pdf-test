@@ -130,9 +130,9 @@ const PropertyAmenities = ({ data }) => {
       differentiateAmenities(data.AMENITIES).capitalizedRemainingAmenities.length > 0) && (
       <div className="mt-10">
         <div className="text-gray7 text-xl mb-4 font-medium">Property Amenities</div>
-        <div className={'w-[700px]'}>
+        <div className={'w-full md:w-[700px]'}>
           {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 && (
-            <div className="grid grid-cols-3 gap-6 items-center mb-6">
+            <div className="grid  sm:grid-cols-2  md:grid-cols-3 gap-6 items-center mb-6">
               {differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.length > 0 &&
                 differentiateAmenities(data.AMENITIES).mainAmenitiesPerProperty.map((amenity, index) => {
                   const matchedAmenity = propertyAmenities?.find(

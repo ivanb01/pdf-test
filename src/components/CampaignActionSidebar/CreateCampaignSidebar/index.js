@@ -36,17 +36,11 @@ import CampaignCreateConfirmationOverlay from '@components/overlays/campaign-cre
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
 
-  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
-
   const [defaultEvents, setDefaultEvents] = useState([
     {
       action: 'Send',
       title: 'New Event',
-      body_html:
-        typeof window !== 'undefined' &&
-        window.localStorage &&
-        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
-
+      body_html: '',
       body: '',
       wait_interval: '-d',
       type: 'Email',
@@ -305,10 +299,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       {
         action: 'Send',
         title: 'New Event',
-        body_html:
-          typeof window !== 'undefined' &&
-          window.localStorage &&
-          `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
+        body_html: '',
         body: '',
         wait_interval: '-d',
         trigger_time: '11:00',
@@ -633,6 +624,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
               <div className="">
                 <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
                 <RichtextEditor
+                  includeSignature
                   placeholder="Write message here..."
                   value={events[selectedEvent]?.body_html}
                   onContentChange={(value) => {

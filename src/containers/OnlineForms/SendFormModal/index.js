@@ -78,7 +78,8 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     <Overlay
       className="w-[600px] min-h-[332px] [&>div]:overflow-visible"
       title={'Send New Form'}
-      handleCloseOverlay={onCancel}>
+      handleCloseOverlay={onCancel}
+    >
       <div className="p-[24px] pt-0 flex flex-col gap-[24px]">
         <div className="flex flex-col gap-[24px]">
           <Dropdown

@@ -76,7 +76,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
       person={person && person}
       setOpen={(state) => {
         setOpen(state);
-      }}>
+      }}
+    >
       <div>
         <div className={'flex gap-4 mb-6'}>
           {person && (
@@ -127,7 +128,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                 maxHeight:
                   person?.contact_campaign_status !== 'never_assigned' ? 'calc(100vh - 180px)' : 'calc(100vh - 235px)',
                 height: '100vh',
-              }}>
+              }}
+            >
               <div className={'flex flex-col px-[22px] py-[26px] '}>
                 <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
                 {person?.contact_campaign_status === 'never_assigned' ? (
@@ -157,13 +159,15 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                 className={`cursor-pointer rounded-lg border ${
                                   areObjectsEqual(campaignData?.events[index], activeEvent) &&
                                   'border-[#BAE6FD] bg-lightBlue1'
-                                } p-3 flex  flex-col gap-[10px] `}>
+                                } p-3 flex  flex-col gap-[10px] `}
+                              >
                                 <div className={'flex justify-between items-center group'}>
                                   <div className="flex items-center">
                                     <div className="w-">
                                       <CircleIcon
                                         small
-                                        active={areObjectsEqual(campaignData?.events[index], activeEvent)}>
+                                        active={areObjectsEqual(campaignData?.events[index], activeEvent)}
+                                      >
                                         <MailIcon
                                           fill={
                                             areObjectsEqual(campaignData?.events[index], activeEvent)
@@ -212,7 +216,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                               onClick={() => setActiveEvent({ ...e })}
                               className={`cursor-pointer rounded-lg border ${
                                 areObjectsEqual(e, activeEvent) && 'border-[#BAE6FD] bg-lightBlue1'
-                              } p-3 flex  flex-col gap-[10px] `}>
+                              } p-3 flex  flex-col gap-[10px] `}
+                            >
                               <div className={'flex justify-between items-center group'}>
                                 <div className="flex items-center  justify-center">
                                   <div className="w-">
@@ -222,7 +227,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#EF4444" />
                                         <rect
                                           x="2"
@@ -251,7 +257,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#10B981" />
                                         <rect
                                           x="2"
@@ -273,7 +280,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#F9FAFB" />
                                         <rect
                                           x="2"
@@ -299,16 +307,17 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                           correspondingEvent?.event_status?.toLowerCase() === 'scheduled'
                                             ? VARIANT_ENUM.WARNING
                                             : correspondingEvent?.event_status?.toLowerCase() === 'sent'
-                                            ? VARIANT_ENUM.SUCCESS
-                                            : VARIANT_ENUM.ERROR
+                                              ? VARIANT_ENUM.SUCCESS
+                                              : VARIANT_ENUM.ERROR
                                         }
                                         text={
                                           correspondingEvent?.event_status?.toLowerCase() === 'scheduled'
                                             ? 'To be sent'
                                             : correspondingEvent?.event_status?.toLowerCase() === 'sent'
-                                            ? 'Sent'
-                                            : 'Cancelled'
-                                        }></StatusChip>
+                                              ? 'Sent'
+                                              : 'Cancelled'
+                                        }
+                                      ></StatusChip>
                                       <div className="text-gray-500 font-inter font-medium text-sm leading-5">
                                         on {getFormattedDateFromTimestamp(correspondingEvent.event_updated_at)}
                                       </div>
@@ -333,7 +342,8 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                 maxHeight:
                   person?.contact_campaign_status !== 'never_assigned' ? 'calc(100vh - 190px)' : 'calc(100vh - 235px)',
                 height: '100vh',
-              }}>
+              }}
+            >
               <div className="mb-6 pt-[26px]">
                 <div className={'sticky top-0'}>
                   <div className={'px-6 pb-3 border-b border-gray2 '}>

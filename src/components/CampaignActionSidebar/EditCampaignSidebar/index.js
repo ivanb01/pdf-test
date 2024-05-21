@@ -49,7 +49,6 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         typeof window !== 'undefined' &&
         window.localStorage &&
         `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
-
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',
@@ -173,7 +172,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         onClick={onClick}
         className={`relative ${!expanded && 'cursor-pointer'} rounded-lg border-2 ${active && 'border-lightBlue3'} ${
           !expanded && active && 'bg-lightBlue1'
-        } ${padding} flex ${className} ${!description && 'items-center'}`}>
+        } ${padding} flex ${className} ${!description && 'items-center'}`}
+      >
         {icon}
         <div className="ml-4 text-sm">
           <div className="text-gray7 font-semibold flex items-center gap-[10px]">
@@ -199,7 +199,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               expanded
                 ? 'h-auto border-l-2 border-r-2 border-b-2 pointer-events-auto border-lightBlue3 px-[18px] py-6'
                 : 'border-none pointer-events-none'
-            } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}>
+            } h-0 transition-all bg-white absolute left-0 right-0 rounded-b-lg top-[90%] z-50 -mx-[1.5px]`}
+          >
             {expanded && (
               <>
                 <Radio
@@ -245,7 +246,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           onClick={onClick}
           className={`cursor-pointer rounded-lg border ${
             active && 'border-[#BAE6FD] bg-lightBlue1'
-          } p-3 flex ${className} flex flex-col gap-[10px] `}>
+          } p-3 flex ${className} flex flex-col gap-[10px] `}
+        >
           <div className={'flex justify-between items-center group'}>
             <div className="flex">
               <div className="w-">{icon}</div>
@@ -260,7 +262,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                   removeEvent(index);
                   setEventsToDelete((prevState) => [...prevState, id]);
                 }}
-                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete">
+                className="hidden group-hover:flex transition-all rounded-full bg-red-50 h-[30px] w-[30px] items-center justify-center hover:bg-red-500 group/delete"
+              >
                 <Delete className="transition-all text-[20px] text-red-500 group-hover/delete:text-white" />
               </div>
             )}
@@ -302,7 +305,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       className="top-[70px]"
       handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
       rounded
-      hideScroll>
+      hideScroll
+    >
       <div className="-mt-3 mb-5">
         <div className="mb-4 text-gray8 text-sm font-medium">
           Choose the clients who will be eligible of this campaign
@@ -392,7 +396,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               </div>
               <a
                 onClick={() => addNewEvent()}
-                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold">
+                className="px-[14px] py-[8px] rounded-[222px] border-2 bg-lightBlue1 border-lightBlue3 cursor-pointer text-lightBlue3 text-sm font-semibold"
+              >
                 + Add New Event
               </a>
             </div>
@@ -512,6 +517,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
               <div className="">
                 <div className="mb-4 text-gray8 text-sm font-medium">Message:</div>
                 <RichtextEditor
+                  includeSignature
                   placeholder="Write message here..."
                   value={events[selectedEvent]?.body_html}
                   onContentChange={(value) => {
