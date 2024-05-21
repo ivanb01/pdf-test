@@ -13,6 +13,7 @@ import { sendMarketingEmail } from '@api/marketing';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import AsyncDropdown from '@components/marketing/AsyncDropdown';
+import SimpleBar from 'simplebar-react';
 
 const validationSchemaWithListingUrl = Yup.object({
   listingUrl: Yup.string()
@@ -87,56 +88,61 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
     setSelectedProperty(i == null ? undefined : i);
   };
   return (
-    <Overlay title={`Order ${name && name}`} handleCloseOverlay={handleCloseOverlay} className="w-[1000px]">
-      <form onSubmit={formik.handleSubmit}>
-        <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
-          <div className={'flex-1 relative'}>
-            <ImageGallery images={template} className={'object-contain'} includeZoom={false} />
-          </div>
-          <div className={'flex-1 '}>
-            <div className={'flex flex-col gap-6 '}>
-              <p className={'text-sm text-gray5 border rounded-xl border-lightBlue2 p-2 pl-4 bg-lightBlue1'}>
-                Complete the fields below to customize and generate your listing's or general promotional materials,
-                ready for both print and digital use. You will receive the file to your email within 24 Hours.
-              </p>
-              {listingUrl && (
-                <>
-                  <AsyncDropdown
-                    formik={formik}
-                    updateSelectedProperty={updateSelectedProperty}
-                    selectedProperty={selectedProperty}
-                  />
-                  <Input
-                    type="text"
-                    label="Listing URL"
-                    required
-                    disabled={selectedProperty}
-                    value={formik.values.listingUrl ?? ''}
-                    id="listingUrl"
-                    onChange={(e) => {
-                      formik.setFieldValue('listingUrl', e.target.value);
-                    }}
-                    error={formik.errors.listingUrl && formik.touched.listingUrl}
-                    errorText={formik.errors.listingUrl}
-                  />
-                </>
-              )}
-              <TextArea
-                className="min-h-[120px]"
-                id="note"
-                name="note"
-                label="Note"
-                value={formik.values.note}
-                optional
-                handleChange={formik.handleChange}
-              />
+    <Overlay
+      title={`Order ${name && name}`}
+      handleCloseOverlay={handleCloseOverlay}
+      maxHeight={'md:max-h-[730px]'}
+      className="w-[1000px]">
+      <SimpleBar style={{ maxHeight: 'calc(100vh - 100px)', height: '100vh' }}>
+        <form onSubmit={formik.handleSubmit}>
+          <div className={'flex gap-6 mr-6 ml-6 mb-8 mt-6'}>
+            <div className={'flex-1 relative'}>
+              <ImageGallery images={template} className={'object-contain'} includeZoom={false} />
+            </div>
+            <div className={'flex-1 '}>
+              <div className={'flex flex-col gap-6 '}>
+                <p className={'text-sm text-gray5 border rounded-xl border-lightBlue2 p-2 pl-4 bg-lightBlue1'}>
+                  Complete the fields below to customize and generate your listing's or general promotional materials,
+                  ready for both print and digital use. You will receive the file to your email within 24 Hours.
+                </p>
+                {listingUrl && (
+                  <>
+                    <AsyncDropdown
+                      formik={formik}
+                      updateSelectedProperty={updateSelectedProperty}
+                      selectedProperty={selectedProperty}
+                    />
+                    <Input
+                      type="text"
+                      label="Listing URL"
+                      required
+                      disabled={selectedProperty}
+                      value={formik.values.listingUrl ?? ''}
+                      id="listingUrl"
+                      onChange={(e) => {
+                        formik.setFieldValue('listingUrl', e.target.value);
+                      }}
+                      error={formik.errors.listingUrl && formik.touched.listingUrl}
+                      errorText={formik.errors.listingUrl}
+                    />
+                  </>
+                )}
+                <TextArea
+                  className="min-h-[120px]"
+                  id="note"
+                  name="note"
+                  label="Note"
+                  value={formik.values.note}
+                  optional
+                  handleChange={formik.handleChange}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </form>
         <div
           className="flex items-end justify-end py-4 pr-6"
-          style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}
-        >
+          style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
           <Button className={`mr-4`} white onClick={handleCloseOverlay}>
             Cancel
           </Button>
@@ -144,7 +150,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
             Send
           </Button>
         </div>
-      </form>
+      </SimpleBar>
     </Overlay>
   );
 };
@@ -177,8 +183,7 @@ export const ImageGallery = ({ images, className, includeZoom }) => {
         <div
           className={
             'absolute top-[50%] left-[20px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }
-        >
+          }>
           <KeyboardArrowLeftIcon onClick={() => showPrevImage()} />
         </div>
       )}
@@ -186,8 +191,7 @@ export const ImageGallery = ({ images, className, includeZoom }) => {
         <div
           className={
             'absolute right-[20px] top-[50%] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }
-        >
+          }>
           <KeyboardArrowRightIcon onClick={() => showNextImage()} />
         </div>
       )}

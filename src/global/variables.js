@@ -200,7 +200,7 @@ export const statuses = [
       {
         id: 16,
         name: 'Offer Submitted',
-        color: 'bg-purple4',
+        color: 'bg-purple3',
       },
     ],
   },
@@ -279,7 +279,7 @@ export const allStatusesQuickEdit = {
     {
       id: 16,
       label: 'Offer Submitted',
-      color: 'bg-purple4',
+      color: 'bg-purple3',
     },
     {
       id: 9,
@@ -812,6 +812,11 @@ export const roomsOptions = [
     id: 999,
     label: 'Any',
     value: null,
+  },
+  {
+    id: 0,
+    label: 'Studio',
+    value: 0,
   },
   {
     id: 1,
@@ -2775,6 +2780,7 @@ export const activityTypeIcons = {
   26: <WhatsAppIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
   28: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  36: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 export const rentalPriceOptions = [
   { id: 1, value: 500, label: '$500' },
@@ -2882,4 +2888,27 @@ export const amenities = [
   'Park View',
   'River View',
   'Skyline View',
+];
+
+export const forOptions = [
+  {
+    id: 0,
+    label: 'For Sale',
+    realtymxValue: 1,
+  },
+  {
+    id: 1,
+    label: 'For Rent',
+    realtymxValue: 2,
+  },
+  {
+    id: 2,
+    label: 'Sold',
+    realtymxValue: 19,
+  },
+  {
+    id: 3,
+    label: 'Rented',
+    realtymxValue: 22,
+  },
 ];

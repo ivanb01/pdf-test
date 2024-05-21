@@ -38,9 +38,15 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
     return true;
   };
   const addNewEvent = () => {
+    const agentSignature = typeof window !== 'undefined' ?
+    JSON.parse(localStorage.getItem('agentSignature')) : '';
+
     let newEvent = {
       title: 'New Event',
-      body_html: '',
+      body_html:
+        typeof window !== 'undefined' &&
+        window.localStorage &&
+        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
       body: '',
       wait_interval: '-d',
       trigger_time: '11:00',
@@ -49,7 +55,7 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       action: 'Send',
       template: {
         id: -1,
-        label: 'Create Custom Email',
+        label: 'Create New Email',
       },
       save_template: false,
     };

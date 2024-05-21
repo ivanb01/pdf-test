@@ -1,11 +1,11 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { getContacts } from '@api/contacts';
-import { fecthOnlineFormsTypes, fetchOnlineFormTypeById, fecthOnlineForms, fetchOnlineForm } from '@api/onlineForms';
+import { fetchOnlineFormsTypes, fetchOnlineFormTypeById, fecthOnlineForms, fetchOnlineForm } from '@api/onlineForms';
 
-export const useFetchOnlineFormsTypes = (options) => {
+export const useFetchOnlineFormsTypes = (params = {}, options) => {
   return useQuery({
-    queryKey: ['online-forms-types'],
-    queryFn: fecthOnlineFormsTypes,
+    queryKey: [`online-forms-types`, { ...params }],
+    queryFn: () => fetchOnlineFormsTypes({ params }),
     refetchOnWindowFocus: false,
     ...options,
   });

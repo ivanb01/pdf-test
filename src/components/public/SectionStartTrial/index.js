@@ -6,11 +6,28 @@ import { Button } from '../Button';
 import arrow from '/public/images/public/start-trial-arrow.png';
 import sectionBg from '/public/images/public/start-trial-section-bg.png';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 export const SectionStartTrial = () => {
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isLoggedIn = () => {
+    let user = localStorage.getItem('user');
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  };
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
   const redirect = () => {
-    //router.push('/contact');
+    if (isAuthenticated) {
+      router.push('/contacts/clients');
+    } else {
+      router.push('/authentication/sign-up');
+    }
   };
 
   return (
@@ -21,7 +38,7 @@ export const SectionStartTrial = () => {
           {"Don't look left, dont look right, click this button and take a bite."}
         </p>
         <div className={styles['section__actions']}>
-          <Button type="primary" onClick={() => router.push('/authentication/sign-up')}>
+          <Button type="primary" onClick={() => redirect()}>
             GET STARTED
           </Button>
           <div className={styles['section__img-arrow']}>

@@ -1,19 +1,29 @@
 import Button from '@components/shared/button';
 import SendIcon from '@mui/icons-material/Send';
 import { AtSymbolIcon, MailIcon } from '@heroicons/react/outline';
-import React from 'react';
+import React, { useEffect } from 'react';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const SendPropertiesFooter = ({
   selectedProperties,
   onSendEmailClick,
   onSendEmailAndSmsClick,
   onSendSmsClick,
-  onPropertiesSave,
+  setSelectedProperties,
   onSavePropertiesClick,
+  contactId,
 }) => {
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
+
+  useEffect(() => {
+    console.log(contacts.find((c) => c.id == contactId));
+  }, [contacts]);
   const router = useRouter();
+  const clearSelectedProperties = () => {
+    setSelectedProperties([]);
+  };
   return (
     <div className="custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between">
       <div className=" bg-gray1 px-[14px] py-[10px] w-fit">
@@ -24,6 +34,7 @@ const SendPropertiesFooter = ({
         </span>
       </div>
       <div className="flex">
+        <Button white label={'Cancel'} className="mr-3" onClick={() => clearSelectedProperties()} />
         {!router.pathname.includes('details') && (
           <Button
             primary
@@ -46,17 +57,19 @@ const SendPropertiesFooter = ({
             // setOpen(true);
           }}
         />
-        <Button
-          primary
-          leftIcon={<AtSymbolIcon />}
-          label="Send via SMS"
-          className="mr-3"
-          onClick={() => {
-            onSendSmsClick();
-            // setSendMethod(2);
-            // setOpen(true);
-          }}
-        />
+        {(router.pathname.includes('properties') || contacts.find((c) => c.id == contactId)?.phone_number) && (
+          <Button
+            primary
+            leftIcon={<AtSymbolIcon />}
+            label="Send via SMS"
+            className="mr-3"
+            onClick={() => {
+              onSendSmsClick();
+              // setSendMethod(2);
+              // setOpen(true);
+            }}
+          />
+        )}
         <Button
           primary
           leftIcon={<MailIcon />}

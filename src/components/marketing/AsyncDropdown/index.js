@@ -6,26 +6,16 @@ import { getBaseUrl } from '@global/functions';
 
 const AsyncDropdown = ({ formik, updateSelectedProperty, selectedProperty }) => {
   const [label, setLabel] = useState('');
-  const [pagination, setPagination] = useState(1);
 
-  const loadOptions = async () => {
+  const loadOptions = async (_, __, { page }) => {
     let params = {
       apikey: '4d7139716e6b4a72',
       callback: 'callback',
       limit: 21,
-      page: pagination,
+      page: page,
+      address: label,
     };
 
-    if (label?.length > 0) {
-      params['address'] = label;
-      if (pagination !== 0) {
-        setPagination(1);
-      }
-      params['page'] = pagination;
-    } else if (label?.length < 0) {
-      setPagination(pagination);
-      params['address'] = undefined;
-    }
     const urlParams = new URLSearchParams({
       ...params,
     });
@@ -34,18 +24,16 @@ const AsyncDropdown = ({ formik, updateSelectedProperty, selectedProperty }) => 
     const data = await fetchJsonp(url)
       .then((res) => res.json())
       .then((data) => {
-        if (data?.LISTINGS.length > 0) {
-          setPagination(pagination + 1);
-        }
         return data;
       })
-      .catch((error) => {
-        console.log(error, 'error');
-      });
+      .catch((error) => {});
 
     return {
       options: data?.LISTINGS ?? [],
       hasMore: data?.LISTINGS.length > 0,
+      additional: {
+        page: page + 1,
+      },
     };
   };
 
@@ -55,6 +43,9 @@ const AsyncDropdown = ({ formik, updateSelectedProperty, selectedProperty }) => 
       <AsyncPaginate
         debounceTimeout={200}
         loadOptions={loadOptions}
+        additional={{
+          page: 1,
+        }}
         getOptionLabel={(option) => (
           <div className={'flex gap-4 h-[40px]'}>
             <img alt={''} src={option?.PHOTOS?.length > 0 ? option?.PHOTOS[0]?.PHOTO_URL : ''} height={40} width={50} />

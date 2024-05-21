@@ -1,5 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { addOnlineFormType, assignForm, deleteForm, postOnlineForm, updateOnlineFormType } from '@api/onlineForms';
+import {
+  addOnlineFormType,
+  assignForm,
+  deleteOnlineFormType,
+  deleteForm,
+  postOnlineForm,
+  updateOnlineFormType,
+} from '@api/onlineForms';
 import { sendEmail } from '@api/email';
 
 export const usePostOnlineFormType = (options) => {
@@ -15,6 +22,14 @@ export const usePostUpdateFormType = (options) => {
   return useMutation({
     mutationFn: async ({ id, templateData }) => {
       return updateOnlineFormType(id, templateData);
+    },
+    ...options,
+  });
+};
+export const useDeleteFormType = (options) => {
+  return useMutation({
+    mutationFn: async (templateId) => {
+      return deleteOnlineFormType(templateId);
     },
     ...options,
   });

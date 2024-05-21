@@ -163,6 +163,7 @@ export default function Info({ client }) {
             iconContent={
               client?.last_communication_date && client?.category_1 !== 'Trash' ? (
                 <DateChip
+                  contact={client}
                   lastCommunication={client.last_communication_date}
                   contactStatus={client.status_2}
                   contactCategory={categoryType}

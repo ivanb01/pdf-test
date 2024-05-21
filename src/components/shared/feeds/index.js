@@ -169,12 +169,20 @@ export default function Feeds({
     }
   }, [inboxData, threadId]);
 
+  function truncateText(text, maxLength = 200) {
+    console.log(text);
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  }
+
   return (
     <>
       {!showGmailInbox ? (
         activities.length > 0 ? (
-          <SimpleBar className="-mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px' }}>
-            <ul role="list" className={`${activities.length > 0 && 'pt-6'}`}>
+          <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px', marginTop: '24px' }}>
+            <ul role="list" className={`${activities.length > 0 && ''}`}>
               {activities
                 ?.slice()
                 .sort((a, b) => b.id - a.id)
@@ -309,6 +317,8 @@ export default function Feeds({
                 style={{
                   height: '285px',
                   paddingRight: '-10px',
+                  margin: '0 -25px',
+                  padding: '0 25px',
                 }}
                 autoHide
               >
@@ -340,12 +350,16 @@ export default function Feeds({
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
-                        <div className="break-words gmail-renderings w-full overflow-hidden ">
+                        <div className="break-word gmail-renderings w-full overflow-hidden ">
                           <span
                             dangerouslySetInnerHTML={{
                               __html: item[0]?.body
-                                ? DOMPurify.sanitize(item[0].body)
-                                : DOMPurify.sanitize(item[0].html_body.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '')),
+                                ? truncateText(DOMPurify.sanitize(item[0].body))
+                                : truncateText(
+                                    DOMPurify.sanitize(
+                                      item[0].html_body.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+                                    ),
+                                  ),
                             }}
                           />
                         </div>

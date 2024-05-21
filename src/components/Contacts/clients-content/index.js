@@ -59,6 +59,7 @@ const Clients = ({
   const [filteredContacts, setFilteredContacts] = useState(contacts);
 
   useEffect(() => {
+    console.log(contacts, 'contacts');
     setFilteredContacts(contacts);
   }, [contacts, openedSubtab]);
 
@@ -127,19 +128,6 @@ const Clients = ({
   }, [openedSubtab, clientsFilters]);
 
   const filterContacts = () => {
-    // if (filtersCleared && hasAnyProperties(clientsFilters)) {
-    //   dispatch(
-    //     setClients(
-    //       contacts.filter(
-    //         (contact) =>
-    //           contact.category_1 == 'Client' &&
-    //           contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-    //       ),
-    //     ),
-    //   );
-    //   setFiltersCleared(false);
-    //   return;
-    // }
     let contactsState =
       openedSubtab !== -1
         ? contacts.filter(
@@ -148,6 +136,7 @@ const Clients = ({
               contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
           )
         : contacts.filter((contact) => contact.category_1 == 'Client');
+
     Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -205,9 +194,6 @@ const Clients = ({
       setFiltersCleared(true);
     }
   };
-  useEffect(() => {
-    console.log(scrollRef, 'ScrollRef');
-  }, [scrollRef]);
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...clientsFilters };
@@ -224,16 +210,14 @@ const Clients = ({
     }
   };
 
-  const getFilterCount = () => {
-    return filteredContacts.filter(
-      (contact) =>
-        contact.category_1 == 'Client' &&
-        contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
-    ).length;
-  };
-
+  const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     filterContacts();
+    statuses.map((status) =>
+      status.statuses.map((s) =>
+        handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted),
+      ),
+    );
   }, [clientsFilters, contacts, openedSubtab]);
 
   useEffect(() => {
@@ -244,6 +228,7 @@ const Clients = ({
     setSearchTerm('');
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder) => {
+    console.log(status, sortOrder);
     let filteredClients = contacts.filter((client) => client.status_2 === status);
 
     filteredClients.sort((a, b) => {
@@ -319,8 +304,7 @@ const Clients = ({
                       <div
                         className={
                           'absolute flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[20px] w-[20px] rounded-xl text-xs text-white'
-                        }
-                      >
+                        }>
                         {getTotalCountOfAllValues(clientsFilters)}
                       </div>
                     )}
@@ -375,8 +359,7 @@ const Clients = ({
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setClientsFilters({}));
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -393,8 +376,7 @@ const Clients = ({
               maxWidth: '100%',
               height: '100%',
               background: '#f9fafb',
-            }}
-          >
+            }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {openedSubtab === -1
                 ? clientStatuses.map((item) => {
@@ -467,8 +449,7 @@ const Clients = ({
               }
             /> */}
           </>
-        }
-      >
+        }>
         <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
       </SlideOver>
     </>

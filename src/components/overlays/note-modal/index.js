@@ -1,11 +1,12 @@
 import Overlay from '@components/shared/overlay';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import toast from 'react-hot-toast';
 import { addContactNote, updateContactNote } from '@api/contacts';
+import { current } from '@reduxjs/toolkit';
 
 const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateActivityLogsInNotes }) => {
   const [loadingButton, setLoadingButton] = useState(false);
@@ -69,7 +70,13 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
       setLoadingButton(false);
     }
   };
+  const ref = useRef(null);
 
+  useEffect(() => {
+    if (ref?.current) {
+      ref?.current.focus();
+    }
+  }, []);
   return (
     <Overlay
       className="md:w-[632px] w-auto"
@@ -79,6 +86,7 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
       <div className="p-6 pt-0 bg-white">
         <form onSubmit={formik.handleSubmit}>
           <TextArea
+            ref={ref}
             className="min-h-[120px]"
             id="description"
             label="Description"

@@ -1,49 +1,39 @@
 import Button from '@components/shared/button';
 import Input from '@components/shared/input';
 import Image from 'next/image';
-import SearchSelectInput from '@components/shared/search-select-input';
 import Overlay from '@components/shared/overlay';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { NYCneighborhoods, bathroomsOptions, roomsOptions, data as data1 } from '@global/variables';
-import bedroom from '/public/images/bedroom.svg';
-import bathroom from '/public/images/bathroom.svg';
+import { NYCneighborhoods, bathroomsOptions, roomsOptions, data as data1, forOptions } from '@global/variables';
 import usd from '/public/images/usd.svg';
 import * as contactServices from 'api/contacts';
-import { valueOptions } from '@global/functions';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setRefetchPart } from '@store/global/slice';
 import { toast } from 'react-hot-toast';
-import Dropdown from '@components/shared/dropdown';
-import RadioGroup from '@components/shared/radio/radio-chips';
 import RadioChips from '@components/shared/radio/radio-chips';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useSelector } from 'react-redux';
-import { setAmenities } from '@store/global/slice';
 import { amenities } from '@global/variables';
 import React from 'react';
 import Tag from '@components/Tag';
 import SimpleBar from 'simplebar-react';
-import Search from '@components/shared/input/search';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import List from '@components/NestedCheckbox/List';
-import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
+import Dropdown from '@components/shared/dropdown';
 
-const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action }) => {
+const EditLookingForPopup = ({ title, handleClose, className, contactId, data, action, category_2 }) => {
   const dispatch = useDispatch();
   const [loadingButton, setLoadingButton] = useState(false);
-  const reduxAmenities = useSelector((state) => state.global.amenities);
-  const [amenitiesChange, setAmenitiesChange] = useState(false);
 
   const [internalAmenities, setInternalAmenities] = useState([]);
 
   useEffect(() => {
-    setInternalAmenities(reduxAmenities.length > 0 ? reduxAmenities : []);
-  }, []);
+    setInternalAmenities(data?.general_tags ? data?.general_tags : []);
+  }, [data]);
 
   const LookingPropertySchema = Yup.object().shape({
     neighborhood_ids: Yup.array()
@@ -51,6 +41,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       .min(1, 'Please select at least one neighborhood'),
     bedrooms: Yup.string().notRequired().nullable(),
     bathrooms: Yup.string().notRequired().nullable(),
+    general_tags: Yup.array(),
     budget_min: Yup.number()
       .min(0, 'Budget Min should be greater than 0')
       .typeError('Budget Min should be an integer')
@@ -74,16 +65,16 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       )
       .notRequired(),
   });
-
   const formik = useFormik({
     validateOnMount: true,
     initialValues: {
       neighborhood_ids: data?.neighborhood_ids ? data.neighborhood_ids : '',
-      looking_action: action,
-      bedrooms: data?.bedrooms_min ? data.bedrooms_min : '',
+      looking_action: data?.looking_action ? data?.looking_action : action,
+      bedrooms: data?.bedrooms_min || data?.bedrooms_min === 0 ? data.bedrooms_min : '',
       bathrooms: data?.bathrooms_min ? data.bathrooms_min : '',
       budget_min: data?.budget_min ? data.budget_min : '',
       budget_max: data?.budget_max ? data.budget_max : '',
+      general_tags: data?.general_tags ? data?.general_tags : [],
     },
     validationSchema: LookingPropertySchema,
     onSubmit: (values, { setFieldValue }) => {
@@ -93,16 +84,19 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       if (formik.isValid) {
         let bathrooms = values.bathrooms && values.bathrooms != 'Any' ? parseFloat(values.bathrooms) : null;
 
-        let bedrooms = values.bedrooms && values.bedrooms != 'Any' ? parseFloat(values.bedrooms) : null;
+        let bedrooms =
+          values.bedrooms !== 'Any' && !isNaN(parseFloat(values.bedrooms)) ? parseFloat(values.bedrooms) : null;
+
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids ? values.neighborhood_ids : null,
-          looking_action: values.looking_action ? values.looking_action : null,
+          looking_action: values.looking_action ? values.looking_action : action,
           bedrooms_min: bedrooms,
-          bedrooms_max: null,
+          bedrooms_max: bedrooms,
           bathrooms_min: bathrooms,
           bathrooms_max: null,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
+          general_tags: internalAmenities,
         });
       }
     },
@@ -152,13 +146,18 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     },
   ]);
 
-  const toggleAmenitySelection = (amenity) => {
+  const toggleAmenitySelection = async (amenity) => {
     if (internalAmenities.includes(amenity)) {
       setInternalAmenities(internalAmenities.filter((selected) => selected !== amenity));
+      formik.setFieldValue(
+        'general_tags',
+        internalAmenities.filter((selected) => selected !== amenity),
+      );
     } else {
       setInternalAmenities([...internalAmenities, amenity]);
+      formik.setFieldValue('general_tags', [...internalAmenities, amenity]);
+      // await contactServices.updateContactLookingProperty(data?.contact_id, propertyId, { general_tags: [...internalAmenities, amenity] });
     }
-    setAmenitiesChange(true);
   };
   const [datav2, setDatav2] = useState([]);
 
@@ -330,24 +329,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     });
   }, [contactId, data?.neighborhood_ids]);
 
-  function arraysHaveSameElements(arr1, arr2) {
-    const sortedArr1 = [...arr1].sort();
-    const sortedArr2 = [...arr2].sort();
-
-    if (sortedArr1.length !== sortedArr2.length) {
-      return false;
-    }
-
-    for (let i = 0; i < sortedArr1.length; i++) {
-      if (sortedArr1[i] !== sortedArr2[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  const dropdownRef = useRef(null);
+  // if Buyer = For Sale, if Renter = For Rent, Landlord = Rented, Sellers = Sold
 
   return (
     <Overlay
@@ -355,16 +337,24 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       handleCloseOverlay={handleClose}
       height="md:max-h-[500px]"
       title={title}
-      className={className}
-    >
+      className={className}>
       <div className="relative">
         <form onSubmit={formik.handleSubmit} className="p-5">
           <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
-            <p className={'text-gray-700 text-sm font-medium mb-1'}>Neighborhood</p>
+            <Dropdown
+              options={forOptions}
+              className="w-full"
+              placeHolder="Status"
+              label={'Status'}
+              handleSelect={(choice) => {
+                formik.setFieldValue('looking_action', choice.realtymxValue);
+              }}
+              initialSelect={forOptions.find((option) => option.realtymxValue == formik.values?.looking_action)}
+            />
+            <p className={'text-gray-700 text-sm font-medium mb-1 mt-4'}>Neighborhood</p>
             <NeighbourhoodDropdown
               className={'max-w-[610px] '}
               style={{ maxHeight: '235px', height: '100%', paddingRight: '12px' }}
-              border={datav2.length > 0}
               setIds={setIds}
               items={items}
               initializeStatus={initializeStatus}
@@ -374,10 +364,12 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
             />
             <RadioChips
               options={roomsOptions}
-              value={formik.values.bedrooms ? formik.values.bedrooms : null}
+              value={formik.values.bedrooms || formik.values.bedrooms === 0 ? formik.values.bedrooms : null}
               label="Bedrooms"
               className="mt-4"
-              handleSelect={(val) => formik.setFieldValue('bedrooms', val.value)}
+              handleSelect={(val) => {
+                formik.setFieldValue('bedrooms', val.value);
+              }}
             />
             <RadioChips
               options={bathroomsOptions}
@@ -438,11 +430,11 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                 errorText={errors.budget_max}
               />
             </div>
-            <div className={'w-[100%] mt-6'}>
+            <div className={'w-[100%] mt-4'}>
               {sections.map((s) => (
                 <React.Fragment key={s.name}>
                   <div
-                    className={'flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
+                    className={' text-gray-700  flex items-center justify-between border-b border-gray-2 py-[6px] mb-5'}
                     role={'button'}
                     onClick={() =>
                       setSections((prev) => {
@@ -454,14 +446,12 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                         });
                         return updatedSections;
                       })
-                    }
-                  >
-                    <p className={'text-xs leading-4 font-semibold tracking-wider uppercase text-gray-5'}>{s.name}</p>
-                    {!s.expanded ? (
-                      <KeyboardArrowDownIcon className={'h-4 w-4 text-gray-4'} />
-                    ) : (
-                      <KeyboardArrowUpIcon className={'h-4 w-4 text-gray-4'} />
-                    )}
+                    }>
+                    <p className={'text-sm font-medium text-gray-700 '}>{s.name}</p>
+                    <KeyboardArrowDownIcon
+                      className={`transition-all h-4 w-4 text-gray-700  ${!s.expanded && 'rotate-180'}`}
+                      aria-hidden="true"
+                    />
                   </div>
                   {s.expanded && (
                     <div className={'flex flex-wrap gap-x-2 '}>
@@ -471,8 +461,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                           onClick={() => {
                             toggleAmenitySelection(a);
                           }}
-                          selected={internalAmenities?.includes(a)}
-                        >
+                          selected={internalAmenities?.includes(a)}>
                           <span>{a}</span>
                         </Tag>
                       ))}
@@ -487,8 +476,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
           className="text-right md:sticky left-0 right-0 bottom-0 bg-white p-5 flex justify-between h-[78px]"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-          }}
-        >
+          }}>
           <div>
             <Button
               white
@@ -499,7 +487,6 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                 setItems(data1);
                 formik?.values?.neighborhood_ids.map((id) => compute(id, 0));
                 filterData(data1, '');
-                dispatch(setAmenities([]));
                 setInternalAmenities([]);
                 formik.setValues({
                   bathrooms: '',
@@ -507,7 +494,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                   neighborhood_ids: [0],
                   budget_max: '',
                   budget_min: '',
-                  looking_action: 1,
+                  looking_action: action,
                 });
               }}
             />
@@ -520,9 +507,8 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
               primary
               className=""
               loading={loadingButton}
-              disabled={!formik.dirty && arraysHaveSameElements(internalAmenities, reduxAmenities)}
+              disabled={!formik.dirty}
               onClick={() => {
-                dispatch(setAmenities([...reduxAmenities, ...internalAmenities]));
                 formik.handleSubmit();
               }}
             />

@@ -39,7 +39,7 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
 
   const sendFormEmail = async () => {
     const emailBody = {
-      to: [clientEmail],
+      to: [clientEmail, userInfo?.email],
       subject: formTitle ?? 'Opgny form',
       body: render(
         <OnlineFormEmailTemplate
@@ -82,7 +82,7 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
 };
 export const DateCell = ({ date }) => <p className="text-sm">{moment(new Date(date)).format('MMM DD, YYYY')}</p>;
 
-export const ActionsCell = ({ formId, onDownloadPdf, onDeleteForm }) => {
+export const ActionsCell = ({ onDownloadPdf, onDeleteForm }) => {
   return (
     <div className="flex gap-4">
       <button onClick={onDownloadPdf}>

@@ -1,7 +1,7 @@
 import Button from 'components/shared/button';
 import Avatar from 'components/shared/avatar';
 import Radio from 'components/shared/radio';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import StatusSelect from 'components/status-select';
 import MultiStepOverlay from 'components/shared/form/multistep-form';
 import { useFormik } from 'formik';
@@ -225,12 +225,21 @@ const AddClientManuallyOverlay = ({ handleClose, title, options, statuses, onCli
     );
   }, [vendorSubtypes]);
 
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [inputRef]);
+
   return (
     <Overlay handleCloseOverlay={handleClose} title={title} className={`w-[1150px]`}>
       <div className="flex min-h-[500px]">
         <SimpleBar autoHide={true} style={{ maxHeight: '500px', width: '100%', height: '100%' }}>
           <form onSubmit={formik.handleSubmit} className="grid grid-cols-2 gap-4 mb-6 p-6 pt-0 flex-1">
             <Input
+              ref={inputRef}
               type="text"
               required
               label="First Name"

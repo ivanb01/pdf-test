@@ -35,48 +35,56 @@ const index = () => {
       key: 'full_name',
       type: 'asc',
       label: 'Name A-Z',
+      api_key: 'name_az',
     },
     {
       id: 2,
       key: 'full_name',
       type: 'desc',
       label: 'Name Z-A',
+      api_key: 'name_za',
     },
     {
       id: 3,
       key: 'total_clients',
       type: 'desc',
       label: '# of Clients',
+      api_key: 'num_clients',
     },
     {
       id: 4,
       key: 'clients_in_funnel',
       type: 'desc',
       label: 'Clients in the funnel',
+      api_key: 'clients_funnel',
     },
     {
       id: 5,
       key: 'percentage_healthy_clients',
       type: 'desc',
       label: 'Highest Client Health',
+      api_key: 'highest_client_health',
     },
     {
       id: 6,
       key: 'percentage_healthy_clients',
       type: 'asc',
       label: 'Lowest Client Health',
+      api_key: 'lowest_client_health',
     },
     {
       id: 7,
       key: 'clients_closed',
       type: 'desc',
       label: 'Closed Clients',
+      api_key: 'closed_clients',
     },
     {
       id: 8,
       key: 'percentage_closed_clients',
       type: 'desc',
       label: 'Conversion',
+      api_key: 'conversion',
     },
   ]);
 
@@ -131,6 +139,7 @@ const index = () => {
   const [loading, setLoading] = useState(false);
   const [sortColumn, setSortColumn] = useState(0);
   const [currentButton, setCurrentButton] = useState(0);
+  const [sortBy, setSortBy] = useState('');
 
   const [hasNextPage, setHasNextPage] = useState(true);
   const [error, setError] = useState();
@@ -140,12 +149,25 @@ const index = () => {
 
   useEffect(() => {
     setLoading(true);
-    getReports(10, offset).then((data) => {
+    getReports(10, offset, sortBy.api_key).then((data) => {
       setItems(data.data);
       setOffset(offset + data.data.count);
       setLoading(false);
     });
   }, []);
+
+  const handleSelect = (item) => {
+    setSortBy(item); // Update selected item
+    // Pass the api_key of the selected item to the API
+    // Make a call to your API passing the api_key
+    // Example:
+    setLoading(true);
+    getReports(10, 0, item.api_key).then((data) => {
+      setItems(data.data);
+      setOffset(data.data.count);
+      setLoading(false);
+    });
+  };
 
   useEffect(() => {
     items.data && initializeData();
@@ -156,7 +178,7 @@ const index = () => {
   }, [sortColumn]);
 
   const loadItems = (offset) => {
-    return getReports(10, offset)
+    return getReports(10, offset, sortBy.api_key)
       .then((response) => {
         return {
           hasNextPage: true,
@@ -215,7 +237,7 @@ const index = () => {
             inputWidth="w-[220px]"
             placeHolder="Choose"
             options={sortColumns}
-            handleSelect={(item) => setSortColumn(item)}
+            handleSelect={handleSelect}
           />
         </div>
       </div>

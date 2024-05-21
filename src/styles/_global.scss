@@ -1843,6 +1843,7 @@ i.justify-align {
 .richtext-styling {
   div {
     margin-bottom: 20px;
+    border: 1px solid red;
   }
 
   h2 {
@@ -1895,4 +1896,25 @@ i.justify-align {
 
 .rmsc .options {
   max-height: 212px !important;
+}
+
+.elementToFadeIn {
+  opacity: 1;
+  animation: fade 0.5s linear;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.tox-edit-area {
+  &::before {
+    border: 2px solid #60A5FA !important;
+    border-radius: 8px !important;
+  }
 }

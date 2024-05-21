@@ -7,6 +7,7 @@ import { render } from '@react-email/components';
 import {
   bathroomsOptions,
   data,
+  forOptions,
   NYCneighborhoods,
   rentalPriceOptions,
   roomsOptions,
@@ -17,13 +18,13 @@ import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import Button from '@components/shared/button';
 import { useLoadScript } from '@react-google-maps/api';
-import React, { useState, useRef, useMemo, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import MinMaxPrice from '@components/shared/dropdown/MinMaxPrice';
 import FilterPropertiesDropdown from '@components/shared/dropdown/FilterPropertiesDropdown';
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
 import { useSelector } from 'react-redux';
-import { generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
+import { formatDateMDY, generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import List from '@components/NestedCheckbox/List';
 import { ChevronDownIcon } from '@heroicons/react/solid';
@@ -98,24 +99,6 @@ const index = () => {
     setFilterValue(filter);
   };
 
-  const forOptions = [
-    {
-      id: 0,
-      label: 'For Sale',
-    },
-    {
-      id: 1,
-      label: 'For Rent',
-    },
-    {
-      id: 2,
-      label: 'Sold',
-    },
-    {
-      id: 3,
-      label: 'Rented',
-    },
-  ];
   const [ids, setIds] = useState();
   const removeNullUndefined = (obj) => {
     const cleanedObj = {};
@@ -158,6 +141,9 @@ const index = () => {
     if (ids?.length) params['neighborhood_id'] = ids;
     if (bedrooms) {
       params['bedsMin'] = bedrooms.value;
+      if (bedrooms?.value === 0) {
+        params['bedsMax'] = bedrooms.value;
+      }
     }
     if (bathrooms) {
       params['bathMin'] = bathrooms.value;
@@ -298,7 +284,7 @@ const index = () => {
         selectedContacts.forEach((c) => {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
-              [c.email],
+              [c.email, userInfo?.email],
               `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
                 <PortfolioEmailTemplate
@@ -318,7 +304,11 @@ const index = () => {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
-                description: `(Email) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+                description: `(Email) Properties sent to ${
+                  c.first_name
+                } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                  item?.portfolio_sharable_id ?? ''
+                }`,
               };
 
               dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
@@ -333,12 +323,21 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}. ${generateSMSFooter(userInfo)}`,
+              `Hey ${
+                c.first_name
+              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
+                item?.portfolio_sharable_id ?? ''
+              }. 
+              ${generateSMSFooter(userInfo)}`,
             )
               .then((res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `(SMS) Properties sent to ${c.first_name} on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`,
+                  description: `(SMS) Properties sent to ${
+                    c.first_name
+                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                    item?.portfolio_sharable_id ?? ''
+                  }`,
                 };
 
                 dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
@@ -408,16 +407,14 @@ const index = () => {
             <div
               class={`${
                 selected ? 'bg-lightBlue3' : 'border border-gray-300'
-              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}
-            >
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
               {selected && (
                 <svg
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                   version="1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
-                  enable-background="new 0 0 48 48"
-                >
+                  enable-background="new 0 0 48 48">
                   <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}
@@ -434,6 +431,12 @@ const index = () => {
       selectedContacts.map((contact) => contact.value),
       selectedProperties.map((property) => property.ID),
     ).then(() => {
+      selectedContacts.map((contact) => {
+        addContactActivity(contact.value, {
+          type_of_activity_id: 36,
+          description: `Properties saved in portfolio on ${formatDateMDY(new Date())}`,
+        });
+      });
       setLoadingEmails(false);
       setLoadingEmails(false);
       setPropertiesSent(true);
@@ -450,17 +453,19 @@ const index = () => {
       }, [1000]);
     }
   }, [open]);
-  const sortedOptions = filteredContacts?.sort((a, b) => {
-    const aIsSelected = isSelected(a);
-    const bIsSelected = isSelected(b);
+  const sortedOptions = filteredContacts
+    ?.filter((contact) => contact.email != userInfo.email)
+    .sort((a, b) => {
+      const aIsSelected = isSelected(a);
+      const bIsSelected = isSelected(b);
 
-    if (aIsSelected && !bIsSelected) {
-      return -1;
-    } else if (!aIsSelected && bIsSelected) {
-      return 1;
-    }
-    return 0;
-  });
+      if (aIsSelected && !bIsSelected) {
+        return -1;
+      } else if (!aIsSelected && bIsSelected) {
+        return 1;
+      }
+      return 0;
+    });
   useEffect(() => {
     setFilteredContacts(
       sendMethod !== 2
@@ -507,7 +512,7 @@ const index = () => {
             options={roomsOptions}
             className=" min-w-[120px]"
             placeHolder="Bedrooms"
-            afterLabel="Beds"
+            afterLabel={bedrooms?.label === 'Studio' ? '' : 'Beds'}
             border={bedrooms && 'border-blue1'}
             handleSelect={(choice) => {
               setBedrooms(choice);
@@ -544,8 +549,7 @@ const index = () => {
                   <div
                     className={
                       'absolute flex items-center justify-center top-[-17px] left-[77px] border-2 border-lightBlue3 bg-white h-[20px] w-[20px] rounded-xl text-xs text-lightBlue3'
-                    }
-                  >
+                    }>
                     {selectedAmenities.split(',').length}
                   </div>
                 )}
@@ -553,8 +557,7 @@ const index = () => {
               </div>
             }
             primary
-            onClick={() => setOpenFilters(true)}
-          >
+            onClick={() => setOpenFilters(true)}>
             Filters
           </Button>
           <Button white onClick={() => resetFilters()} className="min-w-[120px]">
@@ -631,8 +634,7 @@ const index = () => {
                             fetchProperties(filterValue, page - 1);
                             setPage(page - 1);
                           }}
-                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                        >
+                          className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                           Previous
                         </a>
                       )}
@@ -643,8 +645,7 @@ const index = () => {
                             fetchProperties(filterValue, page + 1);
                             setPage(page + 1);
                           }}
-                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                        >
+                          className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                           Next
                         </a>
                       )}
@@ -665,6 +666,7 @@ const index = () => {
                 <div className="flex">
                   {selectedProperties.length > 0 && (
                     <SendPropertiesFooter
+                      setSelectedProperties={setSelectedProperties}
                       selectedProperties={selectedProperties}
                       onSavePropertiesClick={() => {
                         setSendMethod(4);

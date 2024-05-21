@@ -234,6 +234,7 @@ export default function ContactCard({
               <Badge label={contact.category_2} className="text-gray8 bg-gray1 px-[6px] py-[4px] rounded-[2222px]" />
               {contact.status_2 !== 'Dropped' && (
                 <DateChip
+                  contact={contact}
                   lastCommunication={contact.last_communication_date}
                   contactStatus={contact.status_2}
                   contactCategory={categoryType}

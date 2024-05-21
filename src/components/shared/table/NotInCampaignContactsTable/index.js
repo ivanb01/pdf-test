@@ -112,6 +112,7 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2 }) =>
             <td className={'px-6 py-4'}>
               {person.last_communication_date ? (
                 <DateChip
+                  contact={person}
                   lastCommunication={person.last_communication_date}
                   contactStatus={person.status_2}
                   contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
@@ -156,8 +157,8 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2 }) =>
                     {person.contact_campaign_status === 'assigned'
                       ? 'Active'
                       : person.contact_campaign_status === 'unassigned'
-                        ? 'Deactivated'
-                        : 'Inactive'}
+                      ? 'Deactivated'
+                      : 'Inactive'}
                   </span>
                 </div>
               </div>

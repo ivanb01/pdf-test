@@ -10,7 +10,7 @@ import SimpleBar from 'simplebar-react';
 import Loader from '@components/shared/loader';
 import PropertyCard from '@components/property-card';
 import { useSelector } from 'react-redux';
-import { setAmenities, setRefetchPart } from '@store/global/slice';
+import { setRefetchPart } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import { useRouter } from 'next/router';
@@ -23,7 +23,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
-import { generateSMSFooter, getBaseUrl } from '@global/functions';
+import { generateSMSFooter, getBaseUrl, getLookingAction } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
@@ -31,7 +31,6 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
-import { getCompanyFromEmail } from '@global/functions';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -69,7 +68,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     const contact = contacts.filter((c) => {
       return c.id == contactId;
     })[0];
-    if (contact.phone_number !== null && contact.phone_number === '' && sendMethod === 2) {
+    if (contact.phone_number !== null && contact.phone_number !== '' && sendMethod === 2) {
       setSelectedContacts([
         {
           value: contact.id,
@@ -145,7 +144,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0].bathrooms_min || propertiesData.data[0].bathrooms_max) {
               newFiltersCount += 1;
             }
-            if (propertiesData.data[0].bedrooms_min || propertiesData.data[0].bedrooms_max) {
+            if (
+              propertiesData.data[0].bedrooms_min ||
+              propertiesData.data[0].bedrooms_min === 0 ||
+              propertiesData.data[0].bedrooms_max
+            ) {
               newFiltersCount += 1;
             }
             if (propertiesData.data[0].budget_min || propertiesData.data[0].budget_max) {
@@ -154,7 +157,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
             if (propertiesData.data[0].neighborhood_ids && !propertiesData.data[0].neighborhood_ids.includes(0) > 0) {
               newFiltersCount += 1;
             }
-            if (reduxAmenities.length > 0) {
+            if (propertiesData.data[0]?.general_tags?.length > 0) {
+              newFiltersCount += 1;
+            }
+            if (Number(propertiesData.data[0]?.looking_action) != getLookingAction()) {
               newFiltersCount += 1;
             }
           }
@@ -162,6 +168,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           resolve(propertiesData.data);
         })
         .catch((error) => {
+          console.log(error, 'Err');
           toast.error('Error fetching looking for');
           reject(error);
         });
@@ -186,6 +193,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [loadingEmails, setLoadingEmails] = useState(false);
   const [showProperties, setShowProperties] = useState(true);
   const [previewMode, setPreviewMode] = useState(false);
+  const [isDeleting, setIsDeleting] = useState({ loading: false, id: undefined });
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -237,7 +245,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         selectedContacts.forEach((c) => {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
-              [c.email],
+              [c.email, userInfo?.email],
               `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
                 <PortfolioEmailTemplate
@@ -254,9 +262,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 },
               ),
             ).then((res) => {
-              console.log(res);
               const contact = allContacts.find((con) => con.id === c?.value);
-              console.log(contact, 'contact');
               let activity = {
                 type_of_activity_id: 28,
                 description: `(Email) Properties sent to ${
@@ -282,7 +288,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 c.first_name
               }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
                 item?.portfolio_sharable_id ?? ''
-              }. ${generateSMSFooter(userInfo)}`,
+              }.
+              ${generateSMSFooter(userInfo)}`,
             )
               .then((res) => {
                 let activity = {
@@ -315,7 +322,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     if (lowerCaseCategory === 'buyer') {
       return 1;
     } else if (lowerCaseCategory === 'landlord') {
-      return '19,22';
+      return 22;
     } else if (lowerCaseCategory === 'seller') {
       return 19;
     } else {
@@ -338,13 +345,15 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       if (formik.isValid) {
         handleAddSubmit({
           neighborhood_ids: values.neighborhood_ids,
-          looking_action: getLookingAction(),
+          looking_action: values?.looking_action ?? getLookingAction(),
           bedrooms_min: values.bedrooms,
           bedrooms_max: values.bedrooms,
           bathrooms_min: values.bathrooms,
           bathrooms_max: values.bathrooms,
           budget_min: values.budget_min === '' || values.budget_min === 0 ? null : Number(values.budget_min),
           budget_max: values.budget_max === '' || values.budget_max === 0 ? null : Number(values.budget_max),
+        }).then(() => {
+          toast.success('Property interests saved successfully!');
         });
       }
     },
@@ -357,7 +366,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     try {
       await contactServices.addContactLookingProperty(contactId, values);
       setLoadingButton(false);
-      toast.success('Property interests saved successfully!');
       dispatch(setRefetchPart('looking-for'));
       resetForm();
     } catch (error) {
@@ -365,8 +373,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       setLoadingButton(false);
     }
   };
-
-  const reduxAmenities = useSelector((state) => state.global.amenities);
 
   const initializePropertyInterests = async () => {
     try {
@@ -400,8 +406,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       limit: 21,
       page: page,
     };
-    if (reduxAmenities.length > 0) {
-      params['amenities'] = reduxAmenities.join(',');
+    if (filters?.general_tags?.length > 0) {
+      params['amenities'] = filters?.general_tags.join(',');
     }
     if (filterValue === 'newest') {
       params['sort'] = 'date';
@@ -419,19 +425,22 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       params['sort'] = 'price';
       params['order'] = 'desc';
     }
-    params['status'] = getLookingAction();
+    params['status'] = filters?.looking_action ?? getLookingAction();
 
     if (Array.isArray(filters?.neighborhood_ids) && !filters?.neighborhood_ids?.includes(0)) {
       params['neighborhood_id'] = filters?.neighborhood_ids?.join(',');
     }
     if (filters?.budget_min) params['priceMin'] = filters.budget_min;
     if (filters?.budget_max) params['priceMax'] = filters.budget_max;
-    if (filters?.bedrooms_min) {
+    if (filters?.bedrooms_min || filters?.bedrooms_min === 0) {
       params['bedsMin'] = filters.bedrooms_min;
+      if (filters?.bedrooms_min === 0) {
+        params['bedsMax'] = 0;
+      }
     }
-    if (filters?.bedrooms_max) {
-      params['bedsMax'] = filters.bedrooms_max;
-    }
+    // if (filters?.bedrooms_max) {
+    //   params['bedsMax'] = filters.bedrooms_max;
+    // }
 
     if (filters?.bathrooms_min) {
       params['bathMin'] = filters.bathrooms_min;
@@ -439,7 +448,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     if (filters?.bathrooms_max) {
       params['bathMax'] = filters.bathrooms_max;
     }
-    console.log(params, 'param');
     const urlParams = new URLSearchParams({
       ...params,
     });
@@ -532,9 +540,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
   }, [contactId]);
 
-  useEffect(() => {
-    dispatch(setAmenities([]));
-  }, [contactId]);
   const updateUserProperties = () => {
     let properties = [];
     if (propertiesCurrentTab === 2) {
@@ -551,50 +556,48 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   useEffect(() => {
     updateUserProperties();
   }, [propertiesCurrentTab, userProperties]);
-  const _deletePropertyFromPortfolio = (id) => {
-    const actualUsers = { ...userProperties };
-
-    setUserProperties((prev) => {
-      return {
-        ...prev,
-        properties: prev.properties.filter((p) => p.id !== id),
-      };
-    });
-    toast.custom(
-      (t) => (
-        <div
-          className={`${
-            t.visible ? 'animate-enter' : 'animate-leave'
-          } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-        >
-          <div className="flex gap-2 p-4 word-break items-center">
-            <CheckCircleIcon className={'text-green-500'} />
-            <h1 className={'text-sm leading-5 font-medium'}>
-              Property has been deleted <br />
-              successfully!
-            </h1>
+  const _deletePropertyFromPortfolio = (deleteId, undoId) => {
+    setIsDeleting({ loading: true, id: undoId });
+    deletePropertyFromPortfolio(deleteId)
+      .then(() => {
+        setIsDeleting({ loading: false, id: undoId });
+        setUserProperties((prev) => {
+          return {
+            ...prev,
+            properties: prev.properties.filter((p) => p.id !== deleteId),
+          };
+        });
+        const toastId = toast.custom(() => (
+          <div
+            className={`shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                Property has been deleted <br />
+                successfully!
+              </h1>
+            </div>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
+              <button
+                onClick={() => {
+                  addPropertiesInPortfolio([Number(contactId)], [Number(undoId)]).then(() => {
+                    toast.remove(toastId);
+                    getPortfolioByContactId(contactId).then((res) => {
+                      setUserProperties(res?.data);
+                    });
+                  });
+                }}
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                Undo
+              </button>
+            </div>
           </div>
-          <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
-            <button
-              onClick={() => {
-                setUserProperties(actualUsers);
-                toast.dismiss(t.id);
-              }}
-              className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium"
-            >
-              Undo
-            </button>
-          </div>
-        </div>
-      ),
-      { duration: 2000 },
-    );
-    setTimeout(() => {
-      deletePropertyFromPortfolio(id).catch(() => {
+        ));
+      })
+      .catch(() => {
         toast.error('Error while loading items');
         setLoading(false);
       });
-    }, [5000]);
   };
 
   useEffect(() => {
@@ -620,9 +623,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         <EditLookingForPopup
           action={getLookingAction()}
           contactId={contactId}
+          category_2={category}
           data={lookingForData[0]}
           title={lookingForData[0] ? 'Edit Property Interests' : 'Add Property Interests'}
-          className="w-full md:w-[670px]"
+          className="w-full md:w-[700px]"
           handleClose={() => setShowEditPopup(false)}
         />
       )}
@@ -650,8 +654,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         <div
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
-                          }
-                        >
+                          }>
                           <CheckRoundedIcon className={'h-4 w-4'} />
                         </div>
                       )}
@@ -663,16 +666,19 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                     className="py-4"
                     tabs={tabs}
                   />
-                  {propertiesCurrentTab !== 0 && updateUserProperties().length === 0 ? (
+                  {propertiesCurrentTab !== 0 && updateUserProperties()?.length === 0 ? (
                     <EmptyPortfolioClientDetails status={propertiesCurrentTab} />
                   ) : (
                     <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {updateUserProperties().map((property, index) => (
+                      {updateUserProperties()?.map((property, index) => (
                         <PropertyCard
                           noSelect
                           clientNote={property?.contact_notes}
                           key={index}
-                          deletePropertyFromPortfolio={() => _deletePropertyFromPortfolio(property.id)}
+                          isPropertyDeleteing={isDeleting}
+                          deletePropertyFromPortfolio={() =>
+                            _deletePropertyFromPortfolio(property.id, property?.property_id)
+                          }
                           property={property.property_details && property.property_details}
                         />
                       ))}
@@ -688,8 +694,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                               isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
                               selected={selectedProperties}
                               key={index}
-                              property={property}
-                            ></PropertyCard>
+                              property={property}></PropertyCard>
                           ))}
                         </div>
                       ) : (
@@ -706,8 +711,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                       {allPropertiesCount > 21 && (
                         <nav
                           className="flex items-center justify-between bg-white py-3 pb-0 mt-5"
-                          aria-label="Pagination"
-                        >
+                          aria-label="Pagination">
                           <div className="hidden sm:block">
                             <p className="text-sm text-gray-700">
                               Showing{' '}
@@ -744,8 +748,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page - 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                              >
+                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Previous
                               </a>
                             )}
@@ -763,8 +766,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                                   setPage(page + 1);
                                   setLoadingPropertyInterests(true);
                                 }}
-                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0"
-                              >
+                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">
                                 Next
                               </a>
                             )}
@@ -779,7 +781,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           </div>
           {selectedProperties.length > 0 && (
             <SendPropertiesFooter
+              setSelectedProperties={setSelectedProperties}
               selectedProperties={selectedProperties}
+              contactId={contactId}
               onSendEmailAndSmsClick={() => {
                 setSendMethod(3);
                 setOpen(true);

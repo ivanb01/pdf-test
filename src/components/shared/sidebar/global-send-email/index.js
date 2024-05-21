@@ -38,6 +38,17 @@ const SendEmailOverlay = () => {
   const userInfo = useSelector((state) => state.global.userInfo);
 
   useEffect(() => {
+    if (localStorage.getItem('agentSignature')) {
+      setMessage(`<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage.getItem('agentSignature')));
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+  }, [open]);
+  useEffect(() => {
     if (contactToBeEmailed) {
       setSelectedContacts([contactToBeEmailed]);
     }
@@ -104,7 +115,7 @@ const SendEmailOverlay = () => {
       newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
       newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
 
-      sendEmail([contact.email], subject, newMessage).then(() => {
+      sendEmail([contact.email, userInfo?.email], subject, newMessage).then(() => {
         dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
 
         addContactActivity(contact.id, {
@@ -120,30 +131,33 @@ const SendEmailOverlay = () => {
     });
   };
 
-  const resetSendEmailForm = () => {
+  const resetSendEmailForm = (sendAnother = false) => {
     setTimeout(() => {
       setSubject('');
       setMessage('');
-      setSelectedContacts([]);
+      if (!sendAnother) {
+        setSelectedContacts([]);
+      }
       setEmailSent(false);
-      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+      setSelectedTemplate({ label: 'Create New Email', id: -1 });
       setSaveAsTemplate(false);
     }, 500);
   };
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
+  const sortedOptions = contactsCopy
+    ?.filter((contact) => contact.email != userInfo.email)
+    .sort((a, b) => {
+      const aIsSelected = isSelected(a);
+      const bIsSelected = isSelected(b);
 
-  const sortedOptions = contactsCopy?.sort((a, b) => {
-    const aIsSelected = isSelected(a);
-    const bIsSelected = isSelected(b);
-
-    if (aIsSelected && !bIsSelected) {
-      return -1;
-    } else if (!aIsSelected && bIsSelected) {
-      return 1;
-    }
-    return 0;
-  });
+      if (aIsSelected && !bIsSelected) {
+        return -1;
+      } else if (!aIsSelected && bIsSelected) {
+        return 1;
+      }
+      return 0;
+    });
 
   const getTemplates = async () => {
     try {
@@ -154,10 +168,10 @@ const SendEmailOverlay = () => {
         message: template.body_html,
       }));
 
-      emailTemplates.unshift({ label: 'Create Custom Email', id: -1 });
+      emailTemplates.unshift({ label: 'Create New Email', id: -1 });
 
       setEmailTemplates(emailTemplates);
-      setSelectedTemplate({ label: 'Create Custom Email', id: -1 });
+      setSelectedTemplate({ label: 'Create New Email', id: -1 });
     } catch (error) {
       console.error('Failed to get email template:', error);
     }
@@ -202,7 +216,7 @@ const SendEmailOverlay = () => {
           ></lottie-player>
           <div className="text-gray7 font-medium text-lg -mt-4">Email has been sent successfully</div>
 
-          <Button primary label="Send Another Email" onClick={() => resetSendEmailForm()} className="mt-6" />
+          <Button primary label="Send Another Email" onClick={() => resetSendEmailForm(true)} className="mt-6" />
         </div>
       ) : (
         <div>
@@ -235,9 +249,7 @@ const SendEmailOverlay = () => {
           </div>
           {emailTemplates && (
             <div className="mb-6">
-              <div className="mb-1 text-gray8 text-sm font-medium">
-                Select from one of the templates, or create a new template:
-              </div>
+              <div className="mb-1 text-gray8 text-sm font-medium">Create new email, or select a template:</div>
               <Dropdown
                 handleSelect={(option) => {
                   setSelectedTemplate(option);
@@ -260,7 +272,7 @@ const SendEmailOverlay = () => {
                       setSaveAsTemplate(state);
                     }}
                     state={saveAsTemplate}
-                    label="Save New Template"
+                    label="Save this new email as a template"
                   />
                 </div>
               )}

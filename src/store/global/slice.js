@@ -32,7 +32,7 @@ const global = createSlice({
       { name: 'Offer Submitted', sorted: 'asc' },
     ],
     user: typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : [],
-    hideUnapproved: true,
+    hideUnapproved: false,
     skippedEmptyState:
       typeof window !== 'undefined' && localStorage.getItem('skippedEmptyState')
         ? localStorage.getItem('skippedEmptyState')

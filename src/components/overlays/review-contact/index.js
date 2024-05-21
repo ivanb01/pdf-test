@@ -15,7 +15,7 @@ import {
 import Input from 'components/shared/input';
 import { findContactByEmail, updateContact } from 'api/contacts';
 import { findTagsOption, formatDateLL } from 'global/functions';
-import { setOpenedSubtab, setRefetchData } from 'store/global/slice';
+import { setOpenedSubtab, setRefetchData, setRefetchPart } from 'store/global/slice';
 import Radio from 'components/shared/radio';
 import Button from 'components/shared/button';
 import { contactTypes } from 'global/variables';
@@ -40,6 +40,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TextArea from '@components/shared/textarea';
 import { Dropdown as SimpleDropdown } from 'react-multi-select-component';
 import { setAIUnApprovedContacts, setTotal } from '@store/AIUnapproved/slice';
+import * as contactServices from '@api/contacts';
 
 const ReviewContact = ({
   className,
@@ -89,8 +90,18 @@ const ReviewContact = ({
     !router.pathname.toLowerCase().includes('trash')
   );
 
-  useEffect(() => console.log(client.tags), [client.tags]);
-
+  const getLookingAction = (category) => {
+    const lowerCaseCategory = category?.toLowerCase();
+    if (lowerCaseCategory === 'buyer') {
+      return 1;
+    } else if (lowerCaseCategory === 'landlord') {
+      return 22;
+    } else if (lowerCaseCategory === 'seller') {
+      return 19;
+    } else {
+      return 2;
+    }
+  };
   const options = [
     {
       id: 6,
@@ -154,7 +165,13 @@ const ReviewContact = ({
             setUpdating(false);
           });
       } else {
-        handleSubmit(values).then();
+        handleSubmit(values).then(async () => {
+          await contactServices
+            .addContactLookingProperty(client?.id, { looking_action: getLookingAction(values?.category_2) })
+            .then(() => {
+              dispatch(setRefetchPart('looking-for'));
+            });
+        });
       }
     },
   });
@@ -257,12 +274,6 @@ const ReviewContact = ({
     } else {
       category_id = values.selectedContactType;
     }
-
-    console.log(category_id, 'category_id');
-    console.log(
-      '    let status_id = category_id == 3 ? 1 : values.selectedStatus;',
-      category_id == 3 ? 1 : values.selectedStatus,
-    );
 
     const category =
       values.selectedContactCategory === 0

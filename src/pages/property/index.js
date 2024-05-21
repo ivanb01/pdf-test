@@ -488,20 +488,23 @@ const index = () => {
           )}
         </div>
         <>
-          <FsLightbox
-            types={[...new Array(filteredArray?.length).fill('image')]}
-            toggler={toggler}
-            zoomIncrement={0.5}
-            sources={filteredArray?.map((item) => item.ORIGINAL_URL)}
-          />
-
-          <FsLightbox
-            types={[...new Array(data?.PHOTOS?.length).fill('image')]}
-            toggler={lightboxController.toggler}
-            zoomIncrement={0.5}
-            sourceIndex={lightboxController.slide}
-            sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
-          />
+          {filteredArray.length > 0 && (
+            <FsLightbox
+              types={[...new Array(filteredArray?.length).fill('image')]}
+              toggler={toggler}
+              zoomIncrement={0.5}
+              sources={filteredArray?.map((item) => item.ORIGINAL_URL)}
+            />
+          )}
+          {data?.PHOTOS.length > 0 && (
+            <FsLightbox
+              types={[...new Array(data?.PHOTOS?.length).fill('image')]}
+              toggler={lightboxController.toggler}
+              zoomIncrement={0.5}
+              sourceIndex={lightboxController.slide}
+              sources={data?.PHOTOS?.map((i) => i.PHOTO_URL)}
+            />
+          )}
         </>
       </div>
     </>

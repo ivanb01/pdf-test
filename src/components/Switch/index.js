@@ -11,21 +11,22 @@ const SwitchComponent = ({ label }) => {
   const [enabled, setEnabled] = useState(!hideUnapproved);
 
   useEffect(() => {
-    let showUnapproved = localStorage.getItem('showUnapproved') === 'true' ? true : false;
-    setEnabled(showUnapproved);
-    dispatch(setHideUnapproved(!showUnapproved));
-  }, []);
+    let hideUnapproved =
+      localStorage.getItem('hideUnapproved') && localStorage.getItem('hideUnapproved') === 'true' ? true : false;
+    setEnabled(!hideUnapproved);
+    dispatch(setHideUnapproved(hideUnapproved));
 
-  useEffect(() => {
-    dispatch(setHideUnapproved(!enabled));
-    localStorage.setItem('showUnapproved', enabled);
-  }, [enabled]);
+  }, []);
 
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch
         checked={enabled}
-        onChange={setEnabled}
+        onChange={(value) => {
+          dispatch(setHideUnapproved(!value));
+          localStorage.setItem('hideUnapproved', !value);
+          setEnabled(value);
+        }}
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray-200',
           'relative inline-flex h-[19px] w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',

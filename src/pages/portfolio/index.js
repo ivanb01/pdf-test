@@ -9,6 +9,13 @@ import toast from 'react-hot-toast';
 import PropertyCard from '@components/property-card';
 import PortfolioPopup from '@components/Portfolio/property-details-modal';
 import EmptyPortfolioState from '@components/Portfolio/empty-portfolio-state';
+import { getBaseUrl } from '@global/functions';
+import { sendEmail } from '@api/marketing';
+import { render } from '@react-email/components';
+import { useSelector } from 'react-redux';
+import SendNotificationsToAgent from '@components/Portfolio/SendAgentNotification/send-agent-notifications';
+import { getUserInfo } from '@helpers/auth';
+import { getUser } from '@api/user';
 
 const Portfolio = () => {
   const router = useRouter();
@@ -18,8 +25,9 @@ const Portfolio = () => {
   const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);
   const [openViewPropertyModal, setOpenViewPropertyModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const userInfo = useSelector((state) => state.global.userInfo);
+
   useEffect(() => {
-    console.log(share_id, 'share');
     if (share_id) {
       getPortfolioByShareId(share_id)
         .then((res) => {
@@ -70,9 +78,31 @@ const Portfolio = () => {
     console.log(properties);
     return properties;
   };
+
   const addClientFeedback = (share_id, id, status, note) => {
+    console.log('status', status);
     putClientFeedback(share_id, status, note).catch((e) => toast.error('Something went wrong, please refresh'));
     const index = userProperties.properties.findIndex((element) => element?.property_details?.ID === id);
+
+    putClientFeedback(share_id, status, note)
+      .then(() => {
+        const propertyId = userProperties?.properties[index]?.property_details?.ID;
+
+        if (status !== 'saved') {
+          return sendEmail(
+            [userProperties?.properties[0].agent_id],
+            `Client   ${userProperties?.first_name} ${userProperties?.last_name}  ${status} a property.`,
+            render(
+              <SendNotificationsToAgent userProperties={userProperties} status={status} propertyId={propertyId} />,
+              {
+                pretty: true,
+              },
+            ),
+          );
+        }
+      })
+      .catch((e) => toast.error('Something went wrong, please refresh'));
+
     setUserProperties((prev) => {
       prev.properties[index].status = status;
       prev.properties[index].contact_notes = note;
@@ -129,7 +159,10 @@ const Portfolio = () => {
         </div>
 
         {updateUserProperties()?.length === 0 || !updateUserProperties() ? (
-          <EmptyPortfolioState status={propertiesCurrentTab} />
+          <EmptyPortfolioState
+            status={propertiesCurrentTab}
+            propertiesLength={userProperties?.properties?.filter((p) => p.property_details !== undefined).length}
+          />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-6">
             {updateUserProperties().map((property, index) => (

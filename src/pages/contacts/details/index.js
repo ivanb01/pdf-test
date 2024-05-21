@@ -11,7 +11,7 @@ import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
 import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL, formatPhoneNumber } from '@global/functions';
+import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from '@global/functions';
 import { Switch } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -119,9 +119,14 @@ const index = () => {
   };
   useEffect(() => {
     if (contact) {
-      syncEmailOfContact(contact.email).then(() => {
-        setLoadingActivities(false);
-      });
+      syncEmailOfContact(contact.email)
+        .then(() => {
+          setLoadingActivities(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error('Error fetching gmail inbox');
+        });
     }
   }, [contact]);
 
@@ -315,7 +320,7 @@ const index = () => {
                     <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
                   </div>
                 ) : (
-                  <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-max mt-[14px] '}>
+                  <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-max rounded-md mt-[14px] pr-4'}>
                     <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
                     <div className={'text-[#991B1B]'}>
                       <p className={'text-sm font-semibold'}>Phone number is missing! </p>
@@ -323,25 +328,18 @@ const index = () => {
                   </div>
                 )}
                 <div className="mt-[18px] flex items-center">
-                  <Button
-                    size="small"
-                    inline
-                    white
-                    label={
-                      contact.category_1 === 'Other'
-                        ? othersOptions.find((c) => c.id === contact.category_id)?.name
-                        : contact.category_2
-                    }
-                    className="mr-2 text-xs pointer-events-none"
-                  />
+                  <a className="mr-3 text-gray6 bg-gray-100 rounded-md px-3 py-[6px] text-xs font-medium uppercase">
+                    {contact.category_1 === 'Other'
+                      ? othersOptions.find((c) => c.id === contact.category_id)?.name
+                      : contact.category_2}
+                  </a>
                   {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
-                    <Button
-                      size="small"
-                      inline
-                      white
-                      label={allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
-                      className="pointer-events-none text-xs"
-                    />
+                    <a
+                      className={`${
+                        allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).color
+                      } text-neutral1 rounded-xl px-3 py-[6px] text-xs font-medium`}>
+                      {allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
+                    </a>
                   )}
                 </div>
                 {contact.summary && (
@@ -356,6 +354,7 @@ const index = () => {
                     <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium ">
                       <span className="text-gray6 mr-3">Health:</span>
                       <DateChip
+                        contact={contact}
                         lastCommunication={contact.last_communication_date}
                         contactStatus={contact.status_2}
                         contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
@@ -425,7 +424,7 @@ const index = () => {
                             />
                           </Switch> */}
                         </div>
-                        {campaigns?.length - 1 !== index && <hr className="my-[18px]" />}
+                        {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
                       </>
                     ))}
                   </>
@@ -506,7 +505,7 @@ const index = () => {
                 <div className="flex items-center justify-between pt-1">
                   <div className="text-gray8 font-semibold text-sm">Notes</div>
                   <div>
-                    {notes && notes?.length > 0 && (
+                    {notes && notes.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                         <img src={addNote.src} className={'h-7  w-7'} />
                       </a>

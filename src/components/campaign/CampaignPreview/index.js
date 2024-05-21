@@ -12,6 +12,7 @@ import SimpleBar from 'simplebar-react';
 import MailIcon from '../../../icons/MailIcon';
 import Divider from '../../../icons/Divider';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { areObjectsEqual, getTimeWithAMPM } from '@global/functions';
 
 const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, className }) => {
   const [campaignData, setCampaignData] = useState();
@@ -35,35 +36,6 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
     }
   }, [campaignData]);
   const user = useSelector((state) => state.global.user);
-
-  function areObjectsEqual(obj1, obj2) {
-    if (!obj2) {
-      return;
-    }
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2 && obj2);
-
-    if (keys1.length !== keys2.length) {
-      return false;
-    }
-
-    for (let key of keys1) {
-      if (obj1[key] !== obj2[key]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  function getTimeWithAMPM(timestamp) {
-    const dateObject = new Date(timestamp);
-    let hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    return `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-  }
 
   return (
     <SlideOver
@@ -168,7 +140,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
             </div>
           </SimpleBar>
         </div>
-        <div className="w-1/2 bg-gray10 relative border-l border-gray2">
+        <div className="w-1/2 relative border-l border-gray2">
           <SimpleBar style={{ maxHeight: 'calc(100vh - 285px)', height: '100vh' }}>
             <div className="mb-6 pt-[26px]">
               <div className={'sticky top-0'}>

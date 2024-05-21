@@ -17,7 +17,7 @@ import ArrowDropUpTwoToneIcon from '@mui/icons-material/ArrowDropUpTwoTone';
 import { addContactActivity, getContact } from 'api/contacts';
 import React from 'react';
 import { Email, Sms } from '@mui/icons-material';
-import { setSorted } from '@store/global/slice';
+import { setContactToBeEmailed, setOpenEmailContactOverlay, setSorted } from '@store/global/slice';
 import TooltipComponent from '@components/shared/tooltip';
 import { healthLastCommunicationDate } from 'global/variables';
 import { createPortal } from 'react-dom';
@@ -27,8 +27,10 @@ import WhatsApp from '@mui/icons-material/WhatsApp';
 import Table from '..';
 import { getSource } from '@global/functions';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 
 const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryType, handleCardEdit, searchTerm }) => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
@@ -190,14 +192,27 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
   let contactsToBeRendered =
     openedSubtab !== -1 ? contactsStatuses[openedSubtab].statuses : contactsStatuses.flatMap((c) => c.statuses);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
+
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
+  };
+
   return (
     <Table>
       <thead className="bg-gray-50 sticky z-[10] top-0">
         <tr>
           <th
             scope="col"
-            className=" px-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 lg:w-[300px] xl:w-[300px]"
-          >
+            className=" px-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 lg:w-[300px] xl:w-[300px]">
             {/* <Input
               type="checkbox"
               onChange={(event) => handleSelectContact(event, contact)}
@@ -206,28 +221,24 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
           </th>
           <th
             scope="col"
-            className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[200px]"
-          >
+            className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[200px]">
             Type
           </th>
           <th
             scope="col"
-            className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]"
-          >
+            className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[500px] xl:w-[500px]">
             Contact summary
           </th>
 
           <th
             scope="col"
-            className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]"
-          >
+            className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[220px] xl:w-[400px]">
             {openedTab !== 1 && openedSubtab !== 3 ? 'LAST COMMUNICATION ' : ''}
           </th>
 
           <th
             scope="col"
-            className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]"
-          >
+            className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 lg:w-[173px] xl:w-[400px]">
             ACTIONS
           </th>
         </tr>
@@ -247,14 +258,12 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
             <div>
               <tr
                 key={category.id}
-                className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[40px]`}
-              >
+                className={`${category.color} contact-row border-b border-gray-200 sticky z-10 top-[40px]`}>
                 <td colSpan="10">
                   <div
                     className="flex items-center px-6 py-2"
                     role={'button'}
-                    onClick={() => toggleExpanded(category.name)}
-                  >
+                    onClick={() => toggleExpanded(category.name)}>
                     {isExpanded &&
                       isExpanded
                         .filter((item) => item.categoryId === category.name)
@@ -273,12 +282,10 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                       align={'start'}
                       triggerElement={
                         <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
-                      }
-                    >
+                      }>
                       <div
                         // style={{ width: '300px' }}
-                        className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}
-                      >
+                        className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                         <div className="text-sm font-semibold mb-2">
                           Every{' '}
                           {healthLastCommunicationDate[categoryType][category?.name] === 1
@@ -296,8 +303,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         <div className="flex flex-col mt-4">
                           <div className="flex items-center mb-2">
                             <div
-                              className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}
-                            >
+                              className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
                               <Mail className="w-4 mr-1" />
                               <span>Todays</span>
                             </div>
@@ -305,8 +311,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                           </div>
                           <div className="flex items-center">
                             <div
-                              className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}
-                            >
+                              className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
                               <Mail className="w-4 mr-1" />
                               <span>4 days ago</span>
                             </div>
@@ -321,8 +326,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                       onClick={(e) => {
                         e.stopPropagation();
                         handleToggleSorting(category?.name);
-                      }}
-                    >
+                      }}>
                       {sorted.find((s) => s.name === category?.name)?.sorted === 'asc' ? (
                         <svg
                           className="sort-asc sort fill-gray5"
@@ -331,8 +335,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                           id="mdi-sort-alphabetical-ascending"
                           width="20"
                           height="20"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path d="M19 17H22L18 21L14 17H17V3H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
                         </svg>
                       ) : (
@@ -343,8 +346,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                           id="mdi-sort-alphabetical-descending"
                           width="20"
                           height="20"
-                          viewBox="0 0 24 24"
-                        >
+                          viewBox="0 0 24 24">
                           <path d="M19 7H22L18 3L14 7H17V21H19M11 13V15L7.67 19H11V21H5V19L8.33 15H5V13M9 3H7C5.9 3 5 3.9 5 5V11H7V9H9V11H11V5C11 3.9 10.11 3 9 3M9 7H7V5H9Z" />
                         </svg>
                       )}
@@ -371,8 +373,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         pathname: '/contacts/details',
                         query: { id: contact.id },
                       })
-                    }
-                  >
+                    }>
                     <td className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6`}>
                       <ContactInfo
                         maxWidth={'300px'}
@@ -407,12 +408,10 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                             <div
                               className={
                                 'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
-                              }
-                            >
+                              }>
                               {contact.summary}
                             </div>
-                          }
-                        >
+                          }>
                           <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                             <p className="text-xs leading-4 font-normal">{contact.summary}</p>
                           </div>
@@ -420,10 +419,11 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                       )}
                     </td>
 
-                    <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500`}>
+                    <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
                       <div className="text-gray7 font-medium">
                         {contact.status_2 !== 'Dropped' && contact?.status_2 !== 'Trash' ? (
                           <DateChip
+                            contact={contact}
                             lastCommunication={contact.last_communication_date}
                             contactStatus={contact.status_2}
                             contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
@@ -453,15 +453,13 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                 e.stopPropagation();
                                 handleCardEdit(contact);
                               }}
-                              className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center"
-                            >
+                              className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                               <Edit
                                 id={'edit-contact-icon-' + contact.id}
                                 className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
                               />
                             </div>
-                          }
-                        >
+                          }>
                           <div className={'text-xs leading-4 font-medium'}>Edit Contact</div>
                         </TooltipComponent>
                         <TooltipComponent
@@ -475,15 +473,13 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                 e.stopPropagation();
                                 handleSendEmail(contact);
                               }}
-                              className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center"
-                            >
+                              className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                               <Email
                                 id={'edit-contact-icon-' + contact.id}
                                 className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
                               />
                             </div>
-                          }
-                        >
+                          }>
                           <div className={'text-xs leading-4 font-medium'}>Send Email</div>
                         </TooltipComponent>
                         {contact.phone_number && (
@@ -531,15 +527,13 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                       let link = `sms:${contact.phone_number}&body=${message}`;
                                       window.location.href = link;
                                     }}
-                                    className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center"
-                                  >
+                                    className="group/sms cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                                     <Sms
                                       id={'edit-contact-icon-' + contact.id}
                                       className="group-hover/sms:text-lightBlue5 text-gray3 w-4 h-4"
                                     />
                                   </div>
-                                }
-                              >
+                                }>
                                 <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
                               </TooltipComponent>
                             )}
@@ -578,15 +572,13 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                     )}`;
                                     window.open(link, '_blank');
                                   }}
-                                  className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center"
-                                >
+                                  className="group/whatsapp cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                                   <WhatsApp
                                     id={'edit-contact-icon-' + contact.id}
                                     className="group-hover/whatsapp:text-lightBlue5 text-gray3 w-4 h-4"
                                   />
                                 </div>
-                              }
-                            >
+                              }>
                               <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
                             </TooltipComponent>
                             <TooltipComponent
@@ -606,14 +598,12 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                     });
                                     window.open(`tel:${contact.phone_number}`);
                                   }}
-                                  className="group/call cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center"
-                                >
+                                  className="group/call cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                                   <svg
                                     className="group-hover/call:text-lightBlue5 text-gray3 w-4 h-4"
                                     viewBox="0 0 20 20"
                                     fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <path
                                       fill={'currentColor'}
                                       d="M11.7094 5.00008C12.5233 5.15889 13.2713 5.55696 13.8577 6.14336C14.4441 6.72976 14.8422 7.4778 15.001 8.29175M11.7094 1.66675C13.4004 1.85461 14.9773 2.61189 16.1812 3.81425C17.3851 5.01662 18.1444 6.59259 18.3344 8.28341M8.5235 11.5526C7.52219 10.5513 6.73153 9.41912 6.15153 8.21111C6.10164 8.1072 6.0767 8.05524 6.05753 7.9895C5.98943 7.75587 6.03835 7.46899 6.18003 7.27113C6.21989 7.21546 6.26752 7.16783 6.36278 7.07257C6.65412 6.78123 6.79979 6.63556 6.89503 6.48908C7.25419 5.93667 7.25419 5.22452 6.89503 4.67211C6.79979 4.52563 6.65412 4.37996 6.36278 4.08862L6.20039 3.92623C5.75752 3.48336 5.53609 3.26192 5.29827 3.14164C4.8253 2.90241 4.26675 2.90241 3.79378 3.14164C3.55596 3.26192 3.33453 3.48336 2.89166 3.92623L2.7603 4.05759C2.31895 4.49894 2.09827 4.71962 1.92973 5.01964C1.74271 5.35257 1.60825 5.86964 1.60938 6.25149C1.61041 6.59562 1.67716 6.8308 1.81067 7.30117C2.52814 9.82901 3.88187 12.2143 5.87185 14.2043C7.86184 16.1943 10.2471 17.548 12.775 18.2655C13.2453 18.399 13.4805 18.4657 13.8246 18.4668C14.2065 18.4679 14.7236 18.3334 15.0565 18.1464C15.3565 17.9779 15.5772 17.7572 16.0186 17.3158L16.1499 17.1845C16.5928 16.7416 16.8142 16.5202 16.9345 16.2824C17.1737 15.8094 17.1737 15.2508 16.9345 14.7779C16.8142 14.5401 16.5928 14.3186 16.1499 13.8758L15.9875 13.7134C15.6962 13.422 15.5505 13.2764 15.404 13.1811C14.8516 12.8219 14.1395 12.822 13.5871 13.1811C13.4406 13.2764 13.2949 13.422 13.0036 13.7134C12.9083 13.8086 12.8607 13.8562 12.805 13.8961C12.6072 14.0378 12.3203 14.0867 12.0866 14.0186C12.0209 13.9994 11.9689 13.9745 11.865 13.9246C10.657 13.3446 9.52482 12.554 8.5235 11.5526Z"
@@ -624,8 +614,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                     />
                                   </svg>
                                 </div>
-                              }
-                            >
+                              }>
                               <div className={'text-xs leading-4 font-medium'}>Initiate Call</div>
                             </TooltipComponent>
                           </>
@@ -640,8 +629,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                     isExpanded.find((expanded) => expanded.categoryId === category.name)?.expanded !== true
                       ? 'hidden'
                       : ''
-                  } `}
-                >
+                  } `}>
                   <td colSpan={6} className={'text-center pt-[30px]'}>
                     No Contacts
                   </td>
@@ -656,8 +644,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                     <div
                       className="flex items-center px-6 py-2"
                       role={'button'}
-                      onClick={() => toggleExpanded(category.name)}
-                    >
+                      onClick={() => toggleExpanded(category.name)}>
                       {isExpanded &&
                         isExpanded
                           .filter((item) => item.categoryId === category.name)
@@ -676,12 +663,10 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         align={'start'}
                         triggerElement={
                           <InfoSharpIcon className="h-4 w-4 text-gray3 hover:text-gray4" aria-hidden="true" />
-                        }
-                      >
+                        }>
                         <div
                           // style={{ width: '300px' }}
-                          className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}
-                        >
+                          className={`  w-[360px] text-xs font-medium text-white bg-neutral1`}>
                           <div className="text-sm font-semibold mb-2">
                             Every{' '}
                             {healthLastCommunicationDate[categoryType][category?.name] === 1
@@ -699,8 +684,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                           <div className="flex flex-col mt-4">
                             <div className="flex items-center mb-2">
                               <div
-                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}
-                              >
+                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
                                 <Mail className="w-4 mr-1" />
                                 <span>Today</span>
                               </div>
@@ -708,8 +692,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                             </div>
                             <div className="flex items-center">
                               <div
-                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}
-                              >
+                                className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-red3 bg-red1`}>
                                 <Mail className="w-4 mr-1" />
                                 <span>4 days ago</span>
                               </div>
@@ -728,8 +711,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                       .find((expanded) => expanded.categoryId === category.name)?.expanded !== true
                       ? 'hidden'
                       : ''
-                  } `}
-                >
+                  } `}>
                   <td colSpan={6} className={'text-center pt-[30px]'}>
                     No Contacts
                   </td>

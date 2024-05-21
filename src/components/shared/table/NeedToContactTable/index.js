@@ -1,7 +1,7 @@
 import Table from '..';
 import { getContactStatusByStatusId, getContactStatusColorByStatusId, getInitials } from 'global/functions';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Edit from '@mui/icons-material/Edit';
 import Chip from '@components/shared/chip';
 import DateChip from '@components/shared/chip/date-chip';
@@ -15,12 +15,14 @@ import CommunicationForm from '@components/overlays/communication-form';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
+import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 
 const NeedToContactTable = ({ data, handleCardEdit }) => {
   const router = useRouter();
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
 
+  const dispatch = useDispatch();
   const [contactToModify, setContactToModify] = useState(null);
   const isUnapprovedAIContact = (contact) => {
     if (
@@ -31,6 +33,18 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
       if (!contact.approved_ai) return true;
     }
     return false;
+  };
+  const handleSendEmail = (contact) => {
+    let clientToBeEmailed = {
+      value: contact.id,
+      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      profile_image_path: contact.profile_image_path,
+    };
+    dispatch(setContactToBeEmailed(clientToBeEmailed));
+    dispatch(setOpenEmailContactOverlay(true));
   };
   return (
     <Table>
@@ -118,6 +132,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
               </td>
               <td>
                 <DateChip
+                  contact={person}
                   lastCommunication={person.last_communication_date}
                   contactStatus={person.status_2}
                   contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}

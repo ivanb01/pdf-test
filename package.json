@@ -26,8 +26,10 @@
     "@stripe/stripe-js": "^2.2.0",
     "@tailwindcss/forms": "^0.4.0",
     "@tanstack/react-query": "^5.13.4",
+    "@tanstack/react-query-devtools": "^5.36.2",
     "@tanstack/react-table": "^8.9.3",
     "@tinymce/tinymce-react": "^4.3.2",
+    "@vercel/speed-insights": "^1.0.10",
     "aws-amplify": "^5.0.4",
     "axios": "^0.26.1",
     "chart.js": "^3.8.0",
@@ -42,6 +44,7 @@
     "fslightbox-react": "^1.7.6",
     "lexical": "^0.13.0",
     "lottie-react": "^2.4.0",
+    "lucide-react": "^0.365.0",
     "moment": "^2.29.4",
     "next": "^13.5.6",
     "prop-types": "^15.8.1",
@@ -64,6 +67,8 @@
     "simplebar-react": "^2.3.6",
     "stripe": "^14.5.0",
     "swiper": "^10.3.1",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^2.2.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -76,6 +81,7 @@
     "postcss": "^8.4.6",
     "sass": "^1.49.7",
     "tailwindcss": "^3.0.21",
+    "typescript": "5.4.5",
     "worker-loader": "^3.0.8"
   }
 }
