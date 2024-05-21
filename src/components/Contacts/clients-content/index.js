@@ -29,22 +29,22 @@ import ContactsListTable from '@components/shared/table/ContactsListTable';
 const buttons = [
   {
     id: 0,
-    icon: <ViewColumn className="h-5 w-5" />,
+    icon: <ViewColumn className='h-5 w-5' />,
   },
   {
     id: 1,
-    icon: <TableRows className="h-5 w-5" />,
+    icon: <TableRows className='h-5 w-5' />,
   },
 ];
 
 const Clients = ({
-  setShowAddContactOverlay,
-  onSearch,
-  handleCardEdit,
-  unapprovedContacts,
-  handleViewChange,
-  currentButton,
-}) => {
+                   setShowAddContactOverlay,
+                   onSearch,
+                   handleCardEdit,
+                   unapprovedContacts,
+                   handleViewChange,
+                   currentButton,
+                 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const scrollRef = useRef();
@@ -59,6 +59,7 @@ const Clients = ({
   const [filteredContacts, setFilteredContacts] = useState(contacts);
 
   useEffect(() => {
+    console.log(contacts, 'contacts');
     setFilteredContacts(contacts);
   }, [contacts, openedSubtab]);
 
@@ -127,27 +128,15 @@ const Clients = ({
   }, [openedSubtab, clientsFilters]);
 
   const filterContacts = () => {
-    // if (filtersCleared && hasAnyProperties(clientsFilters)) {
-    //   dispatch(
-    //     setClients(
-    //       contacts.filter(
-    //         (contact) =>
-    //           contact.category_1 == 'Client' &&
-    //           contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-    //       ),
-    //     ),
-    //   );
-    //   setFiltersCleared(false);
-    //   return;
-    // }
     let contactsState =
       openedSubtab !== -1
         ? contacts.filter(
-            (contact) =>
-              contact.category_1 == 'Client' &&
-              contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-          )
+          (contact) =>
+            contact.category_1 == 'Client' &&
+            contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+        )
         : contacts.filter((contact) => contact.category_1 == 'Client');
+
     Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
@@ -205,9 +194,7 @@ const Clients = ({
       setFiltersCleared(true);
     }
   };
-  useEffect(() => {
-    console.log(scrollRef, 'ScrollRef');
-  }, [scrollRef]);
+
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...clientsFilters };
@@ -224,16 +211,17 @@ const Clients = ({
     }
   };
 
-  const getFilterCount = () => {
-    return filteredContacts.filter(
-      (contact) =>
-        contact.category_1 == 'Client' &&
-        contact?.status_1.toLowerCase() === clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
-    ).length;
-  };
-
+  const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     filterContacts();
+    statuses.map((status) =>
+      status.statuses.map((s) =>
+        handleFilteredContacts(
+          s.name,
+          sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted,
+        ),
+      ),
+    );
   }, [clientsFilters, contacts, openedSubtab]);
 
   useEffect(() => {
@@ -244,6 +232,7 @@ const Clients = ({
     setSearchTerm('');
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder) => {
+    console.log(status, sortOrder);
     let filteredClients = contacts.filter((client) => client.status_2 === status);
 
     filteredClients.sort((a, b) => {
@@ -262,6 +251,7 @@ const Clients = ({
     return filteredClients;
   };
 
+
   useEffect(() => {
     const handleScroll = (event) => {
       if (event.target.scrollLeft > 80 && document.querySelector('.arrow') !== null) {
@@ -277,18 +267,18 @@ const Clients = ({
 
   return (
     <>
-      <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
+      <div className='absolute left-0 top-0 right-0 bottom-0 flex flex-col'>
         <FloatingAlert
           inProp={unapprovedContacts.length > 0}
           onClick={() => router.push('/ai-summary')}
           buttonText={'Review Now'}
-          className="mx-[21px] mt-[14px]"
+          className='mx-[21px] mt-[14px]'
           message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
         />
-        <div className="p-6 py-4 flex items-center justify-between">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center">
-              <Text h3 className="text-gray7 text-xl mr-4">
+        <div className='p-6 py-4 flex items-center justify-between'>
+          <div className='flex items-center justify-between w-full'>
+            <div className='flex items-center'>
+              <Text h3 className='text-gray7 text-xl mr-4'>
                 {openedSubtab === -1
                   ? 'All Clients'
                   : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
@@ -298,16 +288,16 @@ const Clients = ({
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
                   !contact.approved_ai &&
                   contact.category_1 == 'Client',
-              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+              ).length > 0 && <SwitchComponent label='Unapproved AI Contacts' />}
             </div>
-            <div className="flex items-center justify-self-end">
+            <div className='flex items-center justify-self-end'>
               <Search
                 placeholder={`Search ${
                   openedSubtab !== -1
                     ? clientStatusMainTitlesUpdated[clientStatuses[openedSubtab]?.statusMainTitle]?.toLowerCase()
                     : 'Clients'
                 }`}
-                className="mr-4 text-sm"
+                className='mr-4 text-sm'
                 value={searchTerm}
                 onInput={(event) => setSearchTerm(event.target.value)}
               />
@@ -324,36 +314,36 @@ const Clients = ({
                         {getTotalCountOfAllValues(clientsFilters)}
                       </div>
                     )}
-                    <FilterList className="w-5 h-5" />
+                    <FilterList className='w-5 h-5' />
                   </div>
                 }
-                label="Filter"
-                className="mr-4"
+                label='Filter'
+                className='mr-4'
                 onClick={() => setOpen(true)}
-                iconSize="w-5 h-5"
+                iconSize='w-5 h-5'
               />
               <ButtonsSlider
                 noCount
                 buttons={buttons}
                 currentButton={currentButton}
                 onClick={handleViewChange}
-                className="mr-4"
+                className='mr-4'
               />
               <Button
                 primary
-                leftIcon={<Add className="w-5 h-5" />}
-                iconSize="w-5 h-5"
-                label="Add Client"
+                leftIcon={<Add className='w-5 h-5' />}
+                iconSize='w-5 h-5'
+                label='Add Client'
                 onClick={setShowAddContactOverlay}
               />
             </div>
           </div>
         </div>
         {Object.keys(clientsFilters).length > 0 && (
-          <div className="w-full border-t border-gray2 px-6 py-3">
-            <div className="flex justify-between">
-              <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
-                <div className="mr-2 text-gray5 text-sm ">
+          <div className='w-full border-t border-gray2 px-6 py-3'>
+            <div className='flex justify-between'>
+              <div className='flex flex-wrap items-center w-[100%] gap-[2px]'>
+                <div className='mr-2 text-gray5 text-sm '>
                   {filteredContacts.length}
                   {filteredContacts.length == 1 ? ' result' : ' results'} for:
                 </div>
@@ -365,20 +355,20 @@ const Clients = ({
                       key={`${index}${i}`}
                       active
                       label={filter}
-                      className="mr-1"
+                      className='mr-1'
                     />
                   )),
                 )}
               </div>
               <div
-                className="flex flex-row items-center cursor-pointer"
+                className='flex flex-row items-center cursor-pointer'
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setClientsFilters({}));
                 }}
               >
-                <TrashIcon height={20} className="text-gray3 mr-1" />
-                <Text p className="whitespace-nowrap">
+                <TrashIcon height={20} className='text-gray3 mr-1' />
+                <Text p className='whitespace-nowrap'>
                   Clear Filter
                 </Text>
               </div>
@@ -395,45 +385,45 @@ const Clients = ({
               background: '#f9fafb',
             }}
           >
-            <div className="flex flex-row bg-gray10 w-fit h-full board-view">
+            <div className='flex flex-row bg-gray10 w-fit h-full board-view'>
               {openedSubtab === -1
                 ? clientStatuses.map((item) => {
-                    return item.statuses.map((status, index) => {
-                      return (
-                        <Column
-                          handleFilteredContacts={handleFilteredContacts}
-                          contacts={filteredContacts}
-                          key={index}
-                          status={status}
-                          categoryType="clients"
-                          handleCardEdit={handleCardEdit}
-                          searchTerm={searchTerm}
-                        />
-                      );
-                    });
-                  })
+                  return item.statuses.map((status, index) => {
+                    return (
+                      <Column
+                        handleFilteredContacts={handleFilteredContacts}
+                        contacts={filteredContacts}
+                        key={index}
+                        status={status}
+                        categoryType='clients'
+                        handleCardEdit={handleCardEdit}
+                        searchTerm={searchTerm}
+                      />
+                    );
+                  });
+                })
                 : clientStatuses[openedSubtab]?.statuses.map((status, index) => (
-                    <Column
-                      handleFilteredContacts={handleFilteredContacts}
-                      contacts={filteredContacts}
-                      key={index}
-                      status={status}
-                      categoryType="clients"
-                      handleCardEdit={handleCardEdit}
-                      searchTerm={searchTerm}
-                    />
-                  ))}
+                  <Column
+                    handleFilteredContacts={handleFilteredContacts}
+                    contacts={filteredContacts}
+                    key={index}
+                    status={status}
+                    categoryType='clients'
+                    handleCardEdit={handleCardEdit}
+                    searchTerm={searchTerm}
+                  />
+                ))}
             </div>
           </SimpleBar>
         ) : (
-          <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className='w-auto relative flex' style={{ height: 'calc(100vh - 160px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 <ContactsListTable
                   handleFilteredContacts={handleFilteredContacts}
                   contacts={filteredContacts}
-                  tableFor="contactsList"
-                  categoryType="clients"
+                  tableFor='contactsList'
+                  categoryType='clients'
                   handleCardEdit={handleCardEdit}
                   searchTerm={searchTerm}
                 />
@@ -445,14 +435,14 @@ const Clients = ({
       <SlideOver
         open={open}
         setOpen={setOpen}
-        title="Clients Filters"
-        className="top-[70px]"
+        title='Clients Filters'
+        className='top-[70px]'
         buttons={
           <>
             <Button
               disabled={!Object.values(clientsFilters).flat().length > 0}
               white
-              label="Clear Filter"
+              label='Clear Filter'
               onClick={() => {
                 setFiltersCleared(true);
                 dispatch(setClientsFilters({}));
