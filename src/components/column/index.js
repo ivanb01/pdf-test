@@ -45,7 +45,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
   const [openCommunicationPopup, setOpenCommunicationPopup] = useState(false);
 
   const [filteredContacts, setFilteredContacts] = useState(
-    contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+    contacts?.filter((contact) => contact?.status_id == status?.id && contact?.category_1.toLowerCase() == category),
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
       setFilteredContacts(contacts);
     } else {
       setFilteredContacts(
-        contacts?.filter((contact) => contact.status_id == status.id && contact.category_1.toLowerCase() == category),
+        contacts?.filter((contact) => contact?.status_id == status?.id && contact?.category_1.toLowerCase() == category),
       );
     }
   }, [openedSubtab, contacts]);
@@ -62,8 +62,8 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
     setFilteredContacts(
       contacts?.filter(
         (contact) =>
-          contact.status_id === status.id &&
-          contact.category_1.toLowerCase() === category &&
+          contact?.status_id === status?.id &&
+          contact?.category_1.toLowerCase() === category &&
           searchTerm.split(' ').every((word) => {
             const lowercaseWord = word.toLowerCase();
             return (
@@ -288,7 +288,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
         </a>
       </div>
       {filteredContacts.filter(
-        (contact, index) => contact.status_id === status.id && contact.category_1.toLowerCase() === category,
+        (contact, index) => contact?.status_id === status?.id && contact?.category_1.toLowerCase() === category,
       ).length > 0 ? (
         <SimpleBar
           style={{
@@ -299,7 +299,7 @@ const Column = ({ status, searchTerm, categoryType, handleCardEdit, contacts, ha
         >
           <div className="p-[16px] contact-column-custom-height">
             {filteredContacts.map((contact, index) => {
-              if (contact.status_id === status.id && contact.category_1.toLowerCase() === category) {
+              if (contact.status_id === status?.id && contact?.category_1.toLowerCase() === category) {
                 return (
                   <>
                     <ContactCard
