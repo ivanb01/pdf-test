@@ -6,26 +6,23 @@ import FilterList from '@mui/icons-material/FilterList';
 import Add from '@mui/icons-material/Add';
 import Column from 'components/column';
 import SlideOver from 'components/shared/slideOver';
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
 import ViewColumn from '@mui/icons-material/ViewColumn';
 import TableRows from '@mui/icons-material/TableRows';
 import Accordion from 'components/shared/accordion';
 import ButtonsSlider from 'components/shared/button/buttonsSlider';
-import {
-  clientStatuses,
-  clientStatusMainTitlesUpdated,
-  filtersForLastCommunicationDate,
-  multiselectOptionsClients,
-  statuses,
-} from 'global/variables';
+import Table from 'components/shared/table';
+import { multiselectOptionsClients, statuses } from 'global/variables';
 import { useRouter } from 'next/router';
+import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from 'global/variables';
 import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setClients, setContacts } from 'store/contacts/slice';
 import Chip from 'components/shared/chip';
 import { TrashIcon } from '@heroicons/react/solid';
 import { setClientsFilters } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
+import { useRef } from 'react';
 import SwitchComponent from '@components/Switch';
 import ContactsListTable from '@components/shared/table/ContactsListTable';
 
@@ -129,16 +126,16 @@ const Clients = ({
       );
     }
   }, [openedSubtab, clientsFilters]);
-  let contactsState =
-    openedSubtab !== -1
-      ? contacts.filter(
-        (contact) =>
-          contact.category_1 == 'Client' &&
-          contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-      )
-      : contacts.filter((contact) => contact.category_1 == 'Client');
-  const filterContacts = () => {
 
+  const filterContacts = () => {
+    let contactsState =
+      openedSubtab !== -1
+        ? contacts.filter(
+          (contact) =>
+            contact.category_1 == 'Client' &&
+            contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+        )
+        : contacts.filter((contact) => contact.category_1 == 'Client');
 
     Object.keys(clientsFilters).map((key) => {
       if (key == 'last_communication_date') {
@@ -167,16 +164,8 @@ const Clients = ({
         });
       }
     });
-    const c = statuses.map((status) =>
-      status.statuses.map((s) =>
-        handleFilteredContacts(
-          s.name,
-          sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted,
-        ),
-      ),
-    );
-    console.log(c.flat(2))
-    setFilteredContacts(c.flat(2));
+
+    setFilteredContacts(contactsState);
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -221,32 +210,19 @@ const Clients = ({
       setFiltersCleared(true);
     }
   };
-  const handleFilteredContacts = (status, sortOrder) => {
-    console.log(status, sortOrder);
-    let filteredClients = contactsState.filter((client) => client.status_2 === status);
-
-    dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
-
-    contactsState =  filteredClients.sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.first_name.localeCompare(b.first_name);
-      } else if (sortOrder === 'desc') {
-        return b.first_name.localeCompare(a.first_name);
-      }
-    });
-    setFilteredContacts(contactsState);
-    return contactsState;
-  };
-
 
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     filterContacts();
+    statuses.map((status) =>
+      status.statuses.map((s) =>
+        handleFilteredContacts(
+          s.name,
+          sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted,
+        ),
+      ),
+    );
   }, [clientsFilters, contacts, openedSubtab]);
-
-  useEffect(() => {
-
-  }, [contacts]);
 
   useEffect(() => {
     setFiltersCleared(true);
@@ -255,6 +231,25 @@ const Clients = ({
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
+  const handleFilteredContacts = (status, sortOrder) => {
+    console.log(status, sortOrder);
+    let filteredClients = contacts.filter((client) => client.status_2 === status);
+
+    filteredClients.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (sortOrder === 'desc') {
+        return b.first_name.localeCompare(a.first_name);
+      }
+    });
+
+    dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
+    setFilteredContacts((prevContacts) => {
+      const updatedContacts = [...new Set([...filteredClients, ...prevContacts])];
+      return updatedContacts;
+    });
+    return filteredClients;
+  };
 
 
   useEffect(() => {
