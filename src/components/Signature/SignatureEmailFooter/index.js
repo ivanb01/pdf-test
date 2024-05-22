@@ -14,7 +14,7 @@ const SignatureEmailFooter = ({ userInfo, companyName, imageUrl }) => {
       )}
       {userInfo?.email && <p>{userInfo?.email}</p>}
       {imageUrl && (
-        <div className={'mt-3'}>
+        <div>
           <img src={`${imageUrl}`} alt={''} width={120} />
         </div>
       )}
