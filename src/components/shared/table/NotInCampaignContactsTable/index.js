@@ -17,7 +17,7 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2 }) =>
       <thead>
         <tr className="bg-gray-50 text-gray4">
           <th scope="col" className="px-6 py-3  text-left text-xs leading-4 font-medium tracking-wider uppercase">
-            {categoryType}-{status}
+            {categoryType == 'Unknown' ? 'All Clients' : `${categoryType} - ${status_2}`}
           </th>
           <th
             scope="col"

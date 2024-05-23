@@ -86,7 +86,7 @@ const index = () => {
   const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-  const notInCamapaignContacts = usersInCampaignGlobally?.contacts_not_campaign.filter((contact) =>
+  const notInCampaignContacts = usersInCampaignGlobally?.contacts_not_campaign.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   const eventTypes = [
@@ -193,7 +193,7 @@ const index = () => {
           <SimpleBar style={{ height: '100%' }} autoHide>
             <NotInCampaignContactsTable
               tableFor={'notInCampaignContacts'}
-              data={notInCamapaignContacts}
+              data={notInCampaignContacts}
               categoryType={category}
               status={usersInCampaignGlobally?.contact_status_1}
               status_2={usersInCampaignGlobally?.contact_status_2}
@@ -244,15 +244,13 @@ const index = () => {
                 secondary
                 leftIcon={<PencilIcon className={'h-4 w-4'} />}
                 className="mr-4"
-                onClick={() => setShowEditCampaign(true)}
-              >
+                onClick={() => setShowEditCampaign(true)}>
                 Edit Campaign
               </Button>
               <Button
                 primary
                 leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
-                onClick={() => setOpenCampaignPreview(true)}
-              >
+                onClick={() => setOpenCampaignPreview(true)}>
                 Campaign Preview
               </Button>
             </div>
@@ -262,8 +260,7 @@ const index = () => {
               <div
                 key={index}
                 className={`flex flex-col gap-2.5 items-center justify-center 
-              `}
-              >
+              `}>
                 <div className={'flex gap-3 items-center justify-center'}>
                   <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
                   <span className="text-gray4  text-center font-medium text-xs leading-5">

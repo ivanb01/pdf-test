@@ -31,10 +31,23 @@ import { addCRMCampaigns } from '@store/campaigns/slice';
 import Checkbox from '@components/shared/checkbox';
 import SimpleBar from 'simplebar-react';
 import NotificationAlert from '@components/shared/alert/notification-alert';
-import CampaignCreateConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
+import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
+
+import { useRef } from 'react';
 
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
+
+  const simpleBarRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (simpleBarRef.current) {
+      const simpleBar = simpleBarRef.current;
+      const scrollableNode = simpleBar.getScrollElement();
+      scrollableNode.scrollTop = 0;
+    }
+  };
+  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
 
   const [defaultEvents, setDefaultEvents] = useState([
     {
@@ -179,7 +192,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         onClick={onClick}
         className={`relative ${!expanded && 'cursor-pointer'} rounded-lg border-2 ${active && 'border-lightBlue3'} ${
           !expanded && active && 'bg-lightBlue1'
-        } ${padding} flex ${className} ${!description && 'items-center'}`}>
+        } ${padding} flex ${className} items-center`}>
         {icon}
         <div className="ml-4 text-sm">
           <div className="text-gray7 font-semibold flex items-center gap-[10px]">
@@ -348,6 +361,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   useEffect(() => {
     setAnimate(true);
+    scrollToTop();
     setTimeout(() => {
       setAnimate(false);
     }, 500);
@@ -468,7 +482,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           </SimpleBar>
         </div>
         <div className={`w-1/2 bg-gray10 relative ${animate ? 'elementToFadeIn' : ''}`}>
-          <SimpleBar style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
+          <SimpleBar ref={simpleBarRef} style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
             <div className=" px-[22px] py-[26px]">
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
@@ -676,7 +690,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
         </div>
       </div>
       {openConfirmationDialog && (
-        <CampaignCreateConfirmationOverlay
+        <CampaignCreateEditConfirmationOverlay
           onCancel={() => {
             resetCreateCampaign();
             setOpen(false);

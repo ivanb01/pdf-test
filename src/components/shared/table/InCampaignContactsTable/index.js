@@ -72,7 +72,7 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
             <th
               scope="col"
               className="px-6 py-3 text-left border-b text-xs leading-4 font-medium tracking-wider border-r border-gray2 uppercase">
-              {categoryType}-{status}
+              {categoryType == 'Unknown' ? 'All Clients' : `${categoryType} - ${status_2}`}
             </th>
           </tr>
         </thead>
