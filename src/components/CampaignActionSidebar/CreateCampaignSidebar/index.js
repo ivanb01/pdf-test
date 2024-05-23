@@ -33,8 +33,20 @@ import SimpleBar from 'simplebar-react';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
 
+import { useRef } from 'react';
+
 const CreateCampaignSidebar = ({ open, setOpen }) => {
   const dispatch = useDispatch();
+
+  const simpleBarRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (simpleBarRef.current) {
+      const simpleBar = simpleBarRef.current;
+      const scrollableNode = simpleBar.getScrollElement();
+      scrollableNode.scrollTop = 0;
+    }
+  };
   const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
 
   const [defaultEvents, setDefaultEvents] = useState([
@@ -349,6 +361,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
 
   useEffect(() => {
     setAnimate(true);
+    scrollToTop();
     setTimeout(() => {
       setAnimate(false);
     }, 500);
@@ -469,7 +482,7 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           </SimpleBar>
         </div>
         <div className={`w-1/2 bg-gray10 relative ${animate ? 'elementToFadeIn' : ''}`}>
-          <SimpleBar style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
+          <SimpleBar ref={simpleBarRef} style={{ maxHeight: 'calc(100vh - 340px)', height: '100vh' }}>
             <div className=" px-[22px] py-[26px]">
               {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>

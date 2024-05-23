@@ -31,12 +31,22 @@ import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import SimpleBar from 'simplebar-react';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import { useRef } from 'react';
 import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
 import { createPortal } from 'react-dom';
 import AddActivity from '@components/overlays/add-activity';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
+  const simpleBarRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (simpleBarRef.current) {
+      const simpleBar = simpleBarRef.current;
+      const scrollableNode = simpleBar.getScrollElement();
+      scrollableNode.scrollTop = 0;
+    }
+  };
   const [loadingData, setLoadingData] = useState(true);
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
@@ -290,6 +300,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
 
   useEffect(() => {
     setAnimate(true);
+    scrollToTop();
     setTimeout(() => {
       setAnimate(false);
     }, 500);
@@ -411,7 +422,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             </SimpleBar>
           </div>
           <div className={`w-1/2 bg-gray10 relative ${animate ? 'elementToFadeIn' : ''}`}>
-            <SimpleBar style={{ maxHeight: 'calc(100vh - 410px)', height: '100vh' }}>
+            <SimpleBar ref={simpleBarRef} style={{ maxHeight: 'calc(100vh - 410px)', height: '100vh' }}>
               <div className=" px-[22px] py-[26px]">
                 {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>
