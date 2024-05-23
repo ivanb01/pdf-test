@@ -73,14 +73,6 @@ const index = () => {
       getActivityLog();
       getNotes();
       getCampaigns();
-      if (contactData?.campaign_name) {
-        setCampaigns([
-          {
-            title: contactData?.campaign_name,
-            status: true,
-          },
-        ]);
-      }
     }
   }, [contacts, id]);
 
@@ -110,7 +102,8 @@ const index = () => {
   const getCampaigns = async () => {
     getContactCampaigns(id)
       .then((response) => {
-        setCampaigns(response.data.campaigns);
+        setCampaigns(response.data);
+        // console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -314,8 +307,7 @@ const index = () => {
                           created_at: new Date().toISOString(),
                         });
                         window.open(`tel:${contact.phone_number}`);
-                      }}
-                    >
+                      }}>
                       <img src={call.src} style={{ height: '15px' }} />
                     </div>
                     <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
@@ -338,8 +330,8 @@ const index = () => {
                     <a
                       className={`${
                         allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).color
-                      } text-gray6 rounded-xl px-3 py-[6px] text-xs font-medium`}
-                    >
+                      } text-neutral1 rounded-xl px-3 py-[6px] text-xs font-medium`}>
+
                       {allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).label}
                     </a>
                   )}
@@ -380,7 +372,10 @@ const index = () => {
                   )}
                 </div>
               </div>
-              {campaigns?.length > 0 && (
+              {campaigns?.campaigns_assigned?.length +
+                campaigns?.campaigns_never_assigned?.length +
+                campaigns?.campaigns_unassigned?.length >
+                0 && (
                 <div className="bg-white px-3 mb-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="text-gray8 font-semibold text-sm">Campaigns</div>
 
@@ -389,42 +384,45 @@ const index = () => {
                       <div>Name</div>
                       <div>Status</div>
                     </div>
-                    {campaigns?.map((campaign, index) => (
+                    {campaigns.campaigns_assigned?.map((campaign, index) => (
                       <>
                         <div key={index} className="flex justify-between items-center">
                           <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>
                           <AssignUnassignContactToCampaign
                             campaignId={campaign.id}
-                            active={
-                              contact?.contact_campaign_status !== 'never_assigned' &&
-                              contact?.contact_campaign_status !== 'unassigned'
-                            }
-                            disabled={contact?.contact_campaign_status === 'unassigned'}
+                            active={true}
                             handleUnassign={() => getCampaigns()}
                             activePerson={{ ...contact, contact_id: contact.id }}
                           />
-                          {/* <Switch
-                            checked={campaign.status == 'Active' || campaign.status == true ? true : false}
-                            onChange={(checked) => {
-                              setCampaigns(
-                                campaigns.map((foundCampaign) =>
-                                  foundCampaign.id === campaign.id
-                                    ? { ...foundCampaign, status: checked }
-                                    : foundCampaign,
-                                ),
-                              );
-                            }}
-                            className={`${
-                              campaign.status == 'Active' || campaign.status == true ? 'bg-green5' : 'bg-gray-200'
-                            } relative inline-flex h-[23px] w-9 items-center rounded-full`}>
-                            <span
-                              className={`${
-                                campaign.status == 'Active' || campaign.status == true
-                                  ? 'translate-x-4'
-                                  : 'translate-x-[2px]'
-                              } inline-block h-[18px] w-[18px] transform rounded-full bg-white transition`}
-                            />
-                          </Switch> */}
+                        </div>
+                        {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
+                      </>
+                    ))}
+                    {campaigns.campaigns_never_assigned?.map((campaign, index) => (
+                      <>
+                        <div key={index} className="flex justify-between items-center">
+                          <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>
+                          <AssignUnassignContactToCampaign
+                            campaignId={campaign.id}
+                            active={false}
+                            handleUnassign={() => getCampaigns()}
+                            activePerson={{ ...contact, contact_id: contact.id }}
+                          />
+                        </div>
+                        {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
+                      </>
+                    ))}
+                    {campaigns.campaigns_unassigned?.map((campaign, index) => (
+                      <>
+                        <div key={index} className="flex justify-between items-center">
+                          <div className="text-gray7 text-sm font-medium max-w-[180px]">{campaign.name}</div>
+                          <AssignUnassignContactToCampaign
+                            campaignId={campaign.id}
+                            active={false}
+                            disabled={true}
+                            handleUnassign={() => getCampaigns()}
+                            activePerson={{ ...contact, contact_id: contact.id }}
+                          />
                         </div>
                         {campaigns.length - 1 !== index && <hr className="my-[18px]" />}
                       </>
@@ -451,24 +449,21 @@ const index = () => {
                       onClick={() => setShowGmailInbox(!showGmailInbox)}
                       className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
                         showGmailInbox && 'border-lightBlue3'
-                      }`}
-                    >
+                      }`}>
                       <MailOutline
                         className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
                         className={`responsive-fix text-sm leading-5 ${
                           showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
-                        }`}
-                      >
+                        }`}>
                         Gmail Inbox
                       </span>
                     </button>
                   </div>
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
-                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2"
-                  >
+                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
                     <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
                     <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
                       Start communication
@@ -530,8 +525,7 @@ const index = () => {
                 ) : (
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
-                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}
-                  >
+                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
                     {notes
                       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                       .map((note, index) => (

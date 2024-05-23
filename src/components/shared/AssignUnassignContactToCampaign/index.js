@@ -88,7 +88,9 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
   }, [makeChanges]);
 
   return (
-    <>
+    <div
+      className={disabled && 'cursor-not-allowed'}
+      title={disabled && 'This contact has been unassigned from a campaign, you cannot re-assign!'}>
       <Switch
         onClick={(e) => {
           e.stopPropagation();
@@ -100,9 +102,9 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
         disabled={disabled}
         className={classNames(
           enabled ? 'bg-lightBlue3' : 'bg-gray2',
+          disabled && 'opacity-60 pointer-events-none',
           'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ',
-        )}
-      >
+        )}>
         <span className="sr-only">Use setting</span>
         <span
           aria-hidden="true"
@@ -120,7 +122,7 @@ const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, obj
           makeChanges={setMakeChanges}
         />
       )}
-    </>
+    </div>
   );
 };
 export default AssignUnassignContactToCampaign;
