@@ -46,41 +46,34 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
       }}
       className={className}
       hideScroll
-      title={campaignData?.campaign_name}
-    >
-      <div className=" mt-[-8px] w-[480px] px-[18px] py-[16px] pb-[40px]">
-        <div className={'text-sm leading-5 font-medium mb-[32px]'}>Clients who will be eligible of this campaign</div>
+      title={campaignData?.campaign_name}>
+      <div className="w-full mb-[15px] mt-[-15px]">
         <div>
-          <p className={'text-gray7 font-semibold'}> {campaignFor === 'All Clients'} </p>
-          <>
-            <div className={`relative flex`}>
-              {
-                <CircleIcon>
-                  {campaignFor === 'All Clients' ? (
-                    <AllClientsIcon fill={'#4B5563'} />
-                  ) : (
-                    <SpecificClientsIcon fill={'#4B5563'} />
-                  )}
-                </CircleIcon>
-              }
-              <div className="ml-4 text-sm">
-                <div className="text-gray7 font-semibold flex items-center gap-[10px]">
-                  {campaignFor === 'All Clients' ? 'All Clients' : 'Specific Clients: ' + campaignFor}
-                </div>
-                <div className="text-gray5 mt-1">
-                  {campaignFor === 'All Clients'
-                    ? 'Each client, regardless the status they’re in, will be part of this campaign.'
-                    : 'Only clients by this status, will be part of this campaign.'}
-                </div>
+          <div className={`relative flex items-center`}>
+            <CircleIcon>
+              {campaignFor === 'All Clients' ? (
+                <AllClientsIcon fill={'#4B5563'} />
+              ) : (
+                <SpecificClientsIcon fill={'#4B5563'} />
+              )}
+            </CircleIcon>
+            <div className="ml-4 text-sm">
+              <div className="text-gray7 font-semibold flex items-center gap-[10px]">
+                {campaignFor === 'All Clients' ? 'Campaign for All Clients' : 'Campaign for: ' + campaignFor}
+              </div>
+              <div className="text-gray5 mt-1">
+                {campaignFor === 'All Clients'
+                  ? 'All clients, regardless of status they’re in, will be part of this campaign.'
+                  : 'Only clients by this type and status, will be part of this campaign.'}
               </div>
             </div>
-          </>
+          </div>
         </div>
       </div>
       <hr className=" -mx-6" />
       <div className="flex -mx-6 h-full">
         <div className="w-1/2">
-          <SimpleBar style={{ maxHeight: 'calc(100vh - 285px)', height: '100vh' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 245px)', height: '100vh' }}>
             <div className={'flex flex-col px-[22px] py-[26px] '}>
               <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
               <div>
@@ -92,48 +85,51 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
                   </div>
                 ) : (
                   <div>
-                    {campaignData?.events?.map((e, index) => {
-                      const execute_on =
-                        e?.execute_on === 'Same day as added in system' ? 0 : e?.execute_on.split(' ')[1];
-                      return (
-                        <div className="mb-3 last:mb-0">
-                          <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
-                            Wait {execute_on} {execute_on == 0 || execute_on == 1 ? 'day' : 'days'}, then send this
-                            event at {getTimeWithAMPM(e?.execute_date)}
-                          </div>
-                          <div className="my-2 pl-2">
-                            <Divider />
-                          </div>
-                          <div
-                            onClick={() => setActiveEvent({ ...e })}
-                            className={`cursor-pointer rounded-lg border ${
-                              areObjectsEqual(campaignData?.events[index], activeEvent) &&
-                              'border-[#BAE6FD] bg-lightBlue1'
-                            } p-3 flex  flex-col gap-[10px] `}
-                          >
-                            <div className={'flex justify-between items-center group'}>
-                              <div className="flex items-center">
-                                <div className="w-">
-                                  <CircleIcon small active={areObjectsEqual(campaignData?.events[index], activeEvent)}>
-                                    <MailIcon
-                                      fill={
-                                        areObjectsEqual(campaignData?.events[index], activeEvent)
-                                          ? '#0284C7'
-                                          : '#4B5563'
-                                      }
-                                    />
-                                  </CircleIcon>
+                    {campaignData?.events
+                      ?.sort((a, b) => new Date(a.execute_date) - new Date(b.execute_date))
+                      .map((e, index) => {
+                        const execute_on =
+                          e?.execute_on === 'Same day as added in system' ? 0 : e?.execute_on.split(' ')[1];
+                        return (
+                          <div className="mb-3 last:mb-0">
+                            <div className="px-2 py-1 bg-gray1 text-sm font-semibold inline-block rounded text-gray5">
+                              Wait {execute_on} {execute_on == 0 || execute_on == 1 ? 'day' : 'days'}, then send this
+                              event at {getTimeWithAMPM(e?.execute_date)}
+                            </div>
+                            <div className="my-2 pl-2">
+                              <Divider />
+                            </div>
+                            <div
+                              onClick={() => setActiveEvent({ ...e })}
+                              className={`cursor-pointer rounded-lg border ${
+                                areObjectsEqual(campaignData?.events[index], activeEvent) &&
+                                'border-[#BAE6FD] bg-lightBlue1'
+                              } p-3 flex  flex-col gap-[10px] `}>
+                              <div className={'flex justify-between items-center group'}>
+                                <div className="flex items-center">
+                                  <div className="w-">
+                                    <CircleIcon
+                                      small
+                                      active={areObjectsEqual(campaignData?.events[index], activeEvent)}>
+                                      <MailIcon
+                                        fill={
+                                          areObjectsEqual(campaignData?.events[index], activeEvent)
+                                            ? '#0284C7'
+                                            : '#4B5563'
+                                        }
+                                      />
+                                    </CircleIcon>
+                                  </div>
+                                  <div className="ml-4 text-sm">
+                                    <div className="text-gray7 font-semibold"> {e?.preview?.preview?.subject}</div>
+                                  </div>
                                 </div>
-                                <div className="ml-4 text-sm">
-                                  <div className="text-gray7 font-semibold"> {e?.preview?.preview?.subject}</div>
-                                </div>
+                                <KeyboardArrowRight className={`text-gray7`} />
                               </div>
-                              <KeyboardArrowRight className={`text-gray7`} />
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 )}
               </div>
@@ -141,7 +137,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
           </SimpleBar>
         </div>
         <div className="w-1/2 relative border-l border-gray2">
-          <SimpleBar style={{ maxHeight: 'calc(100vh - 285px)', height: '100vh' }}>
+          <SimpleBar style={{ maxHeight: 'calc(100vh - 245px)', height: '100vh' }}>
             <div className="mb-6 pt-[26px]">
               <div className={'sticky top-0'}>
                 <div className={'px-6 pb-3 border-b border-gray2 '}>
