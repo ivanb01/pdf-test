@@ -5,8 +5,6 @@ import Button from '@components/shared/button';
 import Loader from '@components/shared/loader';
 import AddTemplate from '@components/shared/sidebar/add-template';
 import EditTemplate from '@components/shared/sidebar/edit-template';
-import Table from '@components/shared/table';
-import TopBar from '@components/shared/top-bar';
 import { PlusIcon } from '@heroicons/react/solid';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -18,9 +16,9 @@ const index = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [emailTemplates, setEmailTemplates] = useState();
   const [currentTemplate, setCurrentTemplate] = useState();
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [emailTemplates, setEmailTemplates] = useState();
 
   const fetchEmailTemplates = async () => {
     try {
