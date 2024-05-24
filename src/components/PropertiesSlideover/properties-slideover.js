@@ -122,6 +122,17 @@ const PropertiesSlideOver = ({
   };
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
+
+  useEffect(() => {
+    if (document.querySelector('.side-overlay-wrapper')) {
+      if (propertiesSent) {
+        document.querySelector('.side-overlay-wrapper').classList.add('justify-center');
+      } else {
+        document.querySelector('.side-overlay-wrapper').classList.remove('justify-center');
+      }
+    }
+  }, [propertiesSent]);
+
   return (
     <>
       <SlideOver
