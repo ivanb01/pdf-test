@@ -108,12 +108,10 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
     setLoadingButton(true);
     try {
       const res = await contactServices.addContactLookingProperty(contactId, values);
+      setLoadingButton(false);
       toast.success('Changes were successfully saved');
       dispatch(setRefetchPart('looking-for'));
-      setTimeout(() => {
-        setLoadingButton(false);
-        handleClose();
-      }, 1000);
+      handleClose();
     } catch (error) {
       console.log(error);
       setLoadingButton(false);
@@ -337,11 +335,10 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
       handleCloseOverlay={handleClose}
       height="md:max-h-[500px]"
       title={title}
-      className={className}
-    >
+      className={className}>
       <div className="relative">
-        <form onSubmit={formik.handleSubmit} className="p-5">
-          <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
+        <SimpleBar autoHide className="px-[15px] max-h-full md:max-h-[330px]">
+          <form onSubmit={formik.handleSubmit} className="p-5">
             <Dropdown
               options={forOptions}
               className="w-full"
@@ -447,8 +444,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                         });
                         return updatedSections;
                       })
-                    }
-                  >
+                    }>
                     <p className={'text-sm font-medium text-gray-700 '}>{s.name}</p>
                     <KeyboardArrowDownIcon
                       className={`transition-all h-4 w-4 text-gray-700  ${!s.expanded && 'rotate-180'}`}
@@ -463,8 +459,7 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                           onClick={() => {
                             toggleAmenitySelection(a);
                           }}
-                          selected={internalAmenities?.includes(a)}
-                        >
+                          selected={internalAmenities?.includes(a)}>
                           <span>{a}</span>
                         </Tag>
                       ))}
@@ -473,14 +468,13 @@ const EditLookingForPopup = ({ title, handleClose, className, contactId, data, a
                 </React.Fragment>
               ))}
             </div>
-          </SimpleBar>
-        </form>
+          </form>
+        </SimpleBar>
         <div
           className="text-right md:sticky left-0 right-0 bottom-0 bg-white p-5 flex justify-between h-[78px]"
           style={{
             boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)',
-          }}
-        >
+          }}>
           <div>
             <Button
               white
