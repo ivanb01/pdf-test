@@ -145,12 +145,11 @@ const index = () => {
           <div
             className={`${
               t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-          >
-            <div className='flex gap-2 p-4 word-break items-center'>
+            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+            <div className="flex gap-2 p-4 word-break items-center">
               <CheckCircleIcon className={'text-green-500'} />
               <h1 className={'text-sm leading-5 font-medium'}>
-                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `"Marked as Correct"!`}
+                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `Marked as Correct!`}
               </h1>
             </div>
             <div className='flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100'>
@@ -162,8 +161,7 @@ const index = () => {
                   updateContact(data.id, { ...newData, approved_ai: false }).then(() => dispatch(setRefetchData(true)));
                   // updateAiSummaryTable(data.id, { ...newData, approved_ai: false });
                 }}
-                className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'
-              >
+                className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
                 Undo
               </button>
             </div>
@@ -210,7 +208,7 @@ const index = () => {
     let toastMessage =
       action == 2
         ? `${selectedPeople.length} contacts moved to Trash`
-        : `${selectedPeople.length} contacts "Marked as Correct"!`;
+        : `${selectedPeople.length} contacts Marked as Correct!`;
     {
       selectedPeople.length > 0 &&
       toast.custom(
@@ -536,17 +534,15 @@ const index = () => {
               background='transparent'
               speed='1'
               style={{ height: '300px' }}
-              autoplay
-            ></lottie-player>
-            <div className='-mt-10 text-gray-900 text-center'>
-              <div className='font-semibold text-lg'>Well Done!</div>
-              <div className='mt-3'>You reviewed all contacts imported by AI from Gmail.</div>
+              autoplay></lottie-player>
+            <div className="-mt-10 text-gray-900 text-center">
+              <div className="font-semibold text-lg">Well Done!</div>
+              <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
             </div>
             <div
               onClick={() => router.push('/contacts/clients')}
-              className='cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm'
-            >
-              <img className='mr-2' src={backBtn.src} alt='' />
+              className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
+              <img className="mr-2" src={backBtn.src} alt="" />
               Back to Contacts
             </div>
           </div>
@@ -555,8 +551,7 @@ const index = () => {
             background='transparent'
             speed='1'
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}
-            autoplay
-          ></lottie-player>
+            autoplay></lottie-player>
         </div>
       )}
       {showReviewOverlay && popupData && (
@@ -582,14 +577,12 @@ const index = () => {
               onClick={() => {
                 bulkUpdate(2);
               }}
-              className='hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500'
-            >
-              <Delete /> <span className='ml-2'>Move to Trash</span>
+              className="hover:bg-red-500 hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center mr-4 font-medium py-[6px] px-3 rounded-[4px] bg-red-50 text-red-500">
+              <Delete /> <span className="ml-2">Move to Trash</span>
             </button>
             <button
               onClick={() => bulkUpdate(1)}
-              className='hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]'
-            >
+              className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
               <span className='ml-2'>Mark as Correct</span>
             </button>

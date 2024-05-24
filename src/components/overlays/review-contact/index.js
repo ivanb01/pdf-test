@@ -182,10 +182,11 @@ const ReviewContact = ({
   const removeFromCRM = async () => {
     setRemoving(true);
     try {
-      let newData = { ...client, approved_ai: true, category_id: 3 };
+      let newData = { approved_ai: true, category_id: 3 };
 
+      if (redirectAfterMoveToTrash) router.push('/contacts/clients');
       // do changes locally, remove button loader, close
-      dispatch(updateContactLocally(newData));
+      dispatch(updateContactLocally({ ...newData, id: client.id }));
       setRemoving(false);
       handleClose();
 
@@ -195,8 +196,6 @@ const ReviewContact = ({
       if (!router.pathname.includes('ai-summary')) {
         if (afterSubmit) afterSubmit(client?.id, newData);
       }
-
-      if (redirectAfterMoveToTrash) router.push('/contacts/clients');
 
       if (router.pathname.includes('ai-summary')) {
         const removeItemsFromTable = ai_unapproved_contacts_redux.filter((contact) => contact.id !== client.id);
@@ -356,14 +355,18 @@ const ReviewContact = ({
       }
 
       // make changes to global state
-      dispatch(updateContactLocally(newData));
+      dispatch(updateContactLocally({ ...newData, id: client.id }));
+      console.log('data updated locally by review popup', newData);
       setUpdating(false);
       handleClose();
 
       // function that runs conditionally on submit if prop is given
 
       // api call to update user
-      updateContact(client?.id, newData).then(() => dispatch(setRefetchData(true)));
+      setUpdating(true);
+      updateContact(client?.id, newData).then(() => {
+        dispatch(setRefetchData(true));
+      });
       if (afterSubmit) {
         afterSubmit(client.id, newData);
       }
@@ -392,7 +395,7 @@ const ReviewContact = ({
                 <div className="flex gap-2 p-4 word-break items-center">
                   <CheckCircleIcon className={'text-green-500'} />
                   <h1 className={'text-sm leading-5 font-medium'}>
-                    {newData.first_name} {newData.last_name} "Marked as Correct"!
+                    {newData.first_name} {newData.last_name} Marked as Correct!
                   </h1>
                 </div>
                 <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
@@ -497,9 +500,9 @@ const ReviewContact = ({
             Move to Trash
           </Button>
           <Button
-            className={`${
-              updating && 'bg-[#10B981]'
-            } hover:bg-[#10B981] hover:text-white bg-green-50 text-[#10B981] active:bg-[#10B981]`}
+            className={`${updating && 'bg-[#10B981]'} ${
+              updating ? 'bg-[#10B981] text-white' : 'bg-green-50 text-[#10B981] active:bg-[#10B981]'
+            } hover:bg-[#10B981] hover:text-white `}
             leftIcon={<CheckCircle />}
             coloredButton
             disabled={submitDisabled}

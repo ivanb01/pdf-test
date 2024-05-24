@@ -129,9 +129,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     );
   }, [contacts, sendMethod]);
 
-  useEffect(() => {
-    console.log(filteredContacts, 'filteredContacts');
-  }, [filteredContacts]);
   const getLookingFor = () => {
     return new Promise((resolve, reject) => {
       contactServices
