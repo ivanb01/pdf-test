@@ -27,7 +27,7 @@ const TemplatesTable = ({ data, setCurrentTemplate, setOpenEdit, setOpenDelete, 
         <th scope='col' className='flex-grow py-3 px-2 text-left  text-xs leading-4 font-medium tracking-wider'>
           {isEmail ? 'EMAIL' : 'SMS'}
         </th>
-        <th scope='col' className='flex-grow py-3 px-2 text-center  text-xs leading-4 font-medium tracking-wider'>
+        <th scope='col' className='flex-grow py-3 px-2 text-center  text-xs leading-4 font-medium tracking-wider md:w-[200px]'>
           CREATED DATE
         </th>
         {!isInCampaign && (
