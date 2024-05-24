@@ -81,7 +81,7 @@ const index = () => {
     },
     {
       id: 8,
-      key: 'percentage_closed_clients',
+      key: 'conversion',
       type: 'desc',
       label: 'Conversion',
       api_key: 'conversion',
@@ -105,33 +105,16 @@ const index = () => {
     return Math.round((100 * healthyCount) / totalValue);
   };
 
-  const sortData = () => {
-    let sortedData = [...items.data].sort((a, b) => {
-      if (typeof a[sortColumn.key] === 'number') {
-        return sortColumn.type === 'asc'
-          ? a[sortColumn.key] - b[sortColumn.key]
-          : b[sortColumn.key] - a[sortColumn.key];
-      } else if (typeof a[sortColumn.key] === 'string') {
-        return sortColumn.type === 'asc'
-          ? a[sortColumn.key].localeCompare(b[sortColumn.key])
-          : b[sortColumn.key].localeCompare(a[sortColumn.key]);
-      } else {
-        throw new Error('Invalid sort key. Key should be a string or a number.');
-      }
-    });
-    setItems((prevState) => {
-      return { ...prevState, data: sortedData };
-    });
-  };
 
   const initializeData = () => {
     items.data.map((agent) => {
       agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${getEmailParts(agent.agent_id).lastName}`;
-      agent.percentage_healthy_clients = calculateHealthyCommunication(
-        agent.healthy_communication,
-        agent.unhealthy_communication,
-      );
-      agent.percentage_closed_clients = calculateClosedClients(agent.clients_closed, agent.total_clients);
+      // agent.percentage_healthy_clients = calculateHealthyCommunication(
+      //   agent.healthy_communication,
+      //   agent.unhealthy_communication,
+      // );
+      // agent.percentage_closed_clients = calculateClosedClients(agent.clients_closed, agent.total_clients);
+      agent.percentage_closed_clients = agent.conversion 
       return agent;
     });
   };
@@ -173,9 +156,7 @@ const index = () => {
     items.data && initializeData();
   }, [items]);
 
-  useEffect(() => {
-    sortColumn && sortData(sortColumn);
-  }, [sortColumn]);
+
 
   const loadItems = (offset) => {
     return getReports(10, offset, sortBy.api_key)
