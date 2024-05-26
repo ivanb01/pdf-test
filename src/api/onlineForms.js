@@ -41,3 +41,8 @@ export const postOnlineForm = (form) => {
   const { public_identifier } = form;
   return axiosInstance.put(`v1/online-forms/public/${public_identifier.hex}`, form);
 };
+
+export const postOnlineFormPublic = (form) => {
+  const { public_identifier } = form;
+  return axios.put(`${process.env.NEXT_PUBLIC_API_URL}/v1/online-forms/public/${public_identifier.hex}`, form);
+};

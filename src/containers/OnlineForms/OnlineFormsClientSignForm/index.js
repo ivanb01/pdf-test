@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFetchOnlineForm } from '../queries/queries';
-import { usePostOnlineForm } from '../queries/mutations';
+import { usePostOnlineFormPublic } from '../queries/mutations';
 import CircularProgress from '@mui/material/CircularProgress';
 import Input from '@components/shared/input';
 import { useFormik } from 'formik';
@@ -105,7 +105,7 @@ const OnlineFormsSignForm = () => {
     isPending: postFormPending,
     isSuccess: isPostFormSuccess,
     mutate: mutatePostForm,
-  } = usePostOnlineForm();
+  } = usePostOnlineFormPublic();
 
   const { touched, errors, values, setFieldValue, handleSubmit } = useFormik({
     validateOnMount: true,
@@ -142,6 +142,8 @@ const OnlineFormsSignForm = () => {
   const onDownloadPdf = async () => {
     await downloadPdf(onlineFormData?.data?.content, false, values);
   };
+
+  console.log(values);
 
   if (onlineFormIsSuccess && !Object.keys(onlineFormData?.data.content).length) {
     return (

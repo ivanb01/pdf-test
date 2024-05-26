@@ -39,21 +39,36 @@ const DropdownList = ({ toolbarRef, setShowBlockOptionsDropDown, options, button
 
   return (
     <div
-      className="z-10 block absolute shadow-[0_12px_28px_0_rgba(0,0,0,0.2),0_2px_4px_0_rgba(0,0,0,0.1),inset_0_0_0_1px_rgba(255,255,255,0.5)] rounded-lg min-w-[100px] min-h-[40px] bg-white [&>*:first-child]:mt-2 [&>*:last-child]:mb-2"
-      ref={dropDownRef}
-    >
-      {options.map(({ id, label, icon, onClick }) => {
-        return (
-          <button
-            className="mx-2 p-2 text-[#050505] cursor-pointer leading-4 text-base flex shrink-0  rounded-lg min-w-[268px] content-center hover:bg-[#eee]"
-            onClick={onClick}
-            key={id}
-          >
-            <span className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain ${icon}`} />
-            <span className="flex grow-1 leading-5 w-[200px]">{label}</span>
-          </button>
-        );
-      })}
+      className="z-10 block absolute shadow-[0px_4px_6px_-1px_#0000001a,0px_2px_4px_-1px_#0000000f] rounded-lg min-w-[100px] min-h-[40px] bg-white "
+      ref={dropDownRef}>
+      <ul className="flex divide-x">
+        {options.map(({ id, fields, title }) => {
+          return (
+            <li key={id} className="">
+              {title && (
+                <div className="px-[13px] py-[10px]">
+                  <span className=" font-semibold text-base leading-5">{title}</span>
+                </div>
+              )}
+              <ul className="mb-[12px]">
+                {fields.map(({ id, label, icon, onClick }) => {
+                  return (
+                    <li className="flex w-full " key={id}>
+                      <button
+                        className="py-[10px] pr-[13px] pl-6 text-gray7 cursor-pointer leading-5 text-[14px] flex shrink-0  rounded-lg   hover:bg-[#eee] w-full"
+                        onClick={onClick}
+                        key={id}>
+                        {icon && <span className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain ${icon || ''}`} />}
+                        <span className="flex grow-1 leading-5 ">{label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };

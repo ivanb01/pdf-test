@@ -10,12 +10,12 @@ import { InformationCircleIcon } from '@heroicons/react/solid';
 import Input from '@components/shared/input';
 import { useFormik } from 'formik';
 import { object, string, array } from 'yup';
-import Image from 'next/image';
+// import Image from 'next/image';
 import useDetectOverflow from '@helpers/hooks/useDetectOverflow';
 import { useRouter } from 'next/router';
 import { clearEditorState } from '@store/editor/slice';
-import clsx from 'clsx';
-import CircularProgress from '@mui/material/CircularProgress';
+// import clsx from 'clsx';
+// import CircularProgress from '@mui/material/CircularProgress';
 import { usePostOnlineFormType } from '../queries/mutations';
 import { useFetchAllClients, useFetchOnlineFormsTypes } from '../queries/queries';
 import toast from 'react-hot-toast';
@@ -180,7 +180,7 @@ const FormBuilder = () => {
                     className="[&_input]:bg-transparent focus:[&_input]:ring-0 focus:[&_input]:border-borderColor [&_input]:h-[38px]"
                   />
                 </form>
-                <div className="flex gap-[5px] items-center justify-between">
+                {/* <div className="flex gap-[5px] items-center justify-between">
                   <div className="flex gap-[5px] items-center">
                     <span>Share this custom form with (optional)</span>
                     <button title="Sharing custom form with a contact allows this contact to have/use this template too.">
@@ -206,10 +206,10 @@ const FormBuilder = () => {
 
                     {clientsIsLoading && <CircularProgress size={10} />}
                   </div>
-                </div>
+                </div> */}
               </div>
 
-              <div
+              {/* <div
                 className={`h-full border-[1px] border-gray2 bg-white rounded-md overflow-y-scroll `}
                 ref={clientsContainerRef}
               >
@@ -264,7 +264,7 @@ const FormBuilder = () => {
                     <p>Error fetching clients data...</p>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         )}
@@ -278,8 +278,7 @@ const FormBuilder = () => {
               onClick={onPreviewClick}
               className="flex w-[185px] gap-2 items-center justify-center"
               disabled={isEditorEmpty}
-              loading={loadingPdf}
-            >
+              loading={loadingPdf}>
               Preview and Save
               <ArrowNarrowRightIcon className="w-4 h-4" />
             </Button>
