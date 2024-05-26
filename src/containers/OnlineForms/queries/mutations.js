@@ -55,8 +55,8 @@ export const useDeleteForm = (options) => {
 
 export const usePostOnlineForm = (options) => {
   return useMutation({
-    mutationFn: (fields) => {
-      return postOnlineForm(fields);
+    mutationFn: (form) => {
+      return postOnlineForm(form);
     },
     ...options,
   });

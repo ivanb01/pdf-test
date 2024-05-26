@@ -35,22 +35,18 @@ const columns = [
   columnHelper.accessor('status', {
     header: () => <HeaderCell title="STATUS" />,
     cell: ({ info }) => {
-      const firstName = info?.row?.original?.client_first_name;
-      return (
-        <StatusCell
-          status={info.getValue()}
-          formPublicIdentifier={info.row.original.public_identifier.hex}
-          clientEmail={info.row.original.client_email}
-          formTitle={info.row.original.form_type.name}
-          clientName={firstName}
-        />
-      );
+      return <StatusCell {...info.row.original} />;
     },
     minSize: 150,
   }),
-  columnHelper.accessor('created_at', {
+  columnHelper.accessor('sent_by_email_at', {
     header: () => <HeaderCell title="SENT ON" />,
-    cell: ({ info }) => <DateCell date={info.getValue()} />,
+    cell: ({ info }) => {
+      const createdAt = info.row.original.created_at;
+      const sentAt = info.getValue();
+
+      return <DateCell date={sentAt || createdAt} />;
+    },
     minSize: 200,
   }),
   columnHelper.accessor('actions', {
@@ -58,9 +54,6 @@ const columns = [
     cell: ({ info, onDeleteForm }) => {
       const formTypeId = info.row.original.form_type.id.hex;
       const { data, isSuccess } = useFetchOnlineFormsTypes();
-
-      // console.log('formTypeId', formTypeId);
-      // console.log('data?.data', data?.data);
 
       const onDownloadPdf = async () => {
         if (isSuccess && formTypeId) {
