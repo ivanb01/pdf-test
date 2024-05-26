@@ -17,7 +17,7 @@ const FilterDropdown = ({ types, icon, data, align = 'end', side = 'bottom' }) =
             return (
               <DropdownMenu.Item
                 key={index}
-                className={`text-gray6 block px-4 py-2 text-sm hover:bg-gray1 focus:outline-none ${(data.is_default && (type.action === 'edit' || type.action === 'delete')) || (data.deleted && type.action === 'delete') ? 'hidden' : 'block'}`}
+                className={`text-gray6 block px-4 py-2 text-sm hover:bg-gray1 focus:outline-none`}
                 onClick={() => type.handleClick(data)}>
                 {type.name}
               </DropdownMenu.Item>
