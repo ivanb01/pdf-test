@@ -26,8 +26,7 @@ const FilterBar = ({
             onClick={() => {
               handlePreviewTemplate(formTypeFilter);
             }}
-            className="flex items-center h-[30px] bg-lightBlue1 text-lightBlue3 text-[12px] rounded gap-2 py-[7px] px-[11px]"
-          >
+            className="flex items-center h-[30px] bg-lightBlue1 text-lightBlue3 text-[12px] rounded gap-2 py-[7px] px-[11px]">
             <RemoveRedEyeIcon className="w-4 h-4" />
             <span className="">preview</span>
           </button>
@@ -42,7 +41,7 @@ const FilterBar = ({
           onClick={setCurrentTab}
           className={slideClassname}
         />
-        <Button onClick={onSendFormClick}>
+        <Button onClick={onSendFormClick} disabled={formTypeFilter.deleted}>
           <div className="flex gap-2 justify-center items-center">
             <FeedOutlinedIcon className={'h-5 w-5'} />
             Send New Form

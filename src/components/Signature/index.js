@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 const Signature = ({ userInfo, companyName, imageUrl }) => {
   const ErrorState = ({ message }) => {
-    return <p className={'px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>{message}</p>;
+    return (
+      <p className={'rounded-md px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>{message}</p>
+    );
   };
 
   return (
@@ -28,7 +30,7 @@ const Signature = ({ userInfo, companyName, imageUrl }) => {
           userInfo?.phone_number
         )}
       </div>
-      <p>{userInfo?.email}</p>
+      {!userInfo?.email ? <ErrorState message={'Email is missing'} /> : <p>{userInfo?.email}</p>}
       {imageUrl && (
         <div className={'mt-3'}>
           <img src={`${imageUrl}`} alt={''} height={20} width={120} />

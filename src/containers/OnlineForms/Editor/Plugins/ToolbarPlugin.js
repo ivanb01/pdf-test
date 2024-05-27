@@ -59,119 +59,125 @@ export default function ToolbarPlugin() {
     return [
       {
         id: 1,
-        label: 'Normal',
-        type: 'paragraph',
-        icon: 'bg-[url(/images/icons/text-paragraph.svg)]',
-        onClick: () => {
-          if (blockType !== 'paragraph') {
-            editor.update(() => {
-              const selection = $getSelection();
+        title: '',
+        fields: [
+          {
+            id: 1,
+            label: 'Normal',
+            type: 'paragraph',
+            icon: 'bg-[url(/images/icons/text-paragraph.svg)]',
+            onClick: () => {
+              if (blockType !== 'paragraph') {
+                editor.update(() => {
+                  const selection = $getSelection();
 
-              if ($isRangeSelection(selection)) {
-                $wrapNodes(selection, () => $createParagraphNode());
+                  if ($isRangeSelection(selection)) {
+                    $wrapNodes(selection, () => $createParagraphNode());
+                  }
+                });
               }
-            });
-          }
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 2,
-        label: 'Heading 1',
-        type: 'h1',
-        icon: 'bg-[url(/images/icons/type-h1.svg)]',
-        onClick: () => {
-          if (blockType !== 'h1') {
-            editor.update(() => {
-              const selection = $getSelection();
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 2,
+            label: 'Heading 1',
+            type: 'h1',
+            icon: 'bg-[url(/images/icons/type-h1.svg)]',
+            onClick: () => {
+              if (blockType !== 'h1') {
+                editor.update(() => {
+                  const selection = $getSelection();
 
-              if ($isRangeSelection(selection)) {
-                $wrapNodes(selection, () => $createHeadingNode('h1'));
+                  if ($isRangeSelection(selection)) {
+                    $wrapNodes(selection, () => $createHeadingNode('h1'));
+                  }
+                });
               }
-            });
-          }
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 3,
-        label: 'Heading 2',
-        type: 'h2',
-        icon: 'bg-[url(/images/icons/type-h2.svg)]',
-        onClick: () => {
-          if (blockType !== 'h2') {
-            editor.update(() => {
-              const selection = $getSelection();
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 3,
+            label: 'Heading 2',
+            type: 'h2',
+            icon: 'bg-[url(/images/icons/type-h2.svg)]',
+            onClick: () => {
+              if (blockType !== 'h2') {
+                editor.update(() => {
+                  const selection = $getSelection();
 
-              if ($isRangeSelection(selection)) {
-                $wrapNodes(selection, () => $createHeadingNode('h2'));
+                  if ($isRangeSelection(selection)) {
+                    $wrapNodes(selection, () => $createHeadingNode('h2'));
+                  }
+                });
               }
-            });
-          }
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 4,
-        label: 'Bullet List',
-        icon: 'bg-[url(/images/icons/list-ul.svg)]',
-        type: 'ul',
-        onClick: () => {
-          if (blockType !== 'ul') {
-            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
-          } else {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND);
-          }
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 5,
-        label: 'Numbered List',
-        icon: 'bg-[url(/images/icons/list-ol.svg)]',
-        type: 'ol',
-        onClick: () => {
-          if (blockType !== 'ol') {
-            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
-          } else {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND);
-          }
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 6,
-        label: '2 columns',
-        icon: 'bg-[url(/images/icons/list-ol.svg)]',
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 4,
+            label: 'Bullet List',
+            icon: 'bg-[url(/images/icons/list-ul.svg)]',
+            type: 'ul',
+            onClick: () => {
+              if (blockType !== 'ul') {
+                editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
+              } else {
+                editor.dispatchCommand(REMOVE_LIST_COMMAND);
+              }
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 5,
+            label: 'Numbered List',
+            icon: 'bg-[url(/images/icons/list-ol.svg)]',
+            type: 'ol',
+            onClick: () => {
+              if (blockType !== 'ol') {
+                editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
+              } else {
+                editor.dispatchCommand(REMOVE_LIST_COMMAND);
+              }
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 6,
+            label: '2 columns',
+            icon: 'bg-[url(/images/icons/list-ol.svg)]',
 
-        onClick: () => {
-          editor.dispatchCommand(INSERT_TABLE_COMMAND, {
-            columns: '2',
-            rows: '1',
-          });
+            onClick: () => {
+              editor.dispatchCommand(INSERT_TABLE_COMMAND, {
+                columns: '2',
+                rows: '1',
+              });
 
-          setShowBlockOptionsDropDown(false);
-        },
-      },
-      {
-        id: 7,
-        label: '3 columns',
-        icon: 'bg-[url(/images/icons/list-ol.svg)]',
-        onClick: () => {
-          editor.dispatchCommand(INSERT_TABLE_COMMAND, {
-            columns: '3',
-            rows: '1',
-          });
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+          {
+            id: 7,
+            label: '3 columns',
+            icon: 'bg-[url(/images/icons/list-ol.svg)]',
+            onClick: () => {
+              editor.dispatchCommand(INSERT_TABLE_COMMAND, {
+                columns: '3',
+                rows: '1',
+              });
 
-          setShowBlockOptionsDropDown(false);
-        },
+              setShowBlockOptionsDropDown(false);
+            },
+          },
+        ],
       },
     ];
   }, [blockType, editor]);
 
   const FORM_ELEMENTS_OPTIONS = useMemo(() => {
-    const onFormElementClick = (option) => {
-      if (option.id === 4 || option.id === 5) {
+    const onFormElementClick = (columnId, option) => {
+      if ((columnId === 1 && option.id === 4) || (columnId === 2 && option.id === 2)) {
         editor.dispatchCommand(INSERT_SIGNATURE_COMMAND, {
           altText: 'Signature',
           src: mockSignature.src,
@@ -187,10 +193,17 @@ export default function ToolbarPlugin() {
 
       setShowFormElementsDropdown(false);
     };
-    return FORM_DROPDOWN_OPTIONS.map((formOption) => {
+
+    return FORM_DROPDOWN_OPTIONS.map((formColumn) => {
       return {
-        ...formOption,
-        onClick: () => onFormElementClick(formOption),
+        id: formColumn.id,
+        title: formColumn.title,
+        fields: formColumn.fields.map((formOption) => {
+          return {
+            ...formOption,
+            onClick: () => onFormElementClick(formColumn.id, formOption),
+          };
+        }),
       };
     });
   }, [editor]);
@@ -230,7 +243,6 @@ export default function ToolbarPlugin() {
           setBlockType(type);
         }
       }
-      // Update text format
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
       setIsUnderline(selection.hasFormat('underline'));
@@ -278,8 +290,7 @@ export default function ToolbarPlugin() {
           <Button
             rightIcon={<Image src={ChevronDown} alt="Dropdown" className="object-none" />}
             onClick={() => setShowFormElementsDropdown(!showFormElementsDropdown)}
-            className="focus:ring-transparent"
-          >
+            className="focus:ring-transparent">
             Form Elements
           </Button>
         </div>
@@ -305,8 +316,7 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           !canUndo ? ' opacity-20 cursor-not-allowed ' : ''
         }`}
-        aria-label="Undo"
-      >
+        aria-label="Undo">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/arrow-counterclockwise.svg)]" />
       </button>
       <button
@@ -317,8 +327,7 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle ${
           !canRedo ? 'opacity-20 cursor-not-allowed' : ''
         }`}
-        aria-label="Redo"
-      >
+        aria-label="Redo">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/arrow-clockwise.svg)]" />
       </button>
       <Divider />
@@ -327,10 +336,11 @@ export default function ToolbarPlugin() {
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle block-controls items-center shrink-0"
         onClick={() => setShowBlockOptionsDropDown(!showBlockOptionsDropDown)}
         aria-label="Formatting Options"
-        ref={formatButtonRef}
-      >
-        <span className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain bg-[url(/icons/${blockTypeIcon}.svg)]`} />
-        <span className="flex leading-5 align-middle font-sm text-[#777] text-ellipsis h-5 text-left mr-4">
+        ref={formatButtonRef}>
+        <span
+          className={`flex w-5 h-5 select-none	mr-3 leading-4 bg-contain bg-[url(/images/icons/${blockTypeIcon}.svg)]`}
+        />
+        <span className="flex leading-5 align-middle text-[14px] font-medium text-[#777] text-ellipsis h-5 text-left mr-4">
           {BLOCK_TYPE_TO_BLOCK_NAME[blockType]}
         </span>
         <i className=" select-none bg-[url(/images/icons/chevron-down.svg)]  bg-transparent bg-contain inline-block h-4 w-4 " />
@@ -355,8 +365,7 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isBold ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Bold"
-      >
+        aria-label="Format Bold">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-bold.svg)]" />
       </button>
       <button
@@ -366,8 +375,7 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isItalic ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Italics"
-      >
+        aria-label="Format Italics">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-italic.svg)]" />
       </button>
       <button
@@ -377,8 +385,7 @@ export default function ToolbarPlugin() {
         className={`border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px] ${
           isUnderline ? 'bg-[#dfe8fa] bg-opacity-50' : ''
         }`}
-        aria-label="Format Underline"
-      >
+        aria-label="Format Underline">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle opacity-60	bg-[url(/images/icons/type-underline.svg)]" />
       </button>
       <Divider />
@@ -387,8 +394,7 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Left Align"
-      >
+        aria-label="Left Align">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-left.svg)]" />
       </button>
       <button
@@ -396,8 +402,7 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Center Align"
-      >
+        aria-label="Center Align">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-center.svg)]" />
       </button>
       <button
@@ -405,8 +410,7 @@ export default function ToolbarPlugin() {
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
         }}
         className="border-0 flex bg-none rounded-[10px] p-[8px] cursor-pointer align-middle mr-[2px]"
-        aria-label="Right Align"
-      >
+        aria-label="Right Align">
         <i className="bg-contain inline-block w-[18px] h-[18px] mt-0.5 align-middle  opacity-60	bg-[url(/images/icons/text-right.svg)]" />
       </button>
     </div>

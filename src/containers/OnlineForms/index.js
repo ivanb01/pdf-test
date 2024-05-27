@@ -7,7 +7,7 @@ import SendForm from './SendFormModal';
 import DeleteForm from '@components/overlays/delete-form';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useFetchOnlineFormsTypes, useFetchOnlineFormsPaginated } from './queries/queries';
-import { useDeleteForm, useDeleteFormType } from './queries/mutations';
+import { useDeleteForm, useDeleteFormType, usePostUpdateFormType } from './queries/mutations';
 import toast from 'react-hot-toast';
 import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
 import useDebounce from '@helpers/hooks/useDebouncedSearch';
@@ -201,6 +201,31 @@ const OnlineForms = () => {
     } catch (e) {}
   };
 
+  const onRestoreSuccess = () => {
+    formsTypesRefetch();
+    trashedFormsTemplatesRefetch();
+    toast.success('Form Type Restored from Trash!');
+    setOpenSlideover(false);
+  };
+  const onRestoreError = () => {
+    toast.error('Unable to Restore Form Type from Trash!');
+  };
+
+  const { isPending: isPendingRestoreForm, mutate: updateOnlineFormTypeMutate } = usePostUpdateFormType({
+    onSuccess: onRestoreSuccess,
+    onError: onRestoreError,
+  });
+
+  const onRestoreFormTemplate = (template) => {
+    updateOnlineFormTypeMutate({
+      id: template.id.hex,
+      templateData: {
+        ...template,
+        deleted: false,
+      },
+    });
+  };
+
   if (formsTypesIsLoading || trashedFormsTypesIsLoading) {
     return (
       <div className="w-full h-full flex justify-center items-center">
@@ -234,6 +259,7 @@ const OnlineForms = () => {
           handleEditTemplate={handleEditTemplate}
           handleDeleteTemplate={onDeleteTemplate}
           isDeletingTemplate={isPendingDeleteTemplate}
+          onRestoreFormTemplate={onRestoreFormTemplate}
         />
       </div>
       <div className="flex flex-col w-[calc(100%-320px)]">
@@ -272,13 +298,20 @@ const OnlineForms = () => {
             <div className="bg-white w-[663px] fixed bottom-0 right-0 h-[70px] flex justify-between items-center px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)]">
               <button
                 onClick={() => {
-                  setTrashOverlayOpened(true);
+                  !openedPopover.deleted ? setTrashOverlayOpened(true) : onRestoreFormTemplate(openedPopover);
                 }}
-                className="  text-red5 text-sm font-medium leading-5 bg-red1  rounded-md	">
-                <div className="flex items-center gap-2 py-[9px] px-[17px]">
-                  <TrashIcon className="w-5 h-5" />
-                  <span>Move to Trash</span>
-                </div>
+                disabled={isPendingRestoreForm}
+                className="text-red5 text-sm font-medium leading-5 bg-red1  rounded-md	">
+                {!isPendingRestoreForm ? (
+                  <div className="flex items-center gap-2 py-[9px] px-[17px]">
+                    <TrashIcon className="w-5 h-5" />
+                    {!openedPopover.deleted ? <span>Move to Trash</span> : <span>Restore</span>}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-[38px] w-[109px]">
+                    <CircularProgress size={20} className="text-red5" />
+                  </div>
+                )}
               </button>
               <div className="flex items-center gap-[15px]">
                 <Button white label={'Cancel'} onClick={() => setOpenSlideover(false)} />

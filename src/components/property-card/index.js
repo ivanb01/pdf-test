@@ -23,29 +23,20 @@ import FsLightbox from 'fslightbox-react';
 import { useRouter } from 'next/router';
 import { createPortal } from 'react-dom';
 import CircularProgress from '@mui/material/CircularProgress';
+import InsertCommentIcon from '@mui/icons-material/InsertComment';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, property, putFeedback, setSelected }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const showButtons = images?.length > 1;
-  const showPrevButton = showButtons && currentIndex > 0;
-  const showNextButton = showButtons && currentIndex < images.length - 1;
-  const showNextImage = () => {
-    setCurrentIndex((currentIndex + 1) % images.length);
-  };
-
-  const showPrevImage = () => {
-    setCurrentIndex((currentIndex - 1 + images.length) % images.length);
-  };
-
+const ImageGallery = ({ images, onClick, noSelect, selected, isSelected, property, putFeedback, setSelected }) => {
   return (
-    <div onClick={onClick} className={`group h-full w-full ${images?.length > 0 && 'cursor-pointer'}`}>
+    <div className={`group h-full w-full cursor-pointer`} role={'button'}>
       <img
-        className="object-cover h-full w-full"
-        src={images?.length > 0 ? images[currentIndex].PHOTO_URL : placeholder.src}
+        className="object-cover h-full w-full rounded-[3px]"
+        src={images?.length > 0 ? images[0].PHOTO_URL : placeholder.src}
         alt="Gallery Image"
       />
       {!noSelect && (
-        <div className="absolute left-2 top-2" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute right-2 top-2 z-10" role={'button'}>
           <input
             type="checkbox"
             id={`checkbox-${property?.ID}`}
@@ -83,32 +74,6 @@ const ImageGallery = ({ images, url, onClick, noSelect, selected, isSelected, pr
           </label>
         </div>
       )}
-      {showPrevButton && (
-        <div
-          className={
-            'group-hover:opacity-100 opacity-0 transition-all absolute top-[65px] left-3 h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }>
-          <KeyboardArrowLeftIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              showPrevImage();
-            }}
-          />
-        </div>
-      )}
-      {showNextButton && (
-        <div
-          className={
-            'group-hover:opacity-100 opacity-0 transition-all absolute right-3 top-[65px] h-[30px] w-[30px] rounded-full bg-black bg-opacity-60 flex items-center justify-center text-white cursor-pointer'
-          }>
-          <KeyboardArrowRightIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              showNextImage();
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 };
@@ -127,8 +92,8 @@ const PropertyCard = ({
   clientNote,
   isPropertyDeleteing,
 }) => {
-  const router = useRouter();
   const [liked, setLiked] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [disliked, setDisliked] = useState(false);
   useEffect(() => {
     setLiked(propertyStatus !== 'liked');
@@ -149,25 +114,18 @@ const PropertyCard = ({
 
   return (
     <div
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
       onClick={() => {
         if (putFeedback) {
           openPropertyModal();
         }
       }}
-      className={`border transition-all border-gray-200 rounded-[4px] ${putFeedback && 'cursor-pointer'} ${
+      className={`group border transition-all border-gray-200 rounded-[4px] cursor-pointer ${
         isSelected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
       <div className="h-[160px] relative">
         <ImageGallery
-          onClick={() => {
-            if (!putFeedback) {
-              if (property.PHOTOS?.length > 0) {
-                setLightboxPhotos(property.PHOTOS);
-                setLightboxSlide(0);
-                setLightboxOpen(!lightboxOpen);
-              }
-            }
-          }}
           images={property?.PHOTOS}
           property={property}
           url={!putFeedback ? url : undefined}
@@ -178,58 +136,104 @@ const PropertyCard = ({
           putFeedback={putFeedback}
         />
         {deletePropertyFromPortfolio && (
-          <div className={'flex gap-2 absolute top-2 right-3 justify-center'}>
+          <div className={'flex  gap-2 absolute bottom-2 left-2 justify-center '}>
             {clientNote && clientNote.length > 0 && (
-              <div
-                role={'button'}
-                onClick={() => setOpenFeedbackModal(true)}
-                className={`pb-[3px] border border-lightBlue3 text-lightBlue3 bg-lightBlue1 h-fit px-2 pt-1 text-[10px] font-medium flex items-center justify-center cursor-pointer`}>
-                Client’s comments
-              </div>
-            )}
-          </div>
-        )}
-        {!putFeedback && (
-          <div className={'flex absolute bottom-2 px-3 justify-between items-center w-full'}>
-            <div
-              className={`flex items-center justify-center border ${
-                property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
-                  ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
-                  : 'border-cyan-800 bg-cyan-50 text-cyan-800'
-              } rounded-full h-fit px-2 py-1 text-[10px] font-medium`}>
-              {property?.STATUS}
-            </div>
-            <div className="flex items-center">
               <TooltipComponent
                 side={'bottom'}
                 align={'center'}
                 triggerElement={
-                  <a
-                    className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer"
-                    onClick={() => {
-                      navigator.clipboard.writeText(url);
-                      toast.success('Link copied to clipboard');
-                    }}>
-                    <InsertLinkOutlinedIcon className={'h-5 w-5'} />
-                  </a>
+                  <div
+                    role={'button'}
+                    onClick={() => setOpenFeedbackModal(true)}
+                    className={`rounded-full pb-[3px]  px-2 pt-1  flex items-center justify-center cursor-pointer h-7 w-7 bg-white`}>
+                    <InsertCommentIcon className={'text-gray5 h-4 w-4'} />
+                  </div>
+                }>
+                <p className={'text-[10px] text-white font-medium'}>Client's feedback</p>
+              </TooltipComponent>
+            )}
+          </div>
+        )}
+
+        {!putFeedback && (
+          <div className={'flex absolute top-2 px-3 justify-between items-center w-full'}>
+            <div
+              className={`flex items-center justify-center  ${
+                property?.STATUS?.toLowerCase() === 'sold' || property?.STATUS?.toLowerCase() === 'for sale'
+                  ? 'bg-indigo-50 border-indigo-600 text-indigo-600'
+                  : 'border-cyan-800 bg-cyan-50 text-cyan-800'
+              } rounded-full h-fit px-2 py-1 text-[11px] font-medium`}>
+              {property?.STATUS}
+            </div>
+          </div>
+        )}
+        {!putFeedback && (
+          <AnimatePresence>
+            <div className="flex items-center gap-3 absolute bottom-2  right-2">
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  isVisible && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      transition={{ ease: 'circOut' }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      role="button"
+                      onClick={() => {
+                        if (property.PHOTOS?.length > 0) {
+                          setLightboxPhotos(property.PHOTOS);
+                          setLightboxSlide(0);
+                          setLightboxOpen(!lightboxOpen);
+                        }
+                      }}
+                      className={'flex h-7 w-7  rounded-full  items-center bg-white justify-center cursor-pointer'}>
+                      <CollectionsIcon className={'text-gray5 h-4 w-4'} />
+                    </motion.div>
+                  )
+                }>
+                <p className={'text-[10px] text-white font-medium'}>View Images</p>
+              </TooltipComponent>
+              <TooltipComponent
+                side={'bottom'}
+                align={'center'}
+                triggerElement={
+                  isVisible && (
+                    <motion.a
+                      initial={{ opacity: 0 }}
+                      transition={{ ease: 'circOut' }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className=" h-7 w-7  rounded-full flex items-center bg-white justify-center cursor-pointer"
+                      onClick={() => {
+                        navigator.clipboard.writeText(url);
+                        toast.success('Link copied to clipboard');
+                      }}>
+                      <InsertLinkOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                    </motion.a>
+                  )
                 }>
                 <p className={'text-[10px] text-white font-medium'}>Copy Link</p>
               </TooltipComponent>
+
               {deletePropertyFromPortfolio && (
                 <TooltipComponent
                   side={'bottom'}
                   align={'center'}
                   triggerElement={
-                    <div
-                      role={'button'}
-                      onClick={() => deletePropertyFromPortfolio()}
-                      className={`ml-2  h-7 w-7   rounded-full flex items-center bg-white justify-center cursor-pointer`}>
-                      {isPropertyDeleteing?.loading && property?.ID == isPropertyDeleteing?.id ? (
-                        <CircularProgress className={'h-5 w-5'} />
-                      ) : (
-                        <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
-                      )}
-                    </div>
+                    isVisible && (
+                      <motion.div
+                        role={'button'}
+                        onClick={() => deletePropertyFromPortfolio()}
+                        className={` h-7 w-7  bg-red1 rounded-full flex items-center bg-red-1 justify-center cursor-pointer`}>
+                        {isPropertyDeleteing?.loading && property?.ID == isPropertyDeleteing?.id ? (
+                          <CircularProgress className={'h-5 w-5'} />
+                        ) : (
+                          <DeleteOutlinedIcon className={'h-5 w-5 text-red3'} />
+                        )}
+                      </motion.div>
+                    )
                   }>
                   <p className={'text-[10px] text-white font-medium'}>
                     {!isPropertyDeleteing?.loading ? 'Delete property' : 'Property is being deleted'}
@@ -237,7 +241,7 @@ const PropertyCard = ({
                 </TooltipComponent>
               )}
             </div>
-          </div>
+          </AnimatePresence>
         )}
       </div>
       <div
@@ -257,17 +261,17 @@ const PropertyCard = ({
             </div>
           </div>
           <div className="mb-3 flex font-medium">
-            <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-              <img className="mr-2" src={room.src} alt="" />
+            <div className="mr-3 bg-gray-100 text-gray-500 gap-[6px] flex items-center p-[6px] rounded-[222px]">
+              <img src={room.src} alt="" />
               {property?.BEDROOMS}
             </div>
-            <div className="mr-3 bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-              <img className="mr-2" src={bathroom.src} alt="" />
+            <div className="mr-3 bg-gray-100  gap-[6px] text-gray-500 flex items-center p-[6px] rounded-[222px]">
+              <img src={bathroom.src} alt="" />
               {property?.BATHROOMS}
             </div>
             {property?.SQUARE_FOOTAGE != 0 && (
-              <div className="bg-gray-100 text-gray-500 flex items-center p-[6px] rounded-[222px]">
-                <img className="mr-1" src={sqft.src} alt="" />
+              <div className="bg-gray-100 gap-[6px] text-gray-500 flex items-center p-[6px] rounded-[222px]">
+                <img src={sqft.src} alt="" />
                 {property?.SQUARE_FOOTAGE} sqft
               </div>
             )}

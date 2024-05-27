@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import moment from 'moment';
 import ResendEmail from '/public/icons/resend-email.svg';
-import { sendEmail } from '@api/email';
 import toast from 'react-hot-toast';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { TrashIcon } from '@heroicons/react/solid';
+import { PencilIcon } from '@heroicons/react/solid';
 import { render } from '@react-email/components';
 import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
 import { useSelector } from 'react-redux';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
+import { useRouter } from 'next/router';
+import { useSendEmail } from 'containers/OnlineForms/queries/mutations';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 
@@ -33,18 +33,34 @@ export const ClientCell = ({ name, email, imgSrc }) => {
   );
 };
 
-export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPublicIdentifier }) => {
-  const [isSendingEmail, setSendingEmail] = useState(false);
+export const StatusCell = (props) => {
+  const { status, form_type, client_email, client_name, id } = props;
+
+  const { hex: formPublicIdentifier } = id;
+  const { name: formTitle } = form_type;
+  const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
+
+  const onSendEmailSuccess = () => {
+    toast.success('Form resent successfully!');
+  };
+  const onSendEmailError = () => {
+    toast.error('Unable to resend email!');
+  };
+
+  const { isPending: isPendingSendEmail, mutate: mutateSendEmail } = useSendEmail({
+    onSuccess: onSendEmailSuccess,
+    onError: onSendEmailError,
+  });
 
   const sendFormEmail = async () => {
     const emailBody = {
-      to: [clientEmail, userInfo?.email],
+      to: [client_email],
       subject: formTitle ?? 'Opgny form',
       body: render(
         <OnlineFormEmailTemplate
-          email={clientEmail}
-          first_name={clientName}
+          email={client_email}
+          first_name={client_name}
           agent_first_name={userInfo?.first_name}
           agent_last_name={userInfo?.last_name}
           formLink={`${window.location.origin}/public/online-forms-sign/${formPublicIdentifier}`}
@@ -54,27 +70,44 @@ export const StatusCell = ({ status, formTitle, clientEmail, clientName, formPub
         },
       ),
     };
-    setSendingEmail(true);
-    try {
-      await sendEmail(emailBody);
-      toast.success('Form resent successfully!');
-    } catch (e) {
-      toast.error('Unable to resend email!');
-    } finally {
-      setSendingEmail(false);
-    }
+    mutateSendEmail(emailBody);
   };
+
+  const chipVariant = useMemo(() => {
+    if (status) {
+      let chip = null;
+      switch (status.toLowerCase()) {
+        case 'draft':
+          chip = VARIANT_ENUM.ERROR;
+          break;
+        case 'pending':
+          chip = VARIANT_ENUM.PURPLE;
+          break;
+        default:
+          chip = VARIANT_ENUM.SUCCESS;
+          break;
+      }
+      return chip;
+    } else return '';
+  }, [status]);
+
+  const onAgentSignForm = useCallback(() => {
+    router.push(`/online-forms/agent-sign/${formPublicIdentifier}`);
+  }, [formPublicIdentifier]);
 
   return (
     <div className="flex flex-col gap-[6px] text-[12px] font-medium">
-      <StatusChip
-        text={status.toLowerCase()}
-        variant={status.toLowerCase() === 'pending' ? VARIANT_ENUM.WARNING : VARIANT_ENUM.SUCCESS}
-      />
+      <StatusChip text={status.toLowerCase()} variant={chipVariant} />
       {status.toLowerCase() === 'pending' && (
-        <button disabled={isSendingEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
-          {!isSendingEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
+        <button disabled={isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
+          {!isPendingSendEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
           Resend Form
+        </button>
+      )}
+      {status.toLowerCase() === 'draft' && (
+        <button className=" flex gap-[6px] text-[gray7]" onClick={onAgentSignForm}>
+          <PencilIcon className="w-4 h-4 text-lightBlue6" />
+          Agent Sign
         </button>
       )}
     </div>
@@ -92,8 +125,7 @@ export const ActionsCell = ({ onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-4 h-4"
-        >
+          className="w-4 h-4">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -108,8 +140,7 @@ export const ActionsCell = ({ onDownloadPdf, onDeleteForm }) => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-4 h-4"
-        >
+          class="w-4 h-4">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -133,18 +164,6 @@ ClientCell.propTypes = {
   imgSrc: PropTypes.string,
 };
 
-StatusCell.propTypes = {
-  status: PropTypes.string,
-  formTitle: PropTypes.string,
-  clientEmail: PropTypes.string,
-  clientName: PropTypes.string,
-  formPublicIdentifier: PropTypes.string,
-};
-
 DateCell.propTypes = {
   date: PropTypes.string,
-};
-
-ActionsCell.propTypes = {
-  formId: PropTypes.string,
 };

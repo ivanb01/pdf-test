@@ -37,7 +37,12 @@ export const fetchOnlineForm = (id) => {
   return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v1/online-forms/public/${id}`);
 };
 
-export const postOnlineForm = (fields) => {
-  const { publicId, submitted_answers } = fields;
-  return axiosInstance.put(`v1/online-forms/public/${publicId}`, { submitted_answers: submitted_answers });
+export const postOnlineForm = (form) => {
+  const { public_identifier } = form;
+  return axiosInstance.put(`v1/online-forms/public/${public_identifier.hex}`, form);
+};
+
+export const postOnlineFormPublic = (form) => {
+  const { public_identifier } = form;
+  return axios.put(`${process.env.NEXT_PUBLIC_API_URL}/v1/online-forms/public/${public_identifier.hex}`, form);
 };

@@ -98,7 +98,7 @@ const PIXELS_POINTS_RATIO = 0.75;
 //editor constants (pixels)
 const EDITOR_WIDTH = 748;
 const EDITOR_FONT_SIZE = 15;
-const EDITOR_FORM_INPUT_WIDTH = 200;
+const EDITOR_FORM_INPUT_WIDTH = 250;
 const TABLE_CELL_PADDING_HORIZONTAL_EDITOR = 8;
 const EDITOR_HEADING1_SIZE = 24;
 const EDITOR_HEADING1_MARGIN_BOTTOM = 12;
@@ -137,69 +137,117 @@ export const PDF_HEADING2_MARGIN_BOTTOM = EDITOR_HEADING2_MARGIN_BOTTOM * TOTAL_
 export const FORM_DROPDOWN_OPTIONS = [
   {
     id: 1,
-    label: 'Agent',
-    name: 'agent',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+    title: 'Client fields',
+    fields: [
+      {
+        id: 1,
+        label: 'Client Full Name',
+        name: 'client_full_name',
+        inputType: 'text',
+      },
+      {
+        id: 2,
+        label: 'Client Email',
+        name: 'client_email',
+        inputType: 'text',
+      },
+      {
+        id: 3,
+        label: 'Client Phone',
+        name: 'client_phone',
+        inputType: 'phone_number',
+      },
+      {
+        id: 4,
+        label: 'Client Signature',
+        name: 'signature',
+        inputType: 'signature',
+      },
+    ],
   },
   {
     id: 2,
-    label: 'Client',
-    name: 'client',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+    title: "Agent's fields",
+    fields: [
+      {
+        id: 1,
+        label: 'Agent Full Name',
+        name: 'agent_full_name',
+        inputType: 'text',
+      },
+      {
+        id: 2,
+        label: 'Agent Signature',
+        name: 'signature',
+        inputType: 'signature',
+      },
+    ],
   },
   {
     id: 3,
-    label: 'Date',
-    name: 'date',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+    title: 'Property fields',
+    fields: [
+      {
+        id: 1,
+        label: 'Unit number',
+        name: 'unit_number',
+        inputType: 'text',
+      },
+      {
+        id: 2,
+        label: 'Price',
+        name: 'price',
+        inputType: 'money',
+      },
+      {
+        id: 3,
+        label: 'Common Charges',
+        name: 'common_charges',
+        inputType: 'money',
+      },
+      {
+        id: 3,
+        label: 'Real Estate Taxes',
+        name: 'real_estate_taxes',
+        inputType: 'money',
+      },
+    ],
   },
   {
     id: 4,
-    label: 'Agent Signature',
-    name: 'signature',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 5,
-    label: 'Client Signature',
-    name: 'signature',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 6,
-    label: 'Email',
-    name: 'email',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 7,
-    label: 'Address',
-    name: 'address',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 8,
-    label: 'Price',
-    name: 'price',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 9,
-    label: 'City',
-    name: 'city',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 10,
-    label: 'Commission',
-    name: 'commission',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
-  },
-  {
-    id: 11,
-    label: 'Number',
-    name: 'number',
-    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+    title: 'Contract terms',
+    fields: [
+      {
+        id: 1,
+        label: "Commision to Seller's Agent",
+        name: 'seller_commision',
+        inputType: 'percentage',
+      },
+      {
+        id: 2,
+        label: "Commision to Buyer's Agent",
+        name: 'buyer_commision',
+        inputType: 'percentage',
+      },
+      {
+        id: 3,
+        label: 'Expiration Date',
+        name: 'expiration_date',
+        inputType: 'date',
+      },
+      {
+        id: 3,
+        label: 'Relationship Type',
+        name: 'relationship_type',
+        inputType: 'text',
+      },
+      {
+        id: 3,
+        label: 'Signed Date',
+        name: 'date',
+        inputType: 'date',
+      },
+    ],
   },
 ];
 

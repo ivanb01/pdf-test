@@ -3,18 +3,16 @@ import Overlay from 'components/shared/overlay';
 import Dropdown from '@components/shared/dropdown';
 import PropTypes from 'prop-types';
 import ClientsMultiSelect from 'containers/OnlineForms/ClientsMultiSelect';
-import { useFetchOnlineFormsTypes, useFetchOnlineFormsPaginated } from '../queries/queries';
-import { useAssignForm, useSendEmail } from '../queries/mutations';
+import { useFetchOnlineFormsTypes } from '../queries/queries';
+import { useAssignForm } from '../queries/mutations';
 import { useFormik } from 'formik';
 import { array, object, string } from 'yup';
 import toast from 'react-hot-toast';
-import OnlineFormEmailTemplate from '../OnlineFormEmailTemplate';
-import { useSelector } from 'react-redux';
-import { render } from '@react-email/components';
+import { useRouter } from 'next/router';
 
 const SendForm = ({ params, onCancel, currentForm }) => {
+  const router = useRouter();
   const { data: formsTypesData } = useFetchOnlineFormsTypes();
-  const { refetch: formsRefetch } = useFetchOnlineFormsPaginated(params);
 
   const SendFormSchema = object().shape({
     form_type_id: string().required('Form name is required.'),
@@ -33,33 +31,14 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     },
   });
 
-  const { mutate: mutateSendEmail } = useSendEmail();
-  const userInfo = useSelector((state) => state.global.userInfo);
-
-  const onAssignFormSuccess = (data, variables) => {
-    const { public_identifier } = data?.data;
-    variables.clients.map((client) => {
-      const emailBody = {
-        to: [client.email, userInfo?.email],
-        subject: data?.data?.form_type.name ?? 'Opgny form',
-        body: render(
-          <OnlineFormEmailTemplate
-            email={client?.email}
-            first_name={client?.first_name}
-            agent_first_name={userInfo?.first_name}
-            agent_last_name={userInfo?.last_name}
-            formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier.hex}`}
-          />,
-          {
-            pretty: true,
-          },
-        ),
-      };
-      return mutateSendEmail(emailBody);
-    });
-    onCancel(false);
-    toast.success('Form sent successfully!');
-    formsRefetch();
+  const onAssignFormSuccess = (data) => {
+    router.push(
+      {
+        pathname: `/online-forms/agent-sign/${data.data.public_identifier.hex}`,
+        query: { params: JSON.stringify(params) },
+      },
+      `/online-forms/agent-sign/${data.data.public_identifier.hex}`,
+    );
   };
   const onAssignFormError = () => {
     toast.error('Unable to assign form to a user!');

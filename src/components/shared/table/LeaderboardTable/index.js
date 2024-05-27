@@ -91,6 +91,7 @@ const LeaderboardTable = ({ data, tableFor }) => {
               <ClientHealth
                 healthyCount={dataItem.healthy_communication}
                 unhealthyCount={dataItem.unhealthy_communication}
+                percentage={dataItem.percentage_healthy_clients}
               />
             </td>
             <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
@@ -103,7 +104,7 @@ const LeaderboardTable = ({ data, tableFor }) => {
             </td>
             <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
               <div className="text-gray7 font-medium">
-                {calculateClosedClients(dataItem.clients_closed, dataItem.total_clients)}%
+                {dataItem.conversion_percentage}%
               </div>
             </td>
             <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">

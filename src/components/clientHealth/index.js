@@ -1,17 +1,17 @@
 import React from 'react';
 import { ArrowNarrowUpIcon, ArrowNarrowDownIcon } from '@heroicons/react/solid';
-const ClientHealth = ({ healthyCount, unhealthyCount }) => {
+const ClientHealth = ({ healthyCount, unhealthyCount, percentage }) => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
 
-  const getPercentage = () => {
-    let totalValue = healthyCount + unhealthyCount;
-    if (!Math.round((100 * healthyCount) / totalValue)) {
-      return 0;
-    }
-    return Math.round((100 * healthyCount) / totalValue);
-  };
+  // const getPercentage = () => {
+  //   let totalValue = healthyCount + unhealthyCount;
+  //   if (!Math.round((100 * healthyCount) / totalValue)) {
+  //     return 0;
+  //   }
+  //   return Math.round((100 * healthyCount) / totalValue);
+  // };
   // bg-red-100 text-red-800
   return (
     <div>
@@ -43,8 +43,8 @@ const ClientHealth = ({ healthyCount, unhealthyCount }) => {
           {unhealthyCount}
         </div>
       </div>
-      <span className={`italic text-xs ${getPercentage() > 80 ? 'text-[#059669]' : 'text-red-500'}`}>
-        {getPercentage()}% healthy
+      <span className={`italic text-xs ${percentage > 80 ? 'text-[#059669]' : 'text-red-500'}`}>
+        {percentage}% healthy
       </span>
     </div>
   );

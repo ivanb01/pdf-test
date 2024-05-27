@@ -6,6 +6,7 @@ import {
   deleteForm,
   postOnlineForm,
   updateOnlineFormType,
+  postOnlineFormPublic,
 } from '@api/onlineForms';
 import { sendEmail } from '@api/email';
 
@@ -55,8 +56,16 @@ export const useDeleteForm = (options) => {
 
 export const usePostOnlineForm = (options) => {
   return useMutation({
-    mutationFn: (fields) => {
-      return postOnlineForm(fields);
+    mutationFn: (form) => {
+      return postOnlineForm(form);
+    },
+    ...options,
+  });
+};
+export const usePostOnlineFormPublic = (options) => {
+  return useMutation({
+    mutationFn: (form) => {
+      return postOnlineFormPublic(form);
     },
     ...options,
   });

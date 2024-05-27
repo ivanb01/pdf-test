@@ -42,6 +42,7 @@ const Input = forwardRef(
       secondaryLabel,
       onSignatureEnd,
       onSignatureClear,
+      initialSignatureData,
       hidePhonePrefix,
       disabled,
       ...props
@@ -410,20 +411,33 @@ const Input = forwardRef(
       );
     };
     const signatureInput = () => {
-      const sigCanvas = useRef({});
+      const sigCanvas = useRef(null);
+      const firstRender = useRef(true);
 
-      const className = clsx('border	w-full max-h-[170px] rounded-md', error && errorClasses, className);
+      const clear = () => {
+        onSignatureClear();
+        sigCanvas.current.clear();
+      };
+
+      useEffect(() => {
+        if (sigCanvas && initialSignatureData) {
+          if (firstRender) {
+            sigCanvas.current.fromDataURL(initialSignatureData.untrimmedCanvas);
+            firstRender.current = false;
+          }
+        }
+      }, [initialSignatureData]);
+
+      const className = clsx('border w-full max-h-[170px] rounded-md', error && errorClasses, className);
       const onEnd = () => {
         onSignatureEnd({
           imageData: sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'),
           height: sigCanvas.current.getTrimmedCanvas().height,
           width: sigCanvas.current.getTrimmedCanvas().width,
+          untrimmedCanvas: sigCanvas.current.getCanvas().toDataURL('image/png'),
         });
       };
-      const clear = () => {
-        onSignatureClear();
-        sigCanvas.current.clear();
-      };
+
       return (
         <div className="relative">
           <SignaturePad

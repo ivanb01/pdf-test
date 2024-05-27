@@ -51,16 +51,14 @@ const SelectedProperty = ({ property, setSelected, selected }) => {
           <div
             class={`${
               selected ? 'bg-lightBlue3' : 'border border-gray-300'
-            } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}
-          >
+            } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
             {selected && (
               <svg
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                 version="1"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 48 48"
-                enable-background="new 0 0 48 48"
-              >
+                enable-background="new 0 0 48 48">
                 <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
               </svg>
             )}
@@ -96,7 +94,6 @@ const PropertiesSlideOver = ({
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const [email, setEmail] = useState();
   useEffect(() => {
-    console.log(sendMethod);
     if (email) {
       handleAfterClientAdd(email);
     }
@@ -125,6 +122,17 @@ const PropertiesSlideOver = ({
   };
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
+
+  useEffect(() => {
+    if (document.querySelector('.side-overlay-wrapper')) {
+      if (propertiesSent) {
+        document.querySelector('.side-overlay-wrapper').classList.add('justify-center');
+      } else {
+        document.querySelector('.side-overlay-wrapper').classList.remove('justify-center');
+      }
+    }
+  }, [propertiesSent]);
+
   return (
     <>
       <SlideOver
@@ -135,14 +143,14 @@ const PropertiesSlideOver = ({
         buttons={
           propertiesSent ? null : (
             <div
-              className={`flex items-center ${previewMode || sendMethod === 4 ? 'justify-end' : 'justify-between'}  w-[100%]`}
-            >
+              className={`flex items-center ${
+                previewMode || sendMethod === 4 ? 'justify-end' : 'justify-between'
+              }  w-[100%]`}>
               {!previewMode && sendMethod !== 4 && (
                 <div
                   className={'flex gap-[6px] items-center justify-center text-gray8 cursor-pointer'}
                   role={'button'}
-                  onClick={() => setPreviewMode(true)}
-                >
+                  onClick={() => setPreviewMode(true)}>
                   <RemoveRedEyeOutlinedIcon className={'h-[18px] w-[18px]'} />
                   <p className={'text-sm leading-5 font-semibold'}>Preview</p>
                 </div>
@@ -189,8 +197,7 @@ const PropertiesSlideOver = ({
               )}
             </div>
           )
-        }
-      >
+        }>
         {propertiesSent ? (
           <div className="text-center">
             <lottie-player
@@ -198,8 +205,7 @@ const PropertiesSlideOver = ({
               background="transparent"
               speed="1"
               style={{ height: '200px' }}
-              autoplay
-            ></lottie-player>
+              autoplay></lottie-player>
             <div className="text-gray7 font-semibold text-[18px] -mt-7">
               {sendMethod !== 4
                 ? 'Properties have been successfully sent to your clients!'
@@ -228,8 +234,7 @@ const PropertiesSlideOver = ({
               <button
                 type="button"
                 className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
-                onClick={() => setOpen(false)}
-              >
+                onClick={() => setOpen(false)}>
                 <span className="sr-only">Close panel</span>
                 <Close className="h-6 w-6" aria-hidden="true" />
               </button>
@@ -254,8 +259,7 @@ const PropertiesSlideOver = ({
                           onClick={() => {
                             setOpen(false);
                             setShowAddContactOverlay(true);
-                          }}
-                        >
+                          }}>
                           Add Client
                         </span>
                       </p>
@@ -299,8 +303,7 @@ const PropertiesSlideOver = ({
                           className={
                             ' text-sm leading-5 font-medium text-gray5 ellipsis-email xl:min-w-[230px] lg:w-[130px]'
                           }
-                          title={contact.email}
-                        >
+                          title={contact.email}>
                           {contact.email}
                         </h6>
                       </div>
@@ -312,8 +315,7 @@ const PropertiesSlideOver = ({
                           setSelectedContacts((prevSelected) =>
                             prevSelected.filter((prevContact) => prevContact.value !== contact.value),
                           )
-                        }
-                      >
+                        }>
                         Remove
                       </button>
                     </div>
@@ -325,8 +327,7 @@ const PropertiesSlideOver = ({
               <div className="font-semibold text-gray7 text-[20px]">Properties</div>
               <a
                 className={`cursor-pointer transition-all ${showProperties ? '' : 'rotate-180'}`}
-                onClick={() => setShowProperties(!showProperties)}
-              >
+                onClick={() => setShowProperties(!showProperties)}>
                 <img src={chevronDown.src} />
               </a>
             </div>
@@ -358,8 +359,7 @@ const PropertiesSlideOver = ({
               <button
                 type="button"
                 className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
-                onClick={() => setOpen(false)}
-              >
+                onClick={() => setOpen(false)}>
                 <span className="sr-only">Close panel</span>
                 <Close className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -397,8 +397,7 @@ const PropertiesSlideOver = ({
               <div
                 className={
                   'p-4 flex items-start gap-[44px] shadow-lg flex-col border border-gray1 bg-white flex-1 rounded-[8px] '
-                }
-              >
+                }>
                 <div className={'h-[58px] w-[58px] rounded-full bg-gray1 flex items-center justify-center'}>
                   <PersonOutlineOutlinedIcon className={'h-6 w-6 text-[#0D9488]'} />
                 </div>
@@ -412,8 +411,7 @@ const PropertiesSlideOver = ({
               <div
                 className={
                   'p-4 flex items-start gap-[44px] shadow-lg flex-col flex-1  border border-gray1 bg-white rounded-[8px]'
-                }
-              >
+                }>
                 <div className={'h-[58px] w-[58px] rounded-full bg-gray1 flex items-center justify-center'}>
                   <CorporateFareOutlinedIcon className={'h-6 w-6 text-[#2563EB]'} />
                 </div>

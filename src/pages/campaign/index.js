@@ -4,13 +4,15 @@ import Tabs from '@components/shared/tabs';
 import { useEffect, useRef, useState } from 'react';
 import CampaignWrapper from '@components/campaign/CampaignWrapper';
 import CustomCampaign from '@components/campaign/CustomCampaign';
-import { getCampaignsByCategory } from '@api/campaign';
+import { getCampaignsByCategory, getEmailTemplates } from '@api/campaign';
 import Loader from '@components/shared/loader';
 import useElementInView from '../../hooks/useElementInScreen';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 import { clientOptions } from '@global/variables';
+import EmailTemplates from '../settings/email-templates';
+import EmailTemplatesInCampaign from '@components/campaign/EmailTemplatesInCampaign';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -141,6 +143,29 @@ const index = () => {
       ),
     },
   ];
+  const [emailTemplates, setEmailTemplates] = useState();
+  const [loadingData, setLoadingData] = useState(true);
+
+  const fetchEmailTemplates = async () => {
+    try {
+      const emailResponse = await getEmailTemplates();
+      setEmailTemplates(emailResponse.data.data);
+      setLoadingData(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchEmailTemplates();
+  }, []);
+  const extraTabs = [
+    {
+      id: 6,
+      name: 'Email Templates',
+      href: '#',
+      content: <EmailTemplatesInCampaign emailTemplates={emailTemplates} loadingData={loadingData} />,
+    },
+  ];
   const contacts = useSelector((state) => state.contacts.data.data);
 
   useEffect(() => {
@@ -166,8 +191,7 @@ const index = () => {
       </div>
       <div
         className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-        style={{ height: '230px' }}
-      >
+        style={{ height: '230px' }}>
         <h3 className={'text-3xl leading-9 font-semibold text-white'}>
           Effortless Client and Contact Campaign Coordination
         </h3>
@@ -180,6 +204,7 @@ const index = () => {
       <div className={'w-100 flex items-center'}>
         <Tabs
           loadingTabs={false}
+          extraTabs={emailTemplates?.length > 0 ? extraTabs : undefined}
           current={current}
           setCurrent={setCurrent}
           tabs={localTabs}
@@ -190,7 +215,7 @@ const index = () => {
           triggerCreateCustomCampaign={() => setShowCreateCampaign(true)}
         />
       </div>
-      <CustomCampaign onClick={() => setShowCreateCampaign(true)} />
+      {current !== 6 && <CustomCampaign onClick={() => setShowCreateCampaign(true)} />}
     </div>
   );
 };

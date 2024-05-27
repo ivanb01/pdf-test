@@ -65,11 +65,6 @@ const index = () => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
-      if (['GmailAI', 'Gmail'].includes(contactData?.import_source) && contactData?.approved_ai !== true) {
-        setShowReviewOverlay(true);
-      } else {
-        setShowReviewOverlay(false);
-      }
       getActivityLog();
       getNotes();
       getCampaigns();
@@ -247,7 +242,7 @@ const index = () => {
         <div className={'sticky z-[9] top-0'}>
           <MainMenu />
         </div>
-        {showReviewOverlay && (
+        {['GmailAI', 'Gmail'].includes(contact?.import_source) && contact?.approved_ai !== true && (
           <ReviewContact
             showToast
             hideCloseButton

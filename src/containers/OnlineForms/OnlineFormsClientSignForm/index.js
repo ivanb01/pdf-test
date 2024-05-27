@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFetchOnlineForm } from '../queries/queries';
-import { usePostOnlineForm } from '../queries/mutations';
+import { usePostOnlineFormPublic } from '../queries/mutations';
 import CircularProgress from '@mui/material/CircularProgress';
 import Input from '@components/shared/input';
 import { useFormik } from 'formik';
@@ -12,6 +12,42 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import moment from 'moment';
+import * as Yup from 'yup';
+
+const createValidationSchema = (fields) => {
+  return Yup.object().shape({
+    ...Object.entries(fields).reduce((schema, [key, value]) => {
+      if (value.formType === 'signature') {
+        return {
+          ...schema,
+          [key]: Yup.object().shape({
+            formType: Yup.string(),
+            key: Yup.string(),
+            textValue: Yup.string(),
+            type: Yup.string(),
+
+            answer: Yup.object().shape({
+              height: Yup.number(),
+              width: Yup.number(),
+              imageData: Yup.string().required(`Signature is a required field!`),
+              untrimmedCanvas: Yup.string(),
+            }),
+          }),
+        };
+      } else
+        return {
+          ...schema,
+          [key]: Yup.object().shape({
+            answer: Yup.string().required(`${value.textValue} is a required field!`),
+            formType: Yup.string(),
+            key: Yup.string(),
+            textValue: Yup.string(),
+            type: Yup.string(),
+          }),
+        };
+    }, {}),
+  });
+};
 
 const OnlineFormsSignForm = () => {
   const router = useRouter();
@@ -50,7 +86,9 @@ const OnlineFormsSignForm = () => {
           return {
             [key]: {
               ...onlineFormData?.data?.fields[key],
-              answer: '',
+              answer: onlineFormData?.data?.submitted_answers
+                ? onlineFormData?.data?.submitted_answers[key].answer
+                : '',
             },
           };
         }),
@@ -58,20 +96,29 @@ const OnlineFormsSignForm = () => {
     } else return {};
   }, [onlineFormData]);
 
+  const ValidationSchema = useMemo(() => {
+    return createValidationSchema(initialFormValue);
+  }, [initialFormValue]);
+
   const {
     error: postFormError,
     isPending: postFormPending,
     isSuccess: isPostFormSuccess,
     mutate: mutatePostForm,
-  } = usePostOnlineForm();
+  } = usePostOnlineFormPublic();
 
-  const { values, setFieldValue, handleSubmit } = useFormik({
+  const { touched, errors, values, setFieldValue, handleSubmit } = useFormik({
     validateOnMount: true,
     initialValues: {
       ...initialFormValue,
     },
+    validationSchema: ValidationSchema,
     onSubmit: (values) => {
-      mutatePostForm({ publicId, submitted_answers: values });
+      mutatePostForm({
+        ...onlineFormData.data,
+        submitted_answers: values,
+        status: 'SIGNED',
+      });
     },
     enableReinitialize: true,
   });
@@ -95,6 +142,8 @@ const OnlineFormsSignForm = () => {
   const onDownloadPdf = async () => {
     await downloadPdf(onlineFormData?.data?.content, false, values);
   };
+
+  console.log(values);
 
   if (onlineFormIsSuccess && !Object.keys(onlineFormData?.data.content).length) {
     return (
@@ -144,6 +193,7 @@ const OnlineFormsSignForm = () => {
       <div className="w-full max-w-[1248px] overflow-y-scroll">
         <div className="grid sm:grid-cols-2 p-6 gap-4">
           {formattedTextFields?.map((field) => {
+            const fieldId = field.id;
             return (
               <div key={field.id} className={'w-full sm:max-w-[400px]'}>
                 <Input
@@ -159,7 +209,9 @@ const OnlineFormsSignForm = () => {
                   }}
                   type={field.formType}
                   label={field.textValue}
-                  // error={'error'}
+                  value={values[fieldId]?.answer}
+                  error={errors[fieldId]?.answer && touched[fieldId]?.answer}
+                  errorText={errors[fieldId]?.answer}
                 />
               </div>
             );
@@ -167,6 +219,8 @@ const OnlineFormsSignForm = () => {
         </div>
         <div className="grid sm:grid-cols-2 p-6 gap-4">
           {formattedSignatureFields?.map((field) => {
+            const fieldId = field.id;
+
             return (
               <div key={field.id} className={'w-full sm:max-w-[400px]'}>
                 <Input
@@ -180,7 +234,9 @@ const OnlineFormsSignForm = () => {
                   }}
                   type={field.formType}
                   label={field.textValue}
-                  // error={'error'}
+                  initialSignatureData={values[fieldId]?.answer}
+                  error={errors[fieldId]?.answer.imageData && touched[fieldId]?.answer}
+                  errorText={errors[fieldId]?.answer.imageData}
                 />
               </div>
             );
@@ -197,8 +253,7 @@ const OnlineFormsSignForm = () => {
       <div className="absolute w-full flex h-[70px] justify-between items-center gap-[12px] px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)] ronded-b-lg bottom-0 bg-white">
         <button
           onClick={onDownloadPdf}
-          className="flex items-center gap-[4px] text-lightBlue3 leading-5 text-sm	font-medium"
-        >
+          className="flex items-center gap-[4px] text-lightBlue3 leading-5 text-sm	font-medium">
           <SaveAltIcon className="w-[20px] h-[20px]" />
           Download PDF
         </button>

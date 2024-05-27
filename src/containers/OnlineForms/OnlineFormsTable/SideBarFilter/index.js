@@ -25,6 +25,7 @@ const SideBarFilter = ({
   handleEditTemplate,
   handleDeleteTemplate,
   isDeletingTemplate,
+  onRestoreFormTemplate,
 }) => {
   const [hoveredFilterId, setHoveredFilterId] = useState(null);
 
@@ -80,6 +81,7 @@ const SideBarFilter = ({
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
             hideActionsMenu={true}
+            type={'all-forms'}
           />
         </li>
         <li>
@@ -93,11 +95,12 @@ const SideBarFilter = ({
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
             hideActionsMenu={false}
+            type={'default-forms'}
           />
         </li>
         <li>
           <TypesAccordionElement
-            title={'Forms created by me'}
+            title={'Created by me'}
             types={sortedNonDefaultTypes}
             hoveredFilterId={hoveredFilterId}
             setHoveredFilterId={setHoveredFilterId}
@@ -108,6 +111,7 @@ const SideBarFilter = ({
             hideActionsMenu={false}
             handleDeleteTemplate={handleDeleteTemplate}
             isDeletingTemplate={isDeletingTemplate}
+            type={'my-forms'}
           />
         </li>
         <li>
@@ -123,6 +127,8 @@ const SideBarFilter = ({
             hideActionsMenu={false}
             handleDeleteTemplate={() => {}}
             isDeletingTemplate={false}
+            type={'trash-forms'}
+            onRestoreFormTemplate={onRestoreFormTemplate}
           />
         </li>
       </ul>
