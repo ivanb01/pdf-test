@@ -152,7 +152,7 @@ const index = () => {
                 {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `Marked as Correct!`}
               </h1>
             </div>
-            <div className='flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100'>
+            <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
               <button
                 onClick={() => {
                   toast.dismiss(t.id);
@@ -167,7 +167,7 @@ const index = () => {
             </div>
           </div>
         ),
-        { duration: 0, position:'top-left' },
+        { duration: 0 },
       );
       const removeItemsFromTable = ai_unapprovedContacts.filter((contact) => contact.id !== data.id);
       dispatch(setAIUnApprovedContacts(removeItemsFromTable));
@@ -178,8 +178,7 @@ const index = () => {
       if (checkbox.current) {
         checkbox.current.indeterminate = false;
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const bulkUpdate = (action) => {
@@ -211,35 +210,33 @@ const index = () => {
         : `${selectedPeople.length} contacts Marked as Correct!`;
     {
       selectedPeople.length > 0 &&
-      toast.custom(
-        (t) => (
-          <div
-            className={`${
-              t.visible ? 'animate-enter' : 'animate-leave'
-            } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}
-          >
-            <div className='flex gap-2 p-4 word-break'>
-              <CheckCircleIcon className={'text-green-500'} />
-              <h1 className={'text-sm leading-5 font-medium'}>{toastMessage}</h1>
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
+              <div className="flex gap-2 p-4 word-break">
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>{toastMessage}</h1>
+              </div>
+              <div className="flex rounded-tr-lg rounded-br-lg  p-4 bg-gray-600 text-gray-100">
+                <button
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    bulkUpdateContacts({ contacts: restoredData }).then(() => dispatch(setRefetchData(true)));
+                    // updateContactsLocally(action, restoredData);
+                    setTotalContacts(allData.length);
+                    dispatch(setAIUnApprovedContacts(allData));
+                  }}
+                  className="w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium">
+                  Undo
+                </button>
+              </div>
             </div>
-            <div className='flex rounded-tr-lg rounded-br-lg  p-4 bg-gray-600 text-gray-100'>
-              <button
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  bulkUpdateContacts({ contacts: restoredData }).then(() => dispatch(setRefetchData(true)));
-                  // updateContactsLocally(action, restoredData);
-                  setTotalContacts(allData.length);
-                  dispatch(setAIUnApprovedContacts(allData));
-                }}
-                className='w-full border border-transparent rounded-none rounded-r-lg flex items-center justify-center text-sm leading-5 font-medium font-medium'
-              >
-                Undo
-              </button>
-            </div>
-          </div>
-        ),
-        { duration: 5000 },
-      );
+          ),
+          { duration: 5000 },
+        );
     }
     setSelectedPeople([]);
     if (checkbox.current) {
@@ -273,16 +270,13 @@ const index = () => {
 
   useEffect(() => {
     function isInUnapprovedContacts(person) {
-      return ai_unapproved_contacts_redux.some(contact => contact.id === person.id); // Assuming id is the unique identifier
+      return ai_unapprovedContacts.some((contact) => contact.id === person.id);
     }
 
-// Filter selectedPeople array to keep only those elements which are also in ai_unapproved_contacts_redux
-    const filteredSelectedPeople = selectedPeople.filter(person => isInUnapprovedContacts(person));
+    const filteredSelectedPeople = selectedPeople.filter((person) => isInUnapprovedContacts(person));
+    setSelectedPeople(filteredSelectedPeople);
+  }, [ai_unapprovedContacts, ai_unapproved_contacts_redux, checked]);
 
-// Now filteredSelectedPeople contains only those elements which are present in both arrays
-    setSelectedPeople(filteredSelectedPeople)
-    console.log(selectedPeople, 'selectedPeople', ai_unapproved_contacts_redux, 'ai_unapproved_contacts_redux');
-  }, [ ai_unapproved_contacts_redux]);
   useEffect(() => {
     dispatch(setAIUnApprovedContacts([...items]));
   }, [items]);
@@ -293,21 +287,20 @@ const index = () => {
     <div>
       <MainMenu />
       {globalLoading === false && offset === 0 ? (
-        <div style={{ height: 'calc(100vh - 68px)' }} className='relative'>
+        <div style={{ height: 'calc(100vh - 68px)' }} className="relative">
           <Loader />
         </div>
       ) : ai_unapproved_contacts_redux.length > 0 ? (
         <>
-          <div className='p-6 text-gray-900 font-medium text-base flex justify-between items-center'>
+          <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
             <div>
-              <div
-                className=' p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block'>
+              <div className=" p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
                 {totalContacts ? totalContacts : 0} contacts
               </div>
               from Smart Synced Contacts need to be reviewed
             </div>
             <div>
-              <CloseRounded className='cursor-pointer' onClick={() => router.push('/contacts/clients')} />
+              <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
             </div>
             {/*<div className={'max-w-[500px] min-w-[200px]'}>*/}
             {/*  <DropdownWithSearch*/}
@@ -329,194 +322,178 @@ const index = () => {
           </div>
           <div style={{ overflow: 'auto', height: '79vh', width: '100vw' }} ref={rootRef}>
             <table className={'w-full'}>
-              <thead className='bg-gray-50'>
-              <tr>
-                <th
-                  scope='col'
-                  className='h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]'
-                >
-                  <input
-                    type='checkbox'
-                    className='h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3'
-                    ref={checkbox && checkbox}
-                    checked={checked}
-                    onChange={toggleAll}
-                  />
-                  Contact
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500'
-                >
-                  Type
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500'
-                >
-                  Status
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 '
-                >
-                  Email Summary
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]'
-                >
-                  Imported Date
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500'
-                >
-                  Actions
-                </th>
-                <th
-                  scope='col'
-                  className='px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500'
-                ></th>
-              </tr>
-              </thead>
-              <tbody className=' bg-white'>
-              {ai_unapprovedContacts?.map((dataItem, index) => (
-                <tr
-                  key={dataItem.index}
-                  className='hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200'
-                  // onClick={(event) => handleClickRow(contact, event)}
-                  onClick={(e) => {
-                    if (e.target.type === 'checkbox') return;
-                    handleCardEdit(dataItem);
-                  }}
-                >
-                  {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
-                  <td className='whitespace-nowrap py-4 text-sm pl-6 flex items-center'>
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="h-[56px] py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center w-[300px]">
                     <input
-                      type='checkbox'
-                      className='mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3'
-                      value={dataItem.email}
-                      checked={selectedPeople?.includes(dataItem)}
-                      onChange={(e) =>
-                        setSelectedPeople(
-                          e.target.checked
-                            ? [...selectedPeople, dataItem]
-                            : selectedPeople.filter((p) => p !== dataItem),
-                        )
-                      }
+                      type="checkbox"
+                      className="h-4 w-4 mr-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                      ref={checkbox && checkbox}
+                      checked={checked}
+                      onChange={toggleAll}
                     />
-                    <ContactInfo
-                      data={{
-                        // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
-                        name: `${dataItem.first_name} ${dataItem.last_name}`,
-                        id: dataItem.id,
-                        email: dataItem.email,
-                        // image: dataItem.profile_image_path,
-                      }}
-                      maxWidth={'300px'}
-
-                      // handleSelect={(e, dataItem) =>
-                      //   handleSelectContact(e, dataItem)
-                      // }
-                      // handleAction={(id, action) => handleAction(id, action)}
-                    />
-                  </td>
-                  <td className='max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status'>
-                    <Chip className='break-words' typeStyle>
-                      {dataItem?.category_2}
-                    </Chip>
-                  </td>
-                  <td className='whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500'>
-                    <Chip
-                      statusStyle
-                      className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}
-                    >
-                      {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
-                    </Chip>
-                  </td>
-                  <td className=' text-left px-3 py-4 text-sm text-gray-500 type-and-status'>
-                    <div className=' flex items-center break-all'>
-                      {dataItem.summary && (
-                        <a
-                          href={dataItem.email_link}
-                          onClick={(e) => e.stopPropagation()}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Launch className='h-5 w-5 text-blue-500 mr-2' />
-                        </a>
-                      )}
-                      {dataItem.summary ? <div className='email-summary-styling'>{dataItem.summary}</div> : '-'}
-                    </div>
-                  </td>
-                  <td className=' text-left px-3 py-4 text-sm text-gray-500 type-and-status'>
-                    {formatDateStringMDY(dataItem.created_at)}
-                  </td>
-                  <td className='whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500'>
-                    <div className='flex items-center justify-center gap-6'>
-                      <TooltipComponent
-                        side={'top'}
-                        align='center'
-                        triggerElement={
-                          <div
-                            role={'button'}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAction('approve', dataItem);
-                            }}
-                            className='transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative'
-                          >
-                            <CheckCircle
-                              id={'edit-contact-icon-' + dataItem.id}
-                              className='group-hover/check:text-white text-[16px]'
-                            />
-                          </div>
-                        }
-                      >
-                        <p className=' text-xs font-medium text-white'>Mark as Correct</p>
-                      </TooltipComponent>
-                      <TooltipComponent
-                        side={'top'}
-                        align='center'
-                        triggerElement={
-                          <div
-                            role={'button'}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCardEdit(dataItem);
-                            }}
-                            className=' h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative'
-                          >
-                            <Edit className='text-gray3 w-4 h-4' />
-                          </div>
-                        }
-                      >
-                        <p className=' text-xs font-medium text-white'> Edit Contact</p>
-                      </TooltipComponent>
-                      <TooltipComponent
-                        side={'top'}
-                        align='center'
-                        triggerElement={
-                          <div
-                            role={'button'}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAction('delete', dataItem);
-                            }}
-                            className=' transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative'
-                          >
-                            <Delete className='group-hover/delete:text-white text-[16px]' />
-                          </div>
-                        }
-                      >
-                        <p className=' text-xs font-medium text-white'> Move to trash</p>
-                      </TooltipComponent>
-                    </div>
-                  </td>
-                  <td className='pr-1'></td>
+                    Contact
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
+                    Email Summary
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[150px]">
+                    Imported Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Actions
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 pr-1 text-center text-xs font-medium uppercase tracking-wide text-gray-500"></th>
                 </tr>
-              ))}
+              </thead>
+              <tbody className=" bg-white">
+                {ai_unapprovedContacts?.map((dataItem, index) => (
+                  <tr
+                    key={dataItem.index}
+                    className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
+                    // onClick={(event) => handleClickRow(contact, event)}
+                    onClick={(e) => {
+                      if (e.target.type === 'checkbox') return;
+                      handleCardEdit(dataItem);
+                    }}>
+                    {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
+                    <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
+                      <input
+                        type="checkbox"
+                        className="mr-4 h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                        value={dataItem.email}
+                        checked={selectedPeople?.includes(dataItem)}
+                        onChange={(e) =>
+                          setSelectedPeople(
+                            e.target.checked
+                              ? [...selectedPeople, dataItem]
+                              : selectedPeople.filter((p) => p !== dataItem),
+                          )
+                        }
+                      />
+                      <ContactInfo
+                        data={{
+                          // name: `${dataItem.first_name + ' ' + dataItem.last_name}`,
+                          name: `${dataItem.first_name} ${dataItem.last_name}`,
+                          id: dataItem.id,
+                          email: dataItem.email,
+                          // image: dataItem.profile_image_path,
+                        }}
+                        maxWidth={'300px'}
+
+                        // handleSelect={(e, dataItem) =>
+                        //   handleSelectContact(e, dataItem)
+                        // }
+                        // handleAction={(id, action) => handleAction(id, action)}
+                      />
+                    </td>
+                    <td className="max-w-[150px] text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                      <Chip className="break-words" typeStyle>
+                        {dataItem?.category_2}
+                      </Chip>
+                    </td>
+                    <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                      <Chip
+                        statusStyle
+                        className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
+                        {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
+                      </Chip>
+                    </td>
+                    <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                      <div className=" flex items-center break-all">
+                        {dataItem.summary && (
+                          <a
+                            href={dataItem.email_link}
+                            onClick={(e) => e.stopPropagation()}
+                            target="_blank"
+                            rel="noreferrer">
+                            <Launch className="h-5 w-5 text-blue-500 mr-2" />
+                          </a>
+                        )}
+                        {dataItem.summary ? <div className="email-summary-styling">{dataItem.summary}</div> : '-'}
+                      </div>
+                    </td>
+                    <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
+                      {formatDateStringMDY(dataItem.created_at)}
+                    </td>
+                    <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+                      <div className="flex items-center justify-center gap-6">
+                        <TooltipComponent
+                          side={'top'}
+                          align="center"
+                          triggerElement={
+                            <div
+                              role={'button'}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAction('approve', dataItem);
+                              }}
+                              className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
+                              <CheckCircle
+                                id={'edit-contact-icon-' + dataItem.id}
+                                className="group-hover/check:text-white text-[16px]"
+                              />
+                            </div>
+                          }>
+                          <p className=" text-xs font-medium text-white">Mark as Correct</p>
+                        </TooltipComponent>
+                        <TooltipComponent
+                          side={'top'}
+                          align="center"
+                          triggerElement={
+                            <div
+                              role={'button'}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCardEdit(dataItem);
+                              }}
+                              className=" h-6 w-6 cursor-pointer rounded-full bg-gray1 hover:bg-gray2 flex items-center justify-center relative">
+                              <Edit className="text-gray3 w-4 h-4" />
+                            </div>
+                          }>
+                          <p className=" text-xs font-medium text-white"> Edit Contact</p>
+                        </TooltipComponent>
+                        <TooltipComponent
+                          side={'top'}
+                          align="center"
+                          triggerElement={
+                            <div
+                              role={'button'}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAction('delete', dataItem);
+                              }}
+                              className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
+                              <Delete className="group-hover/delete:text-white text-[16px]" />
+                            </div>
+                          }>
+                          <p className=" text-xs font-medium text-white"> Move to trash</p>
+                        </TooltipComponent>
+                      </div>
+                    </td>
+                    <td className="pr-1"></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             {hasNextPage && (
@@ -527,12 +504,12 @@ const index = () => {
           </div>
         </>
       ) : (
-        <div className='flex items-center justify-center relative'>
-          <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50'>
+        <div className="flex items-center justify-center relative">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
             <lottie-player
-              src='/animations/aisummary1.json'
-              background='transparent'
-              speed='1'
+              src="/animations/aisummary1.json"
+              background="transparent"
+              speed="1"
               style={{ height: '300px' }}
               autoplay></lottie-player>
             <div className="-mt-10 text-gray-900 text-center">
@@ -547,9 +524,9 @@ const index = () => {
             </div>
           </div>
           <lottie-player
-            src='/animations/aisummary2.json'
-            background='transparent'
-            speed='1'
+            src="/animations/aisummary2.json"
+            background="transparent"
+            speed="1"
             style={{ width: '100%', height: 'calc(100vh - 68px)' }}
             autoplay></lottie-player>
         </div>
@@ -558,8 +535,8 @@ const index = () => {
         <ReviewContact
           afterSubmit={updateAiSummaryTable}
           client={popupData}
-          className='w-[1200px]'
-          title='Review AI Smart Synced Contact'
+          className="w-[1200px]"
+          title="Review AI Smart Synced Contact"
           handleClose={() => {
             // setTotalContacts((prevState) => prevState - 1);
             setShowReviewOverlay(false);
@@ -567,12 +544,11 @@ const index = () => {
         />
       )}
       {selectedPeople?.length > 1 && (
-        <div
-          className='bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu'>
-          <div className='flex items-center text-sm text-gray-900'>
-            Selected: <span className='font-bold ml-1'>{selectedPeople.length} contacts</span>
+        <div className="bg-white fixed left-0 right-0 bottom-0 flex items-center justify-between py-4 px-6 space-x-2 fixed-categorize-menu">
+          <div className="flex items-center text-sm text-gray-900">
+            Selected: <span className="font-bold ml-1">{selectedPeople.length} contacts</span>
           </div>
-          <div className='flex'>
+          <div className="flex">
             <button
               onClick={() => {
                 bulkUpdate(2);
@@ -584,7 +560,7 @@ const index = () => {
               onClick={() => bulkUpdate(1)}
               className="hover:bg-[#10B981] hover:text-white transition-all text-sm min-w-[185px] flex items-center justify-center font-medium py-[6px] px-3 rounded-[4px] bg-green-50 text-[#10B981]">
               <CheckCircle />
-              <span className='ml-2'>Mark as Correct</span>
+              <span className="ml-2">Mark as Correct</span>
             </button>
           </div>
         </div>
