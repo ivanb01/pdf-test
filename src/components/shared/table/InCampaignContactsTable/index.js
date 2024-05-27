@@ -24,16 +24,16 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
             </th>
           ))}
         </thead>
-        <tbody className={'flex flex-col w-full max-h-[390px]'}>
+        <tbody className={'flex flex-col w-full '}>
           {data.map((events, rowIndex) => (
-            <tr key={rowIndex} className={'flex   w-full'}>
+            <tr key={rowIndex} className={'flex   w-full '}>
               {events.events.map((e, cellIndex) => (
                 <td
                   key={cellIndex}
-                  className={`flex-grow flex-1 px-6 py-[15px] border-b border-gray2 pr-[66px] mb-[0px] ${
+                  className={`flex-grow flex-1 h-[73px] flex  items-center border-b border-gray2  pl-6 pr-20 py-3 mb-[0px] ${
                     cellIndex === events.events.length - 1 ? ' border-gray2' : ''
                   }`}>
-                  <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
+                  <div className={'flex flex-col gap-1  min-w-[200px] '}>
                     <StatusChip
                       variant={
                         e?.event_status?.toLowerCase() === 'scheduled'
@@ -50,7 +50,7 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                             : 'Canceled'
                       }></StatusChip>
                     {e.date !== null && (
-                      <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
+                      <div className={'text-sm leading-4 font-normal text-gray5'}>
                         {getFormattedDateFromTimestamp(e.event_updated_at)}
                       </div>
                     )}
@@ -164,10 +164,10 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
     <Table tableFor={'inCampaignContacts'}>
       <div className={'flex overflow-x-clip w-[100vw] '}>
         <div className={'shrink-0'}>{other()}</div>
-        <div className={'flex-1 shrink mr-[-8px]'} style={{ overflowX: 'auto' }}>
+        <div className={'flex-1 shrink overflow-y-hidden'} style={{ overflowX: 'auto' }}>
           {eventsTable()}
         </div>
-        <div className={'shrink-0 '}>{assignToCampaign()}</div>
+        <div className={'shrink-0 overflow-hidden'}>{assignToCampaign()}</div>
       </div>
     </Table>
   ) : (
