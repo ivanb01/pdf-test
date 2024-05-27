@@ -103,17 +103,18 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       setEligibleClients(1);
     }
   };
+  const fetchCampaignData = async () => {
+    let fetchedCampaign = await getCampaign(campaignId);
+    fetchedCampaign = fetchedCampaign.data;
+    setLoadingData(false);
+    setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
+    let events = fetchedCampaign.actions.map((event) => ({ ...event }));
+    setEvents(events);
+    setEligibleData(fetchedCampaign);
+  };
+
   useEffect(() => {
     if (!open) {
-      const fetchCampaignData = async () => {
-        let fetchedCampaign = await getCampaign(campaignId);
-        fetchedCampaign = fetchedCampaign.data;
-        setLoadingData(false);
-        setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
-        let events = fetchedCampaign.actions.map((event) => ({ ...event }));
-        setEvents(events);
-        setEligibleData(fetchedCampaign);
-      };
       if (!campaignData) {
         fetchCampaignData();
       } else {
@@ -154,7 +155,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       setEditingCampaignLoader(false);
       setOpen(false);
       toast.success('Campaign edited successfully!');
-      getCampaign(campaignId).then((res) => dispatch(setUsersInCampaignGlobally(res.data)));
+      getCampaign(campaignId).then((res) => {
+        dispatch(setUsersInCampaignGlobally(res.data));
+        setEvents(res.data.actions.map((event) => ({ ...event })));
+      });
     });
     setShowError(false);
   };
