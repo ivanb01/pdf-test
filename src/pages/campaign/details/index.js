@@ -158,7 +158,7 @@ const index = () => {
     switch (currentButton) {
       case 0:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: '100%' }} autoHide>
             <AllCampaignContactsTable
               campaignData={campaignEvents}
               campaignId={id}
@@ -177,7 +177,7 @@ const index = () => {
         );
       case 1:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: '100%' }} autoHide>
             <InCampaignContactsTable
               tableFor={'inCampaignContacts'}
               data={inCampaignContacts}
@@ -190,7 +190,7 @@ const index = () => {
         );
       case 2:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: '100%' }} autoHide>
             <NotInCampaignContactsTable
               tableFor={'notInCampaignContacts'}
               data={notInCampaignContacts}
