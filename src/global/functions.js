@@ -134,7 +134,7 @@ export const getDateFormat = (timestamp) => {
   return mmddyyyyFormat;
 };
 export const removeClientFromArray = (clientList, clientEmail) => {
-  return clientList.filter(function (el) {
+  return clientList.filter(function(el) {
     return el.email != clientEmail;
   });
 };
@@ -291,7 +291,7 @@ export const dateAfterDate = (date1, date2) => {
 };
 
 export const sortDateAsc = (array, arrayFieldName) => {
-  const sortedArray = array.slice().sort(function (a, b) {
+  const sortedArray = array.slice().sort(function(a, b) {
     if (dateBeforeDate(a[arrayFieldName], b[arrayFieldName])) {
       return -1;
     }

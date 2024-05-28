@@ -352,7 +352,7 @@ export default function Feeds({
                                 ? truncateText(DOMPurify.sanitize(item[0].body))
                                 : truncateText(
                                     DOMPurify.sanitize(
-                                      item[0].html_body.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
                                     ),
                                   ),
                             }}
