@@ -26,7 +26,7 @@ import { clientStatuses } from 'global/variables';
 import { TrashIcon } from '@heroicons/react/solid';
 import { multiselectOptionsProfessionals } from 'global/variables';
 import GlobalAlert from '@components/shared/alert/global-alert';
-import { setProfessionalsFilter } from '@store/global/slice';
+import { setClientsFilters, setProfessionalsFilter } from '@store/global/slice';
 import FloatingAlert from '@components/shared/alert/floating-alert';
 import SwitchComponent from '@components/Switch';
 import { useRouter } from 'next/router';
@@ -54,15 +54,10 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
-  const [filters, setFilters] = useState({});
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(0);
-  const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const professionals = useSelector((state) => state.contacts.professionals);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
   const [searchTerm, setSearchTerm] = useState(' ');
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
 
@@ -209,16 +204,20 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   const getFilterCount = () => {
-    if (openedSubtab == 1) {
+    if (openedSubtab == 0) {
       return filteredProfessionals.filter(
-        (contact) => contact.category_id == 12 && contact.category_1 == 'Professional',
+        (contact) =>
+          contact.category_2 !== 'Agent' &&
+          contact.category_2 !== 'Unspecified' &&
+          contact.category_1 == 'Professional',
+      ).length;
+    } else if (openedSubtab == 1) {
+      return filteredProfessionals.filter(
+        (contact) => contact.category_2 == 'Agent' && contact.category_1 == 'Professional',
       ).length;
     } else if (openedSubtab == 2) {
-      return filteredProfessionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional')
-        .length;
-    } else if (openedSubtab == 3) {
       return filteredProfessionals.filter(
-        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
+        (contact) => contact.category_2 == 'Unspecified' && contact.category_1 == 'Professional',
       ).length;
     } else {
       return filteredProfessionals.filter((contact) => contact.category_1 == 'Professional').length;
@@ -278,8 +277,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                       <div
                         className={
                           'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
-                        }
-                      >
+                        }>
                         {getTotalCountOfAllValues(professionalsFilters)}
                       </div>
                     )}
@@ -334,8 +332,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setProfessionalsFilter({}));
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -413,8 +410,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 }
               /> */}
           </>
-        }
-      >
+        }>
         <Accordion
           tabs={openedSubtab === 1 || openedSubtab === 2 ? tabs.slice(1) : tabs}
           handleClick={handleFilterClick}

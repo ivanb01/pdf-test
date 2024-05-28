@@ -1,15 +1,13 @@
 import Layout from 'components/Layout';
 import Professionals from 'components/Contacts/professionals-content';
 import { useState, useEffect } from 'react';
-import { setOpenedTab, setOpenedSubtab, setRefetchData, setExpandedTab } from 'store/global/slice';
+import { setOpenedTab, setRefetchData } from 'store/global/slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'api/contacts';
-import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
+import { setContacts, setProfessionals } from 'store/contacts/slice';
 import Loader from 'components/shared/loader';
 import { professionalsStatuses, professionalsOptions } from 'global/variables';
 import AddClientManuallyOverlay from 'components/overlays/add-client/add-client-manually';
 import { searchContacts } from 'global/functions';
-import EditContactOverlay from 'components/overlays/edit-client';
 import { types } from 'global/variables';
 import ReviewContact from '@components/overlays/review-contact';
 import withAuth from '@components/withAuth';
