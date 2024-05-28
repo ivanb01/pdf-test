@@ -147,16 +147,12 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                 )}
               </td>
               <td className={'px-6 py-4'}>
-                {person.last_communication !== null ? (
-                  <DateChip
-                    contact={person}
-                    lastCommunication={person.last_communication ?? ''}
-                    contactStatus={status_2}
-                    contactCategory={'clients'}
-                  />
-                ) : (
-                  <div>-</div>
-                )}
+                <DateChip
+                  contact={person}
+                  lastCommunication={person.last_communication ?? ''}
+                  contactStatus={status_2}
+                  contactCategory={'clients'}
+                />
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-4'}>
