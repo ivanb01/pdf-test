@@ -127,16 +127,14 @@ const Clients = ({
     }
   }, [openedSubtab, clientsFilters]);
 
-
   const filterContacts = (contactsList) => {
     let contactsState =
       openedSubtab !== -1
-
         ? contactsList.filter(
-          (contact) =>
-            contact.category_1 == 'Client' &&
-            contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
-        )
+            (contact) =>
+              contact.category_1 == 'Client' &&
+              contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
+          )
         : contactsList.filter((contact) => contact.category_1 == 'Client');
 
     Object.keys(clientsFilters).forEach((key) => {
@@ -210,22 +208,29 @@ const Clients = ({
       setFiltersCleared(true);
     }
   };
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
-
-    const filtered = filterContacts(contacts);
+    let filtered = filterContacts(contacts);
+    if (!hideUnapproved && Object.keys(clientsFilters).length > 0) {
+      filtered = filtered.filter(
+        (contact) =>
+          ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+          !contact.approved_ai &&
+          contact.category_1 == 'Client',
+      );
+    } else {
+      filtered = filterContacts(contacts);
+    }
     setFilteredContacts(filtered);
     statuses.forEach((status) =>
       status.statuses.forEach((s) =>
-        handleFilteredContacts(
-          s.name,
-          sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted,
-          filtered,
-        ),
+        handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
       ),
     );
-  }, [clientsFilters, contacts, openedSubtab]);
+    console.log(filtered, 'filtered');
+  }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
 
 
   useEffect(() => {
@@ -237,7 +242,6 @@ const Clients = ({
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder, contactsList = filteredContacts) => {
     let filteredClients = contactsList.filter((client) => client.status_2 === status);
-
 
     filteredClients.sort((a, b) => {
       if (sortOrder === 'asc') {
@@ -267,6 +271,9 @@ const Clients = ({
 
     return () => scrollElement?.removeEventListener('scroll', handleScroll);
   }, [openedSubtab]);
+  useEffect(() => {
+    console.log(hideUnapproved, 'hideUnapproved');
+  }, [hideUnapproved]);
 
   const showUnapprovedToggle = () => {
     console.log(openedSubtab);
