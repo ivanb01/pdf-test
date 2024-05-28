@@ -232,6 +232,39 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     setFiltersCleared(true);
     dispatch(setProfessionalsFilter({}));
   }, [openedSubtab]);
+  const showUnapprovedToggle = () => {
+    if (openedSubtab == 0) {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == 'Professional' &&
+            ![9, 12].includes(contact.category_id),
+        ).length > 0
+      );
+    }
+    if (openedSubtab == -1) {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == 'Professional',
+        ).length > 0
+      );
+    } else {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == 'Professional' &&
+            contact.category_2.toLowerCase() == professionalsStatuses[openedSubtab].statusMainTitle.toLowerCase(),
+        ).length > 0
+      );
+    }
+  };
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   return (
     <>
@@ -250,12 +283,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
               <Text h3 className="text-gray7 text-xl mr-4">
                 {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'All Professionals'}
               </Text>
-              {filteredProfessionals.filter(
-                (contact) =>
-                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
-                  !contact.approved_ai &&
-                  contact.category_1 == 'Professional',
-              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+              {showUnapprovedToggle() && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">
               <Search
