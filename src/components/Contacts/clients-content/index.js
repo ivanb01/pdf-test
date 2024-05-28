@@ -127,29 +127,30 @@ const Clients = ({
     }
   }, [openedSubtab, clientsFilters]);
 
-  const filterContacts = () => {
+
+  const filterContacts = (contactsList) => {
     let contactsState =
       openedSubtab !== -1
-        ? contacts.filter(
+        ? contactsList.filter(
           (contact) =>
             contact.category_1 == 'Client' &&
             contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
         )
-        : contacts.filter((contact) => contact.category_1 == 'Client');
+        : contactsList.filter((contact) => contact.category_1 == 'Client');
 
-    Object.keys(clientsFilters).map((key) => {
-      if (key == 'last_communication_date') {
+    Object.keys(clientsFilters).forEach((key) => {
+      if (key === 'last_communication_date') {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(contact[key], clientsFilters[key][0], contact.category_1, contact.status_2),
         );
-      } else if (key == 'import_source_text' && clientsFilters['import_source_text'] == 'Manually Added') {
+      } else if (key === 'import_source_text' && clientsFilters['import_source_text'] === 'Manually Added') {
         contactsState = contactsState.filter(
           (contact) =>
-            contact.import_source_text != 'Google Contacts' &&
-            contact.import_source_text != 'Smart Sync A.I.' &&
-            contact.import_source_text != 'Gmail',
+            contact.import_source_text !== 'Google Contacts' &&
+            contact.import_source_text !== 'Smart Sync A.I.' &&
+            contact.import_source_text !== 'Gmail',
         );
-      } else if (key == 'is_in_campaign') {
+      } else if (key === 'is_in_campaign') {
         let booleanFilter = clientsFilters[key].map((filter) => campaignFilterMeaning[filter]);
         contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
       } else {
@@ -165,7 +166,7 @@ const Clients = ({
       }
     });
 
-    setFilteredContacts(contactsState);
+    return contactsState;
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -187,14 +188,12 @@ const Clients = ({
       filtersCopy[filterType] = [selectedFilter];
     }
 
-    // console.log('filters', filtersCopy)
     dispatch(setClientsFilters(filtersCopy));
 
     if (Object.keys(filtersCopy).length === 0) {
       setFiltersCleared(true);
     }
   };
-
 
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...clientsFilters };
@@ -213,16 +212,19 @@ const Clients = ({
 
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
-    filterContacts();
-    statuses.map((status) =>
-      status.statuses.map((s) =>
+    const filtered = filterContacts(contacts);
+    setFilteredContacts(filtered);
+    statuses.forEach((status) =>
+      status.statuses.forEach((s) =>
         handleFilteredContacts(
           s.name,
           sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted,
+          filtered,
         ),
       ),
     );
   }, [clientsFilters, contacts, openedSubtab]);
+
 
   useEffect(() => {
     setFiltersCleared(true);
@@ -231,9 +233,9 @@ const Clients = ({
   useEffect(() => {
     setSearchTerm('');
   }, [openedSubtab]);
-  const handleFilteredContacts = (status, sortOrder) => {
-    console.log(status, sortOrder);
-    let filteredClients = contacts.filter((client) => client.status_2 === status);
+  const handleFilteredContacts = (status, sortOrder, contactsList = filteredContacts) => {
+    let filteredClients = contactsList.filter((client) => client.status_2 === status);
+
 
     filteredClients.sort((a, b) => {
       if (sortOrder === 'asc') {
