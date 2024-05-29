@@ -10,7 +10,7 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['upload.wikimedia.org'],
+    domains: ['rls.realty.mx', 'upload.wikimedia.org', 'onelinecrm-production.s3.amazonaws.com'],
   },
   async redirects() {
     return [

@@ -1,13 +1,13 @@
-const index = () => {
-  return <div>Application</div>;
+import MainMenu from '@components/shared/menu';
+import Applications from 'containers/Applications';
+
+const ApplicationsPage = () => {
+  return (
+    <>
+      <MainMenu />
+      <Applications />
+    </>
+  );
 };
 
-export default index;
-
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       requiresAuth: true,
-//     },
-//   };
-// }
+export default ApplicationsPage;

@@ -76,6 +76,11 @@ const MainMenu = ({ className, fixed }) => {
       name: 'Online Forms',
       url: '/online-forms',
     },
+    {
+      id: 6,
+      name: 'Applications',
+      url: '/applications',
+    },
   ]);
 
   const [menuItems, setMenuItems] = useState([

@@ -11,7 +11,7 @@ import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
 import { useSelector } from 'react-redux';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { useRouter } from 'next/router';
-import { useSendEmail } from 'containers/OnlineForms/queries/mutations';
+import { useSendEmail } from '@helpers/queries/mutations';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 

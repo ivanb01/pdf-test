@@ -4,7 +4,8 @@ import { useFetchOnlineFormTypeById, useFetchOnlineFormsPaginated } from '../que
 import { downloadPdf, generatePdfBlob } from '../Pdf/generatePdf';
 import { useFormik } from 'formik';
 import { useFetchOnlineForm } from '../queries/queries';
-import { usePostOnlineForm, useSendEmail } from '../queries/mutations';
+import { usePostOnlineForm } from '../queries/mutations';
+import { useSendEmail } from '@helpers/queries/mutations';
 import CircularProgress from '@mui/material/CircularProgress';
 import { PdfViewer } from '../Pdf';
 import Input from '@components/shared/input';

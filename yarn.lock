@@ -3649,6 +3649,20 @@
   resolved "https://registry.npmjs.org/@one-ini/wasm/-/wasm-0.1.1.tgz"
   integrity sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==
 
+"@pdf-lib/standard-fonts@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@pdf-lib/standard-fonts/-/standard-fonts-1.0.0.tgz"
+  integrity sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA==
+  dependencies:
+    pako "^1.0.6"
+
+"@pdf-lib/upng@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@pdf-lib/upng/-/upng-1.0.1.tgz"
+  integrity sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ==
+  dependencies:
+    pako "^1.0.10"
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
@@ -4873,14 +4887,14 @@
   dependencies:
     "@tanstack/query-devtools" "5.32.1"
 
-"@tanstack/react-query@^5.13.4", "@tanstack/react-query@^5.36.2":
+"@tanstack/react-query@^5.18.1", "@tanstack/react-query@^5.36.2":
   version "5.36.2"
   resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.36.2.tgz"
   integrity sha512-bHNa+5dead+j6SA8WVlEOPxcGfteVFgdyFTCFcxBgjnPf0fFpHUc7aNZBCnvmPXqy/BeQa9zTuU9ectb7i8ZXA==
   dependencies:
     "@tanstack/query-core" "5.36.1"
 
-"@tanstack/react-table@^8.9.3":
+"@tanstack/react-table@^8.10.7":
   version "8.16.0"
   resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.16.0.tgz"
   integrity sha512-rKRjnt8ostqN2fercRVOIH/dq7MAmOENCMvVlKx6P9Iokhh6woBGnIZEkqsY/vEJf1jN3TqLOb34xQGLVRuhAg==
@@ -6300,6 +6314,11 @@ commander@^10.0.0:
   version "10.0.1"
   resolved "https://registry.npmjs.org/commander/-/commander-10.0.1.tgz"
   integrity sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==
+
+commander@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.npmjs.org/commander/-/commander-11.1.0.tgz"
+  integrity sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==
 
 commander@^2.20.0:
   version "2.20.3"
@@ -9634,6 +9653,21 @@ pako@^0.2.5:
   resolved "https://registry.npmjs.org/pako/-/pako-0.2.9.tgz"
   integrity sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==
 
+pako@^1.0.10:
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
+  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
+pako@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
+  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
+pako@^1.0.6:
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
+  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
 pako@~1.0.5:
   version "1.0.11"
   resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
@@ -9741,6 +9775,24 @@ pathval@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/pathval/-/pathval-1.1.1.tgz"
   integrity sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==
+
+pdf-lib@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.npmjs.org/pdf-lib/-/pdf-lib-1.17.1.tgz"
+  integrity sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==
+  dependencies:
+    "@pdf-lib/standard-fonts" "^1.0.0"
+    "@pdf-lib/upng" "^1.0.1"
+    pako "^1.0.11"
+    tslib "^1.11.1"
+
+pdf-merger-js@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.npmjs.org/pdf-merger-js/-/pdf-merger-js-5.1.1.tgz"
+  integrity sha512-T0Ks/2eHXwEIs9W4n/LsJhQwU16J1wmviys4LyN581QBaKSF5U221+mDXnfQcNhKgIylyufbW5va3S3i6X8Smg==
+  dependencies:
+    commander "^11.1.0"
+    pdf-lib "^1.17.1"
 
 pdfjs-dist@3.11.174:
   version "3.11.174"
@@ -9858,6 +9910,11 @@ prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
+
+prettier@^3.0.3:
+  version "3.2.5"
+  resolved "https://registry.npmjs.org/prettier/-/prettier-3.2.5.tgz"
+  integrity sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==
 
 pretty-format@^26.5.2:
   version "26.6.2"
@@ -10102,6 +10159,11 @@ react-multi-select-component@^4.3.4:
   version "4.3.4"
   resolved "https://registry.npmjs.org/react-multi-select-component/-/react-multi-select-component-4.3.4.tgz"
   integrity sha512-Ui/bzCbROF4WfKq3OKWyQJHmy/bd1mW7CQM+L83TfiltuVvHElhKEyPM3JzO9urIcWplBUKv+kyxqmEnd9jPcA==
+
+react-nanny@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.npmjs.org/react-nanny/-/react-nanny-2.15.0.tgz"
+  integrity sha512-fn6tAnJ+UEdD0pq5YytlZJb5XmjVcvXoxq3i2r1o/BavgipwRWsw7oOXNJ8bJd33iedlkNyAQMXVC6qTl0Hv4A==
 
 react-native-get-random-values@^1.4.0:
   version "1.11.0"
