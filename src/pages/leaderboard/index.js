@@ -140,6 +140,7 @@ const index = () => {
   }, []);
 
   const handleSelect = (item) => {
+    setHasNextPage(true)
     setSortBy(item); // Update selected item
     // Pass the api_key of the selected item to the API
     // Make a call to your API passing the api_key
@@ -228,7 +229,7 @@ const index = () => {
         </div>
       ) : items?.total > 0 ? (
         <SimpleBar autoHide style={{ maxHeight: 'calc(100vh - 150px)' }}>
-          <LeaderboardTable tableFor="leaderboard" data={items.data} />
+          <LeaderboardTable tableFor="leaderboard" data={items.data} ref={rootRef} />
           {hasNextPage && (
             <div ref={infiniteRef}>
               <SpinnerLoader />
