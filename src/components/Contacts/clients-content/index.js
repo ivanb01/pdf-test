@@ -1,30 +1,30 @@
-import Text from 'components/shared/text';
-import Button from 'components/shared/button';
-import Search from 'components/shared/input/search';
-import SimpleBar from 'simplebar-react';
-import FilterList from '@mui/icons-material/FilterList';
-import Add from '@mui/icons-material/Add';
-import Column from 'components/column';
-import SlideOver from 'components/shared/slideOver';
-import { useState, useEffect } from 'react';
-import ViewColumn from '@mui/icons-material/ViewColumn';
-import TableRows from '@mui/icons-material/TableRows';
-import Accordion from 'components/shared/accordion';
-import ButtonsSlider from 'components/shared/button/buttonsSlider';
-import Table from 'components/shared/table';
-import { multiselectOptionsClients, statuses } from 'global/variables';
-import { useRouter } from 'next/router';
-import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from 'global/variables';
-import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
-import { useSelector, useDispatch } from 'react-redux';
-import { setClients, setContacts } from 'store/contacts/slice';
-import Chip from 'components/shared/chip';
-import { TrashIcon } from '@heroicons/react/solid';
-import { setClientsFilters } from '@store/global/slice';
-import FloatingAlert from '@components/shared/alert/floating-alert';
-import { useRef } from 'react';
-import SwitchComponent from '@components/Switch';
-import ContactsListTable from '@components/shared/table/ContactsListTable';
+import Text from "components/shared/text";
+import Button from "components/shared/button";
+import Search from "components/shared/input/search";
+import SimpleBar from "simplebar-react";
+import FilterList from "@mui/icons-material/FilterList";
+import Add from "@mui/icons-material/Add";
+import Column from "components/column";
+import SlideOver from "components/shared/slideOver";
+import { useState, useEffect } from "react";
+import ViewColumn from "@mui/icons-material/ViewColumn";
+import TableRows from "@mui/icons-material/TableRows";
+import Accordion from "components/shared/accordion";
+import ButtonsSlider from "components/shared/button/buttonsSlider";
+import Table from "components/shared/table";
+import { multiselectOptionsClients, statuses } from "global/variables";
+import { useRouter } from "next/router";
+import { clientStatuses, clientStatusMainTitlesUpdated, filtersForLastCommunicationDate } from "global/variables";
+import { filterLastCommuncationDate, getTotalCountOfAllValues } from "global/functions";
+import { useSelector, useDispatch } from "react-redux";
+import { setClients, setContacts } from "store/contacts/slice";
+import Chip from "components/shared/chip";
+import { TrashIcon } from "@heroicons/react/solid";
+import { setClientsFilters } from "@store/global/slice";
+import FloatingAlert from "@components/shared/alert/floating-alert";
+import { useRef } from "react";
+import SwitchComponent from "@components/Switch";
+import ContactsListTable from "@components/shared/table/ContactsListTable";
 
 const buttons = [
   {
@@ -55,53 +55,53 @@ const Clients = ({
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const clients = useSelector((state) => state.contacts.clients);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredContacts, setFilteredContacts] = useState(contacts);
 
   useEffect(() => {
-    console.log(contacts, 'contacts');
+    console.log(contacts, "contacts");
     setFilteredContacts(contacts);
   }, [contacts, openedSubtab]);
 
   const tabs = [
     {
-      title: 'CLIENT TYPES',
-      content: ['Landlord', 'Renter', 'Buyer', 'Seller'],
-      value: 'category_2',
+      title: "CLIENT TYPES",
+      content: ["Landlord", "Renter", "Buyer", "Seller"],
+      value: "category_2",
     },
     {
-      title: 'LAST COMMUNICATION',
+      title: "LAST COMMUNICATION",
       content: Object.keys(filtersForLastCommunicationDate),
-      value: 'last_communication_date',
+      value: "last_communication_date",
       onlyOneValue: true,
     },
     {
-      title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
-      value: 'import_source_text',
+      title: "ADDED SOURCE",
+      content: ["Google Contacts", "Smart Sync A.I.", "Manually Added"],
+      value: "import_source_text",
     },
     {
-      title: 'CLIENT STATUS',
+      title: "CLIENT STATUS",
       content:
         openedSubtab === -1
           ? clientStatuses.flatMap((i) => i.statuses.flatMap((s) => s.name))
           : clientStatuses[openedSubtab].statuses.map((item) => item.name),
-      value: 'status_2',
+      value: "status_2",
     },
     {
-      title: 'CAMPAIGN',
-      content: ['In Campaign', 'Not In Campaign'],
-      value: 'is_in_campaign',
+      title: "CAMPAIGN",
+      content: ["In Campaign", "Not In Campaign"],
+      value: "is_in_campaign",
     },
     {
-      title: 'PRIORITY',
+      title: "PRIORITY",
       content: multiselectOptionsClients.map((option) => option.label),
-      value: 'tags',
+      value: "tags",
     },
   ];
   const campaignFilterMeaning = {
-    'In Campaign': 'assigned',
-    'Not In Campaign': null,
+    "In Campaign": "assigned",
+    "Not In Campaign": null,
   };
 
   function hasAnyProperties(obj) {
@@ -119,7 +119,7 @@ const Clients = ({
         setClients(
           contacts.filter(
             (contact) =>
-              contact.category_1 == 'Client' &&
+              contact.category_1 == "Client" &&
               contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
           ),
         ),
@@ -132,24 +132,24 @@ const Clients = ({
       openedSubtab !== -1
         ? contactsList.filter(
             (contact) =>
-              contact.category_1 == 'Client' &&
+              contact.category_1 == "Client" &&
               contact.status_1.toLowerCase() === statuses[openedSubtab]?.statusMainTitle.toLowerCase(),
           )
-        : contactsList.filter((contact) => contact.category_1 == 'Client');
+        : contactsList.filter((contact) => contact.category_1 == "Client");
 
     Object.keys(clientsFilters).forEach((key) => {
-      if (key === 'last_communication_date') {
+      if (key === "last_communication_date") {
         contactsState = contactsState.filter((contact) =>
           filterLastCommuncationDate(contact[key], clientsFilters[key][0], contact.category_1, contact.status_2),
         );
-      } else if (key === 'import_source_text' && clientsFilters['import_source_text'] === 'Manually Added') {
+      } else if (key === "import_source_text" && clientsFilters["import_source_text"] === "Manually Added") {
         contactsState = contactsState.filter(
           (contact) =>
-            contact.import_source_text !== 'Google Contacts' &&
-            contact.import_source_text !== 'Smart Sync A.I.' &&
-            contact.import_source_text !== 'Gmail',
+            contact.import_source_text !== "Google Contacts" &&
+            contact.import_source_text !== "Smart Sync A.I." &&
+            contact.import_source_text !== "Gmail",
         );
-      } else if (key === 'is_in_campaign') {
+      } else if (key === "is_in_campaign") {
         let booleanFilter = clientsFilters[key].map((filter) => campaignFilterMeaning[filter]);
         contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
       } else {
@@ -213,12 +213,12 @@ const Clients = ({
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     let filtered = filterContacts(contacts);
-    if (!hideUnapproved && Object.keys(clientsFilters).length > 0) {
+    if (hideUnapproved && Object.keys(clientsFilters).length > 0) {
       filtered = filtered.filter(
         (contact) =>
-          ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+          ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
           !contact.approved_ai &&
-          contact.category_1 == 'Client',
+          contact.category_1 == "Client",
       );
     } else {
       filtered = filterContacts(contacts);
@@ -229,24 +229,23 @@ const Clients = ({
         handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
       ),
     );
-    console.log(filtered, 'filtered');
+    console.log(filtered, "filtered");
   }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
-
 
   useEffect(() => {
     setFiltersCleared(true);
     dispatch(setClientsFilters({}));
   }, [openedSubtab]);
   useEffect(() => {
-    setSearchTerm('');
+    setSearchTerm("");
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder, contactsList = filteredContacts) => {
     let filteredClients = contactsList.filter((client) => client.status_2 === status);
 
     filteredClients.sort((a, b) => {
-      if (sortOrder === 'asc') {
+      if (sortOrder === "asc") {
         return a.first_name.localeCompare(b.first_name);
-      } else if (sortOrder === 'desc') {
+      } else if (sortOrder === "desc") {
         return b.first_name.localeCompare(a.first_name);
       }
     });
@@ -261,18 +260,18 @@ const Clients = ({
 
   useEffect(() => {
     const handleScroll = (event) => {
-      if (event.target.scrollLeft > 80 && document.querySelector('.arrow') !== null) {
-        document.querySelector('.arrow').style.opacity = '0';
+      if (event.target.scrollLeft > 80 && document.querySelector(".arrow") !== null) {
+        document.querySelector(".arrow").style.opacity = "0";
       }
     };
 
     const scrollElement = scrollRef.current?.getScrollElement();
-    scrollElement?.addEventListener('scroll', handleScroll);
+    scrollElement?.addEventListener("scroll", handleScroll);
 
-    return () => scrollElement?.removeEventListener('scroll', handleScroll);
+    return () => scrollElement?.removeEventListener("scroll", handleScroll);
   }, [openedSubtab]);
   useEffect(() => {
-    console.log(hideUnapproved, 'hideUnapproved');
+    console.log(hideUnapproved, "hideUnapproved");
   }, [hideUnapproved]);
 
   const showUnapprovedToggle = () => {
@@ -281,31 +280,34 @@ const Clients = ({
       return (
         contacts.filter(
           (contact) =>
-            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
             !contact.approved_ai &&
-            contact.category_1 == 'Client',
+            contact.category_1 == "Client",
         ).length > 0
       );
     } else {
       return (
         contacts.filter(
           (contact) =>
-            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
             !contact.approved_ai &&
-            contact.category_1 == 'Client' &&
+            contact.category_1 == "Client" &&
             contact.status_1.toLowerCase() == clientStatuses[openedSubtab].statusMainTitle.toLowerCase(),
         ).length > 0
       );
     }
   };
 
+  useEffect(() => {
+    console.log(Object.values(clientsFilters).flat().length, "length", unapprovedContacts?.length);
+  }, [clientsFilters, unapprovedContacts]);
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         <FloatingAlert
           inProp={unapprovedContacts.length > 0}
-          onClick={() => router.push('/ai-summary')}
-          buttonText={'Review Now'}
+          onClick={() => router.push("/ai-summary")}
+          buttonText={"Review Now"}
           className="mx-[21px] mt-[14px]"
           message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
         />
@@ -314,7 +316,7 @@ const Clients = ({
             <div className="flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
                 {openedSubtab === -1
-                  ? 'All Clients'
+                  ? "All Clients"
                   : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               </Text>
               {showUnapprovedToggle() && <SwitchComponent label="Unapproved AI Contacts" />}
@@ -324,7 +326,7 @@ const Clients = ({
                 placeholder={`Search ${
                   openedSubtab !== -1
                     ? clientStatusMainTitlesUpdated[clientStatuses[openedSubtab]?.statusMainTitle]?.toLowerCase()
-                    : 'Clients'
+                    : "Clients"
                 }`}
                 className="mr-4 text-sm"
                 value={searchTerm}
@@ -333,11 +335,11 @@ const Clients = ({
               <Button
                 secondary
                 leftIcon={
-                  <div className={'relative'}>
+                  <div className={"relative"}>
                     {Object.keys(clientsFilters).length > 0 && (
                       <div
                         className={
-                          'absolute flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[20px] w-[20px] rounded-xl text-xs text-white'
+                          "absolute flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 h-[20px] w-[20px] rounded-xl text-xs text-white"
                         }>
                         {getTotalCountOfAllValues(clientsFilters)}
                       </div>
@@ -373,7 +375,7 @@ const Clients = ({
               <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {filteredContacts.length}
-                  {filteredContacts.length == 1 ? ' result' : ' results'} for:
+                  {filteredContacts.length == 1 ? " result" : " results"} for:
                 </div>
                 {Object.keys(clientsFilters).map((key, index) =>
                   clientsFilters[key].map((filter, i) => (
@@ -407,9 +409,17 @@ const Clients = ({
             autoHide
             ref={scrollRef}
             style={{
-              maxWidth: '100%',
-              height: '100%',
-              background: '#f9fafb',
+              maxWidth: "100%",
+              height:
+                Object.values(clientsFilters).flat().length > 0 && unapprovedContacts?.length > 0
+                  ? "calc(100vh - 276px)"
+                  : Object.values(clientsFilters).flat().length > 0 && unapprovedContacts?.length === undefined
+                    ? "calc(100vh - 203px)"
+                    : Object.values(clientsFilters).flat().length === 0 && unapprovedContacts.length > 0
+                      ? "calc(100vh - 223px)"
+                      : "calc(100vh - 155px)",
+
+              background: "#f9fafb",
             }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">
               {openedSubtab === -1
@@ -442,9 +452,9 @@ const Clients = ({
             </div>
           </SimpleBar>
         ) : (
-          <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className="w-auto relative flex" style={{ height: "calc(100vh - 160px)" }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-              <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
+              <SimpleBar autoHide style={{ height: "100%", maxHeight: "100%" }}>
                 <ContactsListTable
                   handleFilteredContacts={handleFilteredContacts}
                   contacts={filteredContacts}
