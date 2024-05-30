@@ -6,7 +6,7 @@ const index = () => {
     <>
       <MainMenu />
       <Iframe
-        url="https://opgny.com/Deal"
+        url="https://oxfordpg.com/Deal_crm"
         width="100%"
         height="100%"
         id=""
