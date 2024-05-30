@@ -81,7 +81,7 @@ const Clients = ({
       value: "import_source_text",
     },
     {
-      title: "CLIENT STATUS",
+      title: 'CLIENT STATUS',
       content:
         openedSubtab === -1
           ? clientStatuses.flatMap((i) => i.statuses.flatMap((s) => s.name))
@@ -229,8 +229,9 @@ const Clients = ({
         handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
       ),
     );
-    console.log(filtered, "filtered");
+    console.log(filtered, 'filtered');
   }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
+
 
   useEffect(() => {
     setFiltersCleared(true);

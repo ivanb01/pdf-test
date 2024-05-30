@@ -146,14 +146,6 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
   useEffect(() => {
     let filteredProfs = filterContacts(contacts);
-    if (!hideUnapproved && Object.keys(professionalsFilters).length > 0) {
-      filteredProfs = filteredProfs.filter(
-        (contact) =>
-          ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
-          !contact.approved_ai &&
-          contact.category_1 == "Professional",
-      );
-    }
     setFilteredProfessionals(filteredProfs);
   }, [contacts, professionalsFilters, hideUnapproved, openedSubtab]);
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -211,12 +203,25 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   const getFilterCount = () => {
-    return hideUnapproved === true
-      ? filteredProfessionals?.filter(
-          (contact) =>
-            !["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) || contact.approved_ai,
-        )?.length
-      : filteredProfessionals?.length;
+    const profesionals =
+      hideUnapproved === true
+        ? filteredProfessionals.filter(
+            (contact) =>
+              !["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) || contact.approved_ai,
+          )
+        : filteredProfessionals;
+
+    if (openedSubtab == 0) {
+      return profesionals.filter(
+        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == "Professional",
+      ).length;
+    } else if (openedSubtab == 1) {
+      return profesionals.filter((contact) => contact.category_id == 12 && contact.category_1 == "Professional").length;
+    } else if (openedSubtab == 2) {
+      return profesionals.filter((contact) => contact.category_id == 9 && contact.category_1 == "Professional").length;
+    } else {
+      return profesionals.filter((contact) => contact.category_1 == "Professional").length;
+    }
   };
 
   useEffect(() => {
