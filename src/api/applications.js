@@ -16,3 +16,15 @@ export const fetchPropertyApplications = (params) => {
 export const fetchPropertyApplicationById = (id) => {
   return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v1/property-applications/public/${id}`);
 };
+
+export const runCreditCheck = (id) => {
+  return axiosInstance.post(`v1/property-applications/credit-check/${id}`);
+};
+
+export const fetchCreditCheckReport = (id) => {
+  return axiosInstance.post(`v1/property-applications/credit-report/${id}`);
+};
+
+export const generateCreditCheckPaymenkLink = (id) => {
+  return axiosInstance.get(`v1/property-applications/payment-link/${id}`);
+};

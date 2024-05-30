@@ -19,7 +19,7 @@ import {
   PDF_LIST_ITEM_HORIZONTAL_PADDING,
   PDF_HEADING1_MARGIN_BOTTOM,
   PDF_HEADING2_MARGIN_BOTTOM,
-} from '../constants';
+} from '../utils/constants';
 import { getAwsFileBlob } from '@api/files';
 import { useEffect, useState } from 'react';
 import moment from 'moment';

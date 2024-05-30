@@ -10,19 +10,23 @@ import { useRouter } from 'next/router';
 import { useFetchPropertyApplicationsPaginated } from '../queries/queries';
 import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
 import CircularProgress from '@mui/material/CircularProgress';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import Button from '@components/shared/button';
+import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
+import { useRunCreditCheck, useFetchCreditCheckReport } from '../queries/mutations';
 
 const columnHelper = createColumnHelper();
 const columns = [
-  columnHelper.accessor('id', {
-    header: () => (
-      <div className="min-w-[140px] px-6">
-        <span>Id</span>
-      </div>
-    ),
-    cell: (info) => {
-      return <div className="min-w-[140px] px-6">{info.getValue()}</div>;
-    },
-  }),
+  // columnHelper.accessor("id", {
+  //   header: () => (
+  //     <div className="min-w-[140px] px-6">
+  //       <span>Id</span>
+  //     </div>
+  //   ),
+  //   cell: (info) => {
+  //     return <div className="min-w-[140px] px-6">{info.getValue()}</div>;
+  //   },
+  // }),
   columnHelper.accessor(
     (row) => {
       return {
@@ -60,7 +64,7 @@ const columns = [
       ),
     },
   ),
-  columnHelper.accessor('number_of_persons', {
+  columnHelper.accessor('occupants', {
     header: () => (
       <div className="text-center px-4">
         <span>
@@ -70,13 +74,13 @@ const columns = [
       </div>
     ),
     cell: (info) => (
-      <div className="flex items-center justify-center  min-w-[90px] px-6">
+      <div className="flex items-center justify-center  min-w-[90px] gap-1">
         <PersonIcon className="text-gray3 w-[20px] h-[20px]" />
-        <span>{info.renderValue()}</span>
+        <span>{info.renderValue().length + 1}</span>
       </div>
     ),
   }),
-  columnHelper.accessor('listing_address', {
+  columnHelper.accessor('property_address', {
     header: () => (
       <div className="min-w-[292px] px-4">
         <span>Listing Address</span>
@@ -86,7 +90,7 @@ const columns = [
       const { listing_address } = info.row.original;
       return (
         <div className="min-w-[292px] px-4 font-normal">
-          <p>{listing_address}</p>
+          <p>{info.getValue()}</p>
         </div>
       );
     },
@@ -110,50 +114,84 @@ const columns = [
       );
     },
   }),
-  columnHelper.accessor('files', {
+  columnHelper.accessor('documents', {
     header: () => (
       <div className="text-center min-w-[120px] px-6">
-        <span>Files</span>
+        <span>Any files</span>
       </div>
     ),
     cell: (info) => {
       return (
         <div className="min-w-[120px] flex justify-center px-6">
-          {/* {info.renderValue() && <CheckCircleIcon className="w-[20px] h-[20px] text-green5" />} */}
+          {info.getValue().length ? (
+            <CheckCircleIcon className="w-5 h-5 text-green5" />
+          ) : (
+            <RemoveCircleIcon className="h-5 w-5 text-overlayBackground" />
+          )}
         </div>
       );
     },
   }),
-  columnHelper.accessor('credit_report_status', {
+  columnHelper.accessor('emergency_contact_phone_number', {
+    header: () => (
+      <div className="text-center min-w-[120px] px-6">
+        <span>Application Filled</span>
+      </div>
+    ),
+    cell: (info) => {
+      return (
+        <div className="min-w-[120px] flex justify-center px-6">
+          {!!info.getValue() ? (
+            <CheckCircleIcon className="w-5 h-5 text-green5" />
+          ) : (
+            <RemoveCircleIcon className="h-5 w-5 text-overlayBackground" />
+          )}
+        </div>
+      );
+    },
+  }),
+  columnHelper.accessor('credit_check_payment_successfull', {
     header: () => (
       <div className="text-center min-w-[220px]  px-4">
         <span>Credit Report & Check</span>
       </div>
     ),
     cell: (info) => {
+      const { public_identifier, credit_check_payment_successfull, credit_check_run_successfully } = info.row.original;
+      const { data, mutate: mutateFetchCreditCheckReport } = useFetchCreditCheckReport();
+      const { mutate: mutateRunCreditCheck } = useRunCreditCheck({
+        // onSuccess: mutateFetchCreditCheckReport(id),
+      });
+
+      const handlePdfDownload = (e) => {
+        e.stopPropagation();
+        mutateRunCreditCheck({ id: public_identifier });
+      };
+
       const renderSwitch = () => {
-        switch (info.renderValue()) {
-          case 'none':
+        if (!credit_check_payment_successfull) {
+          return <Button secondary>Generate Payment Link</Button>;
+        } else {
+          if (credit_check_run_successfully) {
             return (
-              <button className="min-w-[143px] px-[10px] py-[7px] text-lightBlue3 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded leading-5 text-sm">
-                Run Credit&Check
-              </button>
-            );
-          case 'pending':
-            return (
-              <div className="flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <circle cx="6.5" cy="6.5" r="3.5" fill="#FBBF24" />
-                </svg>
-                <span className="text-yellow2 text-sm leading-5 font-medium">Pending</span>
+              <div className="flex flex-col items-center gap-2">
+                <StatusChip variant={VARIANT_ENUM.SUCCESS} text={'Completed'} />
+                <button className="flex gap-1" onClick={handlePdfDownload}>
+                  <SaveAltIcon className="w-4 h-4 text-gray4" />
+                  <p>Credit check PDF</p>
+                </button>
               </div>
             );
-          default:
-            return (
-              <div>
-                <CheckCircleIcon className="w-[20px] h-[20px] text-green5" />
-              </div>
-            );
+          }
+          return (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                mutateRunCreditCheck({ id: public_identifier });
+              }}>
+              Run Credit&Check
+            </Button>
+          );
         }
       };
 
@@ -304,7 +342,7 @@ const columns = [
       id: 'pdf',
       header: () => (
         <div className="min-w-[76px] px-6 text-center">
-          <span>PDF</span>
+          <span>Full PDF</span>
         </div>
       ),
       cell: (info) => {
@@ -332,6 +370,7 @@ const ApplicationsTable = ({ searchInput }) => {
       page_size: 10,
       count_items: true,
       search_param: searchInput,
+      sort: 'created_at,desc',
     };
   }, [searchInput]);
 

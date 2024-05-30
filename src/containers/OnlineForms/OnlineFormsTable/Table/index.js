@@ -138,7 +138,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
           <Image src={NoFormsSent} width={64} height={64} alt="no-forms" />
           <div className="space-y-2">
             <p className="font-medium text-gray7">No Forms Found</p>
-            <p className="text-gray4">No forms were found with given filters.</p>
+            <p className="text-gray4">We couldn't find anything matching your search criteria...</p>
           </div>
         </div>
       )}

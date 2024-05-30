@@ -19,6 +19,10 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
     toast.success(`${title} uploaded successfully!`);
   };
 
+  const onWrongInputFormat = () => {
+    toast.error('File type not allowed!');
+  };
+
   return (
     <div>
       <FileInputUpload
@@ -27,7 +31,8 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
         handleUploading
         onLargeFile={onLargeFile}
         onSuccess={onSuccess}
-        onRemoveFile={onRemove}>
+        onRemoveFile={onRemove}
+        onWrongFileFormat={onWrongInputFormat}>
         <div className="space-y-2 ">
           <p className="text-gray4 text-sm font-medium leading-5">{title}</p>
           <div className="flex flex-col justify-center items-center p-[26px] pt-[22px] border-dashed border-2 leading-3 font-normal text-xs text-gray5 rounded-md">
@@ -41,7 +46,7 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
                     </FileInputUpload.Input>
                     <span className="text-gray5">{` or drag and drop`}</span>
                   </div>
-                  <span className=" text-gray4">{`PNG, JPG, GIF up to 10MB`}</span>
+                  <span className=" text-gray4">{`PDF, PNG, JPG up to 10MB`}</span>
                 </div>
               </FileInputUpload.Upload>
               <FileInputUpload.Uploading>

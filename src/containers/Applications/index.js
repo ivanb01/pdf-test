@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Search from '@components/shared/input/search';
 import ButtonsSlider from '@components/shared/button/buttonsSlider';
-import { SLIDER_BUTTONS } from './constants';
+import { SLIDER_BUTTONS } from './utils/constants';
 import ApplicationsTable from './Table';
 import useDebounce from 'hooks/useDebounceValue';
 

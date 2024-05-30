@@ -1,23 +1,170 @@
+export const DOCUMENT_PLACEHOLDERS = [
+  {
+    id: 1,
+    title: 'Paystub 1',
+    form_name: 'paystub_1',
+  },
+  {
+    id: 2,
+    title: 'Paystub 2',
+    form_name: 'paystub_2',
+  },
+  {
+    id: 3,
+    title: 'Tax Returns',
+    form_name: 'tax_returns',
+  },
+  {
+    id: 4,
+    title: 'Tax Returns 2',
+    form_name: 'tax_returns_2',
+  },
+  {
+    id: 5,
+    title: 'Bank Statement 1',
+    form_name: 'bank_statement_1',
+  },
+  {
+    id: 6,
+    title: 'Bank Statement 2',
+    form_name: 'bank_statement_2',
+  },
+  {
+    id: 7,
+    title: 'Copy of Photo ID',
+    form_name: 'photo_id_copy',
+  },
+  {
+    id: 8,
+    title: 'W2',
+    form_name: 'w2',
+  },
+];
+
+export const SLIDER_BUTTONS = [
+  {
+    id: 0,
+    name: 'All (36)',
+  },
+  {
+    id: 1,
+    name: 'Unsent (12)',
+  },
+  {
+    id: 2,
+    name: 'Sent (24)',
+  },
+];
+
+export const USA_STATES = [
+  'Alabama',
+  'Alaska',
+  'American Samoa',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'District of Columbia',
+  'Federated States of Micronesia',
+  'Florida',
+  'Georgia',
+  'Guam',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Marshall Islands',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Northern Mariana Islands',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Palau',
+  'Pennsylvania',
+  'Puerto Rico',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virgin Island',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
+];
+
+export const SIDEBAR_BUTTONS = [
+  {
+    id: 0,
+    label: 'Rental Information',
+  },
+  {
+    id: 1,
+    label: "Client's Information",
+  },
+  {
+    id: 2,
+    label: 'Employment Information',
+  },
+  {
+    id: 3,
+    label: 'Documents',
+  },
+  {
+    id: 4,
+    label: 'Financials',
+  },
+  {
+    id: 5,
+    label: 'Other Info',
+  },
+];
+
 export const STEPS = [
   { id: 1, order: 1, label: 'Build' },
   { id: 2, order: 2, label: 'Preview and Save' },
 ];
 
-export const CONTACT_TYPES_OPTIONS = [
+export const CLIENT_OPTIONS = [
   {
-    value: 1,
+    id: 1,
     label: 'Renter',
   },
   {
-    value: 2,
+    id: 2,
     label: 'Buyer',
   },
   {
-    value: 3,
+    id: 3,
     label: 'Seller',
   },
   {
-    value: 4,
+    id: 4,
     label: 'Landlord',
   },
 ];
@@ -81,6 +228,10 @@ export const FONTS = {
       fontWeight: 400,
     },
     {
+      src: '/fonts/poppins/Poppins-Medium.ttf',
+      fontWeight: 500,
+    },
+    {
       src: '/fonts/poppins/Poppins-Italic.ttf',
       fontStyle: 'italic',
     },
@@ -98,7 +249,7 @@ const PIXELS_POINTS_RATIO = 0.75;
 //editor constants (pixels)
 const EDITOR_WIDTH = 748;
 const EDITOR_FONT_SIZE = 15;
-const EDITOR_FORM_INPUT_WIDTH = 250;
+const EDITOR_FORM_INPUT_WIDTH = 200;
 const TABLE_CELL_PADDING_HORIZONTAL_EDITOR = 8;
 const EDITOR_HEADING1_SIZE = 24;
 const EDITOR_HEADING1_MARGIN_BOTTOM = 12;
@@ -137,123 +288,69 @@ export const PDF_HEADING2_MARGIN_BOTTOM = EDITOR_HEADING2_MARGIN_BOTTOM * TOTAL_
 export const FORM_DROPDOWN_OPTIONS = [
   {
     id: 1,
-    title: 'Client fields',
-    fields: [
-      {
-        id: 1,
-        label: 'Client Full Name',
-        name: 'client_full_name',
-        inputType: 'text',
-      },
-      {
-        id: 2,
-        label: 'Client Email',
-        name: 'client_email',
-        inputType: 'text',
-      },
-      {
-        id: 3,
-        label: 'Client Phone',
-        name: 'client_phone',
-        inputType: 'phone',
-      },
-      {
-        id: 4,
-        label: 'Client Signature',
-        name: 'client_signature',
-        inputType: 'signature',
-      },
-    ],
+    label: 'Agent',
+    name: 'agent',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
   },
   {
     id: 2,
-    title: "Agent's fields",
-    fields: [
-      {
-        id: 1,
-        label: 'Agent Full Name',
-        name: 'agent_full_name',
-        inputType: 'text',
-      },
-      {
-        id: 2,
-        label: 'Agent Signature',
-        name: 'agent_signature',
-        inputType: 'signature',
-      },
-    ],
+    label: 'Client',
+    name: 'client',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
   },
   {
     id: 3,
-    title: 'Property fields',
-    fields: [
-      {
-        id: 1,
-        label: 'Property Address',
-        name: 'property_address',
-        inputType: 'text',
-      },
-      {
-        id: 2,
-        label: 'Unit number',
-        name: 'unit_number',
-        inputType: 'text',
-      },
-      {
-        id: 3,
-        label: 'Price',
-        name: 'price',
-        inputType: 'text',
-      },
-      {
-        id: 4,
-        label: 'Common Charges',
-        name: 'common_charges',
-        inputType: 'text',
-      },
-      {
-        id: 5,
-        label: 'Real Estate Taxes',
-        name: 'real_estate_taxes',
-        inputType: 'text',
-      },
-    ],
+    label: 'Date',
+    name: 'date',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
   },
   {
     id: 4,
-    title: 'Contract terms',
-    fields: [
-      {
-        id: 1,
-        label: "Commision to Seller's Agent",
-        name: 'seller_commision',
-        inputType: 'text',
-      },
-      {
-        id: 2,
-        label: "Commision to Buyer's Agent",
-        name: 'buyer_commision',
-        inputType: 'text',
-      },
-      {
-        id: 3,
-        label: 'Expiration Date',
-        name: 'expiration_date',
-        inputType: 'date',
-      },
-      {
-        id: 4,
-        label: 'Relationship Type',
-        name: 'relationship_type',
-        inputType: 'text',
-      },
-      {
-        id: 5,
-        label: 'Signed Date',
-        name: 'date',
-        inputType: 'date',
-      },
-    ],
+    label: 'Agent Signature',
+    name: 'signature',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 5,
+    label: 'Client Signature',
+    name: 'signature',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 6,
+    label: 'Email',
+    name: 'email',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 7,
+    label: 'Address',
+    name: 'address',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 8,
+    label: 'Price',
+    name: 'price',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 9,
+    label: 'City',
+    name: 'city',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 10,
+    label: 'Commission',
+    name: 'commission',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
+  },
+  {
+    id: 11,
+    label: 'Number',
+    name: 'number',
+    icon: 'bg-[url(/icons/text-paragraph.svg)]',
   },
 ];
 

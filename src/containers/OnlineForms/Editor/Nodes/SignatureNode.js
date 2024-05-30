@@ -14,6 +14,37 @@ function convertImageElement(domNode) {
 }
 
 export class SignatureNode extends DecoratorNode {
+  constructor(
+    src,
+    altText,
+    maxWidth,
+    width,
+    height,
+    showCaption,
+    caption,
+    captionsEnabled,
+    key,
+    textValue,
+    label,
+    name,
+    inputType,
+  ) {
+    super(key);
+    this.__src = src;
+    this.__altText = altText;
+    this.__maxWidth = maxWidth;
+    this.__width = width || 'inherit';
+    this.__height = height || 'inherit';
+    this.__showCaption = showCaption || false;
+    this.__caption = caption || createEditor();
+    this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
+    this.__id = uuid();
+    this.__formType = 'signature';
+    this.__textValue = textValue;
+    this.__label = label;
+    this.__name = name;
+    this.__inputType = inputType;
+  }
   static getType() {
     return 'image';
   }
@@ -32,11 +63,15 @@ export class SignatureNode extends DecoratorNode {
       node.__type,
       node.__formType,
       node.__textValue,
+      node.__label,
+      node.__name,
+      node.__inputType,
     );
   }
 
   static importJSON(serializedNode) {
-    const { altText, height, width, maxWidth, caption, src, showCaption, formType, textValue } = serializedNode;
+    const { altText, height, width, maxWidth, caption, src, showCaption, formType, textValue, label, name, inputType } =
+      serializedNode;
     const node = $createSignatureNode({
       altText,
       height,
@@ -46,6 +81,9 @@ export class SignatureNode extends DecoratorNode {
       width,
       formType,
       textValue,
+      label,
+      name,
+      inputType,
     });
     const nestedEditor = node.__caption;
     const editorState = nestedEditor.parseEditorState(caption.editorState);
@@ -72,21 +110,6 @@ export class SignatureNode extends DecoratorNode {
     };
   }
 
-  constructor(src, altText, maxWidth, width, height, showCaption, caption, captionsEnabled, key, textValue) {
-    super(key);
-    this.__src = src;
-    this.__altText = altText;
-    this.__maxWidth = maxWidth;
-    this.__width = width || 'inherit';
-    this.__height = height || 'inherit';
-    this.__showCaption = showCaption || false;
-    this.__caption = caption || createEditor();
-    this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
-    this.__id = uuid();
-    this.__formType = 'signature';
-    this.__textValue = textValue;
-  }
-
   exportJSON() {
     return {
       altText: this.getAltText(),
@@ -101,6 +124,9 @@ export class SignatureNode extends DecoratorNode {
       id: this.__id,
       formType: this.__formType,
       textValue: this.__textValue,
+      label: this.__label,
+      name: this.__name,
+      inputType: this.inputType,
     };
   }
 
@@ -168,6 +194,9 @@ export function $createSignatureNode({
   caption,
   key,
   textValue,
+  label,
+  name,
+  inputType,
 }) {
   const newSignatureNode = new SignatureNode(
     src,
@@ -180,6 +209,9 @@ export function $createSignatureNode({
     captionsEnabled,
     key,
     textValue,
+    label,
+    name,
+    inputType,
   );
 
   return newSignatureNode;

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import ApplyForPropertyEmail from '/public/animations/apply-for-property.gif';
 import clsx from 'clsx';
 import ApplyForm from '../ApplyForm';
-
+import CreditCheckForm from '../CreditCheckForm';
 const ApplyContainer = () => {
   const [showFullApplication, setShowFullApplication] = useState(true);
 
@@ -57,9 +57,7 @@ const ApplyContainer = () => {
               Only the Credit Check
             </button>
           </div>
-          <div className="bg-white px-[20px]  ">
-            {showFullApplication ? <ApplyForm /> : <div className="w-full h-full">Credit check</div>}
-          </div>
+          <div className="bg-white px-[20px]  ">{showFullApplication ? <ApplyForm /> : <CreditCheckForm />}</div>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState, createRef, forwardRef, useEffect, useMemo, useCallback } from 'react';
-import { SIDEBAR_BUTTONS } from 'containers/Applications/constants';
+import { SIDEBAR_BUTTONS } from 'containers/Applications/utils/constants';
 import Button from '@components/shared/button';
 import clsx from 'clsx';
 import NoteIcon from '@mui/icons-material/Note';

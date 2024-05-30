@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { getFileSize } from '../utils';
+import { getFileSize } from '../utils/utils';
 
 const ProgressBar = ({ currentProgress, error, uploading, success, currentFile, uploadedFileData }) => {
   const progressLineClassName = clsx(

@@ -3,8 +3,8 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { useEffect } from 'react';
 import { FormNode } from '../Nodes/FormNode';
 
-export function $createFormElementNode(text) {
-  const newNode = new FormNode(text);
+export function $createFormElementNode(payload) {
+  const newNode = new FormNode(payload);
 
   return newNode;
 }
@@ -70,7 +70,7 @@ export function FormElementPlugin() {
       INSERT_FORM_ELEMENT_COMMAND,
       (payload) => {
         editor.update(() => {
-          const formNode = $createFormElementNode(payload.text);
+          const formNode = $createFormElementNode(payload);
           const nextTextNode = new TextNode(' ');
           $insertNodes([formNode, nextTextNode]);
           nextTextNode.select();

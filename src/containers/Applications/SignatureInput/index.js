@@ -39,12 +39,12 @@ const SigantureInput = ({ name }) => {
   };
 
   return (
-    <div>
-      <div className="relative w-full  border-[1px] rounded shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
+    <div className="h-full">
+      <div className="relative w-full  border-[1px] h-full rounded shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]">
         <SignaturePad
           ref={(node) => (sigCanvas.current = node)}
           canvasProps={{
-            className: 'w-full ',
+            className: 'w-full h-full ',
           }}
           onEnd={setSignature}
         />

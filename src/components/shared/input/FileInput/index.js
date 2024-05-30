@@ -22,6 +22,8 @@ const FileInput = ({ children, ...rest }) => {
     onLargeFile = () => {},
     onSuccess = () => {},
     onRemoveFile,
+    onWrongFileFormat = () => {},
+    acceptedFormats = ['image/jpeg', 'image/png', 'application/pdf'],
     ...restProps
   } = rest;
   const formik = useFormikContext();
@@ -71,8 +73,16 @@ const FileInput = ({ children, ...rest }) => {
     else if (!getIn(formik.values, name) && totalError) setUploadPhase('error');
   }, [postFileData]);
 
+  const handleFileFormat = (file) => {
+    if (!acceptedFormats.includes(file.type)) {
+      onWrongFileFormat();
+      return false;
+    }
+    return true;
+  };
+
   const upload = (file) => {
-    uploadToS3(file);
+    if (handleFileFormat(file)) uploadToS3(file);
   };
 
   const onDrop = (e) => {
@@ -88,7 +98,9 @@ const FileInput = ({ children, ...rest }) => {
 
   const handleFileInput = (e) => {
     const { files } = e.target;
-    upload(files[0]);
+    const file = files[0];
+
+    if (handleFileFormat(file)) upload(files[0]);
   };
 
   const childComponentsPresent = useMemo(() => {

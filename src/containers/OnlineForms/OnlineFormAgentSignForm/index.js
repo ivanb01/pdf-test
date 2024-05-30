@@ -186,8 +186,8 @@ const OnlineFormAgentSign = () => {
                   }}
                   name={field.id}
                   value={values[fieldId]?.answer}
-                  type={field.formType}
-                  label={field.textValue}
+                  type={field.inputType}
+                  label={field.label}
                 />
               </div>
             );
@@ -208,7 +208,7 @@ const OnlineFormAgentSign = () => {
                     setFieldValue(`${id}.answer`, '');
                   }}
                   type={field.formType}
-                  label={field.textValue}
+                  label={field.label}
                   initialSignatureData={values[fieldId]?.answer}
                 />
               </div>

@@ -7,7 +7,7 @@ import RetryIcon from '/public/icons/retry.svg';
 import ProgressBar from 'containers/Applications/ProgressBar.js';
 import NotificationAlert from '@components/shared/alert/notification-alert';
 import toast from 'react-hot-toast';
-import { getFileSize } from 'containers/Applications/utils';
+import { getFileSize } from 'containers/Applications/utils/utils';
 
 const FileInput = ({ name, title, error, errorText, onRemove }) => {
   const onLargeFile = () => {
@@ -15,6 +15,10 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
   };
   const onSuccess = () => {
     toast.success(`${title} uploaded successfully!`);
+  };
+
+  const onWrongInputFormat = () => {
+    toast.error('File type not allowed!');
   };
 
   return (
@@ -25,7 +29,8 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
         handleUploading
         onLargeFile={onLargeFile}
         onSuccess={onSuccess}
-        onRemoveFile={onRemove}>
+        onRemoveFile={onRemove}
+        onWrongFileFormat={onWrongInputFormat}>
         <div className="space-y-2 ">
           <p className="text-gray4 text-sm font-medium leading-5">{title}</p>
           <FileInputUpload.Upload className="w-full flex flex-col justify-center items-center p-[26px] pt-[22px] border-dashed border-2 leading-4 font-normal text-xs text-gray5 rounded-md">
@@ -37,7 +42,7 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
                 </FileInputUpload.Input>
                 <span className="text-gray5">{` or drag and drop`}</span>
               </div>
-              <span className=" text-gray4 text-[10px]">{`PNG, JPG, GIF up to 10MB`}</span>
+              <span className=" text-gray4 text-[10px]">{`PDF, PNG, JPG up to 10MB`}</span>
             </div>
           </FileInputUpload.Upload>
           <FileInputUpload.Uploading className="w-full flex flex-col justify-center items-center pt-[22px] pb-[26px] leading-4 font-normal text-xs text-gray5 rounded-md">
@@ -48,7 +53,7 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
               const { isSuccess: isFetchingUrlSuccess } = presigendUrlMutationData;
               return (
                 <div className="flex gap-2 w-full py-[11px]">
-                  <div className="flex flex-col w-full gap-1.5">
+                  <div className="shrink-1 flex flex-col w-full gap-1.5">
                     <span className="text-xs font-medium text-gray7 leading-4">{fileData?.name}</span>
                     <ProgressBar
                       currentProgress={uploadProgress}
@@ -67,16 +72,22 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
               );
             }}
           </FileInputUpload.Uploading>
-          <FileInputUpload.Uploaded className="w-full flex flex-col justify-center items-center py-6 border leading-4 font-normal text-xs text-gray5 rounded-md">
+          <FileInputUpload.Uploaded className="w-full flex flex-col justify-center items-center py-6 border leading-4 font-normal text-xs text-gray5 rounded-md ">
             {(context) => {
               const { postFileData } = context;
               const { uploadedFileData } = postFileData;
               return (
                 <div className="w-full flex gap-2 p-3">
-                  <div className="flex flex-col w-full gap-3.5">
-                    <div className="flex justify-between text-xs font-medium text-gray7 leading-4">
-                      <span className="">{uploadedFileData?.name_with_format}</span>
-                      <span className="text-gray4 shrink-0">{getFileSize(uploadedFileData?.file_size)}</span>
+                  <div className="flex flex-col w-full gap-3.5 ">
+                    <div className="flex justify-between text-xs font-medium text-gray7 leading-4 	">
+                      <div className="truncate">
+                        <span className="truncate">{uploadedFileData?.name_with_format}</span>
+                      </div>
+                      <div className=" text-nowrap	">
+                        <span className="text-gray4 shrink-0  text-nowrap	">
+                          {getFileSize(uploadedFileData?.file_size)}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex gap-3.5">
                       <FileInputUpload.DownloadButton>

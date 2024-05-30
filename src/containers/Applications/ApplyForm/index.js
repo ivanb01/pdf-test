@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Input, { RadioButton } from '@components/shared/input';
 import Dropdown from '@components/shared/dropdown';
-import { DOCUMENT_PLACEHOLDERS } from '../constants';
+import { DOCUMENT_PLACEHOLDERS } from '../utils/constants';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useFormik, FormikProvider, Field, getIn } from 'formik';
 import * as Yup from 'yup';
@@ -9,7 +9,7 @@ import AddDocument from '../AddDocumentOverlay';
 import InputDropdown from './InputDropdown';
 import Image from 'next/image';
 import Button from '@components/shared/button';
-import { USA_STATES } from '../constants';
+import { USA_STATES } from '../utils/constants';
 import moment from 'moment';
 import { usePostPropertyApplication } from 'containers/Applications/queries/mutations';
 import FileInput from './FileInput';
@@ -25,7 +25,9 @@ import AgreementOverlay from '../AgreementOverlay';
 import { useSendEmail } from '@helpers/queries/mutations';
 import ApplicationSubmitBody from '../EmailTemplates/ApplicationSubmit';
 import { render as renderEmail } from '@react-email/components';
-
+import { useStripe, useElements, Elements, PaymentElement, AddressElement } from '@stripe/react-stripe-js';
+import toast from 'react-hot-toast';
+import useStripePayment from '../utils/hooks/useStripePayment';
 const documentType = {
   bank_statement_1: 'BANK STATEMENT 1',
   bank_statement_2: 'BANK STATEMENT 2',
@@ -39,6 +41,132 @@ const documentType = {
   other_documents: 'OTHER',
 };
 
+const TEST_FORM_VALUES = {
+  agent_name: 'Ivan',
+  property_id: '1b9ce199',
+  contractor_id: 1,
+  contractor_name: 'Contractor Tester',
+  contractor_email: 'contractor@tester.com',
+  apartment_number: '5a',
+  property_address: 'Property Address',
+  property_unit_number: 'Property Unit Number',
+  property_city: 'Property City',
+  property_state: 'ALASKA',
+  // property_state: { id: 3, label: "Alaska", value: "alaska" },
+  property_zip_code: 'Property Zip Code',
+  monthly_rent: 1000.0,
+  lease_start_date: '2024-02-17',
+  lease_end_date: '2024-02-17',
+  landlord: 'Landlord',
+  landlord_address: 'Landlord Address',
+  landlord_phone_number: '3768748763893',
+  client_first_name: 'John',
+  client_last_name: 'Doe',
+  client_email: 'ivanbralic95@gmail.com',
+  client_birth_date: '1980-01-01',
+  client_phone_number: '348767846876783',
+  client_permanent_address: 'Perm 123',
+  client_unit_number: 'Unit 123',
+  client_city: 'Client City',
+  client_state: 'ALASKA',
+  client_zip_code: '387478',
+  client_ssn: '37848745836892798',
+  client_has_pets: false,
+  client_pets_description: '',
+  client_is_guarantor: false,
+  client_is_interested_in_guarantor: false,
+  client_additional_comment: '',
+  client_signature: null,
+  employer: 'Employer',
+  employer_address: 'Employer Address',
+  contact_person: 'Contact Person',
+  contact_person_number: '478487469837938',
+  position_title: 'Work',
+  annual_compensation: 1000000.0,
+  employment_length: '',
+  employed_since_date: '2024-02-17',
+  previous_employer: null,
+  previous_employer_address: null,
+  previous_employer_contact_person: null,
+  previous_employer_position_title: null,
+  previous_employer_annual_compensation: 0.0,
+  previous_employer_employment_length: '',
+  previous_employer_employed_since_date: null,
+  credit_report_status: 'CHECKED',
+  bank_name: null,
+  account_type: null,
+  account_number: null,
+  accountant: null,
+  accountant_phone_number: null,
+  emergency_contact_name: 'Emergency Contact',
+  emergency_contact_phone_number: '7486486487647',
+  need_moving_services: false,
+  move_in_date: null,
+  occupants: [
+    {
+      full_name: 'John Doe',
+      email: 'john@doe.com',
+    },
+  ],
+  documents: [
+    {
+      document_type: 'EMPLOYMENT_LETTER',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'OTHER',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'PAYSTUB_1',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'PAYSTUB_2',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'PHOTO_ID_COPY',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'TAX_RETURNS_1',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'TAX_RETURNS_2',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+    {
+      document_type: 'W2',
+      name: 'Fitbit',
+      name_with_format: 'fitbit.jpg',
+      url: 'featured_properties/fitbit.jpg',
+      file_size: null,
+    },
+  ],
+};
 const ApplyForm = () => {
   const router = useRouter();
   const [isAddDocumentOverlayOpened, setAddDocumentOverlayOpened] = useState(false);
@@ -90,11 +218,12 @@ const ApplyForm = () => {
     ),
 
     // property_state: Yup.string().required('State is a required field!'),
-    property_state: Yup.object().shape({
-      id: Yup.string().required('State is a required field!'),
-      label: Yup.string().required('State is a required field!'),
-      value: Yup.string().required('State is a required field!'),
-    }),
+    // property_state: Yup.object().shape({
+    //   id: Yup.string().required("State is a required field!"),
+    //   label: Yup.string().required("State is a required field!"),
+    //   value: Yup.string().required("State is a required field!"),
+    // }),
+    property_state: Yup.string().required('State is a required field!'),
 
     property_city: Yup.string().required('City is a required field!'),
     property_unit_number: Yup.string().required('Unit numbers is a required field!'),
@@ -141,19 +270,32 @@ const ApplyForm = () => {
 
   const { mutate: mutateSendEmail } = useSendEmail();
 
-  const onSubmitSuccess = async (data, variables) => {
-    const emailBody = {
-      to: [variables.client_email],
-      subject: 'Opgny Property Application',
-      body: renderEmail(
-        <ApplicationSubmitBody email={variables.client_email} first_name={variables.client_first_name} />,
-        {
-          pretty: true,
-        },
-      ),
-    };
+  const onPaymentError = (error) => {
+    toast.error(error.message);
+  };
+  const { elements, loading, statusMessage, errorMessage, handleSubmitPayment, paymentStatus, isErrorOnPayment } =
+    useStripePayment({
+      onError: onPaymentError,
+    });
 
-    mutateSendEmail(emailBody);
+  const onSubmitSuccess = async (data, variables) => {
+    console.log('variables', variables);
+    if (variables.do_credit_check) {
+      await handleSubmitPayment(data.data);
+    } else {
+      const emailBody = {
+        to: [variables.client_email],
+        subject: 'Opgny Property Application',
+        body: renderEmail(
+          <ApplicationSubmitBody email={variables.client_email} first_name={variables.client_first_name} />,
+          {
+            pretty: true,
+          },
+        ),
+      };
+
+      mutateSendEmail(emailBody);
+    }
   };
 
   const {
@@ -227,6 +369,7 @@ const ApplyForm = () => {
       employed_since_month: 0,
       employed_since_year: 0,
       existing_occupant: false,
+      do_credit_check: true,
       landlord: '',
       landlord_address: '',
       landlord_phone_number: '',
@@ -266,7 +409,17 @@ const ApplyForm = () => {
       setTimeout(() => formikBag.setFieldValue('occupants', []));
       setTimeout(() => formikBag.setFieldValue('client_state', ''));
     },
-    onSubmit: (values) => {
+
+    onSubmit: async (values) => {
+      if (values.do_credit_check) {
+        try {
+          const response = await elements.submit();
+          if (Object.keys(response).length) return;
+        } catch (error) {
+          return;
+        }
+      }
+
       const filteredOtherDocuments = filterOtherDocuments(formik.values.documents.other_documents);
       let documents = formik.values.documents;
 
@@ -281,7 +434,7 @@ const ApplyForm = () => {
 
       const filteredValues = {
         ...values,
-        property_state: formik.values.property_state.value,
+        // property_state: formik.values.property_state.value,
         documents,
         signature: null,
         annual_compensation: parseFloat(values.annual_compensation),
@@ -290,6 +443,9 @@ const ApplyForm = () => {
       mutatePostApplication(filteredValues);
     },
   });
+
+  console.log(formik.values);
+  console.log(formik.errors);
 
   const filterOtherDocuments = (otherDocuments) => {
     if (!(otherDocuments && typeof otherDocuments === 'object' && !!Object.keys(otherDocuments).length)) return [];
@@ -348,12 +504,13 @@ const ApplyForm = () => {
     await formik.setFieldValue('monthly_rent', listing.PRICE);
 
     listing?.CITY && (await formik.setFieldValue('property_city', listing.CITY));
-    listing?.STATE &&
-      (await formik.setFieldValue('property_state', {
-        id: uuid(),
-        label: listing.STATE,
-        value: listing.STATE,
-      }));
+    // listing?.STATE &&
+    //   (await formik.setFieldValue("property_state", {
+    //     id: uuid(),
+    //     label: listing.STATE,
+    //     value: listing.STATE,
+    //   }));
+    listing?.STATE && (await formik.setFieldValue('property_state', listing.STATE));
     listing?.UNIT_NUMBER && (await formik.setFieldValue('property_unit_number', listing.UNIT_NUMBER));
     listing?.ZIP_CODE && (await formik.setFieldValue('property_zip_code', listing.ZIP_CODE));
   };
@@ -372,9 +529,9 @@ const ApplyForm = () => {
   };
 
   const resetAfterSuccess = () => {
-    setTimeout(() => {
-      resetApplication();
-    }, 8000);
+    // setTimeout(() => {
+    //   resetApplication();
+    // }, 8000);
   };
 
   useEffect(() => {
@@ -1046,30 +1203,34 @@ const ApplyForm = () => {
                     <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 ">
                       <div className="flex gap-3 items-center mb-[2px]">
                         <input
+                          name="do_credit_check"
                           type="checkbox"
                           className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-                          checked
-                          onChange={() => {}}
+                          onChange={(e) => {
+                            formik.handleChange(e);
+                          }}
+                          value={formik.values.do_credit_check}
+                          checked={formik.values.do_credit_check}
                         />
                         <p className="font-medium ">Include Credit Check</p>
                       </div>
-                      <div className="flex flex-col pl-[28px] gap-6 [&_input]:h-[38px] ">
+                      <div className="flex flex-col pl-[28px] gap-6 [&_input]:h-[38px] mb-[24px]">
                         <p className="font-normal">
                           Landlords want to ensure that they will be paid the rent they are owed when they let out a
                           property. A credit check can help give them information about the tenant's previous history
                           when it comes to paying back debts. The cost of a credit check is $20.00.{' '}
                         </p>
-                        <div className="flex flex-col md:flex-row gap-6 w-full">
+                        {/* <div className="flex flex-col md:flex-row gap-6 w-full">
                           <Input
                             label="Name on Card"
-                            className={'w-full max-w-[292px]'}
+                            className={"w-full max-w-[292px]"}
                             placeholder="Name and Last Name"
                           />
                           <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
                             <div className="absolute top-0 z-[5] focus-within:z-[5] w-full">
                               <Input
                                 label="Card Details"
-                                className={'[&_input]:rounded-none [&_input]:rounded-t-lg '}
+                                className={"[&_input]:rounded-none [&_input]:rounded-t-lg "}
                                 placeholder="Card Number"
                               />
                             </div>
@@ -1078,7 +1239,7 @@ const ApplyForm = () => {
                               <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 left-0 z-0 focus-within:z-[5]">
                                 <Input
                                   className={
-                                    '[&_div]:mt-0 [&_input]:border-[1px] [&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-bl-lg '
+                                    "[&_div]:mt-0 [&_input]:border-[1px] [&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-bl-lg "
                                   }
                                   placeholder="exp date"
                                   label=""
@@ -1087,7 +1248,7 @@ const ApplyForm = () => {
                               <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 z-0 right-0 focus-within:z-[5]">
                                 <Input
                                   label=""
-                                  className={'[&_div]:mt-0 [&_input]:rounded-none [&_input]:rounded-br-lg '}
+                                  className={"[&_div]:mt-0 [&_input]:rounded-none [&_input]:rounded-br-lg "}
                                   placeholder="CVV"
                                 />
                               </div>
@@ -1097,20 +1258,24 @@ const ApplyForm = () => {
                             <div className="w-full absolute top-0 z-0 focus-within:z-10">
                               <Input
                                 label="Billing Address"
-                                className={'w-full [&_input]:rounded-none [&_input]:rounded-t-lg'}
+                                className={"w-full [&_input]:rounded-none [&_input]:rounded-t-lg"}
                                 placeholder="Address"
                               />
                             </div>
                             <div className="w-full absolute bottom-0 z-0 focus-within:z-10">
                               <Input
                                 className={
-                                  'w-full [&_div]:mt-0  [&_input]:border-[1px]  focus:[&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-b-lg'
+                                  "w-full [&_div]:mt-0  [&_input]:border-[1px]  focus:[&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-b-lg"
                                 }
                                 placeholder="Zip Code"
                               />
                             </div>
                           </div>
-                        </div>
+                        </div> */}
+                      </div>
+                      <div className="pl-[28px]">
+                        <PaymentElement onReady={(event) => console.log('CHANGE', event)} />
+                        <AddressElement options={{ mode: 'billing' }} />
                       </div>
                     </div>
                   </div>

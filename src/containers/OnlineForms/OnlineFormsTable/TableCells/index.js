@@ -34,9 +34,9 @@ export const ClientCell = ({ name, email, imgSrc }) => {
 };
 
 export const StatusCell = (props) => {
-  const { status, form_type, client_email, client_name, id } = props;
+  const { status, form_type, client_email, client_name, public_identifier } = props;
 
-  const { hex: formPublicIdentifier } = id;
+  const { hex: formPublicIdentifier } = public_identifier;
   const { name: formTitle } = form_type;
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);

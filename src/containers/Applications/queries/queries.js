@@ -1,6 +1,10 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { fetchProperties, fetchSingleProperty } from '@api/properties';
-import { fetchPropertyApplications, fetchPropertyApplicationById } from '@api/applications';
+import {
+  fetchPropertyApplications,
+  fetchPropertyApplicationById,
+  generateCreditCheckPaymenkLink,
+} from '@api/applications';
 import { getContacts } from '@api/contacts';
 
 export const useFetchProperties = (search, options) => {
@@ -23,11 +27,13 @@ export const useFetchPropertyApplicationsPaginated = (params, options) => {
   const { search_param } = params;
   return useInfiniteQuery({
     queryKey: [`property-applications-search-${search_param}`],
-    queryFn: (query) => fetchPropertyApplications({ page: query.pageParam, ...params }),
+    queryFn: (query) => {
+      return fetchPropertyApplications({ page: query.pageParam, ...params });
+    },
 
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      return lastPage.data.next_page ? lastPage.data.page + 1 : undefined;
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      return lastPage.data.has_next_page ? lastPageParam + 1 : undefined;
     },
     refetchOnWindowFocus: false,
     select: (data) => {
@@ -67,6 +73,15 @@ export const useFetchAllClients = (options) => {
   return useQuery({
     queryKey: ['clients'],
     queryFn: getContacts,
+    ...options,
+  });
+};
+
+export const useGenerateCreditCheckPaymenkLink = () => {
+  return useQuery({
+    queryKey: ['generated-payment-link', id],
+    queryFn: (id) => generateCreditCheckPaymenkLink(id),
+    enabled: false,
     ...options,
   });
 };
