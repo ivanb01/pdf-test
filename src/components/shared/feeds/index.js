@@ -222,7 +222,8 @@ export default function Feeds({
                                         ? formatDateCalendar(activityItem.created_at)
                                         : daysBefore(activityItem.created_at)}
                                     </div>
-                                  }>
+                                  }
+                                >
                                   <h1 className={'text-sm'}>
                                     {formatDateCalendar(activityItem.created_at).includes('AM') ||
                                     formatDateCalendar(activityItem.created_at).includes('PM')
@@ -250,7 +251,8 @@ export default function Feeds({
                                         ? formatDateCalendar(activityItem.updated_at)
                                         : daysBefore(activityItem.updated_at)}
                                     </div>
-                                  }>
+                                  }
+                                >
                                   <h1 className={'text-sm'}>
                                     {formatDateCalendar(activityItem.updated_at).includes('AM') ||
                                     formatDateCalendar(activityItem.updated_at).includes('PM')
@@ -318,7 +320,8 @@ export default function Feeds({
                   margin: '0 -25px',
                   padding: '0 25px',
                 }}
-                autoHide>
+                autoHide
+              >
                 <ul role="list" className={`pt-6 flex flex-col gap-8`}>
                   {Object.values(inboxData).flatMap((item) => (
                     <div
@@ -328,9 +331,11 @@ export default function Feeds({
                         setOpenEmailsPopup(true);
                       }}
                       role={'button'}
-                      key={item[0].thread_id}>
+                      key={item[0].thread_id}
+                    >
                       <div
-                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}
+                      >
                         <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
                         <span
                           style={{ zIndex: '0 !important' }}
@@ -396,7 +401,8 @@ export default function Feeds({
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}></TextArea>
+                errorText={errors.description}
+              ></TextArea>
               <div className="flex flex-row justify-end mt-6">
                 <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
                 <Button type="submit" primary label="Save" loading={loadingButton} />

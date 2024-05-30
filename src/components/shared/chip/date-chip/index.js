@@ -68,7 +68,8 @@ export default function DateChip({
             </>
           )}
         </div>
-      }>
+      }
+    >
       <div style={{ width: '202px' }} className={`flex flex-col justify-center  gap-1.5`}>
         <h6 className={' text-xs leading-4 font-medium'}>
           Communication Health is {isHealthyCommunication ? 'good' : 'low'}!

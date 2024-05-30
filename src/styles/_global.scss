@@ -832,8 +832,9 @@ tbody > div {
 .floatingAlert-enter-active {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 500ms ease-in-out,
-  transform 500ms ease-in-out;
+  transition:
+    opacity 500ms ease-in-out,
+    transform 500ms ease-in-out;
 }
 
 .floatingAlert-exit {
@@ -844,8 +845,9 @@ tbody > div {
 .floatingAlert-exit-active {
   opacity: 0;
   transform: translateX(100%);
-  transition: opacity 500ms ease-in-out,
-  transform 500ms ease-in-out;
+  transition:
+    opacity 500ms ease-in-out,
+    transform 500ms ease-in-out;
 }
 
 @media (max-width: 769px) {
@@ -1447,9 +1449,10 @@ i.chevron-down {
   z-index: 5;
   display: block;
   position: absolute;
-  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2),
-  0 2px 4px 0 rgba(0, 0, 0, 0.1),
-  inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 12px 28px 0 rgba(0, 0, 0, 0.2),
+    0 2px 4px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   min-width: 100px;
   min-height: 40px;

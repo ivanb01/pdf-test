@@ -46,7 +46,6 @@ const SendPropertiesFooter = ({
             }}
           />
         )}
-
         <Button
           primary
           leftIcon={<SendIcon className={'h-4 w-4'} />}

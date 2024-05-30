@@ -319,7 +319,12 @@ const Clients = ({
                   ? "All Clients"
                   : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               </Text>
-              {showUnapprovedToggle() && <SwitchComponent label="Unapproved AI Contacts" />}
+              {contacts.filter(
+                (contact) =>
+                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+                  !contact.approved_ai &&
+                  contact.category_1 == 'Client',
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">
               <Search
