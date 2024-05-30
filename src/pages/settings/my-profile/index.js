@@ -21,9 +21,13 @@ const index = () => {
 
   useEffect(() => {
     const getInfo = async () => {
-      const info = await fetchCurrentUserInfo();
-      dispatch(setUserInfo(info));
-      setChangedUserInfo(info);
+      try {
+        const info = await fetchCurrentUserInfo();
+        dispatch(setUserInfo(info));
+        setChangedUserInfo(info);
+      } catch (error) {
+        toast.error("An error occurred while fetching user info:", error);
+      }
     };
 
     getInfo();
