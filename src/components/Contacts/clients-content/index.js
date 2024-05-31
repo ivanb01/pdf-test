@@ -81,7 +81,7 @@ const Clients = ({
       value: "import_source_text",
     },
     {
-      title: 'CLIENT STATUS',
+      title: "CLIENT STATUS",
       content:
         openedSubtab === -1
           ? clientStatuses.flatMap((i) => i.statuses.flatMap((s) => s.name))
@@ -212,26 +212,15 @@ const Clients = ({
 
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
+    console.log(contacts, "contacts");
     let filtered = filterContacts(contacts);
-    if (hideUnapproved && Object.keys(clientsFilters).length > 0) {
-      filtered = filtered.filter(
-        (contact) =>
-          ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
-          !contact.approved_ai &&
-          contact.category_1 == "Client",
-      );
-    } else {
-      filtered = filterContacts(contacts);
-    }
     setFilteredContacts(filtered);
     statuses.forEach((status) =>
       status.statuses.forEach((s) =>
         handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
       ),
     );
-    console.log(filtered, 'filtered');
   }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
-
 
   useEffect(() => {
     setFiltersCleared(true);
@@ -271,9 +260,6 @@ const Clients = ({
 
     return () => scrollElement?.removeEventListener("scroll", handleScroll);
   }, [openedSubtab]);
-  useEffect(() => {
-    console.log(hideUnapproved, "hideUnapproved");
-  }, [hideUnapproved]);
 
   const showUnapprovedToggle = () => {
     console.log(openedSubtab);
@@ -302,6 +288,21 @@ const Clients = ({
   useEffect(() => {
     console.log(Object.values(clientsFilters).flat().length, "length", unapprovedContacts?.length);
   }, [clientsFilters, unapprovedContacts]);
+  const getCount = () => {
+    if (hideUnapproved) {
+      return (
+        filteredContacts.length -
+        filteredContacts.filter(
+          (contact) =>
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
+            contact.approved_ai !== true &&
+            contact.category_1 === "Client",
+        ).length
+      );
+    } else {
+      return filteredContacts.length;
+    }
+  };
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
@@ -320,12 +321,7 @@ const Clients = ({
                   ? "All Clients"
                   : clientStatusMainTitlesUpdated[clientStatuses[openedSubtab].statusMainTitle]}
               </Text>
-              {contacts.filter(
-                (contact) =>
-                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
-                  !contact.approved_ai &&
-                  contact.category_1 == 'Client',
-              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+              {showUnapprovedToggle() && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">
               <Search
@@ -380,8 +376,8 @@ const Clients = ({
             <div className="flex justify-between">
               <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
-                  {filteredContacts.length}
-                  {filteredContacts.length == 1 ? " result" : " results"} for:
+                  {getCount()}
+                  {getCount() == 1 ? " result" : " results"} for:
                 </div>
                 {Object.keys(clientsFilters).map((key, index) =>
                   clientsFilters[key].map((filter, i) => (
