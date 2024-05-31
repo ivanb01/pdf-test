@@ -1,10 +1,13 @@
+import { getCompany } from '@global/functions';
 import PropTypes from 'prop-types';
-const Signature = ({ userInfo, companyName, imageUrl }) => {
+const Signature = ({ userInfo, email }) => {
   const ErrorState = ({ message }) => {
     return (
       <p className={'rounded-md px-3 py-1 bg-red1 min-w text-sm leading-5 font-medium text-[#991B1B]'}>{message}</p>
     );
   };
+
+  const company = getCompany(email);
 
   return (
     <div className={'flex flex-col gap-[4px] text-gray8 text-sm font-normal'}>
@@ -22,7 +25,7 @@ const Signature = ({ userInfo, companyName, imageUrl }) => {
           )}
         </div>
       </div>
-      <p>{companyName}</p>
+      <p>{company?.companyName}</p>
       <div>
         {userInfo?.phone_number === undefined || userInfo?.phone_number.length === 0 ? (
           <ErrorState message={'Phone Number is missing'} />
@@ -30,10 +33,10 @@ const Signature = ({ userInfo, companyName, imageUrl }) => {
           userInfo?.phone_number
         )}
       </div>
-      {!userInfo?.email ? <ErrorState message={'Email is missing'} /> : <p>{userInfo?.email}</p>}
-      {imageUrl && (
+      {!email ? <ErrorState message={'Email is missing'} /> : <p>{email}</p>}
+      {company.imageUrl && (
         <div className={'mt-3'}>
-          <img src={`${imageUrl}`} alt={''} height={20} width={120} />
+          <img src={`${company.imageUrl}`} alt={''} height={20} width={120} />
         </div>
       )}
     </div>

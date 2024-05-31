@@ -94,13 +94,8 @@ const fetchCurrentUserInfo = async () => {
 
 const saveUserInfo = async (info) => {
   if (info) {
-    let signatureHtml = ReactDOMServer.renderToString(
-      <SignatureEmailFooter
-        userInfo={info}
-        companyName={getCompany(info).companyName}
-        imageUrl={getCompany(info).imageUrl}
-      />,
-    );
+    const email = localStorage.getItem('user');
+    let signatureHtml = ReactDOMServer.renderToString(<SignatureEmailFooter userInfo={info} email={email} />);
     console.log(signatureHtml);
     localStorage.setItem('agentSignature', JSON.stringify(signatureHtml));
     localStorage.setItem('userInfo', JSON.stringify(info));
