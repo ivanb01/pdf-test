@@ -18,7 +18,6 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
   const [person, setPerson] = useState();
 
   useEffect(() => {
-    console.log(data, 'data');
     setPerson(person);
   }, [data]);
 
@@ -183,8 +182,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                          ? 'Deactivated'
-                          : 'Inactive'}
+                        ? 'Deactivated'
+                        : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -200,8 +199,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                         person.contact_campaign_status === 'assigned'
                           ? 'Campaign is Running'
                           : person.contact_campaign_status === 'unassigned'
-                            ? 'Campaign Deactivated'
-                            : 'Never In Campaign'
+                          ? 'Campaign Deactivated'
+                          : 'Never In Campaign'
                       }
                     />
                   </div>
@@ -210,8 +209,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       {person.contact_campaign_status === 'assigned'
                         ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
                         : person.contact_campaign_status === 'unassigned'
-                          ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
-                          : ''}
+                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                        : ''}
                     </div>
                   )}
                 </div>

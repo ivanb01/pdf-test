@@ -1,8 +1,37 @@
+import { getEmailTemplates } from '@api/campaign';
 import { useEffect, useState } from 'react';
 
-export const useCampaignForm = (initialCampaign, initialEvents) => {
-  const [campaign, setCampaign] = useState(initialCampaign);
-  const [events, setEvents] = useState(initialEvents);
+export const useCampaignForm = () => {
+  const [campaign, setCampaign] = useState({
+    name: null,
+    description: 'Campaign Description',
+    status: 'Active',
+    contact_category_id: null,
+    contact_status_id: null,
+  });
+  const [events, setEvents] = useState([
+    {
+      action: 'Send',
+      title: 'New Event',
+      body_html: '',
+      body: '',
+      wait_interval: '-d',
+      type: 'Email',
+      trigger_time: '11:00',
+      charset: 'A',
+      template: {
+        id: -1,
+        label: 'Create New Email',
+      },
+      save_template: false,
+    },
+  ]);
+  const [emailTemplates, setEmailTemplates] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState();
+  const [initialOption, setInitialOption] = useState({
+    id: -1,
+    label: 'Create New Email',
+  });
   const [eligibleClients, setEligibleClients] = useState(0);
   const [showExpanded, setShowExpanded] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -18,6 +47,36 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
       title: 'SMS',
     },
   ]);
+
+  useEffect(() => {
+    getTemplates();
+  }, []);
+
+  const getTemplates = async () => {
+    try {
+      // const smsResponse = await getSMSTemplates();
+      const emailResponse = await getEmailTemplates();
+      // const smsTemplates = smsResponse.data.data.map((template) => ({
+      //   id: template.id,
+      //   label: template.name,
+      //   message: template.message,
+      // }));
+
+      const emailTemplates = emailResponse.data.data.map((template) => ({
+        id: template.id,
+        label: template.subject,
+        message: template.body_html,
+      }));
+
+      // smsTemplates.unshift({ ...initialOption, label: 'Create New Email' });
+      emailTemplates.unshift({ ...initialOption });
+
+      // setSmsTemplates(smsTemplates);
+      setEmailTemplates(emailTemplates);
+    } catch (error) {
+      console.error('Failed to get templates:', error);
+    }
+  };
 
   const validateForm = () => {
     if (!campaign.name) {
@@ -89,5 +148,9 @@ export const useCampaignForm = (initialCampaign, initialEvents) => {
     setIsValid,
     selectedEvent,
     setSelectedEvent,
+    emailTemplates,
+    selectedTemplate,
+    setSelectedTemplate,
+    initialOption,
   };
 };

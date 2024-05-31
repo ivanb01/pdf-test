@@ -424,7 +424,6 @@ const Clients = ({
                     : Object.values(clientsFilters).flat().length === 0 && unapprovedContacts.length > 0
                       ? "calc(100vh - 223px)"
                       : "calc(100vh - 155px)",
-
               background: "#f9fafb",
             }}>
             <div className="flex flex-row bg-gray10 w-fit h-full board-view">

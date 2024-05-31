@@ -206,10 +206,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      {campaignEvents === undefined ||
-      CRMCampaigns === undefined ||
-      campaignDetails === undefined ||
-      usersInCampaignGlobally === undefined ? (
+      {!campaignEvents || !CRMCampaigns || !usersInCampaignGlobally ? (
         <div className="relative h-[90vh]">
           <Loader />
         </div>
