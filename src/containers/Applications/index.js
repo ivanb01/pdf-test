@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import Search from '@components/shared/input/search';
 import ButtonsSlider from '@components/shared/button/buttonsSlider';
-import { SLIDER_BUTTONS } from './utils/constants';
-import ApplicationsTable from './Table';
+import Search from '@components/shared/input/search';
 import useDebounce from 'hooks/useDebounceValue';
+import { useMemo, useState } from 'react';
+import ApplicationsTable from './Table';
+import { useFetchPropertyApplicationsForCount } from './queries/queries';
 
 const Applications = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -13,6 +13,36 @@ const Applications = () => {
   const handleButtonChange = (buttonId) => {
     setCurrentButton(buttonId);
   };
+
+  const { data: countApplicationData } = useFetchPropertyApplicationsForCount({});
+
+  const statusButtons = useMemo(() => {
+    if (countApplicationData) {
+      if (countApplicationData?.data) {
+        const allItemsCount = countApplicationData?.data.total_items ?? 0;
+        const unsentCount = countApplicationData?.data.unsent_property_applications ?? 0;
+        const sentCount = countApplicationData?.data.sent_property_applications ?? 0;
+
+        return [
+          {
+            id: 0,
+            name: 'All',
+            count: allItemsCount,
+          },
+          {
+            id: 1,
+            name: 'Unsent',
+            count: unsentCount,
+          },
+          {
+            id: 2,
+            name: 'Sent',
+            count: sentCount,
+          },
+        ];
+      }
+    } else return [];
+  }, [countApplicationData]);
 
   return (
     <div className="h-full w-full">
@@ -29,8 +59,8 @@ const Applications = () => {
           </div>
           <div className="min-w-[306px]">
             <ButtonsSlider
-              noCount
-              buttons={SLIDER_BUTTONS}
+              noCount={false}
+              buttons={statusButtons}
               currentButton={currentButton}
               onClick={handleButtonChange}
               className="mr-4"
@@ -39,7 +69,7 @@ const Applications = () => {
         </div>
       </div>
 
-      <ApplicationsTable searchInput={debouncedSearch} />
+      <ApplicationsTable searchInput={debouncedSearch} currentButton={currentButton} />
     </div>
   );
 };

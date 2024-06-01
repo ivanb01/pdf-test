@@ -1,33 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Input, { RadioButton } from '@components/shared/input';
+import DropdownWithSearch from '@components/dropdownWithSearch';
+import Button from '@components/shared/button';
 import Dropdown from '@components/shared/dropdown';
-import { DOCUMENT_PLACEHOLDERS } from '../utils/constants';
+import Input, { RadioButton } from '@components/shared/input';
+import { useSendEmail } from '@helpers/queries/mutations';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { useFormik, FormikProvider, Field, getIn } from 'formik';
+import CircularProgress from '@mui/material/CircularProgress';
+import { render as renderEmail } from '@react-email/components';
+import { AddressElement, PaymentElement } from '@stripe/react-stripe-js';
+import clsx from 'clsx';
+import { usePostPropertyApplication } from 'containers/Applications/queries/mutations';
+import { Field, FormikProvider, getIn, useFormik } from 'formik';
+import moment from 'moment';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import AddDocument from '../AddDocumentOverlay';
-import InputDropdown from './InputDropdown';
-import Image from 'next/image';
-import Button from '@components/shared/button';
-import { USA_STATES } from '../utils/constants';
-import moment from 'moment';
-import { usePostPropertyApplication } from 'containers/Applications/queries/mutations';
+import AgreementOverlay from '../AgreementOverlay';
+import ApplicationSubmitBody from '../EmailTemplates/ApplicationSubmit';
+import { DOCUMENT_PLACEHOLDERS, USA_STATES, getFullNameFromAbbreviations } from '../utils/constants';
+import useStripePayment from '../utils/hooks/useStripePayment';
 import FileInput from './FileInput';
+import InputDropdown from './InputDropdown';
 import OccupantsList from './OccupantsLlist';
 import ApplicationSentSuccess from '/public/animations/application-sent-success.gif';
-import clsx from 'clsx';
-import CircularProgress from '@mui/material/CircularProgress';
 import ApplyFormErrorImage from '/public/icons/apply-form-error.svg';
-import { useRouter } from 'next/router';
-import DropdownWithSearch from '@components/dropdownWithSearch';
-import uuid from 'react-uuid';
-import AgreementOverlay from '../AgreementOverlay';
-import { useSendEmail } from '@helpers/queries/mutations';
-import ApplicationSubmitBody from '../EmailTemplates/ApplicationSubmit';
-import { render as renderEmail } from '@react-email/components';
-import { useStripe, useElements, Elements, PaymentElement, AddressElement } from '@stripe/react-stripe-js';
-import toast from 'react-hot-toast';
-import useStripePayment from '../utils/hooks/useStripePayment';
 const documentType = {
   bank_statement_1: 'BANK STATEMENT 1',
   bank_statement_2: 'BANK STATEMENT 2',
@@ -183,19 +181,47 @@ const ApplyForm = () => {
     pets: Yup.string(),
     petType: Yup.string(),
     otherOccupant: Yup.string(),
+
     lease_start_date: Yup.string().required('Lease start date is a required field!'),
-    lease_end_date: Yup.string().required('Lease end date is a required field!'),
+    lease_end_date: Yup.string()
+      .required('Lease end date is a required field!')
+      .test('', 'Lease duration should be atleast one month!', (val, props) => {
+        const expiryDate = moment(val);
+        const lease_start_date = moment(props.parent.lease_start_date);
+        const tmpExpiryDate = moment(lease_start_date).add(1, 'month');
+
+        if (!tmpExpiryDate.isAfter(expiryDate)) {
+          return true;
+        }
+      }),
     client_first_name: Yup.string().required('First name is a required field!'),
     client_last_name: Yup.string().required('Last name is a required field!'),
-    client_email: Yup.string().email().required('Email address is a required field!'),
-    client_birth_date: Yup.date().required('Date of birth is a required field!'),
+    client_email: Yup.string()
+      .email('Please provide a valid email address.')
+      .required('Email address is a required field!'),
+    client_birth_date: Yup.date()
+      .max(new Date(), 'Date of birth cannot be in the future!')
+      .required('Date of birth is a required field!'),
     client_phone_number: Yup.string().required('Phone number is a required field!'),
     client_permanent_address: Yup.string().required('Permanent address is a required field!'),
     client_state: Yup.string().required('State is a required field!'),
     client_city: Yup.string().required('City is a required field!'),
     client_unit_number: Yup.string().required('Unit numbers is a required field!'),
-    client_zip_code: Yup.string().required('Zip is a required field!'),
-    client_ssn: Yup.string().required('Social securty number is a required field!'),
+    client_zip_code: Yup.string()
+      .required('Zip code is a required field!')
+      .length(5, 'Zip code be exactly 5 digits long!')
+      .matches(
+        /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        'Zip code field should contain only digits!',
+      ),
+
+    client_ssn: Yup.string()
+      .required('Social securty number is a required field!')
+      .length(9, 'Social securty number be exactly 9 characters!')
+      .matches(
+        /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        'Social securty number field should contain only digits!',
+      ),
     client_has_pets: Yup.bool(),
     client_pets_description: Yup.string().when('client_has_pets', {
       is: true,
@@ -211,28 +237,35 @@ const ApplyForm = () => {
       Yup.object().shape({
         id: Yup.string(),
         full_name: Yup.string().required('Occupant name is a required field!'),
-        email: Yup.string().required('Email is a required field!'),
+        email: Yup.string()
+          .email('Please provide a valid email address.')
+          .required('Email address is a required field!'),
         phone_number: Yup.string().required('Phone number is a required field!'),
         relationship_description: Yup.string().required('Relationship is a required field!'),
       }),
     ),
-
-    // property_state: Yup.string().required('State is a required field!'),
-    // property_state: Yup.object().shape({
-    //   id: Yup.string().required("State is a required field!"),
-    //   label: Yup.string().required("State is a required field!"),
-    //   value: Yup.string().required("State is a required field!"),
-    // }),
-    property_state: Yup.string().required('State is a required field!'),
-
+    property_state: Yup.mixed().required('State is a required field!'),
     property_city: Yup.string().required('City is a required field!'),
     property_unit_number: Yup.string().required('Unit numbers is a required field!'),
-    property_zip_code: Yup.string().required('Zip is a required field!'),
+    property_zip_code: Yup.string()
+      .required('Zip code is a required field!')
+      .length(5, 'Zip code be exactly 5 digits long!')
+      .matches(
+        /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        'Zip code field should contain only digits!',
+      ),
 
     current_state: Yup.string().required('State is a required field!'),
     current_city: Yup.string().required('City is a required field!'),
     current_unit_number: Yup.string().required('Unit numbers is a required field!'),
-    current_zip_code: Yup.string().required('Zip is a required field!'),
+    current_zip_code: Yup.string()
+      .required('Zip code is a required field!')
+      .length(5, 'Zip code be exactly 5 digits long!')
+      .matches(
+        /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        'Zip code field should contain only digits!',
+      ),
+
     current_addess: Yup.string().required('Current address is a required field!'),
 
     employer: Yup.string().required('Employer is a required field!'),
@@ -279,9 +312,13 @@ const ApplyForm = () => {
     });
 
   const onSubmitSuccess = async (data, variables) => {
-    console.log('variables', variables);
     if (variables.do_credit_check) {
-      await handleSubmitPayment(data.data);
+      try {
+        await handleSubmitPayment(data.data);
+        toast.success('Payment Successful');
+      } catch (error) {
+        toast.error(error.message);
+      }
     } else {
       const emailBody = {
         to: [variables.client_email],
@@ -308,6 +345,8 @@ const ApplyForm = () => {
     onSuccess: onSubmitSuccess,
   });
 
+  const [dropdownOptions, setDropdownOptions] = useState(USA_STATES);
+
   const formik = useFormik({
     initialValues: {
       accountant: '',
@@ -317,7 +356,7 @@ const ApplyForm = () => {
       agent_id: 2234,
       agent_email: 'agent@agent.com',
       agent_name: '',
-      annual_compensation: '',
+      annual_compensation: 0.0,
       apartment_number: '',
       bank_name: '',
       client_additional_comment: '',
@@ -376,7 +415,8 @@ const ApplyForm = () => {
       monthly_rent: '',
       lease_start_date: '',
       lease_end_date: '',
-      move_in_date: moment().format('YYYY-MM-DD'),
+      // move_in_date: moment().format('YYYY-MM-DD'),
+      move_in_date: '',
       need_moving_services: false,
       occupants: [],
       position_title: '',
@@ -403,19 +443,36 @@ const ApplyForm = () => {
       signature: null,
     },
     validationSchema: validationSchema,
-    onReset: async (values, formikBag) => {
-      setPropertySelected(null);
-      setPropertySelectedImageUrl(null);
-      setTimeout(() => formikBag.setFieldValue('occupants', []));
-      setTimeout(() => formikBag.setFieldValue('client_state', ''));
-    },
-
     onSubmit: async (values) => {
+      const { property_state, client_state, current_state } = values;
+      let propertyStateValue = typeof property_state === 'object' ? property_state.value : property_state;
+      let clientStateValue = typeof client_state === 'object' ? client_state.value : client_state;
+      let currentState = typeof current_state === 'object' ? current_state.value : current_state;
+
+      try {
+        if (propertyStateValue.length === 2) {
+          propertyStateValue = getFullNameFromAbbreviations(propertyStateValue).toUpperCase();
+        }
+        if (clientStateValue.length === 2) {
+          clientStateValue = getFullNameFromAbbreviations(clientStateValue).toUpperCase();
+        }
+        if (currentState.length === 2) {
+          currentState = getFullNameFromAbbreviations(currentState).toUpperCase();
+        }
+      } catch (error) {
+        // Do nothing since the state is already in correct format
+      }
+
       if (values.do_credit_check) {
         try {
           const response = await elements.submit();
-          if (Object.keys(response).length) return;
+          //  if (Object.keys(response).length) return;
+          if (response.error) {
+            toast.error(response.error.message);
+            return;
+          }
         } catch (error) {
+          toast.error(error.message);
           return;
         }
       }
@@ -434,10 +491,13 @@ const ApplyForm = () => {
 
       const filteredValues = {
         ...values,
-        // property_state: formik.values.property_state.value,
+        property_state: propertyStateValue,
+        client_state: clientStateValue,
         documents,
+        do_credit_check: true,
         signature: null,
         annual_compensation: parseFloat(values.annual_compensation),
+        property_id: '1b9ce199',
       };
 
       mutatePostApplication(filteredValues);
@@ -504,13 +564,12 @@ const ApplyForm = () => {
     await formik.setFieldValue('monthly_rent', listing.PRICE);
 
     listing?.CITY && (await formik.setFieldValue('property_city', listing.CITY));
-    // listing?.STATE &&
-    //   (await formik.setFieldValue("property_state", {
-    //     id: uuid(),
-    //     label: listing.STATE,
-    //     value: listing.STATE,
-    //   }));
-    listing?.STATE && (await formik.setFieldValue('property_state', listing.STATE));
+    listing?.STATE &&
+      (await formik.setFieldValue('property_state', {
+        id: '',
+        label: listing.STATE,
+        value: listing.STATE,
+      }));
     listing?.UNIT_NUMBER && (await formik.setFieldValue('property_unit_number', listing.UNIT_NUMBER));
     listing?.ZIP_CODE && (await formik.setFieldValue('property_zip_code', listing.ZIP_CODE));
   };
@@ -521,11 +580,6 @@ const ApplyForm = () => {
     formik.setFieldValue('property_address', '');
     formik.setFieldValue('property_id', '');
     formik.setFieldValue('monthly_rent', '');
-  };
-
-  const resetApplication = () => {
-    resetMutation();
-    formik.resetForm(formik.initialValues);
   };
 
   const resetAfterSuccess = () => {
@@ -819,7 +873,7 @@ const ApplyForm = () => {
                         <div className="col-span-1">
                           <DropdownWithSearch
                             indicatorStyles={{ display: 'none' }}
-                            options={USA_STATES?.map((state, index) => {
+                            options={dropdownOptions?.map((state, index) => {
                               return { id: index, label: state, value: state };
                             })}
                             label="*State"
@@ -1056,7 +1110,7 @@ const ApplyForm = () => {
                       />
                       <Input
                         label="*Employment Length"
-                        readonly={true}
+                        onChange={formik.handleChange}
                         value={formik.values.employment_length}
                         error={formik.touched.employment_length && formik.errors.employment_length}
                         errorText={formik.touched.employment_length && formik.errors.employment_length}
@@ -1117,8 +1171,11 @@ const ApplyForm = () => {
                       />
                       <Input
                         label="Previous Employment Length"
-                        readonly={true}
-                        value={formik.values.previous_employment_length}
+                        name="previous_employer_employment_length"
+                        onChange={formik.handleChange}
+                        value={formik.values.previous_employer_employment_length}
+                        type="text"
+                        className={'[&_input]:h-[38px]'}
                       />
                       <Input
                         label="Employed Since"

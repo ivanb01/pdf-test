@@ -14,7 +14,7 @@ const index = () => {
     amount: 2500,
     currency: 'usd',
     appearance: {
-      /*...*/
+      variables: {},
     },
   };
   return (

@@ -87,7 +87,6 @@ const OccupantsList = () => {
                               <button
                                 type="button"
                                 onClick={async () => {
-                                  console.log(arrayHelpers);
                                   await arrayHelpers.remove(index);
                                   if (arrayHelpers.form.values.occupants.length === 1) {
                                     setContainerHeight(0);
@@ -169,7 +168,7 @@ const OccupantsList = () => {
                 onClick={async () => {
                   await formik.values.occupants.push({
                     id: uuid(),
-                    name: '',
+                    full_name: '',
                     phone_number: '',
                     email: '',
                     relationship_description: '',
@@ -204,16 +203,16 @@ const OccupantsList = () => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
                             <Input
                               label="Name"
-                              name={`occupants[${index}].name`}
-                              value={formik.values.occupants[index].name}
+                              name={`occupants[${index}].full_name`}
+                              value={formik.values.occupants[index].full_name}
                               onChange={formik.handleChange}
                               error={
-                                getIn(formik.touched, `occupants[${index}].name`) &&
-                                getIn(formik.errors, `occupants[${index}].name`)
+                                getIn(formik.touched, `occupants[${index}].full_name`) &&
+                                getIn(formik.errors, `occupants[${index}].full_name`)
                               }
                               errorText={
-                                getIn(formik.touched, `occupants[${index}].name`) &&
-                                getIn(formik.errors, `occupants[${index}].name`)
+                                getIn(formik.touched, `occupants[${index}].full_name`) &&
+                                getIn(formik.errors, `occupants[${index}].full_name`)
                               }
                             />
                             <Input
@@ -270,7 +269,7 @@ const OccupantsList = () => {
                     onClick={async () => {
                       await formik.values.occupants.push({
                         id: uuid(),
-                        name: '',
+                        full_name: '',
                         phone_number: '',
                         email: '',
                         relationship_description: '',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from '@components/shared/button';
 import SearchSelectInput from '@components/shared/search-select-input';
 import React from 'react';
@@ -15,8 +15,13 @@ import SendApplicationBody from '../EmailTemplates/SendApplication';
 import { render } from '@react-email/components';
 import { useSendEmail } from '@helpers/queries/mutations';
 import * as Yup from 'yup';
+import { useUpdatePropertyApplication } from '../queries/mutations';
+import { useRouter } from 'next/router';
 
 const SendApplicationModal = ({ applicationData, onClose }) => {
+  const formRef = useRef();
+  const router = useRouter();
+
   const { data } = useFetchAllClients({
     select: ({ data }) => {
       return data.data.map((client) => ({
@@ -28,8 +33,12 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
     },
   });
 
-  const onSendEmailSuccess = () => {
-    onClose();
+  const { mutate: updateApplication } = useUpdatePropertyApplication({
+    // onError: onUpdateError,
+    // onSuccess: onUpdateSuccess,
+  });
+
+  const onSendEmailSuccess = (data, variables) => {
     toast.success('Email successfully sent!');
   };
 
@@ -37,13 +46,23 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
     toast.error('Unable to send email!');
   };
 
-  const { mutate: mutateSendEmail, isPending: isPendingSendEmail } = useSendEmail({
-    onSuccess: onSendEmailSuccess,
+  const { mutateAsync: mutateSendEmail, isPending: isPendingSendEmail } = useSendEmail({
+    onSuccess: (data) => onSendEmailSuccess(data),
     onError: onSendEmailError,
   });
 
   const handleSubmit = (data, variables) => {
-    data.landlords.forEach((landlord) => {
+    console.log('data', data);
+    let recipients = [];
+    data.landlords.forEach(async (landlord) => {
+      recipients = [
+        ...recipients,
+        {
+          name: landlord.client.first_name + ' ' + landlord.client.last_name,
+          email: landlord.client.email,
+        },
+      ];
+
       const emailBody = {
         to: [landlord.client.email],
         subject: 'Opgny Property Application',
@@ -59,11 +78,19 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
           },
         ),
       };
-      mutateSendEmail(emailBody);
+
+      await mutateSendEmail(emailBody);
     });
 
     if (data.contacts.length) {
-      data.contacts.forEach((contact) => {
+      data.contacts.forEach(async (contact) => {
+        recipients = [
+          ...recipients,
+          {
+            name: contact.name,
+            email: contact.email,
+          },
+        ];
         const emailBody = {
           to: [contact.email],
           subject: 'Opgny Property Application',
@@ -79,9 +106,29 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
             },
           ),
         };
-        mutateSendEmail(emailBody);
+
+        await mutateSendEmail(emailBody);
       });
     }
+
+    updateApplication({
+      id: applicationData.public_identifier,
+      applicationData: {
+        ...applicationData,
+        documents: applicationData.documents.map((document) => {
+          delete document.id;
+          return document;
+        }),
+
+        occupants: applicationData.occupants.map((occupant) => {
+          delete occupant.id;
+          return occupant;
+        }),
+
+        recipients: recipients,
+        sent_by_email_at: new Date()
+      },
+    });
   };
 
   const ValidationSchema = Yup.object().shape({
@@ -96,6 +143,9 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
   });
   return (
     <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       className={`flex items-center justify-center overflow-y-auto overflow-x-hidden fixed  z-[900] w-full inset-0 h-modal h-full  bg-[#6B7280BF]/[.75] text-base`}>
       <div className={`relative bg-white rounded-lg shadow overflow-scroll w-[90%] max-w-[600px] max-h-[370px] p-6`}>
         <Formik
@@ -104,9 +154,9 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
             contacts: [],
           }}
           validationSchema={ValidationSchema}
-          onSubmit={handleSubmit}>
+          onSubmit={handleSubmit}
+          innerRef={formRef}>
           {(formik) => {
-            console.log(formik.values);
             return (
               <Form>
                 <div className="flex flex-col gap-6">

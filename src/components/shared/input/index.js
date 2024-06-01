@@ -45,6 +45,7 @@ const Input = forwardRef(
       initialSignatureData,
       hidePhonePrefix,
       disabled,
+      onFocus = () => {},
       ...props
     },
     ref,
@@ -97,6 +98,7 @@ const Input = forwardRef(
             disabled={disabled}
             onKeyDown={onKeyDown}
             value={value}
+            onFocus={onFocus}
             className={`text-sm text-gray8 pr-10 border ${
               disabled ? 'bg-gray1' : 'bg-white'
             } rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${

@@ -26,9 +26,8 @@ const generateSingle = async (applicationData) => {
     .flat();
 
   const generatedBlob = await pdf(<PdfRenderer applicationData={applicationData} />).toBlob();
-
   const merger = new PDFMerger();
-  merger.add(generatedBlob);
+  await merger.add(generatedBlob);
 
   for (const document of documentsArray) {
     let blobResponse = null;
@@ -47,6 +46,7 @@ const generateSingle = async (applicationData) => {
       }
     }
   }
+
   try {
     const mergedPdf = await merger.saveAsBlob();
     return mergedPdf;
@@ -54,6 +54,8 @@ const generateSingle = async (applicationData) => {
     console.log('error', e);
   }
 };
+
+export const generateFullPdf = () => {};
 
 const onProgress = (cb) => (progressCb = cb);
 

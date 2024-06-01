@@ -25,6 +25,6 @@ export const fetchCreditCheckReport = (id) => {
   return axiosInstance.post(`v1/property-applications/credit-report/${id}`);
 };
 
-export const generateCreditCheckPaymenkLink = (id) => {
-  return axiosInstance.get(`v1/property-applications/payment-link/${id}`);
+export const generateCreditCheckPaymenkLink = async (id) => {
+  return await axiosInstance.get(`v1/property-applications/payment-link/${id}`);
 };

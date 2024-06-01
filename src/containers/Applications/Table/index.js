@@ -1,19 +1,25 @@
-import React, { useEffect, useMemo } from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PersonIcon from '@mui/icons-material/Person';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import Avatar from 'components/shared/avatar';
-import PersonIcon from '@mui/icons-material/Person';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import moment from 'moment';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useRouter } from 'next/router';
-import { useFetchPropertyApplicationsPaginated } from '../queries/queries';
-import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
-import CircularProgress from '@mui/material/CircularProgress';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { generateCreditCheckPaymenkLink } from '@api/applications';
 import Button from '@components/shared/button';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
-import { useRunCreditCheck, useFetchCreditCheckReport } from '../queries/mutations';
+import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
+import NoteIcon from '@mui/icons-material/Note';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CircularProgress from '@mui/material/CircularProgress';
+import { saveAs } from 'file-saver';
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
+import { downloadFullPdf } from '../Pdf/generatePdf';
+import SendApplicationModal from '../SendApplicationModal';
+import { useFetchCreditCheckReport, useRunCreditCheck } from '../queries/mutations';
+import { useFetchPropertyApplicationsPaginated } from '../queries/queries';
 
 const columnHelper = createColumnHelper();
 const columns = [
@@ -37,7 +43,7 @@ const columns = [
     },
     {
       id: 'clientInfo',
-      cell: (info) => {
+      cell: ({ info }) => {
         const { client_first_name, client_last_name, client_email } = info.row.original;
         const initials =
           client_first_name.split(' ')[0].charAt(0) +
@@ -73,7 +79,7 @@ const columns = [
         </span>
       </div>
     ),
-    cell: (info) => (
+    cell: ({ info }) => (
       <div className="flex items-center justify-center  min-w-[90px] gap-1">
         <PersonIcon className="text-gray3 w-[20px] h-[20px]" />
         <span>{info.renderValue().length + 1}</span>
@@ -86,7 +92,7 @@ const columns = [
         <span>Listing Address</span>
       </div>
     ),
-    cell: (info) => {
+    cell: ({ info }) => {
       const { listing_address } = info.row.original;
       return (
         <div className="min-w-[292px] px-4 font-normal">
@@ -101,7 +107,7 @@ const columns = [
         <span>Submitted On</span>
       </div>
     ),
-    cell: (info) => {
+    cell: ({ info }) => {
       const createdAt = info.getValue();
       var date = moment(createdAt).format('MMM DD,YYYY');
       var time = moment(createdAt).format('HH:mm');
@@ -120,7 +126,7 @@ const columns = [
         <span>Any files</span>
       </div>
     ),
-    cell: (info) => {
+    cell: ({ info }) => {
       return (
         <div className="min-w-[120px] flex justify-center px-6">
           {info.getValue().length ? (
@@ -138,7 +144,7 @@ const columns = [
         <span>Application Filled</span>
       </div>
     ),
-    cell: (info) => {
+    cell: ({ info }) => {
       return (
         <div className="min-w-[120px] flex justify-center px-6">
           {!!info.getValue() ? (
@@ -156,39 +162,107 @@ const columns = [
         <span>Credit Report & Check</span>
       </div>
     ),
-    cell: (info) => {
-      const { public_identifier, credit_check_payment_successfull, credit_check_run_successfully } = info.row.original;
-      const { data, mutate: mutateFetchCreditCheckReport } = useFetchCreditCheckReport();
-      const { mutate: mutateRunCreditCheck } = useRunCreditCheck({
-        // onSuccess: mutateFetchCreditCheckReport(id),
+    cell: (props) => {
+      const router = useRouter();
+      const { fetchApplicationsParams, info } = props;
+      const { public_identifier, credit_check_payment_successfull, credit_check_ran_successfully } = info.row.original;
+
+      const { refetch: refetchApplications } = useFetchPropertyApplicationsPaginated(fetchApplicationsParams);
+
+      const onCreditCheckGenerationError = () => {
+        toast.error('Unable to generate PDF from server data!');
+      };
+
+      const onDownloadCreditReportSuccess = async (data) => {
+        if (data) {
+          try {
+            const base64Response = await fetch(`data:application/octet-stream;base64,${data.data.document_data}`);
+            const blob = await base64Response.blob();
+            saveAs(blob, 'Credit check report');
+          } catch (e) {
+            onCreditCheckGenerationError();
+          }
+        }
+      };
+
+      const onDownloadCreditReportError = () => {
+        toast.error('Unable to download credit check report!');
+      };
+
+      const {
+        data,
+        mutate: mutateFetchCreditCheckReport,
+        isPending: isPendingFetchingCreditCheckReport,
+      } = useFetchCreditCheckReport({
+        onSuccess: onDownloadCreditReportSuccess,
+        onError: onDownloadCreditReportError,
       });
 
-      const handlePdfDownload = (e) => {
+      const onRunCreditCheckRunSuccess = () => {
+        refetchApplications();
+      };
+      const onRunCreditCheckRunError = () => {
+        toast.error('Unable to run credit check!');
+      };
+
+      const { mutate: mutateRunCreditCheck, isPending: isPendingRunCreditCheck } = useRunCreditCheck({
+        onSuccess: onRunCreditCheckRunSuccess,
+        onError: onRunCreditCheckRunError,
+      });
+
+      const handleRunCreditCheck = (e) => {
         e.stopPropagation();
         mutateRunCreditCheck({ id: public_identifier });
       };
 
+      const handlePdfDownload = (e) => {
+        e.stopPropagation();
+        mutateFetchCreditCheckReport({ id: public_identifier });
+      };
+
+      const [generatingPaymentLink, setGeneratingPaymentLink] = useState(false);
+      const handleGeneratePaymenkLink = async (e) => {
+        e.stopPropagation();
+        setGeneratingPaymentLink(true);
+        try {
+          const response = await generateCreditCheckPaymenkLink(public_identifier);
+          window.open(response.data.payment_link_url, '_blank', 'noopener,noreferrer');
+        } catch (e) {
+          toast.error('Unable to generate payment link!');
+        } finally {
+          setGeneratingPaymentLink(false);
+        }
+
+        refetchApplications();
+      };
+
       const renderSwitch = () => {
         if (!credit_check_payment_successfull) {
-          return <Button secondary>Generate Payment Link</Button>;
+          return (
+            <Button secondary loading={generatingPaymentLink} onClick={handleGeneratePaymenkLink}>
+              Generate Payment Link
+            </Button>
+          );
         } else {
-          if (credit_check_run_successfully) {
+          if (credit_check_ran_successfully) {
             return (
               <div className="flex flex-col items-center gap-2">
                 <StatusChip variant={VARIANT_ENUM.SUCCESS} text={'Completed'} />
-                <button className="flex gap-1" onClick={handlePdfDownload}>
-                  <SaveAltIcon className="w-4 h-4 text-gray4" />
-                  <p>Credit check PDF</p>
+                <button onClick={handlePdfDownload} className="h-4">
+                  {isPendingFetchingCreditCheckReport ? (
+                    <CircularProgress className={'h-4 w-4'} />
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <SaveAltIcon className="w-4 h-4 text-gray4" />
+                      <p>Credit check PDF</p>
+                    </div>
+                  )}
                 </button>
               </div>
             );
           }
           return (
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                mutateRunCreditCheck({ id: public_identifier });
-              }}>
+            <Button onClick={handleRunCreditCheck} loading={isPendingRunCreditCheck}>
               Run Credit&Check
             </Button>
           );
@@ -198,142 +272,134 @@ const columns = [
       return <div className="min-w-[220px] flex justify-center items-center px-4">{renderSwitch()}</div>;
     },
   }),
-  // columnHelper.accessor('sentTo', {
-  //   header: () => (
-  //     <div className=" min-w-[120px] px-6">
-  //       <span>Sent To</span>
-  //     </div>
-  //   ),
-  //   cell: (info) => {
-  //     const { name, email } = info.getValue()[0];
-  //     const contactsLength = info.getValue().length;
-  //     const [showContacts, setShowContacts] = useState(false);
-  //     const popOverRef = useRef(null);
-  //     const contactsRef = useRef(null);
-  //     const otherContancts = [...info.getValue()];
-  //     otherContancts.shift();
 
-  //     const useOutsideAlerter = (ref) => {
-  //       useEffect(() => {
-  //         function handleClickOutside(event) {
-  //           if (ref.current && !ref.current.contains(event.target) && !contactsRef.current.contains(event.target)) {
-  //             setShowContacts(false);
-  //           }
-  //         }
-  //         document.addEventListener('mousedown', handleClickOutside);
-  //         return () => {
-  //           document.removeEventListener('mousedown', handleClickOutside);
-  //         };
-  //       }, [ref]);
-  //     };
+  columnHelper.accessor('recipients', {
+    header: () => (
+      <div className=" min-w-[120px] px-6">
+        <span>Sent To</span>
+      </div>
+    ),
+    cell: ({ info }) => {
+      console.log('INFO', info.row.original);
 
-  //     useOutsideAlerter(popOverRef);
-  //     const popOverClassName = useMemo(() => {
-  //       return `absolute z-10 bg-white right-[25px] translate-x-full top-[40px] shadow-lg p-4 flex flex-col gap-3 rounded-lg opacity-0  ${
-  //         showContacts ? 'opacity-100' : 'opacity-0 transition-opacity  duration-300 ease-in-out pointer-events-none'
-  //       }`;
-  //     }, [showContacts]);
+      const [showContacts, setShowContacts] = useState(false);
+      const popOverRef = useRef(null);
+      const contactsRef = useRef(null);
+      const contactsLength = info.getValue().length;
+      const otherContancts = [...info.getValue()];
+      otherContancts.shift();
 
-  //     return (
-  //       <div className="min-w-[200px] flex items-center gap-3 px-4 relative">
-  //         <div className=" flex flex-col">
-  //           <p>{name}</p>
-  //           <p className="font-normal text-gray4">{email}</p>
-  //         </div>
-  //         {!!(contactsLength - 1) && (
-  //           <div className="relative">
-  //             <div
-  //               ref={contactsRef}
-  //               onClick={(e) => {
-  //                 setShowContacts(!showContacts);
-  //               }}
-  //               className="cursor-pointer rounded-full flex justify-center items-center w-[25px] h-[25px] bg-gray4 text-white text-[10px] leading-4 font-medium ">
-  //               <span className="mr-[2px]">{`+${contactsLength - 1}`}</span>
-  //             </div>
+      const useOutsideAlerter = (ref) => {
+        useEffect(() => {
+          function handleClickOutside(event) {
+            if (ref.current && !ref.current.contains(event.target) && !contactsRef.current.contains(event.target)) {
+              setShowContacts(false);
+            }
+          }
+          document.addEventListener('mousedown', handleClickOutside);
+          return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+          };
+        }, [ref]);
+      };
 
-  //             <div ref={popOverRef} className={popOverClassName}>
-  //               {otherContancts.map((contact) => {
-  //                 return (
-  //                   <div className=" flex flex-col" id={contact.id} key={contact.id}>
-  //                     <p className="text-xs leading-4">{contact.name}</p>
-  //                     <p className="text-xs leading-4 font-normal text-gray4">{contact.email}</p>
-  //                   </div>
-  //                 );
-  //               })}
-  //             </div>
-  //           </div>
-  //         )}
-  //       </div>
-  //     );
-  //   },
-  // }),
-  // columnHelper.accessor('sentOn', {
-  //   header: () => (
-  //     <div className=" min-w-[150px] px-6">
-  //       <span>Sent On</span>
-  //     </div>
-  //   ),
-  //   cell: (info) => {
-  //     const [showSendApplicationOverlay, setShowSendApplicationOverlay] = useState(false);
-  //     const ValidationSchema = Yup.object().shape({
-  //       landlords: Yup.array().required('Landlords are required').min(1, 'Please select at least one neighborhood'),
-  //     });
-  //     const formik = useFormik({
-  //       initialValues: {
-  //         landlords: '',
-  //         contacts: [],
-  //       },
-  //       validationSchema: ValidationSchema,
-  //       onSubmit: () => {},
-  //     });
+      useOutsideAlerter(popOverRef);
+      const popOverClassName = useMemo(() => {
+        return `absolute z-10 bg-white right-[25px] translate-x-full top-[40px] shadow-lg p-4 flex flex-col gap-3 rounded-lg opacity-0  ${
+          showContacts ? 'opacity-100' : 'opacity-0 transition-opacity  duration-300 ease-in-out pointer-events-none'
+        }`;
+      }, [showContacts]);
 
-  //     const onSendApplication = () => {
-  //       setShowSendApplicationOverlay(true);
-  //     };
+      return (
+        <div className="min-w-[200px] flex items-center gap-3 px-4 relative">
+          {info.getValue().length ? (
+            <>
+              <div className=" flex flex-col">
+                <p>{info.getValue()[0].name}</p>
+                <p className="font-normal text-gray4">{info.getValue()[0].email}</p>
+              </div>
+              {!!(contactsLength - 1) && (
+                <div className="relative">
+                  <div
+                    ref={contactsRef}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowContacts(!showContacts);
+                    }}
+                    className="cursor-pointer rounded-full flex justify-center items-center w-[25px] h-[25px] bg-gray4 text-white text-[10px] leading-4 font-medium ">
+                    <span className="mr-[2px]">{`+${contactsLength - 1}`}</span>
+                  </div>
 
-  //     return (
-  //       <div className="min-w-[150px] flex flex-col items-center px-4">
-  //         <p>{info.renderValue()}</p>
-  //         <button onClick={onSendApplication} className="text-lightBlue3">
-  //           Re-Send
-  //         </button>
+                  <div ref={popOverRef} className={popOverClassName}>
+                    {otherContancts.map((contact) => {
+                      return (
+                        <div className=" flex flex-col" id={contact.id} key={contact.id}>
+                          <p className="text-xs leading-4">{contact.name}</p>
+                          <p className="text-xs leading-4 font-normal text-gray4">{contact.email}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <span>--</span>
+          )}
+        </div>
+      );
+    },
+  }),
 
-  //         {showSendApplicationOverlay && (
-  //           <FormikProvider value={formik}>
-  //             <form onSubmit={formik.handleSubmit}>
-  //               <ResendModal onClose={() => setShowSendApplicationOverlay(false)} />
-  //             </form>
-  //           </FormikProvider>
-  //         )}
-  //       </div>
-  //     );
-  //   },
-  // }),
-  // columnHelper.accessor(
-  //   (row) => {
-  //     return () => {};
-  //   },
-  //   {
-  //     id: 'deal',
-  //     header: () => (
-  //       <div className="min-w-[160px] px-6">
-  //         <span>Deal</span>
-  //       </div>
-  //     ),
-  //     cell: (info) => {
-  //       return (
-  //         <div className="min-w-[160px] px-4 font-normal">
-  //           <button className="flex items-center bg-lightBlue1 px-[10px] gap-2 rounded py-[7px] text-lightBlue3 text-xs leading-4">
-  //             <div className="-scale-x-100 rotate-90">
-  //               <InsertDriveFileIcon className="w-4 h-4" />
-  //             </div>
-  //             <span>Create a Deal</span>
-  //           </button>
-  //         </div>
-  //       );
-  //     },
-  //   },
-  // ),
+  // columnHelperAccesor for the whole row data
+  columnHelper.accessor(
+    (row) => {
+      return row;
+    },
+    {
+      id: 'info',
+      header: () => (
+        <div className=" min-w-[150px] px-6">
+          <span>Sent On</span>
+        </div>
+      ),
+      cell: ({ info }) => {
+        const sentOn = info.row.original.sent_by_email_at;
+        var date = moment(sentOn).format('MMM DD,YYYY');
+        var time = moment(sentOn).format('HH:mm');
+
+        const [showModal, setShowModal] = useState(false);
+        const handleSendEmail = (e) => {
+          console.log('Send Email');
+          e.stopPropagation();
+          setShowModal(true);
+        };
+
+        return (
+          <div className="min-w-[150px] flex flex-col items-center px-4">
+            {showModal && (
+              <SendApplicationModal onClose={() => setShowModal(false)} applicationData={info.row.original} />
+            )}
+
+            {info.row.original.sent_by_email_at ? (
+              <div className="flex flex-col items-center min-w-[150px] px-6  ">
+                <p>{date}</p>
+                <p className="font-normal text-gray4">{time}</p>
+                <button onClick={handleSendEmail} className="text-lightBlue3">
+                  Re-Send
+                </button>
+              </div>
+            ) : (
+              <Button className={'w-min'} onClick={handleSendEmail} leftIcon={<NoteIcon className="w-4 h-4 mr-1" />}>
+                Send
+              </Button>
+            )}
+          </div>
+        );
+      },
+    },
+  ),
+
   columnHelper.accessor(
     (row) => {
       return () => {};
@@ -345,15 +411,46 @@ const columns = [
           <span>Full PDF</span>
         </div>
       ),
-      cell: (info) => {
+      cell: ({ info }) => {
+        const onDownloadCreditReportSuccess = async (data) => {
+          if (data && data.data?.document_data) {
+            try {
+              const base64Response = await fetch(`data:application/octet-stream;base64,${data.data.document_data}`);
+              const blob = await base64Response.blob();
+              downloadFullPdf(info.row.original, blob);
+            } catch (e) {
+              downloadFullPdf(info.row.original, null);
+              // onCreditCheckGenerationError();
+            }
+          }
+        };
+
+        const onDownloadCreditReportError = () => {
+          downloadFullPdf(info.row.original, null);
+        };
+
+        const {
+          data,
+          mutate: mutateFetchCreditCheckReport,
+          isPending: isPendingFetchingCreditCheckReport,
+        } = useFetchCreditCheckReport({
+          onSuccess: onDownloadCreditReportSuccess,
+          onError: onDownloadCreditReportError,
+        });
+
+        const handlePdfDownload = (e) => {
+          e.stopPropagation();
+          mutateFetchCreditCheckReport({ id: info.row.original.public_identifier });
+        };
+
         return (
           <div className="min-w-[76px] px-4 font-normal flex justify-center">
-            <button
-              className="text-overlayBackground flex justify-center"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}>
-              <SaveAltIcon className="w-4 h-4" />
+            <button className="text-overlayBackground flex justify-center" onClick={handlePdfDownload}>
+              {isPendingFetchingCreditCheckReport ? (
+                <CircularProgress className={'h-4 w-4'} />
+              ) : (
+                <SaveAltIcon className="w-4 h-4" />
+              )}
             </button>
           </div>
         );
@@ -362,17 +459,31 @@ const columns = [
   ),
 ];
 
-const ApplicationsTable = ({ searchInput }) => {
+const ApplicationsTable = ({ searchInput, currentButton }) => {
   const router = useRouter();
   const [isScrolledToBottom, handleScroll] = useIsScrolledToBottom();
   const fetchApplicationsParams = useMemo(() => {
+    let email_status;
+    switch (currentButton) {
+      case 1:
+        email_status = 'UNSENT';
+        break;
+      case 2:
+        email_status = 'SENT';
+        break;
+      default:
+        email_status = null;
+    }
+    console.log('email_status', email_status);
+
     return {
       page_size: 10,
       count_items: true,
       search_param: searchInput,
       sort: 'created_at,desc',
+      email_status: email_status,
     };
-  }, [searchInput]);
+  }, [searchInput, currentButton]);
 
   const {
     data: applicationsData,
@@ -452,7 +563,10 @@ const ApplicationsTable = ({ searchInput }) => {
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <td key={cell.id} className="py-4">
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {flexRender(cell.column.columnDef.cell, {
+                            info: cell.getContext(),
+                            fetchApplicationsParams,
+                          })}
                         </td>
                       );
                     })}

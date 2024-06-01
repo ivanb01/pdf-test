@@ -1,27 +1,26 @@
-import React, { useRef, useState, createRef, forwardRef, useEffect, useMemo, useCallback } from 'react';
-import { SIDEBAR_BUTTONS } from 'containers/Applications/utils/constants';
 import Button from '@components/shared/button';
-import clsx from 'clsx';
-import NoteIcon from '@mui/icons-material/Note';
-import { useRouter } from 'next/router';
-import { useFetchPropertyApplicationById } from '../queries/queries';
-import CircularProgress from '@mui/material/CircularProgress';
-import { ArrowNarrowLeftIcon } from '@heroicons/react/solid';
-import FileInput from './FileInput';
-import { FormikProvider, getIn, useFormik, useFormikContext } from 'formik';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import Image from 'next/image';
-import AddDocument from '../AddDocumentOverlay';
-import useDownloadAwsFile from '@helpers/hooks/useDownloadAwsFile';
 import Input from '@components/shared/input';
-import { useFetchSingleProperty } from '../queries/queries';
+import useDownloadAwsFile from '@helpers/hooks/useDownloadAwsFile';
+import { ArrowNarrowLeftIcon } from '@heroicons/react/solid';
+import DownloadIcon from '@mui/icons-material/Download';
 import EmailIcon from '@mui/icons-material/Email';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import { useUpdatePropertyApplication } from '../queries/mutations';
+import NoteIcon from '@mui/icons-material/Note';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CircularProgress from '@mui/material/CircularProgress';
+import clsx from 'clsx';
+import { SIDEBAR_BUTTONS } from 'containers/Applications/utils/constants';
+import { FormikProvider, getIn, useFormik, useFormikContext } from 'formik';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { createRef, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import DownloadIcon from '@mui/icons-material/Download';
+import AddDocument from '../AddDocumentOverlay';
 import { downloadPdf } from '../Pdf/generatePdf';
 import SendApplicationModal from '../SendApplicationModal';
+import { useUpdatePropertyApplication } from '../queries/mutations';
+import { useFetchPropertyApplicationById, useFetchSingleProperty } from '../queries/queries';
+import FileInput from './FileInput';
 
 const typeToName = {
   BANK_STATEMENT_1: 'bank_statement_1',
@@ -445,7 +444,7 @@ const ClientsInformation = forwardRef((props, ref) => {
             <Field data={clientsInformation.client_state} title="State" />
             <Field data={clientsInformation.client_city} title="City" />
             <Field data={clientsInformation.client_zip_code} title="Zip Code" />
-            <Field data={clientsInformation.client_social_security_number} title="Social Security Number" />
+            <Field data={clientsInformation.client_ssn} title="Social Security Number" />
             <Field data={clientsInformation.client_has_pets} title="Do you have pets?" />
             <Field data={clientsInformation.client_pets_description} title="Please Specify" />
             <Field
@@ -543,7 +542,11 @@ const DocumentsInformation = forwardRef((props, ref) => {
           };
         } else if (document) return filterOtherDocuments(formik.values.other_documents);
       })
-      .filter((document) => !!document);
+      .filter((document) => !!document)
+      .map((document) => {
+        delete document.id;
+        return document;
+      });
   };
 
   const handleUpdateApplication = async () => {
@@ -551,6 +554,14 @@ const DocumentsInformation = forwardRef((props, ref) => {
       id: router.query.slug,
       applicationData: {
         ...applicationData,
+        occupants: applicationData.occupants.map((occupant) => {
+          delete occupant.id;
+          return occupant;
+        }),
+        recipients: applicationData.recipients.map((recipient) => {
+          delete recipient.id;
+          return recipient;
+        }),
         documents: formatDocuments(),
       },
     });
@@ -634,17 +645,6 @@ const DocumentsInformation = forwardRef((props, ref) => {
           </div>
         </>
       )}
-
-      <div className="bg-[#EFF6FF] rounded-md flex flex-col gap-3 p-4 font-medium text-sm leading-5">
-        <p>Include Credit Check</p>
-        <p className="text-gray5 font-normal">
-          Landlords want to ensure that they will be paid the rent they are owed when they let out a property. A credit
-          check can help give them information about the tenant's previous history when it comes to paying back debts
-        </p>
-        <Button white={true} className={'w-fit'}>
-          Run credit check
-        </Button>
-      </div>
     </div>
   );
 });

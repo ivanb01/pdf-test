@@ -1,24 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import OnlineFormsTable from 'containers/OnlineForms/OnlineFormsTable/Table';
-import SideBarFilter from 'containers/OnlineForms/OnlineFormsTable/SideBarFilter';
-import FilterBar from 'containers/OnlineForms/OnlineFormsTable/FilterBar';
-import { useRouter } from 'next/router';
-import SendForm from './SendFormModal';
 import DeleteForm from '@components/overlays/delete-form';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useFetchOnlineFormsTypes, useFetchOnlineFormsPaginated } from './queries/queries';
-import { useDeleteForm, useDeleteFormType, usePostUpdateFormType } from './queries/mutations';
-import toast from 'react-hot-toast';
-import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
-import useDebounce from '@helpers/hooks/useDebouncedSearch';
-import { generatePdfBlob } from './Pdf/generatePdf';
-import { PdfViewer } from './Pdf';
 import Button from '@components/shared/button';
-import { PencilIcon } from '@heroicons/react/solid';
-import { TrashIcon } from '@heroicons/react/solid';
 import SlideOver from '@components/shared/slideOver';
-import TrashTypeOverlay from './TrashTypeOverlay';
+import useDebounce from '@helpers/hooks/useDebouncedSearch';
+import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
+import { PencilIcon, TrashIcon } from '@heroicons/react/solid';
+import CircularProgress from '@mui/material/CircularProgress';
 import clsx from 'clsx';
+import FilterBar from 'containers/OnlineForms/OnlineFormsTable/FilterBar';
+import SideBarFilter from 'containers/OnlineForms/OnlineFormsTable/SideBarFilter';
+import OnlineFormsTable from 'containers/OnlineForms/OnlineFormsTable/Table';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { PdfViewer } from './Pdf';
+import { generatePdfBlob } from './Pdf/generatePdf';
+import SendForm from './SendFormModal';
+import TrashTypeOverlay from './TrashTypeOverlay';
+import { useDeleteForm, useDeleteFormType, usePostUpdateFormType } from './queries/mutations';
+import { useFetchOnlineFormsForCount, useFetchOnlineFormsPaginated, useFetchOnlineFormsTypes } from './queries/queries';
 
 const statusEnum = {
   1: 'PENDING',
@@ -84,6 +83,10 @@ const OnlineForms = () => {
     isFetchingNextPage,
   } = useFetchOnlineFormsPaginated(fetchFormsParams);
 
+  const { data: countFormsData } = useFetchOnlineFormsForCount({
+    form_type_id: fetchFormsParams.form_type_id,
+  });
+
   const onlineForms = useMemo(() => {
     if (formsData)
       return formsData?.pages
@@ -95,11 +98,11 @@ const OnlineForms = () => {
   }, [formsData]);
 
   const statusButtons = useMemo(() => {
-    if (formsData) {
-      if (formsData?.pages[0].data) {
-        const allItemsCount = formsData?.pages[0].data.total_items ?? 0;
-        const pendingItemsCount = formsData?.pages[0].data.number_of_pending_items ?? 0;
-        const signedItemsCount = formsData?.pages[0].data.number_of_signed_items ?? 0;
+    if (countFormsData) {
+      if (countFormsData?.data) {
+        const allItemsCount = countFormsData?.data.total_items ?? 0;
+        const pendingItemsCount = countFormsData?.data.number_of_pending_items ?? 0;
+        const signedItemsCount = countFormsData?.data.number_of_signed_items ?? 0;
 
         return [
           {
@@ -120,7 +123,7 @@ const OnlineForms = () => {
         ];
       }
     } else return [];
-  }, [formsData, onlineForms]);
+  }, [countFormsData]);
 
   const onDeleteSuccess = () => {
     setShowDeleteForm(false);
