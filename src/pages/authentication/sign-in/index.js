@@ -97,21 +97,21 @@ const SignIn = () => {
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn
               : isDev()
-              ? devRedirectSignIn
-              : isSubscriptions()
-              ? subscriptionsRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn
-              : productionRedirectSignIn,
+                ? devRedirectSignIn
+                : isSubscriptions()
+                  ? subscriptionsRedirectSignIn
+                  : isDocuments()
+                    ? documentsRedirectSignIn
+                    : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-              ? devRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
-              : productionRedirectSignOut,
+                ? devRedirectSignOut
+                : isSubscriptions()
+                  ? subscriptionsRedirectSignOut
+                  : isDocuments()
+                    ? documentsRedirectSignOut
+                    : productionRedirectSignOut,
             responseType: 'code',
           },
         },
@@ -298,7 +298,7 @@ const SignIn = () => {
             Sign In
           </Text>
           <div className="sm:hidden flex flex-col items-center text-center">
-            <div className="text-onelineMainColor font-semibold text-lg mb-16">
+            <div className="text-onelineMainColor font-semibold text-lg mb-16 px-6 sm:px-0">
               Automate Your Sales Process and Close more Deals
             </div>
             <GoogleButton
