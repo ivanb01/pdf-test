@@ -14,6 +14,7 @@ function classNames(...classes) {
 
 export default function MainMenuV2({ items }) {
   const [selected, setSelected] = useState(0);
+
   return (
     <Disclosure as="nav" className="bg-oxford-gradient">
       {({ open }) => (
@@ -30,14 +31,15 @@ export default function MainMenuV2({ items }) {
                     {items.map((item, index) =>
                       item.submenus ? (
                         <Popover className="relative">
+                          {({open}) => (
+                            <>
                           <Popover.Button
-                            className={`rounded-md ${
+                          className={` outline-none rounded-md ${
                               selected == item.id ? 'bg-menuHover' : 'hover:bg-menuHover'
                             } px-3 py-2 text-sm font-medium text-white`}>
                             {item.title}
-                            <ExpandMoreRounded className="h-5 w-5 flex-none text-white" aria-hidden="true" />
+                            <ExpandMoreRounded className={`h-5 w-5 flex-none text-white transition-all ${open ? 'rotate-180' : 'rotate-0'}`} aria-hidden="true" />
                           </Popover.Button>
-
                           <Transition
                             as={Fragment}
                             enter="transition ease-out duration-200"
@@ -81,12 +83,14 @@ export default function MainMenuV2({ items }) {
                               </div>
                             </Popover.Panel>
                           </Transition>
+                          </>
+                          )}
                         </Popover>
                       ) : (
                         <a
                           href="#"
                           onClick={() => setSelected(item.id)}
-                          className={`rounded-md ${
+                          className={`outline-none rounded-md ${
                             selected == item.id ? 'bg-menuHover' : 'hover:bg-menuHover'
                           } px-3 py-2 text-sm font-medium text-white`}>
                           {item.title}
