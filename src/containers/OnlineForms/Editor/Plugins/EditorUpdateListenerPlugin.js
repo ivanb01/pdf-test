@@ -8,6 +8,7 @@ import { SignatureNode } from '../Nodes/SignatureNode';
 
 export function EditorUpdateListenerPlugin({ initialValue }) {
   const [editor] = useLexicalComposerContext();
+
   const dispatch = useDispatch();
   const firstRender = useRef(true);
 
@@ -42,7 +43,15 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
         const formNodesFound = $nodesOfType(FormNode); // get all AbbreviationNode nodes
 
         const formNodes = formNodesFound.reduce((formNodes, currentFormNode) => {
-          const { __id: id, __text: textValue, __type: type, __key: key } = currentFormNode;
+          const {
+            __id: id,
+            __text: textValue,
+            __type: type,
+            __key: key,
+            __label: label,
+            __inputType: inputType,
+            __name: name,
+          } = currentFormNode;
           return {
             ...formNodes,
             [key]: {
@@ -51,6 +60,9 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
               formType: textValue === 'Date' ? 'date' : 'text',
               textValue,
               key,
+              label,
+              name,
+              inputType,
             },
           };
         }, {});
@@ -63,6 +75,9 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
             __type: type,
             __formType: formType,
             __key: keyValue,
+            __label: label,
+            __inputType: inputType,
+            __name: name,
           } = currentSignatureNode;
           return {
             ...signatueNodes,
@@ -72,6 +87,9 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
               formType,
               textValue: signatureTextValue,
               key: keyValue,
+              label,
+              name,
+              inputType,
             },
           };
         }, {});

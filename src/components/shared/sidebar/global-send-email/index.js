@@ -140,7 +140,7 @@ const SendEmailOverlay = () => {
 
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const sortedOptions = contactsCopy
-    ?.filter((contact) => contact.email != userInfo.email)
+    ?.filter((contact) => contact.email != userInfo?.email)
     .sort((a, b) => {
       const aIsSelected = isSelected(a);
       const bIsSelected = isSelected(b);

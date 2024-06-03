@@ -47,72 +47,8 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
       scrollableNode.scrollTop = 0;
     }
   };
-  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
-
-  const [defaultEvents, setDefaultEvents] = useState([
-    {
-      action: 'Send',
-      title: 'New Event',
-      body_html: '',
-      body: '',
-      wait_interval: '-d',
-      type: 'Email',
-      trigger_time: '11:00',
-      charset: 'A',
-      template: {
-        id: -1,
-        label: 'Create New Email',
-      },
-      save_template: false,
-    },
-  ]);
-
-  const [defaultCampaign, setDefaultCampaign] = useState({
-    name: null,
-    description: 'Campaign Description',
-    status: 'Active',
-    contact_category_id: null,
-    contact_status_id: null,
-  });
 
   const [creatingCampaignLoader, setCreatingCampaignLoader] = useState();
-  const [emailTemplates, setEmailTemplates] = useState(null);
-  const [smsTemplates, setSmsTemplates] = useState(null);
-  const [selectedTemplate, setSelectedTemplate] = useState();
-  const [initialOption, setInitialOption] = useState({
-    id: -1,
-    label: '',
-  });
-
-  useEffect(() => {
-    getTemplates();
-  }, []);
-
-  const getTemplates = async () => {
-    try {
-      const smsResponse = await getSMSTemplates();
-      const emailResponse = await getEmailTemplates();
-      const smsTemplates = smsResponse.data.data.map((template) => ({
-        id: template.id,
-        label: template.name,
-        message: template.message,
-      }));
-
-      const emailTemplates = emailResponse.data.data.map((template) => ({
-        id: template.id,
-        label: template.subject,
-        message: template.body_html,
-      }));
-
-      smsTemplates.unshift({ ...initialOption, label: 'Create New Email' });
-      emailTemplates.unshift({ ...initialOption, label: 'Create New Email' });
-
-      setSmsTemplates(smsTemplates);
-      setEmailTemplates(emailTemplates);
-    } catch (error) {
-      console.error('Failed to get templates:', error);
-    }
-  };
 
   const createCampaign = () => {
     setCreatingCampaignLoader(true);
@@ -346,7 +282,10 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     setIsValid,
     selectedEvent,
     setSelectedEvent,
-  } = useCampaignForm(defaultCampaign, defaultEvents);
+    emailTemplates,
+    setSelectedTemplate,
+    initialOption,
+  } = useCampaignForm();
 
   const [showError, setShowError] = useState(false);
   useEffect(() => {

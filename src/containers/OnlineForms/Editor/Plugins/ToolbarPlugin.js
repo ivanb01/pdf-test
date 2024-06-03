@@ -184,10 +184,12 @@ export default function ToolbarPlugin() {
           width: 200,
           height: 50,
           textValue: option.label,
+          ...option,
         });
       } else {
         editor.dispatchCommand(INSERT_FORM_ELEMENT_COMMAND, {
           text: option.label,
+          ...option,
         });
       }
 

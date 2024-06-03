@@ -1,40 +1,40 @@
-import Text from 'components/shared/text';
-import Button from 'components/shared/button';
-import Search from 'components/shared/input/search';
-import SimpleBar from 'simplebar-react';
-import FilterList from '@mui/icons-material/FilterList';
-import ViewColumn from '@mui/icons-material/ViewColumn';
-import TableRows from '@mui/icons-material/TableRows';
-import Add from '@mui/icons-material/Add';
-import Column from 'components/column';
-import SlideOver from 'components/shared/slideOver';
-import { useState, useEffect } from 'react';
-import Accordion from 'components/shared/accordion';
+import Text from "components/shared/text";
+import Button from "components/shared/button";
+import Search from "components/shared/input/search";
+import SimpleBar from "simplebar-react";
+import FilterList from "@mui/icons-material/FilterList";
+import ViewColumn from "@mui/icons-material/ViewColumn";
+import TableRows from "@mui/icons-material/TableRows";
+import Add from "@mui/icons-material/Add";
+import Column from "components/column";
+import SlideOver from "components/shared/slideOver";
+import { useState, useEffect } from "react";
+import Accordion from "components/shared/accordion";
 import {
   professionalsStatuses,
   professioonalStatusMainTitlesUpdated,
   allStatusesQuickEdit,
   filtersForLastCommunicationDate,
-} from 'global/variables';
-import { filterLastCommuncationDate, getTotalCountOfAllValues } from 'global/functions';
-import { useSelector, useDispatch } from 'react-redux';
-import { setContacts, setProfessionals, updateContacts } from 'store/contacts/slice';
-import ButtonsSlider from 'components/shared/button/buttonsSlider';
-import Table from 'components/shared/table';
-import Chip from 'components/shared/chip';
-import { clientStatuses } from 'global/variables';
-import { TrashIcon } from '@heroicons/react/solid';
-import { multiselectOptionsProfessionals } from 'global/variables';
-import GlobalAlert from '@components/shared/alert/global-alert';
-import { setProfessionalsFilter } from '@store/global/slice';
-import FloatingAlert from '@components/shared/alert/floating-alert';
-import SwitchComponent from '@components/Switch';
-import { useRouter } from 'next/router';
-import ProfessionalsTable from '@components/shared/table/ProfessionalsTable';
+} from "global/variables";
+import { filterLastCommuncationDate, getTotalCountOfAllValues } from "global/functions";
+import { useSelector, useDispatch } from "react-redux";
+import { setContacts, setProfessionals, updateContacts } from "store/contacts/slice";
+import ButtonsSlider from "components/shared/button/buttonsSlider";
+import Table from "components/shared/table";
+import Chip from "components/shared/chip";
+import { clientStatuses } from "global/variables";
+import { TrashIcon } from "@heroicons/react/solid";
+import { multiselectOptionsProfessionals } from "global/variables";
+import GlobalAlert from "@components/shared/alert/global-alert";
+import { setClientsFilters, setProfessionalsFilter } from "@store/global/slice";
+import FloatingAlert from "@components/shared/alert/floating-alert";
+import SwitchComponent from "@components/Switch";
+import { useRouter } from "next/router";
+import ProfessionalsTable from "@components/shared/table/ProfessionalsTable";
 
 const campaignFilterMeaning = {
-  'In Campaign': 'assigned',
-  'Not In Campaign': null,
+  "In Campaign": "assigned",
+  "Not In Campaign": null,
 };
 
 const buttons = [
@@ -54,18 +54,13 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   const dispatch = useDispatch();
   const professionalsFilters = useSelector((state) => state.global.professionalsFilters);
 
-  const [filters, setFilters] = useState({});
   const [filtersCleared, setFiltersCleared] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentButton, setCurrentButton] = useState(0);
-  const openedTab = useSelector((state) => state.global.openedTab);
   const openedSubtab = useSelector((state) => state.global.openedSubtab);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-  const professionals = useSelector((state) => state.contacts.professionals);
-  const [contactsOriginalLength, setContactsOriginalLength] = useState(contacts.length);
-  const [searchTerm, setSearchTerm] = useState(' ');
+  const [searchTerm, setSearchTerm] = useState(" ");
   const [filteredProfessionals, setFilteredProfessionals] = useState(contacts);
-
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
   const renamedArray =
     vendorSubtypes &&
@@ -76,12 +71,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
 
   const tabs = [
     {
-      title: 'PROFESSIONAL TYPES',
+      title: "PROFESSIONAL TYPES",
       content:
         openedSubtab === 1
-          ? renamedArray?.map((option) => option.label).filter((label) => !label.toLowerCase().includes('agent'))
+          ? renamedArray?.map((option) => option.label).filter((label) => !label.toLowerCase().includes("agent"))
           : renamedArray?.map((option) => option.label),
-      value: 'category_2',
+      value: "category_2",
     },
     // {
     //   title: 'LAST COMMUNICATION',
@@ -90,9 +85,9 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
     //   onlyOneValue: true,
     // },
     {
-      title: 'ADDED SOURCE',
-      content: ['Google Contacts', 'Smart Sync A.I.', 'Manually Added'],
-      value: 'import_source_text',
+      title: "ADDED SOURCE",
+      content: ["Google Contacts", "Smart Sync A.I.", "Manually Added"],
+      value: "import_source_text",
     },
   ];
 
@@ -115,31 +110,25 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   //   }
   // }, [professionalsFilters]);
 
-  const filterContacts = () => {
-    // if (filtersCleared) {
-    //   dispatch(setProfessionals(contacts.filter((contact) => contact.category_1 == 'Professional')));
-    //   setFiltersCleared(false);
-    //   return;
-    // }
-
-    let contactsState = contacts.filter((contact) => contact.category_1 == 'Professional');
+  const filterContacts = (professionalsList) => {
+    let contactsState = professionalsList?.filter((contact) => contact.category_1 == "Professional");
     Object.keys(professionalsFilters).map((key) => {
-      if (key == 'last_communication_date') {
-        contactsState = contactsState.filter((contact) =>
+      if (key == "last_communication_date") {
+        contactsState = contactsState?.filter((contact) =>
           filterLastCommuncationDate(contact[key], professionalsFilters[key][0], contact.category_1, contact.status_2),
         );
-      } else if (key == 'is_in_campaign') {
+      } else if (key == "is_in_campaign") {
         let booleanFilter = professionalsFilters[key].map((filter) => campaignFilterMeaning[filter]);
-        contactsState = contactsState.filter((contact) => booleanFilter.includes(contact[key]));
-      } else if (key == 'import_source_text' && professionalsFilters['import_source_text'] == 'Manually Added') {
-        contactsState = contactsState.filter(
+        contactsState = contactsState?.filter((contact) => booleanFilter.includes(contact[key]));
+      } else if (key == "import_source_text" && professionalsFilters["import_source_text"] == "Manually Added") {
+        contactsState = contactsState?.filter(
           (contact) =>
-            contact.import_source_text != 'Google Contacts' &&
-            contact.import_source_text != 'Smart Sync A.I.' &&
-            contact.import_source_text != 'Gmail',
+            contact.import_source_text != "Google Contacts" &&
+            contact.import_source_text != "Smart Sync A.I." &&
+            contact.import_source_text != "Gmail",
         );
       } else {
-        contactsState = contactsState.filter((contact) => {
+        contactsState = contactsState?.filter((contact) => {
           if (Array.isArray(contact[key])) {
             return contact[key].reduce(
               (accumulator, current) => accumulator || professionalsFilters[key].includes(current),
@@ -150,14 +139,19 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
         });
       }
     });
+    return contactsState;
 
-    setFilteredProfessionals(contactsState);
+    // setFilteredProfessionals(contactsState);
   };
 
+  useEffect(() => {
+    let filteredProfs = filterContacts(contacts);
+    setFilteredProfessionals(filteredProfs);
+  }, [contacts, professionalsFilters, hideUnapproved, openedSubtab]);
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
-    console.log(selectedFilter, 'selectedFilter');
+    console.log(selectedFilter, "selectedFilter");
     let filtersCopy = { ...professionalsFilters };
-    if (filterType === 'category_2') {
+    if (filterType === "category_2") {
       if (selectedFilter.length > 0) {
         filtersCopy[filterType] = selectedFilter.map((f) => f.label);
       }
@@ -190,7 +184,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   useEffect(() => {
-    console.log(professionalsFilters, 'filtersProff');
+    console.log(professionalsFilters, "filtersProff");
   }, [professionalsFilters]);
   const removeFilter = (filterToRemove, filterType) => {
     let filtersCopy = { ...professionalsFilters };
@@ -209,38 +203,72 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
   };
 
   const getFilterCount = () => {
-    if (openedSubtab == 1) {
-      return filteredProfessionals.filter(
-        (contact) => contact.category_id == 12 && contact.category_1 == 'Professional',
+    const profesionals =
+      hideUnapproved === true
+        ? filteredProfessionals.filter(
+            (contact) =>
+              !["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) || contact.approved_ai,
+          )
+        : filteredProfessionals;
+
+    if (openedSubtab == 0) {
+      return profesionals.filter(
+        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == "Professional",
       ).length;
+    } else if (openedSubtab == 1) {
+      return profesionals.filter((contact) => contact.category_id == 12 && contact.category_1 == "Professional").length;
     } else if (openedSubtab == 2) {
-      return filteredProfessionals.filter((contact) => contact.category_id == 9 && contact.category_1 == 'Professional')
-        .length;
-    } else if (openedSubtab == 3) {
-      return filteredProfessionals.filter(
-        (contact) => contact.category_id != 12 && contact.category_id != 9 && contact.category_1 == 'Professional',
-      ).length;
+      return profesionals.filter((contact) => contact.category_id == 9 && contact.category_1 == "Professional").length;
     } else {
-      return filteredProfessionals.filter((contact) => contact.category_1 == 'Professional').length;
+      return profesionals.filter((contact) => contact.category_1 == "Professional").length;
     }
   };
 
   useEffect(() => {
-    filterContacts();
-  }, [professionalsFilters, contacts]);
-  useEffect(() => {
-    setSearchTerm('');
+    setSearchTerm("");
     setFiltersCleared(true);
     dispatch(setProfessionalsFilter({}));
   }, [openedSubtab]);
-  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+  const showUnapprovedToggle = () => {
+    if (openedSubtab == 0) {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == "Professional" &&
+            ![9, 12].includes(contact.category_id),
+        ).length > 0
+      );
+    }
+    if (openedSubtab == -1) {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == "Professional",
+        ).length > 0
+      );
+    } else {
+      return (
+        filteredProfessionals.filter(
+          (contact) =>
+            ["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) &&
+            !contact.approved_ai &&
+            contact.category_1 == "Professional" &&
+            contact.category_2.toLowerCase() == professionalsStatuses[openedSubtab].statusMainTitle.toLowerCase(),
+        ).length > 0
+      );
+    }
+  };
   return (
     <>
       <div className="absolute left-0 top-0 right-0 bottom-0 flex flex-col">
         <FloatingAlert
           inProp={unapprovedContacts.length > 0}
-          onClick={() => router.push('/ai-summary')}
-          buttonText={'Review Now'}
+          onClick={() => router.push("/ai-summary")}
+          buttonText={"Review Now"}
           className="mx-[21px] mt-[14px]"
           message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
           type="smart-sync"
@@ -249,21 +277,16 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           <div className="flex items-center justify-between w-full">
             <div className=" flex items-center">
               <Text h3 className="text-gray7 text-xl mr-4">
-                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : 'All Professionals'}
+                {openedSubtab !== -1 ? professionalsStatuses[openedSubtab]?.statusMainTitle : "All Professionals"}
               </Text>
-              {filteredProfessionals.filter(
-                (contact) =>
-                  ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
-                  !contact.approved_ai &&
-                  contact.category_1 == 'Professional',
-              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
+              {showUnapprovedToggle() && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             <div className="flex items-center justify-self-end">
               <Search
                 placeholder={`Search ${
                   openedSubtab !== -1
                     ? professionalsStatuses[openedSubtab]?.statusMainTitle.toLowerCase()
-                    : 'professionals'
+                    : "professionals"
                 }`}
                 className="mr-4 text-sm"
                 value={searchTerm}
@@ -273,13 +296,12 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
               <Button
                 secondary
                 leftIcon={
-                  <div className={'relative'}>
+                  <div className={"relative"}>
                     {Object.keys(professionalsFilters).length > 0 && (
                       <div
                         className={
-                          'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
-                        }
-                      >
+                          "absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl"
+                        }>
                         {getTotalCountOfAllValues(professionalsFilters)}
                       </div>
                     )}
@@ -314,7 +336,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
               <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
                 <div className="mr-2 text-gray5 text-sm ">
                   {getFilterCount()}
-                  {getFilterCount() == 1 ? ' result' : ' results'} for:
+                  {getFilterCount() == 1 ? " result" : " results"} for:
                 </div>
                 {Object.keys(professionalsFilters).map((key, index) =>
                   professionalsFilters[key].map((filter, i) => (
@@ -334,8 +356,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 onClick={() => {
                   setFiltersCleared(true);
                   dispatch(setProfessionalsFilter({}));
-                }}
-              >
+                }}>
                 <TrashIcon height={20} className="text-gray3 mr-1" />
                 <Text p className="whitespace-nowrap">
                   Clear Filter
@@ -365,15 +386,15 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
           //     )}
           //   </div>
           // </SimpleBar> */}
-        <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
+        <div className="w-auto relative flex" style={{ height: "calc(100vh - 160px)" }}>
           <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
-            <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
+            <SimpleBar autoHide style={{ height: "100%", maxHeight: "100%" }}>
               <ProfessionalsTable
                 data={
                   hideUnapproved === true
                     ? filteredProfessionals.filter(
                         (contact) =>
-                          !['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) ||
+                          !["GmailAI", "Smart Sync A.I.", "Gmail"].includes(contact.import_source_text) ||
                           contact.approved_ai,
                       )
                     : filteredProfessionals
@@ -413,8 +434,7 @@ const Professionals = ({ setShowAddContactOverlay, onSearch, handleCardEdit, una
                 }
               /> */}
           </>
-        }
-      >
+        }>
         <Accordion
           tabs={openedSubtab === 1 || openedSubtab === 2 ? tabs.slice(1) : tabs}
           handleClick={handleFilterClick}

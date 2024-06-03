@@ -15,15 +15,20 @@ import { getCompany } from '@global/functions';
 const index = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.global.userInfo);
+  const userEmail = useSelector((state) => state.global.user);
   const [defaultUserInfo] = useLocalStorage('userInfo');
   const [changedUserInfo, setChangedUserInfo] = useState(defaultUserInfo);
   const [loadingActivate, setLoadingActivate] = useState(false);
 
   useEffect(() => {
     const getInfo = async () => {
-      const info = await fetchCurrentUserInfo();
-      dispatch(setUserInfo(info));
-      setChangedUserInfo(info);
+      try {
+        const info = await fetchCurrentUserInfo();
+        dispatch(setUserInfo(info));
+        setChangedUserInfo(info);
+      } catch (error) {
+        toast.error('An error occurred while fetching user info:', error);
+      }
     };
 
     getInfo();
@@ -103,15 +108,11 @@ const index = () => {
             <div className={'flex gap-[120px] mt-2'}>
               <div className={'flex flex-col gap-[24px]'}>
                 <p className={'font-normal text-gray6'}>Email Signature</p>
-                <Signature
-                  userInfo={userInfo}
-                  companyName={getCompany(userInfo).companyName}
-                  imageUrl={getCompany(userInfo).imageUrl}
-                />
+                <Signature userInfo={userInfo} email={userEmail} />
               </div>
               <div className={'flex flex-col gap-[24px]'}>
                 <p className={'font-normal text-gray6'}>SMS Signature</p>
-                <Signature userInfo={userInfo} companyName={getCompany(userInfo).companyName} />
+                <Signature userInfo={userInfo} email={userEmail} />
               </div>
             </div>
           </div>

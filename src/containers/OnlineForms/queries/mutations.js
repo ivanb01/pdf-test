@@ -70,12 +70,3 @@ export const usePostOnlineFormPublic = (options) => {
     ...options,
   });
 };
-
-export const useSendEmail = (options) => {
-  return useMutation({
-    mutationFn: (emailBody) => {
-      return sendEmail(emailBody);
-    },
-    ...options,
-  });
-};

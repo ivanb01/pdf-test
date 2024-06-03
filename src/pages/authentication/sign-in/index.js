@@ -97,21 +97,21 @@ const SignIn = () => {
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn
               : isDev()
-                ? devRedirectSignIn
-                : isSubscriptions()
-                  ? subscriptionsRedirectSignIn
-                  : isDocuments()
-                    ? documentsRedirectSignIn
-                    : productionRedirectSignIn,
+              ? devRedirectSignIn
+              : isSubscriptions()
+              ? subscriptionsRedirectSignIn
+              : isDocuments()
+              ? documentsRedirectSignIn
+              : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-                ? devRedirectSignOut
-                : isSubscriptions()
-                  ? subscriptionsRedirectSignOut
-                  : isDocuments()
-                    ? documentsRedirectSignOut
-                    : productionRedirectSignOut,
+              ? devRedirectSignOut
+              : isSubscriptions()
+              ? subscriptionsRedirectSignOut
+              : isDocuments()
+              ? documentsRedirectSignOut
+              : productionRedirectSignOut,
             responseType: 'code',
           },
         },
@@ -294,10 +294,23 @@ const SignIn = () => {
               </div>
             </NotificationAlert>
           )}
-          <Text title className="text-gray5 mb-[10px] mt-[-40px]">
+          <Text title className="hidden sm:block text-gray5 mb-[10px] mt-[-40px]">
             Sign In
           </Text>
-          <div className="text-sm leading-5 font-normal text-gray4">
+          <div className="sm:hidden flex flex-col items-center text-center">
+            <div className="text-onelineMainColor font-semibold text-lg mb-16">
+              Automate Your Sales Process and Close more Deals
+            </div>
+            <GoogleButton
+              onClick={() => {
+                if (!disable) {
+                  signInWithGoogle();
+                }
+              }}
+              label="Sign in with Google"
+            />
+          </div>
+          <div className="hidden sm:block text-sm leading-5 font-normal text-gray4">
             Don't have an account?&nbsp;
             <Link href="#" className="underline" onClick={() => Router.push('sign-up')}>
               Sign Up

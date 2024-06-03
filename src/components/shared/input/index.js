@@ -45,6 +45,7 @@ const Input = forwardRef(
       initialSignatureData,
       hidePhonePrefix,
       disabled,
+      onFocus = () => {},
       ...props
     },
     ref,
@@ -97,6 +98,7 @@ const Input = forwardRef(
             disabled={disabled}
             onKeyDown={onKeyDown}
             value={value}
+            onFocus={onFocus}
             className={`text-sm text-gray8 pr-10 border ${
               disabled ? 'bg-gray1' : 'bg-white'
             } rounded-lg  px-[13px] h-[40px] w-full outline-none focus:ring-1 focus:ring-blue1 focus:border-blue1 ${
@@ -428,7 +430,7 @@ const Input = forwardRef(
         }
       }, [initialSignatureData]);
 
-      const className = clsx('border w-full max-h-[170px] rounded-md', error && errorClasses, className);
+      const canvasClassName = clsx('border w-full max-h-[170px] rounded-md', { errorClasses: error }, className);
       const onEnd = () => {
         onSignatureEnd({
           imageData: sigCanvas.current.getTrimmedCanvas().toDataURL('image/png'),
@@ -443,7 +445,7 @@ const Input = forwardRef(
           <SignaturePad
             ref={sigCanvas}
             canvasProps={{
-              className: className,
+              className: canvasClassName,
             }}
             onEnd={onEnd}
             clearOnResize={false}
@@ -455,6 +457,7 @@ const Input = forwardRef(
         </div>
       );
     };
+
     return (
       <div className={`${className}`}>
         {label && (
@@ -472,20 +475,20 @@ const Input = forwardRef(
           {type == 'phone'
             ? phoneInput()
             : type == 'phone_number'
-            ? InputPhone()
-            : type == 'checkbox'
-            ? checkboxInput()
-            : type == 'password'
-            ? passwordInput()
-            : type == 'money'
-            ? moneyInput()
-            : type === 'date'
-            ? dateInput()
-            : type === 'signature'
-            ? signatureInput()
-            : type == 'time'
-            ? timeInput()
-            : textInput()}
+              ? InputPhone()
+              : type == 'checkbox'
+                ? checkboxInput()
+                : type == 'password'
+                  ? passwordInput()
+                  : type == 'money'
+                    ? moneyInput()
+                    : type === 'date'
+                      ? dateInput()
+                      : type === 'signature'
+                        ? signatureInput()
+                        : type == 'time'
+                          ? timeInput()
+                          : textInput()}
         </div>
         {/* {error && errorText && <p className="mt-4">{errorText}</p>} */}
         {error && errorText && (
@@ -499,3 +502,22 @@ const Input = forwardRef(
 );
 
 export default Input;
+
+export const RadioButton = ({ field: { name, value, onChange, onBlur }, id, label, className, ...props }) => {
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <input
+        name={name}
+        id={id}
+        type="radio"
+        value={id} // could be something else for output?
+        checked={id === value}
+        onChange={onChange}
+        onBlur={onBlur}
+        className="border-gray-300 cursor-pointer focus:ring-lightBlue3 h-4 w-4 text-lightBlue3"
+        {...props}
+      />
+      <label htmlFor={id}>{label}</label>
+    </div>
+  );
+};

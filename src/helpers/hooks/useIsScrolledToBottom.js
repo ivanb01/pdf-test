@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const useIsScrolledToBottom = () => {
   const [isScrolledToBottom, setScrolledToBottom] = useState(false);
 
   const handleScroll = (e) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom) {
-      setScrolledToBottom(true);
-    } else setScrolledToBottom(false);
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    const bottom = Math.abs(scrollHeight - scrollTop - clientHeight) <= 1;
+    setScrolledToBottom(bottom);
   };
+
   return [isScrolledToBottom, handleScroll];
 };
+
 export default useIsScrolledToBottom;

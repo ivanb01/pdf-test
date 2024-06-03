@@ -1,23 +1,28 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import OnlineFormsTable from 'containers/OnlineForms/OnlineFormsTable/Table';
-import SideBarFilter from 'containers/OnlineForms/OnlineFormsTable/SideBarFilter';
-import FilterBar from 'containers/OnlineForms/OnlineFormsTable/FilterBar';
-import { useRouter } from 'next/router';
-import SendForm from './SendFormModal';
 import DeleteForm from '@components/overlays/delete-form';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useFetchOnlineFormsTypes, useFetchOnlineFormsPaginated } from './queries/queries';
-import { useDeleteForm, useDeleteFormType, usePostUpdateFormType } from './queries/mutations';
-import toast from 'react-hot-toast';
-import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
-import useDebounce from '@helpers/hooks/useDebouncedSearch';
-import { generatePdfBlob } from './Pdf/generatePdf';
-import { PdfViewer } from './Pdf';
 import Button from '@components/shared/button';
-import { PencilIcon } from '@heroicons/react/solid';
-import { TrashIcon } from '@heroicons/react/solid';
 import SlideOver from '@components/shared/slideOver';
+import useDebounce from '@helpers/hooks/useDebouncedSearch';
+import useIsScrolledToBottom from '@helpers/hooks/useIsScrolledToBottom';
+import { PencilIcon, TrashIcon } from '@heroicons/react/solid';
+import CircularProgress from '@mui/material/CircularProgress';
+import clsx from 'clsx';
+import FilterBar from 'containers/OnlineForms/OnlineFormsTable/FilterBar';
+import SideBarFilter from 'containers/OnlineForms/OnlineFormsTable/SideBarFilter';
+import OnlineFormsTable from 'containers/OnlineForms/OnlineFormsTable/Table';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { PdfViewer } from './Pdf';
+import { generatePdfBlob } from './Pdf/generatePdf';
+import SendForm from './SendFormModal';
 import TrashTypeOverlay from './TrashTypeOverlay';
+import { useDeleteForm, useDeleteFormType, usePostUpdateFormType } from './queries/mutations';
+import { useFetchOnlineFormsForCount, useFetchOnlineFormsPaginated, useFetchOnlineFormsTypes } from './queries/queries';
+
+const statusEnum = {
+  1: 'PENDING',
+  2: 'SIGNED',
+};
 
 const OnlineForms = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -26,7 +31,6 @@ const OnlineForms = () => {
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState(undefined);
   const [debouncedSearch] = useDebounce(searchTerm, 400);
   const [isScrolledToBottom, handleScroll] = useIsScrolledToBottom();
   const [trashOverlayOpened, setTrashOverlayOpened] = useState(false);
@@ -56,22 +60,18 @@ const OnlineForms = () => {
   const fetchFormsParams = useMemo(() => {
     const { id } = formTypeFilter;
     const { hex: form_type_id } = id;
-    if (currentTab == 1) {
-      setStatus('PENDING');
-    } else if (currentTab == 2) {
-      setStatus('SIGNED');
-    } else {
-      setStatus(undefined);
-    }
+
+    const statusName = statusEnum[currentTab];
 
     return {
       page_size: 10,
       count_items: true,
       search_param: debouncedSearch,
-      status: status,
+      status: statusName,
+      sort: 'created_at,desc',
       ...(!!form_type_id && { form_type_id }),
     };
-  }, [formTypeFilter, debouncedSearch, status, currentTab]);
+  }, [formTypeFilter, debouncedSearch, currentTab]);
 
   const {
     data: formsData,
@@ -82,6 +82,10 @@ const OnlineForms = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useFetchOnlineFormsPaginated(fetchFormsParams);
+
+  const { data: countFormsData } = useFetchOnlineFormsForCount({
+    form_type_id: fetchFormsParams.form_type_id,
+  });
 
   const onlineForms = useMemo(() => {
     if (formsData)
@@ -94,26 +98,32 @@ const OnlineForms = () => {
   }, [formsData]);
 
   const statusButtons = useMemo(() => {
-    if (formsData) {
-      return [
-        {
-          id: 0,
-          name: 'All',
-          count: onlineForms.length,
-        },
-        {
-          id: 1,
-          name: 'Pending',
-          count: onlineForms.length,
-        },
-        {
-          id: 2,
-          name: 'Signed',
-          count: onlineForms.length,
-        },
-      ];
+    if (countFormsData) {
+      if (countFormsData?.data) {
+        const allItemsCount = countFormsData?.data.total_items ?? 0;
+        const pendingItemsCount = countFormsData?.data.number_of_pending_items ?? 0;
+        const signedItemsCount = countFormsData?.data.number_of_signed_items ?? 0;
+
+        return [
+          {
+            id: 0,
+            name: 'All',
+            count: allItemsCount,
+          },
+          {
+            id: 1,
+            name: 'Pending',
+            count: pendingItemsCount,
+          },
+          {
+            id: 2,
+            name: 'Signed',
+            count: signedItemsCount,
+          },
+        ];
+      }
     } else return [];
-  }, [formsData, onlineForms]);
+  }, [countFormsData]);
 
   const onDeleteSuccess = () => {
     setShowDeleteForm(false);
@@ -295,24 +305,31 @@ const OnlineForms = () => {
             <div className="flex justify-center h-full w-auto pb-[70px]">
               <PdfViewer pdf={pdfRender} />
             </div>
-            <div className="bg-white w-[663px] fixed bottom-0 right-0 h-[70px] flex justify-between items-center px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)]">
-              <button
-                onClick={() => {
-                  !openedPopover.deleted ? setTrashOverlayOpened(true) : onRestoreFormTemplate(openedPopover);
-                }}
-                disabled={isPendingRestoreForm}
-                className="text-red5 text-sm font-medium leading-5 bg-red1  rounded-md	">
-                {!isPendingRestoreForm ? (
-                  <div className="flex items-center gap-2 py-[9px] px-[17px]">
-                    <TrashIcon className="w-5 h-5" />
-                    {!openedPopover.deleted ? <span>Move to Trash</span> : <span>Restore</span>}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-[38px] w-[109px]">
-                    <CircularProgress size={20} className="text-red5" />
-                  </div>
-                )}
-              </button>
+            <div
+              className={clsx(
+                `bg-white w-[663px] fixed bottom-0 right-0 h-[70px] flex items-center px-6 shadow-[0_-2px_12px_-1px_rgba(0,0,0,0.07)] `,
+                { 'justify-end': openedPopover.is_default },
+                { 'justify-between': !openedPopover.is_default },
+              )}>
+              {!openedPopover.is_default && (
+                <button
+                  onClick={() => {
+                    !openedPopover.deleted ? setTrashOverlayOpened(true) : onRestoreFormTemplate(openedPopover);
+                  }}
+                  disabled={isPendingRestoreForm}
+                  className="text-red5 text-sm font-medium leading-5 bg-red1  rounded-md	">
+                  {!isPendingRestoreForm ? (
+                    <div className="flex items-center gap-2 py-[9px] px-[17px]">
+                      <TrashIcon className="w-5 h-5" />
+                      {!openedPopover.deleted ? <span>Move to Trash</span> : <span>Restore</span>}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-[38px] w-[109px]">
+                      <CircularProgress size={20} className="text-red5" />
+                    </div>
+                  )}
+                </button>
+              )}
               <div className="flex items-center gap-[15px]">
                 <Button white label={'Cancel'} onClick={() => setOpenSlideover(false)} />
                 <Button

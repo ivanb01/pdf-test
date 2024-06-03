@@ -20,6 +20,7 @@ const DropdownWithSearch = ({
   errorText,
   position,
   marginBottom,
+  indicatorStyles = {},
   ...props
 }) => {
   return (
@@ -109,8 +110,8 @@ const DropdownWithSearch = ({
               color: 'white !important',
             },
           }),
-        }}
-      ></Select>
+          indicatorSeparator: (base, styles) => ({ ...base, ...indicatorStyles }),
+        }}></Select>
       {error && errorText && (
         <NotificationAlert className="mt-2 p-2" type={'error'}>
           {errorText}

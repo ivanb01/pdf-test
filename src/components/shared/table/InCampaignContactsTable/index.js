@@ -24,33 +24,33 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
             </th>
           ))}
         </thead>
-        <tbody className={'flex flex-col w-full max-h-[390px]'}>
+        <tbody className={'flex flex-col w-full '}>
           {data.map((events, rowIndex) => (
-            <tr key={rowIndex} className={'flex   w-full'}>
+            <tr key={rowIndex} className={'flex   w-full '}>
               {events.events.map((e, cellIndex) => (
                 <td
                   key={cellIndex}
-                  className={` flex-grow flex-1 px-6 py-[15px] border-b border-gray2 pr-20 mb-[0px] ${
+                  className={`flex-grow flex-1 h-[73px] flex  items-center border-b border-gray2  pl-6 pr-20 py-3 mb-[0px] ${
                     cellIndex === events.events.length - 1 ? ' border-gray2' : ''
                   }`}>
-                  <div className={'flex flex-col gap-1 mb-[-1px] min-w-[200px] ml-3'}>
+                  <div className={'flex flex-col gap-1  min-w-[200px] '}>
                     <StatusChip
                       variant={
                         e?.event_status?.toLowerCase() === 'scheduled'
                           ? VARIANT_ENUM.WARNING
                           : e?.event_status?.toLowerCase() === 'sent'
-                          ? VARIANT_ENUM.SUCCESS
-                          : VARIANT_ENUM.ERROR
+                            ? VARIANT_ENUM.SUCCESS
+                            : VARIANT_ENUM.ERROR
                       }
                       text={
                         e?.event_status?.toLowerCase() === 'scheduled'
                           ? 'To be sent'
                           : e?.event_status?.toLowerCase() === 'sent'
-                          ? 'Sent'
-                          : 'Canceled'
+                            ? 'Sent'
+                            : 'Canceled'
                       }></StatusChip>
                     {e.date !== null && (
-                      <div className={'text-sm leading-4 font-normal text-gray5 ml-3'}>
+                      <div className={'text-sm leading-4 font-normal text-gray5'}>
                         {getFormattedDateFromTimestamp(e.event_updated_at)}
                       </div>
                     )}
@@ -148,8 +148,8 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
                     {person.contact_campaign_status === 'assigned'
                       ? 'Active'
                       : person.contact_campaign_status === 'unassigned'
-                      ? 'Disabled'
-                      : 'Active'}
+                        ? 'Disabled'
+                        : 'Active'}
                   </span>
                 </div>
               </div>
@@ -161,13 +161,13 @@ const InCampaignContactsTable = ({ data, setCurrentButton, categoryType, status,
   };
 
   return data && data?.length > 0 ? (
-    <Table>
-      <div className={'flex overflow-x-clip w-[100vw] overflow-y-hidden max-h-[390px]'}>
+    <Table tableFor={'inCampaignContacts'}>
+      <div className={'flex overflow-x-clip w-[100vw] '}>
         <div className={'shrink-0'}>{other()}</div>
-        <div className={'flex-1 shrink mr-[-8px]'} style={{ overflowY: 'auto', overflowX: 'auto', maxHeight: '390px' }}>
+        <div className={'flex-1 shrink overflow-y-hidden'} style={{ overflowX: 'auto' }}>
           {eventsTable()}
         </div>
-        <div className={'shrink-0 '}>{assignToCampaign()}</div>
+        <div className={'shrink-0 overflow-hidden'}>{assignToCampaign()}</div>
       </div>
     </Table>
   ) : (

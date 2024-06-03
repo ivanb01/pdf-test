@@ -32,6 +32,10 @@ const links = [
     href: '/public/contact',
     label: 'Contact Us',
   },
+  {
+    href: '/public/apply',
+    label: 'Apply',
+  },
 ];
 
 export const Header = ({ noLinks }) => {

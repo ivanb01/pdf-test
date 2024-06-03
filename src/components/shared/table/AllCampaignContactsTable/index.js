@@ -18,7 +18,6 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
   const [person, setPerson] = useState();
 
   useEffect(() => {
-    console.log(data, 'data');
     setPerson(person);
   }, [data]);
 
@@ -31,33 +30,33 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
               {categoryType == 'Unknown' ? 'All Clients' : `${categoryType} - ${status_2}`}
             </th>
             <th
-              scope='col'
-              className='flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider'>
+              scope="col"
+              className="flex-grow px-6 py-3 text-left uppercase text-xs leading-4 font-medium tracking-wider">
               contact summary
             </th>
             <th
-              scope='col'
-              className='flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider'>
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase  text-left    text-xs leading-4 font-medium tracking-wider">
               last communication
             </th>
             <th
-              scope='col'
-              className='flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider'>
+              scope="col"
+              className="flex-grow px-6 py-3  uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               sent emails
             </th>
             <th
-              scope='col'
-              className='flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider'>
+              scope="col"
+              className="flex-grow px-6 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               campaign
             </th>
             <th
-              scope='col'
-              className='flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider'>
+              scope="col"
+              className="flex-grow px-6 pr-0 py-3 uppercase text-left   text-xs leading-4 font-medium tracking-wider">
               CAMPAIGN history
             </th>
           </tr>
-          </thead>
-          <tbody className={'overflow-y-scroll'}>
+        </thead>
+        <tbody className={'overflow-y-scroll'}>
           {data.map((person) => (
             <tr
               key={person.id}
@@ -68,25 +67,26 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                 setOpenEventsPreview(true);
               }}
               className={'border-b border-gray-200 hover:bg-lightBlue1 group cursor-pointer'}>
-              <td
-                className='pl-6 py-4 pr-4 cursor-pointer'>
+              <td className="pl-6 py-4 pr-4 cursor-pointer">
                 <div className={'flex'}>
-                  <div className={'flex items-start justify-start w-14 '} onClick={(e) => {
-                    e.stopPropagation();
-                    router.push({
-                      pathname: '/contacts/details',
-                      query: { id: person?.contact_id },
-                    });
-                  }}>
+                  <div
+                    className={'flex items-start justify-start w-14 '}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push({
+                        pathname: '/contacts/details',
+                        query: { id: person?.contact_id },
+                      });
+                    }}>
                     {person.profile_image_path ? (
                       <img
-                        className='inline-block h-10 w-10 rounded-full'
+                        className="inline-block h-10 w-10 rounded-full"
                         src={person.profile_image_path}
                         alt={person.contact_name}
                       />
                     ) : (
-                      <span className='inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400'>
-                        <span className='text-sm font-medium leading-none text-white'>
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                        <span className="text-sm font-medium leading-none text-white">
                           {getInitials(person.contact_name).toUpperCase()}
                         </span>
                       </span>
@@ -105,17 +105,22 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       }}>
                       {person.contact_name}
                     </h6>
-                    <h6 role='button' onClick={(e) => {
-                      e.stopPropagation();
-                      router.push({
-                        pathname: '/contacts/details',
-                        query: { id: person?.contact_id },
-                      });
-                    }} className={' text-sm leading-5 font-normal text-gray-500 w-max'}>{person.contact_email}</h6>
+                    <h6
+                      role="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push({
+                          pathname: '/contacts/details',
+                          query: { id: person?.contact_id },
+                        });
+                      }}
+                      className={' text-sm leading-5 font-normal text-gray-500 w-max'}>
+                      {person.contact_email}
+                    </h6>
                   </div>
                 </div>
               </td>
-              <td className='px-6 py-4'>
+              <td className="px-6 py-4">
                 <div className={'flex gap-1.5 items-center justify-start'}>
                   {getSource(person.import_source_text, person.approved_ai).icon}
                   <p className={'text-xs leading-4 font-medium text-gray8'}>
@@ -135,22 +140,18 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       </div>
                     }>
                     <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                      <p className='text-xs leading-4 font-normal'>{person.contact_summary}</p>
+                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
                     </div>
                   </TooltipComponent>
                 )}
               </td>
               <td className={'px-6 py-4'}>
-                {person.last_communication !== null ? (
-                  <DateChip
-                    contact={person}
-                    lastCommunication={person.last_communication ?? ''}
-                    contactStatus={status_2}
-                    contactCategory={'clients'}
-                  />
-                ) : (
-                  <div>-</div>
-                )}
+                <DateChip
+                  contact={person}
+                  lastCommunication={person.last_communication ?? ''}
+                  contactStatus={status_2}
+                  contactCategory={'clients'}
+                />
               </td>
               <td className={'px-6 py-4'}>
                 <div className={'flex gap-4'}>
@@ -181,8 +182,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       {person.contact_campaign_status === 'assigned'
                         ? 'Active'
                         : person.contact_campaign_status === 'unassigned'
-                          ? 'Deactivated'
-                          : 'Inactive'}
+                        ? 'Deactivated'
+                        : 'Inactive'}
                     </span>
                   </div>
                 </div>
@@ -198,8 +199,8 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                         person.contact_campaign_status === 'assigned'
                           ? 'Campaign is Running'
                           : person.contact_campaign_status === 'unassigned'
-                            ? 'Campaign Deactivated'
-                            : 'Never In Campaign'
+                          ? 'Campaign Deactivated'
+                          : 'Never In Campaign'
                       }
                     />
                   </div>
@@ -208,40 +209,38 @@ const AllCampaignContactsTable = ({ data, categoryType, status, status_2, campai
                       {person.contact_campaign_status === 'assigned'
                         ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
                         : person.contact_campaign_status === 'unassigned'
-                          ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
-                          : ''}
+                        ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                        : ''}
                     </div>
                   )}
                 </div>
               </td>
             </tr>
           ))}
-          </tbody>
-        </Table>
-        <PreviewEventsPerClient
-          campaignData={campaignData}
-          campaignId={campaignId}
-          person={person && data?.find((c) => c.contact_id === person?.contact_id)}
-          open={openEventsPreview}
-          setOpen={setOpenEventsPreview}
-          title={campaignFor}
-        />;
-      </>
-    ) :
-    (
-      <div>
-        <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
-          <img src={noUsersFound.src} alt='No users found' />
-          <div>
-            <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact matching to this
-              campaign</h4>
-            <span className={'text-xs leading-4 font-normal text-gray4'}>
+        </tbody>
+      </Table>
+      <PreviewEventsPerClient
+        campaignData={campaignData}
+        campaignId={campaignId}
+        person={person && data?.find((c) => c.contact_id === person?.contact_id)}
+        open={openEventsPreview}
+        setOpen={setOpenEventsPreview}
+        title={campaignFor}
+      />
+    </>
+  ) : (
+    <div>
+      <div className={'flex flex-col items-center justify-center mt-[10%] gap-6 text-center'}>
+        <img src={noUsersFound.src} alt="No users found" />
+        <div>
+          <h4 className={'text-sm leading-5 font-medium text-gray7'}>There is no contact matching to this campaign</h4>
+          <span className={'text-xs leading-4 font-normal text-gray4'}>
             Contacts must share the same type and status as this campaign to appear in this list.
           </span>
-          </div>
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 export default AllCampaignContactsTable;

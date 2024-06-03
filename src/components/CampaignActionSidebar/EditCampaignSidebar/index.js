@@ -35,6 +35,7 @@ import { useRef } from 'react';
 import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign-create-confirmation-overlay';
 import { createPortal } from 'react-dom';
 import AddActivity from '@components/overlays/add-activity';
+import Checkbox from '@components/shared/checkbox';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
@@ -51,31 +52,6 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   const [editingCampaignLoader, setEditingCampaignLoader] = useState();
   const [campaignId, setCampaignId] = useState(id);
   const [eventsToDelete, setEventsToDelete] = useState([]);
-  const agentSignature = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agentSignature')) : '';
-
-  const [defaultEvents, setDefaultEvents] = useState([
-    {
-      id: 0,
-      action: 'Send',
-      title: 'New Event',
-      body_html:
-        typeof window !== 'undefined' &&
-        window.localStorage &&
-        `<div>&nbsp;</div><div>&nbsp;</div>` + JSON.parse(localStorage?.getItem('agentSignature')),
-      body: '',
-      wait_interval: '-d',
-      trigger_time: '11:00',
-      type: 'Email',
-    },
-  ]);
-
-  const defaultCampaign = {
-    name: null,
-    description: 'Campaign Description',
-    status: 'Active',
-    contact_category_id: null,
-    contact_status_id: null,
-  };
 
   const {
     campaign,
@@ -94,7 +70,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     setIsValid,
     selectedEvent,
     setSelectedEvent,
-  } = useCampaignForm(defaultCampaign, defaultEvents);
+    emailTemplates,
+    selectedTemplate,
+    setSelectedTemplate,
+  } = useCampaignForm();
 
   const setEligibleData = (campaign) => {
     if (campaign.contact_category_id == null && campaign.contact_status_id == null) {
@@ -103,17 +82,18 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       setEligibleClients(1);
     }
   };
+  const fetchCampaignData = async () => {
+    let fetchedCampaign = await getCampaign(campaignId);
+    fetchedCampaign = fetchedCampaign.data;
+    setLoadingData(false);
+    setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
+    let events = fetchedCampaign.actions.map((event) => ({ ...event }));
+    setEvents(events);
+    setEligibleData(fetchedCampaign);
+  };
+
   useEffect(() => {
     if (!open) {
-      const fetchCampaignData = async () => {
-        let fetchedCampaign = await getCampaign(campaignId);
-        fetchedCampaign = fetchedCampaign.data;
-        setLoadingData(false);
-        setCampaign({ ...campaign, name: fetchedCampaign.name, description: 'NULL' });
-        let events = fetchedCampaign.actions.map((event) => ({ ...event }));
-        setEvents(events);
-        setEligibleData(fetchedCampaign);
-      };
       if (!campaignData) {
         fetchCampaignData();
       } else {
@@ -154,7 +134,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       setEditingCampaignLoader(false);
       setOpen(false);
       toast.success('Campaign edited successfully!');
-      getCampaign(campaignId).then((res) => dispatch(setUsersInCampaignGlobally(res.data)));
+      getCampaign(campaignId).then((res) => {
+        dispatch(setUsersInCampaignGlobally(res.data));
+        setEvents(res.data.actions.map((event) => ({ ...event })));
+      });
     });
     setShowError(false);
   };
@@ -262,7 +245,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             active && 'border-[#BAE6FD] bg-lightBlue1'
           } p-3 flex ${className} flex flex-col gap-[10px] `}>
           <div className={'flex justify-between items-center group'}>
-            <div className="flex">
+            <div className="flex items-center">
               <div className="w-">{icon}</div>
               <div className="ml-4 text-sm">
                 <div className="text-gray7 font-semibold">{title}</div>
@@ -306,6 +289,14 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
     }, 500);
   }, [selectedEvent]);
 
+  const checkInitialEmailTemplate = (event) => {
+    if (emailTemplates?.find((template) => template.label == event.title && template.message == event.body_html)) {
+      return emailTemplates?.find((template) => template.label == event.title && template.message == event.body_html);
+    } else {
+      return event?.template;
+    }
+  };
+
   return (
     <>
       <SlideOver
@@ -321,7 +312,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
         open={open}
         editableTitle
         errorName={campaign?.name?.length === 0 && showError}
-        title={campaign.name}
+        title={campaign?.name}
         className="top-[70px]"
         handleTitleChange={(e) => setCampaign((prevState) => ({ ...prevState, name: e.target.value }))}
         rounded
@@ -512,14 +503,53 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                     </div>
                   </div>
                 </div>
-                {/* {events[selectedEvent]?.type == 'Email' && (
-              <div className="mb-6">
-                <div className="mb-4 text-gray8 text-sm font-medium">
-                  Select from one of the templates, or create a new template:
+                <div className="mb-6">
+                  <div className="max-w-[380px]">
+                    <div className="mb-4 text-gray8 text-sm font-medium">Create new email, or select a template:</div>
+                    <Dropdown
+                      handleSelect={(option) => {
+                        console.log(option);
+                        setSelectedTemplate(option);
+                        setEvents((currentEvents) =>
+                          currentEvents.map((item, index) => {
+                            if (index === selectedEvent) {
+                              if (option.id == -1) {
+                                return { ...item, title: '', body_html: '', save_template: false, template: option };
+                              }
+                              return {
+                                ...item,
+                                template: option,
+                                title: option.label,
+                                body_html: option.message,
+                                save_template: false,
+                              };
+                            }
+                            return item;
+                          }),
+                        );
+                      }}
+                      initialSelect={checkInitialEmailTemplate(events[selectedEvent])}
+                      options={emailTemplates}
+                      placeHolder="Select Template"
+                    />
+                  </div>
+                  {events[selectedEvent]?.template?.id === -1 && (
+                    <div className="mt-3">
+                      <Checkbox
+                        setState={(state) => {
+                          console.log(state);
+                          setEvents((currentEvents) =>
+                            currentEvents.map((item, index) =>
+                              index === selectedEvent ? { ...item, save_template: state } : item,
+                            ),
+                          );
+                        }}
+                        state={events[selectedEvent]?.save_template}
+                        label="Save this new email as a template"
+                      />
+                    </div>
+                  )}
                 </div>
-                <Dropdown options={emailTemplates} placeHolder="Select Template" />
-              </div>
-            )} */}
                 <div className="mb-6">
                   <div className="mb-4 text-gray8 text-sm font-medium">Email Subject:</div>
                   <Input
@@ -552,7 +582,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
                       );
                     }}
                   />
-                  {events[selectedEvent]?.body_html.length === 0 && showError && (
+                  {events[selectedEvent]?.body_html?.length === 0 && showError && (
                     <NotificationAlert className="mt-2 p-2" type={'error'}>
                       Field cannot be empty!
                     </NotificationAlert>

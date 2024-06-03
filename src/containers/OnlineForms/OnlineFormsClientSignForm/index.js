@@ -61,6 +61,7 @@ const OnlineFormsSignForm = () => {
   } = useFetchOnlineForm(publicId, {
     enabled: !!router.query.slug,
   });
+
   const [render, setRender] = useState(null);
   const [loadingPdf, setLoadingPdf] = useState(false);
 
@@ -143,8 +144,6 @@ const OnlineFormsSignForm = () => {
     await downloadPdf(onlineFormData?.data?.content, false, values);
   };
 
-  console.log(values);
-
   if (onlineFormIsSuccess && !Object.keys(onlineFormData?.data.content).length) {
     return (
       <div className="w-full h-full flex justify-center items-center">
@@ -207,8 +206,8 @@ const OnlineFormsSignForm = () => {
 
                     setFieldValue(`${id}.answer`, value);
                   }}
-                  type={field.formType}
-                  label={field.textValue}
+                  type={field.inputType}
+                  label={field.label}
                   value={values[fieldId]?.answer}
                   error={errors[fieldId]?.answer && touched[fieldId]?.answer}
                   errorText={errors[fieldId]?.answer}

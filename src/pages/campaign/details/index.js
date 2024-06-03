@@ -158,7 +158,7 @@ const index = () => {
     switch (currentButton) {
       case 0:
         return (
-          <SimpleBar style={{ height: '100%' }} autoHide>
+          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
             <AllCampaignContactsTable
               campaignData={campaignEvents}
               campaignId={id}
@@ -177,7 +177,7 @@ const index = () => {
         );
       case 1:
         return (
-          <SimpleBar style={{ height: '100%' }} autoHide>
+          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
             <InCampaignContactsTable
               tableFor={'inCampaignContacts'}
               data={inCampaignContacts}
@@ -190,7 +190,7 @@ const index = () => {
         );
       case 2:
         return (
-          <SimpleBar style={{ height: '100%' }} autoHide>
+          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
             <NotInCampaignContactsTable
               tableFor={'notInCampaignContacts'}
               data={notInCampaignContacts}
@@ -206,10 +206,7 @@ const index = () => {
   return (
     <>
       <MainMenu />
-      {campaignEvents === undefined ||
-      CRMCampaigns === undefined ||
-      campaignDetails === undefined ||
-      usersInCampaignGlobally === undefined ? (
+      {!campaignEvents || !CRMCampaigns || !usersInCampaignGlobally ? (
         <div className="relative h-[90vh]">
           <Loader />
         </div>

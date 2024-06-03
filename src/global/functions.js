@@ -469,6 +469,18 @@ export const getTotalCountOfAllValues = (data) => {
   return totalCount;
 };
 
+export const dataURLtoFile = (dataurl, filename) => {
+  var arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[arr.length - 1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+};
+
 export const timeAgo = (timestamp) => {
   const dt = new Date(timestamp);
   const currentTime = new Date();
@@ -576,22 +588,19 @@ export const removeSecondsFromTime = (timeStr) => {
   }
 };
 
-export const getCompany = (userInfo) => {
+export const getCompany = (email) => {
   let imageUrl = '';
   let companyName = '';
-  switch (userInfo?.tenantId) {
-    case '9b11bc70b91411eda0b1722084980ce8':
-      companyName = 'Oxford Property Group';
-      imageUrl = 'https://i.imgur.com/kbMXf3r.png';
-      break;
-    case 'aa47d67ab91411eda0b1722084980ce8':
-      companyName = 'Spire Group';
-      imageUrl = 'https://i.imgur.com/RAyYKtU.png';
-      break;
-    case 'ba3b15bab91411eda0b1722084980ce8':
-      companyName = 'Level Group';
-      imageUrl = 'https://i.imgur.com/Gq2NDtu.png';
-      break;
+  console.log(email);
+  if (email.includes('opgny')) {
+    companyName = 'Oxford Property Group';
+    imageUrl = 'https://i.imgur.com/kbMXf3r.png';
+  } else if (email.includes('spire')) {
+    companyName = 'Spire Group';
+    imageUrl = 'https://i.imgur.com/RAyYKtU.png';
+  } else if (email.includes('level')) {
+    companyName = 'Level Group';
+    imageUrl = 'https://i.imgur.com/Gq2NDtu.png';
   }
   return { imageUrl, companyName };
 };
