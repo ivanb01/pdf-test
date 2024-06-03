@@ -1,13 +1,13 @@
-import ContactInfo from "@components/shared/table/contact-info";
-import Chip from "@components/shared/chip";
-import { formatDateStringMDY, getContactStatusByStatusId, getContactStatusColorByStatusId } from "@global/functions";
-import Launch from "@mui/icons-material/Launch";
-import TooltipComponent from "@components/shared/tooltip";
-import CheckCircle from "@mui/icons-material/CheckCircle";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
-import React from "react";
-import Table from "..";
+import ContactInfo from '@components/shared/table/contact-info';
+import Chip from '@components/shared/chip';
+import { formatDateStringMDY, getContactStatusByStatusId, getContactStatusColorByStatusId } from '@global/functions';
+import Launch from '@mui/icons-material/Launch';
+import TooltipComponent from '@components/shared/tooltip';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/Delete';
+import React from 'react';
+import Table from '..';
 
 const AIUnapprovedTable = ({
   tableFor,
@@ -20,6 +20,14 @@ const AIUnapprovedTable = ({
   setSelectedPeople,
   handleAction,
 }) => {
+  const formatSummaryText = (text) => {
+    if (text.length > 160) {
+      return text.slice(0, 160) + '...';
+    } else {
+      return text;
+    }
+  };
+
   return (
     <Table tableFor={tableFor}>
       <thead className="bg-gray-50">
@@ -39,7 +47,7 @@ const AIUnapprovedTable = ({
           <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
             Type
           </th>
-          <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+          <th scope="col" className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500">
             Status
           </th>
           <th scope="col" className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 ">
@@ -65,7 +73,7 @@ const AIUnapprovedTable = ({
             className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
             // onClick={(event) => handleClickRow(contact, event)}
             onClick={(e) => {
-              if (e.target.type === "checkbox") return;
+              if (e.target.type === 'checkbox') return;
               handleCardEdit(dataItem);
             }}>
             {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
@@ -89,7 +97,7 @@ const AIUnapprovedTable = ({
                   email: dataItem.email,
                   // image: dataItem.profile_image_path,
                 }}
-                maxWidth={"300px"}
+                maxWidth={'300px'}
 
                 // handleSelect={(e, dataItem) =>
                 //   handleSelectContact(e, dataItem)
@@ -102,19 +110,32 @@ const AIUnapprovedTable = ({
                 {dataItem?.category_2}
               </Chip>
             </td>
-            <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
+            <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
               <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
                 {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
               </Chip>
             </td>
-            <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
-              <div className=" flex items-center break-all">
-                {dataItem.summary && (
-                  <a href={dataItem.email_link} onClick={(e) => e.stopPropagation()} target="_blank" rel="noreferrer">
-                    <Launch className="h-5 w-5 text-blue-500 mr-2" />
-                  </a>
+            <td className=" text-center px-3 py-4 text-sm text-gray-500 type-and-status">
+              <div className=" flex items-center break-words">
+                {dataItem.summary ? (
+                  <div className="text-left">
+                    {formatSummaryText(dataItem.summary)}{' '}
+                    <div
+                      className={`${!dataItem.email_link && 'cursor-not-allowed'} inline-block`}
+                      onClick={(e) => e.stopPropagation()}>
+                      <a
+                        href={dataItem.email_link}
+                        onClick={(e) => e.stopPropagation()}
+                        target="_blank"
+                        className={`w-[100px] ${!dataItem.email_link && 'pointer-events-none'}`}
+                        rel="noreferrer">
+                        <span className="text-lightBlue3 underline">View Email</span>
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  '-'
                 )}
-                {dataItem.summary ? <div className="email-summary-styling">{dataItem.summary}</div> : "-"}
               </div>
             </td>
             <td className=" text-left px-3 py-4 text-sm text-gray-500 type-and-status">
@@ -123,18 +144,18 @@ const AIUnapprovedTable = ({
             <td className="whitespace-nowrap text-left px-3 py-4 text-sm text-gray-500">
               <div className="flex items-center justify-center gap-6">
                 <TooltipComponent
-                  side={"top"}
+                  side={'top'}
                   align="center"
                   triggerElement={
                     <div
-                      role={"button"}
+                      role={'button'}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction("approve", dataItem);
+                        handleAction('approve', dataItem);
                       }}
                       className="transition-all rounded-[4px] cursor-pointer hover:bg-green-500 hover:text-white bg-green-50 text-green-500 w-7 h-7 flex items-center justify-center relative">
                       <CheckCircle
-                        id={"edit-contact-icon-" + dataItem.id}
+                        id={'edit-contact-icon-' + dataItem.id}
                         className="group-hover/check:text-white text-[16px]"
                       />
                     </div>
@@ -142,11 +163,11 @@ const AIUnapprovedTable = ({
                   <p className=" text-xs font-medium text-white">Mark as Correct</p>
                 </TooltipComponent>
                 <TooltipComponent
-                  side={"top"}
+                  side={'top'}
                   align="center"
                   triggerElement={
                     <div
-                      role={"button"}
+                      role={'button'}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCardEdit(dataItem);
@@ -158,14 +179,14 @@ const AIUnapprovedTable = ({
                   <p className=" text-xs font-medium text-white"> Edit Contact</p>
                 </TooltipComponent>
                 <TooltipComponent
-                  side={"top"}
+                  side={'top'}
                   align="center"
                   triggerElement={
                     <div
-                      role={"button"}
+                      role={'button'}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleAction("delete", dataItem);
+                        handleAction('delete', dataItem);
                       }}
                       className=" transition-all rounded-[4px] cursor-pointer hover:bg-red-500 hover:text-white bg-red-50 text-[#ff6d6d] w-7 h-7 flex items-center justify-center relative">
                       <Delete className="group-hover/delete:text-white text-[16px]" />
