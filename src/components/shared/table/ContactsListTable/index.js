@@ -484,7 +484,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         </TooltipComponent>
                         {contact.phone_number && (
                           <>
-                            {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                            {/* {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
                               <TooltipComponent
                                 side={'top'}
                                 align="center"
@@ -536,8 +536,8 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                 }>
                                 <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
                               </TooltipComponent>
-                            )}
-                            <TooltipComponent
+                            )} */}
+                            {/* <TooltipComponent
                               side={'top'}
                               align="center"
                               style={{ marginBottom: '7px' }}
@@ -580,7 +580,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                 </div>
                               }>
                               <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
-                            </TooltipComponent>
+                            </TooltipComponent> */}
                             <TooltipComponent
                               side={'top'}
                               align="center"

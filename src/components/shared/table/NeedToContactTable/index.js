@@ -87,6 +87,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
               isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
             } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 `}
               style={{ height: '84px' }}>
+
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
                   maxWidth={'300px'}
@@ -167,7 +168,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                   </TooltipComponent>
                   {person.phone_number && (
                     <>
-                      {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
+                      {/* {/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) && (
                         <TooltipComponent
                           side={'top'}
                           align="center"
@@ -216,8 +217,8 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                           }>
                           <div className={'text-xs leading-4 font-medium'}>Send SMS</div>
                         </TooltipComponent>
-                      )}
-                      <TooltipComponent
+                      )} */}
+                      {/* <TooltipComponent
                         side={'top'}
                         align="center"
                         style={{ marginBottom: '7px' }}
@@ -257,7 +258,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                           </div>
                         }>
                         <div className={'text-xs leading-4 font-medium'}>Send Whatsapp</div>
-                      </TooltipComponent>
+                      </TooltipComponent> */}
                       <TooltipComponent
                         side={'top'}
                         align="center"
