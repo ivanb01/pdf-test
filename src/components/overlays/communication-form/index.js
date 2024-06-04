@@ -120,7 +120,7 @@ const Card = ({ name, icon, color, disabled, client, setActivities, handleCloseO
         break;
       case 'SMS':
         activityToBeLogged = {
-          type_of_activity_id: 2,
+          type_of_activity_id: 37,
           description: 'Attempted to communicate using SMS.',
         };
         break;

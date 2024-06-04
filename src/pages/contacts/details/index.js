@@ -295,7 +295,6 @@ const index = () => {
                           },
                           ...activities,
                         ]);
-                        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
                         addContactActivity(contact.id, {
                           type_of_activity_id: 27,
                           description: "Attempted to make a phone call.",
