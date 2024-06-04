@@ -45,22 +45,6 @@ import AIChip from "@components/shared/chip/ai-chip";
 import { isHealthyCommuncationDate } from "@global/functions";
 import Overlay from "@components/shared/overlay";
 
-const getNeedToCommunicateContacts = (allContacts) => {
-  if (!allContacts) {
-    return;
-  }
-  return (
-    allContacts &&
-    allContacts.filter((contact) => {
-      const categoryType = contact?.category_1?.toLowerCase() + "s";
-      if (categoryType !== "clients") {
-        return false;
-      }
-      let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
-      return !isHealthyCommunication;
-    }).length
-  );
-};
 const getCountForTabOrSubtab = (count_key, count, allContacts) => {
   if (!count || !allContacts) {
     return;
@@ -236,7 +220,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           {Object.keys(groupedTabs).map((groupName, index) => (
             <div
               key={groupName}
-              className={`${index === 0 ? "" : " pt-4"} ${index == 2 && "other"} ${index == 1 && "needs-attention"}`}>
+              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}>
               <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />

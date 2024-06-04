@@ -85,7 +85,7 @@ const MyApp = ({ Component, pageProps }) => {
         router.push('/authentication/sign-in');
       }
       if (!pageProps.requiresAuth && isUserAuthenticated && !localStorage.getItem('user')) {
-        router.push('/contacts/clients');
+        router.push('/dashboard');
       }
     }
   }, [helpEffect, isUserAuthenticated]);
@@ -111,21 +111,21 @@ const MyApp = ({ Component, pageProps }) => {
             redirectSignIn: isLocalhost()
               ? localRedirectSignIn
               : isDev()
-              ? devRedirectSignIn
-              : isDocuments()
-              ? documentsRedirectSignIn
-              : isSubscriptions()
-              ? subscriptionsRedirectSignIn
-              : productionRedirectSignIn,
+                ? devRedirectSignIn
+                : isDocuments()
+                  ? documentsRedirectSignIn
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignIn
+                    : productionRedirectSignIn,
             redirectSignOut: isLocalhost()
               ? localRedirectSignOut
               : isDev()
-              ? devRedirectSignOut
-              : isDocuments()
-              ? documentsRedirectSignOut
-              : isSubscriptions()
-              ? subscriptionsRedirectSignOut
-              : productionRedirectSignOut,
+                ? devRedirectSignOut
+                : isDocuments()
+                  ? documentsRedirectSignOut
+                  : isSubscriptions()
+                    ? subscriptionsRedirectSignOut
+                    : productionRedirectSignOut,
             responseType: 'code',
           },
         },

@@ -17,20 +17,20 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
-export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
+export const localRedirectSignIn = 'http://localhost:3000/dashboard';
 export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
 
-export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
+export const productionRedirectSignIn = 'https://onelinecrm.com/dashboard';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
 
-export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/dashboard';
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
 
-export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
+export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/dashboard';
 export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
 
 export const documentsRedirectSignOut = 'https://documents.onelinecrm.com/authentication/sign-in';
-export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/contacts/clients';
+export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/dashboard';
 
 export const menuItems = [
   {
