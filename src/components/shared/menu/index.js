@@ -304,7 +304,7 @@ const MainMenu = ({ className, fixed }) => {
               />
             </div>
           )}
-          {openGlobalSearch && <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />}
+          <GlobalSearch open={openGlobalSearch} onClose={() => setOpenGlobalSearch(false)} />
           {/* {showUncategorizedButton() && (
               <Button
                 label={showSuccessButton() ? 'All Contacts Categorized' : 'Categorize Contacts'}
