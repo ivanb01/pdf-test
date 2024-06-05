@@ -1,23 +1,23 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import MainMenu from "components/shared/menu";
-import ReviewContact from "@components/overlays/review-contact";
-import Delete from "@mui/icons-material/Delete";
-import CheckCircle from "@mui/icons-material/CheckCircle";
-import useInfiniteScroll from "react-infinite-scroll-hook";
-import Loader from "@components/shared/loader";
-import { bulkUpdateContacts, updateContact } from "@api/contacts";
-import { useRouter } from "next/router";
-import toast from "react-hot-toast";
-import { setRefetchData } from "@store/global/slice";
-import { useDispatch, useSelector } from "react-redux";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import withAuth from "@components/withAuth";
-import SpinnerLoader from "@components/shared/SpinnerLoader";
-import { getUnapprovedAI } from "@api/aiSmartSync";
-import { CloseRounded } from "@mui/icons-material";
-import AIUnapprovedTable from "@components/shared/table/AIUnapprovedTable";
-import DropdownWithSearch from "@components/dropdownWithSearch";
-import backBtn from "/public/images/back.svg";
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import MainMenu from 'components/shared/menu';
+import ReviewContact from '@components/overlays/review-contact';
+import Delete from '@mui/icons-material/Delete';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import Loader from '@components/shared/loader';
+import { bulkUpdateContacts, updateContact } from '@api/contacts';
+import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
+import { setRefetchData } from '@store/global/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import withAuth from '@components/withAuth';
+import SpinnerLoader from '@components/shared/SpinnerLoader';
+import { getUnapprovedAI } from '@api/aiSmartSync';
+import { CloseRounded } from '@mui/icons-material';
+import AIUnapprovedTable from '@components/shared/table/AIUnapprovedTable';
+import DropdownWithSearch from '@components/dropdownWithSearch';
+import backBtn from '/public/images/back.svg';
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -80,7 +80,7 @@ const index = () => {
   const handleAction = async (type, data) => {
     try {
       let newData = {};
-      if (type === "delete") {
+      if (type === 'delete') {
         newData.category_id = 3;
         newData.approved_ai = true;
       } else {
@@ -90,12 +90,12 @@ const index = () => {
         (t) => (
           <div
             className={`${
-              t.visible ? "animate-enter" : "animate-leave"
+              t.visible ? 'animate-enter' : 'animate-leave'
             } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
             <div className="flex gap-2 p-4 word-break items-center">
-              <CheckCircleIcon className={"text-green-500"} />
-              <h1 className={"text-sm leading-5 font-medium"}>
-                {data.first_name} {data.last_name} {type === "delete" ? "moved to Trash" : `Marked as Correct!`}
+              <CheckCircleIcon className={'text-green-500'} />
+              <h1 className={'text-sm leading-5 font-medium'}>
+                {data.first_name} {data.last_name} {type === 'delete' ? 'moved to Trash' : `Marked as Correct!`}
               </h1>
             </div>
             <div className="flex rounded-tr-lg rounded-br-lg p-4 bg-gray-600 text-gray-100">
@@ -167,11 +167,11 @@ const index = () => {
           (t) => (
             <div
               className={`${
-                t.visible ? "animate-enter" : "animate-leave"
+                t.visible ? 'animate-enter' : 'animate-leave'
               } shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 bg-gray-700 text-gray-50`}>
               <div className="flex gap-2 p-4 word-break">
-                <CheckCircleIcon className={"text-green-500"} />
-                <h1 className={"text-sm leading-5 font-medium"}>{toastMessage}</h1>
+                <CheckCircleIcon className={'text-green-500'} />
+                <h1 className={'text-sm leading-5 font-medium'}>{toastMessage}</h1>
               </div>
               <div className="flex rounded-tr-lg rounded-br-lg  p-4 bg-gray-600 text-gray-100">
                 <button
@@ -205,7 +205,7 @@ const index = () => {
 
   useEffect(() => {
     setLoading(true);
-    getUnapprovedAI(10, offset, categories.map((c) => c.c.value).join(",")).then((data) => {
+    getUnapprovedAI(10, offset, categories.map((c) => c.c.value).join(',')).then((data) => {
       setItems(data.data);
       setOffset(offset + data.data.count);
       setLoading(false);
@@ -214,7 +214,7 @@ const index = () => {
   const handleSelect = (item) => {
     setCategories(item);
     setLoading(true);
-    getUnapprovedAI(10, 0, item.map((item) => item.value).join(",")).then((data) => {
+    getUnapprovedAI(10, 0, item.map((item) => item.value).join(',')).then((data) => {
       setItems(data.data);
       setTotal(data.data.total);
       setOffset(data.data.count);
@@ -222,7 +222,7 @@ const index = () => {
     });
   };
   const loadItems = (offset) => {
-    return getUnapprovedAI(10, offset, categories.map((c) => c.c.value).join(","))
+    return getUnapprovedAI(10, offset, categories.map((c) => c.c.value).join(','))
       .then((response) => {
         return {
           hasNextPage: true,
@@ -232,7 +232,7 @@ const index = () => {
         };
       })
       .catch((error) => {
-        toast.error("Error while loading items");
+        toast.error('Error while loading items');
         throw error;
       });
   };
@@ -293,11 +293,11 @@ const index = () => {
               maxMenuHeight={200}
               isMulti
               options={[
-                { value: "Client", label: "Clients" },
-                { value: "Professional", label: "Professionals" },
-                { value: "Other", label: "Other" },
-                { value: "Uncategorized", label: "Uncategorized" },
-                { value: "Trash", label: "Trash" },
+                { value: 'Client', label: 'Clients' },
+                { value: 'Professional', label: 'Professionals' },
+                { value: 'Other', label: 'Other' },
+                { value: 'Uncategorized', label: 'Uncategorized' },
+                { value: 'Trash', label: 'Trash' },
               ]}
               onChange={(choice) => {
                 handleSelect(choice);
@@ -305,16 +305,16 @@ const index = () => {
             />
           </div>
           <div>
-            <CloseRounded className="cursor-pointer" onClick={() => router.push("/contacts/clients")} />
+            <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
           </div>
         </div>
       </div>
       {loading ? (
-        <div style={{ height: "calc(100vh - 200px)" }} className="relative">
+        <div style={{ height: 'calc(100vh - 200px)' }} className="relative">
           <Loader />
         </div>
       ) : items?.data?.length > 0 ? (
-        <div style={{ overflow: "auto", width: "100vw" }}>
+        <div style={{ overflow: 'auto', width: '100vw' }}>
           <AIUnapprovedTable
             tableFor="ai"
             checked={checked}
@@ -337,7 +337,7 @@ const index = () => {
         items?.data &&
         items.data.length === 0 &&
         (categories.length > 0 ? (
-          <p className={"text-center mt-2 text-sm "}>No Contact Found</p>
+          <p className={'text-center mt-2 text-sm '}>No Contact Found</p>
         ) : (
           <div className="flex items-center justify-center absolute w-[100vw] top-[76px] bg-white">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
@@ -345,14 +345,14 @@ const index = () => {
                 src="/animations/aisummary1.json"
                 background="transparent"
                 speed="1"
-                style={{ height: "300px" }}
+                style={{ height: '300px' }}
                 autoplay></lottie-player>
               <div className="-mt-10 text-gray-900 text-center">
                 <div className="font-semibold text-lg">Well Done!</div>
                 <div className="mt-3">You reviewed all contacts imported by AI from Gmail.</div>
               </div>
               <div
-                onClick={() => router.push("/contacts/clients")}
+                onClick={() => router.push('/contacts/clients')}
                 className="cursor-pointer flex items-center mt-20 text-center justify-center text-lightBlue3 font-medium text-sm">
                 <img className="mr-2" src={backBtn.src} alt="" />
                 Back to Contacts
@@ -362,7 +362,7 @@ const index = () => {
               src="/animations/aisummary2.json"
               background="transparent"
               speed="1"
-              style={{ width: "100%", height: "calc(100vh - 68px)" }}
+              style={{ width: '100%', height: 'calc(100vh - 68px)' }}
               autoplay></lottie-player>
           </div>
         ))

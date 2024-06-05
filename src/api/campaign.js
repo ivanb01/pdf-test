@@ -1,8 +1,8 @@
-import axios from 'axios';
-import axiosInstance from 'api/axiosInstance';
+import axios from "axios";
+import axiosInstance from "api/axiosInstance";
 
 export const getCampaignsEventsUpcoming = (queryParams) => {
-  return axiosInstance.get('v1/campaigns/events/upcoming', {
+  return axiosInstance.get("v1/campaigns/events/upcoming", {
     params: queryParams,
   });
 };
@@ -30,7 +30,7 @@ export const getCampaignsUsers = (id) => {
   return axiosInstance.get(`v2/cmps/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get('v2/cmps', {
+  return axiosInstance.get("v2/cmps", {
     params: { search_term: searchterm },
   });
 };
@@ -44,13 +44,21 @@ export const unassignContactFromCampaign = (campaignId, contactId) => {
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get('v2/cmps');
+  return axiosInstance.get("v2/cmps");
 };
 
 export const getCampaign = (id) => {
   return axiosInstance.get(`v2/cmps/${id}`);
 };
 
+export const getCampaignPagination = (id, offset) => {
+  return axiosInstance.get(`/v2/cmps/${id}/all-contacts`, {
+    params: {
+      limit: 10,
+      offset: offset,
+    },
+  });
+};
 export const addEmailTemplate = (params) => {
   return axiosInstance.post(`v2/em-templates`, params);
 };
