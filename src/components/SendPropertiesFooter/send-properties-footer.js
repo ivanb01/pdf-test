@@ -16,10 +16,6 @@ const SendPropertiesFooter = ({
   contactId,
 }) => {
   const contacts = useSelector((state) => state.contacts.allContacts.data);
-
-  useEffect(() => {
-    console.log(contacts.find((c) => c.id == contactId));
-  }, [contacts]);
   const router = useRouter();
   const clearSelectedProperties = () => {
     setSelectedProperties([]);
