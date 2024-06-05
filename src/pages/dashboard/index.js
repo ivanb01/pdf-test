@@ -15,9 +15,6 @@ export default function Dashboard() {
   const [success, setIsSuccess] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(count, 'count');
-  }, [count]);
   const fetchCount = async () => {
     setIsSuccess(false);
     getCount().then((data) => {
@@ -63,7 +60,7 @@ export default function Dashboard() {
       <AgentDashboardLayout
         success={success}
         needToContactCount={count?.need_to_contact_clients}
-        needToReview={unapprovedContacts.length}
+        needToReview={unapprovedContacts?.length}
       />
     </>
   );
