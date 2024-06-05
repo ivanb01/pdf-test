@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 export default function Dashboard() {
   const dispatch = useDispatch();
   const count = useSelector((state) => state.global.count);
+  const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+  const allContacts = useSelector((state) => state.contacts.allContacts);
   const [success, setIsSuccess] = useState(true);
   const router = useRouter();
 
@@ -44,6 +46,15 @@ export default function Dashboard() {
       }
     }
   }, [router.query]);
+
+  useEffect(() => {
+    const ai_unapproved = allContacts?.data?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null),
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
   return (
     <>
       <div className={'sticky z-[10] top-0'}>
@@ -52,7 +63,7 @@ export default function Dashboard() {
       <AgentDashboardLayout
         success={success}
         needToContactCount={count?.need_to_contact_clients}
-        needToReview={count?.gmail_and_ai_unapproved}
+        needToReview={unapprovedContacts.length}
       />
     </>
   );
