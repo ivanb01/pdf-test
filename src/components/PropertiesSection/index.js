@@ -31,6 +31,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import { updateContact } from 'api/contacts';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -215,12 +216,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     addPropertiesInPortfolio(
       selectedContacts.map((contact) => contact.value),
       selectedProperties.map((property) => property.ID),
-    ).then((res) => {
+    ).then(async (res) => {
       setLoadingEmails(false);
-      getPortfolioByContactId(contactId).then((res) => {
-        setUserProperties(res?.data);
-        setLoading(false);
-      });
+
+      setLoading(false);
+
       if (res?.data.length === 0) {
         setPropertiesSent(true);
         resetPropertySelection();
@@ -258,7 +258,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   pretty: true,
                 },
               ),
-            ).then((res) => {
+            ).then(async (res) => {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
@@ -268,9 +268,20 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   item?.portfolio_sharable_id ?? ''
                 }`,
               };
+              const contactToBeUpdated = allContacts.find((c) => c.id == contactId);
 
-              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-              addContactActivity(item.contact_id, activity);
+              await addContactActivity(item.contact_id, activity)
+                .then(() => {})
+                .then(async () => {
+                  if (!((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))) {
+                    await updateContact(contactToBeUpdated.id, { last_communication_date: new Date() }).then(() => {
+                      dispatch(updateContactLocally({ ...contactToBeUpdated, last_communication_date: new Date() }));
+                      getPortfolioByContactId(contactId).then((res) => {
+                        setUserProperties(res?.data);
+                      });
+                    });
+                  }
+                });
             });
             setPropertiesSent(true);
             resetPropertySelection();
@@ -288,7 +299,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               }.
               ${generateSMSFooter(userInfo)}`,
             )
-              .then((res) => {
+              .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
                   description: `(SMS) Properties sent to ${
@@ -298,15 +309,22 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   }`,
                 };
 
-                const contact = allContacts.find((c) => c.id === c.value);
+                const contact = allContacts.find((c) => c.id == contactId);
 
-                dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-                addContactActivity(item.contact_id, activity);
+                await addContactActivity(contact?.id, activity).then(() => {
+                  updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
+                    getPortfolioByContactId(contactId).then((res) => {
+                      setUserProperties(res?.data);
+                    });
+                    dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                  });
+                });
               })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
               });
+
             setPropertiesSent(true);
             resetPropertySelection();
           }
