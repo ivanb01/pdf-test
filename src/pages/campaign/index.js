@@ -11,7 +11,6 @@ import { setCRMCampaigns } from '@store/campaigns/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 import { clientOptions } from '@global/variables';
-import EmailTemplates from '../settings/email-templates';
 import EmailTemplatesInCampaign from '@components/campaign/EmailTemplatesInCampaign';
 
 const index = () => {

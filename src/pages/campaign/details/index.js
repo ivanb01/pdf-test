@@ -59,7 +59,7 @@ const index = () => {
           dispatch(setUsersInCampaignGlobally(campaignResponse.data));
         })
         .catch((error) => {
-          console.error("Error executing requests:", error);
+          console.error('Error executing requests:', error);
         });
     }
   }, [id]);
@@ -79,10 +79,11 @@ const index = () => {
         };
       })
       .catch((error) => {
-        toast.error("Error while loading items");
+        toast.error('Error while loading items');
         throw error;
       });
   };
+
   async function loadMore() {
     if (loadingPagination) return;
 
@@ -108,6 +109,7 @@ const index = () => {
       setLoadingPagination(false);
     }
   }
+
   const processContacts = (contacts) => {
     return contacts.map((contact) => {
       const {
@@ -126,7 +128,7 @@ const index = () => {
       const contact_unenrolment_date = campaign_contact ? campaign_contact.unenrollment_date : null;
       const event_sent = campaign_contact ? campaign_contact.event_sent : null;
       const events_preview = campaign_contact ? campaign_contact.events_preview : null;
-      const contact_campaign_status = campaign_contact ? campaign_contact?.contact_campaign_status : "never_assigned";
+      const contact_campaign_status = campaign_contact ? campaign_contact?.contact_campaign_status : 'never_assigned';
       return {
         contact_first_name,
         contact_last_name,
@@ -170,9 +172,9 @@ const index = () => {
     }
   }, [CRMCampaigns, id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts.filter((contact) =>
-    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
+    .concat(usersInCampaignGlobally?.contacts_not_campaign)
+    .filter((contact) => contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()));
   const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
@@ -188,7 +190,10 @@ const index = () => {
     {
       name: "CAMPAIGN MATCHED TO",
       icon: campaignsMatchedTo,
-      amount: usersInCampaignGlobally?.contacts?.length,
+      amount:
+        usersInCampaignGlobally?.contacts_in_campaign?.length +
+        usersInCampaignGlobally?.contacts_not_campaign?.length +
+        usersInCampaignGlobally?.contacts_unassigned_count,
     },
     {
       name: "CLIENTS IN CAMPAIGN",
@@ -243,16 +248,16 @@ const index = () => {
     const updatedPaginationItems = paginationItems.map((item) => {
       if (person?.contact_id === item.contact_id) {
         let updatedItem = {};
-        if (person?.contact_campaign_status === "never_assigned") {
+        if (person?.contact_campaign_status === 'never_assigned') {
           updatedItem = {
             ...item,
-            contact_campaign_status: "assigned",
+            contact_campaign_status: 'assigned',
             contact_enrollment_date: new Date(),
           };
-        } else if (person?.contact_campaign_status === "assigned") {
+        } else if (person?.contact_campaign_status === 'assigned') {
           updatedItem = {
             ...item,
-            contact_campaign_status: "unassigned",
+            contact_campaign_status: 'unassigned',
             contact_unenrolment_date: new Date(),
           };
         }
@@ -268,16 +273,16 @@ const index = () => {
     switch (currentButton) {
       case 0:
         return (
-          <SimpleBar style={{ height: "calc(100vh - 388px)" }} autoHide>
+          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
             <div>
               <AllCampaignContactsTable
                 ref={rootRef}
                 campaignData={campaignEvents}
                 campaignId={id}
-                tableFor={"allCampaignContacts"}
+                tableFor={'allCampaignContacts'}
                 campaignFor={
-                  category == "Unknown"
-                    ? "All Clients"
+                  category == 'Unknown'
+                    ? 'All Clients'
                     : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
                 }
                 updatePaginationContacts={updatePaginationContacts}
