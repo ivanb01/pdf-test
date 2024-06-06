@@ -323,12 +323,7 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${
-                c.first_name
-              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
-                item?.portfolio_sharable_id ?? ''
-              }. 
-              ${generateSMSFooter(userInfo)}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.\\n${generateSMSFooter(userInfo)}`,
             )
               .then((res) => {
                 let activity = {
@@ -414,8 +409,7 @@ const index = () => {
                   version="1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
-                  enable-background="new 0 0 48 48"
-                >
+                  enable-background="new 0 0 48 48">
                   <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}
