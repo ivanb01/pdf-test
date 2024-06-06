@@ -35,6 +35,13 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
     }
     return false;
   };
+  const formatSummaryText = (text) => {
+    if (text.length > 160) {
+      return text.slice(0, 160) + '...';
+    } else {
+      return text;
+    }
+  };
   const handleSendEmail = (contact) => {
     let clientToBeEmailed = {
       value: contact.id,
