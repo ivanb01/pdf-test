@@ -390,7 +390,7 @@ const index = () => {
                 campaigns?.campaigns_unassigned?.length >
                 0 && (
                 <div className="bg-white px-3 mb-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
-                  <div className="text-gray8 font-semibold text-sm">Campaigns</div>
+                  <div className="font-semibold text-gray8 text-[14px]">Campaigns</div>
 
                   <>
                     <div className="flex items-center justify-between text-gray4 text-sm mt-8 mb-3">
@@ -509,7 +509,7 @@ const index = () => {
               </div> */}
 
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="text-gray8 font-semibold text-sm">Gmail Inbox</div>
+                <div className="text-gray8 font-semibold text-[14px]">Gmail Inbox</div>
                 <Feeds
                   showFullHeight={contact?.category_1 != 'Client'}
                   contactId={id}
@@ -543,7 +543,7 @@ const index = () => {
             <div className="w-full lg:w-[250px] order-1 lg:order-3">
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3 relative">
                 <div className="flex items-center justify-between">
-                  <div className="text-gray8 font-semibold text-sm">Notes</div>
+                  <div className="text-gray8 font-semibold text-[14px]">Notes</div>
                   <div>
                     {notes && notes.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
@@ -604,7 +604,7 @@ const index = () => {
                 </div>
               )}
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="text-gray8 font-semibold text-sm">Activity Log</div>
+                <div className="text-gray8 font-semibold text-[14px]">Activity Log</div>
                 <Feeds
                   showFullHeight={contact?.category_1 != 'Client'}
                   contactId={id}

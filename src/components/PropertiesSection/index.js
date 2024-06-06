@@ -640,7 +640,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               <>
                 <div className="">
                   <div className="flex justify-between items-center pt-[9px] pr-[9px] h-[47px]">
-                    <div className="font-semibold">Properties</div>
+                    <div className="font-semibold text-gray8 text-[14px]">Properties</div>
                     <div className={'relative flex'}>
                       {propertiesCurrentTab === 0 && (
                         <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>
