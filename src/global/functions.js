@@ -123,6 +123,11 @@ export const formatDate = (eventDate, hideTime) => {
   });
   return hideTime ? `${monthName} ${day}, ${year}` : `${monthName} ${day}, ${year} ${time}`;
 };
+
+export const getFullDateTime = (date) => {
+  return moment(date).format('DD MMMM YYYY, HH:mm:ss');
+};
+
 export const getDateFormat = (timestamp) => {
   const dateObj = new Date(timestamp);
 

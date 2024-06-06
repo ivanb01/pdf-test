@@ -5,7 +5,7 @@ import { downloadPdf, generatePdfBlob } from '../Pdf/generatePdf';
 import { useFormik } from 'formik';
 import { useFetchOnlineForm } from '../queries/queries';
 import { usePostOnlineForm } from '../queries/mutations';
-import { useSendEmail } from '@helpers/queries/mutations';
+import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
 import CircularProgress from '@mui/material/CircularProgress';
 import { PdfViewer } from '../Pdf';
 import Input from '@components/shared/input';
@@ -40,13 +40,14 @@ const OnlineFormAgentSign = () => {
   const { refetch: formsRefetch } = useFetchOnlineFormsPaginated(refetchParams, {
     enabled: !!Object.keys(refetchParams).length,
   });
+  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog();
 
   const onSendEmailSuccess = () => {
     formsRefetch();
     router.push('/online-forms');
     toast.success('Form sent successfully!');
   };
-  const { mutate: mutateSendEmail } = useSendEmail({
+  const mutateSendEmail = useSendEmail({
     onSuccess: onSendEmailSuccess,
   });
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -107,7 +108,12 @@ const OnlineFormAgentSign = () => {
         },
       ),
     };
-    mutateSendEmail(emailBody);
+    mutateSendEmail.mutateAsync(emailBody).then(() => {
+      updateCommunicationAndActivityLog.mutate({
+        form_name: data?.data?.form_type.name ?? 'Opgny form',
+        client_id: variables?.client_id,
+      });
+    });
   };
 
   const {
