@@ -4,6 +4,7 @@ import { setOpenedTab, setOpenedSubtab, setInitializeTabs, setUserInfo } from 's
 import Group from '@mui/icons-material/Group';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import InfoIcon from '@mui/icons-material/Info';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import Error from '@mui/icons-material/Error';
 import Help from '@mui/icons-material/Help';
 import Delete from '@mui/icons-material/Delete';
@@ -50,103 +51,112 @@ const Layout = ({ children }) => {
 
   const [tabs] = useState([
     {
+      id: -1,
+      name: 'All Contacts',
+      icon: <RecentActorsIcon className="h-6 w-6" />,
+      count: 0,
+      count_key: 'all_contacts',
+      href: 'all-contacts',
+      groupName: '',
+    },
+    {
       id: 0,
-      name: "Clients",
-      label: "Clients in the Funnel",
-      groupName: "In Communication",
-      href: "clients",
+      name: 'Clients',
+      label: 'Clients in the Funnel',
+      groupName: 'In Communication',
+      href: 'clients',
       icon: <Group className="h-5 w-5" />,
       count: 0,
-      count_key: "clients_total",
+      count_key: 'clients_total',
       subtab: [
         {
           id: -1,
-          name: "All",
+          name: 'All',
           dot: <span className="h-2 w-2 rounded-full bg-purple-500" />,
           count: 0,
-          count_key: "clients_total",
+          count_key: 'clients_total',
         },
         {
           id: 0,
-          name: "In the Funnel",
+          name: 'In the Funnel',
           dot: <span className="h-2 w-2 rounded-full bg-lightBlue3" />,
           count: 0,
-          count_key: "clients_in_funnel",
+          count_key: 'clients_in_funnel',
         },
         {
           id: 1,
-          name: "Closed",
+          name: 'Closed',
           dot: <span className="h-2 w-2 rounded-full bg-green6" />,
           count: 0,
-          count_key: "clients_closed",
+          count_key: 'clients_closed',
         },
         {
           id: 2,
-          name: "On Hold",
+          name: 'On Hold',
           dot: <span className="h-2 w-2 rounded-full bg-orange1" />,
           count: 0,
-          count_key: "clients_on_hold",
+          count_key: 'clients_on_hold',
         },
         {
           id: 3,
-          name: "Dropped",
+          name: 'Dropped',
           dot: <span className="h-2 w-2 rounded-full bg-red3" />,
           count: 0,
-          count_key: "clients_dropped",
+          count_key: 'clients_dropped',
         },
       ],
     },
     {
       id: 1,
-      name: "Professionals",
-      label: "Professionals",
-      href: "professionals",
-      groupName: "In Communication",
+      name: 'Professionals',
+      label: 'Professionals',
+      href: 'professionals',
+      groupName: 'In Communication',
       icon: <PermContactCalendar className="h-5 w-5" />,
-      count_key: "professionals_total",
+      count_key: 'professionals_total',
       subtab: [
         {
           id: -1,
-          name: "All",
+          name: 'All',
           count: 0,
-          count_key: "professionals_total",
+          count_key: 'professionals_total',
         },
         {
           id: 0,
-          name: "Vendor",
+          name: 'Vendor',
           count: 0,
-          count_key: "professionals_vendor",
+          count_key: 'professionals_vendor',
         },
         {
           id: 1,
-          name: "Agent",
+          name: 'Agent',
           count: 0,
-          count_key: "professional_agent",
+          count_key: 'professional_agent',
         },
         {
           id: 2,
-          name: "Unspecified",
+          name: 'Unspecified',
           count: 0,
-          count_key: "professional_unspecified",
+          count_key: 'professional_unspecified',
         },
       ],
     },
     {
       id: 2,
-      groupName: "Needs Attention",
-      name: "Need to Contact",
-      label: "Need to Contact",
-      href: "needcontact",
+      groupName: 'Needs Attention',
+      name: 'Need to Contact',
+      label: 'Need to Contact',
+      href: 'needcontact',
       count: 0,
-      count_key: "need_to_contact_clients",
-      icon: <LocalPhoneIcon className={"h-5 w-5"} />,
+      count_key: 'need_to_contact_clients',
+      icon: <LocalPhoneIcon className={'h-5 w-5'} />,
     },
     {
       id: 3,
-      name: "Still Unknown",
-      label: "Still Unknown",
-      groupName: "Needs Attention",
-      href: "unknown",
+      name: 'Still Unknown',
+      label: 'Still Unknown',
+      groupName: 'Needs Attention',
+      href: 'unknown',
       icon: (
         <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='currentColor'>
           <path
@@ -156,34 +166,34 @@ const Layout = ({ children }) => {
         </svg>
       ),
       count: 0,
-      count_key: "uncategorized_unknown",
+      count_key: 'uncategorized_unknown',
     },
     {
       id: 4,
-      name: "Need to Categorize",
-      groupName: "Needs Attention",
-      icon: <InfoIcon className={"h-5 w-5"} />,
-      href: "uncategorized",
-      count_key: "uncategorized_new_records",
+      name: 'Need to Categorize',
+      groupName: 'Needs Attention',
+      icon: <InfoIcon className={'h-5 w-5'} />,
+      href: 'uncategorized',
+      count_key: 'uncategorized_new_records',
     },
     {
       id: 5,
-      name: "Family & Friends",
-      label: "Family & Friends",
-      href: "family",
-      count_key: "other_family_friends",
-      icon: <Diversity3Icon className={"h-5 w-5"} />,
-      groupName: "Other",
+      name: 'Family & Friends',
+      label: 'Family & Friends',
+      href: 'family',
+      count_key: 'other_family_friends',
+      icon: <Diversity3Icon className={'h-5 w-5'} />,
+      groupName: 'Other',
     },
     {
       id: 6,
-      name: "Trash",
-      label: "Trash",
-      href: "trash",
-      groupName: "Other",
+      name: 'Trash',
+      label: 'Trash',
+      href: 'trash',
+      groupName: 'Other',
       count: 0,
-      count_key: "trash",
-      icon: <DeleteIcon className={"h-5 w-5"} />,
+      count_key: 'trash',
+      icon: <DeleteIcon className={'h-5 w-5'} />,
     },
   ]);
   const { tabs: storeTabs } = useSelector((state) => state.global);
@@ -215,7 +225,7 @@ const Layout = ({ children }) => {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + days);
       document.cookie = `isAuthenticated=true; path=/; expires=${expiryDate.toUTCString()};`;
-      localStorage.setItem("user", JSON.stringify(user.username));
+      localStorage.setItem('user', JSON.stringify(user.username));
 
       const userInfo = getUserInfo();
       dispatch(setUserInfo(userInfo));
@@ -231,7 +241,7 @@ const Layout = ({ children }) => {
         dispatch(setCount(data.data));
       })
       .catch((error) => {
-        console.log(error, "error");
+        console.log(error, 'error');
       });
   }, []);
 
