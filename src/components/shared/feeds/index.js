@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore, timeAgo } from "global/functions";
-import Text from "components/shared/text";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
-import FilterDropdown from "components/shared/dropdown/FilterDropdown";
-import More from "@mui/icons-material/MoreVert";
-import { useFormik } from "formik";
-import TextArea from "components/shared/textarea";
-import * as contactServices from "api/contacts";
-import Dropdown from "components/shared/dropdown";
-import Overlay from "components/shared/overlay";
-import Button from "components/shared/button";
-import * as Yup from "yup";
-import { activityTypeIcons, activityTypes } from "global/variables";
-import { useDispatch } from "react-redux";
-import { setRefetchPart } from "store/global/slice";
-import { toast } from "react-hot-toast";
-import { setActivityLogData } from "@store/clientDetails/slice";
-import SimpleBar from "simplebar-react";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import TooltipComponent from "@components/shared/tooltip";
-import EmailsPopup from "@components/overlays/email-threads";
-import { getEmailsForSpecificContact } from "@api/email";
-import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
-import Loader from "@components/shared/loader";
-import DOMPurify from "dompurify";
-import NotesSkeleton from "@components/SkeletonLoaders/NotesSkeleton";
-import GeneralSkeleton from "@components/SkeletonLoaders/GeneralSkeleton";
+import React, { useState, useEffect } from 'react';
+import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore, timeAgo } from 'global/functions';
+import Text from 'components/shared/text';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/Delete';
+import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
+import More from '@mui/icons-material/MoreVert';
+import { useFormik } from 'formik';
+import TextArea from 'components/shared/textarea';
+import * as contactServices from 'api/contacts';
+import Dropdown from 'components/shared/dropdown';
+import Overlay from 'components/shared/overlay';
+import Button from 'components/shared/button';
+import * as Yup from 'yup';
+import { activityTypeIcons, activityTypes } from 'global/variables';
+import { useDispatch } from 'react-redux';
+import { setRefetchPart } from 'store/global/slice';
+import { toast } from 'react-hot-toast';
+import { setActivityLogData } from '@store/clientDetails/slice';
+import SimpleBar from 'simplebar-react';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import TooltipComponent from '@components/shared/tooltip';
+import EmailsPopup from '@components/overlays/email-threads';
+import { getEmailsForSpecificContact } from '@api/email';
+import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
+import Loader from '@components/shared/loader';
+import DOMPurify from 'dompurify';
+import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
+import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
 
 export default function Feeds({
   showFullHeight,
@@ -49,7 +49,7 @@ export default function Feeds({
   const [inboxData, setInboxData] = useState([]);
   const [threadData, setThreadData] = useState([]);
   const AddActivitySchema = Yup.object().shape({
-    type_of_activity_id: Yup.string().required("No selected activity"),
+    type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
   });
 
@@ -66,8 +66,8 @@ export default function Feeds({
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
-      type_of_activity_id: "",
-      description: "",
+      type_of_activity_id: '',
+      description: '',
     },
     validationSchema: AddActivitySchema,
     onSubmit: (values) => {
@@ -84,7 +84,7 @@ export default function Feeds({
   };
 
   const handleChooseActivityType = (id) => {
-    formik.setFieldValue("type_of_activity_id", id);
+    formik.setFieldValue('type_of_activity_id', id);
   };
 
   const handleEditActivity = (activity) => {
@@ -113,10 +113,10 @@ export default function Feeds({
       handleCloseModal();
       contactServices
         .updateContactActivity(contactId, activityId, values)
-        .then(() => dispatch(setRefetchPart("activity-log")));
-      toast.success("Activity log updated successfully!");
+        .then(() => dispatch(setRefetchPart('activity-log')));
+      toast.success('Activity log updated successfully!');
     } catch (error) {
-      toast.error("There was an error while editing activity log: ", error);
+      toast.error('There was an error while editing activity log: ', error);
       setLoadingButton(false);
     }
   };
@@ -124,19 +124,19 @@ export default function Feeds({
     try {
       const filteredActivities = activities.filter((item) => item.id !== activity.id);
       setActivities(filteredActivities);
-      toast.success("Activity was deleted successfully!");
+      toast.success('Activity was deleted successfully!');
       contactServices.deleteContactActivity(contactId, activity.id);
     } catch (error) {
-      toast.error("There was a problem deleting the activity!");
+      toast.error('There was a problem deleting the activity!');
     }
   };
 
   useEffect(() => {
-    if (document.querySelector(".client-details-wrapper")) {
+    if (document.querySelector('.client-details-wrapper')) {
       if (activityModal) {
-        document.querySelector(".client-details-wrapper").style.setProperty("z-index", "0", "important");
+        document.querySelector('.client-details-wrapper').style.setProperty('z-index', '0', 'important');
       } else {
-        document.querySelector(".client-details-wrapper").style.setProperty("z-index", "10", "important");
+        document.querySelector('.client-details-wrapper').style.setProperty('z-index', '10', 'important');
       }
     }
   }, [activityModal]);
@@ -175,7 +175,7 @@ export default function Feeds({
   function truncateText(text, maxLength = 200) {
     console.log(text);
     if (text.length > maxLength) {
-      return text.substring(0, maxLength) + "...";
+      return text.substring(0, maxLength) + '...';
     }
     return text;
   }
@@ -186,8 +186,8 @@ export default function Feeds({
         (loadingActivities ? (
           <GeneralSkeleton className="mt-6" />
         ) : activities.length > 0 ? (
-          <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: "285px", marginTop: "24px" }}>
-            <ul role="list" className={`${activities.length > 0 && ""}`}>
+          <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px', marginTop: '24px' }}>
+            <ul role="list" className={`${activities.length > 0 && ''}`}>
               {activities
                 ?.slice()
                 .sort((a, b) => b.id - a.id)
@@ -196,7 +196,7 @@ export default function Feeds({
                     <div className="relative pb-8 flex justify-between">
                       {activityItemIdx !== activities.length - 1 ? (
                         <span
-                          style={{ zIndex: "0 !important" }}
+                          style={{ zIndex: '0 !important' }}
                           className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
                           aria-hidden="true"
                         />
@@ -214,26 +214,25 @@ export default function Feeds({
                             {activityItem.created_at && (
                               <p className="mt-0.5 text-sm text-gray-500 w-fit">
                                 <TooltipComponent
-                                  side={"right"}
+                                  side={'right'}
                                   align="center"
                                   triggerElement={
-                                    <div className={"mr-3"}>
-                                      Created:{" "}
-                                      {formatDateCalendar(activityItem.created_at).includes("AM") ||
-                                      formatDateCalendar(activityItem.created_at).includes("AM") ||
-                                      formatDateCalendar(activityItem.created_at).includes("Last") ||
-                                      formatDateCalendar(activityItem.created_at).includes("Yesterday") ||
-                                      formatDateCalendar(activityItem.created_at).includes("Today")
+                                    <div className={'mr-3'}>
+                                      {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                      formatDateCalendar(activityItem.created_at).includes('Today')
                                         ? formatDateCalendar(activityItem.created_at)
                                         : daysBefore(activityItem.created_at)}
                                     </div>
                                   }>
-                                  <h1 className={"text-sm"}>
-                                    {formatDateCalendar(activityItem.created_at).includes("AM") ||
-                                    formatDateCalendar(activityItem.created_at).includes("PM")
+                                  <h1 className={'text-sm'}>
+                                    {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.created_at).includes('PM')
                                       ? formatDateStringMDY(activityItem.created_at)
                                       : formatDateCalendar(activityItem.created_at) +
-                                        " - " +
+                                        ' - ' +
                                         formatDateLThour(activityItem.created_at)}
                                   </h1>
                                 </TooltipComponent>
@@ -242,26 +241,26 @@ export default function Feeds({
                             {activityItem.updated_at && (
                               <p className="mt-0.5 text-sm text-gray-500 w-fit">
                                 <TooltipComponent
-                                  side={"right"}
+                                  side={'right'}
                                   align="center"
                                   triggerElement={
                                     <div>
-                                      Updated:{" "}
-                                      {formatDateCalendar(activityItem.updated_at).includes("AM") ||
-                                      formatDateCalendar(activityItem.updated_at).includes("AM") ||
-                                      formatDateCalendar(activityItem.updated_at).includes("Last") ||
-                                      formatDateCalendar(activityItem.updated_at).includes("Yesterday") ||
-                                      formatDateCalendar(activityItem.updated_at).includes("Today")
+                                      Updated:{' '}
+                                      {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                      formatDateCalendar(activityItem.updated_at).includes('Today')
                                         ? formatDateCalendar(activityItem.updated_at)
                                         : daysBefore(activityItem.updated_at)}
                                     </div>
                                   }>
-                                  <h1 className={"text-sm"}>
-                                    {formatDateCalendar(activityItem.updated_at).includes("AM") ||
-                                    formatDateCalendar(activityItem.updated_at).includes("PM")
+                                  <h1 className={'text-sm'}>
+                                    {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('PM')
                                       ? formatDateStringMDY(activityItem.updated_at)
                                       : formatDateCalendar(activityItem.updated_at) +
-                                        " - " +
+                                        ' - ' +
                                         formatDateLThour(activityItem.updated_at)}
                                   </h1>
                                 </TooltipComponent>
@@ -275,7 +274,7 @@ export default function Feeds({
                           </div>
                         </>
                       </div>
-                      {activityItem.contact_id && (
+                      {/* {activityItem.contact_id && (
                         <div className="flex mr-3">
                           <FilterDropdown
                             types={[types[1]]}
@@ -286,7 +285,7 @@ export default function Feeds({
                             positionClass="right-7 top-0"
                           />
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </li>
                 ))}
@@ -315,38 +314,37 @@ export default function Feeds({
               )}
               <SimpleBar
                 style={{
-                  height: "285px",
-                  paddingRight: "-10px",
-                  margin: "0 -25px",
-                  padding: "0 25px",
+                  height: '285px',
+                  paddingRight: '-10px',
+                  margin: '0 -25px',
+                  padding: '0 25px',
                 }}
-                autoHide
-              >
+                autoHide>
                 <ul role="list" className={`pt-6 flex flex-col gap-8`}>
                   {Object.values(inboxData).flatMap((item) => (
                     <div
-                      className={"flex gap-3"}
+                      className={'flex gap-3'}
                       onClick={() => {
                         setThreadId(item[0]?.thread_id);
                         setOpenEmailsPopup(true);
                       }}
-                      role={"button"}
+                      role={'button'}
                       key={item[0].thread_id}>
                       <div
-                        className={"h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0"}>
-                        <InboxOutlinedIcon className={"h-5 w-5 text-gray5"} />
+                        className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
+                        <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
                         <span
-                          style={{ zIndex: "0 !important" }}
+                          style={{ zIndex: '0 !important' }}
                           className="absolute top-[36px] left-4 -ml-px h-full w-0.5 bg-gray-200"
                           aria-hidden="true"
                         />
                       </div>
                       <div>
-                        <div className={"flex items-center  flex-wrap"}>
-                          <h6 className={"text-[14px] font-bold mr-2"}>
-                            {item[0]?.subject?.length === 0 ? "(no subject)" : item[0].subject}
+                        <div className={'flex items-center  flex-wrap'}>
+                          <h6 className={'text-[14px] text-[#344054] font-semibold mr-2'}>
+                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0].subject}
                           </h6>
-                          <p className={"text-[#475467] text-sm font-medium"}>{timeAgo(item[0].sent_date)}</p>
+                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
                         <div className="break-word gmail-renderings w-full overflow-hidden ">
                           <span
@@ -355,7 +353,7 @@ export default function Feeds({
                                 ? truncateText(DOMPurify.sanitize(item[0].body))
                                 : truncateText(
                                     DOMPurify.sanitize(
-                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ""),
+                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
                                     ),
                                   ),
                             }}
@@ -399,8 +397,7 @@ export default function Feeds({
                 handleChange={formik.handleChange}
                 value={formik.values.description}
                 error={errors.description && touched.description}
-                errorText={errors.description}
-              ></TextArea>
+                errorText={errors.description}></TextArea>
               <div className="flex flex-row justify-end mt-6">
                 <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
                 <Button type="submit" primary label="Save" loading={loadingButton} />
@@ -417,9 +414,9 @@ const ActivityDescription = ({ activityItem }) => {
   const htmlString = `${activityItem?.description}`;
 
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, "text/html");
-  const h6Content = doc.querySelector("h6")?.textContent;
-  const subjectContent = doc.querySelector("p")?.textContent;
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const h6Content = doc.querySelector('h6')?.textContent;
+  const subjectContent = doc.querySelector('p')?.textContent;
 
   const [showFullContent, setShowFullContent] = useState(false);
 
@@ -427,16 +424,16 @@ const ActivityDescription = ({ activityItem }) => {
 
   return activityItem?.type_of_activity_id === 1 ? (
     <div>
-      <div style={{ display: "flex", gap: "2px", flexDirection: "column" }}>
+      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
         <p>[Email Sent] </p>
-        <p className={"font-bold"}>{subjectContent}</p>
+        <p className={'font-bold'}>{subjectContent}</p>
       </div>
       {h6Content && (
         <h6>
           {isContentLong && !showFullContent ? `${h6Content.slice(0, 88)}... ` : h6Content}
           {isContentLong && (
-            <span className={"text-lightBlue5 cursor-pointer"} onClick={() => setShowFullContent(!showFullContent)}>
-              {showFullContent ? " See less" : " See more"}
+            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
+              {showFullContent ? ' See less' : ' See more'}
             </span>
           )}
         </h6>

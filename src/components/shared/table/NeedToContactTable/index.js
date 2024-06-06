@@ -87,7 +87,6 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
               isUnapprovedAIContact(person) && 'opacity-50 hover:opacity-100'
             } border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 `}
               style={{ height: '84px' }}>
-
               <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                 <ContactInfo
                   maxWidth={'300px'}
