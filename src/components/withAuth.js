@@ -11,7 +11,7 @@ export default function withAuth(Component) {
       if (typeof window !== 'undefined') {
         const isAuthenticated = localStorage.getItem('isAuthenticated');
 
-        let maintenance = false;
+        let maintenance = true;
         if (maintenance === true) {
           router.push('/maintenance');
         }
