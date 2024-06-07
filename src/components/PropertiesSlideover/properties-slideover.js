@@ -178,7 +178,7 @@ const PropertiesSlideOver = ({
                   primary
                   leftIcon={<SendIcon className={'h-3 w-3'} />}
                   loading={loadingEmails}
-                  label="Notify by Email & SMS"
+                  label="Send by Email & SMS"
                   onClick={() => _sendEmail()}
                   disabled={!selectedContacts.length || !selectedProperties.length}
                 />

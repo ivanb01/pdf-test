@@ -45,7 +45,7 @@ const SendPropertiesFooter = ({
         <Button
           primary
           leftIcon={<SendIcon className={'h-4 w-4'} />}
-          label="Notify by Email & SMS"
+          label="Send by Email & SMS"
           className="mr-3"
           onClick={() => {
             onSendEmailAndSmsClick();
