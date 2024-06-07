@@ -45,11 +45,11 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
   const handleSendEmail = (contact) => {
     let clientToBeEmailed = {
       value: contact.id,
-      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
-      first_name: contact.first_name,
-      last_name: contact.last_name,
-      email: contact.email,
-      profile_image_path: contact.profile_image_path,
+      label: `${contact?.first_name} ${contact?.last_name} - ${contact?.email}`,
+      first_name: contact?.first_name,
+      last_name: contact?.last_name,
+      email: contact?.email,
+      profile_image_path: contact?.profile_image_path,
     };
     dispatch(setContactToBeEmailed(clientToBeEmailed));
     dispatch(setOpenEmailContactOverlay(true));
@@ -82,7 +82,7 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
         {data &&
           data.map((person) => (
             <tr
-              key={person.id}
+              key={person?.id}
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
@@ -99,36 +99,36 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
                   maxWidth={'300px'}
                   emailsLength={100}
                   data={{
-                    name: person.first_name + ' ' + person.last_name,
-                    email: person.email,
-                    image: person.profile_image_path,
-                    approved_ai: person.approved_ai,
+                    name: person?.first_name + ' ' + person?.last_name ?? '',
+                    email: person?.email,
+                    image: person?.profile_image_path,
+                    approved_ai: person?.approved_ai,
                   }}
                 />
               </td>
 
               <td>
-                <Chip label={person.category_2} typeStyle />
+                <Chip label={person?.category_2} typeStyle />
                 <Chip
-                  label={person.status_2}
+                  label={person?.status_2}
                   statusStyle
-                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
-                  {getContactStatusByStatusId(person.category_id, person.status_id)}
+                  className={getContactStatusColorByStatusId(person?.category_id, person?.status_id)}>
+                  {getContactStatusByStatusId(person?.category_id, person?.status_id)}
                 </Chip>
               </td>
               <td>
                 <div className=" flex items-center break-words">
-                  {person.summary ? (
+                  {person?.summary ? (
                     <div className="text-left">
-                      {formatSummaryText(person.summary)}{' '}
+                      {formatSummaryText(person?.summary)}{' '}
                       <div
-                        className={`${!person.email_link && 'cursor-not-allowed'} inline-block`}
+                        className={`${!person?.email_link && 'cursor-not-allowed'} inline-block`}
                         onClick={(e) => e.stopPropagation()}>
                         <a
-                          href={person.email_link}
+                          href={person?.email_link}
                           onClick={(e) => e.stopPropagation()}
                           target="_blank"
-                          className={`w-[100px] ${!person.email_link && 'pointer-events-none'}`}
+                          className={`w-[100px] ${!person?.email_link && 'pointer-events-none'}`}
                           rel="noreferrer">
                           <span className="text-lightBlue3 underline">View Email</span>
                         </a>
@@ -142,9 +142,9 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
               <td>
                 <DateChip
                   contact={person}
-                  lastCommunication={person.last_communication_date}
-                  contactStatus={person.status_2}
-                  contactCategory={person.category_1 === 'Client' ? 'clients' : 'professionals'}
+                  lastCommunication={person?.last_communication_date}
+                  contactStatus={person?.status_2}
+                  contactCategory={person?.category_1 === 'Client' ? 'clients' : 'professionals'}
                 />
               </td>
               <td>
@@ -162,7 +162,7 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
                         }}
                         className="group/edit cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                         <Edit
-                          id={'edit-contact-icon-' + person.id}
+                          id={'edit-contact-icon-' + person?.id}
                           className="group-hover/edit:text-lightBlue5 text-gray3 w-4 h-4"
                         />
                       </div>
@@ -178,18 +178,18 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
                         role={'button'}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleSendEmail(contact);
+                          handleSendEmail(person);
                         }}
                         className="group/email cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                         <Email
-                          id={'edit-contact-icon-' + person.id}
+                          id={'edit-contact-icon-' + person?.id}
                           className="group-hover/email:text-lightBlue5 text-gray3 w-4 h-4"
                         />
                       </div>
                     }>
                     <div className={'text-xs leading-4 font-medium'}>Send Email</div>
                   </TooltipComponent>
-                  {person.phone_number && (
+                  {person?.phone_number && (
                     <>
                       <TooltipComponent
                         side={'top'}
@@ -201,12 +201,12 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
                             onClick={(e) => {
                               e.stopPropagation();
                               dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
-                              addContactActivity(person.id, {
+                              addContactActivity(person?.id, {
                                 type_of_activity_id: 27,
                                 description: 'Attempted to make a phone call.',
                                 created_at: new Date().toISOString(),
                               });
-                              window.open(`tel:${person.phone_number}`);
+                              window.open(`tel:${person?.phone_number}`);
                             }}
                             className="group/call cursor-pointer rounded-full p-1.5 bg-gray1 hover:bg-lightBlue2  mr-2 flex items-center justify-center">
                             <svg
