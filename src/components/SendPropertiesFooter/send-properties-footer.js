@@ -21,7 +21,7 @@ const SendPropertiesFooter = ({
     setSelectedProperties([]);
   };
   return (
-    <div className="custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between">
+    <div className="custom-box-shadow-2 px-6 py-[14px] fixed left-0 bottom-0 right-0 bg-white flex items-center justify-between z-50">
       <div className=" bg-gray1 px-[14px] py-[10px] w-fit">
         <span className="font-semibold text-gray7">{selectedProperties?.length}</span>
         <span className="text-gray8 font-medium">
@@ -45,7 +45,7 @@ const SendPropertiesFooter = ({
         <Button
           primary
           leftIcon={<SendIcon className={'h-4 w-4'} />}
-          label="Send by Email & SMS"
+          label="Send via Email & SMS"
           className="mr-3"
           onClick={() => {
             onSendEmailAndSmsClick();

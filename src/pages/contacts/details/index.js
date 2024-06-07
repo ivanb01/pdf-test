@@ -1,47 +1,45 @@
-import MainMenu from '@components/shared/menu';
-import profile from '/public/images/Portrait_Placeholder.png';
-import noteIcon from '/public/images/note-icon.svg';
-import documentsIcon from '/public/images/documents-icon.svg';
-import communication from '/public/images/communication.svg';
-import SimpleBar from 'simplebar-react';
-import email from '/public/images/icons/email.svg';
-import call from '/public/images/call-icon.svg';
-import edit from '/public/images/edit-icon.svg';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import addNote from '/public/images/add-note.svg';
-import Button from '@components/shared/button';
-import DateChip from '@components/shared/chip/date-chip';
-import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from '@global/functions';
-import { Switch } from '@headlessui/react';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import PropertiesSection from '@components/PropertiesSection';
-import Loader from '@components/shared/loader';
-import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
-import toast from 'react-hot-toast';
-import ReviewContact from '@components/overlays/review-contact';
-import Feeds from '@components/shared/feeds';
-import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
-import { Delete, Edit, MailOutline, More } from '@mui/icons-material';
-import Text from '@components/shared/text';
-import MoreVert from '@mui/icons-material/MoreVert';
-import NoteModal from '@components/overlays/note-modal';
-import { createPortal } from 'react-dom';
-import CommunicationForm from '@components/overlays/communication-form';
-import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
-import Dropdown from '@components/shared/dropdown';
-import { setRefetchActivityLog } from '@store/clientDetails/slice';
-import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
-import Email from '@mui/icons-material/Email';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import { getContactCampaign, getContactCampaigns } from '@api/campaign';
-import { updateContactLocally } from '@store/contacts/slice';
-import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
-import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
-import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
+import MainMenu from "@components/shared/menu";
+import profile from "/public/images/Portrait_Placeholder.png";
+import noteIcon from "/public/images/note-icon.svg";
+import documentsIcon from "/public/images/documents-icon.svg";
+import communication from "/public/images/communication.svg";
+import SimpleBar from "simplebar-react";
+import call from "/public/images/call-icon.svg";
+import edit from "/public/images/edit-icon.svg";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import addNote from "/public/images/add-note.svg";
+import Button from "@components/shared/button";
+import DateChip from "@components/shared/chip/date-chip";
+import React, { useEffect, useState } from "react";
+import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from "@global/functions";
+import { Switch } from "@headlessui/react";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import PropertiesSection from "@components/PropertiesSection";
+import Loader from "@components/shared/loader";
+import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from "@api/contacts";
+import toast from "react-hot-toast";
+import ReviewContact from "@components/overlays/review-contact";
+import Feeds from "@components/shared/feeds";
+import FilterDropdown from "@components/shared/dropdown/FilterDropdown";
+import { Delete, Edit, MailOutline, More } from "@mui/icons-material";
+import Text from "@components/shared/text";
+import MoreVert from "@mui/icons-material/MoreVert";
+import NoteModal from "@components/overlays/note-modal";
+import { createPortal } from "react-dom";
+import CommunicationForm from "@components/overlays/communication-form";
+import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from "@global/variables";
+import Dropdown from "@components/shared/dropdown";
+import { setRefetchActivityLog } from "@store/clientDetails/slice";
+import { getEmailsForSpecificContact, syncEmailOfContact } from "@api/email";
+import Email from "@mui/icons-material/Email";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import { getContactCampaign, getContactCampaigns } from "@api/campaign";
+import { updateContactLocally } from "@store/contacts/slice";
+import AssignUnassignContactToCampaign from "@components/shared/AssignUnassignContactToCampaign";
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
+import NotesSkeleton from "@components/SkeletonLoaders/NotesSkeleton";
+import GeneralSkeleton from "@components/SkeletonLoaders/GeneralSkeleton";
 
 const index = () => {
   const router = useRouter();
@@ -81,10 +79,11 @@ const index = () => {
         const notesData = notesResponse.data;
         setNotes(notesData.data);
         setLoadingNotes(false);
+        console.log("done");
       })
       .catch((error) => {
         console.log(error);
-        toast.error('Error fetching notes');
+        toast.error("Error fetching notes");
       });
   };
 
@@ -96,7 +95,7 @@ const index = () => {
       })
       .catch((error) => {
         console.log(error);
-        toast.error('Error fetching activity');
+        toast.error("Error fetching activity");
       });
   };
   const getCampaigns = async () => {
@@ -107,14 +106,15 @@ const index = () => {
       })
       .catch((error) => {
         console.log(error);
-        toast.error('Error fetching campaign');
+        toast.error("Error fetching campaign");
       });
   };
   useEffect(() => {
     if (contact) {
       syncEmailOfContact(contact.email).catch((error) => {
         console.log(error);
-        toast.error('Error fetching gmail inbox');
+        toast.error("Error fetching gmail inbox");
+
       });
     }
   }, [contact]);
@@ -163,12 +163,12 @@ const index = () => {
   };
 
   const handleEditActivity = () => {
-    console.log('edit activity');
+    console.log("edit activity");
   };
   const [openCommunicationPopup, setOpenCommunicationPopup] = useState(false);
 
   const handleDeleteActivity = () => {
-    console.log('delete activity');
+    console.log("delete activity");
   };
 
   const handleUpdateActivityLogsInNotes = () => {
@@ -240,10 +240,10 @@ const index = () => {
   return (
     <>
       <div>
-        <div className={'sticky z-[9] top-0'}>
+        <div className={"sticky z-[9] top-0"}>
           <MainMenu />
         </div>
-        {['GmailAI', 'Gmail'].includes(contact?.import_source) && contact?.approved_ai !== true && (
+        {["GmailAI", "Gmail"].includes(contact?.import_source) && contact?.approved_ai !== true && (
           <ReviewContact
             showToast
             hideCloseButton
@@ -254,7 +254,7 @@ const index = () => {
           />
         )}
         {!contact ? (
-          <div className="relative h-full" style={{ height: 'calc(100vh - 68px) !important' }}>
+          <div className="relative h-full" style={{ height: "calc(100vh - 68px) !important" }}>
             <Loader />
           </div>
         ) : (
@@ -274,7 +274,7 @@ const index = () => {
                 </div>
                 <div className="mt-6">
                   <div className="text-[#101828] text-xl font-semibold break-word">
-                    {contact?.first_name + ' ' + contact?.last_name}
+                    {contact?.first_name + " " + contact?.last_name}
                   </div>
                 </div>
                 <div className={'py-3 flex gap-[6px] text-[#475467] items-center'}>
@@ -300,47 +300,47 @@ const index = () => {
                   <p className={'text-sm font-medium'}>{contact?.email}</p>
                 </div>
                 {contact?.phone_number ? (
-                  <div className={'pb-3 flex gap-[6px] text-[#475467] items-center'}>
+                  <div className={"pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center"}>
                     <div
                       className={
-                        'p-1.5 flex justify-center items-center  border border-#D1D5DB text-sm  font-medium rounded-md shadow-sm text-gray6 hover:bg-white bg-white'
+                        "p-1.5 flex justify-center items-center  border border-#D1D5DB text-sm  font-medium rounded-md shadow-sm text-gray6 hover:bg-white bg-white"
                       }
-                      role={'button'}
+                      role={"button"}
                       onClick={() => {
                         setActivities([
                           {
                             type_of_activity_id: 27,
-                            description: 'Attempted to make a phone call.',
+                            description: "Attempted to make a phone call.",
                             created_at: new Date().toISOString(),
                           },
                           ...activities,
                         ]);
                         addContactActivity(contact.id, {
                           type_of_activity_id: 27,
-                          description: 'Attempted to make a phone call.',
+                          description: "Attempted to make a phone call.",
                           created_at: new Date().toISOString(),
                         });
                         window.open(`tel:${contact.phone_number}`);
                       }}>
-                      <img src={call.src} style={{ height: '15px' }} />
+                      <img src={call.src} style={{ height: "15px" }} />
                     </div>
-                    <p className={'text-sm font-medium'}>{formatPhoneNumber(contact?.phone_number)}</p>
+                    <p className={"text-sm font-medium"}>{formatPhoneNumber(contact?.phone_number)}</p>
                   </div>
                 ) : (
-                  <div className={'bg-red1 px-3 py-2 flex gap-[8px] items-start w-max rounded-md mt-[14px] pr-4'}>
-                    <WarningRoundedIcon className={'text-red5 h-5 w-5'} />
-                    <div className={'text-[#991B1B]'}>
-                      <p className={'text-sm font-semibold'}>Phone number is missing! </p>
+                  <div className={"bg-red1 px-3 py-2 flex gap-[8px] items-start w-max rounded-md mt-[14px] pr-4"}>
+                    <WarningRoundedIcon className={"text-red5 h-5 w-5"} />
+                    <div className={"text-[#991B1B]"}>
+                      <p className={"text-sm font-semibold"}>Phone number is missing! </p>
                     </div>
                   </div>
                 )}
                 <div className="mt-[18px] flex items-center">
                   <a className="mr-3 text-gray6 bg-gray-100 rounded-md px-3 py-[6px] text-xs font-medium uppercase">
-                    {contact.category_1 === 'Other'
+                    {contact.category_1 === "Other"
                       ? othersOptions.find((c) => c.id === contact.category_id)?.name
                       : contact.category_2}
                   </a>
-                  {contact.category_1 == 'Client' && contact.status_2 && contact.status_2 != 'Default' && (
+                  {contact.category_1 == "Client" && contact.status_2 && contact.status_2 != "Default" && (
                     <a
                       className={`${
                         allStatusesQuickEdit.clients.find((c) => contact.status_id === c.id).color
@@ -357,14 +357,14 @@ const index = () => {
                 )}
                 <hr className="my-4" />
                 <div>
-                  {contact.category_1 == 'Client' && contact.status_1 != 'Dropped' && (
+                  {contact.category_1 == "Client" && contact.status_1 != "Dropped" && (
                     <div className="mb-[10px] w-full px-4 py-2 client-details-info-shadow border border-gray2 rounded-lg flex items-center text-sm font-medium ">
                       <span className="text-gray6 mr-3">Health:</span>
                       <DateChip
                         contact={contact}
                         lastCommunication={contact.last_communication_date}
                         contactStatus={contact.status_2}
-                        contactCategory={contact.category_1 === 'Client' ? 'clients' : 'professionals'}
+                        contactCategory={contact.category_1 === "Client" ? "clients" : "professionals"}
                       />
                     </div>
                   )}
@@ -534,7 +534,7 @@ const index = () => {
                 />
               </div>
 
-              {contact?.category_1 == 'Client' && (
+              {contact?.category_1 == "Client" && (
                 <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <PropertiesSection noSelect contactId={id} category={contact.category_2} />
                 </div>
@@ -547,7 +547,7 @@ const index = () => {
                   <div>
                     {notes && notes.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
-                        <img src={addNote.src} className={'h-7  w-7'} />
+                        <img src={addNote.src} className={"h-7  w-7"} />
                       </a>
                     )}
                   </div>
@@ -557,13 +557,13 @@ const index = () => {
                 ) : notes.length > 0 ? (
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
-                    style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
+                    style={{ maxHeight: "300px", marginTop: "30px", paddingRight: "15px" }}>
                     {notes
                       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                       .map((note, index) => (
                         <Item
                           isEditable
-                          className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
+                          className={` ${notes.length - 1 != index && "mb-[18px]"}`}
                           item={note}
                           icon={noteIcon.src}
                         />
@@ -584,7 +584,7 @@ const index = () => {
                   <div className="text-gray8 font-semibold text-sm mb-5">Documents</div>
                   {documents.map((document, index) => (
                     <Item
-                      className={` ${documents.length - 1 != index && 'mb-[18px]'}`}
+                      className={` ${documents.length - 1 != index && "mb-[18px]"}`}
                       item={document}
                       icon={documentsIcon.src}
                     />
@@ -596,7 +596,7 @@ const index = () => {
                   <div className="text-gray8 font-semibold text-sm mb-5">Applications</div>
                   {applications.map((application, index) => (
                     <Item
-                      className={` ${applications.length - 1 != index && 'mb-[18px]'}`}
+                      className={` ${applications.length - 1 != index && "mb-[18px]"}`}
                       item={application}
                       icon={documentsIcon.src}
                     />
