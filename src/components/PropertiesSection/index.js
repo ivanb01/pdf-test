@@ -269,6 +269,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 }`,
               };
               const contactToBeUpdated = allContacts.find((c) => c.id == contactId);
+              setPropertiesSent(true);
+              resetPropertySelection();
 
               await addContactActivity(item.contact_id, activity)
                 .then(() => {})
@@ -283,8 +285,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   }
                 });
             });
-            setPropertiesSent(true);
-            resetPropertySelection();
           }
           if (
             parseInt(c.value) === parseInt(item.contact_id) &&
@@ -305,6 +305,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 };
 
                 const contact = allContacts.find((c) => c.id == contactId);
+                setPropertiesSent(true);
+                resetPropertySelection();
 
                 await addContactActivity(contact?.id, activity).then(() => {
                   updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
@@ -319,9 +321,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
               });
-
-            setPropertiesSent(true);
-            resetPropertySelection();
           }
         });
       });
