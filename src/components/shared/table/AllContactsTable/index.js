@@ -109,12 +109,14 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
 
               <td>
                 <Chip label={person?.category_2} typeStyle />
-                <Chip
-                  label={person?.status_2}
-                  statusStyle
-                  className={getContactStatusColorByStatusId(person?.category_id, person?.status_id)}>
-                  {getContactStatusByStatusId(person?.category_id, person?.status_id)}
-                </Chip>
+                {person?.category_1 === 'Client' && (
+                  <Chip
+                    label={person?.status_2}
+                    statusStyle
+                    className={getContactStatusColorByStatusId(person?.category_id, person?.status_id)}>
+                    {getContactStatusByStatusId(person?.category_id, person?.status_id)}
+                  </Chip>
+                )}
               </td>
               <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
                 <div className={'flex gap-1.5 items-center justify-start'}>

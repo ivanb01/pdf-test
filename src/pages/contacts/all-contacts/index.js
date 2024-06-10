@@ -64,17 +64,38 @@ const AllContacts = () => {
     }
   }, []);
   const filterContacts = () => {
+    console.log(clientsFilters);
     let contactsState = allContacts.data;
-    Object.keys(clientsFilters).map((key) => {
-      contactsState = contactsState.filter((contact) => {
-        if (Array.isArray(contact[key])) {
-          return contact[key].reduce(
-            (accumulator, current) => accumulator || clientsFilters[key].includes(current),
-            false,
-          );
-        }
-        return clientsFilters[key].includes(contact[key]);
-      });
+    Object.keys(clientsFilters).forEach((key) => {
+      if (clientsFilters[key].includes('Other')) {
+        contactsState = contactsState.filter((contact) => {
+          if (Array.isArray(contact[key])) {
+            return contact[key].some((current) => {
+              clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+            });
+          }
+
+          return clientsFilters[key].includes(contact[key]) || contact.category_2.includes('Unknown');
+        });
+      } else if (clientsFilters[key].includes('Uncategorized')) {
+        contactsState = contactsState.filter((contact) => {
+          if (Array.isArray(contact[key])) {
+            return contact[key].some((current) => {
+              clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+            });
+          }
+
+          return clientsFilters[key].includes(contact[key]) && !contact.category_2.includes('Unknown');
+        });
+      } else {
+        contactsState = contactsState.filter((contact) => {
+          if (Array.isArray(contact[key])) {
+            return contact[key].some((current) => clientsFilters[key].includes(current));
+          }
+          return clientsFilters[key].includes(contact[key]);
+        });
+      }
+
       setFilteredContacts(contactsState);
     });
   };
