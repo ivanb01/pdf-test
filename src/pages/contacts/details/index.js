@@ -1,45 +1,46 @@
-import MainMenu from "@components/shared/menu";
-import profile from "/public/images/Portrait_Placeholder.png";
-import noteIcon from "/public/images/note-icon.svg";
-import documentsIcon from "/public/images/documents-icon.svg";
-import communication from "/public/images/communication.svg";
-import SimpleBar from "simplebar-react";
-import call from "/public/images/call-icon.svg";
-import edit from "/public/images/edit-icon.svg";
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import addNote from "/public/images/add-note.svg";
-import Button from "@components/shared/button";
-import DateChip from "@components/shared/chip/date-chip";
-import React, { useEffect, useState } from "react";
-import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from "@global/functions";
-import { Switch } from "@headlessui/react";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import PropertiesSection from "@components/PropertiesSection";
-import Loader from "@components/shared/loader";
-import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from "@api/contacts";
-import toast from "react-hot-toast";
-import ReviewContact from "@components/overlays/review-contact";
-import Feeds from "@components/shared/feeds";
-import FilterDropdown from "@components/shared/dropdown/FilterDropdown";
-import { Delete, Edit, MailOutline, More } from "@mui/icons-material";
-import Text from "@components/shared/text";
-import MoreVert from "@mui/icons-material/MoreVert";
-import NoteModal from "@components/overlays/note-modal";
-import { createPortal } from "react-dom";
-import CommunicationForm from "@components/overlays/communication-form";
-import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from "@global/variables";
-import Dropdown from "@components/shared/dropdown";
-import { setRefetchActivityLog } from "@store/clientDetails/slice";
-import { getEmailsForSpecificContact, syncEmailOfContact } from "@api/email";
-import Email from "@mui/icons-material/Email";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import { getContactCampaign, getContactCampaigns } from "@api/campaign";
-import { updateContactLocally } from "@store/contacts/slice";
-import AssignUnassignContactToCampaign from "@components/shared/AssignUnassignContactToCampaign";
-import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import NotesSkeleton from "@components/SkeletonLoaders/NotesSkeleton";
-import GeneralSkeleton from "@components/SkeletonLoaders/GeneralSkeleton";
+import MainMenu from '@components/shared/menu';
+import profile from '/public/images/Portrait_Placeholder.png';
+import noteIcon from '/public/images/note-icon.svg';
+import documentsIcon from '/public/images/documents-icon.svg';
+import communication from '/public/images/communication.svg';
+import SimpleBar from 'simplebar-react';
+import email from '/public/images/icons/email.svg';
+import call from '/public/images/call-icon.svg';
+import edit from '/public/images/edit-icon.svg';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import addNote from '/public/images/add-note.svg';
+import Button from '@components/shared/button';
+import DateChip from '@components/shared/chip/date-chip';
+import React, { useEffect, useState } from 'react';
+import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from '@global/functions';
+import { Switch } from '@headlessui/react';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import PropertiesSection from '@components/PropertiesSection';
+import Loader from '@components/shared/loader';
+import { addContactActivity, deleteContactNote, getContactActivities, getContactNotes } from '@api/contacts';
+import toast from 'react-hot-toast';
+import ReviewContact from '@components/overlays/review-contact';
+import Feeds from '@components/shared/feeds';
+import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
+import { Delete, Edit, MailOutline, More } from '@mui/icons-material';
+import Text from '@components/shared/text';
+import MoreVert from '@mui/icons-material/MoreVert';
+import NoteModal from '@components/overlays/note-modal';
+import { createPortal } from 'react-dom';
+import CommunicationForm from '@components/overlays/communication-form';
+import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
+import Dropdown from '@components/shared/dropdown';
+import { setRefetchActivityLog } from '@store/clientDetails/slice';
+import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
+import Email from '@mui/icons-material/Email';
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import { getContactCampaign, getContactCampaigns } from '@api/campaign';
+import { updateContactLocally } from '@store/contacts/slice';
+import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
+import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
 
 const index = () => {
   const router = useRouter();
@@ -79,7 +80,7 @@ const index = () => {
         const notesData = notesResponse.data;
         setNotes(notesData.data);
         setLoadingNotes(false);
-        console.log("done");
+        console.log('done');
       })
       .catch((error) => {
         console.log(error);
@@ -300,7 +301,7 @@ const index = () => {
                   <p className={'text-sm font-medium'}>{contact?.email}</p>
                 </div>
                 {contact?.phone_number ? (
-                  <div className={"pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center"}>
+                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center'}>
                     <div
                       className={
                         "p-1.5 flex justify-center items-center  border border-#D1D5DB text-sm  font-medium rounded-md shadow-sm text-gray6 hover:bg-white bg-white"
