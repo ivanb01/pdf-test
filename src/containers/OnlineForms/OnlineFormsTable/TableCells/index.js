@@ -11,7 +11,7 @@ import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
 import { useSelector } from 'react-redux';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { useRouter } from 'next/router';
-import { useSendEmail } from '@helpers/queries/mutations';
+import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 
@@ -48,12 +48,15 @@ export const StatusCell = (props) => {
     toast.error('Unable to resend email!');
   };
 
-  const { isPending: isPendingSendEmail, mutate: mutateSendEmail } = useSendEmail({
+  const sendEmail = useSendEmail({
     onSuccess: onSendEmailSuccess,
     onError: onSendEmailError,
   });
+  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog();
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const sendFormEmail = async () => {
+    const contact_id = allContacts?.find((c) => c.email === client_email);
     const emailBody = {
       to: [client_email],
       subject: formTitle ?? 'Opgny form',
@@ -70,7 +73,12 @@ export const StatusCell = (props) => {
         },
       ),
     };
-    mutateSendEmail(emailBody);
+    sendEmail.mutateAsync(emailBody).then(() => {
+      updateCommunicationAndActivityLog.mutate({
+        form_name: formTitle ?? 'Opgny form',
+        client_id: contact_id?.id,
+      });
+    });
   };
 
   const chipVariant = useMemo(() => {
@@ -99,8 +107,12 @@ export const StatusCell = (props) => {
     <div className="flex flex-col gap-[6px] text-[12px] font-medium">
       <StatusChip text={status.toLowerCase()} variant={chipVariant} />
       {status.toLowerCase() === 'pending' && (
-        <button disabled={isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
-          {!isPendingSendEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
+        <button disabled={sendEmail.isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
+          {!sendEmail.isPendingSendEmail ? (
+            <Image src={ResendEmail} alt="Resend email" />
+          ) : (
+            <CircularProgress size={16} />
+          )}
           Resend Form
         </button>
       )}
