@@ -83,7 +83,6 @@ const index = () => {
         throw error;
       });
   };
-
   async function loadMore() {
     if (loadingPagination) return;
 
@@ -109,7 +108,6 @@ const index = () => {
       setLoadingPagination(false);
     }
   }
-
   const processContacts = (contacts) => {
     return contacts.map((contact) => {
       const {
@@ -173,9 +171,9 @@ const index = () => {
     }
   }, [CRMCampaigns, id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
-    .concat(usersInCampaignGlobally?.contacts_not_campaign)
-    .filter((contact) => contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const totalContacts = usersInCampaignGlobally?.contacts.filter((contact) =>
+    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
   const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
     contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
@@ -191,10 +189,7 @@ const index = () => {
     {
       name: "CAMPAIGN MATCHED TO",
       icon: campaignsMatchedTo,
-      amount:
-        usersInCampaignGlobally?.contacts_in_campaign?.length +
-        usersInCampaignGlobally?.contacts_not_campaign?.length +
-        usersInCampaignGlobally?.contacts_unassigned_count,
+      amount: usersInCampaignGlobally?.contacts?.length,
     },
     {
       name: "CLIENTS IN CAMPAIGN",
@@ -259,7 +254,6 @@ const index = () => {
           updatedItem = {
             ...item,
             contact_campaign_status: "unassigned",
-
             contact_unenrolment_date: new Date(),
           };
         }

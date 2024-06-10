@@ -85,7 +85,7 @@ const AllContacts = () => {
     }
     filterContacts();
     if (Object.keys(clientsFilters).length === 0) {
-      setFilteredContacts(allContacts?.data);
+      setFilteredContacts(allContacts?.data.filter((c) => c.category_1 !== 'Trash'));
     }
   }, [clientsFilters, searchTerm, allContacts]);
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -137,7 +137,7 @@ const AllContacts = () => {
   const tabs = [
     {
       title: 'CATEGORY',
-      content: ['Client', 'Professional', 'Uncategorized', 'Trash'],
+      content: ['Client', 'Professional', 'Uncategorized', 'Other'],
       value: 'category_1',
     },
   ];
@@ -271,7 +271,7 @@ const AllContacts = () => {
           <SlideOver
             open={open}
             setOpen={setOpen}
-            title="Clients Filters"
+            title="All Contacts Filter"
             className="top-[70px]"
             buttons={
               <>
