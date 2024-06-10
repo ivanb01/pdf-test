@@ -85,7 +85,7 @@ const AllContacts = () => {
     }
     filterContacts();
     if (Object.keys(clientsFilters).length === 0) {
-      setFilteredContacts(allContacts?.data.filter((c) => c.category_1 !== 'Trash'));
+      setFilteredContacts(allContacts?.data?.filter((c) => c.category_1 !== 'Trash'));
     }
   }, [clientsFilters, searchTerm, allContacts]);
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
