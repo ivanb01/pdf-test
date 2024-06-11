@@ -46,10 +46,10 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
     openedSubtab === 0
       ? vendorSubtypes
       : openedSubtab === 1
-      ? agentTypes
-      : openedSubtab === 3
-      ? unspecifiedTypes
-      : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
+        ? agentTypes
+        : openedSubtab === 3
+          ? unspecifiedTypes
+          : vendorSubtypes && [...vendorSubtypes, ...agentTypes, ...unspecifiedTypes];
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
 
@@ -146,12 +146,6 @@ const ProfessionalsTable = ({ data, tableFor, categoryType, handleCardEdit, sear
                       </div>
                     </td> */}
                       <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                        <div className={'flex gap-1.5 items-center justify-start'}>
-                          {getSource(contact.import_source_text, contact.approved_ai).icon}
-                          <p className={'text-xs leading-4 font-medium text-gray8'}>
-                            {getSource(contact.import_source_text, contact.approved_ai).name}
-                          </p>
-                        </div>
                         {contact.summary !== null && (
                           <TooltipComponent
                             side={'bottom'}

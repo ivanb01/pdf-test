@@ -15,8 +15,7 @@ const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow })
             <tr>
               <th
                 scope="col"
-                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center"
-              >
+                className="py-3 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6 flex items-center">
                 {tableFor == 'in-categorization' && (
                   <Input className="mr-1" id="select_all" type="checkbox" onChange={handleSelectAll} />
                 )}
@@ -25,8 +24,7 @@ const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow })
               {tableFor != 'in-categorization' && (
                 <th
                   scope="col"
-                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                >
+                  className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
                   Contact summary
                 </th>
               )}
@@ -47,16 +45,14 @@ const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow })
                     } else if (tableFor == 'uncategorized') {
                       handleClickRow(event.target);
                     }
-                  }}
-                >
+                  }}>
                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6 flex items-center">
                     {tableFor == 'in-categorization' && (
                       <Input
                         className="mr-1"
                         type="checkbox"
                         id={'input_' + index}
-                        onChange={(event) => handleClickRow(dataItem, event)}
-                      ></Input>
+                        onChange={(event) => handleClickRow(dataItem, event)}></Input>
                     )}
                     <ContactInfo
                       inCategorization={tableFor === 'in-categorization'}
@@ -89,12 +85,6 @@ const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow })
                   </td>
                   {tableFor != 'in-categorization' && (
                     <td className="whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500">
-                      <div className={'flex gap-1.5 items-center justify-start'}>
-                        {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
-                        <p className={'text-xs leading-4 font-medium text-gray8'}>
-                          {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
-                        </p>
-                      </div>
                       {dataItem.summary !== null && (
                         <TooltipComponent
                           side={'bottom'}
@@ -103,12 +93,10 @@ const UncategorizedTable = ({ data, tableFor, handleSelectAll, handleClickRow })
                             <div
                               className={
                                 'max-w-[239px] leading-5 text-left font-medium text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis  overflow-hidden bg-lightBlue1 text-lightBlue3 '
-                              }
-                            >
+                              }>
                               {dataItem.summary}
                             </div>
-                          }
-                        >
+                          }>
                           <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
                             <p className="text-xs leading-4 font-normal">{dataItem.summary}</p>
                           </div>
