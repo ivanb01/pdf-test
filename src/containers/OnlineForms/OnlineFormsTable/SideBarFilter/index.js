@@ -31,11 +31,11 @@ const SideBarFilter = ({
 
   const [allForm, sortedDefaultTypes, sortedNonDefaultTypes, sortedTrashedTypes] = useMemo(() => {
     const allForm = filters.find((filter) => {
-      return filter.id.hex === '';
+      return filter.id === '';
     });
 
     const filteredArray = filters.filter((filter) => {
-      return allForm.id.hex !== filter.id.hex;
+      return allForm.id !== filter.id;
     });
 
     const defaultTypes = sortTemplatesAlphabetically(filteredArray.filter((type) => type.is_default && !type.deleted));

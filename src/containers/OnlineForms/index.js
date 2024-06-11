@@ -26,7 +26,7 @@ const statusEnum = {
 
 const OnlineForms = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const [formTypeFilter, setFormTypeFilter] = useState({ id: { hex: '' }, name: 'All Forms' });
+  const [formTypeFilter, setFormTypeFilter] = useState({ id: '', name: 'All Forms' });
   const [showSendForm, setShowSendForm] = useState(false);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState(null);
@@ -58,8 +58,7 @@ const OnlineForms = () => {
   } = useFetchOnlineFormsTypes({ deleted: true });
 
   const fetchFormsParams = useMemo(() => {
-    const { id } = formTypeFilter;
-    const { hex: form_type_id } = id;
+    const { id: form_type_id } = formTypeFilter;
 
     const statusName = statusEnum[currentTab];
 
@@ -171,7 +170,7 @@ const OnlineForms = () => {
   }, [isScrolledToBottom, hasNextPage, fetchNextPage]);
 
   const handleEditTemplate = (template) => {
-    router.push(`/online-forms/update-form-type/${template.id.hex}`);
+    router.push(`/online-forms/update-form-type/${template.id}`);
   };
 
   const handlePreviewTemplate = async (template) => {
@@ -228,7 +227,7 @@ const OnlineForms = () => {
 
   const onRestoreFormTemplate = (template) => {
     updateOnlineFormTypeMutate({
-      id: template.id.hex,
+      id: template.id,
       templateData: {
         ...template,
         deleted: false,
@@ -257,9 +256,9 @@ const OnlineForms = () => {
       <div className="w-[320px] shrink-0 h-[calc(100vh-140px)] ">
         <SideBarFilter
           filters={[
-            { id: { hex: '' }, name: 'All Forms' },
-            ...(formsTypesData?.data ?? []),
-            ...(trashedFormsTypesData?.data ?? []),
+            { id: '', name: 'All Forms' },
+            ...(formsTypesData?.data.items ?? []),
+            ...(trashedFormsTypesData?.data.items ?? []),
           ]}
           currentFilterId={formTypeFilter}
           setCurrentFilter={setFormTypeFilter}
@@ -332,12 +331,14 @@ const OnlineForms = () => {
               )}
               <div className="flex items-center gap-[15px]">
                 <Button white label={'Cancel'} onClick={() => setOpenSlideover(false)} />
-                <Button
-                  leftIcon={<PencilIcon />}
-                  label="Edit Form"
-                  className={'gap-x-2'}
-                  onClick={() => router.push(`/online-forms/update-form-type/${openedPopover.id.hex}`)}
-                />
+                {!openedPopover.is_default && (
+                  <Button
+                    leftIcon={<PencilIcon />}
+                    label="Edit Form"
+                    className={'gap-x-2'}
+                    onClick={() => router.push(`/online-forms/update-form-type/${openedPopover.id}`)}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -345,7 +346,7 @@ const OnlineForms = () => {
         {trashOverlayOpened && (
           <TrashTypeOverlay
             onCancel={() => setTrashOverlayOpened(false)}
-            onDelete={() => onDeleteTemplate(openedPopover.id.hex)}
+            onDelete={() => onDeleteTemplate(openedPopover.id)}
             isDeleting={isPendingDeleteTemplate}
           />
         )}

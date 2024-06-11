@@ -1,8 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-const FilterDropdown = ({ types, icon, data, align = 'end', side = 'bottom' }) => {
+const FilterDropdown = ({ types, icon, data, align = 'end', side = 'bottom', onOpenChange = () => {} }) => {
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger asChild>{icon}</DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content

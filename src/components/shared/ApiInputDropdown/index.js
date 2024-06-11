@@ -36,11 +36,11 @@ const ApiInputDropdown = ({ children, ...props }) => {
 
 const SearchInput = ({ children, ...props }) => {
   const { setOpen } = useContext(ApiInputDropdownContext);
-  const { searchValue, setSearchValue } = props;
+  const { searchValue, setSearchValue, label } = props;
   return (
     <div className="flex flex-col ">
       <Input
-        label="Property"
+        label={label}
         placeholder="Search here, or fill the information below"
         onChange={(event) => setSearchValue(event.target.value)}
         value={searchValue}

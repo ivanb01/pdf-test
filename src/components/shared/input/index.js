@@ -452,7 +452,7 @@ const Input = forwardRef(
           />
           <button onClick={clear} className="flex items-center gap-[2px] text-[10px] absolute top-[12px] right-[12px]">
             <DeleteIcon className="text-gray4 h-[16px] w-[11px]" />
-            <span className="text-gray7 leading-4">remove</span>
+            <span className="text-gray7 leading-4">clear</span>
           </button>
         </div>
       );

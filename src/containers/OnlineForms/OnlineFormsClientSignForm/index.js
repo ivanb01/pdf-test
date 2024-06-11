@@ -133,8 +133,12 @@ const OnlineFormsSignForm = () => {
         };
       });
 
-      const signatures = formattedArray.filter((field) => field.formType === 'signature');
-      const restFields = formattedArray.filter((field) => field.formType !== 'signature');
+      const signatures = formattedArray
+        .filter((field) => field.formType === 'signature')
+        .sort((field1, field2) => (+field1.key < +field2.key ? -1 : 1));
+      const restFields = formattedArray
+        .filter((field) => field.formType !== 'signature')
+        .sort((field1, field2) => (+field1.key < +field2.key ? -1 : 1));
 
       return [restFields, signatures];
     } else return [];

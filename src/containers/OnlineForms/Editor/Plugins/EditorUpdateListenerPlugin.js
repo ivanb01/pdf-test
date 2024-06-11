@@ -32,6 +32,7 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
           dispatch(setEditorState(editorState.toJSON()));
         });
       }
+
       firstRender.current = false;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,7 +42,6 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
     return editor.registerUpdateListener(({ editorState }) => {
       editorState.read(() => {
         const formNodesFound = $nodesOfType(FormNode); // get all AbbreviationNode nodes
-
         const formNodes = formNodesFound.reduce((formNodes, currentFormNode) => {
           const {
             __id: id,
@@ -61,7 +61,7 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
               textValue,
               key,
               label,
-              name,
+              name: `${name}-${key}`,
               inputType,
             },
           };
@@ -79,6 +79,7 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
             __inputType: inputType,
             __name: name,
           } = currentSignatureNode;
+
           return {
             ...signatueNodes,
             [keyValue]: {
@@ -88,11 +89,12 @@ export function EditorUpdateListenerPlugin({ initialValue }) {
               textValue: signatureTextValue,
               key: keyValue,
               label,
-              name,
+              name: `${name}-${keyValue}`,
               inputType,
             },
           };
         }, {});
+
         dispatch(setFormField({ ...formNodes, ...signatueNodes }));
       });
     });

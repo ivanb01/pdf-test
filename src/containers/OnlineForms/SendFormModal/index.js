@@ -20,7 +20,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
   });
   const { handleSubmit, errors, setFieldValue, values } = useFormik({
     initialValues: {
-      form_type_id: currentForm?.id.hex ? currentForm?.id.hex : '',
+      form_type_id: currentForm?.id ? currentForm?.id : '',
       clients: [],
     },
     validationSchema: SendFormSchema,
@@ -34,10 +34,10 @@ const SendForm = ({ params, onCancel, currentForm }) => {
   const onAssignFormSuccess = (data) => {
     router.push(
       {
-        pathname: `/online-forms/agent-sign/${data.data.public_identifier.hex}`,
+        pathname: `/online-forms/agent-sign/${data.data.public_identifier}`,
         query: { params: JSON.stringify(params) },
       },
-      `/online-forms/agent-sign/${data.data.public_identifier.hex}`,
+      `/online-forms/agent-sign/${data.data.public_identifier}`,
     );
   };
   const onAssignFormError = () => {
@@ -57,24 +57,23 @@ const SendForm = ({ params, onCancel, currentForm }) => {
     <Overlay
       className="w-[600px] min-h-[332px] [&>div]:overflow-visible"
       title={'Send New Form'}
-      handleCloseOverlay={onCancel}
-    >
+      handleCloseOverlay={onCancel}>
       <div className="p-[24px] pt-0 flex flex-col gap-[24px]">
         <div className="flex flex-col gap-[24px]">
           <Dropdown
             placeHolder="Choose Form*"
             label="Choose Form*"
-            options={formsTypesData?.data?.map(({ id, name }) => {
+            options={formsTypesData?.data?.items.map(({ id, name }) => {
               return { id, label: name };
             })}
             activeIcon={false}
             activeClasses="bg-lightBlue1"
             handleSelect={(source) => {
-              setFieldValue('form_type_id', source.id.hex);
+              setFieldValue('form_type_id', source.id);
             }}
             error={errors.form_type_id}
             errorText={errors.form_type_id}
-            initialSelect={currentForm?.id.hex ? currentForm.name : ''}
+            initialSelect={currentForm?.id ? currentForm.name : ''}
           />
           <ClientsMultiSelect
             handleChange={(client) => {
@@ -95,7 +94,7 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             Cancel
           </Button>
           <Button className={'min-w-fit'} onClick={handleSubmit} loading={assignFormIsPending}>
-            Send
+            Next
           </Button>
         </div>
       </div>

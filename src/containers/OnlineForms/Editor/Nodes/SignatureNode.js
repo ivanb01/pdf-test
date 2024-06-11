@@ -24,12 +24,15 @@ export class SignatureNode extends DecoratorNode {
     caption,
     captionsEnabled,
     key,
+    type,
+    formType,
     textValue,
     label,
     name,
     inputType,
   ) {
     super(key);
+    this.__id = uuid();
     this.__src = src;
     this.__altText = altText;
     this.__maxWidth = maxWidth;
@@ -38,7 +41,6 @@ export class SignatureNode extends DecoratorNode {
     this.__showCaption = showCaption || false;
     this.__caption = caption || createEditor();
     this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
-    this.__id = uuid();
     this.__formType = 'signature';
     this.__textValue = textValue;
     this.__label = label;
@@ -177,6 +179,9 @@ export class SignatureNode extends DecoratorNode {
           caption={this.__caption}
           captionsEnabled={this.__captionsEnabled}
           resizable={true}
+          label={this.__label}
+          name={this.__name}
+          inputType={this.__inputType}
         />
       </Suspense>
     );
@@ -193,6 +198,8 @@ export function $createSignatureNode({
   showCaption,
   caption,
   key,
+  type,
+  formType,
   textValue,
   label,
   name,
@@ -208,12 +215,13 @@ export function $createSignatureNode({
     caption,
     captionsEnabled,
     key,
+    type,
+    formType,
     textValue,
     label,
     name,
     inputType,
   );
-
   return newSignatureNode;
 }
 

@@ -36,7 +36,6 @@ export const ClientCell = ({ name, email, imgSrc }) => {
 export const StatusCell = (props) => {
   const { status, form_type, client_email, client_name, public_identifier } = props;
 
-  const { hex: formPublicIdentifier } = public_identifier;
   const { name: formTitle } = form_type;
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -66,7 +65,7 @@ export const StatusCell = (props) => {
           first_name={client_name}
           agent_first_name={userInfo?.first_name}
           agent_last_name={userInfo?.last_name}
-          formLink={`${window.location.origin}/public/online-forms-sign/${formPublicIdentifier}`}
+          formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier}`}
         />,
         {
           pretty: true,
@@ -100,8 +99,8 @@ export const StatusCell = (props) => {
   }, [status]);
 
   const onAgentSignForm = useCallback(() => {
-    router.push(`/online-forms/agent-sign/${formPublicIdentifier}`);
-  }, [formPublicIdentifier]);
+    router.push(`/online-forms/agent-sign/${public_identifier}`);
+  }, [public_identifier]);
 
   return (
     <div className="flex flex-col gap-[6px] text-[12px] font-medium">

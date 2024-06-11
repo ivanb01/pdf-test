@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useFetchOnlineFormTypeById, useFetchOnlineFormsPaginated } from '../queries/queries';
+import { useFetchOnlineFormsPaginated, useFetchOnlineForm } from '../queries/queries';
 import { downloadPdf, generatePdfBlob } from '../Pdf/generatePdf';
 import { useFormik } from 'formik';
-import { useFetchOnlineForm } from '../queries/queries';
 import { usePostOnlineForm } from '../queries/mutations';
 import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -101,7 +100,7 @@ const OnlineFormAgentSign = () => {
           first_name={variables.client_first_name}
           agent_first_name={userInfo?.first_name}
           agent_last_name={userInfo?.last_name}
-          formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier.hex}`}
+          formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier}`}
         />,
         {
           pretty: true,
@@ -148,8 +147,16 @@ const OnlineFormAgentSign = () => {
         };
       });
 
-      const signatures = formattedArray.filter((field) => field.formType === 'signature');
-      const restFields = formattedArray.filter((field) => field.formType !== 'signature');
+      const signatures = formattedArray
+        .filter((field) => field.formType === 'signature')
+        .sort((field1, field2) => {
+          return +field1.key < +field2.key ? -1 : 1;
+        });
+      const restFields = formattedArray
+        .filter((field) => field.formType !== 'signature')
+        .sort((field1, field2) => {
+          return +field1.key < +field2.key ? -1 : 1;
+        });
 
       return [restFields, signatures];
     } else return [];
@@ -214,8 +221,8 @@ const OnlineFormAgentSign = () => {
                     setFieldValue(`${id}.answer`, '');
                   }}
                   type={field.formType}
-                  label={field.label}
                   initialSignatureData={values[fieldId]?.answer}
+                  label={field.label}
                 />
               </div>
             );

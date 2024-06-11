@@ -14,145 +14,10 @@ import ApplicationSubmitBody from '../EmailTemplates/ApplicationSubmit';
 import { usePostPropertyApplication } from '../queries/mutations';
 import { USA_STATES, getFullNameFromAbbreviations } from '../utils/constants';
 import useStripePayment from '../utils/hooks/useStripePayment';
-
-// const TEST = {
-//   // property_id: '1b9ce199',
-//   // contractor_id: 1,
-//   // contractor_name: 'Contractor Tester',
-//   // contractor_email: 'contractor@tester.com',
-//   // apartment_number: '5a',
-//   // property_address: 'Property Address',
-//   // property_unit_number: 'Property Unit Number',
-//   // property_city: 'Property City',
-//   // property_state: 'ALASKA',
-//   // property_zip_code: '12345',
-
-//   // monthly_rent: 1000.0,
-//   // lease_start_date: '2023-02-17',
-//   // lease_end_date: '2024-02-17',
-//   // landlord: 'Landlord',
-//   // landlord_address: 'Landlord Address',
-//   // landlord_phone_number: '3768748763893',
-//   // client_first_name: 'John',
-//   // client_last_name: 'Doe',
-//   // client_email: 'john@doe.com',
-//   // client_birth_date: '1980-01-01',
-
-//   client_phone_number: '348767846876783',
-//   client_permanent_address: 'Perm 123',
-//   client_unit_number: 'Unit 123',
-//   client_city: 'Client City',
-//   client_state: 'ALASKA',
-//   client_zip_code: '12345',
-//   client_ssn: '999010001',
-
-//   // client_has_pets: false,
-//   // client_pets_description: '',
-//   // client_is_guarantor: false,
-//   // client_is_interested_in_guarantor: false,
-//   // client_additional_comment: '',
-//   // client_signature: {
-//   //   trimmed_signature_data: 'hello',
-//   //   untrimmed_signature_data: 'world',
-//   // },
-
-//   employer: 'Employer',
-//   employer_address: 'Employer Address',
-//   contact_person: 'Contact Person',
-//   contact_person_phone_number: '478487469837938',
-//   position_title: 'Work',
-//   annual_compensation: 1000000.0,
-//   employment_length: '',
-//   employed_since_date: '2024-02-17',
-//   previous_employer: null,
-//   previous_employer_address: null,
-//   previous_employer_contact_person: null,
-//   previous_employer_position_title: null,
-//   previous_employer_annual_compensation: 0.0,
-//   previous_employer_employment_length: '',
-//   previous_employer_employed_since_date: null,
-//   credit_report_status: 'CHECKED',
-//   do_credit_check: true,
-//   bank_name: null,
-//   account_type: null,
-//   account_number: null,
-//   accountant: null,
-//   accountant_phone_number: null,
-//   emergency_contact_name: 'Emergency Contact',
-//   emergency_contact_phone_number: '7486486487647',
-//   need_moving_services: false,
-//   move_in_date: null,
-//   occupants: [
-//     {
-//       full_name: 'John Doe',
-//       email: 'john@doe.com',
-//     },
-//   ],
-//   documents: [
-//     {
-//       document_type: 'EMPLOYMENT_LETTER',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'OTHER',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'PAYSTUB_1',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'PAYSTUB_2',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'PHOTO_ID_COPY',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'TAX_RETURNS_1',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'TAX_RETURNS_2',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//     {
-//       document_type: 'W2',
-//       name: 'Fitbit',
-//       name_with_format: 'fitbit.jpg',
-//       url: 'featured_properties/fitbit.jpg',
-//       file_size: null,
-//     },
-//   ],
-//   recipients: [
-//     {
-//       name: 'John',
-//       email: 'john@doe.com',
-//     },
-//   ],
-// };
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const CreditCheckForm = () => {
   const [agreementSelected, setAgreementSelected] = useState(false);
@@ -169,13 +34,17 @@ const CreditCheckForm = () => {
     client_email: Yup.string()
       .email('Please provide a valid email address.')
       .required('Email address is a required field!'),
-    client_first_name: Yup.string().required('First name is a required field!'),
-    client_last_name: Yup.string().required('Last name is a required field!'),
+    client_first_name: Yup.string()
+      .required('First name is a required field!')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid first name!'),
+    client_last_name: Yup.string()
+      .required('First name is a required field!')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid first name!'),
     client_phone_number: Yup.string().required('Phone number is a required field!'),
     client_permanent_address: Yup.string().required('Permanent address is a required field!'),
     client_ssn: Yup.string()
       .required('Social securty number is a required field!')
-      .length(9, 'Social securty number be exactly 9 digits long!')
+      .length(9, 'Social securty number must be exactly 9 digits long!')
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Social securty number field should contain only digits!',
@@ -183,7 +52,7 @@ const CreditCheckForm = () => {
 
     client_zip_code: Yup.string()
       .required('Zip code is a required field!')
-      .length(5, 'Zip code be exactly 5 digits long!')
+      .length(5, 'Zip code must be exactly 5 digits long!')
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Zip code field should contain only digits!',
@@ -402,11 +271,32 @@ const CreditCheckForm = () => {
     listing?.ZIP_CODE && (await formik.setFieldValue('property_zip_code', listing.ZIP_CODE));
   };
 
+  const onListingRemove = async () => {
+    setPropertySelected(null);
+    setPropertySelectedImageUrl(null);
+    await formik.setFieldValue('property_address', '');
+    await formik.setFieldValue('property_id', '');
+    await formik.setFieldValue('monthly_rent', '');
+    await formik.setFieldValue('property_unit_number', '');
+    await formik.setFieldValue('property_zip_code', '');
+    await formik.setFieldValue('property_city', '');
+    await formik.setFieldValue('property_state', '');
+  };
+
+  const handlePropertyFieldChange = async (e) => {
+    formik.handleChange(e);
+    if (propertySelected) {
+      setPropertySelected(null);
+      await formik.setFieldValue('property_id', '1b9ce199');
+    }
+  };
+
   return (
     <form className="py-[50px] space-y-[24px]" onSubmit={formik.handleSubmit}>
       <p className="text-gray7 font-medium">General Information</p>
       <div className="grid grid-cols-2 gap-[24px] leading-5">
         <InputDropdown label="Apartment address you are applying for*" onListItemClick={onListItemCLick} />
+
         <Input
           label="Select the agent*"
           name="agent_name"
@@ -414,16 +304,57 @@ const CreditCheckForm = () => {
           error={formik.touched.agent_name && formik.errors.agent_name}
           errorText={formik.touched.agent_name && formik.errors.agent_name}
         />
+
+        {propertySelected && (
+          <div className="col-span-1 bg-gray10">
+            <div className="p-4 bg-gray10 ">
+              <div className="flex gap-[10px] items-center relative">
+                {propertySelectedImageUrl && (
+                  <div className="h-[72px] w-[72px] flex justify-center items-center">
+                    <Image
+                      className="rounded object-cover"
+                      src={propertySelectedImageUrl}
+                      alt=""
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: 'auto', height: '100%' }}
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
+                  <p>{propertySelected.LISTING_TITLE}</p>
+                  <p className="text-gray4">{propertySelected.ADDRESS}</p>
+                  <p>
+                    ${propertySelected.PRICE}
+                    <span className="text-gray4">/mo</span>
+                  </p>
+                </div>
+                <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
+                  <button onClick={onListingRemove}>
+                    <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
+                  </button>
+                  {propertySelected && propertySelected?.URL && (
+                    <Link href={propertySelected.URL} target="_blank">
+                      <OpenInNewIcon className="w-4 h-4" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {propertySelected && <div className="col-span-1"></div>}
       </div>
-      <div className="grid grid-cols-4 gap-6 pt-6">
+      <div className="grid grid-cols-4 gap-6">
         <Input
           id="property_address"
           name="property_address"
           label="*Property Address"
           className={'[&_input]:h-[38px] col-span-2'}
           value={formik.values.property_address}
-          onChange={formik.handleChange}
-          readonly={!!propertySelected}
+          onChange={handlePropertyFieldChange}
           error={formik.touched.property_address && formik.errors.property_address && !formik.values.property_address}
           errorText={formik.touched.property_address && formik.errors.property_address}
         />
@@ -433,7 +364,7 @@ const CreditCheckForm = () => {
             className={'[&_input]:h-[38px]'}
             name="property_unit_number"
             value={formik.values.property_unit_number}
-            onChange={formik.handleChange}
+            onChange={handlePropertyFieldChange}
             error={formik.touched.property_unit_number && formik.errors.property_unit_number}
             errorText={formik.touched.property_unit_number && formik.errors.property_unit_number}
           />
@@ -446,6 +377,9 @@ const CreditCheckForm = () => {
               label="*State"
               value={formik.values.property_state}
               onChange={(value) => {
+                if (propertySelected) {
+                  setPropertySelected(null);
+                }
                 formik.setFieldValue('property_state', value);
               }}
               className="col-span-1"
@@ -460,7 +394,7 @@ const CreditCheckForm = () => {
             className={'[&_input]:h-[38px]'}
             name="property_city"
             value={formik.values.property_city}
-            onChange={formik.handleChange}
+            onChange={handlePropertyFieldChange}
             error={formik.touched.property_city && formik.errors.property_city}
             errorText={formik.touched.property_city && formik.errors.property_city}
           />
@@ -468,7 +402,7 @@ const CreditCheckForm = () => {
             label="*Zip"
             className={'[&_input]:h-[38px]'}
             name="property_zip_code"
-            onChange={formik.handleChange}
+            onChange={handlePropertyFieldChange}
             value={formik.values.property_zip_code}
             error={formik.touched.property_zip_code && formik.errors.property_zip_code}
             errorText={formik.touched.property_zip_code && formik.errors.property_zip_code}

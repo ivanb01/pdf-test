@@ -19,7 +19,11 @@ import AddDocument from '../AddDocumentOverlay';
 import { downloadPdf } from '../Pdf/generatePdf';
 import SendApplicationModal from '../SendApplicationModal';
 import { useUpdatePropertyApplication } from '../queries/mutations';
-import { useFetchPropertyApplicationById, useFetchSingleProperty } from '../queries/queries';
+import {
+  useFetchApplicationDocuments,
+  useFetchPropertyApplicationById,
+  useFetchSingleProperty,
+} from '../queries/queries';
 import FileInput from './FileInput';
 
 const typeToName = {
@@ -64,12 +68,22 @@ const ApplicationDetails = () => {
     isRefetching: isRefetchingApplicationDetails,
   } = useFetchPropertyApplicationById(router.query.slug);
 
+  const {
+    data: documentsData,
+    error: documentsErrors,
+    isLoading: documentsIsLoading,
+    isSuccess: documentsIsSuccess,
+    isRefetching: isRefetchingDocumentsDetails,
+  } = useFetchApplicationDocuments(applicationData?.id, {
+    enabled: applicationIsSuccess && !!applicationData.id,
+  });
+
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isAddDocumentOverlayOpened, setAddDocumentOverlayOpened] = useState(false);
 
   const formattedInitialValues = useMemo(() => {
-    if (applicationData) {
-      const data = applicationData.documents.reduce((documentsObject, document) => {
+    if (documentsData && documentsIsSuccess) {
+      const data = documentsData.items.reduce((documentsObject, document) => {
         if (document.document_type === 'OTHER') {
           return {
             ...documentsObject,
@@ -97,7 +111,7 @@ const ApplicationDetails = () => {
         };
       else return data;
     } else return {};
-  }, [applicationData]);
+  }, [documentsData]);
 
   const formik = useFormik({
     initialValues: {
@@ -125,10 +139,10 @@ const ApplicationDetails = () => {
     });
     if (sections && sections[4].current) observer.observe(sections[4].current);
     return () => observer.disconnect();
-  }, [sections, applicationIsSuccess]);
+  }, [sections, applicationIsSuccess, documentsData]);
 
   useEffect(() => {
-    if (applicationIsSuccess)
+    if (applicationIsSuccess && documentsIsSuccess)
       sections.forEach((section) => {
         setPostitonsSpans((currentPostitons) => {
           return {
@@ -195,11 +209,11 @@ const ApplicationDetails = () => {
 
   const onDownloadPdf = async () => {
     setloadingPdf(true);
-    await downloadPdf(applicationData);
+    await downloadPdf({ ...applicationData, documents: documentsData.items });
     setloadingPdf(false);
   };
 
-  if (applicationIsLoading) {
+  if (applicationIsLoading || documentsIsLoading) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <CircularProgress size={50} />
@@ -207,7 +221,7 @@ const ApplicationDetails = () => {
     );
   }
 
-  if (applicationErrors) {
+  if (applicationErrors || documentsErrors) {
     return (
       <div className="w-full h-full flex justify-center items-center text-center">
         <p>Something went wrong while trying to fetch application...</p>
@@ -254,7 +268,7 @@ const ApplicationDetails = () => {
               <EmploymentInformation id="2" ref={sections[2]} employmentInformation={applicationData} />
               <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit}>
-                  {applicationData && (
+                  {applicationData && documentsData && (
                     <DocumentsInformation
                       id="3"
                       documents={formik.values}

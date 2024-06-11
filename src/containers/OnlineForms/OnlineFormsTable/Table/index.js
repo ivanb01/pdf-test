@@ -52,12 +52,11 @@ const columns = [
   columnHelper.accessor('actions', {
     header: () => <HeaderCell title="ACTIONS" />,
     cell: ({ info, onDeleteForm }) => {
-      const formTypeId = info.row.original.form_type.id.hex;
+      const formTypeId = info.row.original.form_type;
       const { data, isSuccess } = useFetchOnlineFormsTypes();
-
       const onDownloadPdf = async () => {
         if (isSuccess && formTypeId) {
-          const typeData = data?.data?.find((type) => type.id.hex === formTypeId);
+          const typeData = data?.data.items?.find((type) => type.id === formTypeId.id);
           downloadPdf(typeData.content, false, info.row.original.submitted_answers, typeData.name);
         }
       };
@@ -66,7 +65,7 @@ const columns = [
         <ActionsCell
           onDownloadPdf={onDownloadPdf}
           onDeleteForm={() => {
-            onDeleteForm(info.row.original.id.hex);
+            onDeleteForm(info.row.original.id);
           }}
         />
       );
