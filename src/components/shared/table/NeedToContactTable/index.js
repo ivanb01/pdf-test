@@ -50,7 +50,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
   return (
     <Table>
       <thead>
-        <tr className="bg-gray-50 text-gray4" style={{ height: '60px' }}>
+        <tr className="bg-gray-50 text-gray4 sticky top-0 z-10">
           <th
             style={{ width: '300px' }}
             scope="col"
