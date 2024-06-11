@@ -157,7 +157,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               newFiltersCount += 1;
             }
             if (propertiesData.data[0]?.general_tags?.length > 0) {
-              newFiltersCount += 1;
+              propertiesData?.data[0]?.general_tags?.forEach((tag) => {
+                newFiltersCount += 1;
+              });
             }
             if (Number(propertiesData.data[0]?.looking_action) != getLookingAction()) {
               newFiltersCount += 1;
@@ -173,6 +175,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         });
     });
   };
+
+  useEffect(() => {
+    console.log(filtersCount, 'filtersCount');
+  }, [filtersCount]);
 
   // const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
 
@@ -665,7 +671,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
                           }>
-                          <CheckRoundedIcon className={'h-4 w-4'} />
+                          {filtersCount}
                         </div>
                       )}
                     </div>

@@ -517,6 +517,7 @@ const index = () => {
                   contactEmail={contact.email}
                   showGmailInbox={true}
                   setShowGmailInbox={setShowGmailInbox}
+                  loadingActivities={loadingActivities}
                   activities={
                     activityFilter.id == 0 || !activityFilter
                       ? activities
