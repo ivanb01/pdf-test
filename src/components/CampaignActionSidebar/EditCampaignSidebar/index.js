@@ -290,7 +290,7 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
   }, [selectedEvent]);
 
   const checkInitialEmailTemplate = (event) => {
-    if (emailTemplates?.find((template) => template.label == event.title && template.message == event.body_html)) {
+    if (emailTemplates?.find((template) => template.label == event?.title && template.message == event.body_html)) {
       return emailTemplates?.find((template) => template.label == event.title && template.message == event.body_html);
     } else {
       return event?.template;
