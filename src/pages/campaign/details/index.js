@@ -109,6 +109,7 @@ const index = () => {
       setLoadingPagination(false);
     }
   }
+
   const processContacts = (contacts) => {
     return contacts.map((contact) => {
       const {

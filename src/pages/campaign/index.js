@@ -25,22 +25,21 @@ const index = () => {
   const CRMCampaigns = useSelector((state) => state.CRMCampaigns.CRMCampaigns);
 
   const renderCampaignWrapper = (category) => {
+    console.log(category, 'categ');
     let filteredCampaigns;
     if (category == 'All Client') {
       filteredCampaigns = CRMCampaigns?.campaigns?.filter(
         (campaign) =>
-          (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          campaign.contact_category_id === null &&
-          campaign.contact_status_id === null,
+          campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          campaign?.contact_category_2?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          campaign?.contact_status_2?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     } else {
       filteredCampaigns = CRMCampaigns?.campaigns?.filter(
         (campaign) =>
           (campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            campaign.contact_category_2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            campaign.contact_status_2.toLowerCase().includes(searchTerm.toLowerCase())) &&
+            campaign?.contact_category_2?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            campaign?.contact_status_2?.toLowerCase().includes(searchTerm.toLowerCase())) &&
           clientOptions.find((option) => option.id == campaign.contact_category_id)?.name === category,
       );
     }
@@ -49,9 +48,9 @@ const index = () => {
       <CampaignWrapper
         key={category}
         category={category}
-        headerTitle={`${filteredCampaigns?.length} ${
-          filteredCampaigns?.length === 1 ? 'Campaign' : 'Campaigns'
-        } for ${category}s`}
+        openedTab={current}
+        const
+        headerTitle={`${category === 'All Client' ? '' : `${filteredCampaigns?.length} ${filteredCampaigns?.length === 1 ? 'Campaign' : 'Campaigns'} for ${category}s`}`}
         campaignCards={filteredCampaigns && filteredCampaigns}
         isVisible={isVisible}
       />
@@ -70,9 +69,7 @@ const index = () => {
               <Loader />
             </div>
           ) : (
-            uniqueCategories.map((category) => {
-              return renderCampaignWrapper(category);
-            })
+            renderCampaignWrapper('All Client')
           )}
         </>
       ),
