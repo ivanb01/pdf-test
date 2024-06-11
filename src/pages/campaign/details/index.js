@@ -1,30 +1,30 @@
-import { useRouter } from 'next/router';
-import SimpleBar from 'simplebar-react';
-import MainMenu from '@components/shared/menu';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import Button from '@components/shared/button';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import allEventsIcon from '../../../../public/images/campaign/allEventsIcon.svg';
-import campaignsMatchedTo from '../../../../public/images/campaign/campaignsMatchedTo.svg';
-import inCampaign from '../../../../public/images/campaign/inCampaign.svg';
-import notInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
-import ButtonsSlider from '@components/shared/button/buttonsSlider';
-import { useEffect, useState } from 'react';
-import Search from '@components/shared/input/search';
-import { useDispatch, useSelector } from 'react-redux';
-import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaign, getCampaignPagination, getCampaignsByCategory } from '@api/campaign';
-import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
-import Loader from '@components/shared/loader';
-import { PencilIcon } from '@heroicons/react/solid';
-import EditCampaignSidebar from '@components/CampaignActionSidebar/EditCampaignSidebar';
-import { capitalize, getContactTypeByTypeId } from '@global/functions';
-import AllCampaignContactsTable from '@components/shared/table/AllCampaignContactsTable';
-import NotInCampaignContactsTable from '@components/shared/table/NotInCampaignContactsTable';
-import InCampaignContactsTable from '@components/shared/table/InCampaignContactsTable';
-import useInfiniteScroll from 'react-infinite-scroll-hook';
-import SpinnerLoader from '@components/shared/SpinnerLoader';
-import toast from 'react-hot-toast';
+import { useRouter } from "next/router";
+import SimpleBar from "simplebar-react";
+import MainMenu from "@components/shared/menu";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Button from "@components/shared/button";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import allEventsIcon from "../../../../public/images/campaign/allEventsIcon.svg";
+import campaignsMatchedTo from "../../../../public/images/campaign/campaignsMatchedTo.svg";
+import inCampaign from "../../../../public/images/campaign/inCampaign.svg";
+import notInCampaign from "../../../../public/images/campaign/notInCampaign.svg";
+import ButtonsSlider from "@components/shared/button/buttonsSlider";
+import { useEffect, useState } from "react";
+import Search from "@components/shared/input/search";
+import { useDispatch, useSelector } from "react-redux";
+import CampaignPreview from "@components/campaign/CampaignPreview";
+import { getAllEvents, getCampaign, getCampaignPagination, getCampaignsByCategory } from "@api/campaign";
+import { setCRMCampaigns, setUsersInCampaignGlobally } from "@store/campaigns/slice";
+import Loader from "@components/shared/loader";
+import { PencilIcon } from "@heroicons/react/solid";
+import EditCampaignSidebar from "@components/CampaignActionSidebar/EditCampaignSidebar";
+import { capitalize, getContactTypeByTypeId } from "@global/functions";
+import AllCampaignContactsTable from "@components/shared/table/AllCampaignContactsTable";
+import NotInCampaignContactsTable from "@components/shared/table/NotInCampaignContactsTable";
+import InCampaignContactsTable from "@components/shared/table/InCampaignContactsTable";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import SpinnerLoader from "@components/shared/SpinnerLoader";
+import toast from "react-hot-toast";
 
 const index = () => {
   const router = useRouter();
@@ -33,10 +33,10 @@ const index = () => {
   const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
   const [campaignDetails, setCampaignDetails] = useState();
   const [campaignEvents, setCampaignEvents] = useState();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
   const [showEditCampaign, setShowEditCampaign] = useState(false);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
   const [paginationItems, setPaginationItems] = useState([]);
   const [offset, setOffset] = useState(0);
   const [loadingPagination, setLoadingPagination] = useState(false);
@@ -79,11 +79,10 @@ const index = () => {
         };
       })
       .catch((error) => {
-        toast.error('Error while loading items');
+        toast.error("Error while loading items");
         throw error;
       });
   };
-
   async function loadMore() {
     if (loadingPagination) return;
 
@@ -109,7 +108,6 @@ const index = () => {
       setLoadingPagination(false);
     }
   }
-
   const processContacts = (contacts) => {
     return contacts.map((contact) => {
       const {
@@ -128,7 +126,7 @@ const index = () => {
       const contact_unenrolment_date = campaign_contact ? campaign_contact.unenrollment_date : null;
       const event_sent = campaign_contact ? campaign_contact.event_sent : null;
       const events_preview = campaign_contact ? campaign_contact.events_preview : null;
-      const contact_campaign_status = campaign_contact ? campaign_contact?.contact_campaign_status : 'never_assigned';
+      const contact_campaign_status = campaign_contact ? campaign_contact?.contact_campaign_status : "never_assigned";
       return {
         contact_first_name,
         contact_last_name,
@@ -157,7 +155,7 @@ const index = () => {
 
   useEffect(() => {
     if (CRMCampaigns === undefined) {
-      getCampaignsByCategory('Client').then((res) => {
+      getCampaignsByCategory("Client").then((res) => {
         dispatch(setCRMCampaigns(res.data));
         let foundCampaign = res.data.campaigns.find((c) => c.campaign_id == id);
         if (foundCampaign?.contact_category_id) {
@@ -183,12 +181,12 @@ const index = () => {
   );
   const eventTypes = [
     {
-      name: 'ALL EVENTS',
+      name: "ALL EVENTS",
       icon: allEventsIcon,
       amount: usersInCampaignGlobally?.events.count,
     },
     {
-      name: 'CAMPAIGN MATCHED TO',
+      name: "CAMPAIGN MATCHED TO",
       icon: campaignsMatchedTo,
       amount:
         usersInCampaignGlobally?.contacts_in_campaign?.length +
@@ -196,12 +194,12 @@ const index = () => {
         usersInCampaignGlobally?.contacts_unassigned_count,
     },
     {
-      name: 'CLIENTS IN CAMPAIGN',
+      name: "CLIENTS IN CAMPAIGN",
       icon: inCampaign,
       amount: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
-      name: 'Unassigned + Never Assigned',
+      name: "Unassigned + Never Assigned",
       icon: notInCampaign,
       amount:
         usersInCampaignGlobally?.contacts_not_campaign?.length + usersInCampaignGlobally?.contacts_unassigned_count,
@@ -211,32 +209,32 @@ const index = () => {
     {
       id: 0,
       name: `${
-        category == 'Unknown'
-          ? 'All Clients'
+        category == "Unknown"
+          ? "All Clients"
           : `All ${capitalize(category)}s - ${usersInCampaignGlobally?.contact_status_2}`
       }`,
       count: paginationItems.length,
     },
     {
       id: 1,
-      name: 'In Campaign',
+      name: "In Campaign",
       count: usersInCampaignGlobally?.contacts_in_campaign?.length,
     },
     {
       id: 2,
-      name: 'Not In Campaign',
+      name: "Not In Campaign",
       count: usersInCampaignGlobally?.contacts_not_campaign?.length,
     },
   ];
 
   useEffect(() => {
     //this is done to detect back button on client details
-    localStorage.removeItem('id');
-    localStorage.removeItem('category');
+    localStorage.removeItem("id");
+    localStorage.removeItem("category");
   }, []);
 
   useEffect(() => {
-    setSearchTerm('');
+    setSearchTerm("");
   }, [currentButton]);
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: loadingPagination,
@@ -248,16 +246,16 @@ const index = () => {
     const updatedPaginationItems = paginationItems.map((item) => {
       if (person?.contact_id === item.contact_id) {
         let updatedItem = {};
-        if (person?.contact_campaign_status === 'never_assigned') {
+        if (person?.contact_campaign_status === "never_assigned") {
           updatedItem = {
             ...item,
-            contact_campaign_status: 'assigned',
+            contact_campaign_status: "assigned",
             contact_enrollment_date: new Date(),
           };
-        } else if (person?.contact_campaign_status === 'assigned') {
+        } else if (person?.contact_campaign_status === "assigned") {
           updatedItem = {
             ...item,
-            contact_campaign_status: 'unassigned',
+            contact_campaign_status: "unassigned",
             contact_unenrolment_date: new Date(),
           };
         }
@@ -273,16 +271,16 @@ const index = () => {
     switch (currentButton) {
       case 0:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: "calc(100vh - 388px)" }} autoHide>
             <div>
               <AllCampaignContactsTable
                 ref={rootRef}
                 campaignData={campaignEvents}
                 campaignId={id}
-                tableFor={'allCampaignContacts'}
+                tableFor={"allCampaignContacts"}
                 campaignFor={
-                  category == 'Unknown'
-                    ? 'All Clients'
+                  category == "Unknown"
+                    ? "All Clients"
                     : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
                 }
                 updatePaginationContacts={updatePaginationContacts}
@@ -303,9 +301,9 @@ const index = () => {
         );
       case 1:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: "calc(100vh - 388px)" }} autoHide>
             <InCampaignContactsTable
-              tableFor={'inCampaignContacts'}
+              tableFor={"inCampaignContacts"}
               data={inCampaignContacts}
               updatePaginationContacts={updatePaginationContacts}
               setCurrentButton={setCurrentButton}
@@ -317,9 +315,9 @@ const index = () => {
         );
       case 2:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+          <SimpleBar style={{ height: "calc(100vh - 388px)" }} autoHide>
             <NotInCampaignContactsTable
-              tableFor={'notInCampaignContacts'}
+              tableFor={"notInCampaignContacts"}
               data={notInCampaignContacts}
               updatePaginationContacts={updatePaginationContacts}
               categoryType={category}
@@ -347,18 +345,18 @@ const index = () => {
             setOpen={setShowEditCampaign}
             id={id}
           />
-          <div className={'p-6 flex justify-between'}>
-            <div className={'flex gap-4 items-start'}>
+          <div className={"p-6 flex justify-between"}>
+            <div className={"flex gap-4 items-start"}>
               <ArrowBackIosIcon
-                className={'text-lightBlue3 h-4 w-4 mt-2 cursor-pointer'}
-                onClick={() => router.push('/campaign')}
+                className={"text-lightBlue3 h-4 w-4 mt-2 cursor-pointer"}
+                onClick={() => router.push("/campaign")}
               />
               <div>
-                <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.name}</h4>
-                <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
-                  <span className={'text-xs leading-5 font-medium text-gray6'}>
-                    {category == 'Unknown'
-                      ? 'All Clients'
+                <h4 className={"text-xl leading-7 font-medium text-gray7 mb-2"}>{campaignDetails?.name}</h4>
+                <div className={"px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max"}>
+                  <span className={"text-xs leading-5 font-medium text-gray6"}>
+                    {category == "Unknown"
+                      ? "All Clients"
                       : `${capitalize(category)}s : ${usersInCampaignGlobally?.contact_status_2}`}
                   </span>
                 </div>
@@ -367,36 +365,36 @@ const index = () => {
             <div className="flex items-center">
               <Button
                 secondary
-                leftIcon={<PencilIcon className={'h-4 w-4'} />}
+                leftIcon={<PencilIcon className={"h-4 w-4"} />}
                 className="mr-4"
                 onClick={() => setShowEditCampaign(true)}>
                 Edit Campaign
               </Button>
               <Button
                 primary
-                leftIcon={<VisibilityIcon className={'h-4 w-4'} />}
+                leftIcon={<VisibilityIcon className={"h-4 w-4"} />}
                 onClick={() => setOpenCampaignPreview(true)}>
                 Campaign Preview
               </Button>
             </div>
           </div>
-          <div className={'p-6 grid grid-cols-4 gap-2.5 border-y border-gray2'}>
+          <div className={"p-6 grid grid-cols-4 gap-2.5 border-y border-gray2"}>
             {eventTypes.map((event, index) => (
               <div
                 key={index}
                 className={`flex flex-col gap-2.5 items-center justify-center 
               `}>
-                <div className={'flex gap-3 items-center justify-center'}>
-                  <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
+                <div className={"flex gap-3 items-center justify-center"}>
+                  <img src={event.icon.src} className={"h-[32px] w-[32px]"} alt={""} />
                   <span className="text-gray4  text-center font-medium text-xs leading-5">
                     {event.name.toUpperCase()}
                   </span>
                 </div>
-                <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
+                <span className={"text-lg leading-6 font-semibold text-gray7"}>{event.amount}</span>
               </div>
             ))}
           </div>
-          <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
+          <div className={"border-b border-gray2 h-[96px] flex p-6 items-center justify-between"}>
             <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
             <Search
               placeholder="Search"
@@ -410,8 +408,8 @@ const index = () => {
             data={campaignEvents}
             className="top-[70px]"
             campaignFor={
-              category == 'Unknown'
-                ? 'All Clients'
+              category == "Unknown"
+                ? "All Clients"
                 : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
             }
             campaignId={id}

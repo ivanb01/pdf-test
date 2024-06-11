@@ -114,7 +114,7 @@ const index = () => {
     if (contact) {
       syncEmailOfContact(contact.email).catch((error) => {
         console.log(error);
-        toast.error('Error fetching gmail inbox');
+        toast.error("Error fetching gmail inbox");
       });
     }
   }, [contact]);
@@ -300,7 +300,7 @@ const index = () => {
                   <p className={'text-sm font-medium'}>{contact?.email}</p>
                 </div>
                 {contact?.phone_number ? (
-                  <div className={'pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center'}>
+                  <div className={"pt-5 pb-[9px] flex gap-[6px] text-[#475467] items-center"}>
                     <div
                       className={
                         'p-1.5 flex justify-center items-center  border border-#D1D5DB text-sm  font-medium rounded-md shadow-sm text-gray6 hover:bg-white bg-white'

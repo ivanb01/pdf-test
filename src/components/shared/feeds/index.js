@@ -255,9 +255,9 @@ export default function Feeds({
                                         : daysBefore(activityItem.updated_at)}
                                     </div>
                                   }>
-                                  <h1 className={'text-sm'}>
-                                    {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('PM')
+                                  <h1 className={"text-sm"}>
+                                    {formatDateCalendar(activityItem.updated_at).includes("AM") ||
+                                    formatDateCalendar(activityItem.updated_at).includes("PM")
                                       ? formatDateStringMDY(activityItem.updated_at)
                                       : formatDateCalendar(activityItem.updated_at) +
                                         ' - ' +
@@ -353,7 +353,7 @@ export default function Feeds({
                                 ? truncateText(DOMPurify.sanitize(item[0].body))
                                 : truncateText(
                                     DOMPurify.sanitize(
-                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
+                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ""),
                                     ),
                                   ),
                             }}

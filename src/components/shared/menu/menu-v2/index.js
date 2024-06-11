@@ -86,10 +86,10 @@ export default function MainMenuV2({ items }) {
                       {item.name}
                     </a>
                   ))} */}
-                                  </div>
-                                </Popover.Panel>
-                              </Transition>
-                            </>
+                              </div>
+                            </Popover.Panel>
+                          </Transition>
+                          </>
                           )}
                         </Popover>
                       ) : (
