@@ -18,6 +18,7 @@ const getLocalStorageValue = () => {
   });
 };
 axiosInstance.interceptors.request.use(function (config) {
+  // const apiGatewayUrl = 'https://hzpkprz6w8.execute-api.us-east-1.amazonaws.com/prod/';
   const apiGatewayUrl = localStorage.getItem('apiGatewayUrl');
 
   return new Promise((resolve, reject) => {

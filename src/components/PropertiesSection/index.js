@@ -31,6 +31,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import PropertiesSkeleton from '@components/SkeletonLoaders/PropertiesSkeleton';
 import { updateContact } from 'api/contacts';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
@@ -641,13 +642,13 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       )}
       {loading ? (
         <div className="relative details-tabs-fixed-height bg-white">
-          <Loader></Loader>
+          <PropertiesSkeleton cardsLength={12} />
         </div>
       ) : (
         <SimpleBar autoHide>
           <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 158px)' }}>
             {loadingPropertyInterests || propertyInterests === undefined ? (
-              <Loader message="Please wait we're searching for matched properties"></Loader>
+              <PropertiesSkeleton cardsLength={12} />
             ) : (
               <>
                 <div className="">
