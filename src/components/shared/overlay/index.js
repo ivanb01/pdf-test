@@ -18,6 +18,10 @@ const Overlay = ({
   const router = useRouter();
   return (
     <div
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       className={`md:flex ${
         !alignStart && 'items-center'
       } justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[999] w-full md:inset-0 h-full md:h-modal ${bgOverlay}`}>

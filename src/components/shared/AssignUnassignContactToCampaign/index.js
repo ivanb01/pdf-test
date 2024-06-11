@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Switch } from "@headlessui/react";
-import DeactivateCampaign from "@components/overlays/DeactivateCampaign";
-import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from "@api/campaign";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { setRefetchCampaign, setUsersInCampaignGlobally } from "@store/campaigns/slice";
+import React, { useEffect, useState } from 'react';
+import { Switch } from '@headlessui/react';
+import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
+import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRefetchCampaign, setUsersInCampaignGlobally } from '@store/campaigns/slice';
+import { createPortal } from 'react-dom';
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 const AssignUnassignContactToCampaign = ({
@@ -27,18 +28,18 @@ const AssignUnassignContactToCampaign = ({
   const { usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
 
   const updateUserLocally = (objectKey, contact_campaign_status) => {
-    if (objectKey === "contacts_in_campaign") {
+    if (objectKey === 'contacts_in_campaign') {
       const updatedUsers = usersInCampaignGlobally?.contacts_in_campaign?.filter(
         (arr) => arr.contact_id !== activePerson.contact_id,
       );
       dispatch(setUsersInCampaignGlobally({ ...usersInCampaignGlobally, contacts_in_campaign: updatedUsers }));
       updatePaginationContacts(activePerson);
-    } else if (objectKey === "contacts_not_campaign") {
+    } else if (objectKey === 'contacts_not_campaign') {
       const updatedContactsNotCampaign = usersInCampaignGlobally?.contacts_not_campaign?.filter(
         (obj) => obj.contact_id !== activePerson.contact_id,
       );
 
-      if (contact_campaign_status === "never_assigned") {
+      if (contact_campaign_status === 'never_assigned') {
         dispatch(
           setUsersInCampaignGlobally({
             ...usersInCampaignGlobally,
@@ -47,7 +48,7 @@ const AssignUnassignContactToCampaign = ({
         );
       }
       updatePaginationContacts(activePerson);
-    } else if (objectKey === "all_contacts_campaign") {
+    } else if (objectKey === 'all_contacts_campaign') {
       if (updatePaginationContacts) {
         updatePaginationContacts(activePerson);
       }
@@ -103,8 +104,8 @@ const AssignUnassignContactToCampaign = ({
 
   return (
     <div
-      className={disabled && "cursor-not-allowed"}
-      title={disabled && "This contact has been unassigned from a campaign, you cannot re-assign!"}>
+      className={disabled && 'cursor-not-allowed'}
+      title={disabled && 'This contact has been unassigned from a campaign, you cannot re-assign!'}>
       <Switch
         onClick={(e) => {
           e.stopPropagation();
@@ -115,27 +116,29 @@ const AssignUnassignContactToCampaign = ({
         checked={enabled}
         disabled={disabled}
         className={classNames(
-          enabled ? "bg-lightBlue3" : "bg-gray2",
-          disabled && "opacity-60 pointer-events-none",
-          "relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ",
+          enabled ? 'bg-lightBlue3' : 'bg-gray2',
+          disabled && 'opacity-60 pointer-events-none',
+          'relative inline-flex h-4 w-7 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ',
         )}>
         <span className="sr-only">Use setting</span>
         <span
           aria-hidden="true"
           className={classNames(
-            enabled ? "translate-x-3" : "translate-x-0",
-            " translate-y-[1px] pointer-events-none inline-block bg-white h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out",
+            enabled ? 'translate-x-3' : 'translate-x-0',
+            ' translate-y-[1px] pointer-events-none inline-block bg-white h-[11px] w-[11px] transform rounded-full shadow ring-0 transition duration-200 ease-in-out',
           )}
         />
       </Switch>
-      {openDeactivate && (
-        <DeactivateCampaign
-          active={active}
-          handleCloseModal={() => setOpenDeactivate(false)}
-          loading={loading}
-          makeChanges={setMakeChanges}
-        />
-      )}
+      {openDeactivate &&
+        createPortal(
+          <DeactivateCampaign
+            active={active}
+            handleCloseModal={() => setOpenDeactivate(false)}
+            loading={loading}
+            makeChanges={setMakeChanges}
+          />,
+          document.getElementById('modal-portal'),
+        )}
     </div>
   );
 };
