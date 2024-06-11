@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import oneLineLogo from "/public/images/oneline_logo_white.svg";
-import placeholder from "/public/images/Portrait_Placeholder.png";
-import { Fragment } from "react";
-import { Disclosure, DisclosurePanel, DisclosureButton, Menu, Transition, Popover } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/outline";
-import { ExpandMoreRounded } from "@mui/icons-material";
-import { Menu as MenuIcon } from "@mui/icons-material/Menu";
-import HamburgerIcon from "@components/HamburgerIcon";
-import ChevronDownIcon from "@heroicons/react/outline";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import oneLineLogo from '/public/images/oneline_logo_white.svg';
+import placeholder from '/public/images/Portrait_Placeholder.png';
+import { Fragment } from 'react';
+import { Disclosure, DisclosurePanel, DisclosureButton, Menu, Transition, Popover } from '@headlessui/react';
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/outline';
+import { ExpandMoreRounded } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material/Menu';
+import HamburgerIcon from '@components/HamburgerIcon';
+import ChevronDownIcon from '@heroicons/react/outline';
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function MainMenuV2({ items }) {
@@ -37,11 +37,11 @@ export default function MainMenuV2({ items }) {
                             <>
                               <Popover.Button
                                 className={` outline-none rounded-md ${
-                                  selected == item.id ? "bg-menuHover" : "hover:bg-menuHover"
+                                  selected == item.id ? 'bg-menuHover' : 'hover:bg-menuHover'
                                 } px-3 py-2 text-sm font-medium text-white`}>
                                 {item.title}
                                 <ExpandMoreRounded
-                                  className={`h-5 w-5 flex-none text-white transition-all ${open ? "rotate-180" : "rotate-0"}`}
+                                  className={`h-5 w-5 flex-none text-white transition-all ${open ? 'rotate-180' : 'rotate-0'}`}
                                   aria-hidden="true"
                                 />
                               </Popover.Button>
@@ -54,7 +54,7 @@ export default function MainMenuV2({ items }) {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1">
                                 <Popover.Panel
-                                  className={` ${item.title == "Resources" ? " left-[-200%]" : "-left-8"} absolute top-full z-10 mt-3 w-[400px] max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5`}>
+                                  className={` ${item.title == 'Resources' ? ' left-[-200%]' : '-left-8'} absolute top-full z-10 mt-3 w-[400px] max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5`}>
                                   <div className="p-4">
                                     {item.submenus.map((submenu) => (
                                       <div
@@ -97,7 +97,7 @@ export default function MainMenuV2({ items }) {
                           href="#"
                           onClick={() => setSelected(item.id)}
                           className={`outline-none rounded-md ${
-                            selected == item.id ? "bg-menuHover" : "hover:bg-menuHover"
+                            selected == item.id ? 'bg-menuHover' : 'hover:bg-menuHover'
                           } px-3 py-2 text-sm font-medium text-white`}>
                           {item.title}
                         </a>
@@ -135,8 +135,8 @@ export default function MainMenuV2({ items }) {
                             <a
                               href="#"
                               className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700',
                               )}>
                               Your Profile
                             </a>
@@ -147,8 +147,8 @@ export default function MainMenuV2({ items }) {
                             <a
                               href="#"
                               className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700',
                               )}>
                               Settings
                             </a>
@@ -159,8 +159,8 @@ export default function MainMenuV2({ items }) {
                             <a
                               href="#"
                               className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700',
                               )}>
                               Sign out
                             </a>
@@ -194,7 +194,7 @@ export default function MainMenuV2({ items }) {
                           className="block rounded-md px-3 py-2 text-base font-medium text-white">
                           {item.title}
                           <ExpandMoreRounded
-                            className={classNames(open ? "rotate-180" : "", "h-5 w-5 flex-none")}
+                            className={classNames(open ? 'rotate-180' : '', 'h-5 w-5 flex-none')}
                             aria-hidden="true"
                           />
                         </Disclosure.Button>
