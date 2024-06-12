@@ -1,3 +1,4 @@
+
 import MainMenu from '@components/shared/menu';
 import profile from '/public/images/Portrait_Placeholder.png';
 import noteIcon from '/public/images/note-icon.svg';
@@ -80,7 +81,6 @@ const index = () => {
         const notesData = notesResponse.data;
         setNotes(notesData.data);
         setLoadingNotes(false);
-        console.log('done');
       })
       .catch((error) => {
         console.log(error);
