@@ -32,7 +32,7 @@ const Index = () => {
       <MainMenu />
       {token && baseUrl && (
         <Iframe
-          url={`${baseUrl}/Payments_crm?token=${token}`}
+          url={`${baseUrl}/Agent_crm/profile?token=${token}`}
           width="100%"
           height="100%"
           id=""
