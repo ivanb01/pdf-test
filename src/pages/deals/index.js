@@ -3,11 +3,13 @@ import Iframe from 'react-iframe';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import jwt from 'jsonwebtoken';
+import { getOpgnyBaseUrl } from '@global/functions';
 
 const Index = () => {
   const userEmail = useSelector((state) => state.global.user);
   const SECRET_KEY = 'secret_key_crm';
   const [token, setToken] = useState();
+  const [baseUrl, setBaseUrl] = useState();
 
   const generateJwt = (email) => {
     const payload = {
@@ -18,9 +20,9 @@ const Index = () => {
   };
 
   useEffect(() => {
+    setBaseUrl(getOpgnyBaseUrl(window.location.hostname));
     if (userEmail) {
       const newToken = generateJwt(userEmail);
-      console.log(newToken);
       setToken(newToken);
     }
   }, [userEmail]);
@@ -28,9 +30,9 @@ const Index = () => {
   return (
     <>
       <MainMenu />
-      {token && (
+      {token && baseUrl && (
         <Iframe
-          url={`https://oxfordpg.com/Deal_crm?token=${token}`}
+          url={`${baseUrl}/Deal_crm?token=${token}`}
           width="100%"
           height="100%"
           id=""
@@ -44,11 +46,3 @@ const Index = () => {
 };
 
 export default Index;
-
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       requiresAuth: true,
-//     },
-//   };
-// }

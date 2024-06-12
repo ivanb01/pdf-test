@@ -609,3 +609,10 @@ export const getCompany = (email) => {
   }
   return { imageUrl, companyName };
 };
+export const getOpgnyBaseUrl = (domain) => {
+  if (domain == 'onelinecrm') {
+    return 'https://opgny.com';
+  } else {
+    return 'https://oxfordpg.com';
+  }
+};
