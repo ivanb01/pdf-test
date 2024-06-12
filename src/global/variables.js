@@ -17,20 +17,20 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import WifiCalling3Icon from '@mui/icons-material/WifiCalling3';
 
-export const localRedirectSignIn = 'http://localhost:3000/contacts/clients';
+export const localRedirectSignIn = 'http://localhost:3000/dashboard';
 export const localRedirectSignOut = 'http://localhost:3000/authentication/sign-in';
 
-export const productionRedirectSignIn = 'https://onelinecrm.com/contacts/clients';
+export const productionRedirectSignIn = 'https://onelinecrm.com/dashboard';
 export const productionRedirectSignOut = 'https://onelinecrm.com/authentication/sign-in';
 
-export const devRedirectSignIn = 'https://dev.onelinecrm.com/contacts/clients';
+export const devRedirectSignIn = 'https://dev.onelinecrm.com/dashboard';
 export const devRedirectSignOut = 'https://dev.onelinecrm.com/authentication/sign-in';
 
-export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/contacts/clients';
+export const subscriptionsRedirectSignIn = 'https://subscriptions.onelinecrm.com/dashboard';
 export const subscriptionsRedirectSignOut = 'https://subscriptions.onelinecrm.com/authentication/sign-in';
 
 export const documentsRedirectSignOut = 'https://documents.onelinecrm.com/authentication/sign-in';
-export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/contacts/clients';
+export const documentsRedirectSignIn = 'https://documents.onelinecrm.com/dashboard';
 
 export const menuItems = [
   {
@@ -2781,6 +2781,7 @@ export const activityTypeIcons = {
   27: <WifiCalling3Icon className="h-4 w-4 text-gray-500" aria-hidden="true" />,
   28: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
   36: <DomainOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
+  38: <InsertDriveFileOutlinedIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />,
 };
 export const rentalPriceOptions = [
   { id: 1, value: 500, label: '$500' },

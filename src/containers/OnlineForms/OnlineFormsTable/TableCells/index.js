@@ -11,7 +11,7 @@ import OnlineFormEmailTemplate from '../../OnlineFormEmailTemplate';
 import { useSelector } from 'react-redux';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { useRouter } from 'next/router';
-import { useSendEmail } from '@helpers/queries/mutations';
+import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
 
 export const HeaderCell = ({ title }) => <p>{title}</p>;
 
@@ -36,7 +36,6 @@ export const ClientCell = ({ name, email, imgSrc }) => {
 export const StatusCell = (props) => {
   const { status, form_type, client_email, client_name, public_identifier } = props;
 
-  const { hex: formPublicIdentifier } = public_identifier;
   const { name: formTitle } = form_type;
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -48,12 +47,15 @@ export const StatusCell = (props) => {
     toast.error('Unable to resend email!');
   };
 
-  const { isPending: isPendingSendEmail, mutate: mutateSendEmail } = useSendEmail({
+  const sendEmail = useSendEmail({
     onSuccess: onSendEmailSuccess,
     onError: onSendEmailError,
   });
+  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog();
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const sendFormEmail = async () => {
+    const contact_id = allContacts?.find((c) => c.email === client_email);
     const emailBody = {
       to: [client_email],
       subject: formTitle ?? 'Opgny form',
@@ -63,14 +65,19 @@ export const StatusCell = (props) => {
           first_name={client_name}
           agent_first_name={userInfo?.first_name}
           agent_last_name={userInfo?.last_name}
-          formLink={`${window.location.origin}/public/online-forms-sign/${formPublicIdentifier}`}
+          formLink={`${window.location.origin}/public/online-forms-sign/${public_identifier}`}
         />,
         {
           pretty: true,
         },
       ),
     };
-    mutateSendEmail(emailBody);
+    sendEmail.mutateAsync(emailBody).then(() => {
+      updateCommunicationAndActivityLog.mutate({
+        form_name: formTitle ?? 'Opgny form',
+        client_id: contact_id?.id,
+      });
+    });
   };
 
   const chipVariant = useMemo(() => {
@@ -92,15 +99,19 @@ export const StatusCell = (props) => {
   }, [status]);
 
   const onAgentSignForm = useCallback(() => {
-    router.push(`/online-forms/agent-sign/${formPublicIdentifier}`);
-  }, [formPublicIdentifier]);
+    router.push(`/online-forms/agent-sign/${public_identifier}`);
+  }, [public_identifier]);
 
   return (
     <div className="flex flex-col gap-[6px] text-[12px] font-medium">
       <StatusChip text={status.toLowerCase()} variant={chipVariant} />
       {status.toLowerCase() === 'pending' && (
-        <button disabled={isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
-          {!isPendingSendEmail ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
+        <button disabled={sendEmail.isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
+          {!sendEmail.isPendingSendEmail ? (
+            <Image src={ResendEmail} alt="Resend email" />
+          ) : (
+            <CircularProgress size={16} />
+          )}
           Resend Form
         </button>
       )}

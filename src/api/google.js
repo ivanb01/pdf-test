@@ -42,13 +42,6 @@ export const getGmailLeadsAIDefault = () => {
   return axiosInstance.get('v1/gmail/ai/leads');
 };
 
-// TODO: testing purposes remove
-export const getUserConsentForGoogleContacts = () => {
-  return axiosInstance.get('v1/google/authorize', {
-    params: { test_callback: '/contacts/clients', scope: 'contacts' },
-  });
-};
-
 export const getUserConsentForGoogleEmail = () => {
   return axiosInstance.get('v1/google/authorize', {
     params: { test_callback: '/contacts/clients', scope: 'contacts,gmail' },

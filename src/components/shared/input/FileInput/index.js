@@ -74,7 +74,7 @@ const FileInput = ({ children, ...rest }) => {
   }, [postFileData]);
 
   const handleFileFormat = (file) => {
-    if (!acceptedFormats.includes(file.type)) {
+    if (!file.type || !acceptedFormats.includes(file.type)) {
       onWrongFileFormat();
       return false;
     }

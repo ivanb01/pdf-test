@@ -123,6 +123,11 @@ export const formatDate = (eventDate, hideTime) => {
   });
   return hideTime ? `${monthName} ${day}, ${year}` : `${monthName} ${day}, ${year} ${time}`;
 };
+
+export const getFullDateTime = (date) => {
+  return moment(date).format('DD MMMM YYYY, HH:mm:ss');
+};
+
 export const getDateFormat = (timestamp) => {
   const dateObj = new Date(timestamp);
 
@@ -603,4 +608,11 @@ export const getCompany = (email) => {
     imageUrl = 'https://i.imgur.com/Gq2NDtu.png';
   }
   return { imageUrl, companyName };
+};
+export const getOpgnyBaseUrl = (domain) => {
+  if (domain == 'onelinecrm') {
+    return 'https://opgny.com';
+  } else {
+    return 'https://oxfordpg.com';
+  }
 };

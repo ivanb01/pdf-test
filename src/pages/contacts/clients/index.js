@@ -153,6 +153,7 @@ const index = () => {
       if (queryParams?.start_importing) {
         handleImportGoogleContact();
       } else if (queryParams?.code && queryParams?.authuser && finishedOnboarding) {
+        console.log(queryParams, 'query');
         handleGoogleAuthCallback(queryParams);
       }
     }
@@ -168,19 +169,12 @@ const index = () => {
   //     setShowSmartSyncOverlay(true);
   //   }
   // }, [userGaveConsent, router.query]);
-
   return (
     <Layout>
       {loading ? (
         <Loader />
       ) : (
         <>
-          {/*{showSmartSyncOverlay && (*/}
-          {/*  <SmartSyncActivatedOverlay*/}
-          {/*    activatingSmartSync={activatingSmartSync}*/}
-          {/*    handleCloseOverlay={() => setShowSmartSyncOverlay(false)}*/}
-          {/*  />*/}
-          {/*)}*/}
           {openTour === 'false' ? (
             loadingPopup === true ? (
               <ImportingContactsPopup />

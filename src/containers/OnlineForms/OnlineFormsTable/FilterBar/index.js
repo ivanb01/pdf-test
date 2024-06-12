@@ -21,7 +21,7 @@ const FilterBar = ({
     <div className="h-[72px] flex justify-between items-center p-[25px] border-b">
       <div className="flex items-center gap-2">
         <div className="color-gray8">{formTypeFilter.name}</div>
-        {!!formTypeFilter.id.hex && (
+        {!!formTypeFilter.id && (
           <button
             onClick={() => {
               handlePreviewTemplate(formTypeFilter);

@@ -50,7 +50,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
   return (
     <Table>
       <thead>
-        <tr className="bg-gray-50 text-gray4" style={{ height: '60px' }}>
+        <tr className="bg-gray-50 text-gray4 sticky top-0 z-10">
           <th
             style={{ width: '300px' }}
             scope="col"
@@ -198,11 +198,10 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                                     break;
                                 }
                                 let activity = {
-                                  type_of_activity_id: 2,
+                                  type_of_activity_id: 37,
                                   description: 'Attempted to communicate using SMS.',
                                 };
 
-                                dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
                                 contactServices.addContactActivity(person.id, activity);
                                 let link = `sms:${person.phone_number}&body=${message}`;
                                 window.location.href = link;
@@ -267,7 +266,6 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                             role={'button'}
                             onClick={(e) => {
                               e.stopPropagation();
-                              dispatch(updateContactLocally({ ...person, last_communication_date: new Date() }));
                               addContactActivity(person.id, {
                                 type_of_activity_id: 27,
                                 description: 'Attempted to make a phone call.',

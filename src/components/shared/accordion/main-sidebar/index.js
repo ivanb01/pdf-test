@@ -1,49 +1,49 @@
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import Text from "components/shared/text";
-import React, { useState, useEffect } from "react";
-import MenuOpen from "@mui/icons-material/MenuOpen";
-import Menu from "@mui/icons-material/Menu";
-import Link from "components/Link";
-import UploadFile from "@mui/icons-material/UploadFile";
-import Router from "next/router";
-import { setExpandedMenu } from "store/global/slice";
-import { useDispatch, useSelector } from "react-redux";
-import Button from "components/shared/button";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useRouter } from "next/router";
-import ArrowForward from "@mui/icons-material/ArrowForward";
-import { getCount } from "api/contacts";
-import SmartSyncOverlay from "components/overlays/smart-sync-overlay";
-import ArrowLeft from "/public/images/arrow-circle-left.svg";
-import ArrowRight from "/public/images/arrow-circle-right.svg";
-import { CSSTransition } from "react-transition-group";
-import { setUserGaveConsent } from "store/global/slice";
-import CheckCircle from "@mui/icons-material/CheckCircle";
+import { ChevronDownIcon } from '@heroicons/react/solid';
+import Text from 'components/shared/text';
+import React, { useState, useEffect } from 'react';
+import MenuOpen from '@mui/icons-material/MenuOpen';
+import Menu from '@mui/icons-material/Menu';
+import Link from 'components/Link';
+import UploadFile from '@mui/icons-material/UploadFile';
+import Router from 'next/router';
+import { setExpandedMenu } from 'store/global/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from 'components/shared/button';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { useRouter } from 'next/router';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import { getCount } from 'api/contacts';
+import SmartSyncOverlay from 'components/overlays/smart-sync-overlay';
+import ArrowLeft from '/public/images/arrow-circle-left.svg';
+import ArrowRight from '/public/images/arrow-circle-right.svg';
+import { CSSTransition } from 'react-transition-group';
+import { setUserGaveConsent } from 'store/global/slice';
+import CheckCircle from '@mui/icons-material/CheckCircle';
 import {
   getUserConsentForGoogleContactsAndEmail,
   getUserConsentForGoogleEmail,
   getUserConsentStatus,
-} from "@api/google";
-import googleContactsIcon from "/public/images/google-contacts.png";
-import checkmark from "/public/images/checkmark.svg";
-import Info from "@mui/icons-material/Info";
-import TooltipComponent from "@components/shared/tooltip";
-import { setOpenedTab, setOpenedSubtab, setExpandedTab } from "store/global/slice";
-import SimpleBar from "simplebar-react";
-import Onboarding from "@components/overlays/onboarding";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import GoogleContact from "../../../../../public/images/GoogleContact.png";
+} from '@api/google';
+import googleContactsIcon from '/public/images/google-contacts.png';
+import checkmark from '/public/images/checkmark.svg';
+import Info from '@mui/icons-material/Info';
+import TooltipComponent from '@components/shared/tooltip';
+import { setOpenedTab, setOpenedSubtab, setExpandedTab } from 'store/global/slice';
+import SimpleBar from 'simplebar-react';
+import Onboarding from '@components/overlays/onboarding';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import GoogleContact from '../../../../../public/images/GoogleContact.png';
 
-const Tour = dynamic(() => import("components/onboarding/tour"), {
+const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
 });
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import SubMenuContent from "@components/shared/SubMenuCard";
-import AIChip from "@components/shared/chip/ai-chip";
-import { isHealthyCommuncationDate } from "@global/functions";
-import Overlay from "@components/shared/overlay";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import SubMenuContent from '@components/shared/SubMenuCard';
+import AIChip from '@components/shared/chip/ai-chip';
+import { isHealthyCommuncationDate } from '@global/functions';
+import Overlay from '@components/shared/overlay';
 
 const getNeedToCommunicateContacts = (allContacts) => {
   if (!allContacts) {
@@ -52,8 +52,8 @@ const getNeedToCommunicateContacts = (allContacts) => {
   return (
     allContacts &&
     allContacts.filter((contact) => {
-      const categoryType = contact?.category_1?.toLowerCase() + "s";
-      if (categoryType !== "clients") {
+      const categoryType = contact?.category_1?.toLowerCase() + 's';
+      if (categoryType !== 'clients') {
         return false;
       }
       let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
@@ -61,14 +61,22 @@ const getNeedToCommunicateContacts = (allContacts) => {
     }).length
   );
 };
+
 const getCountForTabOrSubtab = (count_key, count, allContacts) => {
   if (!count || !allContacts) {
     return;
   }
-  if (count_key === "other_total") {
-    return "(" + (count && count[count_key] ? count["other_family_friends"] + count["uncategorized_unknown"] : 0) + ")";
+  if (count_key === 'all_contacts') {
+    return (
+      '(' +
+      allContacts?.filter((c) => ['Client', 'Professional', 'Uncategorized', 'Trash'].includes(c.category_1)).length +
+      ')'
+    );
+  }
+  if (count_key === 'other_total') {
+    return '(' + (count && count[count_key] ? count['other_family_friends'] + count['uncategorized_unknown'] : 0) + ')';
   } else {
-    return "(" + (count && count[count_key] ? count[count_key] : 0) + ")";
+    return '(' + (count && count[count_key] ? count[count_key] : 0) + ')';
   }
 };
 const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, importContacts }) => {
@@ -86,26 +94,26 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const activateSmartSync = async () => {
     setLoadingActivateSS(true);
-    if (!localStorage.getItem("finishedTour")) {
-      localStorage.setItem("finishedTour", true);
-      localStorage.setItem("openTour", "true");
+    if (!localStorage.getItem('finishedTour')) {
+      localStorage.setItem('finishedTour', true);
+      localStorage.setItem('openTour', 'true');
     }
     try {
       const { data } = await getUserConsentForGoogleContactsAndEmail();
       window.location.href = data.redirect_uri;
     } catch (error) {
-      console.log("error occurredw with google import");
+      console.log('error occurredw with google import');
     }
   };
 
   useEffect(() => {
     if (allContacts && !allContacts?.length) {
-      if (window.location.pathname.includes("/contacts/clients")) setShowOnboarding(true);
+      if (window.location.pathname.includes('/contacts/clients')) setShowOnboarding(true);
     }
   }, [allContacts]);
 
   useEffect(() => {
-    let finishedTour = localStorage.getItem("finishedTour") ? localStorage.getItem("finishedTour") : false;
+    let finishedTour = localStorage.getItem('finishedTour') ? localStorage.getItem('finishedTour') : false;
     setFinishedOnboarding(finishedTour);
   }, []);
 
@@ -126,11 +134,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
 
     const showPulse = (tab) => {
       if (allContacts) {
-        if (tab.href == "needcontact") {
+        if (tab.href == 'needcontact') {
           return (
             allContacts.filter((contact) => {
-              const categoryType = contact?.category_1?.toLowerCase() + "s";
-              if (categoryType !== "clients") {
+              const categoryType = contact?.category_1?.toLowerCase() + 's';
+              if (categoryType !== 'clients') {
                 return false;
               }
               let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
@@ -146,15 +154,15 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         {tabs.map((tab) => {
           return (
             <SubMenuContent
-              side={"start"}
-              align={"bottom"}
-              style={{ marginLeft: "62px" }}
+              side={'start'}
+              align={'bottom'}
+              style={{ marginLeft: '62px' }}
               triggerElement={
                 <div>
                   <Link
                     href="#"
                     className={`hover:bg-gray1 relative flex cursor-pointer  items-center  h-10 justify-center px-2 py-4 mx-3 rounded-md  ${
-                      openedTab == tab.id && "bg-lightBlue1 text-lightBlue3"
+                      openedTab == tab.id && 'bg-lightBlue1 text-lightBlue3'
                     }`}
                     onClick={() => {
                       setOpenedTab(tab.id);
@@ -163,10 +171,10 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     }}>
                     <div
                       className={` flex items-center cursor-pointer ${
-                        openedTab == tab.id ? "text-lightBlue3" : "text-gray5"
+                        openedTab == tab.id ? 'text-lightBlue3' : 'text-gray5'
                       }`}
                       title={tab.name}>
-                      <div title={""}>{tab.icon}</div>
+                      <div title={''}>{tab.icon}</div>
                       {showPulse(tab) && (
                         <span class="absolute right-0 top-2 flex h-2 w-2 ml-4">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -183,11 +191,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                     <div
                       className={`hover:bg-gray1 rounded-md ${
                         isSubtabActive(t.id, tab.id)
-                          ? "text-lightBlue3 bg-lightBlue1 font-semibold"
-                          : "text-gray4 font-medium"
+                          ? 'text-lightBlue3 bg-lightBlue1 font-semibold'
+                          : 'text-gray4 font-medium'
                       }`}>
                       <div
-                        role={"button"}
+                        role={'button'}
                         onClick={() => {
                           setOpenedTab(tab.id);
                           dispatch(setOpenedSubtab(t.id));
@@ -195,7 +203,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         }}
                         className={`px-5 py-3 gap-[5px] transition-all duration-200 text-gray4 text-sm relative flex items-center`}>
                         {t?.dot}
-                        <div className={"w-max"}>{t.name}</div>
+                        <div className={'w-max'}>{t.name}</div>
                         <p>{getCountForTabOrSubtab(t.count_key, count, allContacts)}</p>
                       </div>
                     </div>
@@ -203,7 +211,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                 </div>
               ) : (
                 <div className={`absolute flex mt-1 shadowCustom`}>
-                  <div className={"bg-gray8 h-4 w-4 mt-[10px] ml-[-10px] rotate-45"}></div>
+                  <div className={'bg-gray8 h-4 w-4 mt-[10px] ml-[-10px] rotate-45'}></div>
                   <div
                     className={`px-3 text-sm w-max leading-5 font-semibold  py-2 flex flex-col bg-gray8 ml-[-10px] rounded-md z-10 text-white`}>
                     {tab.name}
@@ -231,12 +239,12 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
     return (
-      <SimpleBar autoHide={true} style={{ maxHeight: "72vh" }}>
-        <div className={"mx-3"}>
+      <SimpleBar autoHide={true} style={{ maxHeight: '72vh' }}>
+        <div className={'mx-3'}>
           {Object.keys(groupedTabs).map((groupName, index) => (
             <div
               key={groupName}
-              className={`${index === 0 ? "" : " pt-4"} ${index == 2 && "other"} ${index == 1 && "needs-attention"}`}>
+              className={`${index === 0 ? '' : ' pt-4'} ${index == 2 && 'other'} ${index == 1 && 'needs-attention'}`}>
               <h2 className="text-gray4 text-xs font-medium leading-5 uppercase pl-2">{groupName}</h2>
               {groupedTabs[groupName].map((tab) => (
                 <TabBar key={tab.id} tab={tab} />
@@ -252,7 +260,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
               className={`cursor-pointer mx-3 px-2 py-2 rounded-md flex items-center text-gray5 `}>
               <UploadFile className="h-5 w-5 text-gray5 cursor-pointer" />
               <Text h4 className={`ml-3 text-gray5`}>
-                {pinned && "Import Contacts from CSV"}
+                {pinned && 'Import Contacts from CSV'}
               </Text>
             </div>
           </>
@@ -265,7 +273,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
     <>
       <div
         className={`relative accordion-wrapper pt-6 pb-3 h-full ${className} transition-all flex flex-col justify-between ${
-          pinned ? "w-[265px]" : "w-[62px]"
+          pinned ? 'w-[265px]' : 'w-[62px]'
         }`}>
         {showSSOverlay ? (
           <>
@@ -280,31 +288,31 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
         )}
         {!finishedOnboarding &&
           showOnboarding &&
-          !userGaveConsent?.includes("gmail") &&
-          !userGaveConsent?.includes("contacts") && <Onboarding setStartedOnboarding={setShowSSOverlay} />}
+          !userGaveConsent?.includes('gmail') &&
+          !userGaveConsent?.includes('contacts') && <Onboarding setStartedOnboarding={setShowSSOverlay} />}
         <div>
           {pinned ? expandedMenu() : narrowMenu(openedTab, openedSubtab)}
           {pinned && (
             <>
               {userGaveConsent && (
                 <>
-                  {userGaveConsent?.includes("gmail") && userGaveConsent?.includes("contacts") && (
+                  {userGaveConsent?.includes('gmail') && userGaveConsent?.includes('contacts') && (
                     <>
                       <div
                         className={`absolute flex gap-[10px] bg-white mb-[-10px] absoluteWidth bottom-6 transition-all w-auto text-gray-700 p-3 pb-0 text-sm mx-3`}>
-                        <div className={"relative  w-6 mt-1"}>
+                        <div className={'relative  w-6 mt-1'}>
                           <img
                             src={checkmark.src}
                             className="h-[13px] w-[13px] border border-white absolute top-[-13px] left-[11px] rounded-full"
                           />
-                          <Image src={GoogleContact} height={20} width={20} style={{ marginTop: "-6px" }} />
+                          <Image src={GoogleContact} height={20} width={20} style={{ marginTop: '-6px' }} />
                         </div>
                         <TooltipComponent
-                          side={"bottom"}
-                          align={"start"}
-                          style={{ marginBottom: "12px" }}
+                          side={'bottom'}
+                          align={'start'}
+                          style={{ marginBottom: '12px' }}
                           triggerElement={
-                            <div className={"relative  w-6 mt-1 h-4"}>
+                            <div className={'relative  w-6 mt-1 h-4'}>
                               <img
                                 src={checkmark.src}
                                 className="h-[15px] w-[15px] absolute top-[-10px]   rounded-full left-[13px] border border-white"
@@ -322,7 +330,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                         <a
                           onClick={() =>
                             router.push({
-                              pathname: "/contacts/clients/",
+                              pathname: '/contacts/clients/',
                               query: { start_importing: true },
                             })
                           }
@@ -333,11 +341,11 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
                       </div>
                     </>
                   )}
-                  {!userGaveConsent?.includes("gmail") && !userGaveConsent?.includes("contacts") && (
+                  {!userGaveConsent?.includes('gmail') && !userGaveConsent?.includes('contacts') && (
                     <div
                       className={` p-3  border border-purple-400 rounded-xl transition-all w-auto bg-purple-50 text-xs m-3 setup-smart-sync`}>
                       <div className="text-xs font-semibold text-gray6">
-                        Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{" "}
+                        Setup <span className="font-bold text-gray-900">“Gmail Smart Sync Contacts by AI”</span> and{' '}
                         <span className="font-bold text-gray-900">“Import Google Contacts”</span> in order to import
                         contacts from Gmail.
                       </div>
@@ -358,7 +366,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <a
             onClick={() =>
               router.push({
-                pathname: "/contacts/no-contact/",
+                pathname: '/contacts/no-contact/',
                 query: { start_importing: true },
               })
             }
@@ -371,7 +379,7 @@ const MainSidebar = ({ tabs, openedTab, setOpenedTab, className, collapsable, im
           <div
             onClick={() => dispatch(setExpandedMenu(!pinned))}
             className="absolute cursor-pointer"
-            style={{ right: "-13px", bottom: pinned ? "10px" : "20px", zIndex: 100 }}>
+            style={{ right: '-13px', bottom: pinned ? '10px' : '20px', zIndex: 100 }}>
             <div className="">
               <Image height={26} width={26} src={pinned ? ArrowLeft.src : ArrowRight.src} />
             </div>
@@ -418,12 +426,13 @@ const TabBar = ({ tab }) => {
     }
   }, [openedTab]);
   useEffect(() => {
-    console.log(openedSubtab, "openedSubtab");
+    console.log(openedSubtab, 'openedSubtab');
   }, [openedSubtab]);
 
   const handleTabClick = () => {
-    if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6) {
+    if (tab.id === 4 || tab.id === 5 || tab.id === 2 || tab.id === 3 || tab.id === 6 || tab.id == -1) {
       router.push(tab.href);
+      return;
     }
     dispatch(setExpandedTab({ id: tab.id, opened: !findOpenedId(tab.id).opened }));
   };
@@ -437,11 +446,11 @@ const TabBar = ({ tab }) => {
 
   const showPulse = (tab) => {
     if (allContacts) {
-      if (tab.href == "needcontact") {
+      if (tab.href == 'needcontact') {
         return (
           allContacts.filter((contact) => {
-            const categoryType = contact?.category_1?.toLowerCase() + "s";
-            if (categoryType !== "clients") {
+            const categoryType = contact?.category_1?.toLowerCase() + 's';
+            if (categoryType !== 'clients') {
               return false;
             }
             let isHealthyCommunication = isHealthyCommuncationDate(contact.last_communication_date);
@@ -459,22 +468,22 @@ const TabBar = ({ tab }) => {
         onClick={() => {
           handleTabClick();
         }}
-        className={`flex items-center h-8 justify-between w-inherit ${openedTab === tab.id && " text-lightBlue3"} ${
+        className={`flex items-center h-8 justify-between w-inherit ${openedTab === tab.id && ' text-lightBlue3'} ${
           (openedTab === 4 && tab.id === 4) ||
           (openedTab === 2 && tab.id === 2) ||
           (openedTab === 3 && tab.id === 3) ||
           (openedTab === 5 && tab.id === 5) ||
           (openedTab === 6 && tab.id === 6)
-            ? "bg-lightBlue1"
-            : ""
+            ? 'bg-lightBlue1'
+            : ''
         }`}>
-        <div className={"flex items-center h-8 justify-between pl-2 pr-3 hover:bg-gray1 w-[241px]"}>
-          <div className={` flex items-center ${openedTab === tab.id ? "text-lightBlue3" : "text-gray3"} `}>
+        <div className={'flex items-center h-8 justify-between pl-2 pr-3 hover:bg-gray1 w-[241px]'}>
+          <div className={` flex items-center ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray3'} `}>
             {tab.icon}
-            <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? "text-lightBlue3" : "text-gray5"}`}>
+            <Text h4 className={`pl-3 pr-1 py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
               {tab.name}
             </Text>
-            <Text h4 className={`py-[0px] ${openedTab === tab.id ? "text-lightBlue3" : "text-gray5"}`}>
+            <Text h4 className={`py-[0px] ${openedTab === tab.id ? 'text-lightBlue3' : 'text-gray5'}`}>
               {getCountForTabOrSubtab(tab.count_key, count, allContacts)}
             </Text>
             {showPulse(tab) && (
@@ -488,7 +497,7 @@ const TabBar = ({ tab }) => {
           {tab.subtab && (
             <ArrowDropDownIcon
               className={`text-gray3 h-5 w-5 transition-all duration-300 ${
-                findOpenedId(tab.id).opened ? "rotate-180" : ""
+                findOpenedId(tab.id).opened ? 'rotate-180' : ''
               }`}
             />
           )}
@@ -502,21 +511,21 @@ const TabBar = ({ tab }) => {
                 key={`${subtab.id}`}
                 href="#"
                 className={`h-8 hover:bg-gray1 px-10 transition-all duration-200 flex items-center ${
-                  isSubtabActive(subtab.id, tab.id) ? "text-lightBlue3 bg-lightBlue1" : "text-gray4"
+                  isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3 bg-lightBlue1' : 'text-gray4'
                 }`}
                 onClick={() => handleSubtabClick(subtab.id)}>
                 {subtab.icon ? subtab.icon : subtab.dot}
                 <Text
                   h4
-                  className={` ${subtab.icon || (subtab.dot && "pl-[10px]")} py-[10px] ${
-                    isSubtabActive(subtab.id, tab.id) ? "text-lightBlue3" : "text-gray4"
+                  className={` ${subtab.icon || (subtab.dot && 'pl-[10px]')} py-[10px] ${
+                    isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {subtab.name}
                 </Text>
                 <Text
                   h4
-                  className={`pl-1 ${subtab.icon || (subtab.dot && "pl-[5px]")}  py-[10px]  ${
-                    isSubtabActive(subtab.id, tab.id) ? "text-lightBlue3" : "text-gray4"
+                  className={`pl-1 ${subtab.icon || (subtab.dot && 'pl-[5px]')}  py-[10px]  ${
+                    isSubtabActive(subtab.id, tab.id) ? 'text-lightBlue3' : 'text-gray4'
                   }`}>
                   {getCountForTabOrSubtab(subtab.count_key, count, allContacts)}
                 </Text>

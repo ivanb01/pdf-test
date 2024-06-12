@@ -126,7 +126,7 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
         }),
 
         recipients: recipients,
-        sent_by_email_at: new Date()
+        sent_by_email_at: new Date(),
       },
     });
   };
@@ -171,7 +171,7 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
                   </div>
                   <div className="">
                     <SearchSelectInput
-                      label="Landlord"
+                      label="Contacts"
                       options={data}
                       value={valueOptions(
                         formik.values.landlords.map((landlord) => landlord.value),

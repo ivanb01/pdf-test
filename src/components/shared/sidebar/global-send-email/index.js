@@ -7,9 +7,9 @@ import { useSelector } from 'react-redux';
 import { MultiSelect } from 'react-multi-select-component';
 import { useEffect, useState } from 'react';
 import { sendEmail } from '@api/marketing';
-import { setOpenEmailContactOverlay } from '@store/global/slice';
+import { setOpenEmailContactOverlay, setRefetchData } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
-import { addContactActivity } from '@api/contacts';
+import { addContactActivity, updateContact } from '@api/contacts';
 import { setRefetchActivityLog } from '@store/clientDetails/slice';
 import RichtextEditor from '@components/Editor';
 import TooltipComponent from '@components/shared/tooltip';
@@ -118,7 +118,12 @@ const SendEmailOverlay = () => {
             /<[^>]*>/g,
             '',
           )} </h6>`,
-        }).then(() => dispatch(setRefetchActivityLog(true)));
+        }).then(() => {
+          updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
+            dispatch(setRefetchActivityLog(true));
+            dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+          });
+        });
         setLoading(false);
         setEmailSent(true);
       });

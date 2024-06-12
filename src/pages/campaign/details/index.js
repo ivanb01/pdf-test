@@ -59,7 +59,7 @@ const index = () => {
           dispatch(setUsersInCampaignGlobally(campaignResponse.data));
         })
         .catch((error) => {
-          console.error("Error executing requests:", error);
+          console.error('Error executing requests:', error);
         });
     }
   }, [id]);
@@ -170,14 +170,14 @@ const index = () => {
     }
   }, [CRMCampaigns, id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts.filter((contact) =>
-    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
+    .concat(usersInCampaignGlobally?.contacts_not_campaign)
+    ?.filter((contact) => contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()));
+  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign?.filter((contact) =>
+    contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign.filter((contact) =>
-    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-  const notInCampaignContacts = usersInCampaignGlobally?.contacts_not_campaign.filter((contact) =>
-    contact.contact_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  const notInCampaignContacts = usersInCampaignGlobally?.contacts_not_campaign?.filter((contact) =>
+    contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   const eventTypes = [
     {
@@ -188,7 +188,10 @@ const index = () => {
     {
       name: "CAMPAIGN MATCHED TO",
       icon: campaignsMatchedTo,
-      amount: usersInCampaignGlobally?.contacts?.length,
+      amount:
+        usersInCampaignGlobally?.contacts_in_campaign?.length +
+        usersInCampaignGlobally?.contacts_not_campaign?.length +
+        usersInCampaignGlobally?.contacts_unassigned_count,
     },
     {
       name: "CLIENTS IN CAMPAIGN",

@@ -1,7 +1,7 @@
 import MainMenu from '@components/shared/menu';
 import SidebarMenu from '@components/shared/sidebar/sidebar-menu';
 import { CreditCardIcon, UserIcon, GlobeAltIcon } from '@heroicons/react/solid';
-import { Security, Summarize } from '@mui/icons-material';
+import { Security, Settings, Summarize, Tune } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { setUserInfo } from 'store/global/slice';
@@ -34,7 +34,19 @@ const SettingsLayout = ({ children }) => {
         // { name: 'SMS', href: 'sms-templates', current: false },
       ],
     },
-    { name: 'Website', href: 'domains', icon: <GlobeAltIcon height={20} className="w-[20px]" />, current: true },
+    { name: 'Website', href: 'domains', icon: <GlobeAltIcon height={20} className="w-[20px]" />, current: false },
+    {
+      name: 'Brokerage Settings',
+      href: 'brokerage-settings',
+      icon: <Tune height={20} className="w-[20px]" />,
+      current: false,
+    },
+    {
+      name: 'Website Settings',
+      href: 'website-settings',
+      icon: <Settings height={20} className="w-[20px]" />,
+      current: false,
+    },
   ]);
 
   const setCurrentNavigation = (targetName) => {

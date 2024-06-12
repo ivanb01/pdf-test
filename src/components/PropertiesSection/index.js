@@ -31,6 +31,8 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
+import PropertiesSkeleton from '@components/SkeletonLoaders/PropertiesSkeleton';
+import { updateContact } from 'api/contacts';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -155,7 +157,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               newFiltersCount += 1;
             }
             if (propertiesData.data[0]?.general_tags?.length > 0) {
-              newFiltersCount += 1;
+              propertiesData?.data[0]?.general_tags?.forEach((tag) => {
+                newFiltersCount += 1;
+              });
             }
             if (Number(propertiesData.data[0]?.looking_action) != getLookingAction()) {
               newFiltersCount += 1;
@@ -171,6 +175,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         });
     });
   };
+
+  useEffect(() => {
+    console.log(filtersCount, 'filtersCount');
+  }, [filtersCount]);
 
   // const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
 
@@ -215,12 +223,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     addPropertiesInPortfolio(
       selectedContacts.map((contact) => contact.value),
       selectedProperties.map((property) => property.ID),
-    ).then((res) => {
+    ).then(async (res) => {
       setLoadingEmails(false);
-      getPortfolioByContactId(contactId).then((res) => {
-        setUserProperties(res?.data);
-        setLoading(false);
-      });
+
+      setLoading(false);
+
       if (res?.data.length === 0) {
         setPropertiesSent(true);
         resetPropertySelection();
@@ -258,7 +265,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   pretty: true,
                 },
               ),
-            ).then((res) => {
+            ).then(async (res) => {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
@@ -268,12 +275,23 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   item?.portfolio_sharable_id ?? ''
                 }`,
               };
+              const contactToBeUpdated = allContacts.find((c) => c.id == contactId);
+              setPropertiesSent(true);
+              resetPropertySelection();
 
-              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-              addContactActivity(item.contact_id, activity);
+              await addContactActivity(item.contact_id, activity)
+                .then(() => {})
+                .then(async () => {
+                  if (!((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))) {
+                    await updateContact(contactToBeUpdated.id, { last_communication_date: new Date() }).then(() => {
+                      dispatch(updateContactLocally({ ...contactToBeUpdated, last_communication_date: new Date() }));
+                      getPortfolioByContactId(contactId).then((res) => {
+                        setUserProperties(res?.data);
+                      });
+                    });
+                  }
+                });
             });
-            setPropertiesSent(true);
-            resetPropertySelection();
           }
           if (
             parseInt(c.value) === parseInt(item.contact_id) &&
@@ -281,14 +299,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${
-                c.first_name
-              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
-                item?.portfolio_sharable_id ?? ''
-              }.
-              ${generateSMSFooter(userInfo)}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.${generateSMSFooter(userInfo)}`,
             )
-              .then((res) => {
+              .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
                   description: `(SMS) Properties sent to ${
@@ -298,17 +311,23 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   }`,
                 };
 
-                const contact = allContacts.find((c) => c.id === c.value);
+                const contact = allContacts.find((c) => c.id == contactId);
+                setPropertiesSent(true);
+                resetPropertySelection();
 
-                dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-                addContactActivity(item.contact_id, activity);
+                await addContactActivity(contact?.id, activity).then(() => {
+                  updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
+                    getPortfolioByContactId(contactId).then((res) => {
+                      setUserProperties(res?.data);
+                    });
+                    dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                  });
+                });
               })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
               });
-            setPropertiesSent(true);
-            resetPropertySelection();
           }
         });
       });
@@ -629,18 +648,18 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
       )}
       {loading ? (
         <div className="relative details-tabs-fixed-height bg-white">
-          <Loader></Loader>
+          <PropertiesSkeleton cardsLength={12} />
         </div>
       ) : (
         <SimpleBar autoHide>
           <div className="bg-white relative scrollable-area" style={{ minHeight: 'calc(100vh - 158px)' }}>
             {loadingPropertyInterests || propertyInterests === undefined ? (
-              <Loader message="Please wait we're searching for matched properties"></Loader>
+              <PropertiesSkeleton cardsLength={12} />
             ) : (
               <>
                 <div className="">
                   <div className="flex justify-between items-center pt-[9px] pr-[9px] h-[47px]">
-                    <div className="font-semibold">Properties</div>
+                    <div className="font-semibold text-gray8 text-[14px]">Properties</div>
                     <div className={'relative flex'}>
                       {propertiesCurrentTab === 0 && (
                         <Button leftIcon={<img src={filter.src}></img>} white onClick={() => setShowEditPopup(true)}>
@@ -652,7 +671,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'
                           }>
-                          <CheckRoundedIcon className={'h-4 w-4'} />
+                          {filtersCount}
                         </div>
                       )}
                     </div>

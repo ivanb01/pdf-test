@@ -1,6 +1,5 @@
 import Button from 'components/shared/button';
 import Overlay from 'components/shared/overlay';
-import PropTypes from 'prop-types';
 import { ExclamationIcon } from '@heroicons/react/outline';
 
 const TrashTypeOverlay = ({ onCancel, onDelete, isDeleting }) => {

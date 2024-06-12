@@ -26,9 +26,6 @@ import PropertyFilters from '@components/overlays/property-filters';
 import { useSelector } from 'react-redux';
 import { formatDateMDY, generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
-import List from '@components/NestedCheckbox/List';
-import { ChevronDownIcon } from '@heroicons/react/solid';
-import CloseIcon from '@mui/icons-material/Close';
 import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
 import { useDispatch } from 'react-redux';
@@ -37,18 +34,10 @@ import { addPropertiesInPortfolio, getPortfolioByContactId } from '@api/portfoli
 import { sendSMS } from '@api/email';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
-import { addContactActivity } from '@api/contacts';
+import { addContactActivity, updateContact } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
-import { getCompanyFromEmail } from '@global/functions';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
-import toast from 'react-hot-toast';
-
-const statuss = Object.freeze({
-  unchecked: 0,
-  checked: 1,
-  indeterminate: -1,
-});
 
 const index = () => {
   const dispatch = useDispatch();
@@ -300,37 +289,43 @@ const index = () => {
                   pretty: true,
                 },
               ),
-            ).then((res) => {
-              const contact = allContacts.find((con) => con.id === c?.value);
-              let activity = {
-                type_of_activity_id: 28,
-                description: `(Email) Properties sent to ${
-                  c.first_name
-                } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
-                  item?.portfolio_sharable_id ?? ''
-                }`,
-              };
+            )
+              .then(async (res) => {
+                const contact = allContacts.find((con) => con.id === c?.value);
+                let activity = {
+                  type_of_activity_id: 28,
+                  description: `(Email) Properties sent to ${
+                    c.first_name
+                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                    item?.portfolio_sharable_id ?? ''
+                  }`,
+                };
 
-              dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-              addContactActivity(item.contact_id, activity);
-            });
+                await addContactActivity(item.contact_id, activity).then(() => {
+                  if (!((sendMethod === 2 && contact.phone_number) || (sendMethod === 3 && contact.phone_number))) {
+                    updateContact(contact.id, { last_communication_date: new Date() });
+                    dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                  }
+                });
+              })
+              .catch((error) => {
+                console.error('Error sending email:', error);
+                // Handle the error if needed
+              });
+
             setPropertiesSent(true);
             resetPropertySelection();
           }
+
           if (
             parseInt(c.value) === parseInt(item.contact_id) &&
             ((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${
-                c.first_name
-              }, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${
-                item?.portfolio_sharable_id ?? ''
-              }. 
-              ${generateSMSFooter(userInfo)}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.${generateSMSFooter(userInfo)}`,
             )
-              .then((res) => {
+              .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
                   description: `(SMS) Properties sent to ${
@@ -339,14 +334,17 @@ const index = () => {
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };
-
-                dispatch(updateContactLocally({ ...c, last_communication_date: new Date() }));
-                addContactActivity(item.contact_id, activity);
+                const contact = allContacts.find((con) => con.id === c?.value);
+                await addContactActivity(item.contact_id, activity).then(() => {
+                  updateContact(contact.id, { last_communication_date: new Date() });
+                  dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+                });
               })
               .catch((error) => {
                 console.error('Error sending SMS:', error);
                 // Handle the error if needed
               });
+
             setPropertiesSent(true);
             resetPropertySelection();
           }
@@ -414,8 +412,7 @@ const index = () => {
                   version="1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
-                  enable-background="new 0 0 48 48"
-                >
+                  enable-background="new 0 0 48 48">
                   <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
                 </svg>
               )}

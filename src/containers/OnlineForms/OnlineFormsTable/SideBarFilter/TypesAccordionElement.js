@@ -29,10 +29,11 @@ const TypesAccordionElement = ({
   const [openAccordion, setOpenAccordion] = useState(false);
   const [isTrashOverlayOpened, setTrashOverlayOpened] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState(null);
+  const [openedPopoverTemplateId, setOpenPopovertemplateId] = useState('');
 
   const onTemplateDelete = async () => {
     if (templateToDelete) {
-      await handleDeleteTemplate(templateToDelete.id.hex);
+      await handleDeleteTemplate(templateToDelete.id);
       setTrashOverlayOpened(false);
     }
   };
@@ -131,23 +132,23 @@ const TypesAccordionElement = ({
                 return (
                   <li
                     className={`group flex w-full h-[50px] text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1  ${
-                      currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue1' : ''
+                      currentFilterId.id === filter.id ? 'bg-lightBlue1' : ''
                     } `}
-                    key={filter.id.hex}
+                    key={filter.id}
                     onMouseEnter={() => {
-                      setHoveredFilterId(filter.id.hex);
+                      setHoveredFilterId(filter.id);
                     }}
                     onMouseLeave={() => {
                       setHoveredFilterId(null);
                     }}>
                     <div
                       className={`w-[6px] h-[50px] ${
-                        currentFilterId.id.hex === filter.id.hex ? 'bg-lightBlue3 ' : 'bg-white '
+                        currentFilterId.id === filter.id ? 'bg-lightBlue3 ' : 'bg-white '
                       } `}
                     />
                     <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
                       <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
-                        {filter?.id.hex ? (
+                        {filter?.id ? (
                           <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
                         ) : (
                           <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
@@ -161,7 +162,7 @@ const TypesAccordionElement = ({
                         {hoveredFilterId !== '' ? (
                           <div
                             className={clsx('opacity-0 mr-6 ', {
-                              ['opacity-100']: hoveredFilterId === filter.id.hex,
+                              ['opacity-100']: hoveredFilterId === filter.id || filter.id === openedPopoverTemplateId,
                             })}>
                             <FilterDropdown
                               types={Actions}
@@ -169,6 +170,11 @@ const TypesAccordionElement = ({
                               data={filter}
                               align={'start'}
                               side={'bottom'}
+                              onOpenChange={(state) => {
+                                if (state) setOpenPopovertemplateId(filter.id);
+                                else setOpenPopovertemplateId(null);
+                              }}
+                              id={filter.id}
                             />
                           </div>
                         ) : (

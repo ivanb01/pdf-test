@@ -337,11 +337,10 @@ export default function ContactCard({
                                 break;
                             }
                             let activity = {
-                              type_of_activity_id: 2,
+                              type_of_activity_id: 37,
                               description: 'Attempted to communicate using SMS.',
                             };
 
-                            dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
                             addContactActivity(contact.id, activity);
                             let link = `sms:${contact.phone_number}&body=${message}`;
                             window.location.href = link;

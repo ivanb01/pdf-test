@@ -36,8 +36,9 @@ export default function DateChip({
     event.stopPropagation();
     if (contact) {
       toast.success('Updated last communication to Today.');
-      dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
-      updateContact(contact.id, { last_communication_date: new Date() });
+      updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
+        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+      });
     }
   };
 
@@ -68,8 +69,7 @@ export default function DateChip({
             </>
           )}
         </div>
-      }
-    >
+      }>
       <div style={{ width: '202px' }} className={`flex flex-col justify-center  gap-1.5`}>
         <h6 className={' text-xs leading-4 font-medium'}>
           Communication Health is {isHealthyCommunication ? 'good' : 'low'}!

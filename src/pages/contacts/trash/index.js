@@ -47,7 +47,7 @@ const index = () => {
   const onSearch = (searchTerm) => {
     const filteredItems =
       allContacts &&
-      allContacts.data.filter(
+      allContacts?.data?.filter(
         (d) =>
           searchTerm.split(' ').every((word) => {
             const lowercaseWord = word.toLowerCase();
@@ -75,23 +75,25 @@ const index = () => {
       ) : (
         <>
           <FloatingAlert
-            inProp={unapprovedContacts.length > 0}
+            inProp={unapprovedContacts?.length > 0}
             onClick={() => router.push('/ai-summary')}
             buttonText={'Review Now'}
             className="mx-[21px] mt-[14px]"
-            message={`${unapprovedContacts.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
+            message={`${unapprovedContacts?.length} New Smart Synced contacts were imported from Gmail and need to be reviewed.`}
             type="smart-sync"
           />
           <div className={'flex justify-between items-center p-6 py-4'}>
             <h3 className={'text-xl leading-7 font-medium'}>Trash</h3>
-            <Search
-              placeholder="Search"
-              className="mr-4 text-sm"
-              onInput={(event) => {
-                setSearchTerm(event.target.value);
-                onSearch(event.target.value);
-              }}
-            />
+            {(searchTerm.length > 0 || onSearch(searchTerm)?.length > 0) && (
+              <Search
+                placeholder="Search"
+                className="mr-4 text-sm"
+                onInput={(event) => {
+                  setSearchTerm(event.target.value);
+                  onSearch(event.target.value);
+                }}
+              />
+            )}
           </div>
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)', overflow: 'hidden' }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>

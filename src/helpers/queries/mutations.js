@@ -2,6 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useState, useCallback, useRef } from 'react';
 import { postPresignedUrl, postFile } from '@api/files';
 import { sendEmail } from '@api/email';
+import { addContactActivity, updateContact } from '@api/contacts';
+import { getFullDateTime } from '@global/functions';
 
 export const usePostPresignedUrl = (options) => {
   const abortControllerRef = useRef(null);
@@ -73,6 +75,21 @@ export const useSendEmail = (options) => {
   return useMutation({
     mutationFn: (emailBody) => {
       return sendEmail(emailBody);
+    },
+    ...options,
+  });
+};
+
+export const useUpdateCommunicationAndActivityLog = (options) => {
+  return useMutation({
+    mutationFn: (data) => {
+      const updateLastCommunication = updateContact(data?.client_id, { last_communication_date: new Date() });
+      const updateActivityLog = addContactActivity(data?.client_id, {
+        type_of_activity_id: 38,
+        description: `${data?.form_name} submitted on ${getFullDateTime(new Date())}`,
+        created_at: new Date().toISOString(),
+      });
+      return Promise.all([updateLastCommunication, updateActivityLog]);
     },
     ...options,
   });

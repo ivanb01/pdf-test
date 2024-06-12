@@ -4,8 +4,9 @@ import useDebouncedValue from 'hooks/useDebounceValue';
 import { useFetchProperties } from 'containers/Applications/queries/queries';
 import Image from 'next/image';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Link from 'next/link';
 
-const InputDropdown = ({ onListItemClick }) => {
+const InputDropdown = ({ label, onListItemClick }) => {
   const [searchValue, setSearchValue] = useState('');
   const debounceValue = useDebouncedValue(searchValue, 500);
 
@@ -13,7 +14,7 @@ const InputDropdown = ({ onListItemClick }) => {
   return (
     <div>
       <ApiInputDropdown>
-        <ApiInputDropdown.SearchInput searchValue={searchValue} setSearchValue={setSearchValue} />
+        <ApiInputDropdown.SearchInput searchValue={searchValue} setSearchValue={setSearchValue} label={label} />
         <ApiInputDropdown.List className="rounded-b shadow-md">
           {data?.LISTINGS.map((listing) => {
             const url = listing.PHOTOS.find((photo) => photo.PHOTO_URL.includes('https://rls.realty.mx'));
@@ -25,7 +26,7 @@ const InputDropdown = ({ onListItemClick }) => {
                     <div className="h-[72px] w-[72px] flex justify-center items-center">
                       {url && (
                         <Image
-                          className="rounded object-cover"
+                          className="rounded object-cover max-w-[72px] max-h-[72px]"
                           src={url.PHOTO_URL}
                           alt=""
                           width={0}
@@ -37,15 +38,19 @@ const InputDropdown = ({ onListItemClick }) => {
                     </div>
                     <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow">
                       <p>{listing.LISTING_TITLE}</p>
-                      <p className="text-gray4">{listing.NEIGHBORHOODS}</p>
+                      <p className="text-gray4">{listing.ADDRESS}</p>
                       <p>
                         ${listing.PRICE}
                         <span className="text-gray4">/mo</span>
                       </p>
                     </div>
-                    <div className="absolute right-0 top-0 flex items-start text-blue2 cursor-pointer">
-                      <OpenInNewIcon className="w-[16px] h-[16px]" />
-                    </div>
+                    {listing && listing.URL && (
+                      <div className="absolute right-0 top-0 flex items-start text-blue2 cursor-pointer">
+                        <Link href={listing.URL} target="_blank">
+                          <OpenInNewIcon className="w-[16px] h-[16px]" />
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
               </ApiInputDropdown.ListItem>

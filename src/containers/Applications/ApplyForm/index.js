@@ -26,6 +26,10 @@ import InputDropdown from './InputDropdown';
 import OccupantsList from './OccupantsLlist';
 import ApplicationSentSuccess from '/public/animations/application-sent-success.gif';
 import ApplyFormErrorImage from '/public/icons/apply-form-error.svg';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Link from 'next/link';
+
 const documentType = {
   bank_statement_1: 'BANK STATEMENT 1',
   bank_statement_2: 'BANK STATEMENT 2',
@@ -39,132 +43,6 @@ const documentType = {
   other_documents: 'OTHER',
 };
 
-const TEST_FORM_VALUES = {
-  agent_name: 'Ivan',
-  property_id: '1b9ce199',
-  contractor_id: 1,
-  contractor_name: 'Contractor Tester',
-  contractor_email: 'contractor@tester.com',
-  apartment_number: '5a',
-  property_address: 'Property Address',
-  property_unit_number: 'Property Unit Number',
-  property_city: 'Property City',
-  property_state: 'ALASKA',
-  // property_state: { id: 3, label: "Alaska", value: "alaska" },
-  property_zip_code: 'Property Zip Code',
-  monthly_rent: 1000.0,
-  lease_start_date: '2024-02-17',
-  lease_end_date: '2024-02-17',
-  landlord: 'Landlord',
-  landlord_address: 'Landlord Address',
-  landlord_phone_number: '3768748763893',
-  client_first_name: 'John',
-  client_last_name: 'Doe',
-  client_email: 'ivanbralic95@gmail.com',
-  client_birth_date: '1980-01-01',
-  client_phone_number: '348767846876783',
-  client_permanent_address: 'Perm 123',
-  client_unit_number: 'Unit 123',
-  client_city: 'Client City',
-  client_state: 'ALASKA',
-  client_zip_code: '387478',
-  client_ssn: '37848745836892798',
-  client_has_pets: false,
-  client_pets_description: '',
-  client_is_guarantor: false,
-  client_is_interested_in_guarantor: false,
-  client_additional_comment: '',
-  client_signature: null,
-  employer: 'Employer',
-  employer_address: 'Employer Address',
-  contact_person: 'Contact Person',
-  contact_person_number: '478487469837938',
-  position_title: 'Work',
-  annual_compensation: 1000000.0,
-  employment_length: '',
-  employed_since_date: '2024-02-17',
-  previous_employer: null,
-  previous_employer_address: null,
-  previous_employer_contact_person: null,
-  previous_employer_position_title: null,
-  previous_employer_annual_compensation: 0.0,
-  previous_employer_employment_length: '',
-  previous_employer_employed_since_date: null,
-  credit_report_status: 'CHECKED',
-  bank_name: null,
-  account_type: null,
-  account_number: null,
-  accountant: null,
-  accountant_phone_number: null,
-  emergency_contact_name: 'Emergency Contact',
-  emergency_contact_phone_number: '7486486487647',
-  need_moving_services: false,
-  move_in_date: null,
-  occupants: [
-    {
-      full_name: 'John Doe',
-      email: 'john@doe.com',
-    },
-  ],
-  documents: [
-    {
-      document_type: 'EMPLOYMENT_LETTER',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'OTHER',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'PAYSTUB_1',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'PAYSTUB_2',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'PHOTO_ID_COPY',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'TAX_RETURNS_1',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'TAX_RETURNS_2',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-    {
-      document_type: 'W2',
-      name: 'Fitbit',
-      name_with_format: 'fitbit.jpg',
-      url: 'featured_properties/fitbit.jpg',
-      file_size: null,
-    },
-  ],
-};
 const ApplyForm = () => {
   const router = useRouter();
   const [isAddDocumentOverlayOpened, setAddDocumentOverlayOpened] = useState(false);
@@ -194,22 +72,28 @@ const ApplyForm = () => {
           return true;
         }
       }),
-    client_first_name: Yup.string().required('First name is a required field!'),
-    client_last_name: Yup.string().required('Last name is a required field!'),
+    client_first_name: Yup.string()
+      .required('First name is a required field!')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid first name!'),
+    client_last_name: Yup.string()
+      .required('Last name is a required field!')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid last name!'),
     client_email: Yup.string()
-      .email('Please provide a valid email address.')
-      .required('Email address is a required field!'),
+      .required('Email address is a required field!')
+      .email('Please provide a valid email address.'),
     client_birth_date: Yup.date()
       .max(new Date(), 'Date of birth cannot be in the future!')
       .required('Date of birth is a required field!'),
     client_phone_number: Yup.string().required('Phone number is a required field!'),
     client_permanent_address: Yup.string().required('Permanent address is a required field!'),
     client_state: Yup.string().required('State is a required field!'),
-    client_city: Yup.string().required('City is a required field!'),
+    client_city: Yup.string()
+      .required('City is a required field!')
+      .matches(/^[A-Za-z ]*$/, 'Please enter valid city name!'),
     client_unit_number: Yup.string().required('Unit numbers is a required field!'),
     client_zip_code: Yup.string()
       .required('Zip code is a required field!')
-      .length(5, 'Zip code be exactly 5 digits long!')
+      .length(5, 'Zip code must be exactly 5 digits long!')
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Zip code field should contain only digits!',
@@ -217,7 +101,7 @@ const ApplyForm = () => {
 
     client_ssn: Yup.string()
       .required('Social securty number is a required field!')
-      .length(9, 'Social securty number be exactly 9 characters!')
+      .length(9, 'Social securty number must be exactly 9 characters!')
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Social securty number field should contain only digits!',
@@ -274,7 +158,12 @@ const ApplyForm = () => {
     contact_person_number: Yup.string().required('Contact person number is a required field!'),
 
     position_title: Yup.string().required('Position title is a required field!'),
-    annual_compensation: Yup.string().required('Annual compensation is a required field!'),
+    annual_compensation: Yup.number()
+      .required('Annual compensation is a required field!')
+      .typeError('Annual compensation is not valid number!')
+      .positive('Annual compensation is not valid number!')
+      .lessThan(1000000000, 'Annual compensation is not valid number!'),
+
     employment_length: Yup.string().required('Employment length is a required field!'),
     employed_since_date: Yup.string().required('Employment date is a required field!'),
     employed_since_month: Yup.number().integer().min(1).max(12),
@@ -353,10 +242,10 @@ const ApplyForm = () => {
       accountant_contact: '',
       account_number: '',
       account_type: '',
-      agent_id: 2234,
+      agent_id: 'agent@email.com',
       agent_email: 'agent@agent.com',
       agent_name: '',
-      annual_compensation: 0.0,
+      annual_compensation: '',
       apartment_number: '',
       bank_name: '',
       client_additional_comment: '',
@@ -429,10 +318,10 @@ const ApplyForm = () => {
       previous_employer_contact_number: '',
       previous_employed_since_month: 1,
       previous_employed_since_year: 0,
-      previous_employer_employed_since_date: null,
+      previous_employer_employed_since_date: '',
       property_address: '',
       property_city: '',
-      property_id: '0',
+      property_id: '1b9ce199',
       property_state: {
         id: '',
         label: '',
@@ -494,18 +383,17 @@ const ApplyForm = () => {
         property_state: propertyStateValue,
         client_state: clientStateValue,
         documents,
-        do_credit_check: true,
+        // do_credit_check: true,
         signature: null,
         annual_compensation: parseFloat(values.annual_compensation),
         property_id: '1b9ce199',
+        contractor_id: 'agent@email.com',
+        agent_id: 'agent@email.com',
       };
 
       mutatePostApplication(filteredValues);
     },
   });
-
-  console.log(formik.values);
-  console.log(formik.errors);
 
   const filterOtherDocuments = (otherDocuments) => {
     if (!(otherDocuments && typeof otherDocuments === 'object' && !!Object.keys(otherDocuments).length)) return [];
@@ -514,17 +402,23 @@ const ApplyForm = () => {
   };
 
   useEffect(() => {
-    if (!formik.values.employed_since_date) return;
+    if (!formik.values.employed_since_date) {
+      formik.setFieldValue('employment_length', '');
+      return;
+    }
 
     formik.setFieldValue('employment_length', setEmploymentLength(formik.values.employed_since_date));
   }, [formik.values.employed_since_date]);
 
   useEffect(() => {
-    if (!formik.values.previous_employer_employed_since_date) return;
+    if (!formik.values.previous_employer_employed_since_date) {
+      formik.setFieldValue('previous_employment_length', '');
+      return;
+    }
 
     formik.setFieldValue(
       'previous_employment_length',
-      setEmploymentLength(formik.values.previous_employer_employed_since_date),
+      setPreviousEmploymentLength(formik.values.previous_employer_employed_since_date),
     );
   }, [formik.values.previous_employer_employed_since_date]);
 
@@ -540,6 +434,31 @@ const ApplyForm = () => {
     if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
       employmentLength = '0';
       formik.setFieldValue('employment_length', employmentLength);
+      return;
+    }
+    if (employmentLengthYears) {
+      employmentLength = `${employmentLengthYears} year${employmentLengthYears !== 1 ? 's' : ''}`;
+    } else if (employmentLengthMonths) {
+      employmentLength = `${employmentLengthMonths} month${employmentLengthMonths !== 1 ? 's' : ''}`;
+    } else if (employmentLengthDays) {
+      employmentLength = `${employmentLengthDays} day${employmentLengthDays !== 1 ? 's' : ''}`;
+    }
+
+    return employmentLength;
+  };
+
+  const setPreviousEmploymentLength = (date) => {
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    formik.setFieldValue('previous_employed_since_month', parseInt(month));
+    formik.setFieldValue('previous_employed_since_year', parseInt(year));
+    const employmentLengthDays = moment().diff(date, 'days');
+    const employmentLengthMonths = moment().diff(date, 'months');
+    const employmentLengthYears = moment().diff(date, 'years');
+    let employmentLength = '';
+    if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
+      employmentLength = '0';
+      formik.setFieldValue('previous_employment_length', employmentLength);
       return;
     }
     if (employmentLengthYears) {
@@ -574,23 +493,35 @@ const ApplyForm = () => {
     listing?.ZIP_CODE && (await formik.setFieldValue('property_zip_code', listing.ZIP_CODE));
   };
 
-  const onListingRemove = () => {
+  const onListingRemove = async () => {
     setPropertySelected(null);
     setPropertySelectedImageUrl(null);
-    formik.setFieldValue('property_address', '');
-    formik.setFieldValue('property_id', '');
-    formik.setFieldValue('monthly_rent', '');
+    await formik.setFieldValue('property_address', '');
+    await formik.setFieldValue('property_id', '');
+    await formik.setFieldValue('monthly_rent', '');
+    await formik.setFieldValue('property_unit_number', '');
+    await formik.setFieldValue('property_zip_code', '');
+    await formik.setFieldValue('property_city', '');
+    await formik.setFieldValue('property_state', '');
   };
 
   const resetAfterSuccess = () => {
-    // setTimeout(() => {
-    //   resetApplication();
-    // }, 8000);
+    setTimeout(() => {
+      resetApplication();
+    }, 8000);
   };
 
   useEffect(() => {
     if (isSuccessPostApplication) resetAfterSuccess();
   }, [isSuccessPostApplication]);
+
+  const handlePropertyFieldChange = async (e) => {
+    formik.handleChange(e);
+    if (propertySelected) {
+      setPropertySelected(null);
+      await formik.setFieldValue('property_id', '1b9ce199');
+    }
+  };
 
   if (isErrorPostApplication) {
     return (
@@ -802,11 +733,12 @@ const ApplyForm = () => {
 
                     <div className="grid grid-cols-4 gap-6 pt-6 ">
                       <div className="col-span-4 w-1/2 pr-[12px]">
-                        <InputDropdown onListItemClick={onListItemCLick} />
+                        <InputDropdown onListItemClick={onListItemCLick} label={'Property'} />
                       </div>
-
-                      {/* {propertySelected && (
-                            <div className="bg-gray10">
+                      <div className="col-span-4">
+                        <div className="grid grid-cols-4 gap-6 ">
+                          {propertySelected && (
+                            <div className="col-span-2 bg-gray10">
                               <div className="p-4 bg-gray10 ">
                                 <div className="flex gap-[10px] items-center relative">
                                   {propertySelectedImageUrl && (
@@ -824,34 +756,36 @@ const ApplyForm = () => {
                                   )}
                                   <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
                                     <p>{propertySelected.LISTING_TITLE}</p>
-                                    <p className="text-gray4">{propertySelected.NEIGHBORHOODS}</p>
+                                    <p className="text-gray4">{propertySelected.ADDRESS}</p>
                                     <p>
                                       ${propertySelected.PRICE}
                                       <span className="text-gray4">/mo</span>
                                     </p>
                                   </div>
                                   <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
-                                    <button
-                                      onClick={() => {
-                                        onListingRemove();
-                                        // setPropertySelected(null);
-                                      }}>
+                                    <button onClick={onListingRemove}>
                                       <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
                                     </button>
-                                    <OpenInNewIcon className="w-4 h-4" />
+                                    {propertySelected && propertySelected?.URL && (
+                                      <Link href={propertySelected.URL} target="_blank">
+                                        <OpenInNewIcon className="w-4 h-4" />
+                                      </Link>
+                                    )}
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          )} */}
+                          )}
+                        </div>
+                      </div>
                       <Input
                         id="property_address"
                         name="property_address"
                         label="*Property Address"
                         className={'[&_input]:h-[38px] col-span-2'}
                         value={formik.values.property_address}
-                        onChange={formik.handleChange}
-                        readonly={!!propertySelected}
+                        onChange={handlePropertyFieldChange}
+                        // readonly={!!propertySelected}
                         error={
                           formik.touched.property_address &&
                           formik.errors.property_address &&
@@ -866,7 +800,7 @@ const ApplyForm = () => {
                           className={'[&_input]:h-[38px]'}
                           name="property_unit_number"
                           value={formik.values.property_unit_number}
-                          onChange={formik.handleChange}
+                          onChange={handlePropertyFieldChange}
                           error={formik.touched.property_unit_number && formik.errors.property_unit_number}
                           errorText={formik.touched.property_unit_number && formik.errors.property_unit_number}
                         />
@@ -879,6 +813,9 @@ const ApplyForm = () => {
                             label="*State"
                             value={formik.values.property_state}
                             onChange={(value) => {
+                              if (propertySelected) {
+                                setPropertySelected(null);
+                              }
                               formik.setFieldValue('property_state', value);
                             }}
                             className="col-span-1"
@@ -893,7 +830,7 @@ const ApplyForm = () => {
                           className={'[&_input]:h-[38px]'}
                           name="property_city"
                           value={formik.values.property_city}
-                          onChange={formik.handleChange}
+                          onChange={handlePropertyFieldChange}
                           error={formik.touched.property_city && formik.errors.property_city}
                           errorText={formik.touched.property_city && formik.errors.property_city}
                         />
@@ -901,7 +838,7 @@ const ApplyForm = () => {
                           label="*Zip"
                           className={'[&_input]:h-[38px]'}
                           name="property_zip_code"
-                          onChange={formik.handleChange}
+                          onChange={handlePropertyFieldChange}
                           value={formik.values.property_zip_code}
                           error={formik.touched.property_zip_code && formik.errors.property_zip_code}
                           errorText={formik.touched.property_zip_code && formik.errors.property_zip_code}
@@ -928,6 +865,7 @@ const ApplyForm = () => {
                         name={'lease_end_date'}
                         value={formik.values.lease_end_date}
                         onChange={(e) => {
+                          if (propertySelected) setPropertySelected(null);
                           formik.setFieldValue('lease_end_date', e.target.value);
                         }}
                         error={formik.touched.lease_end_date && formik.errors.lease_end_date}
@@ -1171,16 +1109,19 @@ const ApplyForm = () => {
                       />
                       <Input
                         label="Previous Employment Length"
-                        name="previous_employer_employment_length"
+                        name="previous_employment_length"
                         onChange={formik.handleChange}
-                        value={formik.values.previous_employer_employment_length}
+                        value={formik.values.previous_employment_length}
                         type="text"
                         className={'[&_input]:h-[38px]'}
+                        readonly={true}
                       />
                       <Input
                         label="Employed Since"
                         name="previous_employer_employed_since_date"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.setFieldValue('previous_employer_employed_since_date', e.target.value);
+                        }}
                         value={formik.values.previous_employer_employed_since_date}
                         type="date"
                         className={'[&_input]:h-[38px]'}
@@ -1277,61 +1218,9 @@ const ApplyForm = () => {
                           property. A credit check can help give them information about the tenant's previous history
                           when it comes to paying back debts. The cost of a credit check is $20.00.{' '}
                         </p>
-                        {/* <div className="flex flex-col md:flex-row gap-6 w-full">
-                          <Input
-                            label="Name on Card"
-                            className={"w-full max-w-[292px]"}
-                            placeholder="Name and Last Name"
-                          />
-                          <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                            <div className="absolute top-0 z-[5] focus-within:z-[5] w-full">
-                              <Input
-                                label="Card Details"
-                                className={"[&_input]:rounded-none [&_input]:rounded-t-lg "}
-                                placeholder="Card Number"
-                              />
-                            </div>
-
-                            <div className="flex h-[99px] relative">
-                              <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 left-0 z-0 focus-within:z-[5]">
-                                <Input
-                                  className={
-                                    "[&_div]:mt-0 [&_input]:border-[1px] [&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-bl-lg "
-                                  }
-                                  placeholder="exp date"
-                                  label=""
-                                />
-                              </div>
-                              <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 z-0 right-0 focus-within:z-[5]">
-                                <Input
-                                  label=""
-                                  className={"[&_div]:mt-0 [&_input]:rounded-none [&_input]:rounded-br-lg "}
-                                  placeholder="CVV"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                            <div className="w-full absolute top-0 z-0 focus-within:z-10">
-                              <Input
-                                label="Billing Address"
-                                className={"w-full [&_input]:rounded-none [&_input]:rounded-t-lg"}
-                                placeholder="Address"
-                              />
-                            </div>
-                            <div className="w-full absolute bottom-0 z-0 focus-within:z-10">
-                              <Input
-                                className={
-                                  "w-full [&_div]:mt-0  [&_input]:border-[1px]  focus:[&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-b-lg"
-                                }
-                                placeholder="Zip Code"
-                              />
-                            </div>
-                          </div>
-                        </div> */}
                       </div>
                       <div className="pl-[28px]">
-                        <PaymentElement onReady={(event) => console.log('CHANGE', event)} />
+                        <PaymentElement />
                         <AddressElement options={{ mode: 'billing' }} />
                       </div>
                     </div>
@@ -1423,7 +1312,7 @@ const ApplyForm = () => {
                           </p>
                           <div className=" w-full max-w-[292px]">
                             <Input
-                              label="Moving Date"
+                              label={`${formik.values.need_moving_services ? '*' : ''}Moving Date`}
                               type="date"
                               name="move_in_date"
                               value={formik.values.need_moving_services ? formik.values.move_in_date : ''}

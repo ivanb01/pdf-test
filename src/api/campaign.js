@@ -1,8 +1,8 @@
-import axios from "axios";
-import axiosInstance from "api/axiosInstance";
+import axios from 'axios';
+import axiosInstance from 'api/axiosInstance';
 
 export const getCampaignsEventsUpcoming = (queryParams) => {
-  return axiosInstance.get("v1/campaigns/events/upcoming", {
+  return axiosInstance.get('v1/campaigns/events/upcoming', {
     params: queryParams,
   });
 };
@@ -30,7 +30,7 @@ export const getCampaignsUsers = (id) => {
   return axiosInstance.get(`v2/campaigns/${id}`);
 };
 export const getCampaigns = (searchterm) => {
-  return axiosInstance.get("v2/campaigns", {
+  return axiosInstance.get('v2/campaigns', {
     params: { search_term: searchterm },
   });
 };
@@ -44,7 +44,7 @@ export const unassignContactFromCampaign = (campaignId, contactId) => {
 };
 
 export const getCampaignsByCategory = (category) => {
-  return axiosInstance.get("v2/campaigns");
+  return axiosInstance.get('v2/campaigns');
 };
 
 export const getCampaign = (id) => {

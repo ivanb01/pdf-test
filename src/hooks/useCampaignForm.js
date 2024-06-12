@@ -120,7 +120,9 @@ export const useCampaignForm = () => {
     let modifiedEvents = events.filter((event, key) => key != index);
     setEvents(modifiedEvents);
     console.log('setevent', modifiedEvents.length - 1);
-    setSelectedEvent(modifiedEvents.length - 1);
+    setTimeout(() => {
+      setSelectedEvent(modifiedEvents.length - 1);
+    }, 50);
   };
 
   useEffect(() => {

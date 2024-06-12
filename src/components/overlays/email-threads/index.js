@@ -1,27 +1,27 @@
-import Overlay from "@components/shared/overlay";
-import Button from "@components/shared/button";
-import React, { useEffect, useRef, useState } from "react";
-import RichtextEditor from "@components/Editor";
-import { timeAgo } from "@global/functions";
-import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from "@api/email";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import DOMPurify from "dompurify";
+import Overlay from '@components/shared/overlay';
+import Button from '@components/shared/button';
+import React, { useEffect, useRef, useState } from 'react';
+import RichtextEditor from '@components/Editor';
+import { timeAgo } from '@global/functions';
+import { getEmailsForSpecificContact, replyInThread, syncEmailOfContact } from '@api/email';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import DOMPurify from 'dompurify';
 
 const EmailItem = ({
-                     name,
-                     isLast,
-                     body,
-                     message_header_id,
-                     sentDate,
-                     threadId,
-                     subject,
-                     email,
-                     openedEditor,
-                     setHideTopButton,
-                     onBtnClick,
-                     loading,
-                   }) => {
+  name,
+  isLast,
+  body,
+  message_header_id,
+  sentDate,
+  threadId,
+  subject,
+  email,
+  openedEditor,
+  setHideTopButton,
+  onBtnClick,
+  loading,
+}) => {
   const allContacts = useSelector((state) => state.contacts.allContacts);
   const userInfo = useSelector((state) => state.global.userInfo);
 
@@ -37,26 +37,25 @@ const EmailItem = ({
     }
   }, [openedEditor]);
 
-
   return (
-    <div className={"flex px-6 flex-col"}>
-      <div className={"flex gap-3 items-start"}>
+    <div className={'flex px-6 flex-col'}>
+      <div className={'flex gap-3 items-start'}>
         <img
-          className={"h-8 w-8 rounded-full shrink-0 flex items-center justify-center text-base leading-6 font-semibold"}
+          className={'h-8 w-8 rounded-full shrink-0 flex items-center justify-center text-base leading-6 font-semibold'}
           src={
-            allContacts?.data?.find((c) => c.email === email)?.profile_image_path || "https://i.imgur.com/UbQ7NC6.png"
+            allContacts?.data?.find((c) => c.email === email)?.profile_image_path || 'https://i.imgur.com/UbQ7NC6.png'
           }
         />
-        <div className={"flex flex-col"}>
-          <div className={"flex gap-3 items-center"}>
-            <h5 className={"font-semibold text-base text-[#344054]"}>
+        <div className={'flex flex-col'}>
+          <div className={'flex gap-3 items-center'}>
+            <h5 className={'font-semibold text-base text-[#344054]'}>
               {email === userInfo?.email
-                ? userInfo?.first_name + " " + userInfo?.last_name
-                : name.replace(/\bundefined\b/g, "")}
+                ? userInfo?.first_name + ' ' + userInfo?.last_name
+                : name.replace(/\bundefined\b/g, '')}
             </h5>
             <div className="text-[#475467] font-medium text-sm">{sentDate}</div>
           </div>
-          <div className={"text-sm font-normal"} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}></div>
+          <div className={'text-sm font-normal'} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}></div>
         </div>
       </div>
     </div>
@@ -68,14 +67,14 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
   const [openedEditor, setOpenedEditor] = useState(false);
   const [hideTopButton, setHideTopButton] = useState(false);
   const userInfo = useSelector((state) => state.global.userInfo);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message_header_id, setMessageId] = useState("");
+  const [threadId, setThreadId] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message_header_id, setMessageId] = useState('');
 
   useEffect(() => {
-    console.log(inboxData, "inboxData");
+    console.log(inboxData, 'inboxData');
   }, [inboxData]);
   const _replyInThread = () => {
     setLoading(true);
@@ -96,7 +95,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
         ],
       });
       setLoading(false);
-      setMessage("");
+      setMessage('');
       replyInThread(contactEmail, message, message_header_id, threadId, subject)
         .then(() => {
           syncEmailOfContact(contactEmail).then(() => {
@@ -106,7 +105,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
           });
         })
         .catch(() => {
-          toast.error("Something went wrong");
+          toast.error('Something went wrong');
         });
     }
   };
@@ -122,14 +121,12 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
       className=" w-[792px]"
       handleCloseOverlay={handleClose}
       includeTitleBorder
-      title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : "(no subject)"}
-    >
+      title={threadData[0]?.subject?.length > 0 ? threadData[0]?.subject : '(no subject)'}>
       {threadData?.length > 3 && !showAll ? (
         <div
           className="email-area"
-          style={{ height: !openedEditor ? "calc(100% - 143px)" : "calc(100% - 353px)", overflow: "auto" }}
-        >
-          <div className={"pt-[18px] pb-[36px] "}>
+          style={{ height: !openedEditor ? 'calc(100% - 143px)' : 'calc(100% - 423px)', overflow: 'auto' }}>
+          <div className={'pt-[18px] pb-[36px] '}>
             <EmailItem
               inboxData={inboxData}
               subject={threadData[threadData?.length - 1]?.subject}
@@ -149,8 +146,8 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               onBtnClick={onBtnClick}
             />
           </div>
-          <div className={"h-[5px] border-y border-gray2 relative"}>
-            <div className={"absolute ml-3 top-[-16px] cursor-pointer"} onClick={() => setShowAll(true)}>
+          <div className={'h-[5px] border-y border-gray2 relative'}>
+            <div className={'absolute ml-3 top-[-16px] cursor-pointer'} onClick={() => setShowAll(true)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="15.5" fill="#F9FAFB" stroke="#D1D5DB" />
                 <path
@@ -164,7 +161,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               </svg>
             </div>
           </div>
-          <div className={"mt-[32px]"}>
+          <div className={'mt-[32px]'}>
             {threadData?.slice(-2).map((e, index) => (
               <React.Fragment key={index}>
                 <EmailItem
@@ -187,7 +184,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                   setHideTopButton={setHideTopButton}
                 />
                 {!(index === threadData?.slice(-2).length - 1) && (
-                  <div className={"h-[1px] bg-gray-100 my-[22px]"}></div>
+                  <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>
                 )}
               </React.Fragment>
             ))}
@@ -195,8 +192,9 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
         </div>
       ) : (
         <>
-          <div className={`email-area pt-[18px]`}
-               style={{ height: !openedEditor ? "calc(100% - 143px)" : "calc(100% - 353px)", overflow: "auto" }}>
+          <div
+            className={`email-area pt-[18px]`}
+            style={{ height: !openedEditor ? 'calc(100% - 143px)' : 'calc(100% - 423px)', overflow: 'auto' }}>
             {threadData?.length <= 3 || showAll ? (
               threadData?.map((e, index) => (
                 <React.Fragment key={index}>
@@ -219,7 +217,7 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
                     setHideTopButton={setHideTopButton}
                     onBtnClick={onBtnClick}
                   />
-                  {!(index === threadData?.length - 1) && <div className={"h-[1px] bg-gray-100 my-[22px]"}></div>}
+                  {!(index === threadData?.length - 1) && <div className={'h-[1px] bg-gray-100 my-[22px]'}></div>}
                 </React.Fragment>
               ))
             ) : (
@@ -228,11 +226,11 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
           </div>
         </>
       )}
-      <div className={"flex flex-col gap-[18px] sticky bottom-0 px-6 bg-white z-10 pb-4 mt-2 "}>
+      <div className={'flex flex-col gap-[18px] sticky bottom-0 px-6 bg-white z-10 pb-4 mt-2 '}>
         {openedEditor ? (
           <>
             <RichtextEditor
-              height={200}
+              height={270}
               label="Message"
               value={message}
               placeholder="Write message here..."
@@ -242,17 +240,16 @@ const EmailsPopup = ({ handleClose, threadData, setInboxData, contactEmail, inbo
               loading={loading}
               darkBlue
               disabled={message.length === 0}
-              className={"bg-lightBlue3 w-[64px] h-[34px]"}
+              className={'bg-lightBlue3 w-[64px] h-[34px]'}
               onClick={() => {
                 onBtnClick();
                 _replyInThread();
-              }}
-            >
+              }}>
               Reply
             </Button>
           </>
         ) : (
-          <Button darkBlue className={"bg-lightBlue3 w-[64px] h-[34px] mt-2"} onClick={() => setOpenedEditor(true)}>
+          <Button darkBlue className={'bg-lightBlue3 w-[64px] h-[34px] mt-2'} onClick={() => setOpenedEditor(true)}>
             Reply
           </Button>
         )}

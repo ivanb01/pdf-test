@@ -54,12 +54,6 @@ const OtherTable = ({ data, handleAction, handleCardEdit }) => {
                   />
                 </td>
                 <td className="whitespace-nowrap px-3 py-4  text-sm text-gray-500 text-left ">
-                  <div className={'flex gap-1.5 items-center justify-start'}>
-                    {getSource(dataItem.import_source_text, dataItem.approved_ai).icon}
-                    <p className={'text-xs leading-4 font-medium text-gray8'}>
-                      {getSource(dataItem.import_source_text, dataItem.approved_ai).name}
-                    </p>
-                  </div>
                   {dataItem.summary !== null && (
                     <TooltipComponent
                       side={'bottom'}

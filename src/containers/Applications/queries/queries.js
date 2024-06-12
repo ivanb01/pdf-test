@@ -1,4 +1,5 @@
 import {
+  fetchApplicationDocuments,
   fetchPropertyApplicationById,
   fetchPropertyApplications,
   generateCreditCheckPaymenkLink,
@@ -92,6 +93,17 @@ export const useGenerateCreditCheckPaymenkLink = (id, options) => {
       return generateCreditCheckPaymenkLink(id);
     },
     enabled: false,
+    ...options,
+  });
+};
+
+export const useFetchApplicationDocuments = (propertyId, options = {}) => {
+  return useQuery({
+    queryKey: ['property-documents', propertyId],
+    queryFn: () => fetchApplicationDocuments(propertyId),
+    select: ({ data }) => {
+      return data;
+    },
     ...options,
   });
 };

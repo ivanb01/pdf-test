@@ -394,12 +394,6 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                       </div>
                     </td>
                     <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
-                      <div className={'flex gap-1.5 items-center justify-start'}>
-                        {getSource(contact.import_source_text, contact.approved_ai).icon}
-                        <p className={'text-xs leading-4 font-medium text-gray8 text-left'}>
-                          {getSource(contact.import_source_text, contact.approved_ai).name}
-                        </p>
-                      </div>
                       {contact.summary !== null && (
                         <TooltipComponent
                           side={'bottom'}
@@ -516,13 +510,10 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                           break;
                                       }
                                       let activity = {
-                                        type_of_activity_id: 2,
+                                        type_of_activity_id: 37,
                                         description: 'Attempted to communicate using SMS.',
                                       };
 
-                                      dispatch(
-                                        updateContactLocally({ ...contact, last_communication_date: new Date() }),
-                                      );
                                       contactServices.addContactActivity(contact.id, activity);
                                       let link = `sms:${contact.phone_number}&body=${message}`;
                                       window.location.href = link;
@@ -590,7 +581,6 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                   role={'button'}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
                                     addContactActivity(contact.id, {
                                       type_of_activity_id: 27,
                                       description: 'Attempted to make a phone call.',
