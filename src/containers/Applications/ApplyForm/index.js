@@ -1218,61 +1218,9 @@ const ApplyForm = () => {
                           property. A credit check can help give them information about the tenant's previous history
                           when it comes to paying back debts. The cost of a credit check is $20.00.{' '}
                         </p>
-                        {/* <div className="flex flex-col md:flex-row gap-6 w-full">
-                          <Input
-                            label="Name on Card"
-                            className={"w-full max-w-[292px]"}
-                            placeholder="Name and Last Name"
-                          />
-                          <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                            <div className="absolute top-0 z-[5] focus-within:z-[5] w-full">
-                              <Input
-                                label="Card Details"
-                                className={"[&_input]:rounded-none [&_input]:rounded-t-lg "}
-                                placeholder="Card Number"
-                              />
-                            </div>
-
-                            <div className="flex h-[99px] relative">
-                              <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 left-0 z-0 focus-within:z-[5]">
-                                <Input
-                                  className={
-                                    "[&_div]:mt-0 [&_input]:border-[1px] [&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-bl-lg "
-                                  }
-                                  placeholder="exp date"
-                                  label=""
-                                />
-                              </div>
-                              <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 z-0 right-0 focus-within:z-[5]">
-                                <Input
-                                  label=""
-                                  className={"[&_div]:mt-0 [&_input]:rounded-none [&_input]:rounded-br-lg "}
-                                  placeholder="CVV"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                            <div className="w-full absolute top-0 z-0 focus-within:z-10">
-                              <Input
-                                label="Billing Address"
-                                className={"w-full [&_input]:rounded-none [&_input]:rounded-t-lg"}
-                                placeholder="Address"
-                              />
-                            </div>
-                            <div className="w-full absolute bottom-0 z-0 focus-within:z-10">
-                              <Input
-                                className={
-                                  "w-full [&_div]:mt-0  [&_input]:border-[1px]  focus:[&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-b-lg"
-                                }
-                                placeholder="Zip Code"
-                              />
-                            </div>
-                          </div>
-                        </div> */}
                       </div>
                       <div className="pl-[28px]">
-                        <PaymentElement onReady={(event) => console.log('CHANGE', event)} />
+                        <PaymentElement />
                         <AddressElement options={{ mode: 'billing' }} />
                       </div>
                     </div>
@@ -1364,7 +1312,7 @@ const ApplyForm = () => {
                           </p>
                           <div className=" w-full max-w-[292px]">
                             <Input
-                              label="Moving Date"
+                              label={`${formik.values.need_moving_services ? '*' : ''}Moving Date`}
                               type="date"
                               name="move_in_date"
                               value={formik.values.need_moving_services ? formik.values.move_in_date : ''}

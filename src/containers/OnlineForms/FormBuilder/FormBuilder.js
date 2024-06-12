@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Editor from '../Editor/Editor';
 import Stepper from '@components/steppper';
 import Button from '@components/shared/button';
@@ -17,19 +17,19 @@ import { clearEditorState } from '@store/editor/slice';
 // import clsx from 'clsx';
 // import CircularProgress from '@mui/material/CircularProgress';
 import { usePostOnlineFormType } from '../queries/mutations';
-import { useFetchAllClients, useFetchOnlineFormsTypes } from '../queries/queries';
+import { useFetchOnlineFormsTypes } from '../queries/queries';
 import toast from 'react-hot-toast';
 import { deepObjectsEqual } from '@global/functions';
 import { generatePdfBlob } from 'containers/OnlineForms/Pdf/generatePdf';
 import DropdownWithSearch from '@components/dropdownWithSearch';
+import { getCurrentUser } from '@helpers/auth';
 
 const FormBuilder = () => {
   const { editorState, isEditorEmpty, formFields } = useSelector((state) => state.editor);
   const [currentStep, setCurrentStep] = useState(1);
   const [render, setRender] = useState(null);
-  const user = useSelector((state) => state.global.user);
+  // const user = useSelector((state) => state.global.user);
   const [loadingPdf, setLoadingPdf] = useState(false);
-  const [isTableOverflow, clientsContainerRef, clientsTableRef] = useDetectOverflow();
   const router = useRouter();
   const dispatch = useDispatch();
   const { refetch: formsTypesRefetch } = useFetchOnlineFormsTypes();
@@ -83,7 +83,7 @@ const FormBuilder = () => {
     initialValues: {
       name: '',
       contact_type: [],
-      created_by: user,
+      created_by: '',
       share_with: '',
       selected: [],
     },
@@ -94,12 +94,12 @@ const FormBuilder = () => {
     onSubmit: onSubmitForm,
   });
 
-  const {
-    data: clientsData,
-    errors: clientsErrors,
-    isLoading: clientsIsLoading,
-    isSuccess: clientsIsSuccess,
-  } = useFetchAllClients();
+  useEffect(() => {
+    const getUserData = async () => {
+      return await getCurrentUser();
+    };
+    getUserData().then((user) => setFieldValue('created_by', user.email));
+  }, []);
 
   const onPreviewClick = async () => {
     if (deepObjectsEqual(lastGeneratedPdf, editorState)) {
@@ -180,91 +180,7 @@ const FormBuilder = () => {
                     className="[&_input]:bg-transparent focus:[&_input]:ring-0 focus:[&_input]:border-borderColor [&_input]:h-[38px]"
                   />
                 </form>
-                {/* <div className="flex gap-[5px] items-center justify-between">
-                  <div className="flex gap-[5px] items-center">
-                    <span>Share this custom form with (optional)</span>
-                    <button title="Sharing custom form with a contact allows this contact to have/use this template too.">
-                      <InformationCircleIcon className="h-[18px] w-[18px] text-gray3 shrink-0 grow-0 " />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-[5px] pr-6 text-xs leading-4 text-overlayBackground">
-                    <span>select all</span>
-                    {clientsIsSuccess && !clientsIsLoading && (
-                      <Input
-                        type="checkbox"
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFieldValue(
-                              'selected',
-                              clientsData?.data?.data.map((client) => client.id.toString()),
-                            );
-                          } else setFieldValue('selected', []);
-                        }}
-                        checked={clientsData?.data?.data?.length === values.selected.length}
-                      />
-                    )}
-
-                    {clientsIsLoading && <CircularProgress size={10} />}
-                  </div>
-                </div> */}
               </div>
-
-              {/* <div
-                className={`h-full border-[1px] border-gray2 bg-white rounded-md overflow-y-scroll `}
-                ref={clientsContainerRef}
-              >
-                <div
-                  className={clsx('[&>*]:border-b-[1px] ', {
-                    ['last:[&>*]:border-b-0']: isTableOverflow,
-                  })}
-                  ref={clientsTableRef}
-                >
-                  {clientsIsSuccess &&
-                    !clientsIsLoading &&
-                    clientsData?.data?.data.map(({ id, first_name, last_name, email }) => {
-                      return (
-                        <div className="flex justify-between items-center px-6 py-4 " onSubmit={handleSubmit} key={id}>
-                          <div className="flex items-center gap-3">
-                            <Image
-                              src={'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}
-                              alt=""
-                              width={40}
-                              height={40}
-                              className="rounded-full"
-                            />
-                            <div className="flex flex-col">
-                              <span className="text-sm leading-5 font-medium text-gray7">{`${first_name} ${last_name} `}</span>
-                              <span className="text-sm leading-5 text-gray4">{`${email}`}</span>
-                            </div>
-                          </div>
-
-                          <Input
-                            type="checkbox"
-                            onChange={handleChange}
-                            name="selected"
-                            value={id}
-                            checked={!!values.selected.includes(id.toString())}
-                          />
-                        </div>
-                      );
-                    })}
-                </div>
-                {clientsIsLoading && (
-                  <div className="w-full h-full flex justify-center items-center">
-                    <CircularProgress size={20} />
-                  </div>
-                )}
-                {clientsErrors && (
-                  <div className={'w-full h-full flex justify-center items-center'}>
-                    <p className="leading-5 text-sm text-gray4 text-center ">Error while trying to load clients..</p>
-                  </div>
-                )}
-                {!clientsIsSuccess && clientsErrors && (
-                  <div className="w-full h-full flex justify-center items-center">
-                    <p>Error fetching clients data...</p>
-                  </div>
-                )}
-              </div> */}
             </div>
           </div>
         )}

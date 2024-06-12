@@ -25,8 +25,6 @@ const CreditCheckForm = () => {
 
   const validationSchema = Yup.object({
     agent_name: Yup.string().required('Agent name is a required field!'),
-    property_address: Yup.string().required('Property address is a required field!'),
-    property_id: Yup.string().required('Property ID is a required field!'),
 
     client_birth_date: Yup.date()
       .max(new Date(), 'Date of birth cannot be in the future')
@@ -66,13 +64,33 @@ const CreditCheckForm = () => {
         height: Yup.number().required(),
       })
       .typeError('Signature is required!'),
-    need_moving_services: Yup.bool(),
     move_in_date: Yup.string()
       .when('need_moving_services', {
         is: true,
         then: Yup.string().required('Moving service date is required!'),
       })
       .nullable(true),
+    need_moving_services: Yup.bool(),
+
+    property_address: Yup.string().required('Property address is a required field!'),
+    property_city: Yup.string().required('City is a required field!'),
+    property_id: Yup.string().required('Property ID is a required field!'),
+    property_unit_number: Yup.string().required('Unit number is a required field!'),
+    property_state: Yup.object()
+      .shape({
+        id: Yup.string(),
+        value: Yup.string().required('State is a required field!'),
+        label: Yup.string(),
+      })
+      .typeError('State is a required field!'),
+
+    property_zip_code: Yup.string()
+      .required('Zip code is a required field!')
+      .length(5, 'Zip code be exactly 5 digits long!')
+      .matches(
+        /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        'Zip code field should contain only digits!',
+      ),
   });
 
   const onPaymentError = (error) => {
@@ -98,13 +116,7 @@ const CreditCheckForm = () => {
     mutateSendEmail(emailBody);
   };
 
-  const {
-    mutate: mutatePostApplication,
-    isPending: isPendingPostApplication,
-    isSuccess: isSuccessPostApplication,
-    isError: isErrorPostApplication,
-    reset: resetMutation,
-  } = usePostPropertyApplication({
+  const { mutate: mutatePostApplication, isPending: isPendingPostApplication } = usePostPropertyApplication({
     onSuccess: onSubmitSuccess,
   });
 
@@ -207,7 +219,7 @@ const CreditCheckForm = () => {
       let stateValue = typeof property_state === 'object' ? property_state.value : property_state;
 
       try {
-        if (propertyStateValue.length === 2) {
+        if (stateValue.length === 2) {
           stateValue = getFullNameFromAbbreviations[stateValue];
         }
       } catch (error) {
@@ -231,16 +243,10 @@ const CreditCheckForm = () => {
         client_unit_number: 'Unit 123',
         client_city: 'Client City',
         client_state: 'ALASKA',
+        contractor_id: 'agent@email.com',
+        agent_id: 'agent@email.com',
 
-        documents: [
-          {
-            document_type: 'PHOTO_ID_COPY',
-            name: 'Fitbit',
-            name_with_format: 'fitbit.jpg',
-            url: 'featured_properties/fitbit.jpg',
-            file_size: null,
-          },
-        ],
+        documents: [],
       });
     },
   });
@@ -295,10 +301,10 @@ const CreditCheckForm = () => {
     <form className="py-[50px] space-y-[24px]" onSubmit={formik.handleSubmit}>
       <p className="text-gray7 font-medium">General Information</p>
       <div className="grid grid-cols-2 gap-[24px] leading-5">
-        <InputDropdown label="Apartment address you are applying for*" onListItemClick={onListItemCLick} />
+        <InputDropdown label="*Apartment address you are applying for" onListItemClick={onListItemCLick} />
 
         <Input
-          label="Select the agent*"
+          label="*Select the agent"
           name="agent_name"
           onChange={formik.handleChange}
           error={formik.touched.agent_name && formik.errors.agent_name}
@@ -384,8 +390,8 @@ const CreditCheckForm = () => {
               }}
               className="col-span-1"
               placeholder={''}
-              error={formik.touched.property_state?.id && formik.errors.property_state?.id}
-              errorText={formik.touched.property_state?.id && formik.errors.property_state?.id}
+              error={formik.touched.property_state && formik.errors.property_state?.value}
+              errorText={formik.errors.property_state?.value}
             />
           </div>
 
@@ -411,7 +417,7 @@ const CreditCheckForm = () => {
       </div>
       <div className="grid grid-cols-4 gap-[24px] leading-5">
         <Input
-          label="First Name*"
+          label="*First Name"
           className={'col-span-2 [&_input]:h-[38px]'}
           name="client_first_name"
           value={formik.values.client_first_name}
@@ -420,7 +426,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_first_name && formik.errors.client_first_name}
         />
         <Input
-          label="Last Name*"
+          label="*Last Name"
           className={'col-span-2 [&_input]:h-[38px]'}
           name="client_last_name"
           value={formik.values.client_last_name}
@@ -430,7 +436,7 @@ const CreditCheckForm = () => {
         />
         <Input
           className={'col-span-3'}
-          label="Permanent Address*"
+          label="*Permanent Address"
           name={'client_permanent_address'}
           value={formik.values.client_permanent_address}
           onChange={formik.handleChange}
@@ -438,7 +444,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_permanent_address && formik.errors.client_permanent_address}
         />
         <Input
-          label="ZIP*"
+          label="*ZIP"
           name={'client_zip_code'}
           value={formik.values.client_zip_code}
           onChange={formik.handleChange}
@@ -446,7 +452,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_zip_code && formik.errors.client_zip_code}
         />
         <Input
-          label="Email address*"
+          label="*Email address"
           name={'client_email'}
           value={formik.values.client_email}
           onChange={formik.handleChange}
@@ -454,7 +460,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_email && formik.errors.client_email}
         />
         <Input
-          label="Date of Birth*"
+          label="*Date of Birth"
           name={'client_birth_date'}
           type="date"
           value={formik.values.client_birth_date}
@@ -465,7 +471,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_birth_date && formik.errors.client_birth_date}
         />
         <Input
-          label="Phone Number*"
+          label="*Phone Number"
           name={'client_phone_number'}
           value={formik.values.client_phone_number}
           onChange={formik.handleChange}
@@ -473,7 +479,7 @@ const CreditCheckForm = () => {
           errorText={formik.touched.client_phone_number && formik.errors.client_phone_number}
         />
         <Input
-          label="SSN*"
+          label="*SSN"
           name={'client_ssn'}
           value={formik.values.client_ssn}
           onChange={formik.handleChange}
@@ -501,7 +507,7 @@ const CreditCheckForm = () => {
             </p>
             <div className=" w-full max-w-[292px]">
               <Input
-                label="Moving Date"
+                label={`${formik.values.need_moving_services ? '*' : ''}Moving Date`}
                 type="date"
                 name="move_in_date"
                 value={formik.values.need_moving_services ? formik.values.move_in_date : ''}
@@ -541,79 +547,16 @@ const CreditCheckForm = () => {
           </div>
         </div>
         <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 col-span-4">
-          {/* <div className="flex gap-3 items-center mb-[2px]">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-              checked
-              onChange={() => {}}
-            />
-            <p className="font-medium ">Include Credit Check</p>
-          </div> */}
           <div className="flex flex-col gap-6 [&_input]:h-[38px] ">
             <p className="font-normal">
               Landlords want to ensure that they will be paid the rent they are owed when they let out a property. A
               credit check can help give them information about the tenant's previous history when it comes to paying
               back debts. The cost of a credit check is $20.00.{' '}
             </p>
-            {/* <div className="flex flex-col md:flex-row gap-6 w-full">
-              <Input label="Name on Card" className={"w-full max-w-[292px]"} placeholder="Name and Last Name" />
-              <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                <div className="absolute top-0 z-[5] focus-within:z-[5] w-full">
-                  <Input
-                    label="Card Details"
-                    className={"[&_input]:rounded-none [&_input]:rounded-t-lg "}
-                    placeholder="Card Number"
-                  />
-                </div>
 
-                <div className="flex h-[99px] relative">
-                  <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 left-0 z-0 focus-within:z-[5]">
-                    <Input
-                      className={
-                        "[&_div]:mt-0 [&_input]:border-[1px] [&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-bl-lg "
-                      }
-                      placeholder="exp date"
-                      label=""
-                    />
-                  </div>
-                  <div className="w-[calc(50%+1px)] max-w-[146.5px] absolute bottom-0 z-0 right-0 focus-within:z-[5]">
-                    <Input
-                      label=""
-                      className={"[&_div]:mt-0 [&_input]:rounded-none [&_input]:rounded-br-lg "}
-                      placeholder="CVV"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col w-full max-w-[292px] relative h-[99px]">
-                <div className="w-full absolute top-0 z-0 focus-within:z-10">
-                  <Input
-                    label="Billing Address"
-                    className={"w-full [&_input]:rounded-none [&_input]:rounded-t-lg"}
-                    placeholder="Address"
-                  />
-                </div>
-                <div className="w-full absolute bottom-0 z-0 focus-within:z-10">
-                  <Input
-                    className={
-                      "w-full [&_div]:mt-0  [&_input]:border-[1px]  focus:[&_input]:border-t-[1px] [&_input]:rounded-none [&_input]:rounded-b-lg"
-                    }
-                    placeholder="Zip Code"
-                  />
-                </div>
-              </div>
-            </div> */}
             <div className="">
               <PaymentElement />
-              <AddressElement
-                options={{ mode: 'billing' }}
-                // onChange={(event) => {
-                //   formik.setFieldValue('client_first_name', event.value.name);
-                //   // if (event.complete) {
-                //   // }
-                // }}
-              />
+              <AddressElement options={{ mode: 'billing' }} />
             </div>
           </div>
         </div>
