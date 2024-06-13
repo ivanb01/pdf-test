@@ -26,7 +26,9 @@ export const updatePropertiesInPortfolio = (id) => {
   });
 };
 export const getPortfolioByContactId = (id) => {
-  return axiosInstance.get(`v2/property-portfolio/${id}`);
+  return axiosInstance.get(`v2/property-portfolio/${id}`, {
+    params: { status: 'all' },
+  });
 };
 
 export const deletePropertyFromPortfolio = (ids) => {
