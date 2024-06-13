@@ -81,9 +81,10 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
     <Overlay
       className="md:w-[632px] w-auto"
       handleCloseOverlay={handleCloseModal}
-      title={note ? `Edit Note` : `Add Note`}>
+      title={note ? `Edit Note` : `Add Note`}
+    >
       <div className="p-6 pt-0 bg-white">
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <TextArea
             ref={ref}
             className="min-h-[120px]"
@@ -96,7 +97,7 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
           />
           <div className="flex flex-row justify-end mt-6">
             <Button className="mr-3" white label="Cancel" onClick={handleCloseModal} />
-            <Button onClick={formik.handleSubmit} primary label="Save" loading={loadingButton} />
+            <Button type="submit" primary label="Save" loading={loadingButton} />
           </div>
         </form>
       </div>
