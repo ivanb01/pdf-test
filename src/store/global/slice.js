@@ -6,7 +6,7 @@ const global = createSlice({
     openedTab: 0,
     openedSubtab: -1,
     tabs: [],
-    expandedMenu: true,
+    expandedMenu: false,
     count: null,
     refetchCount: false,
     refetchData: false,

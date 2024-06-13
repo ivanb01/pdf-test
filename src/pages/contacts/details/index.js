@@ -80,7 +80,6 @@ const index = () => {
         const notesData = notesResponse.data;
         setNotes(notesData.data);
         setLoadingNotes(false);
-        console.log('done');
       })
       .catch((error) => {
         console.log(error);
