@@ -52,9 +52,6 @@ export default function Dashboard() {
     );
     setUnapprovedContacts(ai_unapproved);
   }, [allContacts]);
-  useEffect(() => {
-    document.querySelector('.main-menu').classList.add('main-menu-important');
-  }, []);
   return (
     <>
       <div className={'sticky z-[10] top-0'}>
