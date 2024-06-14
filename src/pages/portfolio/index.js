@@ -9,13 +9,7 @@ import toast from 'react-hot-toast';
 import PropertyCard from '@components/property-card';
 import PortfolioPopup from '@components/Portfolio/property-details-modal';
 import EmptyPortfolioState from '@components/Portfolio/empty-portfolio-state';
-import { getBaseUrl } from '@global/functions';
-import { sendEmail } from '@api/marketing';
-import { render } from '@react-email/components';
 import { useSelector } from 'react-redux';
-import SendNotificationsToAgent from '@components/Portfolio/SendAgentNotification/send-agent-notifications';
-import { getUserInfo } from '@helpers/auth';
-import { getUser } from '@api/user';
 
 const Portfolio = () => {
   const router = useRouter();
@@ -83,25 +77,6 @@ const Portfolio = () => {
     console.log('status', status);
     putClientFeedback(share_id, status, note).catch((e) => toast.error('Something went wrong, please refresh'));
     const index = userProperties.properties.findIndex((element) => element?.property_details?.ID === id);
-
-    putClientFeedback(share_id, status, note)
-      .then(() => {
-        const propertyId = userProperties?.properties[index]?.property_details?.ID;
-
-        if (status !== 'saved') {
-          return sendEmail(
-            [userProperties?.properties[0].agent_id],
-            `Client   ${userProperties?.first_name} ${userProperties?.last_name}  ${status} a property.`,
-            render(
-              <SendNotificationsToAgent userProperties={userProperties} status={status} propertyId={propertyId} />,
-              {
-                pretty: true,
-              },
-            ),
-          );
-        }
-      })
-      .catch((e) => toast.error('Something went wrong, please refresh'));
 
     setUserProperties((prev) => {
       prev.properties[index].status = status;
