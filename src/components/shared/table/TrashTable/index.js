@@ -33,48 +33,48 @@ const TrashTable = ({ data, searchTerm, handleCardEdit }) => {
                 query: { id: person?.id },
               })
             }
-            key={person.id}
+            key={person?.id}
             className={'border-b border-gray-200 cursor-pointer hover:bg-lightBlue1 group'}
             style={{ height: '76px' }}>
             <td className=" pl-6 py-3 pr-2 " style={{ width: '400px' }}>
               <div className={'flex gap-4'}>
                 <div>
-                  {person.profile_image_path ? (
+                  {person?.profile_image_path ? (
                     <img
                       className="inline-block h-10 w-10 rounded-full"
-                      src={person.profile_image_path}
-                      alt={person.first_name}
+                      src={person?.profile_image_path}
+                      alt={person?.first_name}
                     />
                   ) : (
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
                       <span className="text-sm font-medium leading-none text-white">
-                        {getInitials(person.first_name + ' ' + person.last_name).toUpperCase()}
+                        {getInitials(person?.first_name + ' ' + person?.last_name).toUpperCase()}
                       </span>
                     </span>
                   )}
                 </div>
                 <div>
                   <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
-                    {person.first_name} {person.last_name}
+                    {person?.first_name} {person?.last_name}
                   </h6>
-                  <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.email}</h6>
+                  <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person?.email}</h6>
                 </div>
               </div>
             </td>
 
             <td className=" px-3 py-2 text-gray-800 text-center text-sm leading-5 font-medium">
-              {getDateFormat(person.updated_at || person.created_at)}
+              {getDateFormat(person?.updated_at || person?.created_at)}
             </td>
             <td className="pl-3 pr-6 py-3 text-gray-500 text-center w-20">
               <div
                 onMouseEnter={() =>
                   document
-                    .querySelector('#tooltip-restore-contact-' + person.id)
+                    .querySelector('#tooltip-restore-contact-' + person?.id)
                     .classList.remove('invisible', 'opacity-0')
                 }
                 onMouseLeave={() =>
                   document
-                    .querySelector('#tooltip-restore-contact-' + person.id)
+                    .querySelector('#tooltip-restore-contact-' + person?.id)
                     .classList.add('invisible', 'opacity-0')
                 }
                 className={
@@ -87,7 +87,7 @@ const TrashTable = ({ data, searchTerm, handleCardEdit }) => {
                 <RedoIcon className={'text-gray-500 h-4 w-4 ml-0'} />
                 <div
                   style={{ width: '126px' }}
-                  id={'tooltip-restore-contact-' + person.id}
+                  id={'tooltip-restore-contact-' + person?.id}
                   className="inline-block -right-4 top-[35px] z-50 absolute invisible opacity-0 z-10 py-2 px-3 text-xs font-medium text-white bg-neutral1 rounded-lg shadow-sm dark:bg-gray-700">
                   Restore Contact
                 </div>
