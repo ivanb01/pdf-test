@@ -14,17 +14,17 @@ import moment from 'moment';
 import Image from 'next/image';
 
 export const getInitials = (name) => {
-  if (name.includes('|')) {
-    let prePipe = name.split('|')[0].trim();
+  if (name?.includes('|')) {
+    let prePipe = name?.split('|')[0].trim();
     return prePipe[0].toUpperCase();
   }
 
-  let fullName = name.split(/\s+|\.+/);
+  let fullName = name?.split(/\s+|\.+/);
 
-  if (fullName.length > 1) {
-    return (fullName[0][0] + fullName[1][0]).toUpperCase();
-  } else if (fullName.length === 1) {
-    return fullName[0][0].toUpperCase();
+  if (fullName?.length > 1) {
+    return (fullName[0][0] + fullName[1][0])?.toUpperCase();
+  } else if (fullName?.length === 1) {
+    return fullName[0][0]?.toUpperCase();
   }
 
   return '';
