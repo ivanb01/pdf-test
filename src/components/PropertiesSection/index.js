@@ -249,7 +249,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         selectedContacts.forEach((c) => {
           if (c.value === parseInt(item.contact_id) && sendMethod !== 2) {
             sendEmail(
-              [c.email, userInfo?.email],
+              [c.email],
               `${c.first_name}'s Portfolio: Ready for Review!`,
               render(
                 <PortfolioEmailTemplate
