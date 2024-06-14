@@ -6,7 +6,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 import { updateContactLocally } from '@store/contacts/slice';
-import { updateContact } from '@api/contacts';
+import { getCount, updateContact } from '@api/contacts';
+import { setCount } from '@store/global/slice';
 
 export default function DateChip({
   className,
@@ -36,8 +37,11 @@ export default function DateChip({
     event.stopPropagation();
     if (contact) {
       toast.success('Updated last communication to Today.');
+      dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
       updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
-        dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
+        getCount().then((data) => {
+          dispatch(setCount(data.data));
+        });
       });
     }
   };

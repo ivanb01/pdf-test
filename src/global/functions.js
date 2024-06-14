@@ -239,13 +239,9 @@ export const formatDateCalendar = (date) => {
 };
 
 export function daysBefore(dateString) {
-  // Parse the input date string using Moment.js
   const inputDate = moment(dateString, 'YYYY-MM-DD');
 
-  // Get the current date
   const currentDate = moment();
-
-  // Calculate the difference in days
   const daysDifference = currentDate.diff(inputDate, 'days');
 
   return daysDifference + ' days ago';
@@ -387,10 +383,10 @@ export const filterLastCommuncationDate = (date, filterDateString, categoryType,
 // };
 
 export const isHealthyCommuncationDate = (inputDate) => {
-  const inputDateTime = moment(inputDate);
-  const twoDaysAgo = moment().subtract(2, 'days');
-
-  return inputDateTime.isSameOrBefore(moment(), 'day') && inputDateTime.isSameOrAfter(twoDaysAgo, 'day');
+  const givenDate = moment.utc(inputDate);
+  const currentDate = moment.utc();
+  const differenceInDays = currentDate.diff(givenDate, 'days');
+  return differenceInDays < 2;
 };
 
 export const findTagsOption = (selectedOptions) => {
@@ -610,7 +606,7 @@ export const getCompany = (email) => {
   return { imageUrl, companyName };
 };
 export const getOpgnyBaseUrl = (domain) => {
-  if (domain == 'onelinecrm.com') {
+  if (domain == 'onelinecrm') {
     return 'https://opgny.com';
   } else {
     return 'https://oxfordpg.com';
