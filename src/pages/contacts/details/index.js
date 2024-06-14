@@ -41,6 +41,9 @@ import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignCo
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
 import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import SpinnerLoader from '@components/shared/SpinnerLoader';
+
 import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 const index = () => {
   const router = useRouter();
@@ -52,16 +55,18 @@ const index = () => {
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const refetchActivityLog = useSelector((state) => state.clientDetails.refetchActivityLog);
   const [contact, setContact] = useState(null);
-  const [notes, setNotes] = useState(null);
+  const [notes, setNotes] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loadingActivities, setLoadingActivities] = useState(true);
-  const [loadingNotes, setLoadingNotes] = useState(true);
   const [editingContact, setEditingContact] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
   const [activityFilter, setActivityFilter] = useState(false);
   const [showGmailInbox, setShowGmailInbox] = useState(false);
-
+  const [notesOffset, setNotesOffset] = useState(0);
+  const [loadingNotes, setLoadingNotes] = useState(true);
+  const [notesHasNextPage, setNotesHasNextPage] = useState(true);
+  const [error, setError] = useState();
   const globalEmailActivityData = useSelector((state) => state.clientDetails.globalEmailActivity);
 
   useEffect(() => {
@@ -69,17 +74,70 @@ const index = () => {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
       getActivityLog();
-      getNotes();
       getCampaigns();
     }
   }, [contacts, id]);
 
+  useEffect(() => {
+    console.log(id);
+    if (id) {
+      setLoadingNotes(true);
+      getContactNotes(id, notesOffset)
+        .then((paginationResponse) => {
+          console.log('erezabegu');
+          setNotes(paginationResponse.data);
+          setNotesOffset(notesOffset + paginationResponse.data.count);
+          setLoadingNotes(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error('Error fetching notes');
+        });
+    }
+  }, [id]);
+
+  async function loadMore() {
+    try {
+      const { data, count, notesHasNextPage: newNotesHasNextPage } = await getNotes(id, notesOffset);
+      setNotes((current) => {
+        return {
+          ...current,
+          data: [...current.data, ...data],
+          count: count,
+        };
+      });
+
+      setNotesOffset(notesOffset + count);
+
+      setNotesHasNextPage(newNotesHasNextPage);
+      if (count == 0) {
+        setNotesHasNextPage(false);
+        return;
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoadingNotes(false);
+    }
+  }
+
+  const [infiniteRef] = useInfiniteScroll({
+    loading: loadingNotes,
+    hasNextPage: notesHasNextPage,
+    onLoadMore: loadMore,
+    disabled: !!error,
+  });
+
   const getNotes = () => {
-    getContactNotes(id)
-      .then((notesResponse) => {
-        const notesData = notesResponse.data;
-        setNotes(notesData.data);
-        setLoadingNotes(false);
+    return getContactNotes(id, notesOffset)
+      .then((response) => {
+        console.log(response, 'response');
+        return {
+          notesHasNextPage: true,
+          data: response.data.data,
+          count: response.data.count,
+          total: response.data.total,
+        };
       })
       .catch((error) => {
         console.log(error);
@@ -180,7 +238,10 @@ const index = () => {
 
   const handleDeleteNote = (note) => {
     setNoteToEdit(note);
-    setNotes((prevNotes) => prevNotes.filter((noteItem) => noteItem.id !== note.id));
+    setNotes((prevNotes) => ({
+      ...prevNotes,
+      data: prevNotes.data.filter((noteItem) => noteItem.id !== note.id),
+    }));
     deleteContactNote(note.contact_id, note.id).then(() => {
       handleUpdateActivityLogsInNotes();
     });
@@ -448,7 +509,7 @@ const index = () => {
             <div className="flex-grow lg:mx-3 order-last lg:order-2">
               {/* <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="flex items-center justify-between">
-                  <div className={"flex items-center"}>
+                  <div className={'flex items-center'}>
                     <Dropdown
                       initialSelect={activityTypesDropdown[0]}
                       options={activityTypesDropdown}
@@ -461,14 +522,14 @@ const index = () => {
                     <button
                       onClick={() => setShowGmailInbox(!showGmailInbox)}
                       className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
-                        showGmailInbox && "border-lightBlue3"
+                        showGmailInbox && 'border-lightBlue3'
                       }`}>
                       <MailOutline
-                        className={`h-[18px] w-[18px] ${showGmailInbox ? "text-lightBlue3" : "text-[#7A808D]"} `}
+                        className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
                       />
                       <span
                         className={`responsive-fix text-sm leading-5 ${
-                          showGmailInbox ? "text-lightBlue3 font-medium" : "text-gray-700"
+                          showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
                         }`}>
                         Gmail Inbox
                       </span>
@@ -477,14 +538,14 @@ const index = () => {
                   <button
                     onClick={() => setOpenCommunicationPopup(true)}
                     className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
-                    <ChatBubbleOutlineOutlinedIcon className={"h-[18px] w-[18px] text-lightBlue5"} />
-                    <span className={"responsive-fix text-sm font-semibold leading-5 text-lightBlue6"}>
+                    <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
+                    <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
                       Start communication
                     </span>
                   </button>
                 </div>
                 <Feeds
-                  showFullHeight={contact?.category_1 != "Client"}
+                  showFullHeight={contact?.category_1 != 'Client'}
                   contactId={id}
                   activityId={activityFilter.id}
                   contactEmail={contact.email}
@@ -546,7 +607,7 @@ const index = () => {
                 <div className="flex items-center justify-between">
                   <div className="text-gray8 font-semibold text-[14px]">Notes</div>
                   <div>
-                    {notes && notes.length > 0 && (
+                    {notes && notes?.data?.length > 0 && (
                       <a href="#" className="cursor-pointer" onClick={() => setAddNoteModal(true)}>
                         <img src={addNote.src} className={'h-7  w-7'} />
                       </a>
@@ -555,20 +616,27 @@ const index = () => {
                 </div>
                 {loadingNotes ? (
                   <GeneralSkeleton className=" mt-4" rows={2} />
-                ) : notes.length > 0 ? (
+                ) : notes?.data?.length > 0 ? (
                   <SimpleBar
                     className="-mx-3 lg:-mx-6 px-3 lg:px-6"
                     style={{ maxHeight: '300px', marginTop: '30px', paddingRight: '15px' }}>
-                    {notes
-                      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                      .map((note, index) => (
-                        <Item
-                          isEditable
-                          className={` ${notes.length - 1 != index && 'mb-[18px]'}`}
-                          item={note}
-                          icon={noteIcon.src}
-                        />
-                      ))}
+                    <div>
+                      {notes?.data
+                        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                        .map((note, index) => (
+                          <Item
+                            isEditable
+                            className={` ${notes?.data?.length - 1 != index && 'mb-[18px]'}`}
+                            item={note}
+                            icon={noteIcon.src}
+                          />
+                        ))}
+                      {notesHasNextPage && (
+                        <div ref={infiniteRef}>
+                          <SpinnerLoader />
+                        </div>
+                      )}
+                    </div>
                   </SimpleBar>
                 ) : (
                   <div className="text-center mt-4">
@@ -637,8 +705,11 @@ const index = () => {
         <NoteModal
           handleUpdateActivityLogsInNotes={handleUpdateActivityLogsInNotes}
           id={id}
+          notesOffset={notesOffset}
           handleCloseModal={() => setAddNoteModal(false)}
           setNotes={setNotes}
+          setLoadingNotes={setLoadingNotes}
+          setNotesOffset={setNotesOffset}
         />
       )}
       {editNoteModal && (

@@ -5,10 +5,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import TextArea from '@components/shared/textarea';
 import Button from '@components/shared/button';
 import toast from 'react-hot-toast';
-import { addContactNote, updateContactNote } from '@api/contacts';
-import { current } from '@reduxjs/toolkit';
+import { addContactNote, getContactNotes, updateContactNote } from '@api/contacts';
 
-const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateActivityLogsInNotes }) => {
+const NoteModal = ({
+  note,
+  handleCloseModal,
+  action,
+  setNotes,
+  id,
+  handleUpdateActivityLogsInNotes,
+  setLoadingNotes,
+  setNotesOffset,
+  notesOffset,
+}) => {
   const [loadingButton, setLoadingButton] = useState(false);
 
   const AddNoteSchema = Yup.object().shape({
@@ -42,11 +51,20 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
       };
       handleCloseModal();
       console.log(newNote);
-      setNotes((prevNotes) => [...prevNotes, newNote]);
-      // setNotes([...(notesData || []), newNote]);
+      setNotes((prevNotes) => ({
+        ...prevNotes,
+        data: [...prevNotes.data, newNote],
+      }));
       console.log(newNote);
       toast.success('Note added successfully');
-      await addContactNote(id, values);
+      await addContactNote(id, values)
+        .then((res) => getContactNotes(id, 0))
+        .then((paginationResponse) => {
+          setLoadingNotes(true);
+          setNotes(paginationResponse.data);
+          setNotesOffset(notesOffset + paginationResponse.data.count);
+          setLoadingNotes(false);
+        });
       handleUpdateActivityLogsInNotes();
     } catch (error) {
       toast.error(error);
@@ -59,9 +77,12 @@ const NoteModal = ({ note, handleCloseModal, action, setNotes, id, handleUpdateA
       setLoadingButton(true);
       handleCloseModal();
       // console.log(note.id, id, values);
-      setNotes((prevNotes) =>
-        prevNotes.map((existingNote) => (existingNote.id === note.id ? { ...existingNote, ...values } : existingNote)),
-      );
+      setNotes((prevNotes) => ({
+        ...prevNotes,
+        data: prevNotes?.data?.map((existingNote) =>
+          existingNote.id === note.id ? { ...existingNote, ...values } : existingNote,
+        ),
+      }));
       toast.success('Note edited successfully');
       await updateContactNote(id, note.id, values);
       handleUpdateActivityLogsInNotes();

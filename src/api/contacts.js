@@ -56,9 +56,12 @@ export const addContactProfile = (id, profile) => {
   return axiosInstance.post(`v1/contact/${id}/profile`, profile);
 };
 
-export const getContactNotes = (id, queryParams) => {
+export const getContactNotes = (id, offset) => {
   return axiosInstance.get(`v1/contact/${id}/notes`, {
-    params: queryParams,
+    params: {
+      limit: 10,
+      offset: offset,
+    },
   });
 };
 
