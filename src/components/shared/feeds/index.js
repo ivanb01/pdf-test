@@ -255,9 +255,9 @@ export default function Feeds({
                                         : daysBefore(activityItem.updated_at)}
                                     </div>
                                   }>
-                                  <h1 className={"text-sm"}>
-                                    {formatDateCalendar(activityItem.updated_at).includes("AM") ||
-                                    formatDateCalendar(activityItem.updated_at).includes("PM")
+                                  <h1 className={'text-sm'}>
+                                    {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                    formatDateCalendar(activityItem.updated_at).includes('PM')
                                       ? formatDateStringMDY(activityItem.updated_at)
                                       : formatDateCalendar(activityItem.updated_at) +
                                         ' - ' +
@@ -342,7 +342,7 @@ export default function Feeds({
                       <div>
                         <div className={'flex items-center  flex-wrap'}>
                           <h6 className={'text-[14px] font-bold mr-2'}>
-                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0].subject}
+                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0]?.subject}
                           </h6>
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0].sent_date)}</p>
                         </div>
@@ -353,7 +353,7 @@ export default function Feeds({
                                 ? truncateText(DOMPurify.sanitize(item[0].body))
                                 : truncateText(
                                     DOMPurify.sanitize(
-                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ""),
+                                      item[0].html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
                                     ),
                                   ),
                             }}
