@@ -60,9 +60,9 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
           <th scope="col" className="flex-grow py-3  text-left  text-xs leading-4 font-medium tracking-wider">
             TYPE
           </th>
-          <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
-            CAMPAIGN
-          </th>
+          {/*<th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">*/}
+          {/*  CAMPAIGN*/}
+          {/*</th>*/}
           <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
             LAST COMMUNICATION
           </th>
@@ -109,12 +109,12 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                   {getContactStatusByStatusId(person.category_id, person.status_id)}
                 </Chip>
               </td>
-              <td>
-                <StatusChip
-                  variant={person?.is_in_campaign === null ? VARIANT_ENUM.ERROR : VARIANT_ENUM.SUCCESS}
-                  text={person?.is_in_campaign === null ? 'Unassigned' : 'Assigned'}
-                />
-              </td>
+              {/*<td>*/}
+              {/*  <StatusChip*/}
+              {/*    variant={person?.is_in_campaign === null ? VARIANT_ENUM.ERROR : VARIANT_ENUM.SUCCESS}*/}
+              {/*    text={person?.is_in_campaign === null ? 'Unassigned' : 'Assigned'}*/}
+              {/*  />*/}
+              {/*</td>*/}
               <td>
                 <DateChip
                   contact={person}
