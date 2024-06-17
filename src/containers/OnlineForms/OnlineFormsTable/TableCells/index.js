@@ -48,10 +48,9 @@ export const StatusCell = (props) => {
   };
 
   const sendEmail = useSendEmail({
-    onSuccess: onSendEmailSuccess,
     onError: onSendEmailError,
   });
-  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog();
+  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog({ onSuccess: onSendEmailSuccess });
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const sendFormEmail = async () => {

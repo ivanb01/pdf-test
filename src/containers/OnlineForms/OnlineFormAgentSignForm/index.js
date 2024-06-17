@@ -39,16 +39,17 @@ const OnlineFormAgentSign = () => {
   const { refetch: formsRefetch } = useFetchOnlineFormsPaginated(refetchParams, {
     enabled: !!Object.keys(refetchParams).length,
   });
-  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog();
 
   const onSendEmailSuccess = () => {
     formsRefetch();
     router.push('/online-forms');
     toast.success('Form sent successfully!');
   };
-  const mutateSendEmail = useSendEmail({
+  const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog({
     onSuccess: onSendEmailSuccess,
   });
+
+  const mutateSendEmail = useSendEmail();
   const userInfo = useSelector((state) => state.global.userInfo);
 
   const [render, setRender] = useState(null);
