@@ -1,6 +1,5 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EmailIcon from '@mui/icons-material/Email';
-import ChatIcon from '@mui/icons-material/Chat';
 import GroupIcon from '@mui/icons-material/Group';
 import InCampaing from '../../../../public/images/campaign/inCampaign.svg';
 import neverAssigned from '../../../../public/images/campaign/neverAssigned.svg';
@@ -11,7 +10,7 @@ import CampaignPreview from '@components/campaign/CampaignPreview';
 import { useState } from 'react';
 import TooltipComponent from '@components/shared/tooltip';
 import Link from 'next/link';
-import { countActionTypes, getContactStatusByStatusId } from '@global/functions';
+import { getContactStatusByStatusId } from '@global/functions';
 
 const CampaignCard = ({
   name,
@@ -29,7 +28,6 @@ const CampaignCard = ({
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
-  let eventCount = countActionTypes(props.actions);
   return (
     <div className={'flex flex-col rounded-lg campaigns-box-shadow justify-between'}>
       <div className={'px-4 py-[15px]'}>
@@ -51,7 +49,7 @@ const CampaignCard = ({
           <div className={'text-xs leading-5 font-medium text-gray6 flex'}>
             <span className={'mr-1'}>Events:</span>
             <span className={'mr-2'}>
-              {eventCount.email} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
+              {events?.count} <EmailIcon className={'h-3 w-3 text-[#909CBE]'} />
             </span>
           </div>
         </div>
