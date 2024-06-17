@@ -9,7 +9,11 @@ export const addPropertiesInPortfolio = (contact_ids, property_ids) => {
 };
 
 export const getPortfolioByShareId = (id) => {
-  return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v2/property-portfolio/share/${id}`);
+  return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v2/property-portfolio/share/${id}`, {
+    params: {
+      status: 'all',
+    },
+  });
 };
 
 export const putClientFeedback = (id, status, note) => {
