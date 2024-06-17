@@ -253,7 +253,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                   contact?.first_name?.toLowerCase()?.includes(lowercaseWord) ||
                   contact?.last_name?.toLowerCase()?.includes(lowercaseWord)
                 );
-              }) && contact?.category_1 == contactTypes.find((type) => type?.id == openedTab).name,
+              }) && contact?.category_1 == contactTypes.find((type) => type?.id == openedTab)?.name,
           ).length > 0 ? (
             <div>
               <tr
