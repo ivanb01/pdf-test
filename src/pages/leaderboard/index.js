@@ -12,6 +12,7 @@ import withAuth from '@components/withAuth';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import LeaderboardTable from '@components/shared/table/LeaderboardTable';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const [tabs, setTabs] = useState([
@@ -105,7 +106,6 @@ const index = () => {
     return Math.round((100 * healthyCount) / totalValue);
   };
 
-
   const initializeData = () => {
     items.data.map((agent) => {
       agent.full_name = `${getEmailParts(agent.agent_id).firstName} ${getEmailParts(agent.agent_id).lastName}`;
@@ -114,7 +114,7 @@ const index = () => {
       //   agent.unhealthy_communication,
       // );
       // agent.percentage_closed_clients = calculateClosedClients(agent.clients_closed, agent.total_clients);
-      agent.percentage_closed_clients = agent.conversion 
+      agent.percentage_closed_clients = agent.conversion;
       return agent;
     });
   };
@@ -140,7 +140,7 @@ const index = () => {
   }, []);
 
   const handleSelect = (item) => {
-    setHasNextPage(true)
+    setHasNextPage(true);
     setSortBy(item); // Update selected item
     // Pass the api_key of the selected item to the API
     // Make a call to your API passing the api_key
@@ -156,8 +156,6 @@ const index = () => {
   useEffect(() => {
     items.data && initializeData();
   }, [items]);
-
-
 
   const loadItems = (offset) => {
     return getReports(10, offset, sortBy.api_key)
@@ -208,7 +206,7 @@ const index = () => {
   });
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       <div className="mx-6 my-4 flex items-center justify-between">
         <div className="text-lg text-gray7 font-medium">Leaderboard</div>
         <div className="flex items-center">

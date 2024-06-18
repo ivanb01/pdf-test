@@ -38,6 +38,7 @@ import { addContactActivity, updateContact } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 import NeighbourhoodDropdown from '@components/NestedCheckbox/NeighbourhoodDropdown';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -473,7 +474,7 @@ const index = () => {
 
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       <div className="border border-b">
         <div className="flex p-6 gap-4">
           <Search

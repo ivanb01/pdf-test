@@ -19,6 +19,7 @@ import EventPreview from 'components/overlays/event-preview';
 import { getContactCampaignEventPreview } from 'api/campaign';
 import { setExpandedMenu } from '@store/global/slice';
 import CampaignsTable from '@components/shared/table/CampaignsTable';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 Chart.register(ArcElement, ChartDataLabels);
 
@@ -173,7 +174,7 @@ const Campaigns = () => {
 
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       <TopBar text="Campaigns" />
       <div className="bg-gray10 campaigns-custom-height">
         <div className="grid grid-cols-3 gap-6 p-6 h-full">
