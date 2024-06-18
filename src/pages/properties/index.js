@@ -294,7 +294,7 @@ const index = () => {
                 const contact = allContacts.find((con) => con.id === c?.value);
                 let activity = {
                   type_of_activity_id: 28,
-                  description: `(Email) Properties sent to ${
+                  description: `Properties Sent via Email:  ${
                     c.first_name
                   } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
@@ -310,7 +310,6 @@ const index = () => {
               })
               .catch((error) => {
                 console.error('Error sending email:', error);
-                // Handle the error if needed
               });
 
             setPropertiesSent(true);
@@ -328,9 +327,9 @@ const index = () => {
               .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `(SMS) Properties sent to ${
+                  description: `Properties Sent via SMS: to ${
                     c.first_name
-                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                  } - ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };
@@ -432,7 +431,7 @@ const index = () => {
       selectedContacts.map((contact) => {
         addContactActivity(contact.value, {
           type_of_activity_id: 36,
-          description: `Properties saved in portfolio on ${formatDateMDY(new Date())}`,
+          description: `Properties saved in portfolio`,
         });
       });
       setLoadingEmails(false);

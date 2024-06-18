@@ -197,12 +197,12 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                                     message = 'Hey, just checking in.';
                                     break;
                                 }
-                                let activity = {
-                                  type_of_activity_id: 37,
-                                  description: 'Attempted to communicate using SMS.',
-                                };
+                                // let activity = {
+                                //   type_of_activity_id: 37,
+                                //   description: 'Attempted to communicate using SMS.',
+                                // };
 
-                                contactServices.addContactActivity(person.id, activity);
+                                // contactServices.addContactActivity(person.id, activity);
                                 let link = `sms:${person.phone_number}&body=${message}`;
                                 window.location.href = link;
                               }}

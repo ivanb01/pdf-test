@@ -269,9 +269,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
-                description: `(Email) Properties sent to ${
+                description: `Properties Sent via Email: to ${
                   c.first_name
-                } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                } - ${getBaseUrl()}/portfolio?share_id=${
                   item?.portfolio_sharable_id ?? ''
                 }`,
               };
@@ -304,9 +304,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `(SMS) Properties sent to ${
+                  description: `Properties Sent via SMS: to ${
                     c.first_name
-                  } on ${new Date().toLocaleDateString()}: ${getBaseUrl()}/portfolio?share_id=${
+                  } - ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };

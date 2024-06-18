@@ -509,12 +509,12 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                                           message = 'Hey, just checking in.';
                                           break;
                                       }
-                                      let activity = {
-                                        type_of_activity_id: 37,
-                                        description: 'Attempted to communicate using SMS.',
-                                      };
+                                      // let activity = {
+                                      //   type_of_activity_id: 37,
+                                      //   description: 'Attempted to communicate using SMS.',
+                                      // };
 
-                                      contactServices.addContactActivity(contact.id, activity);
+                                      // contactServices.addContactActivity(contact.id, activity);
                                       let link = `sms:${contact.phone_number}&body=${message}`;
                                       window.location.href = link;
                                     }}

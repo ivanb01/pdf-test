@@ -424,9 +424,8 @@ const ActivityDescription = ({ activityItem }) => {
 
   return activityItem?.type_of_activity_id === 1 ? (
     <div>
-      <div style={{ display: 'flex', gap: '2px', flexDirection: 'column' }}>
-        <p>[Email Sent] </p>
-        <p className={'font-bold'}>{subjectContent}</p>
+      <div style={{ display: "flex", gap: "2px", flexDirection: "column" }}>
+        <p><span>Sent Email: </span><span>Subject: {subjectContent}</span></p>
       </div>
       {h6Content && (
         <h6>
