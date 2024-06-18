@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { setUserInfo } from 'store/global/slice';
 import { getUserInfo } from '@helpers/auth';
 import { useDispatch } from 'react-redux';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const SettingsLayout = ({ children }) => {
   const { asPath } = useRouter();
@@ -103,7 +102,7 @@ const SettingsLayout = ({ children }) => {
   return (
     <>
       <div className={'sticky z-[9999] top-0'}>
-        <MainMenuV2 />
+        <MainMenu />
       </div>
       <div className="flex h-full">
         <SidebarMenu navigation={navigation} setCurrentNavigation={setCurrentNavigation} />

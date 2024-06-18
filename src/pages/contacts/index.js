@@ -20,7 +20,6 @@ import ImportFromCsv from 'components/overlays/add-contact/import-from-csv';
 import { setOpenedTab, setOpenedSubtab } from 'store/global/slice';
 import { useSelector, useDispatch } from 'react-redux';
 import withAuth from '@components/withAuth';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const Tour = dynamic(() => import('components/onboarding/tour'), {
   ssr: false,
@@ -819,7 +818,7 @@ const Contacts = ({ data }) => {
 
   return (
     <>
-      <MainMenuV2 />
+      <MainMenu />
       {/* <Tour for={openedTab == 0 ? 'clients' : 'professionals'} /> */}
       <div className="h-full w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
         <SetupGmail

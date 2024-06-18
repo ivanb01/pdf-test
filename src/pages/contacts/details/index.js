@@ -31,7 +31,6 @@ import { getContactCampaigns } from '@api/campaign';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
 
@@ -338,7 +337,7 @@ const index = () => {
     <>
       <div>
         <div className={'sticky z-[9] top-0'}>
-          <MainMenuV2 />
+          <MainMenu />
         </div>
         {['GmailAI', 'Gmail'].includes(contact?.import_source) && contact?.approved_ai !== true && (
           <ReviewContact

@@ -26,7 +26,6 @@ import { getContactCampaignEventPreview } from 'api/campaign';
 import { useDispatch } from 'react-redux';
 import { setExpandedMenu } from '@store/global/slice';
 import ContactCampaignsTable from '@components/shared/table/ContactCampaignsTable';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const ContactCampaigns = ({ isClient, campaigns }) => {
   const dispatch = useDispatch();
@@ -194,7 +193,7 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
 
   return (
     <>
-      <MainMenuV2 />
+      <MainMenu />
       <TopBar text={isClient ? 'Client Campaigns' : 'Professionals Campaigns'} />
       <div className="border-t border-gray2 flex contact-campaigns-fixed-height">
         <div className="h-auto border-r border-gray2">
@@ -228,7 +227,8 @@ const ContactCampaigns = ({ isClient, campaigns }) => {
                   <ButtonsSlider
                     buttons={tabs}
                     currentButton={currentButton}
-                    onClick={setCurrentButton}></ButtonsSlider>
+                    onClick={setCurrentButton}
+                  ></ButtonsSlider>
                 </div>
               </div>
               <div className={`w-auto h-auto`}>

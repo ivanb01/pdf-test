@@ -7,7 +7,6 @@ import MarketingFooter from '@components/marketing/MarketingFooter';
 import SimpleBar from 'simplebar-react';
 import MarketingEmptyState from '@components/marketing/MarketingEmptyState';
 import withAuth from '@components/withAuth';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -337,11 +336,12 @@ const index = () => {
     <>
       <SimpleBar style={{ maxHeight: '100%' }}>
         <div className={'sticky top-0 z-10'}>
-          <MainMenuV2 />
+          <MainMenu />
         </div>
         <div
           className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-          style={{ height: '230px' }}>
+          style={{ height: '230px' }}
+        >
           <div>
             <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
             <p className={'text-[12px] text-center font-medium mt-2 text-white'}>

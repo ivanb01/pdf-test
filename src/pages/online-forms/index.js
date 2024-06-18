@@ -2,7 +2,6 @@ import MainMenu from '@components/shared/menu';
 import Head from 'next/head';
 import OnlineForms from 'containers/OnlineForms';
 import PageHeaderBar from '@components/shared/pageHeaderBar';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const OnlineFormsPage = () => {
   return (
@@ -10,7 +9,7 @@ const OnlineFormsPage = () => {
       <Head>
         <title>Online Forms</title>
       </Head>
-      <MainMenuV2 />
+      <MainMenu />
       <PageHeaderBar />
       <OnlineForms />
     </>

@@ -5,7 +5,6 @@ import GlobalAlert from 'components/shared/alert/global-alert';
 import Search from 'components/shared/input/search';
 import Table from 'components/shared/table';
 import { useState } from 'react';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 const ImportDetails = () => {
   const [imports] = useState([
     {
@@ -59,7 +58,7 @@ const ImportDetails = () => {
   ]);
   return (
     <>
-      <MainMenuV2 />
+      <MainMenu />
       <div className="p-6 flex items-center justify-between border-b border-gray2">
         <div className="flex items-center justify-between w-full">
           <Text h3 className="text-gray7" onBackClick={() => Router.push('/my-profile')}>

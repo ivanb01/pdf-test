@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import jwt from 'jsonwebtoken';
 import { getOpgnyBaseUrl } from '@global/functions';
-import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const Index = () => {
   const userEmail = useSelector((state) => state.global.user);
@@ -30,7 +29,7 @@ const Index = () => {
 
   return (
     <>
-      <MainMenuV2 />
+      <MainMenu />
       {token && baseUrl && (
         <Iframe
           url={`${baseUrl}/helpfulpartnerships_crm/vendors?token=${token}`}
