@@ -423,32 +423,12 @@ export default function Feeds({
 const ActivityDescription = ({ activityItem }) => {
   const htmlString = `${activityItem?.description}`;
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-  const h6Content = doc.querySelector('h6')?.textContent;
-  const subjectContent = doc.querySelector('p')?.textContent;
-
-  const [showFullContent, setShowFullContent] = useState(false);
-
-  const isContentLong = h6Content && h6Content.length > 88;
-
-  return activityItem?.type_of_activity_id === 1 ? (
-    <div>
-      <div style={{ display: "flex", gap: "2px", flexDirection: "column" }}>
-        <p><span>Sent Email: </span><span>Subject: {subjectContent}</span></p>
-      </div>
-      {h6Content && (
-        <h6>
-          {isContentLong && !showFullContent ? `${h6Content.slice(0, 88)}... ` : h6Content}
-          {isContentLong && (
-            <span className={'text-lightBlue5 cursor-pointer'} onClick={() => setShowFullContent(!showFullContent)}>
-              {showFullContent ? ' See less' : ' See more'}
-            </span>
-          )}
-        </h6>
-      )}
-    </div>
-  ) : (
-    activityItem.description
+  return (
+    <span
+      className=""
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(htmlString),
+      }}
+    />
   );
 };
