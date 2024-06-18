@@ -114,10 +114,7 @@ const SendEmailOverlay = () => {
 
         addContactActivity(contact.id, {
           type_of_activity_id: 1,
-          description: `<span>[Email Sent] </span><p>Subject: ${subject}</p><br/><h6>Message: ${newMessage.replace(
-            /<[^>]*>/g,
-            '',
-          )} </h6>`,
+          description: `<span>Sent Email: </span><p>Subject: ${subject}</p>`,
         }).then(() => {
           updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
             dispatch(setRefetchActivityLog(true));
