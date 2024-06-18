@@ -2,18 +2,15 @@ import MainMenu from '@components/shared/menu';
 import profile from '/public/images/Portrait_Placeholder.png';
 import noteIcon from '/public/images/note-icon.svg';
 import documentsIcon from '/public/images/documents-icon.svg';
-import communication from '/public/images/communication.svg';
 import SimpleBar from 'simplebar-react';
 import email from '/public/images/icons/email.svg';
 import call from '/public/images/call-icon.svg';
 import edit from '/public/images/edit-icon.svg';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import addNote from '/public/images/add-note.svg';
 import Button from '@components/shared/button';
 import DateChip from '@components/shared/chip/date-chip';
 import React, { useEffect, useState } from 'react';
-import { findTagsOption, formatDateLL, formatPhoneNumber, getContactStatusColorByStatusId } from '@global/functions';
-import { Switch } from '@headlessui/react';
+import { formatDateLL, formatPhoneNumber } from '@global/functions';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from '@components/PropertiesSection';
@@ -23,23 +20,16 @@ import toast from 'react-hot-toast';
 import ReviewContact from '@components/overlays/review-contact';
 import Feeds from '@components/shared/feeds';
 import FilterDropdown from '@components/shared/dropdown/FilterDropdown';
-import { Delete, Edit, MailOutline, More } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import Text from '@components/shared/text';
 import MoreVert from '@mui/icons-material/MoreVert';
 import NoteModal from '@components/overlays/note-modal';
-import { createPortal } from 'react-dom';
-import CommunicationForm from '@components/overlays/communication-form';
-import { activityTypesDropdown, allStatusesQuickEdit, othersOptions } from '@global/variables';
-import Dropdown from '@components/shared/dropdown';
+import { allStatusesQuickEdit, othersOptions } from '@global/variables';
 import { setRefetchActivityLog } from '@store/clientDetails/slice';
-import { getEmailsForSpecificContact, syncEmailOfContact } from '@api/email';
-import Email from '@mui/icons-material/Email';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import { getContactCampaign, getContactCampaigns } from '@api/campaign';
-import { updateContactLocally } from '@store/contacts/slice';
+import { syncEmailOfContact } from '@api/email';
+import { getContactCampaigns } from '@api/campaign';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
 import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
@@ -57,7 +47,6 @@ const index = () => {
   const [contact, setContact] = useState(null);
   const [notes, setNotes] = useState([]);
   const [activities, setActivities] = useState([]);
-  const [loadingActivities, setLoadingActivities] = useState(true);
   const [editingContact, setEditingContact] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReviewOverlay, setShowReviewOverlay] = useState(false);
@@ -66,37 +55,47 @@ const index = () => {
   const [notesOffset, setNotesOffset] = useState(0);
   const [loadingNotes, setLoadingNotes] = useState(true);
   const [notesHasNextPage, setNotesHasNextPage] = useState(true);
+  const [activitiesOffset, setActivitiesOffset] = useState(0);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+  const [activitiesHasNextPage, setActivitiesHasNextPage] = useState(true);
   const [error, setError] = useState();
-  const globalEmailActivityData = useSelector((state) => state.clientDetails.globalEmailActivity);
 
   useEffect(() => {
     if (id && contacts?.length) {
       let contactData = contacts.find((contact) => contact.id == id);
       setContact(contactData);
-      getActivityLog();
+
       getCampaigns();
     }
   }, [contacts, id]);
 
   useEffect(() => {
-    console.log(id);
     if (id) {
       setLoadingNotes(true);
+      setLoadingActivities(true);
       getContactNotes(id, notesOffset)
         .then((paginationResponse) => {
-          console.log('erezabegu');
           setNotes(paginationResponse.data);
           setNotesOffset(notesOffset + paginationResponse.data.count);
           setLoadingNotes(false);
         })
         .catch((error) => {
-          console.log(error);
           toast.error('Error fetching notes');
+        });
+      getContactActivities(id, activitiesOffset)
+        .then((paginationResponse) => {
+          setActivities(paginationResponse?.data);
+          setActivitiesOffset(activitiesOffset + paginationResponse?.data?.count);
+          setLoadingActivities(false);
+        })
+        .catch((err) => {
+          console.log(err, 'err');
+          toast.error('Error fetching activity log');
         });
     }
   }, [id]);
 
-  async function loadMore() {
+  async function loadMoreNotes() {
     try {
       const { data, count, notesHasNextPage: newNotesHasNextPage } = await getNotes(id, notesOffset);
       setNotes((current) => {
@@ -121,17 +120,51 @@ const index = () => {
     }
   }
 
+  async function loadMoreActivities() {
+    try {
+      const {
+        data,
+        count,
+        activitiesHasNextPage: newActivitiesHasNextPage,
+      } = await getActivityLog(id, activitiesOffset);
+      setActivities((current) => {
+        return {
+          ...current,
+          data: [...current.data, ...data],
+          count: count,
+        };
+      });
+
+      setActivitiesOffset(activitiesOffset + count);
+
+      setActivitiesHasNextPage(newActivitiesHasNextPage);
+      if (count == 0) {
+        setActivitiesHasNextPage(false);
+        return;
+      }
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoadingActivities(false);
+    }
+  }
+
   const [infiniteRef] = useInfiniteScroll({
     loading: loadingNotes,
     hasNextPage: notesHasNextPage,
-    onLoadMore: loadMore,
+    onLoadMore: loadMoreNotes,
+    disabled: !!error,
+  });
+  const [activitiesInfiniteRef] = useInfiniteScroll({
+    loading: loadingActivities,
+    hasNextPage: activitiesHasNextPage,
+    onLoadMore: loadMoreActivities,
     disabled: !!error,
   });
 
   const getNotes = () => {
     return getContactNotes(id, notesOffset)
       .then((response) => {
-        console.log(response, 'response');
         return {
           notesHasNextPage: true,
           data: response.data.data,
@@ -146,13 +179,16 @@ const index = () => {
   };
 
   const getActivityLog = async () => {
-    getContactActivities(id)
+    return getContactActivities(id, activitiesOffset)
       .then((response) => {
-        setActivities(response.data.data);
-        setLoadingActivities(false);
+        return {
+          activitiesHasNextPage: true,
+          data: response?.data.data,
+          count: response?.data.count,
+          total: response?.data.total,
+        };
       })
       .catch((error) => {
-        console.log(error);
         toast.error('Error fetching activity');
       });
   };
@@ -570,30 +606,34 @@ const index = () => {
               </div> */}
 
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="text-gray8 font-semibold text-[14px]">Gmail Inbox</div>
-                <Feeds
-                  showFullHeight={contact?.category_1 != 'Client'}
-                  contactId={id}
-                  activityId={activityFilter.id}
-                  contactEmail={contact.email}
-                  showGmailInbox={true}
-                  setShowGmailInbox={setShowGmailInbox}
-                  loadingActivities={loadingActivities}
-                  activities={
-                    activityFilter.id == 0 || !activityFilter
-                      ? activities
-                      : activities.filter((activity) => {
-                          console.log(activityFilter, activity.type_of_activity_id);
-                          if (activityFilter.id == 14) {
-                            return [14, 15, 16].includes(activity.type_of_activity_id);
-                          } else if (activityFilter.id == 3) {
-                            return [3, 26, 27].includes(activity.type_of_activity_id);
-                          }
-                          return activity.type_of_activity_id == activityFilter.id;
-                        })
-                  }
-                  setActivities={setActivities}
-                />
+                <div className="text-gray8 font-semibold text-[14px] mb-4">Gmail Inbox</div>
+                <div>
+                  <Feeds
+                    showFullHeight={contact?.category_1 != 'Client'}
+                    contactId={id}
+                    activityId={activityFilter.id}
+                    activitiesInfiniteRef={activitiesInfiniteRef}
+                    activitiesHasNextPage={activitiesHasNextPage}
+                    contactEmail={contact.email}
+                    showGmailInbox={true}
+                    setShowGmailInbox={setShowGmailInbox}
+                    loadingActivities={loadingActivities}
+                    activities={
+                      activityFilter.id == 0 || !activityFilter
+                        ? activities?.data
+                        : activities?.data?.filter((activity) => {
+                            console.log(activityFilter, activity.type_of_activity_id);
+                            if (activityFilter.id == 14) {
+                              return [14, 15, 16].includes(activity.type_of_activity_id);
+                            } else if (activityFilter.id == 3) {
+                              return [3, 26, 27].includes(activity.type_of_activity_id);
+                            }
+                            return activity.type_of_activity_id == activityFilter.id;
+                          })
+                    }
+                    setActivities={setActivities}
+                  />
+                </div>
               </div>
 
               {contact?.category_1 == 'Client' && (
@@ -674,28 +714,33 @@ const index = () => {
               )}
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
                 <div className="text-gray8 font-semibold text-[14px]">Activity Log</div>
-                <Feeds
-                  showFullHeight={contact?.category_1 != 'Client'}
-                  contactId={id}
-                  activityId={activityFilter.id}
-                  contactEmail={contact.email}
-                  showGmailInbox={showGmailInbox}
-                  setShowGmailInbox={setShowGmailInbox}
-                  activities={
-                    activityFilter.id == 0 || !activityFilter
-                      ? activities
-                      : activities.filter((activity) => {
-                          console.log(activityFilter, activity.type_of_activity_id);
-                          if (activityFilter.id == 14) {
-                            return [14, 15, 16].includes(activity.type_of_activity_id);
-                          } else if (activityFilter.id == 3) {
-                            return [3, 26, 27].includes(activity.type_of_activity_id);
-                          }
-                          return activity.type_of_activity_id == activityFilter.id;
-                        })
-                  }
-                  setActivities={setActivities}
-                />
+                <div>
+                  <Feeds
+                    showFullHeight={contact?.category_1 != 'Client'}
+                    contactId={id}
+                    loadingActivities={loadingActivities}
+                    activityId={activityFilter.id}
+                    contactEmail={contact.email}
+                    activitiesInfiniteRef={activitiesInfiniteRef}
+                    activitiesHasNextPage={activitiesHasNextPage}
+                    showGmailInbox={showGmailInbox}
+                    setShowGmailInbox={setShowGmailInbox}
+                    activities={
+                      activityFilter.id == 0 || !activityFilter
+                        ? activities
+                        : activities?.data?.filter((activity) => {
+                            console.log(activityFilter, activity.type_of_activity_id);
+                            if (activityFilter.id == 14) {
+                              return [14, 15, 16].includes(activity.type_of_activity_id);
+                            } else if (activityFilter.id == 3) {
+                              return [3, 26, 27].includes(activity.type_of_activity_id);
+                            }
+                            return activity.type_of_activity_id == activityFilter.id;
+                          })
+                    }
+                    setActivities={setActivities}
+                  />
+                </div>
               </div>
             </div>
           </div>

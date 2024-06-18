@@ -101,8 +101,13 @@ export const deleteContactRelationship = (id, relationship_id) => {
   return axiosInstance.delete(`v1/contact/${id}/relationship/${relationship_id}`);
 };
 
-export const getContactActivities = (id) => {
-  return axiosInstance.get(`v1/contact/${id}/activities`);
+export const getContactActivities = (id, offset) => {
+  return axiosInstance.get(`v1/contact/${id}/activities`, {
+    params: {
+      limit: 10,
+      offset,
+    },
+  });
 };
 
 export const getContactActivity = (id, activity_id) => {

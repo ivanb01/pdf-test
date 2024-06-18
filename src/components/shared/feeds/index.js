@@ -27,10 +27,13 @@ import Loader from '@components/shared/loader';
 import DOMPurify from 'dompurify';
 import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
 import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
+import SpinnerLoader from '@components/shared/SpinnerLoader';
 
 export default function Feeds({
   showFullHeight,
   contactId,
+  activitiesInfiniteRef,
+  activitiesHasNextPage,
   activities,
   setActivities,
   activityId: filteredActivityType,
@@ -185,96 +188,97 @@ export default function Feeds({
       {!showGmailInbox &&
         (loadingActivities ? (
           <GeneralSkeleton className="mt-6" />
-        ) : activities.length > 0 ? (
-          <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px', marginTop: '24px' }}>
-            <ul role="list" className={`${activities.length > 0 && ''}`}>
-              {activities
-                ?.slice()
-                .sort((a, b) => b.id - a.id)
-                .map((activityItem, activityItemIdx) => (
-                  <li key={activityItemIdx}>
-                    <div className="relative pb-8 flex justify-between">
-                      {activityItemIdx !== activities.length - 1 ? (
-                        <span
-                          style={{ zIndex: '0 !important' }}
-                          className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                      <div className="relative flex items-start space-x-3">
-                        <>
-                          <div className="relative">
-                            <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
-                              {activityTypeIcons[activityItem.type_of_activity_id] ?? (
-                                <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
-                              )}
+        ) : !loadingActivities && activities?.data?.length > 0 ? (
+          <>
+            <SimpleBar className=" -mx-3 lg:-mx-6 px-3 lg:px-6" style={{ height: '285px', marginTop: '24px' }}>
+              <ul role="list" className={`${activities?.data?.length > 0 && ''}`}>
+                {activities?.data
+                  ?.slice()
+                  .sort((a, b) => b.id - a.id)
+                  .map((activityItem, activityItemIdx) => (
+                    <li key={activityItemIdx}>
+                      <div className="relative pb-8 flex justify-between">
+                        {activityItemIdx !== activities?.data.length - 1 ? (
+                          <span
+                            style={{ zIndex: '0 !important' }}
+                            className="absolute top-5 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                        <div className="relative flex items-start space-x-3">
+                          <>
+                            <div className="relative">
+                              <div className="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                {activityTypeIcons[activityItem.type_of_activity_id] ?? (
+                                  <DescriptionOutlinedIcon className="h-5 w-5 text-gray-500" />
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            {activityItem.created_at && (
-                              <p className="mt-0.5 text-sm text-gray-500 w-fit">
-                                <TooltipComponent
-                                  side={'right'}
-                                  align="center"
-                                  triggerElement={
-                                    <div className={'mr-3'}>
+                            <div className="min-w-0 flex-1">
+                              {activityItem.created_at && (
+                                <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                                  <TooltipComponent
+                                    side={'right'}
+                                    align="center"
+                                    triggerElement={
+                                      <div className={'mr-3'}>
+                                        {formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                        formatDateCalendar(activityItem.created_at).includes('AM') ||
+                                        formatDateCalendar(activityItem.created_at).includes('Last') ||
+                                        formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
+                                        formatDateCalendar(activityItem.created_at).includes('Today')
+                                          ? formatDateCalendar(activityItem.created_at)
+                                          : daysBefore(activityItem.created_at)}
+                                      </div>
+                                    }>
+                                    <h1 className={'text-sm'}>
                                       {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                      formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                      formatDateCalendar(activityItem.created_at).includes('Last') ||
-                                      formatDateCalendar(activityItem.created_at).includes('Yesterday') ||
-                                      formatDateCalendar(activityItem.created_at).includes('Today')
-                                        ? formatDateCalendar(activityItem.created_at)
-                                        : daysBefore(activityItem.created_at)}
-                                    </div>
-                                  }>
-                                  <h1 className={'text-sm'}>
-                                    {formatDateCalendar(activityItem.created_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.created_at).includes('PM')
-                                      ? formatDateStringMDY(activityItem.created_at)
-                                      : formatDateCalendar(activityItem.created_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.created_at)}
-                                  </h1>
-                                </TooltipComponent>
-                              </p>
-                            )}
-                            {activityItem.updated_at && (
-                              <p className="mt-0.5 text-sm text-gray-500 w-fit">
-                                <TooltipComponent
-                                  side={'right'}
-                                  align="center"
-                                  triggerElement={
-                                    <div>
-                                      Updated:{' '}
+                                      formatDateCalendar(activityItem.created_at).includes('PM')
+                                        ? formatDateStringMDY(activityItem.created_at)
+                                        : formatDateCalendar(activityItem.created_at) +
+                                          ' - ' +
+                                          formatDateLThour(activityItem.created_at)}
+                                    </h1>
+                                  </TooltipComponent>
+                                </p>
+                              )}
+                              {activityItem.updated_at && (
+                                <p className="mt-0.5 text-sm text-gray-500 w-fit">
+                                  <TooltipComponent
+                                    side={'right'}
+                                    align="center"
+                                    triggerElement={
+                                      <div>
+                                        Updated:{' '}
+                                        {formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                        formatDateCalendar(activityItem.updated_at).includes('AM') ||
+                                        formatDateCalendar(activityItem.updated_at).includes('Last') ||
+                                        formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
+                                        formatDateCalendar(activityItem.updated_at).includes('Today')
+                                          ? formatDateCalendar(activityItem.updated_at)
+                                          : daysBefore(activityItem.updated_at)}
+                                      </div>
+                                    }>
+                                    <h1 className={'text-sm'}>
                                       {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                      formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                      formatDateCalendar(activityItem.updated_at).includes('Last') ||
-                                      formatDateCalendar(activityItem.updated_at).includes('Yesterday') ||
-                                      formatDateCalendar(activityItem.updated_at).includes('Today')
-                                        ? formatDateCalendar(activityItem.updated_at)
-                                        : daysBefore(activityItem.updated_at)}
-                                    </div>
-                                  }>
-                                  <h1 className={'text-sm'}>
-                                    {formatDateCalendar(activityItem.updated_at).includes('AM') ||
-                                    formatDateCalendar(activityItem.updated_at).includes('PM')
-                                      ? formatDateStringMDY(activityItem.updated_at)
-                                      : formatDateCalendar(activityItem.updated_at) +
-                                        ' - ' +
-                                        formatDateLThour(activityItem.updated_at)}
-                                  </h1>
-                                </TooltipComponent>
-                                {/* Commented 6d ago */}
-                              </p>
-                            )}
-                            <div className="mt-2 text-sm text-gray6 break-word">
-                              <code></code>
-                              <ActivityDescription activityItem={activityItem} />
+                                      formatDateCalendar(activityItem.updated_at).includes('PM')
+                                        ? formatDateStringMDY(activityItem.updated_at)
+                                        : formatDateCalendar(activityItem.updated_at) +
+                                          ' - ' +
+                                          formatDateLThour(activityItem.updated_at)}
+                                    </h1>
+                                  </TooltipComponent>
+                                  {/* Commented 6d ago */}
+                                </p>
+                              )}
+                              <div className="mt-2 text-sm text-gray6 break-word">
+                                <code></code>
+                                <ActivityDescription activityItem={activityItem} />
+                              </div>
                             </div>
-                          </div>
-                        </>
-                      </div>
-                      {/* {activityItem.contact_id && (
+                          </>
+                        </div>
+                        {/* {activityItem.contact_id && (
                         <div className="flex mr-3">
                           <FilterDropdown
                             types={[types[1]]}
@@ -286,11 +290,17 @@ export default function Feeds({
                           />
                         </div>
                       )} */}
-                    </div>
-                  </li>
-                ))}
-            </ul>
-          </SimpleBar>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+              {activitiesHasNextPage && !showGmailInbox && (
+                <div ref={activitiesInfiniteRef}>
+                  <SpinnerLoader />
+                </div>
+              )}
+            </SimpleBar>
+          </>
         ) : (
           <div className="mt-5 text-center h-[265px] flex flex-col justify-center align-center">
             <div className="text-gray7 font-semibold mb-2">No activities found</div>
