@@ -17,8 +17,9 @@ import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
 import ContactInfo from '../contact-info';
+import SpinnerLoader from '@components/shared/SpinnerLoader';
 
-const AllContactsTable = ({ data, handleCardEdit }) => {
+const AllContactsTable = ({ data, handleCardEdit, infiniteScrollRef, showInfiniteScroll }) => {
   const router = useRouter();
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
@@ -65,7 +66,7 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
             CONTACT
           </th>
           <th scope="col" className="flex-grow py-3  text-left  text-xs leading-4 font-medium tracking-wider">
-            TYPE
+            TYPE / STATUS
           </th>
           <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
             CONTACT SUMMARY
@@ -242,6 +243,15 @@ const AllContactsTable = ({ data, handleCardEdit }) => {
               </td>
             </tr>
           ))}
+        {showInfiniteScroll && (
+          <tr colSpan="5">
+            <td colSpan={5} className={'text-center'}>
+              <div ref={infiniteScrollRef}>
+                <SpinnerLoader />
+              </div>
+            </td>
+          </tr>
+        )}
         {openCommuncationPopup &&
           createPortal(
             <CommunicationForm handleCloseOverlay={() => setOpenCommunicationPopup(false)} client={contactToModify} />,

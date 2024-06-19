@@ -10,6 +10,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Image from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 import TrashTypeOverlay from 'containers/OnlineForms/TrashTypeOverlay';
+import { NO_FORMS_MESSAGE } from 'containers/OnlineForms/constants';
 
 const TypesAccordionElement = ({
   title,
@@ -39,7 +40,8 @@ const TypesAccordionElement = ({
   };
 
   useEffect(() => {
-    !title && setOpenAccordion(true);
+    if (((type === 'DEFAULT_FORMS' || type === 'MY_FORMS') && types.length > 0) || type === 'ALL_FORMS')
+      setOpenAccordion(true);
   }, []);
 
   const Actions = useMemo(() => {
@@ -52,9 +54,7 @@ const TypesAccordionElement = ({
             <span>Edit Form</span>
           </div>
         ),
-        handleClick: (template) => {
-          handleEditTemplate(template);
-        },
+        handleClick: handleEditTemplate,
       },
       {
         action: 'preview',
@@ -64,9 +64,7 @@ const TypesAccordionElement = ({
             <span>Preview Form</span>
           </div>
         ),
-        handleClick: async (template) => {
-          handlePreviewTemplate(template);
-        },
+        handleClick: handlePreviewTemplate,
       },
       {
         action: 'delete',
@@ -97,14 +95,14 @@ const TypesAccordionElement = ({
 
     return actionsTypes
       .map((action) => {
-        if (type === 'default-forms' && action.action === 'preview') return action;
+        if (type === 'DEFAULT_FORMS' && action.action === 'preview') return action;
         else if (
-          type === 'my-forms' &&
+          type === 'MY_FORMS' &&
           (action.action === 'edit' || action.action === 'preview' || action.action === 'delete')
         )
           return action;
         else if (
-          type === 'trash-forms' &&
+          type === 'TRASH_FORMS' &&
           (action.action === 'edit' || action.action === 'preview' || action.action === 'restore')
         )
           return action;
@@ -188,7 +186,7 @@ const TypesAccordionElement = ({
             </ul>
           ) : (
             <div className="text-[14px] text-gray4 font-medium leading-5 pl-[18px] py-[15px] pr-6">
-              <span>There is no form created by you yet.</span>
+              <span>{NO_FORMS_MESSAGE[type]}</span>
             </div>
           )}
         </div>

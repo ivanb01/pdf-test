@@ -592,7 +592,6 @@ export const removeSecondsFromTime = (timeStr) => {
 export const getCompany = (email) => {
   let imageUrl = '';
   let companyName = '';
-  console.log(email);
   if (email.includes('opgny')) {
     companyName = 'Oxford Property Group';
     imageUrl = 'https://i.imgur.com/kbMXf3r.png';

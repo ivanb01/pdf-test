@@ -12,22 +12,24 @@ import { useSelector } from 'react-redux';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { useRouter } from 'next/router';
 import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
-
-export const HeaderCell = ({ title }) => <p>{title}</p>;
+import Avatar from '@components/shared/avatar';
+export const HeaderCell = ({ title }) => <p className="text-[12px]">{title}</p>;
 
 export const DefaultCell = ({ label }) => (
   <div>
-    <p className="text-sm">{label}</p>
+    <p className="text-[14px]">{label}</p>
   </div>
 );
 
-export const ClientCell = ({ name, email, imgSrc }) => {
+export const ClientCell = ({ name, firstName, lastName, email, imgSrc }) => {
+  const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+
   return (
-    <div className="flex justify-start align-middle gap-[12px]">
-      <Image src={imgSrc} alt="" width={40} height={40} className="rounded-full" />
+    <div className="flex justify-start align-middle gap-[12px] text-[14px] leading-5">
+      <Avatar initials={initials} className={'w-[40px] h-[40px] bg-gray4 text-[14px] font-medium leading-5'} />
       <div>
-        <p>{name}</p>
-        <p>{email}</p>
+        <p className="font-medium">{name}</p>
+        <p className="text-gray4">{email}</p>
       </div>
     </div>
   );
@@ -123,7 +125,9 @@ export const StatusCell = (props) => {
     </div>
   );
 };
-export const DateCell = ({ date }) => <p className="text-sm">{moment(new Date(date)).format('MMM DD, YYYY')}</p>;
+export const DateCell = ({ date }) => (
+  <p className="text-[14px] leading-5">{moment(new Date(date)).format('MMM DD, YYYY')}</p>
+);
 
 export const ActionsCell = ({ onDownloadPdf, onDeleteForm }) => {
   return (

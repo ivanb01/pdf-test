@@ -18,13 +18,14 @@ import Accordion from '@components/shared/accordion';
 import { useRouter } from 'next/router';
 import AllContactsTable from '@components/shared/table/AllContactsTable';
 import Loader from '@components/shared/loader';
-import { getContacts } from '@api/contacts';
+import { getContacts, getContactsPaginated } from '@api/contacts';
 import { setAllContacts } from '@store/contacts/slice';
+import { useQuery } from '@tanstack/react-query';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
 
 const AllContacts = () => {
   const dispatch = useDispatch();
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
-  const allContacts = useSelector((state) => state.contacts.allContacts);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEditContact, setShowEditContact] = useState(false);
@@ -33,11 +34,39 @@ const AllContacts = () => {
   const [clientsFilters, setClientsFilters] = useState({});
   const [filteredContacts, setFilteredContacts] = useState();
   const [unapprovedContacts, setUnapprovedContacts] = useState([]);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(20);
+  const [contacts, setContacts] = useState([]);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
+
+  const { isFetching, isLoading, isError, error, data, isPreviousData } = useQuery({
+    queryKey: ['clients', offset, searchTerm],
+    queryFn: async () => {
+      const data = await getContactsPaginated(offset, limit, searchTerm);
+      setContacts((prev) => [...prev, ...data.data.data]);
+      setInitialLoadDone(true);
+      return data.data;
+    },
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
+
+  const loadMore = () => {
+    setOffset(offset + 20);
+  };
+
+  const [infiniteRef] = useInfiniteScroll({
+    hasNextPage: true,
+    loading: isFetching,
+    onLoadMore: loadMore,
+    disabled: !!error,
+  });
 
   const router = useRouter();
 
   useEffect(() => {
-    const ai_unapproved = allContacts?.data?.filter(
+    const ai_unapproved = allContacts?.filter(
       (client) =>
         ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
         (client.approved_ai === false || client.approved_ai === null),
@@ -48,98 +77,98 @@ const AllContacts = () => {
   useEffect(() => {
     dispatch(setOpenedTab(-1));
   }, []);
-  useEffect(() => {
-    if (allContacts.data === undefined) {
-      getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')
-        .then((data) => {
-          dispatch(setAllContacts(data.data));
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+  // useEffect(() => {
+  //   if (allContacts.data === undefined) {
+  //     getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')
+  //       .then((data) => {
+  //         dispatch(setAllContacts(data.data));
+  //       })
+  //       .finally(() => {
+  //         setLoading(false);
+  //       });
+  //   }
 
-    if (allContacts.data !== undefined) {
-      setLoading(false);
-    }
-  }, []);
-  const filterContacts = () => {
-    console.log(clientsFilters);
-    let contactsState = allContacts.data;
-    Object.keys(clientsFilters).forEach((key) => {
-      if (clientsFilters[key].includes('Other')) {
-        contactsState = contactsState.filter((contact) => {
-          if (Array.isArray(contact[key])) {
-            return contact[key].some((current) => {
-              clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
-            });
-          }
+  //   if (allContacts.data !== undefined) {
+  //     setLoading(false);
+  //   }
+  // }, []);
+  // const filterContacts = () => {
+  //   console.log(clientsFilters);
+  //   let contactsState = allContacts.data;
+  //   Object.keys(clientsFilters).forEach((key) => {
+  //     if (clientsFilters[key].includes('Other')) {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => {
+  //             clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+  //           });
+  //         }
 
-          return clientsFilters[key].includes(contact[key]) || contact.category_2.includes('Unknown');
-        });
-      } else if (clientsFilters[key].includes('Uncategorized')) {
-        contactsState = contactsState.filter((contact) => {
-          if (Array.isArray(contact[key])) {
-            return contact[key].some((current) => {
-              clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
-            });
-          }
+  //         return clientsFilters[key].includes(contact[key]) || contact.category_2.includes('Unknown');
+  //       });
+  //     } else if (clientsFilters[key].includes('Uncategorized')) {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => {
+  //             clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+  //           });
+  //         }
 
-          return clientsFilters[key].includes(contact[key]) && !contact.category_2.includes('Unknown');
-        });
-      } else {
-        contactsState = contactsState.filter((contact) => {
-          if (Array.isArray(contact[key])) {
-            return contact[key].some((current) => clientsFilters[key].includes(current));
-          }
-          return clientsFilters[key].includes(contact[key]);
-        });
-      }
+  //         return clientsFilters[key].includes(contact[key]) && !contact.category_2.includes('Unknown');
+  //       });
+  //     } else {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => clientsFilters[key].includes(current));
+  //         }
+  //         return clientsFilters[key].includes(contact[key]);
+  //       });
+  //     }
 
-      setFilteredContacts(contactsState);
-    });
-  };
+  //     setFilteredContacts(contactsState);
+  //   });
+  // };
 
-  useEffect(() => {
-    if (allContacts?.data?.length === 0) {
-      return;
-    }
-    filterContacts();
-    if (Object.keys(clientsFilters).length === 0) {
-      setFilteredContacts(allContacts?.data?.filter((c) => c.category_1 !== 'Trash'));
-    }
-  }, [clientsFilters, searchTerm, allContacts]);
-  const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
-    let filtersCopy = { ...clientsFilters };
-    if (filtersCopy[filterType]) {
-      if (filtersCopy[filterType].includes(selectedFilter)) {
-        filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
-        if (filtersCopy[filterType].length < 1) {
-          delete filtersCopy[filterType];
-        }
-      } else {
-        if (isOnlyOneFilter) {
-          filtersCopy[filterType] = [selectedFilter];
-        } else {
-          filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
-        }
-      }
-    } else {
-      filtersCopy[filterType] = [selectedFilter];
-    }
-    setClientsFilters(filtersCopy);
-  };
+  // useEffect(() => {
+  //   if (allContacts?.data?.length === 0) {
+  //     return;
+  //   }
+  //   filterContacts();
+  //   if (Object.keys(clientsFilters).length === 0) {
+  //     setFilteredContacts(allContacts?.data?.filter((c) => c.category_1 !== 'Trash'));
+  //   }
+  // }, [clientsFilters, searchTerm, allContacts]);
+  // const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+  //   let filtersCopy = { ...clientsFilters };
+  //   if (filtersCopy[filterType]) {
+  //     if (filtersCopy[filterType].includes(selectedFilter)) {
+  //       filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
+  //       if (filtersCopy[filterType].length < 1) {
+  //         delete filtersCopy[filterType];
+  //       }
+  //     } else {
+  //       if (isOnlyOneFilter) {
+  //         filtersCopy[filterType] = [selectedFilter];
+  //       } else {
+  //         filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+  //       }
+  //     }
+  //   } else {
+  //     filtersCopy[filterType] = [selectedFilter];
+  //   }
+  //   setClientsFilters(filtersCopy);
+  // };
 
-  useEffect(() => {
-    if (searchTerm.length > 0) {
-      const filterBySearchTerm = filteredContacts.filter(
-        (contact) =>
-          contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          contact.last_name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-      setFilteredContacts(filterBySearchTerm);
-    }
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   if (searchTerm.length > 0) {
+  //     const filterBySearchTerm = filteredContacts.filter(
+  //       (contact) =>
+  //         contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         contact.last_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  //     );
+  //     setFilteredContacts(filterBySearchTerm);
+  //   }
+  // }, [searchTerm]);
   const getCount = () => {
     if (hideUnapproved) {
       return (
@@ -175,7 +204,7 @@ const AllContacts = () => {
 
   return (
     <Layout>
-      {loading ? (
+      {false ? (
         <Loader />
       ) : (
         <>
@@ -190,12 +219,12 @@ const AllContacts = () => {
           <div className={'flex justify-between items-center p-6 py-4'}>
             <div className="flex items-center">
               <h3 className={'text-xl leading-7 font-medium mr-4'}>All Contacts</h3>
-              {filteredContacts?.filter(
+              {allContacts?.filter(
                 (contact) =>
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
               ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
-            <div className={'flex gap-2'}>
+            {/* <div className={'flex gap-2'}>
               <Button
                 secondary
                 leftIcon={
@@ -223,9 +252,9 @@ const AllContacts = () => {
                   setSearchTerm(event.target.value);
                 }}
               />
-            </div>
+            </div> */}
           </div>
-          {Object.keys(clientsFilters).length > 0 && (
+          {/* {Object.keys(clientsFilters).length > 0 && (
             <div className="w-full border-t border-gray2 px-6 py-3">
               <div className="flex justify-between">
                 <div className="flex flex-wrap items-center w-[100%] gap-[2px]">
@@ -258,25 +287,31 @@ const AllContacts = () => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
           <div
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '210px' : '160px'
+                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '196px' : '129px'
               })`,
               overflow: 'hidden',
             }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <AllContactsTable
-                  tableFor={'needToContact'}
-                  data={filteredContacts}
-                  handleCardEdit={(contact) => {
-                    setShowEditContact(contact);
-                    setAddActivityPopup(true);
-                  }}
-                />
+                {!initialLoadDone ? (
+                  <div>Loading...</div>
+                ) : (
+                  <AllContactsTable
+                    tableFor={'needToContact'}
+                    data={contacts}
+                    handleCardEdit={(contact) => {
+                      setShowEditContact(contact);
+                      setAddActivityPopup(true);
+                    }}
+                    infiniteScrollRef={infiniteRef}
+                    showInfiniteScroll={data?.count >= limit}
+                  />
+                )}
               </SimpleBar>
             </div>
           </div>
@@ -289,7 +324,7 @@ const AllContacts = () => {
               title="Edit Client"
             />
           )}
-          <SlideOver
+          {/* <SlideOver
             open={open}
             setOpen={setOpen}
             title="All Contacts Filter"
@@ -307,7 +342,7 @@ const AllContacts = () => {
               </>
             }>
             <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
-          </SlideOver>
+          </SlideOver> */}
         </>
       )}
     </Layout>

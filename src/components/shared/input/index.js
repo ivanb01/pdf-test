@@ -297,6 +297,7 @@ const Input = forwardRef(
             value={inputValue}
             onChange={handleChange}
             placeholder={placeholder}
+            readOnly={readonly}
             name={name ? name : id}
             className={
               saved
@@ -344,6 +345,7 @@ const Input = forwardRef(
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            readOnly={readonly}
           />
         </>
       );
@@ -382,12 +384,15 @@ const Input = forwardRef(
 
     const dateInput = () => {
       const ref = useRef();
+      console.log('DATE VALUE', value);
       return (
         <>
           <input
             type={'date'}
             onChange={onChange}
             ref={ref}
+            value={value}
+            readOnly={readonly}
             placeholder={'dd/mm/yyyy'}
             className={`relative w-full py-[9px] px-[13px] border border-gray-300 rounded-md h-10 text-sm leading-5 font-normal text-gray-500 placeholder:text-gray-500 ${
               errorClasses && errorClasses
@@ -422,6 +427,12 @@ const Input = forwardRef(
       };
 
       useEffect(() => {
+        if (sigCanvas && readonly) {
+          sigCanvas.current.off();
+        } else sigCanvas.current.on();
+      }, [readonly]);
+
+      useEffect(() => {
         if (sigCanvas && initialSignatureData) {
           if (firstRender) {
             sigCanvas.current.fromDataURL(initialSignatureData.untrimmedCanvas);
@@ -450,10 +461,14 @@ const Input = forwardRef(
             onEnd={onEnd}
             clearOnResize={false}
           />
-          <button onClick={clear} className="flex items-center gap-[2px] text-[10px] absolute top-[12px] right-[12px]">
-            <DeleteIcon className="text-gray4 h-[16px] w-[11px]" />
-            <span className="text-gray7 leading-4">clear</span>
-          </button>
+          {!readonly && (
+            <button
+              onClick={clear}
+              className="flex items-center gap-[2px] text-[10px] absolute top-[12px] right-[12px]">
+              <DeleteIcon className="text-gray4 h-[16px] w-[11px]" />
+              <span className="text-gray7 leading-4">clear</span>
+            </button>
+          )}
         </div>
       );
     };

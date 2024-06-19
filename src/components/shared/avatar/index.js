@@ -10,7 +10,7 @@ export default function Avatar({ initials, img, size, className, src, ...props }
       {src ? (
         <img className={`h-14 w-14 inline-block ${localSize} rounded-full ${className}`} src={src} alt="" />
       ) : initials ? (
-        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-400">
+        <span className={`inline-flex h-14 w-14 items-center justify-center rounded-full bg-gray-400 ${className}`}>
           <span className="text-sm font-medium leading-none text-white">{initials}</span>
         </span>
       ) : (

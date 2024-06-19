@@ -25,9 +25,10 @@ import Mail from '@mui/icons-material/Mail';
 import CommunicationForm from '@components/overlays/communication-form';
 import WhatsApp from '@mui/icons-material/WhatsApp';
 import Table from '..';
-import { getSource } from '@global/functions';
+import { getContactStatusByStatusId, getContactStatusColorByStatusId, getSource } from '@global/functions';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
+import Chip from '@components/shared/chip';
 
 const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryType, handleCardEdit, searchTerm }) => {
   const dispatch = useDispatch();
@@ -221,8 +222,8 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
           </th>
           <th
             scope="col"
-            className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wide text-gray-500 w-[200px]">
-            Type
+            className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 w-[380px]">
+            Type / Status
           </th>
           <th
             scope="col"
@@ -386,12 +387,16 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         }}
                       />
                     </td>
-                    <td className={`whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 align-middle`}>
-                      <div className={'flex justify-center items-center'}>
-                        <div className="text-gray7 px-1.5 py-1 font-medium bg-gray1 text-[10px] uppercase rounded min-w-[50px] h-6 flex items-center justify-center lg:w-[76px] xl:w-[86px]">
-                          {contact.category_2}
-                        </div>
-                      </div>
+                    <td className="w-fit">
+                      <Chip label={contact?.category_2} typeStyle />
+                      {contact?.category_1 === 'Client' && (
+                        <Chip
+                          label={contact?.status_2}
+                          statusStyle
+                          className={getContactStatusColorByStatusId(contact?.category_id, contact?.status_id)}>
+                          {getContactStatusByStatusId(contact?.category_id, contact?.status_id)}
+                        </Chip>
+                      )}
                     </td>
                     <td className={`whitespace-nowrap px-3 py-4 text-left text-sm text-gray-500 align-middle`}>
                       {contact.summary !== null && (

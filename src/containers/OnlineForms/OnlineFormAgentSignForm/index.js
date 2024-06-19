@@ -149,12 +149,12 @@ const OnlineFormAgentSign = () => {
       });
 
       const signatures = formattedArray
-        .filter((field) => field.formType === 'signature')
+        .filter((field) => field.inputType === 'signature')
         .sort((field1, field2) => {
           return +field1.key < +field2.key ? -1 : 1;
         });
       const restFields = formattedArray
-        .filter((field) => field.formType !== 'signature')
+        .filter((field) => field.inputType !== 'signature')
         .sort((field1, field2) => {
           return +field1.key < +field2.key ? -1 : 1;
         });
@@ -190,9 +190,11 @@ const OnlineFormAgentSign = () => {
                 <Input
                   onChange={(e) => {
                     const { id } = field;
-                    let value = e.target.value;
+                    let value = '';
+                    if (field.inputType === 'money') value = e;
+                    else value = e.target.value;
 
-                    if (field.formType === 'date') {
+                    if (field.input === 'date') {
                       value = moment(value).format('DD/MM/YYYY');
                     }
 
@@ -221,7 +223,7 @@ const OnlineFormAgentSign = () => {
                     const { id } = field;
                     setFieldValue(`${id}.answer`, '');
                   }}
-                  type={field.formType}
+                  type={field.inputType}
                   initialSignatureData={values[fieldId]?.answer}
                   label={field.label}
                 />

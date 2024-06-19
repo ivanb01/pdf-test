@@ -45,9 +45,9 @@ const Applications = () => {
   }, [countApplicationData]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full overflow-hidden">
       <div className="flex justify-between gap-2 py-[17px]  px-[24px] items-center border-b-[1px] overflow-hidden">
-        <span>Applications</span>
+        <span className="font-medium text-[18px] leading-6">Applications</span>
         <div className="flex items-center gap-2 ">
           <div className="min-w-[200px]">
             <Search
