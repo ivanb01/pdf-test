@@ -18,6 +18,7 @@ import { CloseRounded } from '@mui/icons-material';
 import AIUnapprovedTable from '@components/shared/table/AIUnapprovedTable';
 import DropdownWithSearch from '@components/dropdownWithSearch';
 import backBtn from '/public/images/back.svg';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 const index = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -278,7 +279,7 @@ const index = () => {
   };
   return (
     <div>
-      <MainMenu />
+      <MainMenuV2 />
       <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
         <div>
           <div className="p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">

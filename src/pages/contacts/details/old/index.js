@@ -22,6 +22,7 @@ import { getAIData } from '@api/aiSmartSync';
 import toast from 'react-hot-toast';
 import Loader from '@components/shared/loader';
 import withAuth from '@components/withAuth';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const router = useRouter();
@@ -162,7 +163,7 @@ const index = () => {
 
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       {showReviewOverlay && (
         <ReviewContact
           showToast
@@ -201,8 +202,7 @@ const index = () => {
                         onClick={() => {
                           backUrl !== null ? router.push(backUrl) : router.back();
                         }}
-                        className="items-center flex"
-                      >
+                        className="items-center flex">
                         <Image className="cursor-pointer" src={backArrow} />
                         <div className="ml-2 font-medium">
                           Back to{' '}

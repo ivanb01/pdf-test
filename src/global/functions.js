@@ -606,7 +606,7 @@ export const getCompany = (email) => {
   return { imageUrl, companyName };
 };
 export const getOpgnyBaseUrl = (domain) => {
-  if (domain == 'onelinecrm') {
+  if (domain == 'onelinecrm.com') {
     return 'https://opgny.com';
   } else {
     return 'https://oxfordpg.com';

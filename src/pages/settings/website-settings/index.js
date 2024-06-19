@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import jwt from 'jsonwebtoken';
 import { getOpgnyBaseUrl } from '@global/functions';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const Index = () => {
   const userEmail = useSelector((state) => state.global.user);
@@ -20,7 +21,12 @@ const Index = () => {
   };
 
   useEffect(() => {
-    setBaseUrl(getOpgnyBaseUrl(window.location.hostname));
+    if (typeof window !== 'undefined') {
+      setBaseUrl(getOpgnyBaseUrl(window.location.hostname));
+    }
+  }, []);
+
+  useEffect(() => {
     if (userEmail) {
       const newToken = generateJwt(userEmail);
       setToken(newToken);
@@ -29,7 +35,7 @@ const Index = () => {
 
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       {token && baseUrl && (
         <Iframe
           url={`${baseUrl}/Agent_crm/profile?token=${token}`}
