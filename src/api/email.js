@@ -34,8 +34,14 @@ export const syncEmailOfContact = (contact_email) => {
   });
 };
 
-export const getEmailsForSpecificContact = (contact_email) => {
-  return axiosInstance.get(`v1/email?contact_email=${contact_email}`);
+export const getEmailsForSpecificContact = (contact_email, offset) => {
+  return axiosInstance.get(`v1/email`, {
+    params: {
+      limit: 10,
+      contact_email,
+      offset,
+    },
+  });
 };
 export const getOneThread = (thread_id) => {
   return axiosInstance.get(`v1/email?thread_id=${thread_id}`);
