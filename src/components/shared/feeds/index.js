@@ -61,11 +61,15 @@ export default function Feeds({
       console.log(showGmailInbox);
       setInboxLoading(true);
       getEmailsForSpecificContact(contactEmail).then((res) => {
-        setInboxData(res?.data?.threads);
+        setInboxData(res?.data?.email);
         setInboxLoading(false);
       });
     }
   }, [showGmailInbox]);
+
+  useEffect(() => {
+    console.log(inboxData, 'inboxData');
+  }, [inboxData]);
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -311,17 +315,17 @@ export default function Feeds({
         inboxLoading ? (
           <GeneralSkeleton className="mt-4" roundedIcon={false} rows={6} />
         ) : !inboxLoading ? (
-          Object.values(inboxData).length > 0 ? (
+          inboxData.length > 0 ? (
             <div className="bg-white">
-              {openEmailsPopup && (
-                <EmailsPopup
-                  inboxData={inboxData}
-                  setInboxData={setInboxData}
-                  threadData={threadData}
-                  contactEmail={contactEmail}
-                  handleClose={() => setOpenEmailsPopup(false)}
-                />
-              )}
+              {/*{openEmailsPopup && (*/}
+              {/*  <EmailsPopup*/}
+              {/*    inboxData={inboxData}*/}
+              {/*    setInboxData={setInboxData}*/}
+              {/*    threadData={threadData}*/}
+              {/*    contactEmail={contactEmail}*/}
+              {/*    handleClose={() => setOpenEmailsPopup(false)}*/}
+              {/*  />*/}
+              {/*)}*/}
               <SimpleBar
                 style={{
                   height: '285px',
@@ -331,7 +335,7 @@ export default function Feeds({
                 }}
                 autoHide>
                 <ul role="list" className={`flex flex-col gap-8`}>
-                  {Object.values(inboxData).flatMap((item) => (
+                  {inboxData.map((item) => (
                     <div
                       className={'flex gap-3'}
                       onClick={() => {
@@ -339,7 +343,7 @@ export default function Feeds({
                         setOpenEmailsPopup(true);
                       }}
                       role={'button'}
-                      key={item[0]?.thread_id}>
+                      key={item?.thread_id}>
                       <div
                         className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
                         <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
@@ -352,19 +356,17 @@ export default function Feeds({
                       <div>
                         <div className={'flex items-center  flex-wrap'}>
                           <h6 className={'text-[14px] font-bold mr-2'}>
-                            {item[0]?.subject?.length === 0 ? '(no subject)' : item[0]?.subject}
+                            {item?.subject?.length === 0 ? '(no subject)' : item?.subject}
                           </h6>
-                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item[0]?.sent_date)}</p>
+                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item?.sent_date)}</p>
                         </div>
                         <div className="break-word gmail-renderings w-full overflow-hidden ">
                           <span
                             dangerouslySetInnerHTML={{
-                              __html: item[0]?.body
-                                ? truncateText(DOMPurify.sanitize(item[0]?.body))
+                              __html: item?.body
+                                ? truncateText(DOMPurify.sanitize(item?.body))
                                 : truncateText(
-                                    DOMPurify.sanitize(
-                                      item[0]?.html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, ''),
-                                    ),
+                                    DOMPurify.sanitize(item?.html_body?.replace(/<\/?[^>]+(>|$)|&[a-zA-Z0-9#]+;/g, '')),
                                   ),
                             }}
                           />

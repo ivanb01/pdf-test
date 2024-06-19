@@ -207,7 +207,6 @@ const index = () => {
     if (contact) {
       syncEmailOfContact(contact.email).catch((error) => {
         console.log(error);
-        toast.error('Error fetching gmail inbox');
       });
     }
   }, [contact]);
