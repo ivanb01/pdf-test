@@ -26,6 +26,8 @@ const columns = [
         <ClientCell
           imgSrc="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
           name={fullName}
+          firstName={firstName}
+          lastName={lastName}
           email={info.getValue()}
         />
       );
@@ -111,7 +113,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
             {table?.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="h-[70px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]">
+                className="h-[77px] text-sm  border-b-[1px] border-gray-200 [&>*]:p-[16px] [&>*:first-child]:px-[24px]">
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td

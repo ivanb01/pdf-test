@@ -90,6 +90,7 @@ const OnlineFormsSignForm = () => {
               answer: onlineFormData?.data?.submitted_answers
                 ? onlineFormData?.data?.submitted_answers[key].answer
                 : '',
+              answeredByAgent: !!onlineFormData?.data?.submitted_answers[key].answer,
             },
           };
         }),
@@ -110,9 +111,7 @@ const OnlineFormsSignForm = () => {
 
   const { touched, errors, values, setFieldValue, handleSubmit } = useFormik({
     validateOnMount: true,
-    initialValues: {
-      ...initialFormValue,
-    },
+    initialValues: initialFormValue,
     validationSchema: ValidationSchema,
     onSubmit: (values) => {
       mutatePostForm({
@@ -134,10 +133,10 @@ const OnlineFormsSignForm = () => {
       });
 
       const signatures = formattedArray
-        .filter((field) => field.formType === 'signature')
+        .filter((field) => field.inputType === 'signature')
         .sort((field1, field2) => (+field1.key < +field2.key ? -1 : 1));
       const restFields = formattedArray
-        .filter((field) => field.formType !== 'signature')
+        .filter((field) => field.inputType !== 'signature')
         .sort((field1, field2) => (+field1.key < +field2.key ? -1 : 1));
 
       return [restFields, signatures];
@@ -198,14 +197,16 @@ const OnlineFormsSignForm = () => {
           {formattedTextFields?.map((field) => {
             const fieldId = field.id;
             return (
-              <div key={field.id} className={'w-full sm:max-w-[400px]'}>
+              <div key={field.id} className={'w-full sm:max-w-[400px] '}>
                 <Input
                   onChange={(e) => {
                     const { id } = field;
-                    let value = e.target.value;
+                    let value = '';
+                    if (field.inputType === 'money') value = e;
+                    else value = e.target.value;
 
-                    if (field.formType === 'date') {
-                      value = moment(value).format('DD/MM/YYYY');
+                    if (field.inputType === 'date') {
+                      value = moment(value).format('YYYY-MM-DD');
                     }
 
                     setFieldValue(`${id}.answer`, value);
@@ -215,6 +216,11 @@ const OnlineFormsSignForm = () => {
                   value={values[fieldId]?.answer}
                   error={errors[fieldId]?.answer && touched[fieldId]?.answer}
                   errorText={errors[fieldId]?.answer}
+                  readonly={values[fieldId]?.answeredByAgent}
+                  className={
+                    values[fieldId]?.answeredByAgent &&
+                    '[&_input]:bg-gray1 focus:[&_input]:ring-0 focus:[&_input]:border-borderColor '
+                  }
                 />
               </div>
             );
@@ -240,6 +246,8 @@ const OnlineFormsSignForm = () => {
                   initialSignatureData={values[fieldId]?.answer}
                   error={errors[fieldId]?.answer.imageData && touched[fieldId]?.answer}
                   errorText={errors[fieldId]?.answer.imageData}
+                  readonly={values[fieldId]?.answeredByAgent}
+                  className={values[fieldId]?.answeredByAgent && '[&_canvas]:bg-gray1 '}
                 />
               </div>
             );

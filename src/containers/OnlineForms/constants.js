@@ -181,6 +181,12 @@ export const FORM_DROPDOWN_OPTIONS = [
         name: 'agent_signature',
         inputType: 'signature',
       },
+      {
+        id: 3,
+        label: 'Brokerage Name',
+        name: 'brokerage_name',
+        inputType: 'text',
+      },
     ],
   },
   {
@@ -203,7 +209,7 @@ export const FORM_DROPDOWN_OPTIONS = [
         id: 3,
         label: 'Price',
         name: 'price',
-        inputType: 'text',
+        inputType: 'money',
       },
       {
         id: 4,
@@ -263,4 +269,11 @@ export const BLOCK_TYPE_TO_BLOCK_NAME = {
   ol: 'Numbered List',
   paragraph: 'Normal',
   ul: 'Bulleted List',
+};
+
+export const NO_FORMS_MESSAGE = {
+  ALL_FORMS: '',
+  DEFAULT_FORMS: 'No default forms have been created yet.',
+  MY_FORMS: "No forms have been created yet. Click 'Create New Form' to get started.",
+  TRASH_FORMS: 'No forms have been moved to trash.',
 };

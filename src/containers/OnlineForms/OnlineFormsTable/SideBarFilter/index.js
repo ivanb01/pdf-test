@@ -56,16 +56,10 @@ const SideBarFilter = ({
           <div className={`flex  py-[14px] gap-[8px]  items-center`}>{filters?.length - 1} Forms</div>
         </div>
 
-        <Button white onClick={onPlusClick} disabled={isRefetching} className={'min-w-[165px]'}>
-          <div className=" ">
-            {isRefetching ? (
-              <CircularProgress size={20} />
-            ) : (
-              <div className="flex items-center gap-2 text-gray6">
-                <PlusIcon className=" h-4 w-4 text-gray4" />
-                <span>Create New Form</span>
-              </div>
-            )}
+        <Button white onClick={onPlusClick} className={'min-w-[165px]'}>
+          <div className="flex items-center gap-2 text-gray6">
+            <PlusIcon className=" h-4 w-4 text-gray4" />
+            <span>Create New Form</span>
           </div>
         </Button>
       </div>
@@ -81,7 +75,7 @@ const SideBarFilter = ({
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
             hideActionsMenu={true}
-            type={'all-forms'}
+            type={'ALL_FORMS'}
           />
         </li>
         <li>
@@ -95,7 +89,7 @@ const SideBarFilter = ({
             handleEditTemplate={handleEditTemplate}
             handlePreviewTemplate={handlePreviewTemplate}
             hideActionsMenu={false}
-            type={'default-forms'}
+            type={'DEFAULT_FORMS'}
           />
         </li>
         <li>
@@ -111,7 +105,7 @@ const SideBarFilter = ({
             hideActionsMenu={false}
             handleDeleteTemplate={handleDeleteTemplate}
             isDeletingTemplate={isDeletingTemplate}
-            type={'my-forms'}
+            type={'MY_FORMS'}
           />
         </li>
         <li>
@@ -127,7 +121,7 @@ const SideBarFilter = ({
             hideActionsMenu={false}
             handleDeleteTemplate={() => {}}
             isDeletingTemplate={false}
-            type={'trash-forms'}
+            type={'TRASH_FORMS'}
             onRestoreFormTemplate={onRestoreFormTemplate}
           />
         </li>

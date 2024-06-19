@@ -101,7 +101,7 @@ const ApplicationsTable = ({ searchInput, currentButton }) => {
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="border-b hover:bg-gray10 cursor-pointer"
+                    className="h-[77px] border-b hover:bg-gray10 cursor-pointer text-[14px]"
                     onClick={(e) => {
                       router.push(`/applications/${row.original.public_identifier}`);
                     }}>
@@ -120,13 +120,12 @@ const ApplicationsTable = ({ searchInput, currentButton }) => {
               </tbody>
             </table>
           }
+          {hasNextPage && (
+            <div className="h-[80px] flex items-center justify-center">
+              {isFetchingNextPage && <CircularProgress size={20} />}
+            </div>
+          )}
         </>
-      )}
-
-      {hasNextPage && (
-        <div className="h-[80px] flex items-center justify-center">
-          {isFetchingNextPage && <CircularProgress size={20} />}
-        </div>
       )}
     </div>
   );

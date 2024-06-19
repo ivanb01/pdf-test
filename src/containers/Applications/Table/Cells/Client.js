@@ -10,7 +10,7 @@ export const ClientCell = ({ info }) => {
     '.';
   return (
     <div className="flex gap-3 min-w-[240px] px-4 items-center ">
-      <Avatar src={''} initials={initials} />
+      <Avatar initials={initials} className={'w-[40px] h-[40px] bg-gray4 text-[14px] font-medium leading-5'} />
       <div>
         <p>
           <span>{client_first_name}</span>
