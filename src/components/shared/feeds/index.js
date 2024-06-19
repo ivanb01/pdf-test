@@ -3,8 +3,6 @@ import { formatDateCalendar, formatDateStringMDY, formatDateLThour, daysBefore, 
 import Text from 'components/shared/text';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
-import FilterDropdown from 'components/shared/dropdown/FilterDropdown';
-import More from '@mui/icons-material/MoreVert';
 import { useFormik } from 'formik';
 import TextArea from 'components/shared/textarea';
 import * as contactServices from 'api/contacts';
@@ -23,11 +21,11 @@ import TooltipComponent from '@components/shared/tooltip';
 import EmailsPopup from '@components/overlays/email-threads';
 import { getEmailsForSpecificContact } from '@api/email';
 import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
-import Loader from '@components/shared/loader';
 import DOMPurify from 'dompurify';
-import NotesSkeleton from '@components/SkeletonLoaders/NotesSkeleton';
 import GeneralSkeleton from '@components/SkeletonLoaders/GeneralSkeleton';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
+import { getContactNotes } from 'api/contacts';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
 
 export default function Feeds({
   showFullHeight,
@@ -49,22 +47,78 @@ export default function Feeds({
   const [loadingButton, setLoadingButton] = useState(false);
   const [openEmailsPopup, setOpenEmailsPopup] = useState(false);
   const [inboxLoading, setInboxLoading] = useState(false);
-
+  const [gmailInboxOffset, setGmailInboxOffset] = useState(0);
+  const [gmailInboxHasNextPage, setGmailInboxHasNextPage] = useState(true);
+  const [emailData, setEmailData] = useState([]);
+  const [singleEmail, setSingleEmail] = useState();
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
   });
+  const getGmailInbox = (offset = 0) => {
+    return getEmailsForSpecificContact(contactEmail, offset)
+      .then((response) => {
+        return {
+          gmailInboxHasNextPage: true,
+          data: response.data,
+          count: response.data.count,
+          total: response.data.total,
+        };
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Error fetching notes');
+      });
+  };
+
+  const loadMoreEmails = async () => {
+    try {
+      const { data, count, gmailInboxHasNextPage: newNotesHasNextPage } = await getGmailInbox(gmailInboxOffset);
+      setEmailData((current) => ({
+        email: [...(current.email || []), ...(data.email || [])],
+        count: count,
+      }));
+      setGmailInboxOffset(gmailInboxOffset + count);
+      setGmailInboxHasNextPage(newNotesHasNextPage);
+      if (count === 0) {
+        setGmailInboxHasNextPage(false);
+      }
+    } finally {
+      setInboxLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (showGmailInbox) {
       setInboxLoading(true);
-      getEmailsForSpecificContact(contactEmail).then((res) => {
-        setEmailData(res?.data?.email);
+      setGmailInboxOffset(0);
+      getEmailsForSpecificContact(contactEmail, 0).then((res) => {
+        setEmailData({ email: res?.data?.email || [], count: res?.data?.count || 0 });
+        setGmailInboxOffset(res?.data?.count || 0);
         setInboxLoading(false);
       });
     }
-  }, [showGmailInbox]);
+  }, [showGmailInbox, contactEmail]);
 
+  const [infiniteRef] = useInfiniteScroll({
+    loading: inboxLoading,
+    hasNextPage: gmailInboxHasNextPage,
+    onLoadMore: loadMoreEmails,
+  });
+
+  const resetPagination = async () => {
+    setInboxLoading(true);
+    setGmailInboxHasNextPage(true);
+    setGmailInboxOffset(0); // Ensure offset is reset to zero
+    setEmailData({ email: [], count: 0 }); // Reset the email data
+    getGmailInbox(0).then((response) => {
+      setEmailData({ email: response.data.email, count: response.data.count });
+      setGmailInboxOffset(response.data.count);
+      setOpenEmailsPopup(false);
+      setGmailInboxHasNextPage(true);
+      setInboxLoading(false);
+    });
+  };
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -167,11 +221,8 @@ export default function Feeds({
       handleClick: handleDeleteActivity,
     },
   ];
-  const [emailData, setEmailData] = useState([]);
-  const [singleEmail, setSingleEmail] = useState();
 
   function truncateText(text, maxLength = 200) {
-    console.log(text);
     if (text.length > maxLength) {
       return text.substring(0, maxLength) + '...';
     }
@@ -306,10 +357,11 @@ export default function Feeds({
         inboxLoading ? (
           <GeneralSkeleton className="mt-4" roundedIcon={false} rows={6} />
         ) : !inboxLoading ? (
-          emailData?.length > 0 ? (
+          emailData?.email?.length > 0 ? (
             <div className="bg-white">
               {openEmailsPopup && (
                 <EmailsPopup
+                  resetPagination={resetPagination}
                   setEmailData={setEmailData}
                   singleEmail={singleEmail}
                   contactEmail={contactEmail}
@@ -325,7 +377,7 @@ export default function Feeds({
                 }}
                 autoHide>
                 <ul role="list" className={`flex flex-col gap-8`}>
-                  {emailData.map((item) => (
+                  {emailData?.email?.map((item) => (
                     <div
                       className={'flex gap-3'}
                       onClick={() => {
@@ -365,6 +417,11 @@ export default function Feeds({
                     </div>
                   ))}
                 </ul>
+                {gmailInboxHasNextPage && (
+                  <div ref={infiniteRef}>
+                    <SpinnerLoader />
+                  </div>
+                )}
               </SimpleBar>
             </div>
           ) : (

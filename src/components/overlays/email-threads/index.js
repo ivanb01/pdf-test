@@ -43,7 +43,7 @@ const EmailItem = ({ name, body, message_header_id, sentDate, threadId, subject,
   );
 };
 
-const EmailsPopup = ({ handleClose, contactEmail, singleEmail, setEmailData }) => {
+const EmailsPopup = ({ handleClose, contactEmail, singleEmail, setEmailData, resetPagination }) => {
   const [openedEditor, setOpenedEditor] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -55,14 +55,7 @@ const EmailsPopup = ({ handleClose, contactEmail, singleEmail, setEmailData }) =
       replyInThread(contactEmail, message, singleEmail?.message_header_id, singleEmail?.thread_id, singleEmail?.subject)
         .then(() => {
           syncEmailOfContact(contactEmail).then(() => {
-            getEmailsForSpecificContact(contactEmail).then((res) => {
-              setEmailData(res?.data?.email);
-              setTimeout(() => {
-                handleClose();
-              }, 1000);
-
-              setLoading(false);
-            });
+            resetPagination();
           });
         })
         .catch(() => {
