@@ -49,8 +49,7 @@ export default function Feeds({
   const [loadingButton, setLoadingButton] = useState(false);
   const [openEmailsPopup, setOpenEmailsPopup] = useState(false);
   const [inboxLoading, setInboxLoading] = useState(false);
-  const [inboxData, setInboxData] = useState([]);
-  const [threadData, setThreadData] = useState([]);
+
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
@@ -58,18 +57,14 @@ export default function Feeds({
 
   useEffect(() => {
     if (showGmailInbox) {
-      console.log(showGmailInbox);
       setInboxLoading(true);
       getEmailsForSpecificContact(contactEmail).then((res) => {
-        setInboxData(res?.data?.email);
+        setEmailData(res?.data?.email);
         setInboxLoading(false);
       });
     }
   }, [showGmailInbox]);
 
-  useEffect(() => {
-    console.log(inboxData, 'inboxData');
-  }, [inboxData]);
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -172,12 +167,8 @@ export default function Feeds({
       handleClick: handleDeleteActivity,
     },
   ];
-  const [threadId, setThreadId] = useState();
-  useEffect(() => {
-    if (openEmailsPopup) {
-      setThreadData(inboxData[threadId]);
-    }
-  }, [inboxData, threadId]);
+  const [emailData, setEmailData] = useState([]);
+  const [singleEmail, setSingleEmail] = useState();
 
   function truncateText(text, maxLength = 200) {
     console.log(text);
@@ -315,17 +306,16 @@ export default function Feeds({
         inboxLoading ? (
           <GeneralSkeleton className="mt-4" roundedIcon={false} rows={6} />
         ) : !inboxLoading ? (
-          inboxData.length > 0 ? (
+          emailData?.length > 0 ? (
             <div className="bg-white">
-              {/*{openEmailsPopup && (*/}
-              {/*  <EmailsPopup*/}
-              {/*    inboxData={inboxData}*/}
-              {/*    setInboxData={setInboxData}*/}
-              {/*    threadData={threadData}*/}
-              {/*    contactEmail={contactEmail}*/}
-              {/*    handleClose={() => setOpenEmailsPopup(false)}*/}
-              {/*  />*/}
-              {/*)}*/}
+              {openEmailsPopup && (
+                <EmailsPopup
+                  setEmailData={setEmailData}
+                  singleEmail={singleEmail}
+                  contactEmail={contactEmail}
+                  handleClose={() => setOpenEmailsPopup(false)}
+                />
+              )}
               <SimpleBar
                 style={{
                   height: '285px',
@@ -335,11 +325,11 @@ export default function Feeds({
                 }}
                 autoHide>
                 <ul role="list" className={`flex flex-col gap-8`}>
-                  {inboxData.map((item) => (
+                  {emailData.map((item) => (
                     <div
                       className={'flex gap-3'}
                       onClick={() => {
-                        setThreadId(item[0]?.thread_id);
+                        setSingleEmail(item);
                         setOpenEmailsPopup(true);
                       }}
                       role={'button'}
