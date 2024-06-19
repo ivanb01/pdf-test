@@ -32,9 +32,7 @@ import { addContactActivity } from '@api/contacts';
 import { updateContactLocally } from '@store/contacts/slice';
 import PortfolioEmailTemplate from '@components/Portfolio/PortfolioEmailTemplate/portfolio-email-template';
 import PropertiesSkeleton from '@components/SkeletonLoaders/PropertiesSkeleton';
-import { getContactNotes, updateContact } from 'api/contacts';
-import useInfiniteScroll from 'react-infinite-scroll-hook';
-import SpinnerLoader from '@components/shared/SpinnerLoader';
+import { updateContact } from 'api/contacts';
 
 export default function PropertiesSection({ contactId, category, noSelect }) {
   const refetchPart = useSelector((state) => state.global.refetchPart);
@@ -178,6 +176,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     });
   };
 
+  useEffect(() => {
+    console.log(filtersCount, 'filtersCount');
+  }, [filtersCount]);
+
   // const lookingForData = useSelector((state) => state.clientDetails.lookingForData);
 
   //* FORMIK *//
@@ -197,10 +199,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [showProperties, setShowProperties] = useState(true);
   const [previewMode, setPreviewMode] = useState(false);
   const [isDeleting, setIsDeleting] = useState({ loading: false, id: undefined });
-  const [propertiesLoading, setPropertiesLoading] = useState(true);
-  const [propertiesOffset, setPropertiesOffset] = useState(0);
-  const [propertiesHasNextPage, setPropertiesHasNextPage] = useState(true);
-  const [error, setError] = useState();
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -271,7 +269,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
-                description: `Properties Sent via Email: to ${c.first_name} - ${getBaseUrl()}/portfolio?share_id=${
+                description: `Properties Sent via Email: to ${
+                  c.first_name
+                } - ${getBaseUrl()}/portfolio?share_id=${
                   item?.portfolio_sharable_id ?? ''
                 }`,
               };
@@ -285,7 +285,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   if (!((sendMethod === 2 && c.phone_number) || (sendMethod === 3 && c.phone_number))) {
                     await updateContact(contactToBeUpdated.id, { last_communication_date: new Date() }).then(() => {
                       dispatch(updateContactLocally({ ...contactToBeUpdated, last_communication_date: new Date() }));
-                      getPortfolioByContactId(contactId, 0, 'all').then((res) => {
+                      getPortfolioByContactId(contactId).then((res) => {
                         setUserProperties(res?.data);
                       });
                     });
@@ -304,7 +304,9 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `Properties Sent via SMS: to ${c.first_name} - ${getBaseUrl()}/portfolio?share_id=${
+                  description: `Properties Sent via SMS: to ${
+                    c.first_name
+                  } - ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };
@@ -315,7 +317,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
 
                 await addContactActivity(contact?.id, activity).then(() => {
                   updateContact(contact.id, { last_communication_date: new Date() }).then(() => {
-                    getPortfolioByContactId(contactId, 0, 'all').then((res) => {
+                    getPortfolioByContactId(contactId).then((res) => {
                       setUserProperties(res?.data);
                     });
                     dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
@@ -522,54 +524,37 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     {
       name: 'Portfolio',
       href: '#',
-      count: userProperties?.portfolio_count,
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined).length,
     },
     {
       name: 'Liked',
       href: '#',
-      count: userProperties?.liked_count,
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'liked')
+        .length,
     },
     {
       name: 'Disliked',
       href: '#',
-      count: userProperties?.disliked_count,
+      count: userProperties?.properties?.filter((p) => p?.property_details !== undefined && p.status === 'disliked')
+        .length,
     },
   ];
 
   const [propertiesCurrentTab, setPropertiesCurrentTab] = useState(0);
 
-  const status =
-    propertiesCurrentTab === 1
-      ? 'all'
-      : propertiesCurrentTab === 2
-        ? 'liked'
-        : propertiesCurrentTab === 3
-          ? 'disliked'
-          : 'all';
-
   useEffect(() => {
-    console.log(propertiesCurrentTab, 'propertiesCurrentTab');
-  }, [propertiesCurrentTab]);
-
-  useEffect(() => {
-    const fetchProperties = () => {
-      setPropertiesLoading(true);
-      setPropertiesOffset(0);
-      setPropertiesHasNextPage(true);
-      getPortfolioByContactId(contactId, 0, status)
+    if (contactId) {
+      getPortfolioByContactId(contactId)
         .then((res) => {
           setUserProperties(res?.data);
-          setPropertiesLoading(false);
-          setPropertiesOffset(res?.data.count);
+          setLoading(false);
         })
         .catch(() => {
           toast.error('Error while loading items');
-          setPropertiesLoading(false);
+          setLoading(false);
         });
-    };
-
-    fetchProperties();
-  }, [propertiesCurrentTab]);
+    }
+  }, [contactId]);
 
   const updateUserProperties = () => {
     let properties = [];
@@ -584,15 +569,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
     }
     return properties;
   };
-
   useEffect(() => {
     updateUserProperties();
   }, [propertiesCurrentTab, userProperties]);
-
   const _deletePropertyFromPortfolio = (deleteId, undoId) => {
     setIsDeleting({ loading: true, id: undoId });
-    const propertyStatus = userProperties.properties.find((p) => p.id === deleteId).status;
-    console.log(propertyStatus, 'property');
     deletePropertyFromPortfolio(deleteId)
       .then(() => {
         setIsDeleting({ loading: false, id: undoId });
@@ -600,9 +581,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           return {
             ...prev,
             properties: prev.properties.filter((p) => p.id !== deleteId),
-            portfolio_count: propertyStatus === 'saved' ? prev.portfolio_count - 1 : prev.portfolio_count,
-            disliked_count: propertyStatus === 'disliked' ? prev.disliked_count - 1 : prev.disliked_count,
-            liked_count: propertyStatus === 'liked' ? prev.liked_count - 1 : prev.liked_count,
           };
         });
         const toastId = toast.custom(() => (
@@ -620,22 +598,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                 onClick={() => {
                   addPropertiesInPortfolio([Number(contactId)], [Number(undoId)]).then(() => {
                     toast.remove(toastId);
-                    const propertyToBeAdded = userProperties?.properties?.find((p) => p.id === deleteId);
-                    const indexToBeAdded = userProperties?.properties?.findIndex((p) => p.id === deleteId);
-                    setUserProperties((prev) => {
-                      const updatedProperties = [...prev.properties];
-
-                      if (indexToBeAdded !== -1 && propertyToBeAdded) {
-                        updatedProperties.splice(indexToBeAdded, 0, propertyToBeAdded);
-                      }
-
-                      return {
-                        ...prev,
-                        properties: updatedProperties,
-                        portfolio_count: propertyStatus === 'saved' ? prev.portfolio_count + 1 : prev.portfolio_count,
-                        disliked_count: propertyStatus === 'disliked' ? prev.disliked_count + 1 : prev.disliked_count,
-                        liked_count: propertyStatus === 'liked' ? prev.liked_count + 1 : prev.liked_count,
-                      };
+                    getPortfolioByContactId(contactId).then((res) => {
+                      setUserProperties(res?.data);
                     });
                   });
                 }}
@@ -651,51 +615,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
         setLoading(false);
       });
   };
-
-  const getPortfolio = (propertiesOffset) => {
-    return getPortfolioByContactId(contactId, propertiesOffset, status)
-      .then((response) => {
-        return {
-          propertiesHasNextPage: true,
-          data: response.data,
-          count: response.data.count,
-        };
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error('Error fetching notes');
-      });
-  };
-
-  async function loadMore() {
-    try {
-      const { data, count, propertiesHasNextPage: newNotesHasNextPage } = await getPortfolio(propertiesOffset);
-      setUserProperties((current) => {
-        return {
-          ...current,
-          properties: [...current.properties, ...data?.properties],
-          count: count,
-        };
-      });
-
-      setPropertiesOffset(propertiesOffset + count);
-      setPropertiesHasNextPage(newNotesHasNextPage);
-      if (count === 0) {
-        setPropertiesHasNextPage(false);
-      }
-    } catch (err) {
-      setError(err);
-    } finally {
-      setPropertiesLoading(false);
-    }
-  }
-
-  const [infiniteRef] = useInfiniteScroll({
-    loading: propertiesLoading,
-    hasNextPage: propertiesHasNextPage,
-    onLoadMore: loadMore,
-    disabled: !!error,
-  });
 
   useEffect(() => {
     if (!open) {
@@ -763,38 +682,23 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                     className="py-4"
                     tabs={tabs}
                   />
-                  {propertiesLoading ? (
-                    <div className="relative details-tabs-fixed-height bg-white">
-                      <PropertiesSkeleton cardsLength={12} />
-                    </div>
-                  ) : propertiesCurrentTab !== 0 && updateUserProperties()?.length === 0 ? (
+                  {propertiesCurrentTab !== 0 && updateUserProperties()?.length === 0 ? (
                     <EmptyPortfolioClientDetails status={propertiesCurrentTab} />
-                  ) : propertiesCurrentTab !== 0 ? (
-                    <div className={'flex justify-center items-center flex-col'}>
-                      <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {updateUserProperties()?.map((property, index) => (
-                          <PropertyCard
-                            noSelect
-                            clientNote={property?.contact_notes}
-                            key={index}
-                            isPropertyDeleteing={isDeleting}
-                            deletePropertyFromPortfolio={() =>
-                              _deletePropertyFromPortfolio(property.id, property?.property_id)
-                            }
-                            property={property.property_details && property.property_details}
-                          />
-                        ))}
-                      </div>
-                      {/*<div>*/}
-                      {propertiesHasNextPage && (
-                        <div ref={infiniteRef}>
-                          <SpinnerLoader />
-                        </div>
-                      )}
-                      {/*</div>*/}
-                    </div>
                   ) : (
-                    <></>
+                    <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {updateUserProperties()?.map((property, index) => (
+                        <PropertyCard
+                          noSelect
+                          clientNote={property?.contact_notes}
+                          key={index}
+                          isPropertyDeleteing={isDeleting}
+                          deletePropertyFromPortfolio={() =>
+                            _deletePropertyFromPortfolio(property.id, property?.property_id)
+                          }
+                          property={property.property_details && property.property_details}
+                        />
+                      ))}
+                    </div>
                   )}
                   {propertiesCurrentTab === 0 && (
                     <div className={`${selectedProperties.length > 0 && 'pb-[80px]'}`}>
