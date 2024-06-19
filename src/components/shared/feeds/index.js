@@ -171,7 +171,6 @@ export default function Feeds({
   const [singleEmail, setSingleEmail] = useState();
 
   function truncateText(text, maxLength = 200) {
-    console.log(text);
     if (text.length > maxLength) {
       return text.substring(0, maxLength) + '...';
     }
