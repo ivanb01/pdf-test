@@ -33,7 +33,7 @@ export const updatePropertiesInPortfolio = (id) => {
 };
 export const getPortfolioByContactId = (id, offset, status) => {
   return axiosInstance.get(`v2/property-portfolio/${id}`, {
-    params: { status, limit: 10, offset },
+    params: { status, limit: 20, offset },
   });
 };
 
