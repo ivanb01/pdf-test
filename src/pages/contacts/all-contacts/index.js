@@ -66,7 +66,6 @@ const AllContacts = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(allContacts);
     const ai_unapproved = allContacts?.filter(
       (client) =>
         ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
@@ -220,7 +219,7 @@ const AllContacts = () => {
           <div className={'flex justify-between items-center p-6 py-4'}>
             <div className="flex items-center">
               <h3 className={'text-xl leading-7 font-medium mr-4'}>All Contacts</h3>
-              {contacts?.filter(
+              {allContacts?.filter(
                 (contact) =>
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
               ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
