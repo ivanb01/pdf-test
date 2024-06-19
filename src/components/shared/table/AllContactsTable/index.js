@@ -66,7 +66,7 @@ const AllContactsTable = ({ data, handleCardEdit, infiniteScrollRef, showInfinit
             CONTACT
           </th>
           <th scope="col" className="flex-grow py-3  text-left  text-xs leading-4 font-medium tracking-wider">
-            TYPE
+            TYPE / STATUS
           </th>
           <th scope="col" className="flex-grow py-3   text-left   text-xs leading-4 font-medium tracking-wider">
             CONTACT SUMMARY
