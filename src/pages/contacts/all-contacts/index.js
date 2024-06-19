@@ -38,6 +38,7 @@ const AllContacts = () => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(20);
   const [contacts, setContacts] = useState([]);
+  const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const { isFetching, isLoading, isError, error, data, isPreviousData } = useQuery({
     queryKey: ['clients', offset, searchTerm],
@@ -64,14 +65,15 @@ const AllContacts = () => {
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const ai_unapproved = allContacts?.data?.filter(
-  //     (client) =>
-  //       ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
-  //       (client.approved_ai === false || client.approved_ai === null),
-  //   );
-  //   setUnapprovedContacts(ai_unapproved);
-  // }, [allContacts]);
+  useEffect(() => {
+    console.log(allContacts);
+    const ai_unapproved = allContacts?.filter(
+      (client) =>
+        ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(client.import_source) &&
+        (client.approved_ai === false || client.approved_ai === null),
+    );
+    setUnapprovedContacts(ai_unapproved);
+  }, [allContacts]);
 
   useEffect(() => {
     dispatch(setOpenedTab(-1));
@@ -218,10 +220,10 @@ const AllContacts = () => {
           <div className={'flex justify-between items-center p-6 py-4'}>
             <div className="flex items-center">
               <h3 className={'text-xl leading-7 font-medium mr-4'}>All Contacts</h3>
-              {/* {filteredContacts?.filter(
+              {contacts?.filter(
                 (contact) =>
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
-              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />} */}
+              ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
             {/* <div className={'flex gap-2'}>
               <Button
@@ -291,7 +293,7 @@ const AllContacts = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '210px' : '129px'
+                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '196px' : '129px'
               })`,
               overflow: 'hidden',
             }}>
