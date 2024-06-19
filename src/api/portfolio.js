@@ -11,7 +11,9 @@ export const addPropertiesInPortfolio = (contact_ids, property_ids) => {
 export const getPortfolioByShareId = (id) => {
   return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/v2/property-portfolio/share/${id}`, {
     params: {
-      status: 'all',
+      status: 'liked',
+      limit: 10,
+      offset: 0,
     },
   });
 };
@@ -29,9 +31,9 @@ export const updatePropertiesInPortfolio = (id) => {
     status: 'saved',
   });
 };
-export const getPortfolioByContactId = (id) => {
+export const getPortfolioByContactId = (id, offset, status) => {
   return axiosInstance.get(`v2/property-portfolio/${id}`, {
-    params: { status: 'all' },
+    params: { status, limit: 10, offset },
   });
 };
 
