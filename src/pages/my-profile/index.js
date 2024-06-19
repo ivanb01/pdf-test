@@ -23,6 +23,7 @@ import PlanOptions from '@components/PlanOptions';
 import withAuth from '@components/withAuth';
 import useLocalStorage from 'hooks/useLocalStorage';
 import ImportsSummaryTable from '@components/shared/table/ImportsSummaryTable';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const dispatch = useDispatch();
@@ -171,8 +172,7 @@ const index = () => {
                 loading={loadingActivate}
                 googleActivated={consentGiven()}
                 // disabled={consentGiven()}
-                onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}
-              >
+                onClick={() => (consentGiven() ? deactivateGoogleConsent() : activateGoogleConsent())}>
                 {consentGiven() ? 'Connected' : 'Connect'}
               </Button>
             </div>
@@ -282,7 +282,7 @@ const index = () => {
   ];
   return (
     <>
-      <MainMenu />
+      <MainMenuV2 />
       <div className="w-full flex items-center justify-center" style={{ height: 'calc(100vh - 70px)' }}>
         <div className="border-t border-gray2 flex h-full min-h-full w-full">
           <div className="w-[375px] h-full border-r border-gray2 px-1 py-5">
@@ -294,8 +294,7 @@ const index = () => {
                   onClick={() => setCurrentTab(tab.id)}
                   className={`p-3 flex items-center ${
                     currentTab == tab.id ? 'bg-lightBlue1 text-lightBlue3' : 'text-gray4 hover:text-gray5'
-                  } rounded-md`}
-                >
+                  } rounded-md`}>
                   {tab.icon}
                   {tab.name}
                 </a>

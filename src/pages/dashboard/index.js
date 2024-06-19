@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getGoogleAuthCallback } from '@api/google';
 import { useRouter } from 'next/router';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ export default function Dashboard() {
   return (
     <>
       <div className={'sticky z-[10] top-0'}>
-        <MainMenu />
+        <MainMenuV2 />
       </div>
       <AgentDashboardLayout
         success={success}

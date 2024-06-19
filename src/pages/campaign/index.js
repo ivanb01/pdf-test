@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CreateCampaignSidebar from '@components/CampaignActionSidebar/CreateCampaignSidebar';
 import { clientOptions } from '@global/variables';
 import EmailTemplatesInCampaign from '@components/campaign/EmailTemplatesInCampaign';
+import MainMenuV2 from '@components/shared/menu/menu-v2';
 
 const index = () => {
   const [current, setCurrent] = useState(0);
@@ -183,7 +184,7 @@ const index = () => {
     <div style={{ maxHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
       <CreateCampaignSidebar open={showCreateCampaign} setOpen={setShowCreateCampaign} />
       <div ref={elementRef} className={'sticky top-0 z-[10]'}>
-        <MainMenu />
+        <MainMenuV2 />
       </div>
       <div
         className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
