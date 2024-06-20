@@ -40,7 +40,6 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
 
   const onSendEmailSuccess = (data, variables) => {
     toast.success('Email successfully sent!');
-    onClose();
   };
 
   const onSendEmailError = () => {
@@ -53,8 +52,8 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
   });
 
   const handleSubmit = (data, variables) => {
+    console.log('data', data);
     let recipients = [];
-
     data.landlords.forEach(async (landlord) => {
       recipients = [
         ...recipients,
@@ -133,7 +132,7 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
   };
 
   const ValidationSchema = Yup.object().shape({
-    landlords: Yup.array().min(1, 'Contacts are a required field!').required('Lanlords are required is required'),
+    landlords: Yup.array().min(1, 'Landlords are a required field!').required('Lanlords are required is required'),
     contacts: Yup.array().of(
       Yup.object().shape({
         id: Yup.string(),

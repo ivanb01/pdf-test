@@ -1,13 +1,11 @@
-import React from 'react';
-import PaymentSuccessContaienr from 'containers/Applications/PaymentSuccessContainer';
-import { Header } from '@components/public/Header';
+import React from "react";
+import PaymentSuccessContaienr from "containers/Applications/PaymentSuccessContainer";
 
 const index = () => {
   return (
-    <>
-      <Header noLinks={true}/>
+    <div>
       <PaymentSuccessContaienr />
-    </>
+    </div>
   );
 };
 

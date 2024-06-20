@@ -32,7 +32,7 @@ const generateSingle = async (applicationData) => {
   for (const document of documentsArray) {
     let blobResponse = null;
     const format = document.name_with_format.split('.').pop();
-    if (format === 'jpg' || format === 'png' || format === 'jpeg') {
+    if (format === 'jpg' || format === 'png') {
       const imageFile = await pdf(<ImageRender source={document.presigned_url} />).toBlob();
       await merger.add(imageFile);
     } else if (format === 'pdf') {

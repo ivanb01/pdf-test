@@ -31,8 +31,8 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Link from 'next/link';
 
 const documentType = {
-  bank_statement_1: 'BANK_STATEMENT_1',
-  bank_statement_2: 'BANK_STATEMENT_2',
+  bank_statement_1: 'BANK STATEMENT 1',
+  bank_statement_2: 'BANK STATEMENT 2',
   employment_letter: 'EMPLOYMENT_LETTER',
   paystub_1: 'PAYSTUB_1',
   paystub_2: 'PAYSTUB_2',
@@ -380,19 +380,17 @@ const ApplyForm = () => {
 
       const filteredValues = {
         ...values,
-        previous_employer_employed_since_date: !!values.previous_employer_employed_since_date
-          ? values.previous_employer_employed_since_date
-          : null,
-
         property_state: propertyStateValue,
         client_state: clientStateValue,
         documents,
+        // do_credit_check: true,
         signature: null,
         annual_compensation: parseFloat(values.annual_compensation),
         property_id: '1b9ce199',
         contractor_id: 'agent@email.com',
         agent_id: 'agent@email.com',
       };
+
       mutatePostApplication(filteredValues);
     },
   });
@@ -434,8 +432,9 @@ const ApplyForm = () => {
     const employmentLengthYears = moment().diff(date, 'years');
     let employmentLength = '';
     if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
-      employmentLength = '0 days';
-      return employmentLength;
+      employmentLength = '0';
+      formik.setFieldValue('employment_length', employmentLength);
+      return;
     }
     if (employmentLengthYears) {
       employmentLength = `${employmentLengthYears} year${employmentLengthYears !== 1 ? 's' : ''}`;
@@ -458,8 +457,9 @@ const ApplyForm = () => {
     const employmentLengthYears = moment().diff(date, 'years');
     let employmentLength = '';
     if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
-      employmentLength = '0 days';
-      return employmentLength;
+      employmentLength = '0';
+      formik.setFieldValue('previous_employment_length', employmentLength);
+      return;
     }
     if (employmentLengthYears) {
       employmentLength = `${employmentLengthYears} year${employmentLengthYears !== 1 ? 's' : ''}`;
@@ -505,10 +505,6 @@ const ApplyForm = () => {
     await formik.setFieldValue('property_state', '');
   };
 
-  const resetApplication = () => {
-    resetMutation();
-    formik.resetForm();
-  };
   const resetAfterSuccess = () => {
     setTimeout(() => {
       resetApplication();

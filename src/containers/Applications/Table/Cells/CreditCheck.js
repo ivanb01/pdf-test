@@ -4,18 +4,14 @@ import { CircularProgress } from '@mui/material';
 import Button from '@components/shared/button';
 import { useFetchCreditCheckReport, useRunCreditCheck } from 'containers/Applications/queries/mutations';
 import { useFetchPropertyApplicationsPaginated } from 'containers/Applications/queries/queries';
+import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import { useSendEmail } from '@helpers/queries/mutations';
-import toast from 'react-hot-toast';
-import PaymentLinkEmailTemplate from 'containers/Applications/PaymentLinkEmailTemplate';
-import { useSelector } from 'react-redux';
-import { render } from '@react-email/components';
 
 export const CreditCheckCell = (props) => {
+  const router = useRouter();
   const { fetchApplicationsParams, info } = props;
   const { public_identifier, credit_check_payment_successfull, credit_check_ran_successfully } = info.row.original;
-  const userInfo = useSelector((state) => state.global.userInfo);
 
   const { refetch: refetchApplications } = useFetchPropertyApplicationsPaginated(fetchApplicationsParams);
 
@@ -39,11 +35,14 @@ export const CreditCheckCell = (props) => {
     toast.error('Unable to download credit check report!');
   };
 
-  const { mutate: mutateFetchCreditCheckReport, isPending: isPendingFetchingCreditCheckReport } =
-    useFetchCreditCheckReport({
-      onSuccess: onDownloadCreditReportSuccess,
-      onError: onDownloadCreditReportError,
-    });
+  const {
+    data,
+    mutate: mutateFetchCreditCheckReport,
+    isPending: isPendingFetchingCreditCheckReport,
+  } = useFetchCreditCheckReport({
+    onSuccess: onDownloadCreditReportSuccess,
+    onError: onDownloadCreditReportError,
+  });
 
   const onRunCreditCheckRunSuccess = () => {
     refetchApplications();
@@ -68,47 +67,12 @@ export const CreditCheckCell = (props) => {
   };
 
   const [generatingPaymentLink, setGeneratingPaymentLink] = useState(false);
-  const onSendPaymentLinkEmailSuccess = () => {
-    toast.success('Payment link sent successfully!');
-  };
-  const { mutate: mutateSendEmail } = useSendEmail({
-    onSuccess: onSendPaymentLinkEmailSuccess,
-  });
-
-  const handleSendPaymentLinkEmail = async (paymentLink) => {
-    const {
-      client_email: clientEmail,
-      client_first_name: clientFirstName,
-      client_last_name: clientLastName,
-    } = info.row.original;
-    const { first_name: agentFirstName, last_name: agentLastName } = userInfo;
-
-    const emailBody = {
-      to: [clientEmail],
-      subject: 'Opgny credit check payment link',
-      body: render(
-        <PaymentLinkEmailTemplate
-          paymentLink={paymentLink}
-          email={clientEmail}
-          first_name={clientFirstName}
-          agent_first_name={agentFirstName}
-          agent_last_name={agentLastName}
-        />,
-        {
-          pretty: true,
-        },
-      ),
-    };
-
-    mutateSendEmail(emailBody);
-  };
   const handleGeneratePaymenkLink = async (e) => {
     e.stopPropagation();
     setGeneratingPaymentLink(true);
-
     try {
       const response = await generateCreditCheckPaymenkLink(public_identifier);
-      if (response) handleSendPaymentLinkEmail(response.data.payment_link_url);
+      window.open(response.data.payment_link_url, '_blank', 'noopener,noreferrer');
     } catch (e) {
       toast.error('Unable to generate payment link!');
     } finally {
