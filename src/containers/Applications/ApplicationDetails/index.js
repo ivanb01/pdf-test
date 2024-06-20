@@ -128,9 +128,7 @@ const ApplicationDetails = () => {
       ...formattedInitialValues,
     },
     enableReinitialize: true,
-    onSubmit: () => {
-      console.log('submit');
-    },
+    onSubmit: () => {},
   });
 
   useEffect(() => {
@@ -549,10 +547,10 @@ const DocumentsInformation = forwardRef((props, ref) => {
     return Object.entries(formik.values)
       .flatMap(([key, document]) => {
         if (key !== 'other_documents' && document) {
-          const { presigned_url, id, position, ...rest } = document;
+          const { presigned_url, id, position, document_type, ...rest } = document;
           return {
             ...rest,
-            document_type: nameToType[rest?.name],
+            document_type: document_type || nameToType[rest?.name],
           };
         } else if (document) return filterOtherDocuments(formik.values.other_documents);
       })

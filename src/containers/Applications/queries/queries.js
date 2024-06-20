@@ -86,17 +86,6 @@ export const useFetchAllClients = (options) => {
   });
 };
 
-export const useGenerateCreditCheckPaymenkLink = (id, options) => {
-  return useQuery({
-    queryKey: ['generated-payment-link'],
-    queryFn: () => {
-      return generateCreditCheckPaymenkLink(id);
-    },
-    enabled: false,
-    ...options,
-  });
-};
-
 export const useFetchApplicationDocuments = (propertyId, options = {}) => {
   return useQuery({
     queryKey: ['property-documents', propertyId],
