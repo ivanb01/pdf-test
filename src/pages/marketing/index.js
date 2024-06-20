@@ -330,7 +330,7 @@ const index = () => {
   ];
 
   useEffect(() => {
-    document.querySelector('.main-menu').classList.add('main-menu-important');
+    // document.querySelector('.main-menu').classList.add('main-menu-important');
   }, []);
 
   return (

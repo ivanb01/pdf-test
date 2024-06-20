@@ -44,6 +44,7 @@ function classNames(...classes) {
 export default function MainMenuV2() {
   const router = useRouter();
   const [selected, setSelected] = useState(0);
+  const user = useSelector((state) => state.global.user);
 
   const [items] = useState([
     // {
@@ -55,6 +56,7 @@ export default function MainMenuV2() {
       title: 'Contacts',
       href: '/contacts/clients',
       submenus: [
+        { id: 7, description: 'Everyone in your contact list.', title: 'All Contacts', href: '/contacts/all-contacts' },
         { id: 0, description: 'Active client list pipeline.', title: 'Clients', href: '/contacts/clients' },
         {
           id: 1,
@@ -95,6 +97,11 @@ export default function MainMenuV2() {
       href: '/properties',
     },
     {
+      id: 10,
+      title: 'Listings',
+      href: '/listings',
+    },
+    {
       id: 4,
       title: 'Applications',
       href: '/applications',
@@ -115,8 +122,13 @@ export default function MainMenuV2() {
       href: '/leads',
     },
     {
+      id: 9,
+      title: 'Marketing',
+      href: '/marketing',
+    },
+    {
       id: 7,
-      title: 'Online Forms',
+      title: 'Forms',
       href: '/online-forms',
     },
     {
@@ -286,11 +298,18 @@ export default function MainMenuV2() {
     <Disclosure as="nav" className="bg-oxford-gradient">
       {({ menuOpen }) => (
         <>
-          <div className="mx-auto px-4 custom:px-6 lg:px-8">
+          <div className="mx-auto px-4 custom:px-6">
             <div className="flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Image className="h-5 w-auto" src={oneLineLogo} alt="Your Company" />
+                  <Image
+                    className="h-5 w-auto"
+                    src={oneLineLogo}
+                    onClick={() => {
+                      router.push('/dashboard');
+                    }}
+                    alt="Your Company"
+                  />
                 </div>
                 <div className="hidden custom:ml-6 custom:block">
                   <div className="flex space-x-4">
@@ -319,12 +338,12 @@ export default function MainMenuV2() {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1">
                                 <Popover.Panel
-                                  className={` ${item.title == 'Resources' ? ' left-[-200%]' : '-left-8'} absolute top-full z-10 mt-3 w-[400px] max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5`}>
+                                  className={` ${item.title == 'Resources' ? ' left-[-200%]' : '-left-8'} absolute top-full z-[9999] mt-3 w-[400px] max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5`}>
                                   <div className="p-4">
                                     {item.submenus.map((submenu) => (
                                       <div
                                         key={submenu.title}
-                                        className={`${typeof window !== 'undefined' && window.location.pathname == submenu.href && 'bg-gray-50'} group relative flex gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50`}>
+                                        className={`${typeof window !== 'undefined' && window.location.pathname == submenu.href && 'bg-gray-50'} group relative flex gap-x-4 rounded-lg px-4 py-2 text-sm leading-6 hover:bg-gray-50`}>
                                         {/* <div className="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
                                       <item.icon className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />
                                     </div> */}
@@ -335,7 +354,7 @@ export default function MainMenuV2() {
                                             {submenu.title}
                                             <span className="absolute inset-0" />
                                           </a>
-                                          <p className="mt-1 text-gray-600">{submenu.description}</p>
+                                          <p className="mt-0 text-gray-600">{submenu.description}</p>
                                         </div>
                                       </div>
                                     ))}
@@ -545,7 +564,7 @@ export default function MainMenuV2() {
                             <Disclosure.Button
                               key={item.id}
                               as="a"
-                              // href={item.href}
+                              onClick={() => router.push(item.href)}
                               className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-white hover:bg-gray-50">
                               {item.title}
                             </Disclosure.Button>
@@ -558,7 +577,8 @@ export default function MainMenuV2() {
                   <Disclosure.Button
                     as="a"
                     href="#"
-                    className="block rounded-md px-3 py-2 text-base font-medium text-white">
+                    className="block rounded-md px-3 py-2 text-base font-medium text-white"
+                    onClick={() => router.push(item.href)}>
                     {item.title}
                   </Disclosure.Button>
                 ),
@@ -567,35 +587,29 @@ export default function MainMenuV2() {
             <div className="border-t border-gray-300 pb-3 pt-4">
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
+                  <img className="h-10 w-10 rounded-full" src={placeholder.src} alt="" />
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-white">Tom Cook</div>
-                  <div className="text-sm font-medium text-white">tom@example.com</div>
+                  <div className="text-base font-medium text-white">
+                    {userInfo?.first_name ? userInfo?.first_name + ' ' + userInfo?.last_name : userInfo?.email}
+                  </div>
+                  <div className="text-sm font-medium text-white">{user?.email}</div>
                 </div>
               </div>
               <div className="mt-3 space-y-1 px-2">
                 <Disclosure.Button
                   as="a"
                   href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white">
-                  Your Profile
-                </Disclosure.Button>
-                <Disclosure.Button
-                  as="a"
-                  href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white">
+                  className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white"
+                  onClick={() => router.push('/settings/my-profile')}>
                   Settings
                 </Disclosure.Button>
                 <Disclosure.Button
                   as="a"
                   href="#"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white">
-                  Sign out
+                  className="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white"
+                  onClick={handleSignOut}>
+                  Logout
                 </Disclosure.Button>
               </div>
             </div>
