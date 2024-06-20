@@ -323,7 +323,8 @@ const index = () => {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.${generateSMSFooter(userInfo)}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.
+\n\n${generateSMSFooter(userInfo)}`,
             )
               .then(async (res) => {
                 let activity = {
