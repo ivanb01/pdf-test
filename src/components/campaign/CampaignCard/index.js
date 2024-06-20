@@ -65,7 +65,7 @@ const CampaignCard = ({
                   ? `${props.contact_category_2}s | ${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
                   : 'All Clients:'
                 : openedTab !== 0
-                  ? `${props.contact_category_2}:`
+                  ? `${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
                   : 'All Clients:'}
             </div>
             <div className={'flex'}>
