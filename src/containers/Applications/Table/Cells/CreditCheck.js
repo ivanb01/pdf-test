@@ -89,7 +89,6 @@ export const CreditCheckCell = (props) => {
 
     mutateSendEmail(emailBody);
   };
-
   const handleGeneratePaymenkLink = async (e) => {
     e.stopPropagation();
     setGeneratingPaymentLink(true);
