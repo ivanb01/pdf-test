@@ -6,7 +6,7 @@ import TooltipComponent from '@components/shared/tooltip';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
-import React from 'react';
+import React, { useState } from 'react';
 import Table from '..';
 
 const AIUnapprovedTable = ({
@@ -20,6 +20,8 @@ const AIUnapprovedTable = ({
   setSelectedPeople,
   handleAction,
 }) => {
+  const [isHovered, setIsHovered] = useState(-1);
+
   const formatSummaryText = (text) => {
     if (text.length > 160) {
       return text.slice(0, 160) + '...';
@@ -69,14 +71,14 @@ const AIUnapprovedTable = ({
       <tbody className=" bg-white">
         {ai_unapprovedContacts?.map((dataItem, index) => (
           <tr
+            onMouseEnter={() => setIsHovered(dataItem.id)}
+            onMouseLeave={() => setIsHovered(-1)}
             key={dataItem.index}
             className="hover:bg-lightBlue1 cursor-pointer contact-row group bg-white group border-b border-gray-200"
-            // onClick={(event) => handleClickRow(contact, event)}
             onClick={(e) => {
               if (e.target.type === 'checkbox') return;
               handleCardEdit(dataItem);
             }}>
-            {/*onClick={(event) => handleClickRow(dataItem, event)}>*/}
             <td className="whitespace-nowrap py-4 text-sm pl-6 flex items-center">
               <input
                 type="checkbox"
@@ -111,7 +113,9 @@ const AIUnapprovedTable = ({
               </Chip>
             </td>
             <td className="whitespace-nowrap text-center px-3 py-4 text-sm text-gray-500">
-              <Chip statusStyle className={getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}>
+              <Chip
+                statusStyle
+                className={`${isHovered === dataItem?.id && getContactStatusByStatusId(dataItem.category_id, dataItem.status_id).toLowerCase() === 'new lead' ? 'border border-lightBlue3' : ''} ${getContactStatusColorByStatusId(dataItem.category_id, dataItem.status_id)}`}>
                 {getContactStatusByStatusId(dataItem.category_id, dataItem.status_id)}
               </Chip>
             </td>
