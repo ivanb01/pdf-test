@@ -248,7 +248,10 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
             <div className="flex items-center">
               <div className="w-">{icon}</div>
               <div className="ml-4 text-sm">
-                <div className="text-gray7 font-semibold">{title}</div>
+                <div className="text-gray7">
+                  <span className="font-semibold">Event {index + 1}: </span>
+                  {title}
+                </div>
               </div>
             </div>
             <KeyboardArrowRight className="text-gray7 group-hover:hidden" />
@@ -414,6 +417,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
           </div>
           <div className={`w-1/2 bg-gray10 relative ${animate ? 'elementToFadeIn' : ''}`}>
             <SimpleBar ref={simpleBarRef} style={{ maxHeight: 'calc(100vh - 410px)', height: '100vh' }}>
+              <div className="text-gray8 text-sm font-semibold px-[22px] py-4">Event {selectedEvent + 1}</div>
+              <hr />
               <div className=" px-[22px] py-[26px]">
                 {/* <div>
                 <div className="mb-4 text-gray8 text-sm font-medium">Choose the type of event you want to send:</div>

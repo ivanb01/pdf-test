@@ -12,7 +12,7 @@ export const useCampaignForm = () => {
   const [events, setEvents] = useState([
     {
       action: 'Send',
-      title: 'New Event',
+      title: '',
       body_html: '',
       body: '',
       wait_interval: '-d',
@@ -98,7 +98,7 @@ export const useCampaignForm = () => {
   };
   const addNewEvent = () => {
     let newEvent = {
-      title: 'New Event',
+      title: '',
       body_html: '',
       body: '',
       wait_interval: '-d',

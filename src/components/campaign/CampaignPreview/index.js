@@ -16,6 +16,7 @@ import { areObjectsEqual, getTimeWithAMPM } from '@global/functions';
 
 const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, className }) => {
   const [campaignData, setCampaignData] = useState();
+  const [activeIndex, setActiveIndex] = useState(1);
   useEffect(() => {
     if (!open) {
       return;
@@ -100,7 +101,10 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
                               <Divider />
                             </div>
                             <div
-                              onClick={() => setActiveEvent({ ...e })}
+                              onClick={() => {
+                                setActiveEvent({ ...e });
+                                setActiveIndex(index + 1);
+                              }}
                               className={`cursor-pointer rounded-lg border ${
                                 areObjectsEqual(campaignData?.events[index], activeEvent) &&
                                 'border-[#BAE6FD] bg-lightBlue1'
@@ -121,7 +125,10 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
                                     </CircleIcon>
                                   </div>
                                   <div className="ml-4 text-sm">
-                                    <div className="text-gray7 font-semibold"> {e?.preview?.preview?.subject}</div>
+                                    <div className="text-gray7">
+                                      <span className="font-semibold">Event {index + 1}:</span>{' '}
+                                      {e?.preview?.preview?.subject}
+                                    </div>
                                   </div>
                                 </div>
                                 <KeyboardArrowRight className={`text-gray7`} />
@@ -141,7 +148,7 @@ const CampaignPreview = ({ open, setOpen, campaignId, data, campaignFor, classNa
             <div className="mb-6 pt-[26px]">
               <div className={'sticky top-0'}>
                 <div className={'px-6 pb-3 border-b border-gray2 '}>
-                  <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
+                  <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event {activeIndex}</h5>
                   <div className={'flex items-center gap-1'}>
                     {activeEvent?.event_type === 'Email' ? (
                       <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3'} />
