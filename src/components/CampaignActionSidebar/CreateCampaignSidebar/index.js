@@ -100,6 +100,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
           ...res.data.campaign,
           actions: res.data.actions,
           campaign_id: res.data.campaign.id,
+          contact_category_2: [4, 5, 7, 6].includes(res.data.campaign.contact_category_id)
+            ? clientOptions.find((c) => c.id == res.data.campaign.contact_category_id).name
+            : 'All Clients',
         }),
       );
       resetCreateCampaign();
@@ -306,6 +309,9 @@ const CreateCampaignSidebar = ({ open, setOpen }) => {
     }, 500);
   }, [selectedEvent]);
 
+  useEffect(() => {
+    console.log(campaign);
+  }, [campaign]);
   return (
     <SlideOver
       width="w-[1240px]"
