@@ -22,12 +22,14 @@ import { getContacts, getContactsPaginated } from '@api/contacts';
 import { setAllContacts } from '@store/contacts/slice';
 import { useQuery } from '@tanstack/react-query';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
+import { debounce } from '@mui/material';
+import DropdownWithSearch from '@components/dropdownWithSearch';
 
 const AllContacts = () => {
   const dispatch = useDispatch();
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(null);
   const [showEditContact, setShowEditContact] = useState(false);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [open, setOpen] = useState(false);
@@ -39,18 +41,32 @@ const AllContacts = () => {
   const [limit, setLimit] = useState(20);
   const [contacts, setContacts] = useState([]);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
+  const [categoryNames, setCategoryNames] = useState([]);
 
   const { isFetching, isLoading, isError, error, data, isPreviousData } = useQuery({
-    queryKey: ['clients', offset, searchTerm],
+    queryKey: ['clients', offset, searchTerm, categoryNames],
     queryFn: async () => {
-      const data = await getContactsPaginated(offset, limit, searchTerm);
-      setContacts((prev) => [...prev, ...data.data.data]);
+      const data = await getContactsPaginated(offset, limit, searchTerm, null, categoryNames);
+      if (offset >= 20) {
+        console.log('adding', data.data.data);
+        setContacts((prev) => [...prev, ...data.data.data]);
+      } else {
+        console.log('setting', data.data.data);
+        setContacts(data.data.data);
+      }
       setInitialLoadDone(true);
       return data.data;
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   });
+
+  const handleSearch = (value) => {
+    setOffset(0);
+    setSearchTerm(value);
+  };
+
+  const debouncedOnChange = debounce(handleSearch, 500);
 
   const loadMore = () => {
     setOffset(offset + 20);
@@ -73,6 +89,10 @@ const AllContacts = () => {
     );
     setUnapprovedContacts(ai_unapproved);
   }, [allContacts]);
+
+  useEffect(() => {
+    console.log(contacts);
+  }, [contacts]);
 
   useEffect(() => {
     dispatch(setOpenedTab(-1));
@@ -224,32 +244,29 @@ const AllContacts = () => {
                   ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) && !contact.approved_ai,
               ).length > 0 && <SwitchComponent label="Unapproved AI Contacts" />}
             </div>
-            {/* <div className={'flex gap-2'}>
-              <Button
-                secondary
-                leftIcon={
-                  <div className={'relative'}>
-                    {Object.keys(clientsFilters).length > 0 && (
-                      <div
-                        className={
-                          'absolute  h-[20px] w-[20px]  text-xs text-white flex items-center justify-center top-[-14px] left-[63px] border-2 border-lightBlue1 bg-lightBlue3 rounded-xl'
-                        }>
-                        {getTotalCountOfAllValues(clientsFilters)}
-                      </div>
-                    )}
-                    <FilterList className="w-5 h-5" />
-                  </div>
-                }
-                label="Filter"
-                className="mr-4"
-                onClick={() => setOpen(true)}
-                iconSize="w-5 h-5"
+            <div className={'flex gap-2'}>
+              <DropdownWithSearch
+                placeholder="Filter..."
+                className="min-w-[250px]"
+                maxMenuHeight={200}
+                isMulti
+                options={[
+                  { value: 'Client', label: 'Clients' },
+                  { value: 'Professional', label: 'Professionals' },
+                  { value: 'Other', label: 'Other' },
+                  { value: 'Uncategorized', label: 'Uncategorized' },
+                  { value: 'Trash', label: 'Trash' },
+                ]}
+                onChange={(choices) => {
+                  setCategoryNames(choices.map((item) => item.value).join(','));
+                  setOffset(0);
+                }}
               />
               <Search
                 placeholder="Search here..."
                 className="mr-4 text-sm"
-                onInput={(event) => {
-                  setSearchTerm(event.target.value);
+                onChange={(event) => {
+                  debouncedOnChange(event.target.value);
                 }}
               />
             </div> */}
@@ -292,14 +309,14 @@ const AllContacts = () => {
             className="w-auto relative flex"
             style={{
               height: `calc(100vh - ${
-                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '196px' : '129px'
+                unapprovedContacts?.length > 0 || Object.keys(clientsFilters).length > 0 ? '206px' : '129px'
               })`,
               overflow: 'hidden',
             }}>
             <div className={` relative h-full w-full`} style={{ height: '100%', overflow: 'hidden' }}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
                 {!initialLoadDone ? (
-                  <div>Loading...</div>
+                  <Loader />
                 ) : (
                   <AllContactsTable
                     tableFor={'needToContact'}

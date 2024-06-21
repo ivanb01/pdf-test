@@ -20,6 +20,7 @@ const DropdownWithSearch = ({
   errorText,
   position,
   marginBottom,
+  className,
   indicatorStyles = {},
   ...props
 }) => {
@@ -40,6 +41,7 @@ const DropdownWithSearch = ({
         onMenuClose={onMenuClose}
         options={options}
         onChange={onChange}
+        className={className}
         styles={{
           input: (base) => ({
             ...base,
