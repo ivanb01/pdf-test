@@ -257,6 +257,18 @@ export function getFormattedDateFromTimestamp(timestamp) {
   return date.format('MM/DD/YYYY');
 }
 
+export function getTimeFromTimestamp(timestamp) {
+  const date = new Date(timestamp);
+
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  };
+
+  return date.toLocaleTimeString('en-US', options);
+}
+
 export function isAfterToday(timestamp) {
   const currentDate = moment();
   const dateToCompare = moment(timestamp);
