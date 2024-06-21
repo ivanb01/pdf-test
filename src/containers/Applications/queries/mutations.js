@@ -1,10 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import {
-  postPropertyApplication,
-  updatePropertyApplication,
-  runCreditCheck,
-  fetchCreditCheckReport,
-} from '@api/applications';
+import { postPropertyApplication, updatePropertyApplication, fetchCreditCheckReport } from '@api/applications';
 
 export const usePostPropertyApplication = (options) => {
   return useMutation({
@@ -18,15 +13,6 @@ export const useUpdatePropertyApplication = (options) => {
   return useMutation({
     mutationFn: async ({ id, applicationData }) => {
       return updatePropertyApplication(id, applicationData);
-    },
-    ...options,
-  });
-};
-
-export const useRunCreditCheck = (options) => {
-  return useMutation({
-    mutationFn: async ({ id }) => {
-      return runCreditCheck(id);
     },
     ...options,
   });

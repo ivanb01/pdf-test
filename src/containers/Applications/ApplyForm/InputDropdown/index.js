@@ -5,12 +5,15 @@ import { useFetchProperties } from 'containers/Applications/queries/queries';
 import Image from 'next/image';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const InputDropdown = ({ label, onListItemClick }) => {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState('');
   const debounceValue = useDebouncedValue(searchValue, 500);
 
   const { data } = useFetchProperties(debounceValue);
+
   return (
     <div>
       <ApiInputDropdown>
@@ -44,9 +47,14 @@ const InputDropdown = ({ label, onListItemClick }) => {
                         <span className="text-gray4">/mo</span>
                       </p>
                     </div>
-                    {listing && listing.URL && (
-                      <div className="absolute right-0 top-0 flex items-start text-blue2 cursor-pointer">
-                        <Link href={listing.URL} target="_blank">
+
+                    {listing && listing.ID && (
+                      <div
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="absolute right-0 top-0 flex items-start text-blue2 cursor-pointer">
+                        <Link href={`${window.location.origin}/property?id=${listing.ID}`} target="_blank">
                           <OpenInNewIcon className="w-[16px] h-[16px]" />
                         </Link>
                       </div>

@@ -340,8 +340,8 @@ const CreditCheckForm = () => {
                   <button onClick={onListingRemove}>
                     <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
                   </button>
-                  {propertySelected && propertySelected?.URL && (
-                    <Link href={propertySelected.URL} target="_blank">
+                  {propertySelected && propertySelected?.ID && (
+                    <Link href={`${window.location.origin}/property?id=${propertySelected.ID}`} target="_blank">
                       <OpenInNewIcon className="w-4 h-4" />
                     </Link>
                   )}

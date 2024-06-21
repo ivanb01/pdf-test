@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import { generateCreditCheckPaymenkLink } from '@api/applications';
 import { CircularProgress } from '@mui/material';
 import Button from '@components/shared/button';
-import { useFetchCreditCheckReport, useRunCreditCheck } from 'containers/Applications/queries/mutations';
+import { useFetchCreditCheckReport } from 'containers/Applications/queries/mutations';
 import { useFetchPropertyApplicationsPaginated } from 'containers/Applications/queries/queries';
-import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { useSendEmail } from '@helpers/queries/mutations';
+import toast from 'react-hot-toast';
+import PaymentLinkEmailTemplate from 'containers/Applications/PaymentLinkEmailTemplate';
+import { useSelector } from 'react-redux';
+import { render } from '@react-email/components';
+import ResendEmail from '/public/icons/resend-email.svg';
+import Image from 'next/image';
 
 export const CreditCheckCell = (props) => {
-  const router = useRouter();
   const { fetchApplicationsParams, info } = props;
-  const { public_identifier, credit_check_payment_successfull, credit_check_ran_successfully } = info.row.original;
+
+  const { public_identifier, status } = info.row.original;
+
+  const userInfo = useSelector((state) => state.global.userInfo);
 
   const { refetch: refetchApplications } = useFetchPropertyApplicationsPaginated(fetchApplicationsParams);
 
@@ -35,31 +43,11 @@ export const CreditCheckCell = (props) => {
     toast.error('Unable to download credit check report!');
   };
 
-  const {
-    data,
-    mutate: mutateFetchCreditCheckReport,
-    isPending: isPendingFetchingCreditCheckReport,
-  } = useFetchCreditCheckReport({
-    onSuccess: onDownloadCreditReportSuccess,
-    onError: onDownloadCreditReportError,
-  });
-
-  const onRunCreditCheckRunSuccess = () => {
-    refetchApplications();
-  };
-  const onRunCreditCheckRunError = () => {
-    toast.error('Unable to run credit check!');
-  };
-
-  const { mutate: mutateRunCreditCheck, isPending: isPendingRunCreditCheck } = useRunCreditCheck({
-    onSuccess: onRunCreditCheckRunSuccess,
-    onError: onRunCreditCheckRunError,
-  });
-
-  const handleRunCreditCheck = (e) => {
-    e.stopPropagation();
-    mutateRunCreditCheck({ id: public_identifier });
-  };
+  const { mutate: mutateFetchCreditCheckReport, isPending: isPendingFetchingCreditCheckReport } =
+    useFetchCreditCheckReport({
+      onSuccess: onDownloadCreditReportSuccess,
+      onError: onDownloadCreditReportError,
+    });
 
   const handlePdfDownload = (e) => {
     e.stopPropagation();
@@ -67,12 +55,48 @@ export const CreditCheckCell = (props) => {
   };
 
   const [generatingPaymentLink, setGeneratingPaymentLink] = useState(false);
+  const onSendPaymentLinkEmailSuccess = () => {
+    toast.success('Payment link sent successfully!');
+  };
+  const { mutate: mutateSendEmail } = useSendEmail({
+    onSuccess: onSendPaymentLinkEmailSuccess,
+  });
+
+  const handleSendPaymentLinkEmail = async (paymentLink) => {
+    const {
+      client_email: clientEmail,
+      client_first_name: clientFirstName,
+      client_last_name: clientLastName,
+    } = info.row.original;
+    const { first_name: agentFirstName, last_name: agentLastName } = userInfo;
+
+    const emailBody = {
+      to: [clientEmail],
+      subject: 'Opgny credit check payment link',
+      body: render(
+        <PaymentLinkEmailTemplate
+          paymentLink={paymentLink}
+          email={clientEmail}
+          first_name={clientFirstName}
+          agent_first_name={agentFirstName}
+          agent_last_name={agentLastName}
+        />,
+        {
+          pretty: true,
+        },
+      ),
+    };
+
+    mutateSendEmail(emailBody);
+  };
+
   const handleGeneratePaymenkLink = async (e) => {
     e.stopPropagation();
     setGeneratingPaymentLink(true);
+
     try {
       const response = await generateCreditCheckPaymenkLink(public_identifier);
-      window.open(response.data.payment_link_url, '_blank', 'noopener,noreferrer');
+      if (response) handleSendPaymentLinkEmail(response.data.payment_link_url);
     } catch (e) {
       toast.error('Unable to generate payment link!');
     } finally {
@@ -82,38 +106,40 @@ export const CreditCheckCell = (props) => {
     refetchApplications();
   };
 
-  const renderSwitch = () => {
-    if (!credit_check_payment_successfull) {
-      return (
-        <Button secondary loading={generatingPaymentLink} onClick={handleGeneratePaymenkLink}>
-          Generate Payment Link
-        </Button>
-      );
-    } else {
-      if (credit_check_ran_successfully) {
-        return (
-          <div className="flex flex-col items-center gap-2">
-            <StatusChip variant={VARIANT_ENUM.SUCCESS} text={'Completed'} />
-            <button onClick={handlePdfDownload} className="h-4">
-              {isPendingFetchingCreditCheckReport ? (
-                <CircularProgress className={'h-4 w-4'} />
-              ) : (
-                <div className="flex items-center gap-1">
-                  <SaveAltIcon className="w-4 h-4 text-gray4" />
-                  <p>Credit check PDF</p>
-                </div>
-              )}
-            </button>
-          </div>
-        );
-      }
-      return (
-        <Button onClick={handleRunCreditCheck} loading={isPendingRunCreditCheck}>
-          Run Credit&Check
-        </Button>
-      );
-    }
+  const CREDIT_CHECK_STATUSES = {
+    CREATED: (
+      <Button secondary loading={generatingPaymentLink} onClick={handleGeneratePaymenkLink}>
+        Generate Payment Link
+      </Button>
+    ),
+    CREDIT_CHECK_PAYMENT_PENDING: (
+      <div className="flex flex-col items-center gap-[6px]">
+        <StatusChip variant={VARIANT_ENUM.PURPLE} text={'Pending'} />
+        <button
+          disabled={generatingPaymentLink}
+          className="flex gap-[6px] items-center"
+          onClick={handleGeneratePaymenkLink}>
+          {!generatingPaymentLink ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
+          <span className="text-[10px] leading-[18px] font-medium">Resend Payment Link</span>
+        </button>
+      </div>
+    ),
+    CREDIT_CHECK_PAYMENT_SUCCESSFUL: (
+      <div className="flex flex-col items-center gap-2">
+        <StatusChip variant={VARIANT_ENUM.SUCCESS} text={'Completed'} />
+        <button onClick={handlePdfDownload} className="h-4">
+          {isPendingFetchingCreditCheckReport ? (
+            <CircularProgress className={'h-4 w-4'} />
+          ) : (
+            <div className="flex items-center gap-1">
+              <SaveAltIcon className="w-4 h-4 text-gray4" />
+              <span className="text-[10px] leading-[18px] font-medium">Credit check PDF</span>
+            </div>
+          )}
+        </button>
+      </div>
+    ),
   };
 
-  return <div className="min-w-[220px] flex justify-center items-center px-4">{renderSwitch()}</div>;
+  return <div className="min-w-[220px] flex justify-center items-center px-4">{CREDIT_CHECK_STATUSES[status]}</div>;
 };

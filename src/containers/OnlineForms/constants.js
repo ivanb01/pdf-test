@@ -273,7 +273,7 @@ export const BLOCK_TYPE_TO_BLOCK_NAME = {
 
 export const NO_FORMS_MESSAGE = {
   ALL_FORMS: '',
-  DEFAULT_FORMS: 'No default forms have been created yet.',
+  DEFAULT_FORMS: 'Your organization has no default forms. Click "Create New Form" to get started.',
   MY_FORMS: "No forms have been created yet. Click 'Create New Form' to get started.",
-  TRASH_FORMS: 'No forms have been moved to trash.',
+  TRASH_FORMS: 'Your Trash is Empty.',
 };

@@ -1,9 +1,4 @@
-import {
-  fetchApplicationDocuments,
-  fetchPropertyApplicationById,
-  fetchPropertyApplications,
-  generateCreditCheckPaymenkLink,
-} from '@api/applications';
+import { fetchApplicationDocuments, fetchPropertyApplicationById, fetchPropertyApplications } from '@api/applications';
 import { getContacts } from '@api/contacts';
 import { fetchProperties, fetchSingleProperty } from '@api/properties';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -82,17 +77,6 @@ export const useFetchAllClients = (options) => {
   return useQuery({
     queryKey: ['clients'],
     queryFn: getContacts,
-    ...options,
-  });
-};
-
-export const useGenerateCreditCheckPaymenkLink = (id, options) => {
-  return useQuery({
-    queryKey: ['generated-payment-link'],
-    queryFn: () => {
-      return generateCreditCheckPaymenkLink(id);
-    },
-    enabled: false,
     ...options,
   });
 };

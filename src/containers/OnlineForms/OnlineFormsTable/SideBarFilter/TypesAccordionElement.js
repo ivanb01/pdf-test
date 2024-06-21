@@ -125,11 +125,11 @@ const TypesAccordionElement = ({
       {openAccordion && (
         <div>
           {types.length ? (
-            <ul>
+            <ul className="flex flex-col">
               {types?.map((filter) => {
                 return (
                   <li
-                    className={`group flex w-full h-[50px] text-sm font-medium text-gray7 items-center cursor-pointer hover:bg-lightBlue1  ${
+                    className={`group flex w-full  h-full text-sm font-medium text-gray7  cursor-pointer hover:bg-lightBlue1  ${
                       currentFilterId.id === filter.id ? 'bg-lightBlue1' : ''
                     } `}
                     key={filter.id}
@@ -139,47 +139,46 @@ const TypesAccordionElement = ({
                     onMouseLeave={() => {
                       setHoveredFilterId(null);
                     }}>
-                    <div
-                      className={`w-[6px] h-[50px] ${
-                        currentFilterId.id === filter.id ? 'bg-lightBlue3 ' : 'bg-white '
-                      } `}
-                    />
-                    <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
-                      <div className={`flex px-[10px] py-[12px] gap-[8px] items-center text-left	`}>
-                        {filter?.id ? (
-                          <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
-                        ) : (
-                          <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
-                        )}
-                        {filter?.name}
+                    <div className="w-full flex items-center min-h-[44px] justify-between">
+                      <div
+                        className={`w-[6px] h-full ${currentFilterId.id === filter.id ? 'bg-lightBlue3 ' : 'bg-white '} `}
+                      />
+                      <div className="w-full" onMouseDown={() => setCurrentFilter(filter)}>
+                        <div className={'flex px-[10px] py-[12px] gap-[8px] items-start text-left'}>
+                          {filter?.id ? (
+                            <Image src={FolderIcon} className="h-5 w-5" alt="Form type filter" />
+                          ) : (
+                            <Image src={FoldersIcon} className="h-5 w-5" alt="All forms" />
+                          )}
+                          {filter?.name}
+                        </div>
                       </div>
+                      {!hideActionsMenu && (
+                        <div>
+                          {hoveredFilterId !== '' ? (
+                            <div
+                              className={clsx('opacity-0 mr-6 ', {
+                                ['opacity-100']: hoveredFilterId === filter.id || filter.id === openedPopoverTemplateId,
+                              })}>
+                              <FilterDropdown
+                                types={Actions}
+                                icon={<DotsHorizontalIcon className="w-5 cursor-pointer text-lightBlue3" />}
+                                data={filter}
+                                align={'start'}
+                                side={'bottom'}
+                                onOpenChange={(state) => {
+                                  if (state) setOpenPopovertemplateId(filter.id);
+                                  else setOpenPopovertemplateId(null);
+                                }}
+                                id={filter.id}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-5 h-5  mr-6"></div>
+                          )}
+                        </div>
+                      )}
                     </div>
-
-                    {!hideActionsMenu && (
-                      <div>
-                        {hoveredFilterId !== '' ? (
-                          <div
-                            className={clsx('opacity-0 mr-6 ', {
-                              ['opacity-100']: hoveredFilterId === filter.id || filter.id === openedPopoverTemplateId,
-                            })}>
-                            <FilterDropdown
-                              types={Actions}
-                              icon={<DotsHorizontalIcon className="w-5 cursor-pointer text-lightBlue3" />}
-                              data={filter}
-                              align={'start'}
-                              side={'bottom'}
-                              onOpenChange={(state) => {
-                                if (state) setOpenPopovertemplateId(filter.id);
-                                else setOpenPopovertemplateId(null);
-                              }}
-                              id={filter.id}
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-5 h-5  mr-6"></div>
-                        )}
-                      </div>
-                    )}
                   </li>
                 );
               })}
