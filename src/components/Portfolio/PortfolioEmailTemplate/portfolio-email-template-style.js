@@ -10,10 +10,13 @@ export const container = {
   maxWidth: '660px',
 };
 
+export const signatureContainer = {
+  marginTop: '20px',
+  marginLeft: '0',
+};
 export const logo = {
   margin: '56px 56px 56px 32px',
 };
-
 export const mainContainer = {
   margin: '-16px 24px 0px',
   maxWidth: '565px',
@@ -25,6 +28,9 @@ export const paragraph = {
   fontStyle: 'normal',
   fontWeight: 400,
   lineHeight: '24px',
+};
+export const signatureParagraph = {
+  color: '#344054',
 };
 
 export const button = {

@@ -24,7 +24,7 @@ import FilterPropertiesDropdown from '@components/shared/dropdown/FilterProperti
 import withAuth from '@components/withAuth';
 import PropertyFilters from '@components/overlays/property-filters';
 import { useSelector } from 'react-redux';
-import { formatDateMDY, generateSMSFooter, getBaseUrl, searchContacts } from '@global/functions';
+import { formatDateMDY, generateSMSFooter, getBaseUrl, getCompany, searchContacts } from '@global/functions';
 import placeholder from '/public/images/img-placeholder.png';
 import { setAmenities } from '@store/global/slice';
 import { sendEmail } from '@api/marketing';
@@ -243,7 +243,8 @@ const index = () => {
     setFilteredContacts(filteredArray.data);
   };
   const userInfo = useSelector((state) => state.global.userInfo);
-
+  const agentEmail = userInfo?.email || '';
+  const company = getCompany(agentEmail);
   const [loadingEmails, setLoadingEmails] = useState(false);
   const _sendEmail = () => {
     setLoadingEmails(true);
@@ -285,6 +286,11 @@ const index = () => {
                   }
                   first_name={c?.first_name}
                   portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                  agent_last_name={userInfo?.last_name}
+                  agent_phone_number={userInfo?.phone_number}
+                  companyName={company.companyName}
+                  companyLogo={company.imageUrl}
+                  agent_email={userInfo?.email}
                 />,
                 {
                   pretty: true,
@@ -329,9 +335,7 @@ const index = () => {
               .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `Properties Sent via SMS: to ${
-                    c.first_name
-                  } - ${getBaseUrl()}/portfolio?share_id=${
+                  description: `Properties Sent via SMS: to ${c.first_name} - ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };
