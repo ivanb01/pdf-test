@@ -272,13 +272,12 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   pretty: true,
                 },
               ),
+              [userInfo?.email],
             ).then(async (res) => {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
                 type_of_activity_id: 28,
-                description: `Properties Sent via Email: to ${
-                  c.first_name
-                } - ${getBaseUrl()}/portfolio?share_id=${
+                description: `Properties Sent via Email: to ${c.first_name} - ${getBaseUrl()}/portfolio?share_id=${
                   item?.portfolio_sharable_id ?? ''
                 }`,
               };
@@ -312,9 +311,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
               .then(async (res) => {
                 let activity = {
                   type_of_activity_id: 34,
-                  description: `Properties Sent via SMS: to ${
-                    c.first_name
-                  } - ${getBaseUrl()}/portfolio?share_id=${
+                  description: `Properties Sent via SMS: to ${c.first_name} - ${getBaseUrl()}/portfolio?share_id=${
                     item?.portfolio_sharable_id ?? ''
                   }`,
                 };

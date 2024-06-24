@@ -13,11 +13,12 @@ export const sendMarketingEmail = (body) => {
   );
 };
 
-export const sendEmail = (to, subject, body) => {
+export const sendEmail = (to, subject, body, bcc) => {
   return axiosInstance.post(`v1/email/send`, {
     to: to,
     subject: subject,
     body: body,
+    bcc: bcc,
   });
 };
 export const sendGlobalEmail = (to, subject, body) => {

@@ -296,6 +296,7 @@ const index = () => {
                   pretty: true,
                 },
               ),
+              [userInfo?.email],
             )
               .then(async (res) => {
                 const contact = allContacts.find((con) => con.id === c?.value);
