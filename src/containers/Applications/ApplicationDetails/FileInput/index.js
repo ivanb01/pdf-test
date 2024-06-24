@@ -32,7 +32,7 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
         onRemoveFile={onRemove}
         onWrongFileFormat={onWrongInputFormat}>
         <div className="space-y-2 ">
-          <p className="text-gray4 text-sm font-medium leading-5">{title}</p>
+          <p className="text-gray6 text-sm font-medium leading-5">{title}</p>
           <FileInputUpload.Upload className="w-full flex flex-col justify-center items-center p-[26px] pt-[22px] border-dashed border-2 leading-4 font-normal text-xs text-gray5 rounded-md">
             <div className="flex flex-col items-center ">
               <Image src={UploadIcon} alt="upload-icon" className="mb-3" />
@@ -52,9 +52,11 @@ const FileInput = ({ name, title, error, errorText, onRemove }) => {
               const { isError: errorOnUplod, uploadProgress, isSuccess: isUploadSuccess } = postFileMutationData;
               const { isSuccess: isFetchingUrlSuccess } = presigendUrlMutationData;
               return (
-                <div className="flex gap-2 w-full py-[11px]">
-                  <div className="shrink-1 flex flex-col w-full gap-1.5">
-                    <span className="text-xs font-medium text-gray7 leading-4">{fileData?.name}</span>
+                <div className="flex gap-2 w-full py-[11px] ">
+                  <div className="shrink-1 flex flex-col w-full gap-1.5 truncate">
+                    <div className="truncate">
+                      <span className="text-xs font-medium text-gray7 leading-4">{fileData?.name}</span>
+                    </div>
                     <ProgressBar
                       currentProgress={uploadProgress}
                       error={errorOnUplod}

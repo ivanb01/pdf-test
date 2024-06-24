@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFetchPropertyApplicationById } from '../queries/queries';
+import { useFetchApplicationDocuments, useFetchPropertyApplicationById } from '../queries/queries';
 import { useRouter } from 'next/router';
 import { PdfViewer } from '../Pdf';
 import { CircularProgress } from '@mui/material';
@@ -15,9 +15,16 @@ const ApplicationPdfViewer = () => {
     error: applicationErrors,
     isLoading: applicationIsLoading,
     isSuccess: applicationIsSuccess,
-    refetch: refetchApplicationDetails,
-    isRefetching: isRefetchingApplicationDetails,
   } = useFetchPropertyApplicationById(applicationId);
+
+  const {
+    data: documentsData,
+    error: documentsErrors,
+    isLoading: documentsIsLoading,
+  } = useFetchApplicationDocuments(applicationData?.id, {
+    enabled: applicationIsSuccess && !!applicationData.id,
+  });
+
   const [generatingPdf, setGeneratingPdf] = useState(true);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -25,23 +32,23 @@ const ApplicationPdfViewer = () => {
   const handleDownloadPdf = async () => {
     if (!applicationData) return;
     setDownloadingPdf(true);
-    await downloadPdf(applicationData);
+    await downloadPdf({ ...applicationData, documents: documentsData.items });
     setDownloadingPdf(false);
   };
 
   const handleGeneratePdf = async () => {
     if (!applicationData) return;
-    const blob = await generatePdfBlob(applicationData);
+    const blob = await generatePdfBlob({ ...applicationData, documents: documentsData.items });
     const url = URL.createObjectURL(blob);
     setPdfUrl(url);
     setGeneratingPdf(false);
   };
 
   useEffect(() => {
-    handleGeneratePdf();
-  }, [applicationData]);
+    if (applicationData && documentsData) handleGeneratePdf();
+  }, [applicationData, documentsData]);
 
-  if (applicationIsLoading || generatingPdf) {
+  if (applicationIsLoading || documentsIsLoading || generatingPdf) {
     return (
       <div className="w-full h-full flex justify-center items-center">
         <CircularProgress size={50} />
@@ -49,7 +56,7 @@ const ApplicationPdfViewer = () => {
     );
   }
 
-  if (applicationErrors) {
+  if (applicationErrors || documentsErrors) {
     return (
       <div className="w-full h-full flex justify-center items-center text-center">
         <p>Something went wrong while trying to fetch application...</p>
