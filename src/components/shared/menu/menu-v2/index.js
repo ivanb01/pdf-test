@@ -34,7 +34,7 @@ import { setCRMCampaigns } from '@store/campaigns/slice';
 import { getUserInfo, loadAfterSignInRedirect } from '@helpers/auth';
 import { isHealthyCommuncationDate } from '@global/functions';
 import Link from 'next/link';
-import oneLineLogo from '/public/images/oneline_logo_white.svg';
+import oneLineLogo from '/public/images/oneline_logo_white_short.svg';
 import placeholder from '/public/images/Portrait_Placeholder.png';
 
 function classNames(...classes) {
@@ -95,6 +95,15 @@ export default function MainMenuV2() {
       id: 3,
       title: 'Properties',
       href: '/properties',
+      submenus: [
+        { id: 12, description: 'Search, send, and save properties.', title: 'Search Properties', href: '/properties' },
+        {
+          id: 13,
+          description: 'Manage your exclusive listings.',
+          title: 'My Listings',
+          href: '/listings',
+        },
+      ],
     },
     {
       id: 10,
@@ -303,7 +312,7 @@ export default function MainMenuV2() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <Image
-                    className="h-5 w-auto"
+                    className="h-5 w-auto cursor-pointer"
                     src={oneLineLogo}
                     onClick={() => {
                       router.push('/dashboard');
