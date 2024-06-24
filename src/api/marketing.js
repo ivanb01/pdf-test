@@ -20,6 +20,14 @@ export const sendEmail = (to, subject, body) => {
     body: body,
   });
 };
+export const sendGlobalEmail = (to, subject, body) => {
+  return axiosInstance.post(`v1/email/send/gmail`, {
+    to: to,
+    subject: subject,
+    body: body,
+    action: 'send',
+  });
+};
 export const sendEmailFromContactForm = (body) => {
   return axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/email/send/contact`,

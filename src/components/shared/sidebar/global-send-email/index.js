@@ -6,7 +6,7 @@ import SlideOver from '@components/shared/slideOver';
 import { useSelector } from 'react-redux';
 import { MultiSelect } from 'react-multi-select-component';
 import { useEffect, useState } from 'react';
-import { sendEmail } from '@api/marketing';
+import { sendGlobalEmail } from '@api/marketing';
 import { setOpenEmailContactOverlay, setRefetchData } from '@store/global/slice';
 import { useDispatch } from 'react-redux';
 import { addContactActivity, updateContact } from '@api/contacts';
@@ -109,7 +109,7 @@ const SendEmailOverlay = () => {
       newMessage = newMessage.replace(/\{\{agent_last_name\}\}/g, agentLastName);
       newMessage = newMessage.replace(/\{\{agent_name\}\}/g, agentFullName);
 
-      sendEmail([contact.email], subject, newMessage).then(() => {
+      sendGlobalEmail([contact.email], subject, newMessage).then(() => {
         dispatch(updateContactLocally({ ...contact, last_communication_date: new Date() }));
 
         addContactActivity(contact.id, {
