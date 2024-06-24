@@ -106,11 +106,6 @@ export default function MainMenuV2() {
       ],
     },
     {
-      id: 10,
-      title: 'Listings',
-      href: '/listings',
-    },
-    {
       id: 4,
       title: 'Applications',
       href: '/applications',
