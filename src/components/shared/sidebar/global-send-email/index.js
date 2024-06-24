@@ -292,12 +292,15 @@ const SendEmailOverlay = () => {
           </div>
           <div className="text-gray6 text-sm font-medium mb-1">Message</div>
           <RichtextEditor
-            includeSignature
             label="Message"
+            includeSignature={false}
             value={message}
             placeholder="Write message here..."
             onContentChange={setMessage}
           />
+          <p className={'italic text-sm text-gray4 text-center mt-1'}>
+            Email signatures configured in Gmail will show on sent emails from Oneline.
+          </p>
         </div>
       )}
     </SlideOver>
