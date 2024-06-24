@@ -269,7 +269,7 @@ const AllContacts = () => {
                   debouncedOnChange(event.target.value);
                 }}
               />
-            </div>
+            </div> */}
           </div>
           {/* {Object.keys(clientsFilters).length > 0 && (
             <div className="w-full border-t border-gray2 px-6 py-3">

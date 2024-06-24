@@ -280,59 +280,61 @@ const index = () => {
   return (
     <div>
       <MainMenuV2 />
-      <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
-        <div>
-          <div className="p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
-            {total ? total : 0} contacts
-          </div>
-          from Smart Synced Contacts need to be reviewed
-        </div>
-        <div className="flex gap-2 items-center">
-          <div className="max-w-[500px] min-w-[200px]">
-            <DropdownWithSearch
-              placeholder="Filter..."
-              maxMenuHeight={200}
-              isMulti
-              options={[
-                { value: 'Client', label: 'Clients' },
-                { value: 'Professional', label: 'Professionals' },
-                { value: 'Other', label: 'Other' },
-                { value: 'Uncategorized', label: 'Uncategorized' },
-                { value: 'Trash', label: 'Trash' },
-              ]}
-              onChange={(choice) => {
-                handleSelect(choice);
-              }}
-            />
-          </div>
-          <div>
-            <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
-          </div>
-        </div>
-      </div>
       {loading ? (
         <div style={{ height: 'calc(100vh - 200px)' }} className="relative">
           <Loader />
         </div>
       ) : items?.data?.length > 0 ? (
-        <div style={{ overflow: 'auto', width: '100vw' }}>
-          <AIUnapprovedTable
-            tableFor="ai"
-            checked={checked}
-            ai_unapprovedContacts={items?.data}
-            checkbox={checkbox}
-            handleCardEdit={handleCardEdit}
-            handleAction={handleAction}
-            selectedPeople={selectedPeople}
-            setSelectedPeople={setSelectedPeople}
-            toggleAll={toggleAll}
-          />
-          {hasNextPage && (
-            <div ref={infiniteRef}>
-              <SpinnerLoader />
+        <>
+          <div className="p-6 text-gray-900 font-medium text-base flex justify-between items-center">
+            <div>
+              <div className="p-2 mr-3 border-blue-500 border bg-blue-50 text-blue-600 font-semibold rounded-lg inline-block">
+                {total ? total : 0} contacts
+              </div>
+              from Smart Synced Contacts need to be reviewed
             </div>
-          )}
-        </div>
+            <div className="flex gap-2 items-center">
+              <div className="max-w-[500px] min-w-[200px]">
+                <DropdownWithSearch
+                  placeholder="Filter..."
+                  maxMenuHeight={200}
+                  isMulti
+                  options={[
+                    { value: 'Client', label: 'Clients' },
+                    { value: 'Professional', label: 'Professionals' },
+                    { value: 'Other', label: 'Other' },
+                    { value: 'Uncategorized', label: 'Uncategorized' },
+                    { value: 'Trash', label: 'Trash' },
+                  ]}
+                  onChange={(choice) => {
+                    handleSelect(choice);
+                  }}
+                />
+              </div>
+              <div>
+                <CloseRounded className="cursor-pointer" onClick={() => router.push('/contacts/clients')} />
+              </div>
+            </div>
+          </div>
+          <div style={{ overflow: 'auto', width: '100vw' }}>
+            <AIUnapprovedTable
+              tableFor="ai"
+              checked={checked}
+              ai_unapprovedContacts={items?.data}
+              checkbox={checkbox}
+              handleCardEdit={handleCardEdit}
+              handleAction={handleAction}
+              selectedPeople={selectedPeople}
+              setSelectedPeople={setSelectedPeople}
+              toggleAll={toggleAll}
+            />
+            {hasNextPage && (
+              <div ref={infiniteRef}>
+                <SpinnerLoader />
+              </div>
+            )}
+          </div>
+        </>
       ) : (
         !loading &&
         items?.data &&
