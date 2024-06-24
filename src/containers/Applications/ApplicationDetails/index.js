@@ -128,9 +128,7 @@ const ApplicationDetails = () => {
       ...formattedInitialValues,
     },
     enableReinitialize: true,
-    onSubmit: () => {
-      console.log('submit');
-    },
+    onSubmit: () => {},
   });
 
   useEffect(() => {
@@ -232,7 +230,7 @@ const ApplicationDetails = () => {
     <div className=" w-full h-full flex flex-col divide-y">
       <button className="p-6 flex items-center gap-2 " onClick={router.back}>
         <ArrowNarrowLeftIcon className="h-[20px] w-[20px] text-lightBlue3" />
-        <span className="text-lg font-medium leading-6">Create Custom Form</span>
+        <span className="text-lg font-medium leading-6">Application Details</span>
       </button>
       <div className="flex divide-x">
         <div className="min-w-[300px] grow-0">
@@ -482,7 +480,7 @@ const ClientsInformation = forwardRef((props, ref) => {
               <Field data={occupant.full_name} title="Full Name" />
               <Field data={occupant.email} title="Email Address" />
               <Field data={occupant.phone_number} title="Phone Number" />
-              <Field data={occupant.relationship} title="Relationship" />
+              <Field data={occupant.relationship_description} title="Relationship" />
             </div>
           );
         })}
@@ -549,10 +547,10 @@ const DocumentsInformation = forwardRef((props, ref) => {
     return Object.entries(formik.values)
       .flatMap(([key, document]) => {
         if (key !== 'other_documents' && document) {
-          const { presigned_url, id, position, ...rest } = document;
+          const { presigned_url, id, position, document_type, ...rest } = document;
           return {
             ...rest,
-            document_type: nameToType[rest?.name],
+            document_type: document_type || nameToType[rest?.name],
           };
         } else if (document) return filterOtherDocuments(formik.values.other_documents);
       })

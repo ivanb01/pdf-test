@@ -18,13 +18,15 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Link from 'next/link';
 import Image from 'next/image';
+import AgentSearchDropdown from '../ApplyForm/AgentSearch';
+import Avatar from '@components/shared/avatar';
 
 const CreditCheckForm = () => {
   const [agreementSelected, setAgreementSelected] = useState(false);
   const [isAgreementModalOpen, setAgreementModalOpen] = useState(false);
 
   const validationSchema = Yup.object({
-    agent_name: Yup.string().required('Agent name is a required field!'),
+    agent_name: Yup.string().required('Agent is a required field!'),
 
     client_birth_date: Yup.date()
       .max(new Date(), 'Date of birth cannot be in the future')
@@ -126,8 +128,8 @@ const CreditCheckForm = () => {
       accountant_contact: '',
       account_number: '',
       account_type: '',
-      agent_id: 2234,
-      agent_email: 'agent@agent.com',
+      agent_id: '',
+      agent_email: '',
       agent_name: '',
       annual_compensation: 0.0,
       apartment_number: '',
@@ -243,9 +245,7 @@ const CreditCheckForm = () => {
         client_unit_number: 'Unit 123',
         client_city: 'Client City',
         client_state: 'ALASKA',
-        contractor_id: 'agent@email.com',
-        agent_id: 'agent@email.com',
-
+        contractor_id: values.agent_email,
         documents: [],
       });
     },
@@ -297,61 +297,85 @@ const CreditCheckForm = () => {
     }
   };
 
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const onAgentClick = (agent) => {
+    formik.setFieldValue('agent_email', agent.email);
+    formik.setFieldValue('agent_id', agent.email);
+    formik.setFieldValue('agent_name', `${agent.first_name} ${agent.last_name}`);
+
+    const initials = `${agent.first_name.charAt(0).toUpperCase()}${agent.last_name.charAt(0).toUpperCase()}`;
+    setSelectedAgent({
+      ...agent,
+      initials,
+    });
+  };
+
   return (
     <form className="py-[50px] space-y-[24px]" onSubmit={formik.handleSubmit}>
       <p className="text-gray7 font-medium">General Information</p>
       <div className="grid grid-cols-2 gap-[24px] leading-5">
-        <InputDropdown label="*Apartment address you are applying for" onListItemClick={onListItemCLick} />
-
-        <Input
-          label="*Select the agent"
-          name="agent_name"
-          onChange={formik.handleChange}
-          error={formik.touched.agent_name && formik.errors.agent_name}
-          errorText={formik.touched.agent_name && formik.errors.agent_name}
-        />
-
-        {propertySelected && (
-          <div className="col-span-1 bg-gray10">
-            <div className="p-4 bg-gray10 ">
-              <div className="flex gap-[10px] items-center relative">
-                {propertySelectedImageUrl && (
-                  <div className="h-[72px] w-[72px] flex justify-center items-center">
-                    <Image
-                      className="rounded object-cover"
-                      src={propertySelectedImageUrl}
-                      alt=""
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: 'auto', height: '100%' }}
-                    />
-                  </div>
-                )}
-                <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
-                  <p>{propertySelected.LISTING_TITLE}</p>
-                  <p className="text-gray4">{propertySelected.ADDRESS}</p>
-                  <p>
-                    ${propertySelected.PRICE}
-                    <span className="text-gray4">/mo</span>
-                  </p>
-                </div>
-                <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
-                  <button onClick={onListingRemove}>
-                    <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
-                  </button>
-                  {propertySelected && propertySelected?.URL && (
-                    <Link href={propertySelected.URL} target="_blank">
-                      <OpenInNewIcon className="w-4 h-4" />
-                    </Link>
+        <div className="flex flex-col gap-3 ">
+          <InputDropdown label="*Apartment address you are applying for" onListItemClick={onListItemCLick} />
+          {propertySelected && (
+            <div className="col-span-1 bg-gray10">
+              <div className="p-4 bg-gray10 ">
+                <div className="flex gap-[10px] items-center relative">
+                  {propertySelectedImageUrl && (
+                    <div className="h-[72px] w-[72px] flex justify-center items-center">
+                      <Image
+                        className="rounded object-cover"
+                        src={propertySelectedImageUrl}
+                        alt=""
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: 'auto', height: '100%' }}
+                      />
+                    </div>
                   )}
+                  <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
+                    <p>{propertySelected.LISTING_TITLE}</p>
+                    <p className="text-gray4">{propertySelected.ADDRESS}</p>
+                    <p>
+                      ${propertySelected.PRICE}
+                      <span className="text-gray4">/mo</span>
+                    </p>
+                  </div>
+                  <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
+                    <button onClick={onListingRemove}>
+                      <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
+                    </button>
+                    {propertySelected && propertySelected?.ID && (
+                      <Link href={`${window.location.origin}/property?id=${propertySelected.ID}`} target="_blank">
+                        <OpenInNewIcon className="w-4 h-4" />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {propertySelected && <div className="col-span-1"></div>}
+        <div className="flex flex-col gap-3 ">
+          <AgentSearchDropdown
+            placeholder="Select Agent"
+            onListItemClick={onAgentClick}
+            label={'*Agent'}
+            error={formik.touched?.agent_name && formik.errors.agent_name}
+            errorText={formik.errors?.agent_name}
+          />
+
+          {selectedAgent && (
+            <div className="flex gap-6 bg-gray10 p-4">
+              <Avatar className={'h-[72px] w-[72px]'} initials={selectedAgent?.initials} />
+              <div className="flex flex-col justify-center text-base leading-6 text-gray7">
+                <span className="font-medium">{`${selectedAgent?.first_name} ${selectedAgent?.last_name}`}</span>
+                <span className="text-gray5">{`${selectedAgent?.email} `}</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-4 gap-6">
         <Input

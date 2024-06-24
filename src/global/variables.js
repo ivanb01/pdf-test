@@ -347,7 +347,7 @@ export const clientStatuses = [
       {
         id: 2,
         name: 'New Lead',
-        color: 'bg-lightBlue1',
+        color: 'bg-lightBlue1  border border-lightBlue1',
       },
       {
         id: 3,

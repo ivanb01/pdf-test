@@ -109,6 +109,7 @@ const index = () => {
       setLoadingPagination(false);
     }
   }
+
   const processContacts = (contacts) => {
     return contacts.map((contact) => {
       const {
@@ -354,12 +355,13 @@ const index = () => {
               />
               <div>
                 <h4 className={'text-xl leading-7 font-medium text-gray7 mb-2'}>{campaignDetails?.name}</h4>
-                <div className={'px-1.5 py-0.5 bg-gray1 flex items-center justify-start w-max'}>
-                  <span className={'text-xs leading-5 font-medium text-gray6'}>
+                <div className={'flex items-center justify-start w-max'}>
+                  <span className={'text-xs leading-5 font-medium text-gray6 px-1.5 py-0.5 bg-gray1'}>
                     {category == 'Unknown'
                       ? 'All Clients'
-                      : `${capitalize(category)}s : ${usersInCampaignGlobally?.contact_status_2}`}
+                      : `${capitalize(category)}s: ${usersInCampaignGlobally?.contact_status_2}`}
                   </span>
+                  <span className="text-sm ml-1">{`are eligible for this campaign.`}</span>
                 </div>
               </div>
             </div>

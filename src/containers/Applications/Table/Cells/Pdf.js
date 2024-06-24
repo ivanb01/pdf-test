@@ -2,16 +2,28 @@ import { downloadFullPdf } from 'containers/Applications/Pdf/generatePdf';
 import { useFetchCreditCheckReport } from 'containers/Applications/queries/mutations';
 import { CircularProgress } from '@mui/material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { fetchApplicationDocuments } from '@api/applications';
+import { toast } from 'react-hot-toast';
 
 export const PdfCell = ({ info }) => {
   const onDownloadCreditReportSuccess = async (data) => {
-    if (data && data.data?.document_data) {
+    let documentsDataResponse = { documents: [] };
+    try {
+      const { data: documentData } = await fetchApplicationDocuments(info.row.original.id);
+      documentsDataResponse = {
+        documents: documentData.items,
+      };
+    } catch (e) {
+      toast.error('Unable to load user documents!');
+    }
+
+    if (data && data.data?.document_data && documentsDataResponse) {
       try {
         const base64Response = await fetch(`data:application/octet-stream;base64,${data.data.document_data}`);
         const blob = await base64Response.blob();
-        downloadFullPdf(info.row.original, blob);
+        downloadFullPdf({ ...info.row.original, documents: documentsDataResponse }, blob);
       } catch (e) {
-        downloadFullPdf(info.row.original, null);
+        downloadFullPdf({ ...info.row.original, documents: documentsDataResponse }, null);
       }
     }
   };

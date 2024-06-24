@@ -7,7 +7,7 @@ import unassigned from '../../../../public/images/campaign/unassigned.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from 'next/router';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TooltipComponent from '@components/shared/tooltip';
 import Link from 'next/link';
 import { getContactStatusByStatusId } from '@global/functions';
@@ -25,6 +25,9 @@ const CampaignCard = ({
   openedTab,
   ...props
 }) => {
+  useEffect(() => {
+    console.log(category, 'category');
+  }, [category]);
   const router = useRouter();
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
 
@@ -65,7 +68,7 @@ const CampaignCard = ({
                   ? `${props.contact_category_2}s | ${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
                   : 'All Clients:'
                 : openedTab !== 0
-                  ? `${props.contact_category_2}:`
+                  ? `${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
                   : 'All Clients:'}
             </div>
             <div className={'flex'}>
@@ -131,7 +134,7 @@ const CampaignCard = ({
       <CampaignPreview
         campaignFor={
           props.contact_category_id != null && props.contact_status_id != null
-            ? category + '-' + getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)
+            ? `${props.contact_category_2}s - ${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}`
             : 'All Clients'
         }
         campaignId={campaign_id}

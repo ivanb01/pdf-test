@@ -1,8 +1,27 @@
 import { Body, Head, Html, Container, Img, Section, Text, Link } from '@react-email/components';
 import PropTypes from 'prop-types';
-import { main, container, logo, mainContainer, paragraph, button, buttonText } from './portfolio-email-template-style';
+import {
+  main,
+  container,
+  logo,
+  mainContainer,
+  paragraph,
+  button,
+  buttonText,
+  signatureParagraph,
+  signatureContainer,
+} from './portfolio-email-template-style';
 
-const PortfolioEmailTemplate = ({ portfolioLink, first_name, agent_first_name }) => {
+const PortfolioEmailTemplate = ({
+  portfolioLink,
+  first_name,
+  agent_first_name,
+  agent_last_name,
+  companyName,
+  agent_phone_number,
+  companyLogo,
+  agent_email,
+}) => {
   return (
     <Html>
       <Head />
@@ -25,6 +44,15 @@ const PortfolioEmailTemplate = ({ portfolioLink, first_name, agent_first_name })
             </Container>
           </Section>
         </Container>
+        <Container style={signatureContainer}>
+          <Text style={signatureParagraph}>
+            {agent_first_name} {agent_last_name}
+          </Text>
+          <Text style={signatureParagraph}>{companyName}</Text>
+          <Text style={signatureParagraph}>{agent_phone_number}</Text>
+          <Text style={signatureParagraph}>{agent_email}</Text>
+          <Img src={companyLogo} width="134" height="28" alt="OxfordLogo" />
+        </Container>
       </Body>
     </Html>
   );
@@ -35,4 +63,5 @@ PortfolioEmailTemplate.propTypes = {
   portfolioLink: PropTypes.string,
   first_name: PropTypes.string,
   agent_first_name: PropTypes.string,
+  agent_last_name: PropTypes.string,
 };

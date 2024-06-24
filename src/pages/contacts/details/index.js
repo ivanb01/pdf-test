@@ -197,7 +197,6 @@ const index = () => {
     getContactCampaigns(id)
       .then((response) => {
         setCampaigns(response.data);
-        // console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -281,6 +280,15 @@ const index = () => {
     deleteContactNote(note.contact_id, note.id).then(() => {
       handleUpdateActivityLogsInNotes();
     });
+  };
+
+  const showCampaignsSection = () => {
+    let campaigns_assigned = campaigns?.campaigns_assigned?.length ? campaigns?.campaigns_assigned?.length : 0;
+    let campaigns_unassigned = campaigns?.campaigns_unassigned?.length ? campaigns?.campaigns_unassigned?.length : 0;
+    let campaigns_never_assigned = campaigns?.campaigns_never_assigned?.length
+      ? campaigns?.campaigns_never_assigned?.length
+      : 0;
+    return campaigns_assigned + campaigns_unassigned + campaigns_never_assigned > 0;
   };
 
   const types = [
@@ -482,10 +490,8 @@ const index = () => {
                   )}
                 </div>
               </div>
-              {campaigns?.campaigns_assigned?.length +
-                campaigns?.campaigns_never_assigned?.length +
-                campaigns?.campaigns_unassigned?.length >
-                0 && (
+
+              {showCampaignsSection() && (
                 <div className="bg-white px-3 mb-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg">
                   <div className="font-semibold text-gray8 text-[14px]">Campaigns</div>
 

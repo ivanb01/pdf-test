@@ -62,7 +62,7 @@ export default function DateChip({
             <>
               <div
                 onClick={(event) => updateCommunicationDate(event)}
-                className="cursor-pointer group-hover/update:inline-flex hidden rounded-full px-2 h-[24px] text-xs font-medium items-center bg-lightBlue1 text-lightBlue3">
+                className="cursor-pointer group-hover/update:inline-flex hidden rounded-full px-2 h-[24px] text-xs font-medium items-center bg-lightBlue1 text-lightBlue3 hover:border hover:border-lightBlue3">
                 Update to: Today
               </div>
               <div

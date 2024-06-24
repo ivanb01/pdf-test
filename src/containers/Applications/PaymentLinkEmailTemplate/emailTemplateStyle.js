@@ -10,15 +10,12 @@ export const container = {
   maxWidth: '660px',
 };
 
-export const signatureContainer = {
-  marginTop: '20px',
-  marginLeft: '0',
-};
 export const logo = {
   margin: '56px 56px 56px 32px',
 };
+
 export const mainContainer = {
-  margin: '-16px 24px 0px',
+  margin: '-16px 56px 32px 56px',
   maxWidth: '565px',
 };
 
@@ -29,15 +26,11 @@ export const paragraph = {
   fontWeight: 400,
   lineHeight: '24px',
 };
-export const signatureParagraph = {
-  color: '#344054',
-};
 
 export const button = {
   display: 'flex',
-  marginLeft: 0,
-  width: '243px',
-  padding: '7px 19px',
+  width: '133px',
+  padding: '7px 13px',
   justifyContent: 'center',
   alignItems: 'center',
   borderRadius: '6px',
@@ -54,4 +47,34 @@ export const buttonText = {
   fontStyle: 'normal',
   fontWeight: 400,
   margin: '5px 0px',
+};
+
+export const footer = {
+  maxWidth: '565px',
+};
+
+export const footerParagraph = {
+  color: '#475467',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  marginBottom: '40px',
+};
+
+export const link = {
+  color: '#475467',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  textDecoration: 'underline',
+};
+
+export const icons = {
+  width: '92px',
+  marginRight: 0,
+};
+export const footerIcons = {
+  width: '20px',
+  height: '20px',
+  cursor: 'pointer',
 };

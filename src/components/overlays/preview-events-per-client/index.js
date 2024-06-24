@@ -21,6 +21,7 @@ import { setRefetchCampaign, setUsersInCampaignGlobally } from '@store/campaigns
 
 const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data, campaignData: cData }) => {
   const [activeEvent, setActiveEvent] = useState();
+  const [selectedEventIndex, setSelectedEventIndex] = useState();
   const [campaignData, setCampaignData] = useState();
   const [loading, setLoading] = useState(false);
   const { refetchCampaign } = useSelector((state) => state.CRMCampaigns);
@@ -53,6 +54,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
   useEffect(() => {
     if (campaignData && person?.contact_campaign_status !== 'never_assigned') {
       setActiveEvent(campaignData?.events[0]);
+      setSelectedEventIndex(1);
     }
   }, [campaignData]);
 
@@ -61,6 +63,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
   useEffect(() => {
     if (person?.contact_campaign_status !== 'never_assigned') {
       setActiveEvent(person?.events_preview[0]);
+      setSelectedEventIndex(1);
     }
   }, [person]);
   return (
@@ -76,8 +79,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
       person={person && person}
       setOpen={(state) => {
         setOpen(state);
-      }}
-    >
+      }}>
       <div>
         <div className={'flex gap-4 mb-6'}>
           {person && (
@@ -128,8 +130,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                 maxHeight:
                   person?.contact_campaign_status !== 'never_assigned' ? 'calc(100vh - 180px)' : 'calc(100vh - 235px)',
                 height: '100vh',
-              }}
-            >
+              }}>
               <div className={'flex flex-col px-[22px] py-[26px] '}>
                 <div className="mb-4 text-gray8 text-sm font-medium">Events</div>
                 {person?.contact_campaign_status === 'never_assigned' ? (
@@ -155,19 +156,20 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                 <Divider />
                               </div>
                               <div
-                                onClick={() => setActiveEvent({ ...e })}
+                                onClick={() => {
+                                  setSelectedEventIndex(index + 1);
+                                  setActiveEvent({ ...e });
+                                }}
                                 className={`cursor-pointer rounded-lg border ${
                                   areObjectsEqual(campaignData?.events[index], activeEvent) &&
                                   'border-[#BAE6FD] bg-lightBlue1'
-                                } p-3 flex  flex-col gap-[10px] `}
-                              >
+                                } p-3 flex  flex-col gap-[10px] `}>
                                 <div className={'flex justify-between items-center group'}>
                                   <div className="flex items-center">
                                     <div className="w-">
                                       <CircleIcon
                                         small
-                                        active={areObjectsEqual(campaignData?.events[index], activeEvent)}
-                                      >
+                                        active={areObjectsEqual(campaignData?.events[index], activeEvent)}>
                                         <MailIcon
                                           fill={
                                             areObjectsEqual(campaignData?.events[index], activeEvent)
@@ -178,7 +180,10 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                       </CircleIcon>
                                     </div>
                                     <div className="ml-4 text-sm">
-                                      <div className="text-gray7 font-semibold"> {e?.preview?.preview?.subject}</div>
+                                      <div className="text-gray7">
+                                        <span className="font-semibold"> Event {index + 1}:</span>
+                                        {e?.preview?.preview?.subject}
+                                      </div>
                                     </div>
                                   </div>
                                   <KeyboardArrowRight className={`text-gray7`} />
@@ -213,11 +218,13 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                               <Divider />
                             </div>
                             <div
-                              onClick={() => setActiveEvent({ ...e })}
+                              onClick={() => {
+                                setSelectedEventIndex(index + 1);
+                                setActiveEvent({ ...e });
+                              }}
                               className={`cursor-pointer rounded-lg border ${
                                 areObjectsEqual(e, activeEvent) && 'border-[#BAE6FD] bg-lightBlue1'
-                              } p-3 flex  flex-col gap-[10px] `}
-                            >
+                              } p-3 flex  flex-col gap-[10px] `}>
                               <div className={'flex justify-between items-center group'}>
                                 <div className="flex items-center  justify-center">
                                   <div className="w-">
@@ -227,8 +234,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#EF4444" />
                                         <rect
                                           x="2"
@@ -257,8 +263,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#10B981" />
                                         <rect
                                           x="2"
@@ -280,8 +285,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                         height="39"
                                         viewBox="0 0 38 39"
                                         fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <rect x="2" y="2.5" width="34" height="34" rx="17" fill="#F9FAFB" />
                                         <rect
                                           x="2"
@@ -300,7 +304,10 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                     )}
                                   </div>
                                   <div className="ml-4 text-sm flex flex-col gap-[6px]">
-                                    <div className="text-gray7 font-semibold"> {e?.preview?.preview?.subject}</div>
+                                    <div className="text-gray7">
+                                      <span className="font-semibold"> Event {index + 1}: </span>
+                                      {e?.preview?.preview?.subject}
+                                    </div>
                                     <div className={'flex gap-2'}>
                                       <StatusChip
                                         variant={
@@ -316,10 +323,9 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                                             : correspondingEvent?.event_status?.toLowerCase() === 'sent'
                                               ? 'Sent'
                                               : 'Cancelled'
-                                        }
-                                      ></StatusChip>
+                                        }></StatusChip>
                                       <div className="text-gray-500 font-inter font-medium text-sm leading-5">
-                                        on {getFormattedDateFromTimestamp(correspondingEvent.event_updated_at)}
+                                        on {getFormattedDateFromTimestamp(correspondingEvent?.event_updated_at)}
                                       </div>
                                     </div>
                                   </div>
@@ -342,12 +348,11 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
                 maxHeight:
                   person?.contact_campaign_status !== 'never_assigned' ? 'calc(100vh - 190px)' : 'calc(100vh - 235px)',
                 height: '100vh',
-              }}
-            >
+              }}>
               <div className="mb-6 pt-[26px]">
                 <div className={'sticky top-0'}>
                   <div className={'px-6 pb-3 border-b border-gray2 '}>
-                    <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event Details</h5>
+                    <h5 className={'text-sm leading-5 font-medium text-gray7 '}>Event {selectedEventIndex}</h5>
                     <div className={'flex items-center gap-1'}>
                       <EmailIcon className={'h-3.5 w-3.5 text-lightBlue3'} />
                       <span className={'font-inter text-xs font-medium leading-5 text-gray4'}>

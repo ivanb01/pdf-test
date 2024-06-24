@@ -426,8 +426,10 @@ export default function Feeds({
             </div>
           ) : (
             <div className="mt-5 text-center h-[265px] flex flex-col justify-center align-center">
-              <div className="text-gray7 font-semibold mb-2">No activities found</div>
-              <div className="text-gray5 text-sm mb-6">No activities have been logged for this client yet.</div>
+              <div className="text-gray7 font-semibold mb-2">No email synced</div>
+              <div className="text-gray5 text-sm mb-6">
+                You've had no email communication with this contact in the last 60 days.
+              </div>
             </div>
           )
         ) : null

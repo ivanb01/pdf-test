@@ -16,9 +16,21 @@ export const getContacts = (category, searchterm) => {
   });
 };
 
-export const getContactsPaginated = (offset = 0, limit = 20, search_term = '', category_ids = '') => {
+export const getContactsPaginated = (
+  offset = 0,
+  limit = 20,
+  search_term = '',
+  category_ids = '',
+  category_names = '',
+) => {
   return axiosInstance.get('v1/contacts', {
-    params: { offset: offset, limit: limit, search_term: search_term, category_ids: category_ids },
+    params: {
+      offset: offset,
+      limit: limit,
+      search_term: search_term,
+      category_ids: category_ids,
+      category_names: category_names,
+    },
   });
 };
 

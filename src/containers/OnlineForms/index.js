@@ -278,6 +278,7 @@ const OnlineForms = () => {
           setCurrentTab={setCurrentTab}
           onSendFormClick={onSendFormClick}
           setSearchValue={setSearchTerm}
+          searchValue={searchTerm}
           formTypeFilter={formTypeFilter}
           handlePreviewTemplate={handlePreviewTemplate}
         />

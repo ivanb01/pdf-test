@@ -23,7 +23,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SendPropertiesFooter from '@components/SendPropertiesFooter/send-properties-footer';
 import { sendEmail } from '@api/marketing';
 import { render } from '@react-email/components';
-import { generateSMSFooter, getBaseUrl, getLookingAction } from '@global/functions';
+import { generateSMSFooter, getBaseUrl, getCompany, getLookingAction } from '@global/functions';
 import { sendSMS } from '@api/email';
 import { fetchCurrentUserInfo } from '@helpers/auth';
 import PropertiesSlideOver from '@components/PropertiesSlideover/properties-slideover';
@@ -202,6 +202,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const userInfo = useSelector((state) => state.global.userInfo);
+  const agentEmail = userInfo?.email || '';
+  const company = getCompany(agentEmail);
 
   const sortedOptions = filteredContacts?.sort((a, b) => {
     const aIsSelected = isSelected(a);
@@ -260,6 +262,11 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   }
                   first_name={c?.first_name}
                   portfolioLink={`${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}`}
+                  agent_last_name={userInfo?.last_name}
+                  agent_phone_number={userInfo?.phone_number}
+                  companyName={company.companyName}
+                  companyLogo={company.imageUrl}
+                  agent_email={userInfo?.email}
                 />,
                 {
                   pretty: true,
@@ -299,7 +306,8 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
           ) {
             sendSMS(
               [c.phone_number],
-              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.${generateSMSFooter(userInfo)}`,
+              `Hey ${c.first_name}, new properties have been added in your portfolio. View here: ${getBaseUrl()}/portfolio?share_id=${item?.portfolio_sharable_id ?? ''}.
+\n\n${generateSMSFooter(userInfo)}`,
             )
               .then(async (res) => {
                 let activity = {

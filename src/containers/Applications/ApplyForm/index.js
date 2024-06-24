@@ -29,10 +29,12 @@ import ApplyFormErrorImage from '/public/icons/apply-form-error.svg';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Link from 'next/link';
+import AgentSearchDropdown from './AgentSearch';
+import Avatar from 'components/shared/avatar';
 
 const documentType = {
-  bank_statement_1: 'BANK STATEMENT 1',
-  bank_statement_2: 'BANK STATEMENT 2',
+  bank_statement_1: 'BANK_STATEMENT_1',
+  bank_statement_2: 'BANK_STATEMENT_2',
   employment_letter: 'EMPLOYMENT_LETTER',
   paystub_1: 'PAYSTUB_1',
   paystub_2: 'PAYSTUB_2',
@@ -53,7 +55,7 @@ const ApplyForm = () => {
   const [isAgreementModalOpen, setAgreementModalOpen] = useState(false);
 
   const validationSchema = Yup.object({
-    agent_name: Yup.string().required('Agent name is a required field!'),
+    agent_name: Yup.string().required('Agent is a required field!'),
     property_address: Yup.string().required('Property address is a required field!'),
     property_id: Yup.string().required('Property ID is a required field!'),
     pets: Yup.string(),
@@ -380,17 +382,18 @@ const ApplyForm = () => {
 
       const filteredValues = {
         ...values,
+        previous_employer_employed_since_date: !!values.previous_employer_employed_since_date
+          ? values.previous_employer_employed_since_date
+          : null,
+
         property_state: propertyStateValue,
         client_state: clientStateValue,
         documents,
-        // do_credit_check: true,
         signature: null,
         annual_compensation: parseFloat(values.annual_compensation),
         property_id: '1b9ce199',
-        contractor_id: 'agent@email.com',
-        agent_id: 'agent@email.com',
+        contractor_id: values.agent_email,
       };
-
       mutatePostApplication(filteredValues);
     },
   });
@@ -432,9 +435,8 @@ const ApplyForm = () => {
     const employmentLengthYears = moment().diff(date, 'years');
     let employmentLength = '';
     if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
-      employmentLength = '0';
-      formik.setFieldValue('employment_length', employmentLength);
-      return;
+      employmentLength = '0 days';
+      return employmentLength;
     }
     if (employmentLengthYears) {
       employmentLength = `${employmentLengthYears} year${employmentLengthYears !== 1 ? 's' : ''}`;
@@ -457,9 +459,8 @@ const ApplyForm = () => {
     const employmentLengthYears = moment().diff(date, 'years');
     let employmentLength = '';
     if (employmentLengthYears < 0 || employmentLengthMonths < 0 || employmentLengthDays < 0) {
-      employmentLength = '0';
-      formik.setFieldValue('previous_employment_length', employmentLength);
-      return;
+      employmentLength = '0 days';
+      return employmentLength;
     }
     if (employmentLengthYears) {
       employmentLength = `${employmentLengthYears} year${employmentLengthYears !== 1 ? 's' : ''}`;
@@ -505,6 +506,10 @@ const ApplyForm = () => {
     await formik.setFieldValue('property_state', '');
   };
 
+  const resetApplication = () => {
+    resetMutation();
+    formik.resetForm();
+  };
   const resetAfterSuccess = () => {
     setTimeout(() => {
       resetApplication();
@@ -521,6 +526,19 @@ const ApplyForm = () => {
       setPropertySelected(null);
       await formik.setFieldValue('property_id', '1b9ce199');
     }
+  };
+
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const onAgentClick = (agent) => {
+    formik.setFieldValue('agent_email', agent.email);
+    formik.setFieldValue('agent_id', agent.email);
+    formik.setFieldValue('agent_name', `${agent.first_name} ${agent.last_name}`);
+
+    const initials = `${agent.first_name.charAt(0).toUpperCase()}${agent.last_name.charAt(0).toUpperCase()}`;
+    setSelectedAgent({
+      ...agent,
+      initials,
+    });
   };
 
   if (isErrorPostApplication) {
@@ -562,15 +580,24 @@ const ApplyForm = () => {
               <div className="bg-white ">
                 <div className="w-full flex justify-center flex-col divide-y-[1px] ">
                   <div className="w-full sm:w-1/2 pt-[24px] pb-[50px]">
-                    <Input
-                      label="*Your Agent"
-                      placeholder={'Search here'}
-                      name="agent_name"
-                      value={formik.values.agent_name}
-                      onChange={formik.handleChange}
-                      error={formik.touched.agent_name && formik.errors.agent_name}
-                      errorText={formik.touched.agent_name && formik.errors.agent_name}
-                    />
+                    <div className="flex flex-col gap-3 ">
+                      <AgentSearchDropdown
+                        onListItemClick={onAgentClick}
+                        label={'*Your agent'}
+                        placeholder="Search here, or fill the information below"
+                        error={formik.touched?.agent_name && formik.errors.agent_name}
+                        errorText={formik.errors?.agent_name}
+                      />
+                      {selectedAgent && (
+                        <div className="flex gap-6 bg-gray10 p-4">
+                          <Avatar className={'h-[72px] w-[72px]'} initials={selectedAgent?.initials} />
+                          <div className="flex flex-col justify-center text-base leading-6 text-gray7">
+                            <span className="font-medium">{`${selectedAgent?.first_name} ${selectedAgent?.last_name}`}</span>
+                            <span className="text-gray5">{`${selectedAgent?.email} `}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex flex-col py-[50px] gap-6">
                     <p className="leading-6 font-medium text-base">Client's Information</p>
@@ -690,7 +717,7 @@ const ApplyForm = () => {
                       </div>
 
                       <div className="flex flex-col gap-[4px] col-span-4">
-                        <p className="text-gray4 text-sm font-medium leading-5">*Do you have pets?</p>
+                        <p className="text-gray6 text-sm font-medium leading-5">*Do you have pets?</p>
                         <div className="h-[38px] flex gap-[18px] items-center font-medium leading-4 text-sm">
                           <Field
                             component={RadioButton}
@@ -766,8 +793,10 @@ const ApplyForm = () => {
                                     <button onClick={onListingRemove}>
                                       <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
                                     </button>
-                                    {propertySelected && propertySelected?.URL && (
-                                      <Link href={propertySelected.URL} target="_blank">
+                                    {propertySelected && propertySelected?.ID && (
+                                      <Link
+                                        href={`${window.location.origin}/property?id=${propertySelected.ID}`}
+                                        target="_blank">
                                         <OpenInNewIcon className="w-4 h-4" />
                                       </Link>
                                     )}

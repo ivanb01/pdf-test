@@ -41,7 +41,7 @@ const OccupantsList = () => {
     <div className="py-[50px]">
       <div className="flex flex-col ">
         <div>
-          <p className="text-gray4 text-sm font-medium leading-5">Is there any other occupant?</p>
+          <p className="text-gray6 text-sm font-medium leading-5">Is there any other occupant?</p>
           <div className="h-[38px] flex gap-[18px] items-center font-medium leading-4 text-sm">
             <Field
               component={RadioButton}
