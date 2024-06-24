@@ -207,6 +207,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
     dispatch(setOpenEmailContactOverlay(true));
   };
 
+  const [isHovered, setIsHovered] = useState(-1);
   return (
     <Table>
       <thead className="bg-gray-50 sticky z-[10] top-0">
@@ -359,6 +360,8 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
               {filterContacts(category, contactTypes).length ? (
                 filterContacts(category, contactTypes).map((contact) => (
                   <tr
+                    onMouseEnter={() => setIsHovered(contact?.id)}
+                    onMouseLeave={() => setIsHovered(-1)}
                     key={contact.id}
                     className={`
                     ${isUnapprovedAIContact(contact) && hideUnapproved && 'hidden'}
@@ -387,13 +390,13 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                         }}
                       />
                     </td>
-                    <td className="w-fit">
+                    <td className=" whitespace-nowrap  text-sm  align-middle">
                       <Chip label={contact?.category_2} typeStyle />
                       {contact?.category_1 === 'Client' && (
                         <Chip
-                          label={contact?.status_2}
                           statusStyle
-                          className={getContactStatusColorByStatusId(contact?.category_id, contact?.status_id)}>
+                          className={`${isHovered === contact?.id && getContactStatusByStatusId(contact?.category_id, contact?.status_id).toLowerCase() === 'new lead' ? 'border border-lightBlue3' : ''}
+                           ${getContactStatusColorByStatusId(contact?.category_id, contact?.status_id)}`}>
                           {getContactStatusByStatusId(contact?.category_id, contact?.status_id)}
                         </Chip>
                       )}
