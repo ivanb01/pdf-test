@@ -403,6 +403,7 @@ export default function Feeds({
                           <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item?.sent_date)}</p>
                         </div>
                         <div className="break-word gmail-renderings w-full overflow-hidden ">
+                          <span>{item?.snippet}</span>
                           <span
                             dangerouslySetInnerHTML={{
                               __html: item?.body
