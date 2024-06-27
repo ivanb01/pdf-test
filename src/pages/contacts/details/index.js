@@ -412,14 +412,17 @@ const index = () => {
                       }
                       role={'button'}
                       onClick={() => {
-                        setActivities([
-                          {
-                            type_of_activity_id: 27,
-                            description: 'Attempted to make a phone call.',
-                            created_at: new Date().toISOString(),
-                          },
+                        setActivities({
                           ...activities,
-                        ]);
+                          data: [
+                            {
+                              type_of_activity_id: 27,
+                              description: 'Attempted to make a phone call.',
+                              created_at: new Date().toISOString(),
+                            },
+                            ...activities.data,
+                          ],
+                        });
                         addContactActivity(contact.id, {
                           type_of_activity_id: 27,
                           description: 'Attempted to make a phone call.',
