@@ -80,10 +80,10 @@ const index = () => {
   };
 
   const getFromNumber = () => {
-    return (page - 1) * 21 + 1;
+    return (page - 1) * 20 + 1;
   };
   const getToNumber = () => {
-    return Math.min(page * 21, properties.TOTAL_COUNT);
+    return Math.min(page * 20, properties.TOTAL_COUNT);
   };
   const onFiltersChange = (filter) => {
     setFilterValue(filter);
