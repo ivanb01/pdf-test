@@ -30,7 +30,7 @@ export const sendSMS = (to, message) => {
 export const syncEmailOfContact = (contact_email) => {
   return axiosInstance.post('v1/email/sync/gmail', {
     contact_email: contact_email ?? undefined,
-    number_of_emails: '10',
+    number_of_emails: '20',
   });
 };
 
