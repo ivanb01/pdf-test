@@ -711,10 +711,6 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                         <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                           {propertyInterests.map((property, index) => (
                             <PropertyCard
-                              isInPortfolio={userProperties?.properties
-                                ?.filter((p) => p?.property_details !== undefined)
-                                .map((property) => property.property_details.ID)
-                                .includes(property.ID)}
                               setSelected={setSelectedProperties}
                               isSelected={selectedProperties.map((property) => property.ID).includes(property.ID)}
                               selected={selectedProperties}
