@@ -21,50 +21,54 @@ import AddClientManuallyOverlay from '@components/overlays/add-client/add-client
 import { clientOptions, clientStatuses } from '@global/variables';
 import { useRouter } from 'next/router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { getPortfolioByContactId } from '@api/portfolio';
 
-const SelectedProperty = ({ property, setSelected, selected }) => {
+const SelectedProperty = ({ property, setSelected, selected, isInPortfolio }) => {
   return (
-    <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
-      <div className="flex items-center">
-        <img
-          className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
-          src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
-        />
-        <div className="font-semibold text-gray7 mr-3 text-[14px]">
-          {property.PROPERTY_TYPE} in {property.ADDRESS}
+    <div className="bg-gray10 border border-gray1 p-[10px] rounded-lg mb-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <img
+            className="h-[50px] w-[85px] object-cover rounded-lg mr-3"
+            src={property?.PHOTOS?.length ? property.PHOTOS[0].PHOTO_URL : placeholder.src}
+          />
+          <div className="font-semibold text-gray7 mr-3 text-[14px]">
+            {property.PROPERTY_TYPE} in {property.ADDRESS}
+          </div>
+        </div>
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
+            id={`checkbox-${property.ID}`}
+            class="hidden"
+            onChange={(event) => {
+              if (event.target.checked) {
+                setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
+              } else {
+                setSelected((prevSelected) => [...prevSelected, property]);
+              }
+            }}
+          />
+          <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
+            <div
+              class={`${
+                selected ? 'bg-lightBlue3' : 'border border-gray-300'
+              } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+              {selected && (
+                <svg
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  version="1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  enable-background="new 0 0 48 48">
+                  <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
+                </svg>
+              )}
+            </div>
+          </label>
         </div>
       </div>
-      <div class="form-checkbox">
-        <input
-          type="checkbox"
-          id={`checkbox-${property.ID}`}
-          class="hidden"
-          onChange={(event) => {
-            if (event.target.checked) {
-              setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
-            } else {
-              setSelected((prevSelected) => [...prevSelected, property]);
-            }
-          }}
-        />
-        <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
-          <div
-            class={`${
-              selected ? 'bg-lightBlue3' : 'border border-gray-300'
-            } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
-            {selected && (
-              <svg
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                version="1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 48 48"
-                enable-background="new 0 0 48 48">
-                <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
-              </svg>
-            )}
-          </div>
-        </label>
-      </div>
+      {isInPortfolio && <div className="mt-2 text-sm text-gray6 italic">previously sent to this client</div>}
     </div>
   );
 };
@@ -122,6 +126,7 @@ const PropertiesSlideOver = ({
   };
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
+  const [selectedContactPortfolio, setSelectedContactPortfolio] = useState(null);
 
   useEffect(() => {
     if (document.querySelector('.side-overlay-wrapper')) {
@@ -132,6 +137,22 @@ const PropertiesSlideOver = ({
       }
     }
   }, [propertiesSent]);
+
+  useEffect(() => {
+    console.log(selectedContacts);
+    if (selectedContacts.length == 1) {
+      getPortfolioByContactId(selectedContacts[0].value)
+        .then((res) => {
+          setSelectedContactPortfolio(res.data.properties);
+          // setLoading(false);
+        })
+        .catch(() => {
+          toast.error('Error while fetching portfolio');
+          // setLoading(false);
+        });
+    }
+    setSelectedContactPortfolio(null);
+  }, [selectedContacts]);
 
   return (
     <>
@@ -341,7 +362,14 @@ const PropertiesSlideOver = ({
             {showProperties && (
               <>
                 {selectedProperties.map((property) => (
-                  <SelectedProperty property={property} setSelected={setSelectedProperties} selected={true} />
+                  <SelectedProperty
+                    isInPortfolio={selectedContactPortfolio
+                      ?.map((property) => property.property_details.ID)
+                      .includes(property?.ID)}
+                    property={property}
+                    setSelected={setSelectedProperties}
+                    selected={true}
+                  />
                 ))}
               </>
             )}

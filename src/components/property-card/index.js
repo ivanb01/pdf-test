@@ -26,6 +26,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { AnimatePresence, motion } from 'framer-motion';
+import { MarkEmailRead } from '@mui/icons-material';
 
 const ImageGallery = ({ images, onClick, noSelect, selected, isSelected, property, putFeedback, setSelected }) => {
   return (
@@ -79,6 +80,8 @@ const ImageGallery = ({ images, onClick, noSelect, selected, isSelected, propert
 };
 
 const PropertyCard = ({
+  className,
+  isInPortfolio,
   property,
   selected,
   setSelected,
@@ -121,7 +124,8 @@ const PropertyCard = ({
           openPropertyModal();
         }
       }}
-      className={`group border transition-all border-gray-200 rounded-[4px] cursor-pointer ${
+      title={isInPortfolio && 'This property has already been sent to this client.'}
+      className={`${isInPortfolio && 'opacity-50 hover:opacity-100'} group border transition-all border-gray-200 rounded-[4px] cursor-pointer ${
         isSelected && ' border border-lightBlue3 custom-box-shadow'
       }`}>
       <div className="h-[160px] relative">
@@ -169,6 +173,28 @@ const PropertyCard = ({
         )}
         {!putFeedback && (
           <AnimatePresence>
+            {/* {isInPortfolio && (
+              <div className="flex items-center gap-3 absolute bottom-2  left-3">
+                <TooltipComponent
+                  side={'bottom'}
+                  align={'center'}
+                  triggerElement={
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      transition={{ ease: 'circOut' }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      role="button"
+                      className={'flex h-7 w-7  rounded-full  items-center bg-green5 justify-center cursor-pointer'}>
+                      <MarkEmailRead className={'text-white h-4 w-4'} />
+                    </motion.div>
+                  }>
+                  <p className={'text-[10px] text-white font-medium'}>
+                    This property has already been sent to this client.
+                  </p>
+                </TooltipComponent>
+              </div>
+            )} */}
             <div className="flex items-center gap-3 absolute bottom-2  right-2">
               <TooltipComponent
                 side={'bottom'}
