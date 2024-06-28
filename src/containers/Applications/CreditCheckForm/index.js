@@ -4,7 +4,7 @@ import { CircularProgress } from '@mui/material';
 import { render as renderEmail } from '@react-email/components';
 import { AddressElement, PaymentElement } from '@stripe/react-stripe-js';
 import clsx from 'clsx';
-import { FormikProvider, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
@@ -20,7 +20,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AgentSearchDropdown from '../ApplyForm/AgentSearch';
 import Avatar from '@components/shared/avatar';
-import ScrollToErrors from '../ScrollToErrors';
 
 const CreditCheckForm = () => {
   const [agreementSelected, setAgreementSelected] = useState(false);
@@ -197,22 +196,20 @@ const CreditCheckForm = () => {
       previous_employer_employed_since_date: null,
       property_address: '',
       property_city: '',
-      property_id: '',
+      property_id: '0',
       property_state: '',
       property_unit_number: '',
       property_zip_code: '',
       signature: null,
     },
     validationSchema: validationSchema,
-    validateOnMount: true,
 
     onSubmit: async (values) => {
       try {
         const response = await elements.submit();
         //  if (Object.keys(response).length) return;
         if (response.error) {
-          const element = document.querySelector(`[id=stripe-payment-container]`);
-          if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          toast.error(response.error.message);
           return;
         }
       } catch (error) {
@@ -301,347 +298,332 @@ const CreditCheckForm = () => {
   };
 
   const [selectedAgent, setSelectedAgent] = useState(null);
-
-  const onAgentClick = async (agent) => {
-    formik.setFieldValue('agent_id', agent.email);
+  const onAgentClick = (agent) => {
     formik.setFieldValue('agent_email', agent.email);
-    formik.setFieldValue('agent_name', agent.first_name);
-    formik.setFieldValue('contractor_email', agent.email);
-    formik.setFieldValue('contractor_id', agent.email);
-    formik.setFieldValue('contractor_name', `${agent.first_name} ${agent.last_name}`);
+    formik.setFieldValue('agent_id', agent.email);
+    formik.setFieldValue('agent_name', `${agent.first_name} ${agent.last_name}`);
 
     const initials = `${agent.first_name.charAt(0).toUpperCase()}${agent.last_name.charAt(0).toUpperCase()}`;
     setSelectedAgent({
       ...agent,
       initials,
     });
-
-    setTimeout(() => {
-      formik.validateField('agent_name');
-    });
   };
 
   return (
-    <FormikProvider value={formik}>
-      <form className="py-[50px] space-y-[24px]" onSubmit={formik.handleSubmit}>
-        <p className="text-gray7 font-medium">General Information</p>
-        <div className="grid grid-cols-2 gap-[24px] leading-5">
-          <div className="flex flex-col gap-3 ">
-            <InputDropdown label="*Apartment address you are applying for" onListItemClick={onListItemCLick} />
-            {propertySelected && (
-              <div className="col-span-1 bg-gray10">
-                <div className="p-4 bg-gray10 ">
-                  <div className="flex gap-[10px] items-center relative">
-                    {propertySelectedImageUrl && (
-                      <div className="h-[72px] w-[72px] flex justify-center items-center">
-                        <Image
-                          className="rounded object-cover"
-                          src={propertySelectedImageUrl}
-                          alt=""
-                          width={0}
-                          height={0}
-                          sizes="100vw"
-                          style={{ width: 'auto', height: '100%' }}
-                        />
-                      </div>
+    <form className="py-[50px] space-y-[24px]" onSubmit={formik.handleSubmit}>
+      <p className="text-gray7 font-medium">General Information</p>
+      <div className="grid grid-cols-2 gap-[24px] leading-5">
+        <div className="flex flex-col gap-3 ">
+          <InputDropdown label="*Apartment address you are applying for" onListItemClick={onListItemCLick} />
+          {propertySelected && (
+            <div className="col-span-1 bg-gray10">
+              <div className="p-4 bg-gray10 ">
+                <div className="flex gap-[10px] items-center relative">
+                  {propertySelectedImageUrl && (
+                    <div className="h-[72px] w-[72px] flex justify-center items-center">
+                      <Image
+                        className="rounded object-cover"
+                        src={propertySelectedImageUrl}
+                        alt=""
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: 'auto', height: '100%' }}
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
+                    <p>{propertySelected.LISTING_TITLE}</p>
+                    <p className="text-gray4">{propertySelected.ADDRESS}</p>
+                    <p>
+                      ${propertySelected.PRICE}
+                      <span className="text-gray4">/mo</span>
+                    </p>
+                  </div>
+                  <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
+                    <button onClick={onListingRemove}>
+                      <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
+                    </button>
+                    {propertySelected && propertySelected?.ID && (
+                      <Link href={`${window.location.origin}/property?id=${propertySelected.ID}`} target="_blank">
+                        <OpenInNewIcon className="w-4 h-4" />
+                      </Link>
                     )}
-                    <div className="flex flex-col font-medium leadin-5 text-sm text-gray7 grow gap-[6px]">
-                      <p>{propertySelected.LISTING_TITLE}</p>
-                      <p className="text-gray4">{propertySelected.ADDRESS}</p>
-                      <p>
-                        ${propertySelected.PRICE}
-                        <span className="text-gray4">/mo</span>
-                      </p>
-                    </div>
-                    <div className="absolute right-0 top-0 flex text-blue2 cursor-pointer  gap-2 items-center">
-                      <button onClick={onListingRemove}>
-                        <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
-                      </button>
-                      {propertySelected && propertySelected?.ID && (
-                        <Link href={`${window.location.origin}/property?id=${propertySelected.ID}`} target="_blank">
-                          <OpenInNewIcon className="w-4 h-4" />
-                        </Link>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-3 ">
-            <AgentSearchDropdown
-              name={'agent_name'}
-              placeholder="Select Agent"
-              onListItemClick={onAgentClick}
-              label={'*Agent'}
-              error={formik.touched?.agent_name && formik.errors.agent_name}
-              errorText={formik.errors?.agent_name}
-            />
-
-            {selectedAgent && (
-              <div className="flex gap-6 bg-gray10 p-4">
-                <Avatar className={'h-[72px] w-[72px]'} initials={selectedAgent?.initials} />
-                <div className="flex flex-col justify-center text-base leading-6 text-gray7">
-                  <span className="font-medium">{`${selectedAgent?.first_name} ${selectedAgent?.last_name}`}</span>
-                  <span className="text-gray5">{`${selectedAgent?.email} `}</span>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        <div className="grid grid-cols-4 gap-6">
+
+        <div className="flex flex-col gap-3 ">
+          <AgentSearchDropdown
+            placeholder="Select Agent"
+            onListItemClick={onAgentClick}
+            label={'*Agent'}
+            error={formik.touched?.agent_name && formik.errors.agent_name}
+            errorText={formik.errors?.agent_name}
+          />
+
+          {selectedAgent && (
+            <div className="flex gap-6 bg-gray10 p-4">
+              <Avatar className={'h-[72px] w-[72px]'} initials={selectedAgent?.initials} />
+              <div className="flex flex-col justify-center text-base leading-6 text-gray7">
+                <span className="font-medium">{`${selectedAgent?.first_name} ${selectedAgent?.last_name}`}</span>
+                <span className="text-gray5">{`${selectedAgent?.email} `}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-6">
+        <Input
+          id="property_address"
+          name="property_address"
+          label="*Property Address"
+          className={'[&_input]:h-[38px] col-span-2'}
+          value={formik.values.property_address}
+          onChange={handlePropertyFieldChange}
+          error={formik.touched.property_address && formik.errors.property_address && !formik.values.property_address}
+          errorText={formik.touched.property_address && formik.errors.property_address}
+        />
+        <div className="grid grid-cols-4 col-span-2 gap-[24px]">
           <Input
-            id="property_address"
-            name="property_address"
-            label="*Property Address"
-            className={'[&_input]:h-[38px] col-span-2'}
-            value={formik.values.property_address}
+            label="*Unit number"
+            className={'[&_input]:h-[38px]'}
+            name="property_unit_number"
+            value={formik.values.property_unit_number}
             onChange={handlePropertyFieldChange}
-            error={formik.touched.property_address && formik.errors.property_address && !formik.values.property_address}
-            errorText={formik.touched.property_address && formik.errors.property_address}
+            error={formik.touched.property_unit_number && formik.errors.property_unit_number}
+            errorText={formik.touched.property_unit_number && formik.errors.property_unit_number}
           />
-          <div className="grid grid-cols-4 col-span-2 gap-[24px]">
-            <Input
-              label="*Unit number"
-              className={'[&_input]:h-[38px]'}
-              name="property_unit_number"
-              value={formik.values.property_unit_number}
-              onChange={handlePropertyFieldChange}
-              error={formik.touched.property_unit_number && formik.errors.property_unit_number}
-              errorText={formik.touched.property_unit_number && formik.errors.property_unit_number}
+          <div className="col-span-1">
+            <DropdownWithSearch
+              indicatorStyles={{ display: 'none' }}
+              options={dropdownOptions?.map((state, index) => {
+                return { id: index, label: state, value: state };
+              })}
+              label="*State"
+              value={formik.values.property_state}
+              onChange={(value) => {
+                if (propertySelected) {
+                  setPropertySelected(null);
+                }
+                formik.setFieldValue('property_state', value);
+              }}
+              className="col-span-1"
+              placeholder={''}
+              error={formik.touched.property_state && formik.errors.property_state?.value}
+              errorText={formik.errors.property_state?.value}
             />
-            <div className="col-span-1" name="property_state.value">
-              <DropdownWithSearch
-                indicatorStyles={{ display: 'none' }}
-                options={dropdownOptions?.map((state, index) => {
-                  return { id: index, label: state, value: state };
-                })}
-                label="*State"
-                value={formik.values.property_state}
-                onChange={(value) => {
-                  if (propertySelected) {
-                    setPropertySelected(null);
-                  }
-                  formik.setFieldValue('property_state', value);
-                }}
-                className="col-span-1"
-                placeholder={''}
-                error={formik.touched.property_state && formik.errors.property_state?.value}
-                errorText={formik.errors.property_state?.value}
-              />
-            </div>
+          </div>
 
-            <Input
-              label="*City"
-              className={'[&_input]:h-[38px]'}
-              name="property_city"
-              value={formik.values.property_city}
-              onChange={handlePropertyFieldChange}
-              error={formik.touched.property_city && formik.errors.property_city}
-              errorText={formik.touched.property_city && formik.errors.property_city}
-            />
-            <Input
-              label="*Zip"
-              className={'[&_input]:h-[38px]'}
-              name="property_zip_code"
-              onChange={handlePropertyFieldChange}
-              value={formik.values.property_zip_code}
-              error={formik.touched.property_zip_code && formik.errors.property_zip_code}
-              errorText={formik.touched.property_zip_code && formik.errors.property_zip_code}
-            />
-          </div>
+          <Input
+            label="*City"
+            className={'[&_input]:h-[38px]'}
+            name="property_city"
+            value={formik.values.property_city}
+            onChange={handlePropertyFieldChange}
+            error={formik.touched.property_city && formik.errors.property_city}
+            errorText={formik.touched.property_city && formik.errors.property_city}
+          />
+          <Input
+            label="*Zip"
+            className={'[&_input]:h-[38px]'}
+            name="property_zip_code"
+            onChange={handlePropertyFieldChange}
+            value={formik.values.property_zip_code}
+            error={formik.touched.property_zip_code && formik.errors.property_zip_code}
+            errorText={formik.touched.property_zip_code && formik.errors.property_zip_code}
+          />
         </div>
-        <div className="grid grid-cols-4 gap-[24px] leading-5">
-          <Input
-            label="*First Name"
-            className={'col-span-2 [&_input]:h-[38px]'}
-            name="client_first_name"
-            value={formik.values.client_first_name}
-            onChange={formik.handleChange}
-            error={formik.touched.client_first_name && formik.errors.client_first_name}
-            errorText={formik.touched.client_first_name && formik.errors.client_first_name}
-          />
-          <Input
-            label="*Last Name"
-            className={'col-span-2 [&_input]:h-[38px]'}
-            name="client_last_name"
-            value={formik.values.client_last_name}
-            onChange={formik.handleChange}
-            error={formik.touched.client_last_name && formik.errors.client_last_name}
-            errorText={formik.touched.client_last_name && formik.errors.client_last_name}
-          />
-          <Input
-            className={'col-span-3'}
-            label="*Permanent Address"
-            name={'client_permanent_address'}
-            value={formik.values.client_permanent_address}
-            onChange={formik.handleChange}
-            error={formik.touched.client_permanent_address && formik.errors.client_permanent_address}
-            errorText={formik.touched.client_permanent_address && formik.errors.client_permanent_address}
-          />
-          <Input
-            label="*ZIP"
-            name={'client_zip_code'}
-            value={formik.values.client_zip_code}
-            onChange={formik.handleChange}
-            error={formik.touched.client_zip_code && formik.errors.client_zip_code}
-            errorText={formik.touched.client_zip_code && formik.errors.client_zip_code}
-          />
-          <Input
-            label="*Email address"
-            name={'client_email'}
-            value={formik.values.client_email}
-            onChange={formik.handleChange}
-            error={formik.touched.client_email && formik.errors.client_email}
-            errorText={formik.touched.client_email && formik.errors.client_email}
-          />
-          <Input
-            label="*Date of Birth"
-            name={'client_birth_date'}
-            type="date"
-            value={formik.values.client_birth_date}
-            onChange={(event) => {
-              formik.setFieldValue('client_birth_date', event.target.value);
-            }}
-            error={formik.touched.client_birth_date && formik.errors.client_birth_date}
-            errorText={formik.touched.client_birth_date && formik.errors.client_birth_date}
-          />
-          <Input
-            label="*Phone Number"
-            name={'client_phone_number'}
-            value={formik.values.client_phone_number}
-            onChange={formik.handleChange}
-            error={formik.touched.client_phone_number && formik.errors.client_phone_number}
-            errorText={formik.touched.client_phone_number && formik.errors.client_phone_number}
-          />
-          <Input
-            label="*SSN"
-            name={'client_ssn'}
-            value={formik.values.client_ssn}
-            onChange={formik.handleChange}
-            error={formik.touched.client_ssn && formik.errors.client_ssn}
-            errorText={formik.touched.client_ssn && formik.errors.client_ssn}
-          />
-          <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 col-span-2">
-            <div className="flex gap-3 items-center mb-[2px]">
-              <input
-                name="need_moving_services"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
-                onChange={(e) => {
-                  formik.handleChange(e);
-                }}
-                value={formik.values.need_moving_services}
-                checked={formik.values.need_moving_services}
-              />
-              <p className="font-medium ">I Want Moving Services</p>
-            </div>
-            <div className="flex flex-col pl-[28px] gap-6 [&_input]:h-[38px] ">
-              <p className="font-normal">
-                Please reach out to me with information about the following discounted service from the Oxford family
-                network.
-              </p>
-              <div className=" w-full max-w-[292px]">
-                <Input
-                  label={`${formik.values.need_moving_services ? '*' : ''}Moving Date`}
-                  type="date"
-                  name="move_in_date"
-                  value={formik.values.need_moving_services ? formik.values.move_in_date : ''}
-                  readonly={!formik.values.need_moving_services}
-                  onChange={(e) => {
-                    formik.setFieldValue('move_in_date', e.target.value);
-                  }}
-                  error={
-                    formik.values.need_moving_services && formik.touched.move_in_date && formik.errors.move_in_date
-                  }
-                  errorText={
-                    formik.values.need_moving_services && formik.touched.move_in_date && formik.errors.move_in_date
-                  }
-                />
-              </div>
-            </div>
+      </div>
+      <div className="grid grid-cols-4 gap-[24px] leading-5">
+        <Input
+          label="*First Name"
+          className={'col-span-2 [&_input]:h-[38px]'}
+          name="client_first_name"
+          value={formik.values.client_first_name}
+          onChange={formik.handleChange}
+          error={formik.touched.client_first_name && formik.errors.client_first_name}
+          errorText={formik.touched.client_first_name && formik.errors.client_first_name}
+        />
+        <Input
+          label="*Last Name"
+          className={'col-span-2 [&_input]:h-[38px]'}
+          name="client_last_name"
+          value={formik.values.client_last_name}
+          onChange={formik.handleChange}
+          error={formik.touched.client_last_name && formik.errors.client_last_name}
+          errorText={formik.touched.client_last_name && formik.errors.client_last_name}
+        />
+        <Input
+          className={'col-span-3'}
+          label="*Permanent Address"
+          name={'client_permanent_address'}
+          value={formik.values.client_permanent_address}
+          onChange={formik.handleChange}
+          error={formik.touched.client_permanent_address && formik.errors.client_permanent_address}
+          errorText={formik.touched.client_permanent_address && formik.errors.client_permanent_address}
+        />
+        <Input
+          label="*ZIP"
+          name={'client_zip_code'}
+          value={formik.values.client_zip_code}
+          onChange={formik.handleChange}
+          error={formik.touched.client_zip_code && formik.errors.client_zip_code}
+          errorText={formik.touched.client_zip_code && formik.errors.client_zip_code}
+        />
+        <Input
+          label="*Email address"
+          name={'client_email'}
+          value={formik.values.client_email}
+          onChange={formik.handleChange}
+          error={formik.touched.client_email && formik.errors.client_email}
+          errorText={formik.touched.client_email && formik.errors.client_email}
+        />
+        <Input
+          label="*Date of Birth"
+          name={'client_birth_date'}
+          type="date"
+          value={formik.values.client_birth_date}
+          onChange={(event) => {
+            formik.setFieldValue('client_birth_date', event.target.value);
+          }}
+          error={formik.touched.client_birth_date && formik.errors.client_birth_date}
+          errorText={formik.touched.client_birth_date && formik.errors.client_birth_date}
+        />
+        <Input
+          label="*Phone Number"
+          name={'client_phone_number'}
+          value={formik.values.client_phone_number}
+          onChange={formik.handleChange}
+          error={formik.touched.client_phone_number && formik.errors.client_phone_number}
+          errorText={formik.touched.client_phone_number && formik.errors.client_phone_number}
+        />
+        <Input
+          label="*SSN"
+          name={'client_ssn'}
+          value={formik.values.client_ssn}
+          onChange={formik.handleChange}
+          error={formik.touched.client_ssn && formik.errors.client_ssn}
+          errorText={formik.touched.client_ssn && formik.errors.client_ssn}
+        />
+        <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 col-span-2">
+          <div className="flex gap-3 items-center mb-[2px]">
+            <input
+              name="need_moving_services"
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+              onChange={(e) => {
+                formik.handleChange(e);
+              }}
+              value={formik.values.need_moving_services}
+              checked={formik.values.need_moving_services}
+            />
+            <p className="font-medium ">I Want Moving Services</p>
           </div>
-          <div className="col-span-2 w-full h-full">
-            <div className="space-y-[4px]">
+          <div className="flex flex-col pl-[28px] gap-6 [&_input]:h-[38px] ">
+            <p className="font-normal">
+              Please reach out to me with information about the following discounted service from the Oxford family
+              network.
+            </p>
+            <div className=" w-full max-w-[292px]">
               <Input
-                name="client_signature"
-                onSignatureEnd={(url) => {
-                  formik.setFieldValue(`client_signature`, url);
-                }}
-                onSignatureClear={() => {
-                  formik.setFieldValue(`client_signature`, null);
-                }}
-                type="signature"
-                label="Please sign here:"
-                error={
-                  (formik.errors.client_signature || formik.errors.client_signature?.untrimmedCanvas) &&
-                  formik.touched.client_signature
-                }
-                errorText={
-                  formik.errors.client_signature?.untrimmedCanvas
-                    ? formik.errors.client_signature.untrimmedCanvas
-                    : formik.errors.client_signature
-                }
-              />
-            </div>
-          </div>
-          <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 col-span-4">
-            <div className="flex flex-col gap-6 [&_input]:h-[38px] ">
-              <p className="font-normal">
-                Landlords want to ensure that they will be paid the rent they are owed when they let out a property. A
-                credit check can help give them information about the tenant's previous history when it comes to paying
-                back debts. The cost of a credit check is $20.00.{' '}
-              </p>
-
-              <div id="stripe-payment-container">
-                <PaymentElement />
-                <AddressElement options={{ mode: 'billing' }} />
-              </div>
-            </div>
-          </div>
-          <div className="pt-[50px] flex justify-between col-span-4">
-            <div className="flex items-center gap-[12px] p-[16px] bg-gray10 rounded-md	">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+                label={`${formik.values.need_moving_services ? '*' : ''}Moving Date`}
+                type="date"
+                name="move_in_date"
+                value={formik.values.need_moving_services ? formik.values.move_in_date : ''}
+                readonly={!formik.values.need_moving_services}
                 onChange={(e) => {
-                  setAgreementSelected(e.target.checked);
+                  formik.setFieldValue('move_in_date', e.target.value);
                 }}
-                value={agreementSelected}
-                checked={agreementSelected}
+                error={formik.values.need_moving_services && formik.touched.move_in_date && formik.errors.move_in_date}
+                errorText={
+                  formik.values.need_moving_services && formik.touched.move_in_date && formik.errors.move_in_date
+                }
               />
-              <p className="text-gray7 text-[14px] font-medium leading-5">
-                I agree to this{' '}
-                <button type="button" className="text-[#2563EB] underline " onClick={() => setAgreementModalOpen(true)}>
-                  Credit Check Agreement
-                </button>{' '}
-                and understand that my credit check fee is non-refundable.
-              </p>
             </div>
-
-            <button
-              disabled={!agreementSelected}
-              className={clsx('w-full max-w-[320px] bg-[#3B82F6] py-[13px] px-[25px] rounded-md text-white', {
-                'opacity-50': !agreementSelected,
-                'opacity-100': agreementSelected,
-              })}>
-              {isPendingPostApplication ? <CircularProgress size={15} sx={{ color: 'white' }} /> : <span>Submit</span>}
-            </button>
           </div>
         </div>
-        {isAgreementModalOpen && (
-          <AgreementOverlay
-            handleClose={() => setAgreementModalOpen(false)}
-            handleAgree={() => {
-              setAgreementModalOpen(false);
-              setAgreementSelected(true);
-            }}
-          />
-        )}
-      </form>
-      <ScrollToErrors />
-    </FormikProvider>
+        <div className="col-span-2 w-full h-full">
+          <div className="space-y-[4px]">
+            <Input
+              onSignatureEnd={(url) => {
+                formik.setFieldValue(`client_signature`, url);
+              }}
+              onSignatureClear={() => {
+                formik.setFieldValue(`client_signature`, null);
+              }}
+              type="signature"
+              label="Please sign here:"
+              error={
+                (formik.errors.client_signature || formik.errors.client_signature?.untrimmedCanvas) &&
+                formik.touched.client_signature
+              }
+              errorText={
+                formik.errors.client_signature?.untrimmedCanvas
+                  ? formik.errors.client_signature.untrimmedCanvas
+                  : formik.errors.client_signature
+              }
+            />
+          </div>
+        </div>
+        <div className="p-4 rounded-md bg-gray10 text-gray4 text-sm font-medium leading-5 col-span-4">
+          <div className="flex flex-col gap-6 [&_input]:h-[38px] ">
+            <p className="font-normal">
+              Landlords want to ensure that they will be paid the rent they are owed when they let out a property. A
+              credit check can help give them information about the tenant's previous history when it comes to paying
+              back debts. The cost of a credit check is $20.00.{' '}
+            </p>
+
+            <div className="">
+              <PaymentElement />
+              <AddressElement options={{ mode: 'billing' }} />
+            </div>
+          </div>
+        </div>
+        <div className="pt-[50px] flex justify-between col-span-4">
+          <div className="flex items-center gap-[12px] p-[16px] bg-gray10 rounded-md	">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300 text-lightBlue3 focus:ring-lightBlue3"
+              onChange={(e) => {
+                setAgreementSelected(e.target.checked);
+              }}
+              value={agreementSelected}
+              checked={agreementSelected}
+            />
+            <p className="text-gray7 text-[14px] font-medium leading-5">
+              I agree to this{' '}
+              <button type="button" className="text-[#2563EB] underline " onClick={() => setAgreementModalOpen(true)}>
+                Credit Check Agreement
+              </button>{' '}
+              and understand that my credit check fee is non-refundable.
+            </p>
+          </div>
+
+          <button
+            disabled={!agreementSelected}
+            className={clsx('w-full max-w-[320px] bg-[#3B82F6] py-[13px] px-[25px] rounded-md text-white', {
+              'opacity-50': !agreementSelected,
+              'opacity-100': agreementSelected,
+            })}>
+            {isPendingPostApplication ? <CircularProgress size={15} sx={{ color: 'white' }} /> : <span>Submit</span>}
+          </button>
+        </div>
+      </div>
+      {isAgreementModalOpen && (
+        <AgreementOverlay
+          handleClose={() => setAgreementModalOpen(false)}
+          handleAgree={() => {
+            setAgreementModalOpen(false);
+            setAgreementSelected(true);
+          }}
+        />
+      )}
+    </form>
   );
 };
 

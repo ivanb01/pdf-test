@@ -93,12 +93,6 @@ const PdfFooter = ({ signingDate = 'February 2024' }) => {
   );
 };
 
-const CREDIT_CHECK_MESSAGE = {
-  CREATED: 'Not requested',
-  CREDIT_CHECK_PAYMENT_PENDING: 'Payment pending',
-  CREDIT_CHECK_PAYMENT_SUCCESSFUL: 'Succesfully ran',
-};
-
 const PersonalInformation = ({ personalInformation }) => {
   return (
     <View style={{ flexGrow: 1, width: '50%', letterSpacing: -0.5 }}>
@@ -117,7 +111,7 @@ const PersonalInformation = ({ personalInformation }) => {
           <Text>Date of Birth:</Text>
           <Text>Cell Phone:</Text>
           <Text>Credit Report Status:</Text>
-          {/* <Text>Background Check Status:</Text> */}
+          <Text>Background Check Status:</Text>
         </View>
         <View style={{ display: 'flex', gap: 2, flexGrow: 1, fontSize: 9, fontWeight: 300 }}>
           <Text>{personalInformation.client_first_name}</Text>
@@ -130,8 +124,8 @@ const PersonalInformation = ({ personalInformation }) => {
           <Text>{personalInformation.client_ssn}</Text>
           <Text>{personalInformation.client_birth_date}</Text>
           <Text>{personalInformation.client_phone_number}</Text>
-          <Text>{CREDIT_CHECK_MESSAGE[personalInformation.status]}</Text>
-          {/* <Text>Not requested</Text> */}
+          <Text>{'STATUS'}</Text>
+          <Text>{'STATUS'}</Text>
         </View>
       </View>
     </View>
@@ -477,7 +471,11 @@ export const ImageRender = ({ source }) => {
   return (
     <Document>
       <Page style={{ padding: 35, ...styles }}>
-        <Image alt={source} src={source} />
+        <Image
+          alt={source}
+          src={source}
+          // style={{ width: 160, height: 80, objectFit: 'contain', borderBottomWidth: 1 }}
+        />
       </Page>
     </Document>
   );

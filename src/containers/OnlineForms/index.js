@@ -288,11 +288,7 @@ const OnlineForms = () => {
               <CircularProgress size={40} />
             </div>
           ) : (
-            <OnlineFormsTable
-              onlineForms={onlineForms}
-              onDeleteForm={onOpenDeleteFormClick}
-              fetchFormsParams={fetchFormsParams}
-            />
+            <OnlineFormsTable onlineForms={onlineForms} onDeleteForm={onOpenDeleteFormClick} />
           )}
           {hasNextPage && (
             <div className="h-[80px] flex items-center justify-center">
