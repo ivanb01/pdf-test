@@ -307,7 +307,7 @@ const ContactsListTable = ({ data, contacts, handleFilteredContacts, categoryTyp
                             <div
                               className={`inline-flex rounded-full px-2 text-xs font-medium items-center text-green4 bg-green1`}>
                               <Mail className="w-4 mr-1" />
-                              <span>Todays</span>
+                              <span>Today</span>
                             </div>
                             <span className="ml-4">Healthy Communication</span>
                           </div>
