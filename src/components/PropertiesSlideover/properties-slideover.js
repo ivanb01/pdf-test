@@ -13,7 +13,7 @@ import chevronDown from '../../../public/images/ch-down.svg';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import placeholder from '../../../public/images/img-placeholder.png';
 import { useSelector } from 'react-redux';
 
@@ -21,8 +21,9 @@ import AddClientManuallyOverlay from '@components/overlays/add-client/add-client
 import { clientOptions, clientStatuses } from '@global/variables';
 import { useRouter } from 'next/router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-
+import RemoveCircleOutlineSharpIcon from '@mui/icons-material/RemoveCircleOutlineSharp';
 const SelectedProperty = ({ property, setSelected, selected }) => {
+  const ref = useRef();
   return (
     <div className="bg-gray10 border border-gray1 flex items-center justify-between p-[10px] rounded-lg mb-2">
       <div className="flex items-center">
@@ -34,33 +35,24 @@ const SelectedProperty = ({ property, setSelected, selected }) => {
           {property.PROPERTY_TYPE} in {property.ADDRESS}
         </div>
       </div>
-      <div class="form-checkbox">
+      <div>
         <input
           type="checkbox"
           id={`checkbox-${property.ID}`}
-          class="hidden"
+          className="hidden"
+          ref={ref}
+          checked={selected}
           onChange={(event) => {
-            if (event.target.checked) {
-              setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
-            } else {
-              setSelected((prevSelected) => [...prevSelected, property]);
-            }
+            setSelected((prevSelected) => prevSelected.filter((item) => item.ID !== property.ID));
           }}
         />
-        <label htmlFor={`checkbox-${property.ID}`} class="flex items-center cursor-pointer">
-          <div
-            class={`${
-              selected ? 'bg-lightBlue3' : 'border border-gray-300'
-            } relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center`}>
+        <label
+          htmlFor={`checkbox-${property.ID}`}
+          className="flex items-center cursor-pointer"
+          onClick={() => ref?.current?.click()}>
+          <div className={` relative rounded-full w-6 h-6 flex flex-shrink-0 justify-center items-center text-gray4`}>
             {selected && (
-              <svg
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                version="1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 48 48"
-                enable-background="new 0 0 48 48">
-                <polygon fill="white" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9" />
-              </svg>
+              <RemoveCircleOutlineSharpIcon className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
             )}
           </div>
         </label>
