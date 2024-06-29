@@ -36,8 +36,8 @@ const columns = [
   }),
   columnHelper.accessor('status', {
     header: () => <HeaderCell title="STATUS" />,
-    cell: ({ info }) => {
-      return <StatusCell {...info.row.original} />;
+    cell: ({ info, fetchFormsParams }) => {
+      return <StatusCell onlineForm={info.row.original} fetchFormsParams={fetchFormsParams} />;
     },
     minSize: 150,
   }),
@@ -76,7 +76,7 @@ const columns = [
   }),
 ];
 
-const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
+const OnlineFormsTable = ({ onlineForms, onDeleteForm, fetchFormsParams }) => {
   const table = useReactTable({
     data: onlineForms,
     columns,
@@ -125,6 +125,7 @@ const OnlineFormsTable = ({ onlineForms, onDeleteForm }) => {
                       {flexRender(cell.column.columnDef.cell, {
                         info: cell.getContext(),
                         onDeleteForm,
+                        fetchFormsParams,
                       })}
                     </td>
                   );
