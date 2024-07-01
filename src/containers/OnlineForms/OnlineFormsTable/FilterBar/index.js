@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Search from '@components/shared/input/search';
 import PropTypes from 'prop-types';
 import Button from '@components/shared/button';
@@ -6,9 +6,6 @@ import ButtonsSlider from '@components/shared/button/buttonsSlider';
 import clsx from 'clsx';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
-import useElementDimensions from '@helpers/hooks/useElementDimensions';
-
-const TITLE_MAX_WIDTH = 565;
 
 const FilterBar = ({
   statusButtons,
@@ -20,15 +17,12 @@ const FilterBar = ({
   handlePreviewTemplate,
   searchValue,
 }) => {
-  const [titleDim, titleRef] = useElementDimensions();
   const slideClassname = clsx({ ['w-[193px] h-[49px]']: !statusButtons.length });
 
   return (
     <div className="h-[72px] flex justify-between items-center p-[25px] border-b">
-      <div className="flex items-center gap-2 max-w-[562px] overflow-hidden">
-        <div ref={titleRef} className="w-full color-gray8 overflow-hidden truncate">
-          <span className="whitespace-nowrap">{formTypeFilter.name}</span>
-        </div>
+      <div className="flex items-center gap-2 max-w-[562px]">
+        <div className="color-gray8 truncate">{formTypeFilter.name}</div>
         {!!formTypeFilter.id && (
           <button
             onClick={() => {
@@ -46,24 +40,23 @@ const FilterBar = ({
           onChange={(value) => {
             setSearchValue(value);
           }}
+          className={'text-[14px]'}
+          expandable={true}
           value={searchValue}
-          shrinkOn={titleDim.scrollWidth > TITLE_MAX_WIDTH - 30 - 10 - 45 - 25}
         />
 
-        <div className="flex items-center gap-[10px]">
-          <ButtonsSlider
-            buttons={statusButtons}
-            currentButton={currentTab}
-            onClick={setCurrentTab}
-            className={slideClassname}
-          />
-          <Button onClick={onSendFormClick} disabled={formTypeFilter.deleted} className={'min-w-[128px] w-[128px]'}>
-            <div className="flex gap-2 justify-center items-center">
-              <FeedOutlinedIcon className={'h-5 w-5'} />
-              Send Form
-            </div>
-          </Button>
-        </div>
+        <ButtonsSlider
+          buttons={statusButtons}
+          currentButton={currentTab}
+          onClick={setCurrentTab}
+          className={slideClassname}
+        />
+        <Button onClick={onSendFormClick} disabled={formTypeFilter.deleted} className={'min-w-[128px] w-[128px]'}>
+          <div className="flex gap-2 justify-center items-center">
+            <FeedOutlinedIcon className={'h-5 w-5'} />
+            Send Form
+          </div>
+        </Button>
       </div>
     </div>
   );

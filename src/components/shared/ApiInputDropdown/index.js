@@ -52,36 +52,21 @@ const SearchInput = ({ children, ...props }) => {
   );
 };
 
-const ListContainer = ({ children, ...props }) => {
-  const { className, isLoading } = props;
-  let render = null;
-
-  if (React.isValidElement(children)) {
-    render = children;
-  }
-
-  if (!React.isValidElement(children) && Array.isArray(children)) {
-    const List = children.find((child) => child.type.name === 'List');
-    const EmptyList = children.find((child) => child.type.name === 'EmptyList');
-    const Loading = children.find((child) => child.type.name === 'Loading');
-
-    if (List?.props?.children?.length) render = List;
-    else render = EmptyList;
-
-    if (isLoading && Loading) render = Loading;
-  }
-
-  return (
-    <div className={clsx('absolute bg-white max-h-[250px] w-full z-[999] top-[68px] overflow-y-scroll', className)}>
-      {render}
-    </div>
-  );
-};
-
 const List = ({ children, className, ...props }) => {
   const { open } = useContext(ApiInputDropdownContext);
-
-  return <>{open && <div className={clsx('bg-white flex flex-col ', className)}>{children}</div>}</>;
+  return (
+    <>
+      {open && (
+        <div
+          className={clsx(
+            'bg-white absolute flex flex-col w-full max-h-[250px] overflow-y-scroll z-[999] top-[68px] ',
+            className,
+          )}>
+          <ul>{Children?.map(children, (child) => cloneElement(child))}</ul>
+        </div>
+      )}
+    </>
+  );
 };
 
 const ListItem = ({ children, ...props }) => {
@@ -90,7 +75,7 @@ const ListItem = ({ children, ...props }) => {
 
   return (
     <li
-      className="flex flex-col  overflow-y-scroll h-full min-w-full  text-gray-900 text-sm z-[999]"
+      className="flex flex-col iten.between overflow-y-scroll h-full min-w-full  text-gray-900 text-sm z-[999]"
       onMouseDown={() => {
         onItemClick();
         setOpen(false);
@@ -100,38 +85,7 @@ const ListItem = ({ children, ...props }) => {
   );
 };
 
-const EmptyList = ({ children }) => {
-  const { open } = useContext(ApiInputDropdownContext);
-
-  return (
-    <>
-      {open && (
-        <div className="h-[250px]">
-          <div className="h-full w-full">{children}</div>
-        </div>
-      )}
-    </>
-  );
-};
-
-const Loading = ({ children }) => {
-  const { open } = useContext(ApiInputDropdownContext);
-
-  return (
-    <>
-      {open && (
-        <div className="h-[250px]">
-          <div className="h-full w-full">{children}</div>
-        </div>
-      )}
-    </>
-  );
-};
-
 ApiInputDropdown.List = List;
-ApiInputDropdown.ListContainer = ListContainer;
-ApiInputDropdown.Loading = Loading;
-ApiInputDropdown.EmptyList = EmptyList;
 ApiInputDropdown.ListItem = ListItem;
 ApiInputDropdown.SearchInput = SearchInput;
 

@@ -12,9 +12,7 @@ import {
   COLUMNS_GAP,
   PDF_FORM_ELEMENT,
   PDF_HEADING1_SIZE,
-  PDF_HEADING1_LINE_HEIGHT,
   PDF_HEADING2_SIZE,
-  PDF_HEADING2_LINE_HEIGHT,
   PDF_PARAGRAPH_MARGIN_BOTTOM,
   PDF_LIST_PADDING_LEFT,
   PDF_LIST_ITEM_VERTICAL_PADDING,
@@ -41,7 +39,7 @@ const PdfLineBreak = () => {
     <Text
       style={{
         width: 500,
-        height: 10 * TOTAL_RATIO,
+        height: 20 * TOTAL_RATIO,
       }}
     />
   );
@@ -57,11 +55,10 @@ const PdfHeading1 = ({ headingElement }) => {
               ...styles,
               fontSize: PDF_HEADING1_SIZE,
               marginBottom: PDF_HEADING1_MARGIN_BOTTOM,
-              lineHeight: PDF_HEADING1_LINE_HEIGHT,
-              textAlign: headingElement.format,
               ...TEXT_FORMAT_STYLES[node.format],
             }}
-            key={index}>
+            key={index}
+          >
             {node.text}
           </Text>
         );
@@ -79,11 +76,10 @@ const PdfHeading2 = ({ headingElement }) => {
               ...styles,
               fontSize: PDF_HEADING2_SIZE,
               marginBottom: PDF_HEADING2_MARGIN_BOTTOM,
-              lineHeight: PDF_HEADING2_LINE_HEIGHT,
-              textAlign: headingElement.format,
               ...TEXT_FORMAT_STYLES[node.format],
             }}
-            key={index}>
+            key={index}
+          >
             {node.text}
           </Text>
         );
@@ -103,14 +99,16 @@ const PdfImage = ({ src }) => {
     <View
       style={{
         width: '100%',
-      }}>
+      }}
+    >
       <View
         style={{
           borderBottom: 1,
           borderBottomColor: 'black',
           width: 200 * 0.75,
           height: 50 * 0.75,
-        }}>
+        }}
+      >
         <Image
           src={src}
           alt=""
@@ -132,7 +130,8 @@ const PdfFormInput = ({ text }) => (
       borderBottom: 1,
       borderBottomColor: 'black',
       textAlign: 'center',
-    }}>
+    }}
+  >
     {text}
   </Text>
 );
@@ -146,16 +145,17 @@ const EmptyPdfFormInput = () => {
         borderBottom: 1,
         borderBottomColor: 'black',
         textAlign: 'center',
-      }}></Text>
+      }}
+    ></Text>
   );
 };
-
 const EmptyPdfSignature = () => {
   return (
     <View
       style={{
         width: '100%',
-      }}>
+      }}
+    >
       <View
         style={{
           borderWidth: 1,
@@ -184,9 +184,9 @@ const PdfParagraph = ({ nodes, format, style }) => {
             justifyContent: JUSTIFY_PARAGRAPH[format],
             marginBottom: PDF_PARAGRAPH_MARGIN_BOTTOM,
             ...style,
-          }}>
+          }}
+        >
           {nodes.map(({ id, type, text, format, src }, index) => {
-            console.log('tyype', type);
             if (text) {
               if (type === 'formNode') {
                 let value = null;
@@ -200,6 +200,7 @@ const PdfParagraph = ({ nodes, format, style }) => {
                 return <PdfFormInput text={value} key={index} />;
               } else {
                 const breakText = text.split(' ');
+
                 return breakText.map((word) => {
                   return <PdfWord text={word} format={format} key={index} />;
                 });
@@ -233,12 +234,14 @@ const PdfNumberList = ({ listItems }) => {
               display: 'flex',
               flexDirection: 'row',
             }}
-            key={index}>
+            key={index}
+          >
             <View
               style={{
                 paddingVertical: PDF_LIST_ITEM_VERTICAL_PADDING,
                 paddingHorizontal: PDF_LIST_ITEM_HORIZONTAL_PADDING,
-              }}>
+              }}
+            >
               <View
                 style={{
                   width: 20,
@@ -251,7 +254,8 @@ const PdfNumberList = ({ listItems }) => {
                   bottom: 0,
                   paddingVertical: PDF_LIST_ITEM_VERTICAL_PADDING,
                   ...styles,
-                }}>
+                }}
+              >
                 <Text>{`${value}. `}</Text>
               </View>
               <PdfParagraph nodes={children} style={{ fontSize: PDF_FONT_SIZE, marginBottom: 0 }} />
@@ -273,12 +277,14 @@ const PdfBulletList = ({ listItems }) => {
               display: 'flex',
               flexDirection: 'row',
             }}
-            key={index}>
+            key={index}
+          >
             <View
               style={{
                 paddingVertical: PDF_LIST_ITEM_VERTICAL_PADDING,
                 paddingHorizontal: PDF_LIST_ITEM_HORIZONTAL_PADDING,
-              }}>
+              }}
+            >
               <View
                 style={{
                   width: 20,
@@ -291,7 +297,8 @@ const PdfBulletList = ({ listItems }) => {
                   left: 0,
                   bottom: 0,
                   paddingVertical: PDF_LIST_ITEM_VERTICAL_PADDING + 5,
-                }}>
+                }}
+              >
                 <View
                   style={{
                     width: 3,
@@ -340,14 +347,16 @@ const PdfColumns = ({ nodes }) => {
         width: PDF_DOCUMENT_WIDTH,
         paddingBottom: 10,
         gap: 7,
-      }}>
+      }}
+    >
       {nodes?.children[0]?.children.map((column, index) => {
         return (
           <View
             key={index}
             style={{
               width: (PDF_DOCUMENT_WIDTH - (columnsNumber - 1) * COLUMNS_GAP) / columnsNumber,
-            }}>
+            }}
+          >
             <TableCell tableCell={column} />
           </View>
         );
@@ -370,7 +379,8 @@ const PdfHeader = () => {
         paddingHorizontal: HEADER_FOOTER_PADDING,
         paddingTop: HEADER_FOOTER_PADDING,
         gap: HEADER_FOOTER_GAP,
-      }}>
+      }}
+    >
       <Image
         alt={'logo'}
         src={logo.src}
@@ -398,7 +408,8 @@ const PdfFooter = () => {
         paddingHorizontal: HEADER_FOOTER_PADDING,
         paddingBottom: HEADER_FOOTER_PADDING,
         gap: HEADER_FOOTER_GAP,
-      }}>
+      }}
+    >
       <View style={{ backgroundColor: 'black', height: 1, width: '100%' }} />
       <Text style={{ fontSize: PDF_FONT_SIZE * 0.9 }}>
         5 West 37th Street, 12th Floor, New York, NY 10018 | O: (212)300-6412 | www.opgny.com
@@ -408,14 +419,14 @@ const PdfFooter = () => {
 };
 
 const RenderedDocument = ({ editor, isPreview, formValues }) => {
-  console.log('editor', editor);
   const editorElements = editor?.root.children;
   return (
     <RendererContext.Provider
       value={{
         isPreview,
         formValues,
-      }}>
+      }}
+    >
       <Document>
         <Page
           dpi={72}
@@ -425,7 +436,8 @@ const RenderedDocument = ({ editor, isPreview, formValues }) => {
               PDF_PADDING - 20 + (PDF_FONT_SIZE * 0.9 + HEADER_FOOTER_PADDING + HEADER_FOOTER_GAP * 2 + 1 + 20.78),
             paddingBottom: PDF_PADDING - 20 + (PDF_FONT_SIZE * 0.9 + HEADER_FOOTER_PADDING + HEADER_FOOTER_GAP + 1),
             paddingHorizontal: PDF_PADDING,
-          }}>
+          }}
+        >
           <PdfHeader />
           {editor && (
             <View>

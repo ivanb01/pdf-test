@@ -54,6 +54,10 @@ const Input = forwardRef(
     if (error) {
       errorClasses = 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500';
     }
+    useEffect(() => {
+      console.log(ref);
+    }, [ref]);
+
     const textInput = () => {
       return iconBefore ? (
         <>
@@ -380,11 +384,10 @@ const Input = forwardRef(
 
     const dateInput = () => {
       const ref = useRef();
-
+      console.log('DATE VALUE', value);
       return (
         <>
           <input
-            name={name}
             type={'date'}
             onChange={onChange}
             ref={ref}
@@ -454,7 +457,6 @@ const Input = forwardRef(
             ref={sigCanvas}
             canvasProps={{
               className: canvasClassName,
-              name,
             }}
             onEnd={onEnd}
             clearOnResize={false}
