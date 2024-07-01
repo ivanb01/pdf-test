@@ -11,7 +11,11 @@ const GlobalSearch = ({ open, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const contactsData = useSelector((state) => state.contacts.allContacts.data);
   const router = useRouter();
-  const uniqueCategories = [...new Set(contactsData?.map((item) => item.category_1))];
+  const uniqueCategories = [...new Set(contactsData?.map((item) => item.category_1))].sort((a, b) => {
+    if (a === 'Client') return -1;
+    if (b === 'Client') return 1;
+    return a.localeCompare(b);
+  });
   const cancelButtonRef = useRef(null);
 
   const renderSearchResults = () => {
@@ -68,17 +72,30 @@ const GlobalSearch = ({ open, onClose }) => {
   };
 
   const searchItems = (category) => {
-    return contactsData.filter(
-      (d) =>
-        searchTerm.split(' ').every((word) => {
-          const lowercaseWord = word.toLowerCase();
-          return (
-            d.email.toLowerCase().includes(lowercaseWord) ||
-            d.first_name.toLowerCase().includes(lowercaseWord) ||
-            d.last_name.toLowerCase().includes(lowercaseWord)
-          );
-        }) && d.category_1 === category,
-    );
+    return contactsData
+      .filter(
+        (d) =>
+          searchTerm.split(' ').every((word) => {
+            const lowercaseWord = word.toLowerCase();
+            return (
+              d.email.toLowerCase().includes(lowercaseWord) ||
+              d.first_name.toLowerCase().includes(lowercaseWord) ||
+              d.last_name.toLowerCase().includes(lowercaseWord)
+            );
+          }) && d.category_1 === category,
+      )
+      .sort((a, b) => {
+        const nameA = `${a.first_name.toLowerCase()} ${a.last_name.toLowerCase()}`;
+        const nameB = `${b.first_name.toLowerCase()} ${b.last_name.toLowerCase()}`;
+
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
   };
   const renderNoResultsMessage = () => {
     const noResults = uniqueCategories.every((category) => {

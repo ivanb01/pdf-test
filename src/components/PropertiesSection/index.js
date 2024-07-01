@@ -671,7 +671,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                           Client Preferences
                         </Button>
                       )}
-                      {filtersCount > 0 && (
+                      {filtersCount > 0 && propertiesCurrentTab === 0 && (
                         <div
                           className={
                             'text-xs w-5 h-5 flex items-center justify-center absolute right-[-9px] top-[-9px] rounded-full bg-lightBlue3 text-white'

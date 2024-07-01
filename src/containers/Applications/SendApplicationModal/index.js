@@ -133,7 +133,12 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
   };
 
   const ValidationSchema = Yup.object().shape({
-    landlords: Yup.array().min(1, 'Contacts are a required field!').required('Lanlords are required is required'),
+    landlords: Yup.array().when('contacts', {
+      is: (contacts) => {
+        return !contacts.length;
+      },
+      then: Yup.array().min(1, 'Contacts are a required field!').required('Lanlords are required is required'),
+    }),
     contacts: Yup.array().of(
       Yup.object().shape({
         id: Yup.string(),
@@ -165,7 +170,7 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
                     <div className="flex flex-col gap-[4px]">
                       <p className="text-base	font-medium leading-6">Send Application</p>
                       <p className="text-sm	font-normal leading-5 text-gray5">
-                        Send Application to Landlord or other contact to review.
+                        Send Application to Contacts or other recipients to review.
                       </p>
                     </div>
                     <Button closeButton onClick={onClose} />
@@ -196,12 +201,15 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
                           <div className="flex flex-col gap-4 ">
                             <button
                               type="button"
-                              onClick={() => {
+                              onClick={async () => {
                                 arrayHelpers.push({
                                   id: uuid(),
                                   name: '',
                                   email: '',
                                 });
+                                // setTimeout(async () => {
+                                //   await formik.validateForm();
+                                // }, 0);
                               }}
                               className="flex items-center text-lightBlue3 text-sm font-medium leading-5 gap-[4px] w-fit">
                               <AddCircleIcon className="h-4 w-4" />
@@ -209,39 +217,45 @@ const SendApplicationModal = ({ applicationData, onClose }) => {
                             </button>
                             {formik.values.contacts.map((contact, index) => {
                               return (
-                                <div key={index} className="flex items-center gap-6 w-full">
-                                  <Input
-                                    label="Name"
-                                    name={`contacts[${index}].name`}
-                                    value={formik.values.contacts[index].name}
-                                    onChange={formik.handleChange}
-                                    className={'w-full'}
-                                    error={
-                                      formik.errors.contacts &&
-                                      formik.touched.contacts &&
-                                      formik.touched.contacts[index]?.name &&
-                                      formik.errors.contacts[index]?.name
-                                    }
-                                    errorText={formik.errors.contacts && formik.errors.contacts[index]?.name}
-                                  />
-                                  <Input
-                                    label="Email"
-                                    name={`contacts[${index}].email`}
-                                    value={formik.values.contacts[index].email}
-                                    onChange={formik.handleChange}
-                                    className={'w-full'}
-                                    error={
-                                      formik.errors.contacts &&
-                                      formik.touched.contacts &&
-                                      formik.touched?.contacts[index]?.email &&
-                                      formik.errors?.contacts[index]?.email
-                                    }
-                                    errorText={formik.errors.contacts && formik.errors.contacts[index]?.email}
-                                  />
+                                <div key={index} className="flex items-start gap-6 w-full">
+                                  <div className="grid grid-cols-2 gap-6 w-full">
+                                    <Input
+                                      label="Name"
+                                      name={`contacts[${index}].name`}
+                                      value={formik.values.contacts[index].name}
+                                      onChange={formik.handleChange}
+                                      className={'w-full'}
+                                      error={
+                                        formik.errors.contacts &&
+                                        formik.touched.contacts &&
+                                        formik.touched.contacts[index]?.name &&
+                                        formik.errors.contacts[index]?.name
+                                      }
+                                      errorText={formik.errors.contacts && formik.errors.contacts[index]?.name}
+                                    />
+                                    <Input
+                                      label="Email"
+                                      name={`contacts[${index}].email`}
+                                      value={formik.values.contacts[index].email}
+                                      onChange={formik.handleChange}
+                                      className={'w-full'}
+                                      error={
+                                        formik.errors.contacts &&
+                                        formik.touched.contacts &&
+                                        formik.touched?.contacts[index]?.email &&
+                                        formik.errors?.contacts[index]?.email
+                                      }
+                                      errorText={formik.errors.contacts && formik.errors.contacts[index]?.email}
+                                    />
+                                  </div>
                                   <button
                                     type="button"
+                                    className="pt-5"
                                     onClick={() => {
                                       arrayHelpers.remove(index);
+                                      // setTimeout(async () => {
+                                      //   await formik.validateForm();
+                                      // }, 0);
                                     }}>
                                     <RemoveCircleIcon className="h-4 w-4 text-overlayBackground" />
                                   </button>
