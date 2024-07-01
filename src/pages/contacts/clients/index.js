@@ -126,12 +126,22 @@ const index = () => {
         await getContacts().then((res) => {
           dispatch(setAllContacts(res.data));
         });
-        await getCount().then((data) => {
-          dispatch(setCount(data.data));
-          setLoadingPopup(false);
-          setSuccess(true);
-          setOpenSuccessPopup(true);
-        });
+        await getCount()
+          .then((data) => {
+            dispatch(setCount(data.data));
+            setLoadingPopup(false);
+            setSuccess(true);
+            setOpenSuccessPopup(true);
+          })
+          .then(() => {
+            syncEmailOfContact(undefined, '100')
+              .then(() => {
+                getAIContacts()
+                  .then(() => {})
+                  .catch((err) => {});
+              })
+              .catch((err) => {});
+          });
       }, 4000);
     } catch (error) {}
   };
