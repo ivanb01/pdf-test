@@ -213,13 +213,14 @@ const Clients = ({
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     console.log(contacts, 'contacts');
-    filterContacts(contacts);
-    // setFilteredContacts(filtered);
-    // statuses.forEach((status) =>
-    //   status.statuses.forEach((s) =>
-    //     handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
-    //   ),
-    // );
+    let filtered = filterContacts(contacts);
+    setFilteredContacts(filtered);
+    statuses.forEach((status) =>
+      status.statuses.forEach((s) =>
+        handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
+      ),
+    );
+
   }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
 
   useEffect(() => {
@@ -231,14 +232,6 @@ const Clients = ({
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder, contactsList = filteredContacts) => {
     let filteredClients = contactsList.filter((client) => client.status_2 === status);
-
-    filteredClients.sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.first_name.localeCompare(b.first_name);
-      } else if (sortOrder === 'desc') {
-        return b.first_name.localeCompare(a.first_name);
-      }
-    });
 
     dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
     setFilteredContacts((prevContacts) => {
