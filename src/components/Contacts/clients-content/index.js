@@ -25,6 +25,7 @@ import FloatingAlert from '@components/shared/alert/floating-alert';
 import { useRef } from 'react';
 import SwitchComponent from '@components/Switch';
 import ContactsListTable from '@components/shared/table/ContactsListTable';
+import SearchContactsTable from '@components/shared/table/SearchContactsTable';
 
 const buttons = [
   {
@@ -213,13 +214,13 @@ const Clients = ({
   const sorted = useSelector((state) => state.global.sorted);
   useEffect(() => {
     console.log(contacts, 'contacts');
-    filterContacts(contacts);
-    // setFilteredContacts(filtered);
-    // statuses.forEach((status) =>
-    //   status.statuses.forEach((s) =>
-    //     handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
-    //   ),
-    // );
+    let filtered = filterContacts(contacts);
+    setFilteredContacts(filtered);
+    statuses.forEach((status) =>
+      status.statuses.forEach((s) =>
+        handleFilteredContacts(s.name, sorted.find((sortedItem) => sortedItem.name === s.name)?.sorted, filtered),
+      ),
+    );
   }, [clientsFilters, contacts, openedSubtab, hideUnapproved]);
 
   useEffect(() => {
@@ -453,14 +454,26 @@ const Clients = ({
           <div className="w-auto relative flex" style={{ height: 'calc(100vh - 160px)' }}>
             <div className={`border border-gray-200 overflow-hidden relative h-full w-full`}>
               <SimpleBar autoHide style={{ height: '100%', maxHeight: '100%' }}>
-                <ContactsListTable
-                  handleFilteredContacts={handleFilteredContacts}
-                  contacts={filteredContacts}
-                  tableFor="contactsList"
-                  categoryType="clients"
-                  handleCardEdit={handleCardEdit}
-                  searchTerm={searchTerm}
-                />
+                <div className={!searchTerm.length && 'hidden'}>
+                  <SearchContactsTable
+                    handleFilteredContacts={handleFilteredContacts}
+                    contacts={filteredContacts}
+                    tableFor="contactsList"
+                    categoryType="clients"
+                    handleCardEdit={handleCardEdit}
+                    searchTerm={searchTerm}
+                  />
+                </div>
+                <div className={searchTerm.length && 'hidden'}>
+                  <ContactsListTable
+                    handleFilteredContacts={handleFilteredContacts}
+                    contacts={filteredContacts}
+                    tableFor="contactsList"
+                    categoryType="clients"
+                    handleCardEdit={handleCardEdit}
+                    searchTerm={searchTerm}
+                  />
+                </div>
               </SimpleBar>
             </div>
           </div>
