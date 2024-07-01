@@ -90,11 +90,6 @@ const Clients = ({
       value: 'status_2',
     },
     {
-      title: 'CAMPAIGN',
-      content: ['In Campaign', 'Not In Campaign'],
-      value: 'is_in_campaign',
-    },
-    {
       title: 'PRIORITY',
       content: multiselectOptionsClients.map((option) => option.label),
       value: 'tags',
