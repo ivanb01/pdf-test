@@ -35,8 +35,12 @@ export const getCampaigns = (searchterm) => {
   });
 };
 
-export const assignContactToCampaign = (campaignId, contactId) => {
-  return axiosInstance.post(`v2/campaigns/${campaignId}/add-contact/${contactId}`);
+export const assignContactToCampaign = (campaignId, contactId, local_timezone) => {
+  return axiosInstance.post(`/v2/campaigns/${campaignId}/add-contact/${contactId}`, null, {
+    params: {
+      local_timezone: local_timezone,
+    },
+  });
 };
 
 export const unassignContactFromCampaign = (campaignId, contactId) => {

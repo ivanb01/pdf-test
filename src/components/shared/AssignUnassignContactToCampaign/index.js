@@ -26,6 +26,9 @@ const AssignUnassignContactToCampaign = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
+  const getTimeZone = () => {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  };
 
   const updateUserLocally = (objectKey, contact_campaign_status) => {
     if (objectKey === 'contacts_in_campaign') {
@@ -60,7 +63,7 @@ const AssignUnassignContactToCampaign = ({
     if (!active) {
       setEnabled(true);
       setLoading(true);
-      await assignContactToCampaign(campaignId, activePerson.contact_id).then((res) => {
+      await assignContactToCampaign(campaignId, activePerson.contact_id, getTimeZone()).then((res) => {
         setLoading(false);
         setOpenDeactivate(false);
       });
