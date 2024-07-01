@@ -495,10 +495,10 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   };
 
   const getFromNumber = () => {
-    return (page - 1) * 21 + 1;
+    return (page - 1) * 20 + 1;
   };
   const getToNumber = () => {
-    return Math.min(page * 21, allPropertiesCount);
+    return Math.min(page * 20, allPropertiesCount);
   };
 
   useEffect(() => {
@@ -525,7 +525,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   }, [formik]);
 
   const tabs = [
-    { name: 'All', href: '#' },
+    { name: 'All', href: '#', count: allPropertiesCount },
     {
       name: 'Portfolio',
       href: '#',

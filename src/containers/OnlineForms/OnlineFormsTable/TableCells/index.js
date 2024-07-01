@@ -13,6 +13,9 @@ import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { useRouter } from 'next/router';
 import { useSendEmail, useUpdateCommunicationAndActivityLog } from '@helpers/queries/mutations';
 import Avatar from '@components/shared/avatar';
+import { usePostOnlineForm } from 'containers/OnlineForms/queries/mutations';
+import { useFetchOnlineFormsPaginated } from 'containers/OnlineForms/queries/queries';
+
 export const HeaderCell = ({ title }) => <p className="text-[12px]">{title}</p>;
 
 export const DefaultCell = ({ label }) => (
@@ -22,7 +25,7 @@ export const DefaultCell = ({ label }) => (
 );
 
 export const ClientCell = ({ name, firstName, lastName, email, imgSrc }) => {
-  const initials = `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+  const initials = `${firstName?.charAt(0).toUpperCase()}${lastName?.charAt(0).toUpperCase()}`;
 
   return (
     <div className="flex justify-start align-middle gap-[12px] text-[14px] leading-5">
@@ -35,14 +38,25 @@ export const ClientCell = ({ name, firstName, lastName, email, imgSrc }) => {
   );
 };
 
-export const StatusCell = (props) => {
-  const { status, form_type, client_email, client_name, public_identifier } = props;
-
+export const StatusCell = ({ onlineForm, fetchFormsParams }) => {
+  const { status, form_type, client_email, client_name, public_identifier } = onlineForm;
   const { name: formTitle } = form_type;
   const router = useRouter();
   const userInfo = useSelector((state) => state.global.userInfo);
+  const { refetch: formsRefetch, isRefetching: isRefetchingForms } = useFetchOnlineFormsPaginated(fetchFormsParams);
+
+  const onSendFormSuccess = () => {
+    formsRefetch();
+  };
+  const { mutate: mutatePostForm, isPending: isPendingUpdateForm } = usePostOnlineForm({
+    onSuccess: onSendFormSuccess,
+  });
 
   const onSendEmailSuccess = () => {
+    mutatePostForm({
+      ...onlineForm,
+      sent_by_email_at: moment().toISOString(),
+    });
     toast.success('Form resent successfully!');
   };
   const onSendEmailError = () => {
@@ -52,6 +66,7 @@ export const StatusCell = (props) => {
   const sendEmail = useSendEmail({
     onError: onSendEmailError,
   });
+
   const updateCommunicationAndActivityLog = useUpdateCommunicationAndActivityLog({ onSuccess: onSendEmailSuccess });
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
@@ -108,11 +123,7 @@ export const StatusCell = (props) => {
       <StatusChip text={status.toLowerCase()} variant={chipVariant} />
       {status.toLowerCase() === 'pending' && (
         <button disabled={sendEmail.isPendingSendEmail} className=" flex gap-[6px]" onClick={sendFormEmail}>
-          {!sendEmail.isPendingSendEmail ? (
-            <Image src={ResendEmail} alt="Resend email" />
-          ) : (
-            <CircularProgress size={16} />
-          )}
+          {!sendEmail.isPending ? <Image src={ResendEmail} alt="Resend email" /> : <CircularProgress size={16} />}
           Resend Form
         </button>
       )}

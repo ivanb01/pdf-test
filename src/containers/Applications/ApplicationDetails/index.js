@@ -154,7 +154,7 @@ const ApplicationDetails = () => {
           };
         });
       });
-  }, [sections, applicationIsSuccess]);
+  }, [sections, applicationIsSuccess, documentsIsSuccess]);
 
   const headerRef = useCallback((node) => {
     if (node) {
@@ -202,6 +202,8 @@ const ApplicationDetails = () => {
     });
     setCurrentSection(parseInt(current.id));
   };
+
+  console.log('curren section', currentSection);
 
   const [loadingPdf, setloadingPdf] = useState(false);
 

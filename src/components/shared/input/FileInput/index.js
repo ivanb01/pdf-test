@@ -190,7 +190,7 @@ const Input = ({ children }) => {
         type="file"
         onChange={handleFileInput}
         className="hidden"
-        accept="image/png, image/jpg, application/pdf"
+        accept="image/png, image/jpg, image/jpeg, application/pdf"
       />
     </div>
   );

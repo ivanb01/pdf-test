@@ -99,60 +99,60 @@ const OccupantsList = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
                               <Input
                                 label="*Name"
-                                name={`occupants[${index}].full_name`}
+                                name={`occupants.${index}.full_name`}
                                 value={formik.values.occupants[index].full_name}
                                 onChange={formik.handleChange}
                                 error={
-                                  getIn(formik.touched, `occupants[${index}].full_name`) &&
-                                  getIn(formik.errors, `occupants[${index}].full_name`)
+                                  getIn(formik.touched, `occupants.${index}.full_name`) &&
+                                  getIn(formik.errors, `occupants.${index}.full_name`)
                                 }
                                 errorText={
-                                  getIn(formik.touched, `occupants[${index}].full_name`) &&
-                                  getIn(formik.errors, `occupants[${index}].full_name`)
+                                  getIn(formik.touched, `occupants.${index}.full_name`) &&
+                                  getIn(formik.errors, `occupants.${index}.full_name`)
                                 }
                               />
                               <Input
                                 label="*Email Address"
-                                name={`occupants[${index}].email`}
+                                name={`occupants.${index}.email`}
                                 value={formik.values.occupants[index].email}
                                 onChange={formik.handleChange}
                                 error={
-                                  getIn(formik.touched, `occupants[${index}].email`) &&
-                                  getIn(formik.errors, `occupants[${index}].email`)
+                                  getIn(formik.touched, `occupants.${index}.email`) &&
+                                  getIn(formik.errors, `occupants.${index}.email`)
                                 }
                                 errorText={
-                                  getIn(formik.touched, `occupants[${index}].email`) &&
-                                  getIn(formik.errors, `occupants[${index}].email`)
+                                  getIn(formik.touched, `occupants.${index}.email`) &&
+                                  getIn(formik.errors, `occupants.${index}.email`)
                                 }
                               />
 
                               <Input
                                 label="*Phone Number"
                                 type="phone"
-                                name={`occupants[${index}].phone_number`}
+                                name={`occupants.${index}.phone_number`}
                                 value={formik.values.occupants[index].phone_number}
                                 onChange={formik.handleChange}
                                 error={
-                                  getIn(formik.touched, `occupants[${index}].phone_number`) &&
-                                  getIn(formik.errors, `occupants[${index}].phone_number`)
+                                  getIn(formik.touched, `occupants.${index}.phone_number`) &&
+                                  getIn(formik.errors, `occupants.${index}.phone_number`)
                                 }
                                 errorText={
-                                  getIn(formik.touched, `occupants[${index}].phone_number`) &&
-                                  getIn(formik.errors, `occupants[${index}].phone_number`)
+                                  getIn(formik.touched, `occupants.${index}.phone_number`) &&
+                                  getIn(formik.errors, `occupants.${index}.phone_number`)
                                 }
                               />
                               <Input
                                 label="*Relationship"
-                                name={`occupants[${index}].relationship_description`}
+                                name={`occupants.${index}.relationship_description`}
                                 value={formik.values.occupants[index].relationship_description}
                                 onChange={formik.handleChange}
                                 error={
-                                  getIn(formik.touched, `occupants[${index}].relationship_description`) &&
-                                  getIn(formik.errors, `occupants[${index}].relationship_description`)
+                                  getIn(formik.touched, `occupants.${index}.relationship_description`) &&
+                                  getIn(formik.errors, `occupants.${index}.relationship_description`)
                                 }
                                 errorText={
-                                  getIn(formik.touched, `occupants[${index}].relationship_description`) &&
-                                  getIn(formik.errors, `occupants[${index}].relationship_description`)
+                                  getIn(formik.touched, `occupants.${index}.relationship_description`) &&
+                                  getIn(formik.errors, `occupants.${index}.relationship_description`)
                                 }
                               />
                             </div>

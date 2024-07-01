@@ -32,7 +32,7 @@ import GlobalSearch from '@components/GlobalSearch';
 import { setAllContacts } from 'store/contacts/slice';
 import { setCRMCampaigns } from '@store/campaigns/slice';
 import { getUserInfo, loadAfterSignInRedirect } from '@helpers/auth';
-import { isHealthyCommuncationDate } from '@global/functions';
+import { getInitials, isHealthyCommuncationDate } from '@global/functions';
 import Link from 'next/link';
 import oneLineLogo from '/public/images/oneline_logo_white_short.svg';
 import placeholder from '/public/images/Portrait_Placeholder.png';
@@ -469,13 +469,21 @@ export default function MainMenuV2() {
                     <div>
                       <Menu.Button className="">
                         <a href="#">
-                          <Image
-                            width={32}
-                            height={32}
-                            className="inline-block rounded-full"
-                            src={placeholder}
-                            alt=""
-                          />
+                          {userInfo?.first_name && userInfo?.last_name ? (
+                            <span className="inline-flex h-[32px] w-[32px] items-center justify-center rounded-full bg-gray-400">
+                              <span className="text-sm font-medium leading-none sss text-white">
+                                {getInitials(userInfo?.first_name + ' ' + userInfo?.last_name).toUpperCase()}
+                              </span>
+                            </span>
+                          ) : (
+                            <Image
+                              width={32}
+                              height={32}
+                              className="inline-block rounded-full"
+                              src={placeholder}
+                              alt=""
+                            />
+                          )}
                         </a>
                       </Menu.Button>
                     </div>
@@ -490,13 +498,21 @@ export default function MainMenuV2() {
                       <Menu.Items className="absolute right-0 z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-5 px-4 flex items-center">
                           <div className="mr-3">
-                            <Image
-                              width={40}
-                              height={40}
-                              className="inline-block rounded-full"
-                              src={placeholder}
-                              alt=""
-                            />
+                            {userInfo?.first_name && userInfo?.last_name ? (
+                              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                                <span className="text-sm font-medium leading-none sss text-white">
+                                  {getInitials(userInfo?.first_name + ' ' + userInfo?.last_name).toUpperCase()}
+                                </span>
+                              </span>
+                            ) : (
+                              <Image
+                                width={40}
+                                height={40}
+                                className="inline-block rounded-full"
+                                src={placeholder}
+                                alt=""
+                              />
+                            )}
                           </div>
                           <div className="max-w-[165px] w-full">
                             <p className="truncate text-sm font-medium text-gray4">
@@ -591,7 +607,15 @@ export default function MainMenuV2() {
             <div className="border-t border-gray-300 pb-3 pt-4">
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
-                  <img className="h-10 w-10 rounded-full" src={placeholder.src} alt="" />
+                  {userInfo?.first_name && userInfo?.last_name ? (
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
+                      <span className="text-sm font-medium leading-none sss text-white">
+                        {getInitials(userInfo?.first_name + ' ' + userInfo?.last_name).toUpperCase()}
+                      </span>
+                    </span>
+                  ) : (
+                    <img className="h-10 w-10 rounded-full" src={placeholder.src} alt="" />
+                  )}
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-white">
