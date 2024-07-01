@@ -167,6 +167,7 @@ const Clients = ({
     });
 
     setFilteredContacts(contactsState);
+    return contactsState;
   };
 
   const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
@@ -231,15 +232,9 @@ const Clients = ({
     setSearchTerm('');
   }, [openedSubtab]);
   const handleFilteredContacts = (status, sortOrder, contactsList = filteredContacts) => {
-    let filteredClients = contactsList.filter((client) => client.status_2 === status);
-
-    filteredClients.sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.first_name.localeCompare(b.first_name);
-      } else if (sortOrder === 'desc') {
-        return b.first_name.localeCompare(a.first_name);
-      }
-    });
+    let filteredClients = contactsList
+      .filter((client) => client.status_2 === status)
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     dispatch(setContacts([...new Set([...filteredClients, ...contacts])]));
     setFilteredContacts((prevContacts) => {
