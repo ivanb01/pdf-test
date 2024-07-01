@@ -244,9 +244,7 @@ const MainMenu = ({ className, fixed }) => {
 
   return (
     <div
-      className={`${fixed && 'fixed top-0 left-0 right-0'} main-menu px-6 py-4 ${
-        !router.pathname.includes('/campaign') ? 'bg-oxford-gradient' : 'bg-campaignHeader'
-      } z-50 flex items-center justify-between`}>
+      className={`${fixed && 'fixed top-0 left-0 right-0'} main-menu px-6 py-4 bg-oxford-gradient  z-50 flex items-center justify-between`}>
       <div className="flex items-center">
         <div className="menu-logo mr-6 flex items-center">
           <Image

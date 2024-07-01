@@ -186,18 +186,18 @@ const index = () => {
       <div ref={elementRef} className={'sticky top-0 z-[10]'}>
         <MainMenuV2 />
       </div>
-      <div
-        className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-        style={{ height: '230px' }}>
-        <h3 className={'text-3xl leading-9 font-semibold text-white'}>
-          Effortless Client and Contact Campaign Coordination
-        </h3>
-        <Search
-          placeholder="Search for campaign title or client status..."
-          className="text-sm w-[550px]"
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-      </div>
+      {/*<div*/}
+      {/*  className={'bg-campaign bg-no-repeat bg-cover flex items-center justify-center flex-col gap-10 pb-14 pt-14'}*/}
+      {/*  style={{ height: '230px' }}>*/}
+      {/*  <h3 className={'text-3xl leading-9 font-semibold text-white'}>*/}
+      {/*    Effortless Client and Contact Campaign Coordination*/}
+      {/*  </h3>*/}
+      {/*  <Search*/}
+      {/*    placeholder="Search for campaign title or client status..."*/}
+      {/*    className="text-sm w-[550px]"*/}
+      {/*    onChange={(event) => setSearchTerm(event.target.value)}*/}
+      {/*  />*/}
+      {/*</div>*/}
       <div className={'w-100 flex items-center'}>
         <Tabs
           loadingTabs={false}

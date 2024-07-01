@@ -329,39 +329,36 @@ const index = () => {
     },
   ];
 
-  useEffect(() => {
-    // document.querySelector('.main-menu').classList.add('main-menu-important');
-  }, []);
-
   return (
     <>
       <SimpleBar style={{ maxHeight: '100%' }}>
         <div className={'sticky top-0 z-10'}>
           <MainMenuV2 />
         </div>
-        <div
-          className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}
-          style={{ height: '230px' }}>
-          <div>
-            <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>
-            <p className={'text-[12px] text-center font-medium mt-2 text-white'}>
-              Receive custom digital templates to your email - Ready in 24 Hours or Less!
-            </p>
-          </div>
-          <Search
-            placeholder="Search here..."
-            className="text-sm w-[550px]"
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
-        </div>
-        <div className={'w-100 flex items-center'}>
+        {/*<div*/}
+        {/*  className={'bg-marketing-header-gradient flex items-center justify-center flex-col gap-10 pb-14 pt-14'}*/}
+        {/*  style={{ height: '230px' }}*/}
+        {/*>*/}
+        {/*  <div>*/}
+        {/*    <h3 className={'text-3xl leading-9 font-semibold text-white'}>What design do you need today?</h3>*/}
+        {/*    <p className={'text-[12px] text-center font-medium mt-2 text-white'}>*/}
+        {/*      Receive custom digital templates to your email - Ready in 24 Hours or Less!*/}
+        {/*    </p>*/}
+        {/*  </div>*/}
+        {/*  <Search*/}
+        {/*    placeholder="Search here..."*/}
+        {/*    className="text-sm w-[550px]"*/}
+        {/*    onChange={(event) => setSearchTerm(event.target.value)}*/}
+        {/*  />*/}
+        {/*</div>*/}
+        <div className={'w-screen flex'}>
           <Tabs
             loadingTabs={false}
             current={current}
             setCurrent={setCurrent}
             tabs={localTabs}
             wrapperClassName={`bg-white mt-5`}
-            className={'mx-auto bg-white'}
+            className={'ml-[60px] bg-white'}
             navClassName={'justify-center'}
           />
         </div>
