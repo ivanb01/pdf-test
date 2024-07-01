@@ -36,6 +36,8 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
 
 import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
+import ButtonsSlider from '@components/shared/button/buttonsSlider';
+
 const index = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -291,31 +293,6 @@ const index = () => {
     return campaigns_assigned + campaigns_unassigned + campaigns_never_assigned > 0;
   };
 
-  const types = [
-    {
-      name: (
-        <span className="flex flex-row">
-          <Edit className="text-gray6 mr-3 w-4" />
-          <Text smallText className="text-gray6">
-            Edit Activity
-          </Text>
-        </span>
-      ),
-      handleClick: handleEditActivity,
-    },
-    {
-      name: (
-        <span className="flex flex-row">
-          <Delete height={15} className="text-red5 mr-3 w-4" />
-          <Text smallText className="text-red5">
-            Delete Activity
-          </Text>
-        </span>
-      ),
-      handleClick: handleDeleteActivity,
-    },
-  ];
-
   const noteTypes = [
     {
       name: (
@@ -338,6 +315,21 @@ const index = () => {
         </span>
       ),
       handleClick: handleDeleteNote,
+    },
+  ];
+  const [currentGmailActiveFilter, setCurrentGmailActiveFilter] = useState(0);
+  const gmailFilterButtons = [
+    {
+      id: 0,
+      name: 'All',
+    },
+    {
+      id: 1,
+      name: 'Inbox',
+    },
+    {
+      id: 2,
+      name: 'Sent',
     },
   ];
 
@@ -552,72 +544,19 @@ const index = () => {
             </div>
 
             <div className="flex-grow lg:mx-3 order-last lg:order-2">
-              {/* <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="flex items-center justify-between">
-                  <div className={'flex items-center'}>
-                    <Dropdown
-                      initialSelect={activityTypesDropdown[0]}
-                      options={activityTypesDropdown}
-                      className="w-[180px]"
-                      handleSelect={(choice) => {
-                        setActivityFilter(choice);
-                        setShowGmailInbox(false);
-                      }}
-                    />
-                    <button
-                      onClick={() => setShowGmailInbox(!showGmailInbox)}
-                      className={`ml-2 flex justify-center items-center gap-2 py-2 px-[14px] rounded-full border-borderColor border ${
-                        showGmailInbox && 'border-lightBlue3'
-                      }`}>
-                      <MailOutline
-                        className={`h-[18px] w-[18px] ${showGmailInbox ? 'text-lightBlue3' : 'text-[#7A808D]'} `}
-                      />
-                      <span
-                        className={`responsive-fix text-sm leading-5 ${
-                          showGmailInbox ? 'text-lightBlue3 font-medium' : 'text-gray-700'
-                        }`}>
-                        Gmail Inbox
-                      </span>
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => setOpenCommunicationPopup(true)}
-                    className="flex justify-center items-center gap-2 py-2 px-[14px] rounded-full bg-lightBlue1  hover:bg-lightBlue2">
-                    <ChatBubbleOutlineOutlinedIcon className={'h-[18px] w-[18px] text-lightBlue5'} />
-                    <span className={'responsive-fix text-sm font-semibold leading-5 text-lightBlue6'}>
-                      Start communication
-                    </span>
-                  </button>
-                </div>
-                <Feeds
-                  showFullHeight={contact?.category_1 != 'Client'}
-                  contactId={id}
-                  activityId={activityFilter.id}
-                  contactEmail={contact.email}
-                  showGmailInbox={showGmailInbox}
-                  setShowGmailInbox={setShowGmailInbox}
-                  loadingActivities={loadingActivities}
-                  activities={
-                    activityFilter.id == 0 || !activityFilter
-                      ? activities
-                      : activities.filter((activity) => {
-                          console.log(activityFilter, activity.type_of_activity_id);
-                          if (activityFilter.id == 14) {
-                            return [14, 15, 16].includes(activity.type_of_activity_id);
-                          } else if (activityFilter.id == 3) {
-                            return [3, 26, 27].includes(activity.type_of_activity_id);
-                          }
-                          return activity.type_of_activity_id == activityFilter.id;
-                        })
-                  }
-                  setActivities={setActivities}
-                />
-              </div> */}
-
               <div className="bg-white px-3 lg:px-6 py-[20px] client-details-box-shadow rounded-lg mb-3">
-                <div className="text-gray8 font-semibold text-[14px] mb-4">Gmail Inbox</div>
+                <div className={'flex justify-between items-center'}>
+                  <div className="text-gray8 font-semibold text-[14px] mb-4">Gmail Inbox</div>
+                  <ButtonsSlider
+                    buttons={gmailFilterButtons}
+                    currentButton={currentGmailActiveFilter}
+                    onClick={setCurrentGmailActiveFilter}
+                    noCount={true}
+                  />
+                </div>
                 <div>
                   <Feeds
+                    currentGmailActiveFilter={currentGmailActiveFilter}
                     showFullHeight={contact?.category_1 != 'Client'}
                     contactId={id}
                     activityId={activityFilter.id}

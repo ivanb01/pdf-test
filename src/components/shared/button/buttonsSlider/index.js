@@ -9,8 +9,7 @@ const ButtonsSlider = ({ buttons, currentButton, className, onClick, noCount }) 
             onClick={() => onClick(button.id)}
             className={`relative w-1/2 transition-all ${
               currentButton == button.id ? 'bg-white  shadow' : ''
-            } rounded-md border-transparent border py-2 text-sm font-medium whitespace-nowrap focus:z-10 sm:w-auto sm:px-4`}
-          >
+            } rounded-md border-transparent border py-2 text-sm font-medium whitespace-nowrap focus:z-9 sm:w-auto sm:px-4`}>
             <span className={`${currentButton == button.id ? 'text-gray5' : 'text-gray4'}`}>
               {button.name ? button.name : button.icon}
             </span>{' '}

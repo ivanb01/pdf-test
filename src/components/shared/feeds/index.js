@@ -39,6 +39,7 @@ export default function Feeds({
   showGmailInbox,
   setShowGmailInbox,
   loadingActivities,
+  currentGmailActiveFilter,
 }) {
   const dispatch = useDispatch();
   const [activityModal, setActivityModal] = useState(false);
@@ -49,40 +50,51 @@ export default function Feeds({
   const [inboxLoading, setInboxLoading] = useState(false);
   const [gmailInboxOffset, setGmailInboxOffset] = useState(0);
   const [gmailInboxHasNextPage, setGmailInboxHasNextPage] = useState(true);
-  const [emailData, setEmailData] = useState([]);
+  const [emailData, setEmailData] = useState({ email: [], count: 0, total: 0 });
   const [singleEmail, setSingleEmail] = useState();
   const AddActivitySchema = Yup.object().shape({
     type_of_activity_id: Yup.string().required('No selected activity'),
     // description: Yup.string().required('Description required'),
   });
-  const getGmailInbox = (offset = 0) => {
-    return getEmailsForSpecificContact(contactEmail, offset)
-      .then((response) => {
-        return {
-          gmailInboxHasNextPage: true,
-          data: response.data,
-          count: response.data.count,
-          total: response.data.total,
-        };
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error('Error fetching notes');
-      });
+  useEffect(() => {
+    console.log(currentGmailActiveFilter);
+  }, [currentGmailActiveFilter]);
+
+  const gmailFilter = currentGmailActiveFilter === 0 ? 'all' : currentGmailActiveFilter === 1 ? 'inbox' : 'sent';
+
+  const getGmailInbox = async (offset = 0, gmailFilter) => {
+    try {
+      const response = await getEmailsForSpecificContact(contactEmail, offset, gmailFilter);
+      const hasNextPage = offset + response.data.count < response.data.total;
+
+      return {
+        gmailInboxHasNextPage: hasNextPage,
+        data: response.data,
+        count: response.data.count,
+        total: response.data.total,
+      };
+    } catch (error) {
+      console.log(error);
+      toast.error('Error fetching notes');
+      return { gmailInboxHasNextPage: false, data: { email: [], count: 0, total: 0 }, count: 0, total: 0 };
+    }
   };
 
   const loadMoreEmails = async () => {
     try {
-      const { data, count, gmailInboxHasNextPage: newNotesHasNextPage } = await getGmailInbox(gmailInboxOffset);
+      const {
+        data,
+        count,
+        total,
+        gmailInboxHasNextPage: hasNextPage,
+      } = await getGmailInbox(gmailInboxOffset, gmailFilter);
       setEmailData((current) => ({
-        email: [...(current.email || []), ...(data.email || [])],
-        count: count,
+        email: [...current.email, ...data.email],
+        count,
+        total,
       }));
       setGmailInboxOffset(gmailInboxOffset + count);
-      setGmailInboxHasNextPage(newNotesHasNextPage);
-      if (count === 0) {
-        setGmailInboxHasNextPage(false);
-      }
+      setGmailInboxHasNextPage(hasNextPage);
     } finally {
       setInboxLoading(false);
     }
@@ -92,33 +104,40 @@ export default function Feeds({
     if (showGmailInbox) {
       setInboxLoading(true);
       setGmailInboxOffset(0);
-      getEmailsForSpecificContact(contactEmail, 0).then((res) => {
-        setEmailData({ email: res?.data?.email || [], count: res?.data?.count || 0 });
-        setGmailInboxOffset(res?.data?.count || 0);
+      setGmailInboxHasNextPage(true);
+      getGmailInbox(0, gmailFilter).then((res) => {
+        setEmailData({ email: res.data.email, count: res.count, total: res.total });
+        setGmailInboxOffset(res.count);
+        setGmailInboxHasNextPage(res.gmailInboxHasNextPage);
         setInboxLoading(false);
       });
     }
-  }, [showGmailInbox, contactEmail]);
+  }, [showGmailInbox, contactEmail, currentGmailActiveFilter]);
 
   const [infiniteRef] = useInfiniteScroll({
     loading: inboxLoading,
     hasNextPage: gmailInboxHasNextPage,
     onLoadMore: loadMoreEmails,
   });
-
   const resetPagination = async () => {
-    setInboxLoading(true);
-    setGmailInboxHasNextPage(true);
-    setGmailInboxOffset(0); // Ensure offset is reset to zero
-    setEmailData({ email: [], count: 0 }); // Reset the email data
-    getGmailInbox(0).then((response) => {
-      setEmailData({ email: response.data.email, count: response.data.count });
-      setGmailInboxOffset(response.data.count);
-      setOpenEmailsPopup(false);
+    try {
+      setInboxLoading(true);
       setGmailInboxHasNextPage(true);
+      setGmailInboxOffset(0);
+      setEmailData({ email: [], count: 0, total: 0 });
+
+      const response = await getGmailInbox(0, gmailFilter);
+      setEmailData({ email: response.data.email, count: response.count, total: response.total });
+      setGmailInboxOffset(response.count);
+      setGmailInboxHasNextPage(response.gmailInboxHasNextPage);
+      setOpenEmailsPopup(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
       setInboxLoading(false);
-    });
+    }
   };
+
   //* FORMIK *//
   const formik = useFormik({
     initialValues: {
@@ -388,7 +407,21 @@ export default function Feeds({
                       key={item?.thread_id}>
                       <div
                         className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
-                        <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                        {item?.email_type === 'sent' ? (
+                          <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none">
+                            <path
+                              d="M2.5 16.6666V3.33331L18.3333 9.99998L2.5 16.6666ZM4.16667 14.1666L14.0417 9.99998L4.16667 5.83331V8.74998L9.16667 9.99998L4.16667 11.25V14.1666Z"
+                              fill="#6B7280"
+                            />
+                          </svg>
+                        )}
                         <span
                           style={{ zIndex: '0 !important' }}
                           className="absolute top-[36px] left-4 -ml-px h-full w-0.5 bg-gray-200"
@@ -397,11 +430,14 @@ export default function Feeds({
                       </div>
                       <div>
                         <div className={'flex items-center  flex-wrap'}>
-                          <h6 className={'text-[14px] font-bold mr-2'}>
-                            {item?.subject?.length === 0 ? '(no subject)' : item?.subject}
-                          </h6>
-                          <p className={'text-[#475467] text-sm font-medium'}>{timeAgo(item?.sent_date)}</p>
+                          <p className={'text-sm font-medium leading-5 text-[#475467]'}>
+                            {item?.email_type === 'sent' ? 'Sent: ' : ' Inbox: '}
+                            {timeAgo(item?.sent_date)}
+                          </p>
                         </div>
+                        <h6 className={'text-[14px] font-bold mr-2'}>
+                          {item?.subject?.length === 0 ? '(no subject)' : item?.subject}
+                        </h6>
                         <div className="break-word gmail-renderings w-full overflow-hidden ">
                           <span>{item?.snippet}</span>
                           <span

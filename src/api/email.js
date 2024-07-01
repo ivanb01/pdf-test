@@ -34,12 +34,13 @@ export const syncEmailOfContact = (contact_email, number_of_emails) => {
   });
 };
 
-export const getEmailsForSpecificContact = (contact_email, offset) => {
+export const getEmailsForSpecificContact = (contact_email, offset, email_type) => {
   return axiosInstance.get(`v1/email`, {
     params: {
       limit: 10,
       contact_email,
       offset,
+      email_type,
     },
   });
 };
