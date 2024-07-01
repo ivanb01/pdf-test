@@ -41,7 +41,6 @@ const AllContacts = () => {
   const [limit, setLimit] = useState(20);
   const [contacts, setContacts] = useState([]);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
-
   const [categoryNames, setCategoryNames] = useState([]);
 
   const { isFetching, isLoading, isError, error, data, isPreviousData } = useQuery({
