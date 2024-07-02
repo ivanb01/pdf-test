@@ -101,8 +101,7 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
                   label="Note"
                   optional
                   value={formik.values.note}
-                  handleChange={formik.handleChange}
-                ></TextArea>
+                  handleChange={formik.handleChange}></TextArea>
                 <div className={'grid grid-cols-2 gap-6'}>
                   <Input
                     type="date"
@@ -120,12 +119,11 @@ const RequestCustomDesign = ({ handleOverlayClose }) => {
               </div>
               <div
                 className="flex items-end justify-end py-4 pr-6 sticky bottom-0 bg-white"
-                style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}
-              >
+                style={{ boxShadow: '0px -2px 12px 1px rgba(0, 0, 0, 0.07)' }}>
                 <Button className={`mr-4`} white onClick={handleOverlayClose}>
                   Cancel
                 </Button>
-                <Button primary type={'submit'} disabled={!formik.errors}>
+                <Button primary type={'submit'} disabled={!formik.errors} onClick={formik.handleSubmit}>
                   Send Request
                 </Button>
               </div>

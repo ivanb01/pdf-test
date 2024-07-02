@@ -200,6 +200,7 @@ const index = () => {
       {/*</div>*/}
       <div className={'w-100 flex items-center'}>
         <Tabs
+          setSearchTerm={setSearchTerm}
           loadingTabs={false}
           extraTabs={emailTemplates?.length > 0 ? extraTabs : undefined}
           current={current}

@@ -1,9 +1,9 @@
-import Image from 'next/image';
 import { classNames } from 'global/functions';
-import { useState } from 'react';
 import Loader from '../loader';
 import Button from '../button';
 import { PlusIcon } from '@heroicons/react/solid';
+import Search from '@components/shared/input/search';
+import { useRouter } from 'next/router';
 
 export default function Tabs({
   tabs = [],
@@ -17,11 +17,13 @@ export default function Tabs({
   addCampaignButton,
   triggerCreateCustomCampaign,
   extraTabs,
+  setSearchTerm,
   ...props
 }) {
   const handleSetCurrent = (id) => () => {
     setCurrent(id);
   };
+  const router = useRouter();
   return (
     <div className={`w-full h-auto bg-gray10 flex flex-col ${wrapperClassName}`}>
       <div className="sm:hidden">
@@ -39,7 +41,8 @@ export default function Tabs({
           ))}
         </select>
       </div>
-      <div className={`hidden sm:flex ${className} bg-white pt-2`}>
+      <div
+        className={`hidden sm:flex ${className} bg-white pt-2 ${router.pathname.includes('marketing') && ' items-center justify-between'}`}>
         <div className={'flex '}>
           <nav
             className={`border-b border-gray-200 -mb-px flex ${extraTabs && 'pr-[32px]'} space-x-8 ${navClassName}`}
@@ -122,10 +125,25 @@ export default function Tabs({
             </nav>
           )}
         </div>
-        {addCampaignButton && (
-          <div className="flex items-center">
-            <div className="italic text-gray-700 mr-3 text-sm font-medium">Want to create it yourself?</div>
-            <Button leftIcon={<PlusIcon />} secondary label="Custom Campaign" onClick={triggerCreateCustomCampaign} />
+        {(addCampaignButton || setSearchTerm) && (
+          <div className={'flex gap-4 justify-between'}>
+            {setSearchTerm && (
+              <Search
+                placeholder="Search"
+                className={`text-sm ${router.pathname.includes('marketing') && 'mr-[60px]'} `}
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+            )}
+            {addCampaignButton && (
+              <div className="flex items-center">
+                <Button
+                  leftIcon={<PlusIcon />}
+                  secondary
+                  label="Custom Campaign"
+                  onClick={triggerCreateCustomCampaign}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

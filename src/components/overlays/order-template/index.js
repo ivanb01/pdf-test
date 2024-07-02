@@ -146,7 +146,7 @@ const OrderTemplate = ({ template, name, handleCloseOverlay, listingUrl }) => {
           <Button className={`mr-4`} white onClick={handleCloseOverlay}>
             Cancel
           </Button>
-          <Button primary type={'submit'}>
+          <Button primary type={'submit'} onClick={formik.handleSubmit}>
             Send
           </Button>
         </div>

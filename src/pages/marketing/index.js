@@ -345,14 +345,11 @@ const index = () => {
         {/*      Receive custom digital templates to your email - Ready in 24 Hours or Less!*/}
         {/*    </p>*/}
         {/*  </div>*/}
-        {/*  <Search*/}
-        {/*    placeholder="Search here..."*/}
-        {/*    className="text-sm w-[550px]"*/}
-        {/*    onChange={(event) => setSearchTerm(event.target.value)}*/}
-        {/*  />*/}
+
         {/*</div>*/}
-        <div className={'w-screen flex'}>
+        <div className={'w-100 flex items-center'}>
           <Tabs
+            setSearchTerm={setSearchTerm}
             loadingTabs={false}
             current={current}
             setCurrent={setCurrent}
