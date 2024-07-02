@@ -1,33 +1,57 @@
 import Button from 'components/shared/button';
 import Overlay from 'components/shared/overlay';
 import Dropdown from '@components/shared/dropdown';
-import PropTypes from 'prop-types';
-import ClientsMultiSelect from 'containers/OnlineForms/ClientsMultiSelect';
 import { useFetchOnlineFormsTypes } from '../queries/queries';
 import { useAssignForm } from '../queries/mutations';
 import { useFormik } from 'formik';
-import { array, object, string } from 'yup';
+import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import ClientDropdown from '@components/shared/dropdown/ClientsDropdown';
 
 const SendForm = ({ params, onCancel, currentForm }) => {
+  const contacts = useSelector((state) => state.contacts.allContacts.data);
   const router = useRouter();
   const { data: formsTypesData } = useFetchOnlineFormsTypes();
 
-  const SendFormSchema = object().shape({
-    form_type_id: string().required('Form name is required.'),
-    clients: array().min(1, 'No clients selected.'),
+  const SendFormSchema = yup.object().shape({
+    form_type_id: yup.string().required('Form name is required.'),
+
+    client: yup
+      .object()
+      .shape({
+        value: yup.string().required('Client is required.'),
+        email: yup.string(),
+        firstName: yup.string(),
+        lastName: yup.string(),
+        label: yup.string(),
+        profile_image_path: yup.string().nullable(),
+      })
+      .typeError('Client is required'),
   });
-  const { handleSubmit, errors, setFieldValue, values } = useFormik({
+  const formik = useFormik({
     initialValues: {
       form_type_id: currentForm?.id ? currentForm?.id : '',
-      clients: [],
+      client: null,
     },
     validationSchema: SendFormSchema,
-    validateOnChange: false,
+    validateOnChange: true,
     validateOnBlur: false,
     onSubmit: (values) => {
-      onSubmitForm(values);
+      const { client, form_type_id } = values;
+
+      onSubmitForm({
+        form_type_id,
+        clients: [
+          {
+            id: client.value.toString(),
+            email: client.email,
+            first_name: client.firstName,
+            last_name: client.lastName,
+          },
+        ],
+      });
     },
   });
 
@@ -68,32 +92,41 @@ const SendForm = ({ params, onCancel, currentForm }) => {
             })}
             activeIcon={false}
             activeClasses="bg-lightBlue1"
-            handleSelect={(source) => {
-              setFieldValue('form_type_id', source.id);
+            handleSelect={async (source) => {
+              formik.setFieldValue('form_type_id', source.id);
             }}
-            error={errors.form_type_id}
-            errorText={errors.form_type_id}
+            error={formik.touched.form_type_id && formik.errors.form_type_id}
+            errorText={formik.errors.form_type_id}
             initialSelect={currentForm?.id ? currentForm.name : ''}
           />
-          <ClientsMultiSelect
-            handleChange={(client) => {
-              const formattedClient = {
-                id: client.value.toString(),
-                email: client.email,
-                first_name: client.first_name,
-                last_name: client.last_name,
+          <ClientDropdown
+            indicatorStyles={{ display: 'none' }}
+            options={contacts?.map((contact) => {
+              return {
+                value: contact.id,
+                label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+                email: contact.email,
+                firstName: contact.first_name,
+                lastName: contact.last_name,
+                profile_image_path: contact.profile_image_path,
               };
-              setFieldValue('clients', [formattedClient]);
+            })}
+            label="Send Form To*"
+            value={formik.values.client}
+            handleSelect={(client) => {
+              formik.setFieldValue('client', client);
             }}
-            error={errors.clients}
-            placeholder="Search for a Contact..."
+            className="col-span-1"
+            placeholder={''}
+            error={formik.touched?.client && formik.errors?.client}
+            errorText={formik.errors?.client}
           />
         </div>
         <div className="flex justify-end gap-[17px]">
           <Button white className={'min-w-fit'} onClick={onCancel}>
             Cancel
           </Button>
-          <Button className={'min-w-fit'} onClick={handleSubmit} loading={assignFormIsPending}>
+          <Button className={'min-w-fit'} onClick={formik.handleSubmit} loading={assignFormIsPending}>
             Next
           </Button>
         </div>
@@ -103,20 +136,3 @@ const SendForm = ({ params, onCancel, currentForm }) => {
 };
 
 export default SendForm;
-
-SendForm.propTypes = {
-  formsList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      label: PropTypes.string,
-      name: PropTypes.string,
-    }),
-  ),
-  clientsList: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.number,
-      label: PropTypes.string,
-    }),
-  ),
-  onCancel: PropTypes.func,
-};
