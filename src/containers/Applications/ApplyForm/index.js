@@ -31,6 +31,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Link from 'next/link';
 import AgentSearchDropdown from './AgentSearch';
 import Avatar from 'components/shared/avatar';
+import ScrollToErrors from '../ScrollToErrors';
 
 const documentType = {
   bank_statement_1: 'BANK_STATEMENT_1',
@@ -130,7 +131,11 @@ const ApplyForm = () => {
         relationship_description: Yup.string().required('Relationship is a required field!'),
       }),
     ),
-    property_state: Yup.mixed().required('State is a required field!'),
+    property_state: Yup.object().shape({
+      id: Yup.string().required('State is a required field!'),
+      label: Yup.string().required('State is a required field!'),
+      value: Yup.string().required('State is a required field!'),
+    }),
     property_city: Yup.string().required('City is a required field!'),
     property_unit_number: Yup.string().required('Unit numbers is a required field!'),
     property_zip_code: Yup.string()
@@ -206,8 +211,9 @@ const ApplyForm = () => {
     if (variables.do_credit_check) {
       try {
         await handleSubmitPayment(data.data);
-        toast.success('Payment Successful');
+        // toast.success('Payment Successful');
       } catch (error) {
+        resetMutation();
         toast.error(error.message);
       }
     } else {
@@ -271,8 +277,8 @@ const ApplyForm = () => {
       contact_person: '',
       contact_person_number: '',
       contractor_id: 1,
-      contractor_name: 'Contractor Tester',
-      contractor_email: 'contractor@tester.com',
+      contractor_name: '',
+      contractor_email: '',
       current_addess: '',
       current_city: '',
       current_state: '',
@@ -357,9 +363,9 @@ const ApplyForm = () => {
       if (values.do_credit_check) {
         try {
           const response = await elements.submit();
-          //  if (Object.keys(response).length) return;
           if (response.error) {
-            toast.error(response.error.message);
+            const element = document.querySelector(`[id=stripe-payment-container]`);
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
           }
         } catch (error) {
@@ -397,6 +403,66 @@ const ApplyForm = () => {
       mutatePostApplication(filteredValues);
     },
   });
+
+  // const getFieldErrorNames = (formikErrors) => {
+  //   const transformObjectToDotNotation = (obj, prefix = '', result = []) => {
+  //     Object.keys(obj).forEach((key) => {
+  //       const value = obj[key];
+  //       if (!value) return;
+
+  //       const nextKey = prefix ? `${prefix}.${key}` : key;
+
+  //       if (typeof value === 'object') {
+  //         transformObjectToDotNotation(value, nextKey, result);
+  //       } else {
+  //         if (nextKey === 'client_signature.untrimmedCanvas') result.push('client_signature');
+  //         if (nextKey === 'property_state.id') result.push('property_state');
+  //         else result.push(nextKey);
+  //       }
+  //     });
+
+  //     return result;
+  //   };
+
+  //   return transformObjectToDotNotation(formikErrors);
+  // };
+
+  // useEffect(() => {
+  //   if (!formik.submitCount) return;
+  //   if (formik.isValid) return;
+  //   if (!Object.keys(formik.errors).length) return;
+
+  //   const fieldErrorNames = getFieldErrorNames(formik.errors);
+
+  //   const fieldsOrder = fieldErrorNames
+  //     .reduce((acc, error, index) => {
+  //       const element = document.querySelectorAll(
+  //         `input[name='${fieldErrorNames[index]}'], canvas[name='${fieldErrorNames[index]}'], button[name='${fieldErrorNames[index]}'], div[name='${fieldErrorNames[index]}']`,
+  //       )[0];
+
+  //       if (!element) {
+  //         return acc;
+  //       } else
+  //         return [
+  //           ...acc,
+  //           {
+  //             name: error,
+  //             topDistance: element.getBoundingClientRect().top,
+  //           },
+  //         ];
+  //     }, [])
+  //     .sort((a, b) => {
+  //       return a.topDistance - b.topDistance;
+  //     });
+
+  //   const element = document.querySelectorAll(
+  //     `input[name='${fieldsOrder[0].name}'], canvas[name='${fieldsOrder[0].name}'], button[name='${fieldsOrder[0].name}'], div[name='${fieldsOrder[0].name}']`,
+  //   )[0];
+
+  //   if (!element) return;
+
+  //   element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // }, [formik.submitCount]);
 
   const filterOtherDocuments = (otherDocuments) => {
     if (!(otherDocuments && typeof otherDocuments === 'object' && !!Object.keys(otherDocuments).length)) return [];
@@ -529,15 +595,22 @@ const ApplyForm = () => {
   };
 
   const [selectedAgent, setSelectedAgent] = useState(null);
-  const onAgentClick = (agent) => {
-    formik.setFieldValue('agent_email', agent.email);
+  const onAgentClick = async (agent) => {
     formik.setFieldValue('agent_id', agent.email);
-    formik.setFieldValue('agent_name', `${agent.first_name} ${agent.last_name}`);
+    formik.setFieldValue('agent_email', agent.email);
+    formik.setFieldValue('agent_name', agent.first_name);
+    formik.setFieldValue('contractor_email', agent.email);
+    formik.setFieldValue('contractor_id', agent.email);
+    formik.setFieldValue('contractor_name', `${agent.first_name} ${agent.last_name}`);
 
     const initials = `${agent.first_name.charAt(0).toUpperCase()}${agent.last_name.charAt(0).toUpperCase()}`;
     setSelectedAgent({
       ...agent,
       initials,
+    });
+
+    setTimeout(() => {
+      formik.validateField('agent_name');
     });
   };
 
@@ -556,7 +629,7 @@ const ApplyForm = () => {
     );
   }
 
-  if (isSuccessPostApplication) {
+  if (isSuccessPostApplication && !formik.values.do_credit_check) {
     return (
       <div className="w-full h-full flex flex-col  justify-center items-center p-[50px] text-center text-[24px] font-medium leading-[32px] text-gray6">
         <div className="py-[233px] flex flex-col justify-center items-center">
@@ -582,6 +655,7 @@ const ApplyForm = () => {
                   <div className="w-full sm:w-1/2 pt-[24px] pb-[50px]">
                     <div className="flex flex-col gap-3 ">
                       <AgentSearchDropdown
+                        name="agent_name"
                         onListItemClick={onAgentClick}
                         label={'*Your agent'}
                         placeholder="Search here, or fill the information below"
@@ -681,6 +755,7 @@ const ApplyForm = () => {
                           errorText={formik.touched.client_unit_number && formik.errors.client_unit_number}
                         />
                         <Dropdown
+                          name={'client_state'}
                           options={USA_STATES?.map((state, index) => {
                             return { id: index, label: state, value: state };
                           })}
@@ -690,8 +765,6 @@ const ApplyForm = () => {
                           initialSelect={''}
                           label={'*State'}
                           className={'[&_input]:h-[38px]'}
-                          name="client_state"
-                          // value={formik.values.client_state}
                           error={formik.touched.client_state && formik.errors.client_state}
                           errorText={formik.touched.client_state && formik.errors.client_state}
                         />
@@ -833,7 +906,7 @@ const ApplyForm = () => {
                           error={formik.touched.property_unit_number && formik.errors.property_unit_number}
                           errorText={formik.touched.property_unit_number && formik.errors.property_unit_number}
                         />
-                        <div className="col-span-1">
+                        <div className="col-span-1" name="property_state">
                           <DropdownWithSearch
                             indicatorStyles={{ display: 'none' }}
                             options={dropdownOptions?.map((state, index) => {
@@ -964,6 +1037,7 @@ const ApplyForm = () => {
                           errorText={formik.touched.current_unit_number && formik.errors.current_unit_number}
                         />
                         <Dropdown
+                          name="current_state"
                           options={USA_STATES?.map((state, index) => {
                             return { id: index, label: state, value: state };
                           })}
@@ -973,7 +1047,6 @@ const ApplyForm = () => {
                           initialSelect={''}
                           label={'*State'}
                           className={'[&_input]:h-[38px]'}
-                          name="current_state"
                           value={formik.values.current_state}
                           error={formik.touched.current_state && formik.errors.current_state}
                           errorText={formik.touched.current_state && formik.errors.current_state}
@@ -1248,7 +1321,7 @@ const ApplyForm = () => {
                           when it comes to paying back debts. The cost of a credit check is $20.00.{' '}
                         </p>
                       </div>
-                      <div className="pl-[28px]">
+                      <div className="pl-[28px]" id="stripe-payment-container">
                         <PaymentElement />
                         <AddressElement options={{ mode: 'billing' }} />
                       </div>
@@ -1368,6 +1441,7 @@ const ApplyForm = () => {
                       <span className="leading-6 font-medium text-base mb-6">Your Signature</span>
                       <div className="max-w-[608px] max-h-[170px]">
                         <Input
+                          name={'client_signature'}
                           onSignatureEnd={(url) => {
                             formik.setFieldValue(`client_signature`, url);
                           }}
@@ -1421,7 +1495,7 @@ const ApplyForm = () => {
                             'opacity-100': agreementSelected,
                           },
                         )}>
-                        {isPendingPostApplication ? (
+                        {isPendingPostApplication || loading ? (
                           <CircularProgress size={20} sx={{ color: 'white' }}></CircularProgress>
                         ) : (
                           'Submit'
@@ -1446,6 +1520,7 @@ const ApplyForm = () => {
             }}
           />
         )}
+        <ScrollToErrors />
       </FormikProvider>
     </>
   );
