@@ -64,6 +64,7 @@ const index = () => {
   const [showProperties, setShowProperties] = useState(true);
   const [datav2, setDatav2] = useState([]);
   const [items, setItems] = useState(data);
+  const userEmail = typeof window !== 'undefined' && localStorage.getItem('user');
 
   const initializeStatus = () => {
     const updatedData = items.map((category) => ({
@@ -296,7 +297,7 @@ const index = () => {
                   pretty: true,
                 },
               ),
-              [userInfo?.email],
+              [!userInfo?.email || userInfo?.email?.length == 0 ? userEmail : userInfo?.email],
             )
               .then(async (res) => {
                 const contact = allContacts.find((con) => con.id === c?.value);

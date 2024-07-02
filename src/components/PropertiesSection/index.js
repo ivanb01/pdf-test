@@ -199,6 +199,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
   const [showProperties, setShowProperties] = useState(true);
   const [previewMode, setPreviewMode] = useState(false);
   const [isDeleting, setIsDeleting] = useState({ loading: false, id: undefined });
+  const userEmail = localStorage.getItem('user');
   const isSelected = (option) => selectedContacts.some((selected) => selected.value === option.value);
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
   const userInfo = useSelector((state) => state.global.userInfo);
@@ -272,7 +273,7 @@ export default function PropertiesSection({ contactId, category, noSelect }) {
                   pretty: true,
                 },
               ),
-              [userInfo?.email],
+              [!userInfo?.email || userInfo?.email?.length == 0 ? userEmail : userInfo?.email],
             ).then(async (res) => {
               const contact = allContacts.find((con) => con.id === c?.value);
               let activity = {
