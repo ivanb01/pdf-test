@@ -22,6 +22,7 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
   const router = useRouter();
   const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
   const [openCommuncationPopup, setOpenCommunicationPopup] = useState(false);
+  const [isHovered, setIsHovered] = useState(-1);
 
   const dispatch = useDispatch();
   const [contactToModify, setContactToModify] = useState(null);
@@ -76,6 +77,8 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
           data.map((person) => (
             <tr
               key={person.id}
+              onMouseEnter={() => setIsHovered(person?.id)}
+              onMouseLeave={() => setIsHovered(-1)}
               onClick={() =>
                 router.push({
                   pathname: '/contacts/details',
@@ -105,7 +108,8 @@ const NeedToContactTable = ({ data, handleCardEdit }) => {
                 <Chip
                   label={person.status_2}
                   statusStyle
-                  className={getContactStatusColorByStatusId(person.category_id, person.status_id)}>
+                  className={`${isHovered === person?.id && getContactStatusByStatusId(person?.category_id, person?.status_id).toLowerCase() === 'new lead' ? 'border border-lightBlue3' : ''}
+                           ${getContactStatusColorByStatusId(person?.category_id, person?.status_id)}`}>
                   {getContactStatusByStatusId(person.category_id, person.status_id)}
                 </Chip>
               </td>
