@@ -36,22 +36,21 @@ const PortfolioEmailTemplate = ({
               to help keep your search organized.
             </Text>
             <Text style={paragraph}>Looking forward to hearing your thoughts!</Text>
-            <Text style={paragraph}>{agent_first_name}</Text>
             <Container style={button}>
               <Link href={portfolioLink} style={buttonText}>
                 View Properties in Your Portfolio
               </Link>{' '}
             </Container>
           </Section>
-        </Container>
-        <Container style={signatureContainer}>
-          <Text style={signatureParagraph}>
-            {agent_first_name} {agent_last_name}
-          </Text>
-          <Text style={signatureParagraph}>{companyName}</Text>
-          <Text style={signatureParagraph}>{agent_phone_number}</Text>
-          <Text style={signatureParagraph}>{agent_email}</Text>
-          <Img src={companyLogo} width="134" height="28" alt="OxfordLogo" />
+          <Section style={mainContainer}>
+            <Text style={signatureParagraph}>
+              {agent_first_name} {agent_last_name}
+            </Text>
+            <Text style={signatureParagraph}>{companyName}</Text>
+            <Text style={signatureParagraph}>{agent_phone_number}</Text>
+            <Text style={signatureParagraph}>{agent_email}</Text>
+            <Img src={companyLogo} width="134" height="28" alt="OxfordLogo" />
+          </Section>
         </Container>
       </Body>
     </Html>

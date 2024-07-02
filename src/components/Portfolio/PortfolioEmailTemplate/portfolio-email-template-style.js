@@ -10,10 +10,6 @@ export const container = {
   maxWidth: '660px',
 };
 
-export const signatureContainer = {
-  marginTop: '20px',
-  marginLeft: '0',
-};
 export const logo = {
   margin: '56px 56px 56px 32px',
 };
