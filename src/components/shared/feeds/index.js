@@ -407,7 +407,7 @@ export default function Feeds({
                       key={item?.thread_id}>
                       <div
                         className={'h-8 relative w-8 bg-gray1 flex items-center justify-center rounded-full shrink-0'}>
-                        {item?.email_type === 'sent' ? (
+                        {item?.email_type !== 'sent' ? (
                           <InboxOutlinedIcon className={'h-5 w-5 text-gray5'} />
                         ) : (
                           <svg
