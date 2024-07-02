@@ -9,11 +9,18 @@ import campaignsMatchedTo from '../../../../public/images/campaign/campaignsMatc
 import inCampaign from '../../../../public/images/campaign/inCampaign.svg';
 import notInCampaign from '../../../../public/images/campaign/notInCampaign.svg';
 import ButtonsSlider from '@components/shared/button/buttonsSlider';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Search from '@components/shared/input/search';
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignPreview from '@components/campaign/CampaignPreview';
-import { getAllEvents, getCampaign, getCampaignPagination, getCampaignsByCategory } from '@api/campaign';
+import {
+  getAllEvents,
+  getCampaign,
+  getCampaignPagination,
+  getCampaignsByCategory,
+  getInCampaignContacts,
+  getNotInCampaignContacts,
+} from '@api/campaign';
 import { setCRMCampaigns, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 import Loader from '@components/shared/loader';
 import { PencilIcon } from '@heroicons/react/solid';
@@ -26,6 +33,13 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import SpinnerLoader from '@components/shared/SpinnerLoader';
 import toast from 'react-hot-toast';
 import MainMenuV2 from '@components/shared/menu/menu-v2';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { getContactsPaginated } from '@api/contacts';
+import { useAllCampaignContacts, useInCampaignContacts, useNotInCampaignContacts } from '../../../hooks/campaignHooks';
+import noUsersFound from '../../../../public/images/campaign/noUsersFound.svg';
+import RenderAllCampaignTable from '@components/campaign/RenderAllCampaignTable';
+import RenderInCampaignTable from '@components/campaign/RenderInCampaignTable';
+import RenderNotInCampaignTable from '@components/campaign/RenderNotInCampaignTable';
 
 const index = () => {
   const router = useRouter();
@@ -38,11 +52,19 @@ const index = () => {
   const [openCampaignPreview, setOpenCampaignPreview] = useState(false);
   const [showEditCampaign, setShowEditCampaign] = useState(false);
   const [category, setCategory] = useState('');
-  const [paginationItems, setPaginationItems] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [loadingPagination, setLoadingPagination] = useState(false);
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [error, setError] = useState();
+  const [counts, setCounts] = useState({
+    inCampaignCount: 0,
+    allCampaignCount: 0,
+    notInCampaignCount: 0,
+    eventsCount: 0,
+  });
+
+  const updateCounts = (key, value) => {
+    setCounts((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
   const dispatch = useDispatch();
 
   const getEvents = () => {
@@ -53,11 +75,9 @@ const index = () => {
 
   useEffect(() => {
     if (id) {
-      Promise.all([getEvents(), getCampaignPagination(id, offset), getCampaign(id)])
-        .then(([_, paginationResponse, campaignResponse]) => {
-          setPaginationItems(processContacts(paginationResponse.data.contacts));
-          setOffset(offset + paginationResponse.data.count);
-          dispatch(setUsersInCampaignGlobally(campaignResponse.data));
+      Promise.all([getEvents(), getCampaign(id)])
+        .then(([_, campaignResponse]) => {
+          dispatch(setUsersInCampaignGlobally(campaignResponse?.data));
         })
         .catch((error) => {
           console.error('Error executing requests:', error);
@@ -68,49 +88,46 @@ const index = () => {
   useEffect(() => {
     if (id) getEvents();
   }, [campaignDetails]);
-
-  const loadItems = () => {
-    return getCampaignPagination(id, offset)
-      .then((response) => {
-        return {
-          hasNextPage: true,
-          data: response.data.contacts,
-          count: response.data.count,
-          total: response.data.total_count,
-        };
-      })
-      .catch((error) => {
-        toast.error('Error while loading items');
-        throw error;
-      });
-  };
-  async function loadMore() {
-    if (loadingPagination) return;
-
-    setLoadingPagination(true);
-    try {
-      const { data, count, hasNextPage: newHasNextPage } = await loadItems(offset);
-      setPaginationItems((current) => {
-        const processedContacts = processContacts(data);
-
-        const combinedArray = [...current, ...processedContacts];
-        return Array.from(new Set(combinedArray));
-      });
-
-      setOffset(offset + count);
-
-      setHasNextPage(newHasNextPage);
-      if (count === 0) {
-        setHasNextPage(false);
-      }
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoadingPagination(false);
-    }
-  }
-
   const processContacts = (contacts) => {
+    return contacts.map((contact) => {
+      const {
+        contact_email,
+        contact_first_name,
+        contact_last_name,
+        contact_id,
+        import_source,
+        import_source_text,
+        last_communication_date,
+        profile_image_path,
+        campaign_contact,
+      } = contact;
+
+      const contact_enrollment_date = campaign_contact ? campaign_contact.enrollment_date : null;
+      const contact_unenrolment_date = campaign_contact ? campaign_contact.unenrollment_date : null;
+      const event_sent = campaign_contact ? campaign_contact.event_sent : null;
+      const events_preview = campaign_contact ? campaign_contact.events_preview : null;
+      const events = campaign_contact ? campaign_contact.events_list : null;
+      const contact_campaign_status = campaign_contact ? campaign_contact?.contact_campaign_status : 'never_assigned';
+      return {
+        contact_first_name,
+        contact_last_name,
+        contact_id,
+        contact_email,
+        import_source,
+        import_source_text,
+        last_communication_date,
+        profile_image_path,
+        contact_enrollment_date,
+        contact_unenrolment_date,
+        event_sent,
+        events_preview,
+        contact_campaign_status,
+        events,
+      };
+    });
+  };
+
+  const processUnassignedContacts = (contacts) => {
     return contacts.map((contact) => {
       const {
         contact_email,
@@ -146,15 +163,25 @@ const index = () => {
       };
     });
   };
-  useEffect(() => {
-    console.log(paginationItems);
-  }, [paginationItems]);
+
   useEffect(() => {
     if (usersInCampaignGlobally?.contact_category_id) {
       setCategory(getContactTypeByTypeId(null, usersInCampaignGlobally.contact_category_id));
     }
   }, [usersInCampaignGlobally]);
 
+  useEffect(() => {
+    setCounts((prevState) => ({
+      ...prevState,
+      inCampaignCount: usersInCampaignGlobally?.contacts_assigned_count,
+      notInCampaignCount:
+        usersInCampaignGlobally?.contacts_unassigned_count + usersInCampaignGlobally?.contacts_never_assigned_count,
+    }));
+  }, [
+    usersInCampaignGlobally?.contacts_assigned_count,
+    usersInCampaignGlobally?.contacts_unassigned_count,
+    usersInCampaignGlobally?.contacts_never_assigned_count,
+  ]);
   useEffect(() => {
     if (CRMCampaigns === undefined) {
       getCampaignsByCategory('Client').then((res) => {
@@ -172,39 +199,26 @@ const index = () => {
     }
   }, [CRMCampaigns, id]);
 
-  const totalContacts = usersInCampaignGlobally?.contacts_in_campaign
-    .concat(usersInCampaignGlobally?.contacts_not_campaign)
-    ?.filter((contact) => contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()));
-  const inCampaignContacts = usersInCampaignGlobally?.contacts_in_campaign?.filter((contact) =>
-    contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-  const notInCampaignContacts = usersInCampaignGlobally?.contacts_not_campaign?.filter((contact) =>
-    contact?.contact_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
   const eventTypes = [
     {
       name: 'ALL EVENTS',
       icon: allEventsIcon,
-      amount: usersInCampaignGlobally?.events.count,
+      amount: counts?.eventsCount,
     },
     {
       name: 'CAMPAIGN MATCHED TO',
       icon: campaignsMatchedTo,
-      amount:
-        usersInCampaignGlobally?.contacts_in_campaign?.length +
-        usersInCampaignGlobally?.contacts_not_campaign?.length +
-        usersInCampaignGlobally?.contacts_unassigned_count,
+      amount: counts?.allCampaignCount,
     },
     {
       name: 'CLIENTS IN CAMPAIGN',
       icon: inCampaign,
-      amount: usersInCampaignGlobally?.contacts_in_campaign?.length,
+      amount: counts?.inCampaignCount,
     },
     {
       name: 'Unassigned + Never Assigned',
       icon: notInCampaign,
-      amount:
-        usersInCampaignGlobally?.contacts_not_campaign?.length + usersInCampaignGlobally?.contacts_unassigned_count,
+      amount: counts?.notInCampaignCount,
     },
   ];
   const buttons = [
@@ -215,17 +229,23 @@ const index = () => {
           ? 'All Clients'
           : `All ${capitalize(category)}s - ${usersInCampaignGlobally?.contact_status_2}`
       }`,
-      count: paginationItems.length,
+      count: counts?.allCampaignCount,
     },
     {
       id: 1,
       name: 'In Campaign',
-      count: usersInCampaignGlobally?.contacts_in_campaign?.length,
+      count:
+        counts?.inCampaignCount === undefined
+          ? usersInCampaignGlobally?.contacts_assigned_count
+          : counts?.inCampaignCount,
     },
     {
       id: 2,
       name: 'Not In Campaign',
-      count: usersInCampaignGlobally?.contacts_not_campaign?.length,
+      count:
+        counts?.notInCampaignCount === undefined
+          ? usersInCampaignGlobally?.contacts_unassigned_count
+          : counts?.notInCampaignCount,
     },
   ];
 
@@ -238,95 +258,39 @@ const index = () => {
   useEffect(() => {
     setSearchTerm('');
   }, [currentButton]);
-  const [infiniteRef, { rootRef }] = useInfiniteScroll({
-    loading: loadingPagination,
-    hasNextPage,
-    onLoadMore: loadMore,
-    disabled: !!error,
-  });
-  const updatePaginationContacts = (person) => {
-    const updatedPaginationItems = paginationItems.map((item) => {
-      if (person?.contact_id === item.contact_id) {
-        let updatedItem = {};
-        if (person?.contact_campaign_status === 'never_assigned') {
-          updatedItem = {
-            ...item,
-            contact_campaign_status: 'assigned',
-            contact_enrollment_date: new Date(),
-          };
-        } else if (person?.contact_campaign_status === 'assigned') {
-          updatedItem = {
-            ...item,
-            contact_campaign_status: 'unassigned',
-            contact_unenrolment_date: new Date(),
-          };
-        }
-        return updatedItem;
-      } else {
-        return item;
-      }
-    });
 
-    setPaginationItems(updatedPaginationItems);
-  };
   const renderTable = (currentButton) => {
     switch (currentButton) {
       case 0:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
-            <div>
-              <AllCampaignContactsTable
-                ref={rootRef}
-                campaignData={campaignEvents}
-                campaignId={id}
-                tableFor={'allCampaignContacts'}
-                campaignFor={
-                  category == 'Unknown'
-                    ? 'All Clients'
-                    : `${capitalize(category)} - ${usersInCampaignGlobally?.contact_status_2}`
-                }
-                updatePaginationContacts={updatePaginationContacts}
-                campaignPreviewData={totalContacts}
-                setPaginationItems={setPaginationItems}
-                paginationItems={paginationItems}
-                categoryType={category}
-                status={usersInCampaignGlobally?.contact_status_1}
-                status_2={usersInCampaignGlobally?.contact_status_2}
-              />
-              {hasNextPage && (
-                <div ref={infiniteRef}>
-                  <SpinnerLoader />
-                </div>
-              )}
-            </div>
-          </SimpleBar>
+          <RenderAllCampaignTable
+            campaignEvents={campaignEvents}
+            usersInCampaignGlobally={usersInCampaignGlobally}
+            id={id}
+            processContacts={processContacts}
+            category={category}
+            updateCounts={updateCounts}
+          />
         );
       case 1:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
-            <InCampaignContactsTable
-              tableFor={'inCampaignContacts'}
-              data={inCampaignContacts}
-              updatePaginationContacts={updatePaginationContacts}
-              setCurrentButton={setCurrentButton}
-              categoryType={category}
-              status={usersInCampaignGlobally?.contact_status_1}
-              status_2={usersInCampaignGlobally?.contact_status_2}
-            />
-          </SimpleBar>
+          <RenderInCampaignTable
+            id={id}
+            updateCounts={updateCounts}
+            setCurrentButton={setCurrentButton}
+            usersInCampaignGlobally={usersInCampaignGlobally}
+            category={category}
+          />
         );
       case 2:
         return (
-          <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
-            <NotInCampaignContactsTable
-              tableFor={'notInCampaignContacts'}
-              data={notInCampaignContacts}
-              updatePaginationContacts={updatePaginationContacts}
-              categoryType={category}
-              status={usersInCampaignGlobally?.contact_status_1}
-              status_2={usersInCampaignGlobally?.contact_status_2}
-            />
-          </SimpleBar>
+          <RenderNotInCampaignTable
+            usersInCampaignGlobally={usersInCampaignGlobally}
+            category={category}
+            id={id}
+            updateCounts={updateCounts}
+            processUnassignedContacts={processUnassignedContacts}
+          />
         );
     }
   };
@@ -399,12 +363,6 @@ const index = () => {
           </div>
           <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
             <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
-            <Search
-              placeholder="Search"
-              className="mr-4 text-sm"
-              value={searchTerm}
-              onInput={(event) => setSearchTerm(event.target.value)}
-            />
           </div>
           {renderTable(currentButton)}
           <CampaignPreview

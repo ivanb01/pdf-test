@@ -1,97 +1,134 @@
 import React, { useEffect, useState } from 'react';
 import { Switch } from '@headlessui/react';
 import DeactivateCampaign from '@components/overlays/DeactivateCampaign';
-import { assignContactToCampaign, getCampaignsUsers, unassignContactFromCampaign } from '@api/campaign';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRefetchCampaign, setUsersInCampaignGlobally } from '@store/campaigns/slice';
+import { assignContactToCampaign, unassignContactFromCampaign } from '@api/campaign';
 import { createPortal } from 'react-dom';
+import {
+  changeCampaignStatus,
+  useAssignContactToCampaign,
+  useChangeCampaignStatus,
+  useDeactivateContactFromCampaign,
+} from '../../../hooks/campaignHooks';
+import { queryClient } from '../../../pages/_app';
+import { setUsersInCampaignGlobally } from '@store/campaigns/slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const AssignUnassignContactToCampaign = ({
-  campaignId,
-  active,
-  activePerson,
-  objectKey,
-  disabled,
-  handleUnassign,
-  updatePaginationContacts,
-}) => {
-  const [enabled, setEnabled] = useState(false);
-  const [makeChanges, setMakeChanges] = useState(false);
-  const [openDeactivate, setOpenDeactivate] = useState(false);
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
+const AssignUnassignContactToCampaign = ({ campaignId, active, activePerson, objectKey, disabled, handleUnassign }) => {
   const getTimeZone = () => {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   };
-
-  const updateUserLocally = (objectKey, contact_campaign_status) => {
-    if (objectKey === 'contacts_in_campaign') {
-      const updatedUsers = usersInCampaignGlobally?.contacts_in_campaign?.filter(
-        (arr) => arr.contact_id !== activePerson.contact_id,
-      );
-      dispatch(setUsersInCampaignGlobally({ ...usersInCampaignGlobally, contacts_in_campaign: updatedUsers }));
-      updatePaginationContacts(activePerson);
-    } else if (objectKey === 'contacts_not_campaign') {
-      const updatedContactsNotCampaign = usersInCampaignGlobally?.contacts_not_campaign?.filter(
-        (obj) => obj.contact_id !== activePerson.contact_id,
-      );
-
-      if (contact_campaign_status === 'never_assigned') {
-        dispatch(
-          setUsersInCampaignGlobally({
-            ...usersInCampaignGlobally,
-            contacts_not_campaign: updatedContactsNotCampaign,
-          }),
-        );
-      }
-      updatePaginationContacts(activePerson);
-    } else if (objectKey === 'all_contacts_campaign') {
-      if (updatePaginationContacts) {
-        updatePaginationContacts(activePerson);
-      }
-    }
-  };
-
+  const dispatch = useDispatch();
+  const [enabled, setEnabled] = useState(false);
+  const [makeChanges, setMakeChanges] = useState(false);
+  const [openDeactivate, setOpenDeactivate] = useState(false);
+  const deactivateContactFromCampaign = useDeactivateContactFromCampaign();
+  const _assignContactToCampaign = useAssignContactToCampaign();
+  const changeCampaignStatus = useChangeCampaignStatus(activePerson?.contact_campaign_status, getTimeZone());
   const [loading, setLoading] = useState(false);
+  const { CRMCampaigns, usersInCampaignGlobally } = useSelector((state) => state.CRMCampaigns);
+
   const handleCampaignAssignment = async () => {
     if (!active) {
       setEnabled(true);
       setLoading(true);
-      await assignContactToCampaign(campaignId, activePerson.contact_id, getTimeZone()).then((res) => {
-        setLoading(false);
-        setOpenDeactivate(false);
-      });
-      updateUserLocally(objectKey, activePerson.contact_campaign_status);
-      dispatch(setRefetchCampaign(true));
 
-      getCampaignsUsers(campaignId).then((res) => {
-        dispatch(setUsersInCampaignGlobally(res.data));
-        setLoading(false);
-        setOpenDeactivate(false);
-      });
+      if (objectKey === 'contacts_not_campaign') {
+        _assignContactToCampaign
+          .mutateAsync({ campaignId: campaignId, activePerson: activePerson, timeZone: getTimeZone() })
+          .then(() => {
+            setLoading(false);
+            setOpenDeactivate(false);
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count + 1,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count - 1,
+              }),
+            );
+          });
+      } else {
+        changeCampaignStatus.mutateAsync({ campaignId: campaignId, activePerson: activePerson.contact_id }).then(() => {
+          setLoading(false);
+          setOpenDeactivate(false);
+          console.log(activePerson?.contact_campaign_status);
+          if (activePerson?.contact_campaign_status == 'never_assigned') {
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count + 1,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count - 1,
+              }),
+            );
+            queryClient.refetchQueries({ queryKey: ['in_campaign_contacts', campaignId] });
+          } else {
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count + 1,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count - 1,
+              }),
+            );
+            queryClient.refetchQueries({ queryKey: ['not_in_campaign_contacts', campaignId] });
+          }
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: ['all_campaign_contacts', campaignId] });
+          }, [1000]);
+        });
+      }
     } else if (active) {
       setEnabled(false);
       setLoading(true);
-      await unassignContactFromCampaign(campaignId, activePerson.contact_id).then((res) => {
-        setLoading(false);
-        setOpenDeactivate(false);
-        if (handleUnassign) {
-          handleUnassign();
-        }
-      });
-      dispatch(setRefetchCampaign(true));
-      updateUserLocally(objectKey, activePerson.contact_campaign_status);
-      getCampaignsUsers(campaignId).then((res) => {
-        dispatch(setUsersInCampaignGlobally(res.data));
-        setLoading(false);
-        setOpenDeactivate(false);
-      });
+      if (objectKey === 'contacts_in_campaign') {
+        deactivateContactFromCampaign
+          .mutateAsync({ campaignId: campaignId, activePerson: activePerson.contact_id })
+          .then(() => {
+            setLoading(false);
+            setOpenDeactivate(false);
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count + 1,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count - 1,
+              }),
+            );
+          });
+      } else {
+        changeCampaignStatus.mutateAsync({ campaignId: campaignId, activePerson: activePerson.contact_id }).then(() => {
+          setLoading(false);
+          setOpenDeactivate(false);
+
+          if (activePerson?.contact_campaign_status == 'never_assigned') {
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count + 1,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count - 1,
+              }),
+            );
+            queryClient.refetchQueries({ queryKey: ['in_campaign_contacts', campaignId] });
+          } else {
+            dispatch(
+              setUsersInCampaignGlobally({
+                ...usersInCampaignGlobally,
+                contacts_never_assigned_count: usersInCampaignGlobally?.contacts_never_assigned_count + 1,
+                contacts_assigned_count: usersInCampaignGlobally?.contacts_assigned_count - 1,
+              }),
+            );
+            queryClient.refetchQueries({ queryKey: ['not_in_campaign_contacts', campaignId] });
+          }
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: ['all_campaign_contacts', campaignId] });
+          }, [1000]);
+
+          if (handleUnassign) {
+            handleUnassign();
+          }
+        });
+      }
     }
   };
 

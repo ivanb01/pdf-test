@@ -6,6 +6,7 @@ import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignCo
 import Table from '..';
 import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
+import Loader from '@components/shared/loader';
 
 const InCampaignContactsTable = ({
   data,
@@ -14,6 +15,7 @@ const InCampaignContactsTable = ({
   status,
   status_2,
   updatePaginationContacts,
+  isLoading,
 }) => {
   const router = useRouter();
   const eventsTable = () => {
@@ -59,9 +61,9 @@ const InCampaignContactsTable = ({
                     {e.date !== null && (
                       <div className="flex items-center">
                         <div className={'text-sm leading-4 font-normal text-gray5'}>
-                          {getFormattedDateFromTimestamp(e.event_updated_at)}
+                          {getFormattedDateFromTimestamp(e.event_scheduled_date)}
                           {' at '}
-                          {getTimeFromTimestamp(e.event_updated_at)}
+                          {getTimeFromTimestamp(e.event_scheduled_date)}
                         </div>
                       </div>
                     )}

@@ -36,6 +36,7 @@ import CampaignCreateEditConfirmationOverlay from '@components/overlays/campaign
 import { createPortal } from 'react-dom';
 import AddActivity from '@components/overlays/add-activity';
 import Checkbox from '@components/shared/checkbox';
+import { queryClient } from '../../../pages/_app';
 
 const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetails }) => {
   const dispatch = useDispatch();
@@ -130,6 +131,8 @@ const EditCampaignSidebar = ({ open, setOpen, id, campaignData, setCampaignDetai
       actions_to_remove: eventsToDelete,
     };
     updateCampaign(editCampaignObject, campaignId).then((res) => {
+      queryClient.invalidateQueries({ queryKey: ['all_campaign_contacts', campaignId] });
+
       setCampaignDetails({ ...campaign, actions: editCampaignObject.actions });
       setEditingCampaignLoader(false);
       setOpen(false);

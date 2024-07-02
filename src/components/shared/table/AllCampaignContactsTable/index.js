@@ -9,19 +9,19 @@ import Table from '..';
 import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import PreviewEventsPerClient from '@components/overlays/preview-events-per-client';
-import previewEventsPerClient from '@components/overlays/preview-events-per-client';
+import { useAllCampaignContacts } from '../../../../hooks/campaignHooks';
 
 const AllCampaignContactsTable = ({
   paginationItems,
   campaignPreviewData,
-  setPaginationItems,
   categoryType,
-  status,
   status_2,
   campaignFor,
   campaignData,
   campaignId,
   updatePaginationContacts,
+  isLoading,
+  isFetching,
 }) => {
   const router = useRouter();
   const [openEventsPreview, setOpenEventsPreview] = useState(false);
@@ -32,7 +32,7 @@ const AllCampaignContactsTable = ({
     setPerson(person);
   }, [paginationItems]);
 
-  return paginationItems.length > 0 ? (
+  return paginationItems && paginationItems?.length > 0 ? (
     <>
       <Table>
         <thead className={'sticky top-0 z-10'}>
@@ -70,7 +70,7 @@ const AllCampaignContactsTable = ({
         <tbody className={'overflow-y-scroll'}>
           {paginationItems.map((person) => (
             <tr
-              key={person.id}
+              key={person?.id}
               onClick={() => {
                 setPerson(person);
                 localStorage.setItem('id', JSON.stringify(id));
@@ -89,10 +89,10 @@ const AllCampaignContactsTable = ({
                         query: { id: person?.contact_id },
                       });
                     }}>
-                    {person.profile_image_path ? (
+                    {person?.profile_image_path ? (
                       <img
                         className="inline-block h-10 w-10 rounded-full"
-                        src={person.profile_image_path}
+                        src={person?.profile_image_path}
                         alt={person?.contact_first_name}
                       />
                     ) : (
@@ -126,7 +126,7 @@ const AllCampaignContactsTable = ({
                         });
                       }}
                       className={' text-sm leading-5 font-normal text-gray-500 w-max'}>
-                      {person.contact_email}
+                      {person?.contact_email}
                     </h6>
                   </div>
                 </div>
@@ -141,19 +141,19 @@ const AllCampaignContactsTable = ({
                         className={
                           'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                         }>
-                        {person.contact_summary}
+                        {person?.contact_summary}
                       </div>
                     }>
                     <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>
-                      <p className="text-xs leading-4 font-normal">{person.contact_summary}</p>
+                      <p className="text-xs leading-4 font-normal">{person?.contact_summary}</p>
                     </div>
                   </TooltipComponent>
                 )}
               </td>
               <td className={'px-6 py-4'}>
                 <DateChip
-                  contact={person}
-                  lastCommunication={person.last_communication_date ?? ''}
+                  contact={person && person}
+                  lastCommunication={person?.last_communication_date ?? ''}
                   contactStatus={status_2}
                   contactCategory={'clients'}
                 />
@@ -184,11 +184,11 @@ const AllCampaignContactsTable = ({
                   <div>
                     <span
                       className={`text-xs leading-5 font-medium ${
-                        person.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
+                        person?.contact_campaign_status === 'unassigned' ? 'text-gray3' : 'text-gray7'
                       }`}>
-                      {person.contact_campaign_status === 'assigned'
+                      {person?.contact_campaign_status === 'assigned'
                         ? 'Active'
-                        : person.contact_campaign_status === 'unassigned'
+                        : person?.contact_campaign_status === 'unassigned'
                           ? 'Deactivated'
                           : 'Inactive'}
                     </span>
@@ -200,23 +200,23 @@ const AllCampaignContactsTable = ({
                   <div className={'flex gap-1 items-center '}>
                     <StatusChip
                       variant={
-                        person.contact_campaign_status === 'assigned' ? VARIANT_ENUM.SUCCESS : VARIANT_ENUM.ERROR
+                        person?.contact_campaign_status === 'assigned' ? VARIANT_ENUM.SUCCESS : VARIANT_ENUM.ERROR
                       }
                       text={
-                        person.contact_campaign_status === 'assigned'
+                        person?.contact_campaign_status === 'assigned'
                           ? 'Campaign is Running'
-                          : person.contact_campaign_status === 'unassigned'
+                          : person?.contact_campaign_status === 'unassigned'
                             ? 'Campaign Deactivated'
                             : 'Never In Campaign'
                       }
                     />
                   </div>
-                  {person.contact_campaign_status !== null && (
+                  {person?.contact_campaign_status !== null && (
                     <div className={'text-xs leading-4 font-medium text-gray5 ml-0'}>
-                      {person.contact_campaign_status === 'assigned'
-                        ? `from ${formatDateStringMDY(person.contact_enrollment_date)}`
-                        : person.contact_campaign_status === 'unassigned'
-                          ? `from ${formatDateStringMDY(person.contact_unenrolment_date)}`
+                      {person?.contact_campaign_status === 'assigned'
+                        ? `from ${formatDateStringMDY(person?.contact_enrollment_date)}`
+                        : person?.contact_campaign_status === 'unassigned'
+                          ? `from ${formatDateStringMDY(person?.contact_unenrolment_date)}`
                           : ''}
                     </div>
                   )}
@@ -228,8 +228,10 @@ const AllCampaignContactsTable = ({
       </Table>
       <PreviewEventsPerClient
         campaignData={campaignData}
+        isLoading={isLoading}
+        isFetching={isFetching}
         campaignId={campaignId}
-        person={person && campaignPreviewData?.find((c) => c.contact_id === person?.contact_id)}
+        person={person && paginationItems && paginationItems?.find((c) => c.contact_id == person?.contact_id)}
         open={openEventsPreview}
         setOpen={setOpenEventsPreview}
         title={campaignFor}

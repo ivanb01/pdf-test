@@ -225,9 +225,7 @@ const AllContacts = () => {
 
   return (
     <Layout>
-      {false ? (
-        <Loader />
-      ) : (
+      {
         <>
           <FloatingAlert
             inProp={unapprovedContacts?.length > 0}
@@ -362,7 +360,7 @@ const AllContacts = () => {
             <Accordion tabs={tabs} handleClick={handleFilterClick} activeSelections={clientsFilters} defaultOpen />
           </SlideOver> */}
         </>
-      )}
+      }
     </Layout>
   );
 };

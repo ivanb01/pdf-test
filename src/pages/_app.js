@@ -34,7 +34,15 @@ import EmailSendComponent from '@components/EmailSendComponent';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    gcTime: 120000,
+  },
+});
 import { isLocalhost, isDev, isSubscriptions, isDocuments } from '@helpers/env';
 import { fetchCurrentUserInfo, saveUserInfo } from '@helpers/auth';
 
@@ -153,8 +161,7 @@ const MyApp = ({ Component, pageProps }) => {
         </Head>
         <div
           className={`main-page overflow-y-auto overflow-x-hidden`}
-          style={{ display: 'flex', flexDirection: 'column' }}
-        >
+          style={{ display: 'flex', flexDirection: 'column' }}>
           <Provider store={store}>
             <QueryClientProvider client={queryClient}>
               <ReactQueryDevtools initialIsOpen={false} />

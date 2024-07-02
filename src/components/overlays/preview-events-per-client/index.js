@@ -19,13 +19,24 @@ import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
 import { getAllEvents, getCampaign } from '@api/campaign';
 import { setRefetchCampaign, setUsersInCampaignGlobally } from '@store/campaigns/slice';
 
-const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data, campaignData: cData }) => {
+const PreviewEventsPerClient = ({
+  open,
+  setOpen,
+  title,
+  person,
+  campaignId,
+  data,
+  campaignData: cData,
+  isLoading,
+  isFetching,
+}) => {
   const [activeEvent, setActiveEvent] = useState();
   const [selectedEventIndex, setSelectedEventIndex] = useState();
   const [campaignData, setCampaignData] = useState();
   const [loading, setLoading] = useState(false);
-  const { refetchCampaign } = useSelector((state) => state.CRMCampaigns);
-  const dispatch = useDispatch();
+  useEffect(() => {
+    setLoading(isLoading || isFetching);
+  }, [isLoading, isFetching]);
   useEffect(() => {
     if (person?.contact_campaign_status !== 'never_assigned') {
       if (cData) {
@@ -41,16 +52,7 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
       return;
     }
   }, [campaignId, data, person, open, cData]);
-  useEffect(() => {
-    if (refetchCampaign) {
-      setLoading(true);
-      getCampaign(campaignId).then((res) => {
-        dispatch(setUsersInCampaignGlobally(res.data));
-        dispatch(setRefetchCampaign(false));
-        setLoading(false);
-      });
-    }
-  }, [refetchCampaign, campaignData, campaignId]);
+
   useEffect(() => {
     if (campaignData && person?.contact_campaign_status !== 'never_assigned') {
       setActiveEvent(campaignData?.events[0]);
@@ -62,10 +64,12 @@ const PreviewEventsPerClient = ({ open, setOpen, title, person, campaignId, data
 
   useEffect(() => {
     if (person?.contact_campaign_status !== 'never_assigned') {
-      setActiveEvent(person?.events_preview[0]);
+      console.log(person, 'person');
+      setActiveEvent(person?.events_preview && person?.events_preview[0]);
       setSelectedEventIndex(1);
     }
   }, [person]);
+
   return (
     <SlideOver
       width="w-[1070px]"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Table from '..';
 import { getInitials, getFormattedDateFromTimestamp, getSource } from 'global/functions';
 import DateChip from '@components/shared/chip/date-chip';
@@ -7,12 +7,15 @@ import noUsersFound from '/public/images/campaign/noUsersFound.svg';
 import AssignUnassignContactToCampaign from '@components/shared/AssignUnassignContactToCampaign';
 import { useRouter } from 'next/router';
 import StatusChip, { VARIANT_ENUM } from '@components/shared/status-chip';
+import Loader from '@components/shared/loader';
 
-const NotInCampaignContactsTable = ({ data, categoryType, status, status_2, updatePaginationContacts }) => {
+const NotInCampaignContactsTable = ({ data, categoryType, status, status_2, updatePaginationContacts, isLoading }) => {
   const router = useRouter();
   const { id, category } = router.query;
 
-  return data && data?.length > 0 ? (
+  return isLoading ? (
+    <Loader />
+  ) : data && data?.length > 0 ? (
     <Table>
       <thead>
         <tr className="bg-gray-50 text-gray4">
@@ -61,24 +64,26 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2, upda
                     <img
                       className="inline-block h-10 w-10 rounded-full"
                       src={person.profile_image_path ?? ''}
-                      alt={person.contact_name}
+                      alt={person?.contact_first_name}
                     />
                   ) : (
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
                       <span className="text-sm font-medium leading-none text-white">
-                        {getInitials(person.contact_name).toUpperCase()}
+                        {getInitials(person?.contact_first_name + ' ' + person?.contact_last_name).toUpperCase()}
                       </span>
                     </span>
                   )}
                 </div>
                 <div>
-                  <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>{person.contact_name}</h6>
+                  <h6 className={'text-sm leading-5 font-medium text-gray-800 '}>
+                    {person?.contact_first_name + person?.contact_last_name}
+                  </h6>
                   <h6 className={' text-sm leading-5 font-normal text-gray-500'}>{person.contact_email}</h6>
                 </div>
               </div>
             </td>
             <td className="px-6 py-4">
-              {person.contact_summary !== null && person.contact_summary.length > 0 && (
+              {person.contact_summary !== null && person.contact_summary?.length > 0 && (
                 <TooltipComponent
                   side={'bottom'}
                   align={'center'}
@@ -87,7 +92,7 @@ const NotInCampaignContactsTable = ({ data, categoryType, status, status_2, upda
                       className={
                         'max-w-[239px] leading-5 text-left font-medium max-h-[24px] text-[11px] px-3 py-0.5 mt-1.5 text-ellipsis overflow-hidden bg-lightBlue1 text-lightBlue3 '
                       }>
-                      {person.contact_summary}
+                      {person?.contact_summary}
                     </div>
                   }>
                   <div className={`w-[260px] pointer-events-none text-white bg-neutral1 rounded-lg`}>

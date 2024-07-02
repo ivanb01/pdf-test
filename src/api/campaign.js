@@ -63,6 +63,24 @@ export const getCampaignPagination = (id, offset) => {
     },
   });
 };
+
+export const getInCampaignContacts = (id, offset) => {
+  return axiosInstance.get(`v2/campaigns/${id}/contacts-in-campaign`, {
+    params: {
+      limit: 10,
+      offset,
+    },
+  });
+};
+
+export const getNotInCampaignContacts = (id, offset) => {
+  return axiosInstance.get(`v2/campaigns/${id}/contacts-not-in-campaign`, {
+    params: {
+      limit: 10,
+      offset: offset,
+    },
+  });
+};
 export const addEmailTemplate = (params) => {
   return axiosInstance.post(`v2/email-templates`, params);
 };
