@@ -596,7 +596,7 @@ export default function MainMenuV2() {
                               key={item.id}
                               as="a"
                               onClick={() => router.push(item.href)}
-                              className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-white hover:text-black hover:bg-gray-50">
+                              className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-white hover:bg-gray-50">
                               {item.title}
                             </Disclosure.Button>
                           ))}
