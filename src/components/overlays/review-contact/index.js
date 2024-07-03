@@ -13,7 +13,7 @@ import {
   professionalsOptions,
 } from 'global/variables';
 import Input from 'components/shared/input';
-import { findContactByEmail, updateContact } from 'api/contacts';
+import { addContact, findContactByEmail, updateContact } from 'api/contacts';
 import { findTagsOption, formatDateLL } from 'global/functions';
 import { setOpenedSubtab, setRefetchData, setRefetchPart } from 'store/global/slice';
 import Radio from 'components/shared/radio';
@@ -55,6 +55,7 @@ const ReviewContact = ({
   hideCloseButton,
   afterSubmit,
   removeAIContact,
+  refetchAllContacts,
 }) => {
   const vendorSubtypes = useSelector((state) => state.global.vendorSubtypes);
 
@@ -138,11 +139,14 @@ const ReviewContact = ({
             ? 1
             : client?.category_1 === 'Trash'
               ? 4
-              : 2,
+              : client?.category_1 === 'Other'
+                ? 2
+                : 3,
       selectedContactType: client?.category_id,
       selectedContactSubtype: client?.category_id,
       selectedStatus: client?.status_id,
     },
+
     onSubmit: async (values) => {
       if (formik.values.email !== formik.initialValues.email) {
         setUpdating(true);
@@ -285,7 +289,7 @@ const ReviewContact = ({
       status_id: status_id == '' ? 1 : status_id,
       category_2: category,
       summary: values.summary,
-      category_1: contactTypes.find((type) => type.id == values.selectedContactCategory).name,
+      category_1: contactTypes.find((type) => type.id == values.selectedContactCategory)?.name,
     };
 
     const newData = isUnapprovedAI
@@ -365,9 +369,21 @@ const ReviewContact = ({
 
       // api call to update user
       setUpdating(true);
-      updateContact(client?.id, newData).then(() => {
-        dispatch(setRefetchData(true));
-      });
+
+      if (refetchAllContacts) {
+        //THIS IS USED TO CONTROL MANUALlY ADDED CONTACT IN CRM
+        addContact(newData).then(() => {
+          if (refetchAllContacts) {
+            setTimeout(() => {
+              refetchAllContacts();
+            }, [2000]);
+          }
+        });
+      } else {
+        updateContact(client?.id, newData).then(() => {
+          dispatch(setRefetchData(true));
+        });
+      }
       if (afterSubmit) {
         afterSubmit(client.id, newData);
       }
