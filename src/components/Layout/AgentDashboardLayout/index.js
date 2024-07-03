@@ -196,7 +196,6 @@ const AgentDashboardLayout = ({ success, needToContactCount, needToReview }) => 
       </div>
       <div className={'bg-[#F1F6F8] my-7 h-full mx-4 rounded-[22px] flex flex-col flex-1 gap-8 py-8  flex-wrap'}>
         <div className={'flex mx-4 md:mx-6 lg:mx-[22px] gap-4 md:gap-6 lg:gap-[22px] flex-wrap'}>
-          <NeedHelpContainer />
           {success && needToReview == 0 ? (
             <SuccessContactsContainers needToReview={needToReview} needToContactCount={needToContactCount} />
           ) : (
@@ -215,6 +214,7 @@ const AgentDashboardLayout = ({ success, needToContactCount, needToReview }) => 
               needToContactCount={needToContactCount}
             />
           )}
+          <NeedHelpContainer />
         </div>
       </div>
     </div>
