@@ -1,8 +1,11 @@
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import React from 'react';
+import { setContactToBeEmailed, setOpenEmailContactOverlay } from '@store/global/slice';
+import { useDispatch } from 'react-redux';
 
 const NeedHelpContainer = () => {
+  const dispatch = useDispatch();
   return (
     <div
       className={
@@ -25,16 +28,34 @@ const NeedHelpContainer = () => {
           Contact our support team by phone, text, or email if you need assistance.{' '}
         </p>
         <div className={'flex justify-between align-center mt-[30px] flex-wrap gap-1'}>
-          <div className={'flex gap-2 justify-center items-center'}>
+          <div
+            className={'flex gap-2 justify-center items-center cursor-pointer'}
+            onClick={() => {
+              window.open(`tel:+16463894548`);
+            }}>
             <div className={'h-[48px] w-[48px] flex items-center justify-center bg-[#F3F4F6] rounded-full'}>
               <LocalPhoneOutlinedIcon />
             </div>
-            <div className={'flex flex-col gap-2'}>
+            <div className={'flex flex-col gap-2 cursor-pointer'}>
               <p className={'text-[14px] font-medium text-gray6'}>Phone Support </p>
               <p className={'text-sm font-semibold text-gray6'}>(646) 389-4548</p>
             </div>
           </div>
-          <div className={'flex gap-2 justify-center items-center'}>
+          <div
+            className={'flex gap-2 justify-center items-center cursor-pointer'}
+            onClick={() => {
+              let clientToBeEmailed = {
+                value: -1,
+                label: `Arizona Namani - az@opgny.com`,
+                first_name: 'Arizona',
+                last_name: 'Namani',
+                email: 'az@opgny.com',
+                profile_image_path: '',
+              };
+              dispatch(setContactToBeEmailed(clientToBeEmailed));
+
+              dispatch(setOpenEmailContactOverlay(true));
+            }}>
             <div className={'h-[48px] w-[48px] flex items-center justify-center bg-[#F3F4F6] rounded-full'}>
               <MailOutlineIcon />
             </div>
