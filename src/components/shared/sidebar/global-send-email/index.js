@@ -18,11 +18,9 @@ import { updateContactLocally } from '@store/contacts/slice';
 import Dropdown from '@components/shared/dropdown';
 import { addEmailTemplate, getEmailTemplates } from '@api/campaign';
 import Checkbox from '@components/shared/checkbox';
-import { useRouter } from 'next/router';
 
 const SendEmailOverlay = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [selectedContacts, setSelectedContacts] = useState([]);
   const contacts = useSelector((state) => state.contacts.allContacts.data);
   const contactToBeEmailed = useSelector((state) => state.global.contactToBeEmailed);
@@ -54,41 +52,19 @@ const SendEmailOverlay = () => {
     if (selectedContacts.length && subject.length) setFormIsValid(true);
     else setFormIsValid(false);
   }, [selectedContacts, subject, message]);
-  const updateContactsCopy = () => {
-    const formattedContacts = contacts.map((contact) => ({
-      value: contact.id,
-      label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
-      first_name: contact.first_name,
-      last_name: contact.last_name,
-      email: contact.email,
-      profile_image_path: contact.profile_image_path,
-    }));
-
-    if (router.pathname.includes('/dashboard')) {
-      const arizonaContact = {
-        first_name: 'Arizona',
-        last_name: 'Namani',
-        email: 'az@opgny.com',
-        profile_image_path: '',
-        value: -1,
-        label: 'Arizona Namani - az@opgny.com',
-      };
-
-      const hasDuplicate = contacts.some((contact) => contact.email === arizonaContact.email);
-
-      if (!hasDuplicate) {
-        setContactsCopy([arizonaContact, ...formattedContacts]);
-      } else {
-        setContactsCopy(formattedContacts);
-      }
-    } else {
-      setContactsCopy(formattedContacts);
-    }
-  };
 
   useEffect(() => {
     if (contacts) {
-      updateContactsCopy();
+      setContactsCopy(
+        contacts?.map((contact) => ({
+          value: contact.id,
+          label: `${contact.first_name} ${contact.last_name} - ${contact.email}`,
+          first_name: contact.first_name,
+          last_name: contact.last_name,
+          email: contact.email,
+          profile_image_path: contact.profile_image_path,
+        })),
+      );
     }
     getTemplates();
   }, [contacts]);
