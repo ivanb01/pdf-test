@@ -44,12 +44,12 @@ const PortfolioEmailTemplate = ({
           </Section>
           <Section style={mainContainer}>
             <Text style={signatureParagraph}>
-              {agent_first_name} {agent_last_name}
+              {first_name} {agent_last_name}
             </Text>
             <Text style={signatureParagraph}>{companyName}</Text>
             <Text style={signatureParagraph}>{agent_phone_number}</Text>
             <Text style={signatureParagraph}>{agent_email}</Text>
-            <Img src={companyLogo} width="134" height="28" alt="OxfordLogo" />
+            <Img src={companyLogo} alt="OxfordLogo" height="28" />
           </Section>
         </Container>
       </Body>
