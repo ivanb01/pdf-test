@@ -17,9 +17,9 @@ const CampaignCard = ({
   events,
   category,
   campaign_id,
-  contacts_never_assigned_count,
-  contact_assigned_count,
-  contact_unassigned_count,
+  // contacts_never_assigned_count,
+  // contact_assigned_count,
+  // contact_unassigned_count,
   contact_status_2,
   isVisible,
   openedTab,
@@ -65,59 +65,59 @@ const CampaignCard = ({
             <div className={'m-auto'}>
               {openedTab === 0
                 ? props.contact_category_id != null && props.contact_status_id != null
-                  ? `${props.contact_category_2}s | ${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
-                  : 'All Clients:'
+                  ? `${props.contact_category_2}s | ${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}`
+                  : 'All Clients'
                 : openedTab !== 0
-                  ? `${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}:`
-                  : 'All Clients:'}
+                  ? `${getContactStatusByStatusId(props.contact_category_id, props.contact_status_id)}`
+                  : 'All Clients'}
             </div>
-            <div className={'flex'}>
-              {contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
-                ? contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count
-                : 0}
-              <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />
-            </div>
+            {/*<div className={'flex'}>*/}
+            {/*  {contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count*/}
+            {/*    ? contact_assigned_count + contact_unassigned_count + contacts_never_assigned_count*/}
+            {/*    : 0}*/}
+            {/*  <GroupIcon className={'h-4 w-4 text-[#909CBE] ml-1'} />*/}
+            {/*</div>*/}
           </div>
           <div className={'flex gap-2 text-xs leading-5 font-medium text-gray6 mt-[14px]'}>
-            <TooltipComponent
-              side={'top'}
-              align={'center'}
-              triggerElement={
-                <div className={'flex items-center gap-1'}>
-                  <img src={InCampaing.src} className={'h-[18px] w-[18px]'} alt={''} />
-                  <span>{contact_assigned_count ? contact_assigned_count : 0}</span>
-                </div>
-              }>
-              <div className=" pointer-events-none  text-xs font-medium text-white ">
-                <p className="font-semibold">Clients in campaign</p>
-              </div>
-            </TooltipComponent>
-            <TooltipComponent
-              side={'top'}
-              align={'center'}
-              triggerElement={
-                <div className={'flex items-center gap-1'}>
-                  <img src={unassigned.src} alt={''} />
-                  <span>{contact_unassigned_count ? contact_unassigned_count : 0}</span>
-                </div>
-              }>
-              <div className=" pointer-events-none  text-xs font-medium text-white ">
-                <p className="font-semibold">Clients not in campaign</p>
-              </div>
-            </TooltipComponent>
-            <TooltipComponent
-              side={'top'}
-              align={'center'}
-              triggerElement={
-                <div className={'flex items-center gap-1'}>
-                  <img src={neverAssigned.src} alt={''} />
-                  <span>{contacts_never_assigned_count ? contacts_never_assigned_count : 0}</span>
-                </div>
-              }>
-              <div className=" pointer-events-none  text-xs font-medium text-white ">
-                <p className="font-semibold">Clients never assigned in campaign</p>
-              </div>
-            </TooltipComponent>
+            {/*<TooltipComponent*/}
+            {/*  side={'top'}*/}
+            {/*  align={'center'}*/}
+            {/*  triggerElement={*/}
+            {/*    <div className={'flex items-center gap-1'}>*/}
+            {/*      <img src={InCampaing.src} className={'h-[18px] w-[18px]'} alt={''} />*/}
+            {/*      <span>{contact_assigned_count ? contact_assigned_count : 0}</span>*/}
+            {/*    </div>*/}
+            {/*  }>*/}
+            {/*  <div className=" pointer-events-none  text-xs font-medium text-white ">*/}
+            {/*    <p className="font-semibold">Clients in campaign</p>*/}
+            {/*  </div>*/}
+            {/*</TooltipComponent>*/}
+            {/*<TooltipComponent*/}
+            {/*  side={'top'}*/}
+            {/*  align={'center'}*/}
+            {/*  triggerElement={*/}
+            {/*    <div className={'flex items-center gap-1'}>*/}
+            {/*      <img src={unassigned.src} alt={''} />*/}
+            {/*      <span>{contact_unassigned_count ? contact_unassigned_count : 0}</span>*/}
+            {/*    </div>*/}
+            {/*  }>*/}
+            {/*  <div className=" pointer-events-none  text-xs font-medium text-white ">*/}
+            {/*    <p className="font-semibold">Clients not in campaign</p>*/}
+            {/*  </div>*/}
+            {/*</TooltipComponent>*/}
+            {/*<TooltipComponent*/}
+            {/*  side={'top'}*/}
+            {/*  align={'center'}*/}
+            {/*  triggerElement={*/}
+            {/*    <div className={'flex items-center gap-1'}>*/}
+            {/*      <img src={neverAssigned.src} alt={''} />*/}
+            {/*      <span>{contacts_never_assigned_count ? contacts_never_assigned_count : 0}</span>*/}
+            {/*    </div>*/}
+            {/*  }>*/}
+            {/*  <div className=" pointer-events-none  text-xs font-medium text-white ">*/}
+            {/*    <p className="font-semibold">Clients never assigned in campaign</p>*/}
+            {/*  </div>*/}
+            {/*</TooltipComponent>*/}
           </div>
         </div>
       </div>

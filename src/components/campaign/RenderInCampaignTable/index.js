@@ -27,7 +27,7 @@ const RenderInCampaignTable = ({ category, usersInCampaignGlobally, setCurrentBu
     }
   }, [inCampaignData]);
   return (
-    <SimpleBar style={{ height: 'calc(100vh - 388px)' }} autoHide>
+    <SimpleBar style={{ height: 'calc(100vh - 271px)' }} autoHide>
       <div>
         {inCampaignData && (
           <InCampaignContactsTable

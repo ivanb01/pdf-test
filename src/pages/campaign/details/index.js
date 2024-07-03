@@ -78,6 +78,7 @@ const index = () => {
       Promise.all([getEvents(), getCampaign(id)])
         .then(([_, campaignResponse]) => {
           dispatch(setUsersInCampaignGlobally(campaignResponse?.data));
+          setCampaignDetails(campaignResponse?.data);
         })
         .catch((error) => {
           console.error('Error executing requests:', error);
@@ -190,37 +191,15 @@ const index = () => {
         if (foundCampaign?.contact_category_id) {
           setCategory(getContactTypeByTypeId(null, foundCampaign.contact_category_id));
         }
-        setCampaignDetails(foundCampaign);
+        // setCampaignDetails(foundCampaign);
       });
     } else if (CRMCampaigns !== undefined) {
       const campaign = CRMCampaigns?.campaigns.find((c) => c.campaign_id == id);
       setCategory(getContactTypeByTypeId(null, campaign.contact_category_id));
-      setCampaignDetails(campaign);
+      // setCampaignDetails(campaign);
     }
   }, [CRMCampaigns, id]);
 
-  const eventTypes = [
-    {
-      name: 'ALL EVENTS',
-      icon: allEventsIcon,
-      amount: counts?.eventsCount,
-    },
-    {
-      name: 'CAMPAIGN MATCHED TO',
-      icon: campaignsMatchedTo,
-      amount: counts?.allCampaignCount,
-    },
-    {
-      name: 'CLIENTS IN CAMPAIGN',
-      icon: inCampaign,
-      amount: counts?.inCampaignCount,
-    },
-    {
-      name: 'Unassigned + Never Assigned',
-      icon: notInCampaign,
-      amount: counts?.notInCampaignCount,
-    },
-  ];
   const buttons = [
     {
       id: 0,
@@ -345,22 +324,22 @@ const index = () => {
               </Button>
             </div>
           </div>
-          <div className={'p-6 grid grid-cols-4 gap-2.5 border-y border-gray2'}>
-            {eventTypes.map((event, index) => (
-              <div
-                key={index}
-                className={`flex flex-col gap-2.5 items-center justify-center 
-              `}>
-                <div className={'flex gap-3 items-center justify-center'}>
-                  <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />
-                  <span className="text-gray4  text-center font-medium text-xs leading-5">
-                    {event.name.toUpperCase()}
-                  </span>
-                </div>
-                <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>
-              </div>
-            ))}
-          </div>
+          {/*<div className={'p-6 grid grid-cols-4 gap-2.5 border-y border-gray2'}>*/}
+          {/*  {eventTypes.map((event, index) => (*/}
+          {/*    <div*/}
+          {/*      key={index}*/}
+          {/*      className={`flex flex-col gap-2.5 items-center justify-center */}
+          {/*    `}>*/}
+          {/*      <div className={'flex gap-3 items-center justify-center'}>*/}
+          {/*        <img src={event.icon.src} className={'h-[32px] w-[32px]'} alt={''} />*/}
+          {/*        <span className="text-gray4  text-center font-medium text-xs leading-5">*/}
+          {/*          {event.name.toUpperCase()}*/}
+          {/*        </span>*/}
+          {/*      </div>*/}
+          {/*      <span className={'text-lg leading-6 font-semibold text-gray7'}>{event.amount}</span>*/}
+          {/*    </div>*/}
+          {/*  ))}*/}
+          {/*</div>*/}
           <div className={'border-b border-gray2 h-[96px] flex p-6 items-center justify-between'}>
             <ButtonsSlider buttons={buttons} currentButton={currentButton} onClick={setCurrentButton} />
           </div>
