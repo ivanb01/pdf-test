@@ -24,17 +24,17 @@ import { useQuery } from '@tanstack/react-query';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { debounce } from '@mui/material';
 import DropdownWithSearch from '@components/dropdownWithSearch';
-import AddClientManuallyOverlay from '@components/overlays/add-client/add-client-manually';
-import { clientOptions, clientStatuses } from '@global/variables';
-import Add from '@mui/icons-material/Add';
 
 const AllContacts = () => {
   const dispatch = useDispatch();
+  const hideUnapproved = useSelector((state) => state.global.hideUnapproved);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(null);
   const [showEditContact, setShowEditContact] = useState(false);
   const [addActivityPopup, setAddActivityPopup] = useState(false);
   const [open, setOpen] = useState(false);
   const [clientsFilters, setClientsFilters] = useState({});
+  const [filteredContacts, setFilteredContacts] = useState();
   const [unapprovedContacts, setUnapprovedContacts] = useState([]);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [offset, setOffset] = useState(0);
@@ -43,17 +43,8 @@ const AllContacts = () => {
   const allContacts = useSelector((state) => state.contacts.allContacts.data);
 
   const [categoryNames, setCategoryNames] = useState([]);
-  const [showAddContactOverlay, setShowAddContactOverlay] = useState(false);
 
-  const {
-    isFetching,
-    isLoading,
-    isError,
-    error,
-    data,
-    isPreviousData,
-    refetch: refetchAllContacts,
-  } = useQuery({
+  const { isFetching, isLoading, isError, error, data, isPreviousData } = useQuery({
     queryKey: ['clients', offset, searchTerm, categoryNames],
     queryFn: async () => {
       const data = await getContactsPaginated(offset, limit, searchTerm, null, categoryNames);
@@ -107,10 +98,131 @@ const AllContacts = () => {
   useEffect(() => {
     dispatch(setOpenedTab(-1));
   }, []);
+  // useEffect(() => {
+  //   if (allContacts.data === undefined) {
+  //     getContacts('1,2,3,4,5,6,7,8,9,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27')
+  //       .then((data) => {
+  //         dispatch(setAllContacts(data.data));
+  //       })
+  //       .finally(() => {
+  //         setLoading(false);
+  //       });
+  //   }
 
-  const handleClose = () => {
-    setShowAddContactOverlay(false);
+  //   if (allContacts.data !== undefined) {
+  //     setLoading(false);
+  //   }
+  // }, []);
+  // const filterContacts = () => {
+  //   console.log(clientsFilters);
+  //   let contactsState = allContacts.data;
+  //   Object.keys(clientsFilters).forEach((key) => {
+  //     if (clientsFilters[key].includes('Other')) {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => {
+  //             clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+  //           });
+  //         }
+
+  //         return clientsFilters[key].includes(contact[key]) || contact.category_2.includes('Unknown');
+  //       });
+  //     } else if (clientsFilters[key].includes('Uncategorized')) {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => {
+  //             clientsFilters[key].includes(current) || current.category_2.includes('Unknown');
+  //           });
+  //         }
+
+  //         return clientsFilters[key].includes(contact[key]) && !contact.category_2.includes('Unknown');
+  //       });
+  //     } else {
+  //       contactsState = contactsState.filter((contact) => {
+  //         if (Array.isArray(contact[key])) {
+  //           return contact[key].some((current) => clientsFilters[key].includes(current));
+  //         }
+  //         return clientsFilters[key].includes(contact[key]);
+  //       });
+  //     }
+
+  //     setFilteredContacts(contactsState);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (allContacts?.data?.length === 0) {
+  //     return;
+  //   }
+  //   filterContacts();
+  //   if (Object.keys(clientsFilters).length === 0) {
+  //     setFilteredContacts(allContacts?.data?.filter((c) => c.category_1 !== 'Trash'));
+  //   }
+  // }, [clientsFilters, searchTerm, allContacts]);
+  // const handleFilterClick = (selectedFilter, filterType, isOnlyOneFilter) => () => {
+  //   let filtersCopy = { ...clientsFilters };
+  //   if (filtersCopy[filterType]) {
+  //     if (filtersCopy[filterType].includes(selectedFilter)) {
+  //       filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== selectedFilter);
+  //       if (filtersCopy[filterType].length < 1) {
+  //         delete filtersCopy[filterType];
+  //       }
+  //     } else {
+  //       if (isOnlyOneFilter) {
+  //         filtersCopy[filterType] = [selectedFilter];
+  //       } else {
+  //         filtersCopy[filterType] = [...filtersCopy[filterType], selectedFilter];
+  //       }
+  //     }
+  //   } else {
+  //     filtersCopy[filterType] = [selectedFilter];
+  //   }
+  //   setClientsFilters(filtersCopy);
+  // };
+
+  // useEffect(() => {
+  //   if (searchTerm.length > 0) {
+  //     const filterBySearchTerm = filteredContacts.filter(
+  //       (contact) =>
+  //         contact.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //         contact.last_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  //     );
+  //     setFilteredContacts(filterBySearchTerm);
+  //   }
+  // }, [searchTerm]);
+  const getCount = () => {
+    if (hideUnapproved) {
+      return (
+        filteredContacts?.length -
+        filteredContacts?.filter(
+          (contact) =>
+            ['GmailAI', 'Smart Sync A.I.', 'Gmail'].includes(contact.import_source_text) &&
+            contact.approved_ai !== true &&
+            clientsFilters?.category_1?.includes(contact?.category_1),
+        ).length
+      );
+    } else {
+      return filteredContacts?.length;
+    }
   };
+  const tabs = [
+    {
+      title: 'CATEGORY',
+      content: ['Client', 'Professional', 'Uncategorized', 'Other'],
+      value: 'category_1',
+    },
+  ];
+  const removeFilter = (filterToRemove, filterType) => {
+    let filtersCopy = { ...clientsFilters };
+
+    filtersCopy[filterType] = filtersCopy[filterType].filter((element) => element !== filterToRemove);
+    if (filtersCopy[filterType].length < 1) {
+      delete filtersCopy[filterType];
+    }
+
+    setClientsFilters(filtersCopy);
+  };
+
   return (
     <Layout>
       {
@@ -156,36 +268,6 @@ const AllContacts = () => {
                   debouncedOnChange(event.target.value);
                 }}
               />
-              <Button
-                primary
-                leftIcon={<Add className="w-5 h-5" />}
-                iconSize="w-5 h-5"
-                label="Add Contact"
-                onClick={setShowAddContactOverlay}
-              />
-              {showAddContactOverlay && (
-                <ReviewContact
-                  client={{
-                    email: '',
-                    first_name: '',
-                    last_name: '',
-                    lead_source: '',
-                    phone_number: null,
-                    priority: '',
-                    selectedContactCategory: 4,
-                    selectedContactSubtype: 6,
-                    selectedContactType: 6,
-                    selectedStatus: 2,
-                    summary: null,
-                    tags: null,
-                    category_1: '',
-                    import_source: 'Manually Added',
-                  }}
-                  refetchAllContacts={refetchAllContacts}
-                  handleClose={() => setShowAddContactOverlay(false)}
-                  title="Add Contact"
-                />
-              )}
             </div>
           </div>
           {/* {Object.keys(clientsFilters).length > 0 && (
@@ -252,7 +334,6 @@ const AllContacts = () => {
           {addActivityPopup && (
             <ReviewContact
               showToast
-              refetchAllContacts={refetchAllContacts}
               client={showEditContact}
               setClient={setShowEditContact}
               handleClose={() => setAddActivityPopup(false)}
