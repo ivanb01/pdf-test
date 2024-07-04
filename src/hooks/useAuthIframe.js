@@ -13,7 +13,7 @@ const useAuthIframe = () => {
   const generateJwt = (email) => {
     const payload = {
       email,
-      exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60,
+      exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
     };
     return jwt.sign(payload, SECRET_KEY);
   };
